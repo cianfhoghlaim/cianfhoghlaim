@@ -4,7 +4,9 @@
 # shared tmpfs volume.
 services:
   locket:
-    image: ghcr.io/bpbradley/locket:infisical
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
+    environment:
+      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
     restart: unless-stopped
     container_name: cianfhoghlaim-logfire-locket
     user: "65532"

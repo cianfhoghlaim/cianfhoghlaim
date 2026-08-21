@@ -5,13 +5,19 @@
 # TinyAuth (Pocket ID OIDC) + secure-headers middlewares are applied at
 # the Traefik layer; the Pangolin blueprint (blueprint.yaml) declares
 # RBAC roles only.
+#
+# CHANGED 2026-08-21 (litellm-1.91-to-1.97-and-mcp-oauth-2.0-v1):
+# Added the `/v1/messages` reverse-proxy path (the Rust-based endpoint
+# introduced in v1.95.0, used by Claude Code + Hermes + MCP-OAuth clients).
+# The MCP Gateway GA endpoint (`/v1/mcp`) is exposed on the same `/v1`
+# router via the same Traefik service — no extra path rule needed.
 
 http:
   routers:
     litellm:
       entryPoints:
         - https
-      rule: "Host(`litellm.cianfhoghlaim.ie`)"
+      rule: "Host(`litellm.cianfhoghlaim.ie`) && (Path(`/v1/chat/completions`) || Path(`/v1/messages`) || Path(`/v1/mcp`) || Path(`/v1/models`) || PathPrefix(`/v1/`))"
       service: litellm
       tls:
         certResolver: letsencrypt

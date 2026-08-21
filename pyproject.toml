@@ -13,6 +13,14 @@ dependencies = [
     "anthropic>=0.106.0",
     "baml-py>=0.222.0",
     "beautifulsoup4>=4.12",
+    # boto3 is used by garage_init.py (the Lakehouse stack's init) but we
+    # pin a relaxed upper bound so that dlt[filesystem]>=1.30.0 can
+    # resolve at the same time. The runtime uses the latest compatible
+    # version that satisfies both constraints.
+    # The 2026-08-24-lakehouse-stack-doctor-and-env-var-cleanup-v1 change
+    # originally pinned boto3>=1.43.77; that pin was relaxed to
+    # boto3<1.43.77 (per the 2026-08-21-upstream-version-alignment audit,
+    # since dlt 1.30.0 requires botocore<1.43.77).
     # CocoIndex bumped to >=1.0.20 (from historical >=1.0.14) by the
     # 2026-08-17-hygiene-drift-cleanup-v1 change (P2.1). v1.0.15-v1.0.20
     # are additive: BigQuery/Snowflake/Valkey target connectors,
@@ -23,8 +31,20 @@ dependencies = [
     "dagster>=1.13",
     "dagster-dbt>=0.29",
     "dagster-dlt>=0.29",
-    "dlt[duckdb,motherduck,filesystem]>=1.28.1",
-    "duckdb>=1.4",
+    "dagster-webserver>=1.13",
+    "dagster-shared>=1.13",
+    "dagster-graphql>=1.13",
+    # Pin boto3/botocore upper bound — dlt[filesystem]>=1.30.0 requires
+    # botocore<1.43.77 (the newer botocore breaks s3 filesystem source).
+    "boto3<1.43.77",
+    "botocore<1.43.77",
+    # dlt bumped from >=1.28.1 to >=1.30.0 per the
+    # 2026-08-21-dlt-1.28.1-to-1.30.0-v1 openspec change (Priority 1 bump).
+    # dlt 1.30 is the latest stable as of Aug 2026 and brings the
+    # `refresh` write_disposition + the `pipeline.dataset()` single-schema
+    # default behaviour we depend on.
+    "dlt[duckdb,motherduck,filesystem]>=1.30.0,<2.0.0",
+    "duckdb>=1.5.4,<1.6.0",
     "fastapi>=0.115.0,<0.140",
     "firecrawl>=4.28.2",
     "google-adk>=1.17.0",

@@ -67,9 +67,47 @@ CREATE DATABASE litellm;         -- litellm stack model registry (was: standalon
 -- is gone — replaced by this shared database on lakehouse-postgres.
 CREATE DATABASE cognee_cianfhoghlaim;  -- cognee KG + pgvector (was: dedicated cognee-postgres)
 
+-- CHANGED 2026-08-23 (lakehouse-production-config-and-lance-sidecar-modernization-v1):
+-- Cognee now connects as a dedicated `cognee` user (NOT the shared `lakekeeper`
+-- superuser) for security best-practice (per Lakekeeper config docs). The
+-- cognee user has permissions ONLY on the cognee_cianfhoghlaim database — no
+-- read/write access to the other 13 databases.
+--
+-- The actual password is set by a post-init SQL script
+-- (bonneagar/stacks/lakehouse/init-cognee-user.sql) that runs via
+-- docker-entrypoint-initdb.d/ AFTER this main init-db.sql. The cognee service
+-- then reads COGNEE_POSTGRES_PASSWORD from the Locket-resolved env var.
+-- For dev: the placeholder password is the same as POSTGRES_PASSWORD.
+CREATE USER cognee;  -- password set later by init-cognee-user.sql
+GRANT ALL PRIVILEGES ON DATABASE cognee_cianfhoghlaim TO cognee;
+GRANT ALL ON SCHEMA public TO cognee;
+
+-- ---------------------------------------------------------------------------
+-- Olake CDC source DB (added 2026-08-22-lakehouse-config-and-env-var-hardening-v1)
+-- ---------------------------------------------------------------------------
+-- Olake CDC jobs connect to this DB to capture changes for the
+-- olake → iceberk → lance pipeline. Was the placeholder `staging_pg`
+-- (never existed in the lakehouse-postgres).
+CREATE DATABASE olake_source;  -- olake CDC source DB (was: staging_pg placeholder)
+
+-- ---------------------------------------------------------------------------
+-- Required Postgres extensions (added 2026-08-22-lakehouse-config-and-env-var-hardening-v1)
+-- ---------------------------------------------------------------------------
+-- The pgvector/pgvector:pg17 image includes postgresql-contrib + pgvector.
+-- These 6 extensions MUST be created BEFORE Lakekeeper migrations run.
+-- uuid-ossp, pgcrypto, pg_trgm, bbtree_gin, btree_gist — required by Lakekeeper.
+-- vector — required by Cognee pgvector backend.
+-- IF NOT EXISTS makes the script idempotent for existing volumes.
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+CREATE EXTENSION IF NOT EXISTS "pg_trgm";
+CREATE EXTENSION IF NOT EXISTS "btree_gin";
+CREATE EXTENSION IF NOT EXISTS "btree_gist";
+CREATE EXTENSION IF NOT EXISTS "vector";
+
 -- ---------------------------------------------------------------------------
 -- Grant permissions on every database to the lakekeeper superuser.
--- All 13 databases share the single superuser (POSTGRES_USER in compose.yaml).
+-- All 14 databases share the single superuser (POSTGRES_USER in compose.yaml).
 -- Per-service passwords are layered on top by the LANGFUSE_DB_PASSWORD /
 -- MLFLOW_DB_PASSWORD / LITELLM_DB_PASSWORD / COGNEE_POSTGRES_PASSWORD env
 -- vars when each downstream service connects. Using ONE superuser keeps
@@ -88,3 +126,4 @@ GRANT ALL PRIVILEGES ON DATABASE langfuse                TO lakekeeper;
 GRANT ALL PRIVILEGES ON DATABASE mlflow                  TO lakekeeper;
 GRANT ALL PRIVILEGES ON DATABASE litellm                 TO lakekeeper;
 GRANT ALL PRIVILEGES ON DATABASE cognee_cianfhoghlaim    TO lakekeeper;
+GRANT ALL PRIVILEGES ON DATABASE olake_source            TO lakekeeper;

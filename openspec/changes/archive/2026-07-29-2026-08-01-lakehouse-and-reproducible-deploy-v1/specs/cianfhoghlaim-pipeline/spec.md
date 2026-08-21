@@ -18,7 +18,7 @@ MUST set the following:
 - `CIANFHOGHLAIM_EMBED_DIM` (default `1024`)
 
 The canonical CocoIndex v1 App entry point at
-`cocoindex/_shared/_lifespan.py` reads these env vars at module
+`cocoindex_flows/_shared/_lifespan.py` reads these env vars at module
 load (lines 99-108) and constructs the shared
 `SentenceTransformerEmbedder(EMBED_MODEL)` for the 14 v1 Apps.
 
@@ -51,7 +51,7 @@ CIANFHOGHLAIM_EMBED_DIM=             # unset → default 1024
 ## Why this matters
 
 Today the canonical embedder (`BAAI/bge-m3` at 1024-dim) is hardcoded
-in `cocoindex/_shared/_lifespan.py` + `orchestration/resources.py`.
+in `cocoindex_flows/_shared/_lifespan.py` + `orchestration/resources.py`.
 Operators who want to swap embedders (for OCR-HTR experiments, for
 cross-archive domain adaptation, for benchmarking) have no env knob
 and must edit source code + redeploy. This requirement gives them the

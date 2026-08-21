@@ -1,8 +1,10 @@
 services:
   locket:
-    # NOTE: replaced locket v0.17.3 with ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    # NOTE: replaced locket v0.17.3 with ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
     # (see openclaw/sidecar.yaml for full context). Same shim, env-driven.
-    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
+    environment:
+      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
     container_name: langfuse-locket
     restart: unless-stopped
     user: "65532:65532"
@@ -24,6 +26,7 @@ services:
       - infisical_secret
     volumes:
       - ./secrets.env:/templates/secrets.env:ro
+      - ${INFISICAL_FALLBACK_FILE}:/run/secrets/locket/env-fallback.env:ro
       - stack-secrets:/run/secrets/locket
     healthcheck:
       test:

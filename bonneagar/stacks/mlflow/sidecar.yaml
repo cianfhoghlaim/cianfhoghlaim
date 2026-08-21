@@ -1,7 +1,7 @@
 # =============================================================================
 # MLFLOW - Locket Sidecar Configuration (ghcr.io/cianfhoghlaim/locket-shim)
 # =============================================================================
-# Uses ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0 -- the v0.2.0 drop-in that sends
+# Uses ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1 -- the v0.2.0 drop-in that sends
 # camelCase query params (projectId/secretPath/secretType) to Infisical
 # v0.161+, replacing the broken locket v0.17.3 (snake_case -> 422 ->
 # passthrough). See bonneagar/scripts/cianfhoghlaim-locket-shim.py for the shim
@@ -17,9 +17,9 @@
 
 services:
   locket:
-    # NOTE: replaced locket v0.17.3 with ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    # NOTE: replaced locket v0.17.3 with ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
     # (see openclaw/sidecar.yaml for full context). Same shim, env-driven.
-    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
     container_name: mlflow-locket
     restart: unless-stopped
     user: "65532:65532"
@@ -34,6 +34,7 @@ services:
     # no-new-privileges for the rest of the hardening.
     read_only: false
     environment:
+      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
       INFISICAL_URL: ${INFISICAL_URL}
       INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
       INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}
@@ -42,10 +43,13 @@ services:
       LOCKET_MODE: ${LOCKET_MODE:-watch}
       LOCKET_SRC: /templates/secrets.env
       LOCKET_DST: /run/secrets/locket
+      # Per the 2026-08-21-mlflow bump: mlflow v3.15.1 image tag is referenced
+      # in the main compose.yaml; INFISICAL_FALLBACK_FILE is OPTIONAL.
     secrets:
       - infisical_secret
     volumes:
       - ./secrets.env:/templates/secrets.env:ro
+      - ${INFISICAL_FALLBACK_FILE:-/dev/null}:/run/secrets/locket/env-fallback.env:ro
       - stack-secrets:/run/secrets/locket
     healthcheck:
       test:

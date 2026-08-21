@@ -1,18 +1,18 @@
 # defs/3_model_lifecycle/cocoindex_v1/european_nations_factory/defs.yaml
 #
 # L3 CocoIndex v1 component that wires the 40 European-nation
-# CocoIndex Apps emitted by cocoindex/european_nations/_factory.py.
+# CocoIndex Apps emitted by cocoindex_flows/european_nations/_factory.py.
 #
 # Per the `centralized-schema-registry` capability + the
 # 2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1
 # change (commit b850bf14e). The 40 hand-written CocoIndex Apps at
-# `cocoindex/european_nations/<nation>/education_embedding.py` are
+# `cocoindex_flows/european_nations/<nation>/education_embedding.py` are
 # now 1-line shims that re-export from the factory. This single L3
 # component replaces the 40 per-nation components that previously
 # lived under `orchestration/defs/3_model_lifecycle/cocoindex_v1/european_nations_*_education/`.
 #
 # The factory module:
-#   cocoindex/european_nations/_factory.py
+#   cocoindex_flows/european_nations/_factory.py
 # exports 40 CocoIndex Apps at module import time (one per nation
 # in NATION_CONFIG). The Apps are loaded by the KCG Component
 # (CelticModelLifecycleComponent) via the standard `apps:` list below.
@@ -27,7 +27,7 @@ attributes:
   embedding_model: BAAI/bge-m3
   hnsw_index: true
   conformance_required: true
-  factory_module: cianfhoghlaim.cocoindex.european_nations._factory
+  factory_module: cianfhoghlaim.cocoindex_flows.european_nations._factory
   factory_pattern: true
   apps:
     # 40 CocoIndex Apps (one per ISO-3 nation: alb, aut, bel, bih, bgr,
@@ -35,10 +35,10 @@ attributes:
     # xkx, lva, lie, ltu, lux, mlt, mda, mne, nld, mkd, nor, pol, prt,
     # rou, srb, svk, svn, esp, swe, che, tur, ukr)
     - app_name: european_nations_factory
-      module: cianfhoghlaim.cocoindex.european_nations._factory
+      module: cianfhoghlaim.cocoindex_flows.european_nations._factory
       source: european_nations
       description: |
-        The 40 CocoIndex Apps from cocoindex/european_nations/_factory.py.
+        The 40 CocoIndex Apps from cocoindex_flows/european_nations/_factory.py.
         Each App is named `<iso3>_education_embedding` and writes to
         `cianhoghlaim.european_nations.<iso3>.education_chunks`. The
         factory pattern collapsed ~5,400 LOC into 504 LOC (-91%).
@@ -54,7 +54,7 @@ attributes:
   metadata:
     openspec_change: 2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1
     spec: centralized-schema-registry
-    factory_module: cocoindex.european_nations._factory
+    factory_module: cocoindex_flows.european_nations._factory
     nation_count: 40
     original_loc: 5400
     factory_loc: 224

@@ -14,4 +14,5 @@ services:
   locket:
     environment:
       - INFISICAL_SECRET_PATH=/tinyauth
+      - LOCKET_FALLBACK_FILE=/run/secrets/locket/env-fallback.env
       - INFISICAL_SECRET_KEYS=PROVIDERS_POCKETID_CLIENT_ID,PROVIDERS_POCKETID_CLIENT_SECRET

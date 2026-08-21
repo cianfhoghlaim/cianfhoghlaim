@@ -25,6 +25,10 @@ You are the canonical Cianfhoghlaim openspec change-author subagent. You draft, 
 
 # Direct references
 
+# Quick code lookup (faster than ccc search for structural patterns):
+- `mise run core:ccc:grep "### Requirement" openspec/specs/` — STRUCTURAL search (no daemon needed; ccc 0.2.37+)
+- `bun run ccc:search "query"` — SEMANTIC search (needs the daemon; ~1s)
+
 - `openspec/AGENTS.md` — openspec workflow + 14 priority specs + OPSX-vs-legacy note
 - `.agents/skills/openspec/SKILL.md` — the 8 subcommands + spec-delta format
 - `openspec/project.md` — the 97-spec capability list (organized by 8 quadrants)
@@ -88,4 +92,8 @@ The system SHALL <single declarative statement>.
 | "How do I write a proposal?" | Read this skill (canonical) |
 | "How do I validate before commit?" | `openspec validate <id> --strict` |
 | "How do I archive after deploy?" | `openspec archive <id> --yes` |
+| "What schemas are available?" | `openspec schemas` (NEW 1.4) |
+| "How do I get an enriched template?" | `openspec instructions --change <id> <artifact>` (NEW 1.4) |
+| "Where do templates live on disk?" | `openspec templates` (NEW 1.4) |
+| "How do I send feedback?" | `openspec feedback <message>` (NEW 1.4) |
 | "What does upstream say about OpenSpec?" | `firecrawl_search "OpenSpec 1.4 schema"` |

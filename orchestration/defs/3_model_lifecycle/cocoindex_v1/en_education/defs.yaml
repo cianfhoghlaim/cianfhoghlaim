@@ -13,7 +13,7 @@ attributes:
   conformance_required: true
   apps:
     - app_name: EnglandEducationEmbedding
-      module: cianfhoghlaim.cocoindex.biep_parity.en_education_embedding
+      module: cianfhoghlaim.cocoindex_flows.biep_parity.en_education_embedding
       source: british_isles
       lance_table: cianfhoghlaim.lc.en.education_chunks
   schedule:

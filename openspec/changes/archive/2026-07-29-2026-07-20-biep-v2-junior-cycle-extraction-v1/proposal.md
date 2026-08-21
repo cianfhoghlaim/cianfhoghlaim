@@ -91,10 +91,10 @@ DuckLake namespace `cianfhoghlaim.education.british_isles.ireland.junior_cycle.<
 
 ### 3. New CocoIndex v1 App
 
-`cocoindex/subjects/junior_cycle_embedding.py` — 36 LanceDB tables at
+`cocoindex_flows/subjects/junior_cycle_embedding.py` — 36 LanceDB tables at
 `cianfhoghlaim.jc.<subject>.<year>_<lang>`. Conforms to the R1–R4 v1 contract:
 
-- **R1** — `from cocoindex._shared._lifespan import shared_lifespan`
+- **R1** — `from cocoindex_flows._shared._lifespan import shared_lifespan`
 - **R2** — Imports the canonical `LANCE_DB` + `EMBEDDER` from `_lifespan`
 - **R3** — `app = coco.App(coco.AppConfig(name="junior_cycle_embedding"))` at module scope
 - **R4** — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`

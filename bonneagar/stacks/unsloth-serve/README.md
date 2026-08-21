@@ -4,18 +4,20 @@ The Unsloth Studio headless inference server. Hosts the 3-product Unsloth
 stack (Desktop + Studio + Core) as a Docker container, exposing both the
 Studio UI on `:8888` and the OpenAI/Anthropic-compatible API on `:8889`.
 
-## Why two compose override files (arm1-oci + bunchloch)?
+## Why two compose override files (arm1-oci + M4 Max)?
 
-Unsloth has different runtime requirements per host:
+Unsloth has different runtime requirements per host (per the 2026-08-21
+hotfix commit — bunchloch is the M4 Max GPU host via Apple Silicon
+Metal/MLX, arm1-oci is the CPU-only host):
 
 | Host | Image | GPU | Memory | Public? | Use case |
 |:--|:--|:--|:--|:--|:--|
-| **`arm1-oci`** | `unsloth/unsloth:cuda-latest` | `-ngl 99` (full GPU offload) | 12 GB | Yes (Pangolin) | Production serving for hermes/openclaw/webchat |
-| **`bunchloch`** | `unsloth/unsloth:latest` | `-ngl 0` (CPU/MPS) | 8 GB | No (`127.0.0.1` only) | Dev mode + the marimo 10-way comparison notebook + the Studio UI |
+| **`arm1-oci`** | `unsloth/unsloth:latest` | `-ngl 0` (CPU-only, Oracle Cloud arm64) | 10 GB | Yes (Pangolin) | Production serving for hermes/openclaw/webchat |
+| **`bunchloch`** | `unsloth/unsloth:latest` | `-ngl 99` (Metal/MLX, M4 Max 48 GB unified memory) | 16 GB | No (`127.0.0.1` only) | Dev mode + the marimo 10-way comparison notebook + the Studio UI |
 
 The base `compose.yaml` is shared. The two override files differ only in
-`image`, `LLAMA_ARG_NGL`, `deploy.resources.limits.memory`, and the
-Pangolin `expose` block.
+`image`, `LLAMA_ARG_NGL`, `LLAMA_ARG_THREADS`, `UNSLOTH_PLATFORM`,
+`deploy.resources.limits.memory`, and the bind host.
 
 ## Deployed model
 
@@ -58,20 +60,66 @@ Plus `unsloth start pi` for Pi Coding Agent.
 
 ## Usage
 
+### Production (arm1-oci, CPU-only, public via Pangolin)
+
 ```bash
-# Production (arm1-oci, GPU)
-docker compose -f compose.yaml -f compose.arm1-oci.yaml -f sidecar.yaml up -d
+docker compose \
+  -f compose.yaml \
+  -f compose.arm1-oci.yaml \
+  -f sidecar.yaml \
+  --env-file ../../.env \
+  up -d
+```
 
-# Dev mode (bunchloch, CPU/MPS)
-docker compose -f compose.yaml -f compose.bunchloch.yaml -f sidecar.yaml up -d
+The sidecar pulls `UNSLOTH_API_KEY` from Infisical via Locket.
 
-# Verify the API is serving models
+### Dev mode (bunchloch, M4 Max MLX, local)
+
+**Option A: With Locket sidecar (when Infisical is healthy)**
+
+```bash
+docker compose \
+  -f compose.yaml \
+  -f compose.m4-max.yaml \
+  -f sidecar.yaml \
+  --env-file ../../.env \
+  up -d
+```
+
+**Option B: Without Infisical (local-dev fallback, no Locket)**
+
+```bash
+cd bonneagar/stacks/unsloth-serve/
+cp .env.example .env
+# edit .env to set UNSLOTH_API_KEY
+docker compose \
+  -f compose.yaml \
+  -f compose.m4-max.yaml \
+  -f compose.local-dev.yaml \
+  --env-file .env \
+  up -d
+```
+
+The `compose.local-dev.yaml` overlay REMOVES the Locket sidecar
+dependency. The container reads `UNSLOTH_API_KEY` directly from
+the mounted `.env` file.
+
+### Verify
+
+```bash
+# Verify the API is serving models (any mode)
 curl -s http://localhost:8889/v1/models \
   -H "Authorization: Bearer $UNSLOTH_API_KEY" | jq
 
 # Confirm the loaded model
 curl -s http://localhost:8889/v1/models \
   -H "Authorization: Bearer $UNSLOTH_API_KEY" | jq '.data[0].id'
+
+# Trigger a chat completion (first load takes ~81s on M4 Max CPU)
+curl -s http://localhost:8889/v1/chat/completions \
+  -H "Authorization: Bearer $UNSLOTH_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"unsloth/Qwen3.8-27B-GGUF","messages":[{"role":"user","content":"ping"}],"max_tokens":5}' | jq
 ```
 
 ## Network
@@ -91,9 +139,13 @@ A single shared secret scope:
 The 5 agent stacks (hermes, openclaw, openchamber, cianfhoghlaim,
 openclaw-arm1-oci) all read the same key via Locket.
 
+**Local-dev fallback:** `compose.local-dev.yaml` reads from a mounted
+`.env` file at `/etc/unsloth/.env` (the entrypoint checks Locket first,
+falls back to `.env` if Locket is empty).
+
 ## Cost
 
-- **Compute:** 0 (runs on existing bunchloch M4 Max + arm1-oci GPU)
+- **Compute:** 0 (runs on existing bunchloch M4 Max + arm1-oci)
 - **API tokens:** Saves up to ~80% of M3 plan spend during heavy agent sessions
 - **Storage:** ~50 GB on the GGUF cache for 5 commonly-used quants
 - **Infisical:** 1 new secret scope (`unsloth/`); 0 new projects

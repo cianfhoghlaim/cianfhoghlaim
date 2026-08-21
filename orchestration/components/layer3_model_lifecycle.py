@@ -574,7 +574,9 @@ class CelticFederatedOcrComponent(Component, Resolvable):
         # DEFERRED: explicit `manual()` automation condition unless the
         # defs.yaml overrides via `automation_cron:`.
         if self.automation_cron == "manual":
-            _automation = dg.AutomationCondition.manual()
+            # Dagster 1.13 has no `AutomationCondition.manual()` — `None` is how
+            # "never auto-materialise, launch by hand" is expressed.
+            _automation = None
         else:
             _automation = dg.AutomationCondition.on_cron(self.automation_cron)
 

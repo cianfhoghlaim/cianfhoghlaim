@@ -32,6 +32,10 @@ You are the infrastructure functional subagent for the cianfhoghlaim monorepo. Y
 
 # Direct references (mirrors guides.yml)
 
+# Quick code lookup (faster than ccc search for structural patterns):
+- `mise run core:ccc:grep "class \\\\NAME(" bonneagar/` — STRUCTURAL search (no daemon needed; ccc 0.2.37+)
+- `bun run ccc:search "query"` — SEMANTIC search (needs the daemon; ~1s)
+
 - `bonneagar/AGENTS.md` — IaC conventions + 89 stacks inventory
 - `bonneagar/README.md` — quickstart + Komodo procedures
 - `bonneagar/stacks/INDEX.md` — stack catalog

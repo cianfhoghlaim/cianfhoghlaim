@@ -168,16 +168,16 @@ for (const [code, name] of Object.entries(americas))
 // cocoindex/ rename map (FLAT files + future subdirs)
 // Per-jurisdiction education_embedding files
 for (const [code, name] of Object.entries(europeanNations))
-  dlt[`cocoindex/european_nations_${code}_education_embedding.py`] =
-    `cocoindex/european_nations/${name}/education_embedding.py`;
+  dlt[`cocoindex_flows/european_nations_${code}_education_embedding.py`] =
+    `cocoindex_flows/european_nations/${name}/education_embedding.py`;
 // Cross-jurisdiction apps
-dlt[`cocoindex/european_nations_law_embedding.py`] = "cocoindex/european_nations_cross/law_embedding.py";
-dlt[`cocoindex/european_nations_medicine_embedding.py`] = "cocoindex/european_nations_cross/medicine_embedding.py";
-dlt[`cocoindex/commonwealth_education_embedding.py`] = "cocoindex/commonwealth_cross/education_embedding.py";
+dlt[`cocoindex_flows/european_nations_law_embedding.py`] = "cocoindex_flows/european_nations_cross/law_embedding.py";
+dlt[`cocoindex_flows/european_nations_medicine_embedding.py`] = "cocoindex_flows/european_nations_cross/medicine_embedding.py";
+dlt[`cocoindex_flows/commonwealth_education_embedding.py`] = "cocoindex_flows/commonwealth_cross/education_embedding.py";
 // Per-jurisdiction commonwealth
 for (const [code, name] of Object.entries(commonwealth))
-  dlt[`cocoindex/commonwealth_${code}_education_embedding.py`] =
-    `cocoindex/commonwealth/${name}/education_embedding.py`;
+  dlt[`cocoindex_flows/commonwealth_${code}_education_embedding.py`] =
+    `cocoindex_flows/commonwealth/${name}/education_embedding.py`;
 
 // Print as YAML
 console.log("baml_src:");

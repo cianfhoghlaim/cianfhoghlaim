@@ -36,12 +36,12 @@
 
 ## Stage 3 — CocoIndex v1 Apps
 
-- [ ] Create `cocoindex/british_isles/england/__init__.py`
-- [ ] Create `cocoindex/british_isles/england/aqa_education_embedding.py` — verify R1–R4 conformance
-- [ ] Create `cocoindex/british_isles/england/ocr_education_embedding.py`
-- [ ] Create `cocoindex/british_isles/england/edexcel_education_embedding.py`
+- [ ] Create `cocoindex_flows/british_isles/england/__init__.py`
+- [ ] Create `cocoindex_flows/british_isles/england/aqa_education_embedding.py` — verify R1–R4 conformance
+- [ ] Create `cocoindex_flows/british_isles/england/ocr_education_embedding.py`
+- [ ] Create `cocoindex_flows/british_isles/england/edexcel_education_embedding.py`
 - [ ] All 3 Apps MUST:
-  - Import `from cocoindex._shared._lifespan import shared_lifespan`
+  - Import `from cocoindex_flows._shared._lifespan import shared_lifespan`
   - Import `LANCE_DB` + `EMBEDDER` from `_lifespan`
   - Declare `app = coco.App(coco.AppConfig(name="england_<board>_education_embedding"))` at module scope
   - Use `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`

@@ -6,7 +6,7 @@ table (the canonical companion table populated by the
 `firecrawl_corpus_loader.py`).
 
 The store uses the shared BGE-M3 1024-d embeddings (the canonical
-shared embedder from `cocoindex/infrastructure/_lifespan.py`).
+shared embedder from `cocoindex_flows/infrastructure/_lifespan.py`).
 """
 from __future__ import annotations
 

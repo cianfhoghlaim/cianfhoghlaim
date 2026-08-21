@@ -1,0 +1,10 @@
+pypi_analytics:
+  outputs:
+    dev:
+      type: duckdb
+      path: '{{ env_var("DUCKDB_DATABASE") }}'
+    prod:
+      type: duckdb
+      path: "md:duckdb_stats"
+
+  target: dev

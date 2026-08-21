@@ -86,7 +86,7 @@ Failing to follow this convention causes critical
 
 Every CocoIndex v1 App MUST pass the 4-rule R1-R4
 conformance contract enforced by
-`cocoindex/infrastructure/cocoindex_v1_conformance.py`:
+`cocoindex_flows/infrastructure/cocoindex_v1_conformance.py`:
 
 | Rule | Meaning |
 |:--|:--|
@@ -122,12 +122,12 @@ When you need N nearly-identical CocoIndex Apps that differ
 only by a config row (ISO code, subject, jurisdiction,
 etc.), collapse them into 1 factory-driven module + N
 1-line re-export shims. Canonical example:
-`cocoindex/european_nations/_factory.py` collapses 40
+`cocoindex_flows/european_nations/_factory.py` collapses 40
 nation CocoIndex Apps into 1 factory + 40 shims
 (~4,776 LOC reduction).
 
 ```python
-# From cocoindex/european_nations/_factory.py
+# From cocoindex_flows/european_nations/_factory.py
 @dataclass(frozen=True)
 class NationConfig:
     iso3: str
@@ -163,7 +163,7 @@ To add a new jurisdiction: append a `NationConfig` row to
 | Add a new BIEP v3 jurisdiction pipeline | Subclass `JurisdictionPipelineBase` at `dlt_sources/british_isles/_cross/jurisdiction_pipeline_base.py:33` |
 | Add a new BAML extraction function | `baml_src/<area>/` (319 `.baml` files; the 5 canonical `lc6` extraction functions are in `baml_src/curriculum/`) |
 | Add a new CocoIndex v1 App | `cocoindex/<area>/<name>_embedding.py` (model after `ireland_lc_mathematics_embedding.py`) |
-| Add a new BIEP v3 jurisdiction factory | `cocoindex/biep_parity/<jurisdiction>_<stage>_apps.py` (model after `ireland_jc_apps.py`) |
+| Add a new BIEP v3 jurisdiction factory | `cocoindex_flows/biep_parity/<jurisdiction>_<stage>_apps.py` (model after `ireland_jc_apps.py`) |
 | Add a new Dagster asset | The relevant 5-layer component: `orchestration/defs/{1_ingestion,2_materials,3_model_lifecycle,4_asset_generation,5_agent_ops}/` |
 | Add a new jurisdiction asset wrapper | Subclass `JurisdictionAssetsBase` at `orchestration/defs/2_materials/_base/jurisdiction_assets_base.py:33` |
 | Add a new OCR/VLM model | `meaisinfhoghlaim/models/registry.py:VISION_MODELS` (the 22-entry `ocr_vision` subset view of `MODEL_REGISTRY`) |
@@ -174,7 +174,7 @@ To add a new jurisdiction: append a `NationConfig` row to
 | Add a new MotherDuck Dive target | `motherduck/README.md` (this repo) |
 | Run the BIEP v3 Ireland pipeline | `python -c "from dlt_sources.british_isles.ireland.education.ireland_jurisdiction_pipeline import ireland_jurisdiction_pipeline; ireland_jurisdiction_pipeline.run()"` |
 | Audit a DLT destination issue | `python -c "from dlt_sources.common.destinations_cianfhoghlaim import get_dlt_destination; print(get_dlt_destination())"` |
-| Diagnose an embedder issue | `python -c "from cocoindex._shared._lifespan import EMBED_MODEL, EMBED_DIM; print(EMBED_MODEL, EMBED_DIM)"` |
+| Diagnose an embedder issue | `python -c "from cocoindex_flows._shared._lifespan import EMBED_MODEL, EMBED_DIM; print(EMBED_MODEL, EMBED_DIM)"` |
 
 ## Cross-references
 

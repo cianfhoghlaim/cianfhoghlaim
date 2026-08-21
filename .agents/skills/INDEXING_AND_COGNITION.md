@@ -82,7 +82,7 @@ bun run ccc:search --lang python --path 'cianfhoghlaim/*' "BAML extraction funct
 bun run ccc:search --offset 5 --limit 5 "BAML extraction function"
 
 # Summarise a file or directory (uses project's summary feature)
-ccc describe cocoindex/_lifespan.py
+ccc describe cocoindex_flows/_lifespan.py
 
 # List + read concept guides (loaded from .cocoindex_code/guides.yml)
 ccc describe .                       # project overview
@@ -93,7 +93,7 @@ ccc describe .                       # project overview
 
 Per the `docs-skills-consolidation-pipeline` change (2026-06-16),
 the v1-native replacement for the standalone `ccc search` CLI is
-the **`cocoindex/codebase_indexing.py`**
+the **`cocoindex_flows/codebase_indexing.py`**
 CocoIndex v1 App, registered in Dagster under the `codebase`
 asset group. It uses the **same embedding model** (`BAAI/bge-m3`)
 and the **same LanceDB HNSW index** as the rest of the data
@@ -601,7 +601,7 @@ subagents were rewritten to align with the new tree.
 
 | Former surface (pre-2026-06-28) | Current path (v7) |
 |:--|:--|
-| Oideachais data platform (5-stage PDF pipeline, BAML, DLT sources) | repo root with `dlt_sources/`, `baml_src/`, `cocoindex/`, `orchestration/`, `notebooks/` |
+| Oideachais data platform (5-stage PDF pipeline, BAML, DLT sources) | repo root with `dlt_sources/`, `baml_src/`, `cocoindex_flows/`, `orchestration/`, `notebooks/` |
 | Oideachais official-media DLT source | `dlt_sources/official_media/` |
 | Oideachais BAML schemas | `baml_src/` |
 | Oideachais notebooks | `notebooks/` |
@@ -683,7 +683,7 @@ and defines a new canonical spec:
 Three surfaces expose the Cianfhoghlaim codebase to agents.
 This section resolves the dual CLI vs v1 App vs graph
 companion split that the `ccc` skill's DEPRECATION NOTICE
-banner + the `cocoindex/codebase_indexing.py` v1 App
+banner + the `cocoindex_flows/codebase_indexing.py` v1 App
 introduced.
 
 ### 10.1 The 3 surfaces
@@ -747,7 +747,7 @@ code). All registered in
 Each companion writes to its own LanceDB table; the
 unified v1 App + the 4 companions share the same
 embedder (`BAAI/bge-m3`, 1024-d) per
-`cocoindex/_shared/_lifespan.py:107`.
+`cocoindex_flows/_shared/_lifespan.py:107`.
 
 ### 10.5 The DEPRECATION NOTICE context
 
@@ -771,7 +771,7 @@ bun run ccc:init       # first time only (creates .cocoindex_code/)
 bun run ccc:index      # incremental refresh (<10s) / full rebuild (~2-5 min)
 bun run ccc:search "your query"
 ccc describe .         # project overview
-ccc describe cocoindex/_lifespan.py    # per-file summary
+ccc describe cocoindex_flows/_lifespan.py    # per-file summary
 ccc status             # chunk count + file count + language histogram
 
 # v1 App (Python — canonical replacement)
@@ -787,9 +787,9 @@ uv run python -c "from cocoindex.codebase_indexing import search_api_endpoints; 
 ### 10.7 Cross-references
 
 - [`./ccc/SKILL.md`](ccc/SKILL.md) — the CCC CLI skill (with the DEPRECATION NOTICE banner)
-- [`./cocoindex/SKILL.md`](cocoindex/SKILL.md) — the CocoIndex v1 master skill
-- [`../../cocoindex/codebase_indexing.py`](../../cocoindex/codebase_indexing.py) — the v1 App canonical source
-- [`../../cocoindex/AGENTS.md`](../../cocoindex/AGENTS.md) — the CocoIndex embedding layer
+- [`./cocoindex_flows/SKILL.md`](cocoindex_flows/SKILL.md) — the CocoIndex v1 master skill
+- [`../../cocoindex_flows/codebase_indexing.py`](../../cocoindex_flows/codebase_indexing.py) — the v1 App canonical source
+- [`../../cocoindex_flows/AGENTS.md`](../../cocoindex_flows/AGENTS.md) — the CocoIndex embedding layer
 - [`../../orchestration/defs/unified_embedding_assets.py`](../../orchestration/defs/unified_embedding_assets.py) — the 4 infrastructure companions
 
 ---

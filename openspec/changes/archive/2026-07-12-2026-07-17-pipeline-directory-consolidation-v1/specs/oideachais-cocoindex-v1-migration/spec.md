@@ -9,12 +9,12 @@ CocoIndex v1 Apps SHALL live under
 SHALL live under
 `cocoindex/{european_nations,commonwealth,british_isles}_cross/`.
 
-#### Scenario: cocoindex/european_nations/germany has the per-country app
+#### Scenario: cocoindex_flows/european_nations/germany has the per-country app
 
 - **WHEN** the directory consolidation change is materialised
-- **THEN** `cocoindex/european_nations/germany/education_embedding.py`
+- **THEN** `cocoindex_flows/european_nations/germany/education_embedding.py`
   SHALL exist
-- **AND** `cocoindex/european_nations_cross/law_embedding.py`
+- **AND** `cocoindex_flows/european_nations_cross/law_embedding.py`
   SHALL exist
 - **AND** `cocoindex/european_nations_deu_education_embedding.py`
   SHALL NOT exist
@@ -39,8 +39,8 @@ and `celtic/` (Celtic-language embeddings).
 - **WHEN** the directory consolidation change is materialised
 - **THEN** all of `cocoindex/{_shared,american_nations,british_isles,european_nations,european_nations_cross,commonwealth,commonwealth_cross,celtic,subjects,media,portfolio,knowledge_graph,infrastructure,corpus,biep_parity}/`
   SHALL exist
-- **AND** `cocoindex/subjects/mathematics_embedding.py` SHALL exist
-- **AND** `cocoindex/corpus/leabharlann_flow.py` SHALL exist
-- **AND** `cocoindex/infrastructure/codebase_indexing.py` SHALL
+- **AND** `cocoindex_flows/subjects/mathematics_embedding.py` SHALL exist
+- **AND** `cocoindex_flows/corpus/leabharlann_flow.py` SHALL exist
+- **AND** `cocoindex_flows/infrastructure/codebase_indexing.py` SHALL
   exist
-- **AND** `cocoindex/knowledge_graph/cognify.py` SHALL exist
+- **AND** `cocoindex_flows/knowledge_graph/cognify.py` SHALL exist

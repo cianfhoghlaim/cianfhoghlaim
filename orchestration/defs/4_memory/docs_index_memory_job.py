@@ -8,7 +8,12 @@ The job is idempotent — re-running is safe (the Graphiti add_episode
 is idempotent; the LanceDB MERGE TABLE is idempotent; the Cognee
 cognify is idempotent within the dataset).
 """
-from __future__ import annotations
+# Deliberately NOT `from __future__ import annotations`. Dagster 1.13 detects
+# the `context` parameter from its REAL annotation object; with postponed
+# annotations it sees the string "AssetExecutionContext" and raises
+# "Cannot annotate `context` parameter with type AssetExecutionContext",
+# which aborts `dg.load_defs()` for the ENTIRE code location and silently
+# drops everything to the `_defs_walker` fallback.
 
 import logging
 from datetime import UTC, datetime

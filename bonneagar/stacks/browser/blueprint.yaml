@@ -1,0 +1,41 @@
+# =============================================================================
+# BROWSER - Pangolin Private Resource Blueprint
+# =============================================================================
+# Per the 6-file GOLD_STANDARD pattern. Declares the RBAC role + Pangolin
+# private-resource definitions for the browser-grid, skyvern, stagehand-local,
+# and solver-service endpoints.
+#
+# The browser-grid CDP endpoint (port 9222) is the canonical entry point.
+# All other services are network-internal and not exposed via Pangolin.
+# =============================================================================
+
+private-resources:
+  browser-grid-cdp:
+    name: "Browser Grid (CDP)"
+    mode: "http"
+    destination-port: 9222
+    full-domain: "browser-cdp.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "browser-grid"
+
+  # Opt-in backends (off by default; uncomment + populate to expose)
+  # skyvern:
+  #   name: "Skyvern"
+  #   mode: "http"
+  #   destination-port: 8000
+  #   full-domain: "skyvern.cianfhoghlaim.ie"
+  #   protocol: "http"
+  #   roles:
+  #     - "Member"
+  #   destination: "skyvern"
+  # stagehand-local:
+  #   name: "Stagehand"
+  #   mode: "http"
+  #   destination-port: 3100
+  #   full-domain: "stagehand.cianfhoghlaim.ie"
+  #   protocol: "http"
+  #   roles:
+  #     - "Member"
+  #   destination: "stagehand-local"

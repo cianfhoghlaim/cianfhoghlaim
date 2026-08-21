@@ -1,6 +1,7 @@
-# Komodo procedure: deploy unsloth-serve (arm1-oci, GPU-backed, public)
-# Per the 2026-08-21-unsloth-v5-integration-v1 change.
-# The GPU-backed variant for production serving of hermes/openclaw/webchat.
+# Komodo procedure: deploy unsloth-serve (arm1-oci, CPU-only, public)
+# Per the 2026-08-21-unsloth-v5-integration-v1 change (corrected in the
+# 2026-08-21 hotfix commit): arm1-oci is the CPU-only host.
+# The CPU variant for production serving of hermes/openclaw/webchat.
 # The bunchloch variant is deployed via deploy-unsloth-serve-bunchloch.toml.
 
 # Stage 0: pre-reqs
@@ -27,7 +28,7 @@ type = "RunProcedure"
 name = "deploy-infisical-arm1-oci"
 procedure = "deploy-infisical-arm1-oci"
 
-# Stage 2: deploy the unsloth-serve stack (GPU variant)
+# Stage 2: deploy the unsloth-serve stack (CPU variant)
 [[stage.action]]
 type = "DeployStack"
 name = "deploy-unsloth-serve"

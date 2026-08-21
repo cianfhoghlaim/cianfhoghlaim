@@ -16,7 +16,7 @@ The tools are consumed by:
   ``cianfhoghlaim.agents.adk.image_generation_agent``) — the canonical
   ADK consumer.
 * **The CocoIndex ``image_generation_flow``** (see
-  ``cocoindex/media/image_generation_flow.py``) — registers generated
+  ``cocoindex_flows/media/image_generation_flow.py``) — registers generated
   assets in the index.
 * **The Babylon.js material system** (see
   ``meaisinfhoghlaim/document_factory/``) — consumes textures.
@@ -440,7 +440,7 @@ async def cocoindex_register(
     CocoIndex so the BIEP embeddings search includes them.
     """
     try:
-        from cocoindex.media.image_generation_flow import (
+        from cocoindex_flows.media.image_generation_flow import (
             register_generated_asset,
         )
     except ImportError:
@@ -452,7 +452,7 @@ async def cocoindex_register(
             "indexed_at": datetime.now(UTC).isoformat(),
             "record_id": _record_id_from_url(asset_url),
             "error": (
-                "cocoindex.media.image_generation_flow not yet "
+                "cocoindex_flows.media.image_generation_flow not yet "
                 "implemented (placeholder until PR 5 ships the "
                 "per-subject CocoIndex flows)"
             ),

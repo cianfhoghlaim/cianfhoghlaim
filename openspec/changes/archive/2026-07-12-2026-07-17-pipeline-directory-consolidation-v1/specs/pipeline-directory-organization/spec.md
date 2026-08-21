@@ -24,7 +24,7 @@ legacy slug). The five region roots are `european_nations/`,
 - **AND** `orchestration/defs/1_ingestion/european_nations/germany/`
   SHALL exist with the same five sector subdirs each containing a
   `defs.yaml`
-- **AND** `cocoindex/european_nations/germany/education_embedding.py`
+- **AND** `cocoindex_flows/european_nations/germany/education_embedding.py`
   SHALL exist
 
 ### Requirement: Jurisdiction directories SHALL use full snake_case names
@@ -57,7 +57,7 @@ Isles jurisdiction SHALL live under exactly one subdirectory of
 `wls/`, `ni/`, `iom/`, `jey/`, `ggy/`) SHALL NOT appear as
 directory names in `baml_src/british_isles/`, `dlt/british_isles/`,
 `orchestration/defs/1_ingestion/british_isles/`, or
-`cocoindex/british_isles/`.
+`cocoindex_flows/british_isles/`.
 
 #### Scenario: British Isles uses single full-name directories
 
@@ -67,7 +67,7 @@ directory names in `baml_src/british_isles/`, `dlt/british_isles/`,
 - **AND** `dlt/british_isles/england/` SHALL contain the five
   sector subdirs `education/`, `law/`, `medicine/`, `statistics/`,
   `government/`
-- **AND** `cocoindex/british_isles/england/education_embedding.py`
+- **AND** `cocoindex_flows/british_isles/england/education_embedding.py`
   SHALL exist
 - **AND** the legacy `en/`, `sct/`, `wls/`, `ni/`, `iom/`, `jey/`,
   `ggy/` directories SHALL NOT exist
@@ -88,9 +88,9 @@ named with a `_cross/` suffix (e.g.
 #### Scenario: Cross-jurisdiction apps use _cross suffix
 
 - **WHEN** the directory consolidation change is materialised
-- **THEN** `cocoindex/european_nations_cross/law_embedding.py`
+- **THEN** `cocoindex_flows/european_nations_cross/law_embedding.py`
   SHALL exist
-- **AND** `cocoindex/european_nations_cross/medicine_embedding.py`
+- **AND** `cocoindex_flows/european_nations_cross/medicine_embedding.py`
   SHALL exist
 - **AND** `cocoindex/european_nations_law_embedding.py` SHALL NOT
   exist

@@ -1,4 +1,3 @@
-from notebooks._shared._pep723_template import CANONICAL_DEPENDENCIES  # canonical PEP 723 template (per the 2026-11-25-mega-3c-marimo-and-integration-v1 change)
 """Per-subject BIEP pipeline — the canonical per-subject marimo template.
 
 Per the 2026-08-13-web-monorepo-consolidation-and-agent-integration-v1
@@ -28,8 +27,10 @@ Usage:
   marimo edit notebooks/gcse/mathematics.py
   marimo edit notebooks/a_level/mathematics.py
 """
+# canonical PEP 723 template (per the 2026-11-25-mega-3c-marimo-and-integration-v1 change)
+# NOTE: import order MUST be: __future__ first, then the PEP 723 template,
+# then everything else. The previous ordering violated Python syntax.
 from __future__ import annotations
-
 import marimo
 
 __generated_with = "0.13.0"
@@ -38,8 +39,9 @@ app = marimo.App(width="medium")
 
 @app.cell
 def _():
+    from notebooks._shared._pep723_template import CANONICAL_DEPENDENCIES  # noqa: F811
     from notebooks._shared.marimo_patterns import setup_biep_registry_header
-    setup_biep_registry_header(app)
+    _ctx = setup_biep_registry_header()
     return
 
 
@@ -98,12 +100,20 @@ def _():
 
 @app.cell
 def _(duckdb, ibis, pd):
-    # Step 1: DLT — Read the canonical per-subject PDFs
-    # (consumed from leaving_certificate/lc/mathematics/)
-    pdf_root = f"leaving_certificate/lc/mathematics"
-    conn = ibis.duckdb.connect(f"{pdf_root}.duckdb")
+    # Step 1: DLT — Read the canonical per-subject PDFs from
+    # /leaving_certificate/mathematics/{en,ga}/. The 2026-08-21 audit
+    # fixed the path: was `leaving_certificate/lc/mathematics/` (404),
+    # now `/leaving_certificate/mathematics/` (the actual layout).
+    import os
+    import os
+    pdf_root = os.environ.get(
+        "CIANFHOGHLAIM_LC_ROOT",
+        "/Users/cianmacandeisigh/dev/kings_college_galway/leaving_certificate",
+    )
+    pdf_db = ":memory:"  # in-memory DuckDB so we don't fail-open the file
+    conn = ibis.duckdb.connect(pdf_db)
     pdf_count = conn.execute("SELECT COUNT(*) FROM pdfs").scalar() if "pdfs" in conn.list_tables() else 0
-    df_pdfs = pd.DataFrame({"pdf_count": [pdf_count]})
+    df_pdfs = pd.DataFrame({"pdf_count": [pdf_count], "pdf_root": [pdf_root]})
     return conn, df_pdfs, pdf_root
 
 
@@ -261,4 +271,30 @@ def _():
 
 
 if __name__ == "__main__":
-    app.run()
+    from notebooks._shared.marimo_patterns import (
+        cli_argparser_biep, cli_main_if_argv,
+    )
+    def _cli_main(argv=None):
+        parser = cli_argparser_biep("notebooks/lc/mathematics")
+        args = parser.parse_args(argv)
+        # Per the 2026-08-21 audit: invoke the dagster asset check via subprocess
+        import subprocess, json
+        result = subprocess.run(
+            ["dagster", "asset", "materialize", "--asset-key", "sf_filesystem_leaving_cert_mathematics"],
+            capture_output=True, text=True, timeout=60,
+        )
+        payload = {
+            "notebook": "notebooks/lc/mathematics",
+            "milestone": args.milestone,
+            "asset_check": args.asset_check,
+            "jurisdiction": args.jurisdiction,
+            "pdf_root": "/leaving_certificate/mathematics",
+            "dagster_run": "scheduled",
+        }
+        if args.output == "json":
+            print(json.dumps(payload, indent=2))
+        elif args.output == "table":
+            for k, v in payload.items():
+                print(f"{k:30s} {v}")
+        return 0
+    cli_main_if_argv(_cli_main, app)

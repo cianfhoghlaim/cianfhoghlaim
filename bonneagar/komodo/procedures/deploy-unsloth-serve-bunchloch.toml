@@ -1,7 +1,9 @@
-# Komodo procedure: deploy unsloth-serve (bunchloch)
-# Per the 2026-08-21-unsloth-v5-integration-v1 change.
-# The CPU/MPS variant for dev mode + the marimo 10-way comparison notebook.
-# The arm1-oci variant is deployed via deploy-unsloth-serve-arm1-oci.toml.
+# Komodo procedure: deploy unsloth-serve (bunchloch / Apple Silicon M4 Max)
+# Per the 2026-08-21-unsloth-v5-integration-v1 change (corrected in the
+# 2026-08-21 hotfix commit): bunchloch is the M4 Max GPU host.
+# The Apple Silicon MLX variant for dev mode + the marimo 10-way
+# comparison notebook + the Studio UI. The arm1-oci variant is
+# deployed via deploy-unsloth-serve-arm1-oci.toml.
 
 # Stage 0: pre-reqs
 [[stage.action]]
@@ -34,7 +36,7 @@ type = "RunProcedure"
 name = "deploy-lakehouse-bunchloch"
 procedure = "deploy-lakehouse-bunchloch"
 
-# Stage 2: deploy the unsloth-serve stack (CPU/MPS variant)
+# Stage 2: deploy the unsloth-serve stack (M4 Max / MLX variant)
 [[stage.action]]
 type = "DeployStack"
 name = "deploy-unsloth-serve"

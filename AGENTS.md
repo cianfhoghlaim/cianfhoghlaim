@@ -44,7 +44,7 @@ The **3 new post-2026-08-15 specs** (centralized-model-registry + centralized-sc
 
 | Spec | One-liner |
 |:--|:--|
-| [`centralized-model-registry`](openspec/specs/centralized-model-registry/spec.md) | The single canonical model registry (52 entries / 7 families) — drives LiteLLM, BAML, agents, embedders, image-gen, voice, translation |
+| [`centralized-model-registry`](openspec/specs/centralized-model-registry/spec.md) | The single canonical model registry (76 entries / 7 families) — drives LiteLLM, BAML, agents, embedders, image-gen, voice, translation |
 | [`centralized-schema-registry`](openspec/specs/centralized-schema-registry/spec.md) | BAML is the single source of truth — Pydantic + Zod are codegen; 96 hand-written Pydantic duplicates removed |
 | [`deployment-control-panel`](openspec/specs/deployment-control-panel/spec.md) | The 5-tab marimo control panel + web UI + CLI for picking models/pipelines/datasets/stacks; writes to `deployment-choice.yaml` |
 
@@ -58,19 +58,40 @@ the task for the domain you're working on today:
 # Daily "I'm working on X" commands (omnibus tasks per domain)
 mise run core                     # dev env (sync + install + lint + test + format)
 mise run core:ci                  # the canonical CI gate (lint + test + openspec:validate-all + devops:validate-stacks)
-mise run devops                   # IaC + 89 stacks + Komodo/Pangolin/Locket/Infisical
+mise run devops                   # IaC + 94 stacks + Komodo/Pangolin/Locket/Infisical
 mise run data                     # lakehouse + BIEP + Dagster + baml_src + CocoIndex + motherduck + notebooks
 mise run ml                       # meaisinfhoghlaim (OCR/HTR/Alignment/Celtic) + 12-agent fleet + MODEL_REGISTRY
 mise run web                      # web/apps + web/packages + web/hono-api + Turborepo
 
 # Surgical subcommands (when you know exactly what you want)
-mise run lint:skills              # validate .agents/skills/ metadata (65 skills pass)
+mise run lint:skills              # validate .agents/skills/ metadata (166 skills pass)
 mise run lint:drift-docs          # validate every AGENTS.md number claim against ground truth
-mise run openspec:validate-all    # CI gate for every openspec change + spec (131 items pass)
-mise run devops:validate-stacks   # validate all 89 Docker Compose stacks against the 6-file GOLD_STANDARD
+mise run openspec:validate-all    # CI gate for every openspec change + spec (146 items pass)
+mise run devops:validate-stacks   # validate all 94 Docker Compose stacks against the 6-file GOLD_STANDARD
 mise run data:dagster:up          # launch the Dagster UI on :3335
 mise run data:biep:milestone -- 1 # run BIEP v3 milestone m1
-mise run ml:registry:audit         # verify all 24 VISION_MODELS are live on HF Hub
+mise run data:all:up               # bring up the FULL data plane (lakehouse + logfire + langfuse + mlflow + dagster)
+mise run ml:registry:audit         # verify all 22 ocr_vision models are live on HF Hub
+mise run ml:litellm:regenerate     # regenerate config.yaml from MODEL_REGISTRY (now auto-runs in CI per 2026-08-21)
+
+# New in 2026-08-22 dev-tooling-refactor v2 (bun 1.4 + mise fmt + uv 0.12 + openspec 1.10):
+mise run core:bun:prune            # bun prune (remove unused packages; bun 1.4+)
+mise run core:bun:audit:fix       # bun audit fix (auto-upgrade vulns; bun 1.4+)
+mise run core:bun:dedupe           # bun dedupe (remove duplicate versions; bun 1.4+)
+mise run core:bun:format           # bunx prettier --write . (the missing formatter)
+mise run core:bun:parallel         # bun run --parallel
+mise run core:mise:fmt             # mise fmt (auto-format mise.toml)
+mise run core:mise:fmt:check       # mise fmt --check (CI gate)
+mise run core:mise:upgrade         # mise upgrade (the mise CLI itself)
+mise run core:uv:lock:refresh      # uv lock --refresh (re-resolve)
+mise run core:uv:lock:upgrade      # uv lock --upgrade (upgrade all packages)
+mise run core:uv:tree:json         # uv tree --format=json (programmatic)
+mise run core:uv:format            # uv format (Python formatter, uv 0.12+)
+mise run openspec:upgrade          # print the bun add -g @fission-ai/openspec@1.10.0 command
+
+# Subproject tasks (after mise 2026.8.10+ is installed, the root aliases route to subprojects):
+cd bonneagar && mise run devops:health   # IaC subproject
+cd agents && mise run ml:agents:smoke    # agent-fleet subproject
 mise run web:dev tuatha-ui        # per-app dev server via Turbo filter
 ```
 
@@ -86,7 +107,7 @@ mise run lint:drift-docs           # validate every AGENTS.md number claim again
 mise run openspec:validate         # run `openspec validate --strict` against the pending change under review
 ```
 
-### Priority compose stacks (4 of 93)
+### Priority compose stacks (4 of 94)
 
 | Stack | Port | Domain |
 |:--|--:|:--|
@@ -95,7 +116,7 @@ mise run openspec:validate         # run `openspec validate --strict` against th
 | `langfuse` | 3000 | `langfuse.cianfhoghlaim.ie` (LLM observability) |
 | `lakehouse` | 3900-3904, 5433, 8181-8182 | internal (Garage S3 + Postgres + Lakekeeper) |
 
-The full inventory of 93 stacks is at
+The full inventory of 94 stacks is at
 [`bonneagar/AGENTS.md`](bonneagar/AGENTS.md) (the IaC subdirectory
 owns the stack catalogue; see the `## Repo Boundary` section below).
 
@@ -358,7 +379,7 @@ To ensure you use the appropriate skills for the different aspects of the projec
 ### Codebase Exploration & General Development
 - **Code Search**: Use [`ccc`](.agents/skills/ccc/SKILL.md) (CocoIndex Code) for semantic search over the codebase. Prefer `ccc search` over raw `grep`/`find` to get context-aware, relevant files instantly.
 - **Python Quality**: Use [`dignified-python`](.agents/skills/dignified-python/SKILL.md) for LBYL exception handling patterns, ABC interfaces, and explicit module boundaries.
-- **Centralized Registries**: Load [`centralized-registry`](.agents/skills/centralized-registry/SKILL.md) when adding/changing/toggling any model, schema, pipeline, or stack. The canonical surfaces are `MODEL_REGISTRY` (52 entries / 7 families), `notebooks/_shared/schema.py` (5 introspection helpers), `deployment-choice.yaml` (the enablement file), and the `00_control_panel.py` marimo notebook (the 5-tab UI).
+- **Centralized Registries**: Load [`centralized-registry`](.agents/skills/centralized-registry/SKILL.md) when adding/changing/toggling any model, schema, pipeline, or stack. The canonical surfaces are `MODEL_REGISTRY` (76 entries / 7 families), `notebooks/_shared/schema.py` (5 introspection helpers), `deployment-choice.yaml` (the enablement file), and the `00_control_panel.py` marimo notebook (the 5-tab UI).
 
 ### Core Data Platform (`dlt/` + `orchestration/`)
 - **Orchestration**: Load [`dagster`](.agents/skills/dagster/SKILL.md) (specifically the expert routing rules inside it). This ensures you know how to build `MultiPartitionsDefinition` and avoid absolute namespace errors.

@@ -1,0 +1,31 @@
+# syntax=docker/dockerfile:1.4
+# =============================================================================
+# Marimo Multi-Notebook FastAPI Server — Builder Dockerfile
+# =============================================================================
+# Builds on the pre-cached marimo-multinb:latest image (which already
+# has python:3.11-slim + marimo + fastapi + uvicorn). Only adds the
+# updated main.py.
+#
+# Build:
+#   docker build -t marimo-multinb:latest \
+#     -f multi-notebook-server/Dockerfile.dev \
+#     multi-notebook-server/
+# =============================================================================
+
+FROM marimo-multinb:latest
+
+# Copy the updated main.py (the new with_dynamic_directory + validate_callback pattern)
+COPY main.py /app/main.py
+
+# Re-declare the port + CMD (the base image already has these but we
+# overwrite them to ensure the new main.py is used)
+EXPOSE 2718
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost:2718/health || exit 1
+
+USER root
+# Ensure the app_user can read the new main.py
+RUN chmod 644 /app/main.py
+USER app_user
+
+CMD ["uvicorn", "main:api", "--host", "0.0.0.0", "--port", "2718"]

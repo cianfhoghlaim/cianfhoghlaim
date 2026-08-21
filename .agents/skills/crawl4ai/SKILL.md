@@ -1,15 +1,17 @@
 ---
 name: crawl4ai
-description: Complete toolkit for web crawling and data extraction using Crawl4AI. Use when users need to scrape websites, extract structured data, handle JavaScript-heavy pages, crawl multiple URLs, or build automated web data pipelines.
+description: Complete toolkit for web crawling and data extraction using Crawl4AI. Use when users need to scrape websites, extract structured data, handle JavaScript-heavy pages, crawl multiple URLs, or build automated web data pipelines. Also covers the native Crawl4AI MCP server (v0.9.x) for MCP-native agents.
 ---
 
 # Crawl4AI
 
-**Version:** 0.7.4 | **Last Updated:** 2025-01-19
+**Version:** 0.9.2 | **Last Updated:** 2026-08-21
 
 ## Overview
 
 This skill provides comprehensive support for web crawling and data extraction using the Crawl4AI library, including the complete SDK reference, ready-to-use scripts for common patterns, and optimized workflows for efficient data extraction.
+
+> **NEW in v0.9.x**: The Crawl4AI Docker image (`unclecode/crawl4ai:v0.9.2`) ships with a **native Model Context Protocol (MCP) server** on port 11235. See the **MCP server section** below for the 7 tools + SSE/WS endpoints.
 
 ## Quick Start
 
@@ -409,6 +411,72 @@ config = CrawlerRunConfig(
     }
 )
 ```
+
+## MCP Server (v0.9.x — NEW)
+
+The Crawl4AI Docker image ships with a **native MCP server** on the
+same port as the REST API (11235). This section covers the canonical
+endpoints, the 7 exposed tools, and the JWT auth pattern.
+
+### Endpoints
+
+| Transport | URL | Auth |
+|:--|:--|:--|
+| **SSE** | `http://localhost:11235/mcp/sse` | `Authorization: Bearer <jwt>` when `security.jwt_enabled=true` |
+| **WebSocket** | `ws://localhost:11235/mcp/ws` | JWT bearer in upgrade handshake |
+| **Schema introspection** | `http://localhost:11235/mcp/schema` | JWT bearer |
+| **REST (non-MCP)** | `http://localhost:11235/crawl`, `/crawl/stream`, `/md`, `/html`, `/screenshot`, `/pdf`, `/execute_js`, `/ask` | JWT bearer |
+
+### The 7 MCP tools
+
+| Tool | Purpose |
+|:--|:--|
+| `md` | Render the page as LLM-ready Markdown |
+| `html` | Return the cleaned HTML |
+| `screenshot` | Capture a page screenshot (returns `artifact_id`) |
+| `pdf` | Render the page as a PDF (returns `artifact_id`) |
+| `execute_js` | Run arbitrary JS in the page context |
+| `crawl` | The full deep-crawl primitive |
+| `ask` | LLM-mediated page query |
+
+### Auth setup (v0.9.0 secure-by-default)
+
+Per the v0.9.0 contract, the server binds loopback unless a JWT
+secret is set. To enable the MCP surface:
+
+1. Generate a JWT secret (e.g. `openssl rand -hex 32`)
+2. Add to `.infisical.env` as `CRAWL4AI_JWT_SECRET=infisical://dev-baile/cianfhoghlaim/crawl4ai-jwt-secret`
+3. Run `bun run secrets:init` to sync to the Infisical vault
+4. The `bonneagar/stacks/crawl4ai/secrets.env` injects the secret into the container
+
+### Smoke test
+
+```bash
+# 1. /health
+curl -fsS http://crawl4ai:11235/health
+# 2. /mcp/sse reachability
+curl -fsS -H "Accept: text/event-stream" \
+  -H "Authorization: Bearer ${CRAWL4AI_JWT:-}" \
+  --max-time 5 http://crawl4ai:11235/mcp/sse
+# 3. /mcp/schema → ≥7 tools
+curl -fsS http://crawl4ai:11235/mcp/schema | jq '.tools | length'
+# 4. Memory pressure
+curl -fsS http://crawl4ai:11235/monitor/health | jq '.janitor.memory_pressure'
+# 5. Browser pool reuse rate
+curl -fsS http://crawl4ai:11235/monitor/browsers | jq '.summary.reuse_rate_percent'
+```
+
+Or run `bun run mcp:smoke:crawl4ai` (the CI smoke task).
+
+### When to choose MCP vs REST
+
+- **Use the MCP server** when the consumer is an MCP-native agent
+  (OpenCode, Claude Code, Cursor, AG-UI). The agent runtime
+  discovers the 7 tools via the standard MCP `tools/list` handshake.
+- **Use the REST API** when the consumer is a Python pipeline
+  (dlt + Dagster + CocoIndex flows). The Python SDK
+  (`AsyncWebCrawler`) gives you hooks, custom strategies, and
+  fine-grained control.
 
 ## Resources
 

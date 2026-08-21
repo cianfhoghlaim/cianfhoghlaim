@@ -26,6 +26,17 @@ name: browser
 # SHARED CONFIGURATION ANCHORS
 # =============================================================================
 
+# =============================================================================
+# BROWSERBASE NOTE (2026-08-21)
+# -----------------------------------------------------------------------------
+# Browserbase is RETAINED as an OPTIONAL FALLBACK stack per user directive.
+# The browserbase MCP entry has been removed from opencode.json + .mcp.json
+# in favour of the native crawl4ai MCP v0.9.x surface (see
+# openspec/changes/2026-08-21-complete-browserbase-archive-and-crawl4ai-mcp-v1/).
+# To re-enable browserbase cloud integration, set BROWSER_ENABLE_BROWSERBASE=1
+# in your local .env and uncomment the BROWSER_BROWSERBASE_* lines below.
+# =============================================================================
+
 x-browser-env: &browser-env
   # Self-hosted backend URLs
   BROWSER_CDP_URL: ws://browser-grid:9222
@@ -33,9 +44,9 @@ x-browser-env: &browser-env
   BROWSER_CRAWL4AI_URL: http://crawl4ai:11235
   BROWSER_STAGEHAND_URL: http://stagehand-local:3100
   BROWSER_SOLVER_URL: http://solver-service:5000/turnstile
-  # Paid fallback (optional)
-  BROWSER_BROWSERBASE_API_KEY: ${BROWSERBASE_API_KEY:-}
-  BROWSER_BROWSERBASE_PROJECT_ID: ${BROWSERBASE_PROJECT_ID:-}
+  # Paid fallback (optional — see BROWSERBASE NOTE above)
+  # BROWSER_BROWSERBASE_API_KEY: ${BROWSERBASE_API_KEY:-}
+  # BROWSER_BROWSERBASE_PROJECT_ID: ${BROWSERBASE_PROJECT_ID:-}
   BROWSER_FIRECRAWL_API_KEY: ${FIRECRAWL_API_KEY:-}
 
 x-llm-env: &llm-env

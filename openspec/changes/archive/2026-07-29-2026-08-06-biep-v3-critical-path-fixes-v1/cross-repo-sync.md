@@ -14,7 +14,7 @@ this file documents the 2-repo commit plan for this change.
 
 ```
 1. Update notebooks/_shared/db.py:26
-2. Update cocoindex/_shared/_lifespan.py:107
+2. Update cocoindex_flows/_shared/_lifespan.py:107
 3. Update motherduck/flights/lc_pdf_sync_flight.py:122
 4. Update dlt/api_sources/youtube_videos.py:40,377
 5. Update dlt/british_isles/_cross/registry_loader.py

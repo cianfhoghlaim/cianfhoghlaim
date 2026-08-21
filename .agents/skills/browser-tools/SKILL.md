@@ -1,33 +1,36 @@
 ---
 name: browser-tools
-description: Router for all browser automation + web scraping + agent-on-the-web tools in Cianfhoghlaim. Use this to decide which tool fits a task: Crawl4AI (self-hosted), Firecrawl MCP, Firecrawl CLI, Skyvern, Stagehand, or Playwright/CDP. Covers when to use each, the auth + cookie patterns, the 5-backend architecture, the new Crawl4AI 0.7.4 features (CSS+LLM extraction, deep crawl, hooks), the opt-in pattern for Skyvern + Stagehand, and the KCG safety rules (domain allowlist, no unscraped authentication flows). Triggers: 'browse website', 'scrape URL', 'login flow', 'click button', 'extract data from page', 'browser agent', 'autonomous browsing', 'screenshot', 'PDF capture', 'authenticated scraping', 'Crawl4AI', 'deep crawl'.
+description: Router for all browser automation + web scraping + agent-on-the-web tools in Cianfhoghlaim. Use this to decide which tool fits a task: Crawl4AI (self-hosted REST), Crawl4AI MCP (v0.9.x native), Firecrawl MCP, Firecrawl CLI, Skyvern, Stagehand, or Playwright/CDP. Covers when to use each, the auth + cookie patterns, the 6-backend architecture (3 default + 2 opt-in + 1 MCP-native), the new Crawl4AI v0.9.x features (native MCP server, secure-by-default, JWT auth), the opt-in pattern for Skyvern + Stagehand, and the KCG safety rules (domain allowlist, no unscraped authentication flows). Triggers: 'browse website', 'scrape URL', 'login flow', 'click button', 'extract data from page', 'browser agent', 'autonomous browsing', 'screenshot', 'PDF capture', 'authenticated scraping', 'Crawl4AI', 'deep crawl', 'MCP-native'.
 ---
 
-# Browser Tools — Router (post v4 + Crawl4AI refactor)
+# Browser Tools — Router (post v4 + Crawl4AI v0.9.x + native MCP)
 
-Cianfhoghlaim has 5 ways to drive a browser, scrape a page, or
+Cianfhoghlaim has **6 ways** to drive a browser, scrape a page, or
 run an agent-on-the-web. This skill is the router — pick the
 right one for the task.
 
-## The 5 backends (Moderate strategy, 5 = 3 default + 2 opt-in)
+## The 6 backends (Moderate strategy, 6 = 4 default + 2 opt-in)
 
 | Backend | Default? | Cost | Port | When to use |
 |:--|:--|:--|--:|:--|
-| **Crawl4AI** (self-hosted) | ✅ ON | $0 | 11235 | The default. CSS+LLM extraction, deep crawl, hooks. Best for bulk + structured. |
+| **Crawl4AI REST** (self-hosted) | ✅ ON | $0 | 11235 | The default Python SDK path. CSS+LLM extraction, deep crawl, hooks. Best for Python pipelines. |
+| **Crawl4AI MCP** (self-hosted, v0.9.x native) | ✅ ON | $0 | 11235 | **NEW 2026-08-21**: the native MCP server (`/mcp/sse`, `/mcp/ws`). JWT-authed. Best for MCP-native agents. |
 | **Firecrawl MCP** (paid) | ✅ ON | $0.005-0.05/page | MCP | Paid fallback. Best for anti-bot + JS-rendered + agent/research. |
 | **Playwright CDP** (self-hosted) | ✅ ON | $0 | 9222 | Drive a real browser locally. Best for fine-grained interactions. |
 | **Skyvern** (opt-in) | ⚙️ `BROWSER_ENABLE_SKYVERN=1` | $0 | 8000 | Vision-based semantic navigation. Opt-in for vision-heavy flows. |
 | **Stagehand** (opt-in) | ⚙️ `BROWSER_ENABLE_STAGEHAND=1` | $0 | 3100 | AI-powered UI interactions + agent mode. Opt-in for autonomous flows. |
 
-> **Browserbase was removed 2026-06-29** (no credits, no replacement plan).
+> **Browserbase was removed 2026-06-29** (no credits, no replacement plan)
+> **and re-confirmed 2026-08-21** (per `openspec/changes/2026-08-21-complete-browserbase-archive-and-crawl4ai-mcp-v1/`).
 > The 2 opt-in backends are OFF by default to keep the surface area small.
 
 ## The 5 corresponding skills
 
 | If you need to… | Use this tool | Skill |
 |:--|:--|:--|
-| Bulk extraction from a single URL into markdown/JSON | **Crawl4AI** | `crawl4ai` |
-| Bulk extraction from many URLs (deep crawl) | **Crawl4AI** (BFS/DFS) | `crawl4ai` |
+| Bulk extraction from a single URL into markdown/JSON (Python pipeline) | **Crawl4AI REST** | `crawl4ai` |
+| Bulk extraction from many URLs (deep crawl) | **Crawl4AI REST** (BFS/DFS) | `crawl4ai` |
+| MCP-native bulk extraction (MCP client / OpenCode agent) | **Crawl4AI MCP** (v0.9.x) | n/a — `mcp:smoke:crawl4ai` |
 | Agent-driven research + structured extraction | **Firecrawl** (MCP) or **CLI** | `firecrawl` / `firecrawl-cli` |
 | Cloud-based anti-bot + JS-rendered scraping | **Firecrawl** (MCP) | `firecrawl` |
 | Local Chromium / Firefox via Playwright | **Playwright** (via the `browser` stack) | `browser` |
@@ -37,17 +40,18 @@ right one for the task.
 ## Decision tree (Crawl4AI-first)
 
 ```
-Need to scrape a single static page?             → Crawl4AI (use css strategy)
-Need to extract structured data with a schema?    → Crawl4AI (use LLM strategy)
-Need to deep-crawl a docs site?                  → Crawl4AI (BFS/DFS strategy)
-Need to click / login / fill a form?              → Firecrawl MCP interact (or Playwright if local)
-Need vision-based navigation?                    → Skyvern (opt-in)
-Need an autonomous agent that can plan?           → Stagehand agent mode (opt-in)
-Need a self-hosted scraper with no LLM cost?       → Crawl4AI (use css strategy — free)
-Need full Playwright control locally?             → browser (Playwright stack)
-Need to monitor a page for changes?               → Firecrawl MCP monitor
-Need to interact with a page (login + click)?     → Firecrawl MCP interact
-Need to scrape many URLs in batch?                → Crawl4AI batch or Firecrawl batch
+Need to scrape a single static page (Python pipeline)?  → Crawl4AI REST (use css strategy)
+Need MCP-native bulk extraction (agent runtime)?        → Crawl4AI MCP (v0.9.x native)
+Need to extract structured data with a schema?        → Crawl4AI (use LLM strategy)
+Need to deep-crawl a docs site?                        → Crawl4AI (BFS/DFS strategy)
+Need to click / login / fill a form?                   → Firecrawl MCP interact (or Playwright if local)
+Need vision-based navigation?                          → Skyvern (opt-in)
+Need an autonomous agent that can plan?                 → Stagehand agent mode (opt-in)
+Need a self-hosted scraper with no LLM cost?            → Crawl4AI (use css strategy — free)
+Need full Playwright control locally?                   → browser (Playwright stack)
+Need to monitor a page for changes?                     → Firecrawl MCP monitor
+Need to interact with a page (login + click)?           → Firecrawl MCP interact
+Need to scrape many URLs in batch?                      → Crawl4AI batch or Firecrawl batch
 ```
 
 ## The 5 backends in Python

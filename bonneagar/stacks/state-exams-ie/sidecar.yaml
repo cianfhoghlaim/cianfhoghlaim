@@ -22,6 +22,8 @@ services:
       # The 2 Infisical secrets (injected by Locket at startup)
       EXAMINATIONS_IE_USERNAME: "${infisical://dev-baile/cianfhoghlaim/examinations-ie/username}"
       EXAMINATIONS_IE_PASSWORD: "${infisical://dev-baile/cianfhoghlaim/examinations-ie/password}"
+    environment:
+      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
     networks:
       - state-exams-ie-net
       - pangolin-private

@@ -159,7 +159,7 @@ cd bonneagar/stacks/openchamber
 docker compose -f compose.yaml -f sidecar.yaml up -d
 ```
 
-The Locket sidecar (`ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0`)
+The Locket sidecar (`ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1`)
 resolves all `infisical://dev-baile/openchamber/...` URIs at runtime
 and writes them to `/run/secrets/locket/secrets.env`, which the
 OpenChamber entrypoint then sources via a shell wrapper.

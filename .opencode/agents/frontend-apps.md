@@ -39,6 +39,10 @@ You are the frontend-apps functional subagent for the cianfhoghlaim monorepo. Yo
 
 # Direct references (mirrors guides.yml)
 
+# Quick code lookup (faster than ccc search for structural patterns):
+- `mise run core:ccc:grep "function \\\\NAME(" web/apps/` — STRUCTURAL search (no daemon needed; ccc 0.2.37+)
+- `bun run ccc:search "query"` — SEMANTIC search (needs the daemon; ~1s)
+
 - `web/AGENTS.md` — web conventions
 - `agents/tuatha/AGENTS.md` — Túatha educational MMO
 - `agents/meaisinfhoghlaim/AGENTS.md` — agent fleet (referenced from web surfaces)

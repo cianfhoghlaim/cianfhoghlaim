@@ -9,11 +9,11 @@
 ## Phase 2: Retroactive cleanup (3 tasks)
 
 - [ ] **T2.1**: Run the 6-file bulk sed for the `sruth/cianfhoghlaim/cocoindex_flows` refs in `cocoindex/`
-  - `cocoindex/knowledge_graph/multihop_search.py`
-  - `cocoindex/_shared/reranker.py`
-  - `cocoindex/_shared/repo_type_detector.py`
-  - `cocoindex/infrastructure/arch_doc_cache.py`
-  - `cocoindex/infrastructure/cocoindex_v1_conformance.py`
+  - `cocoindex_flows/knowledge_graph/multihop_search.py`
+  - `cocoindex_flows/_shared/reranker.py`
+  - `cocoindex_flows/_shared/repo_type_detector.py`
+  - `cocoindex_flows/infrastructure/arch_doc_cache.py`
+  - `cocoindex_flows/infrastructure/cocoindex_v1_conformance.py`
   - `tests_pkg_temp/_oideachais/test_canuint_alignment.py` (mark for deletion)
 - [ ] **T2.2**: Run `mise run drift-audit` to verify the count drops to 0 in source files
 - [ ] **T2.3**: Spot-check 3 of the 6 files to ensure the rename was correct (the canonical replacement is `pathlib.Path("cocoindex/codebase_indexing")`)

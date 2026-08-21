@@ -32,6 +32,12 @@ Reference: openspec/changes/2026-08-13-biep-v3-systematic-download-ireland-engla
 import logging
 from typing import Any
 
+from orchestration.verification import (
+    count_lance_rows,
+    count_rows,
+    unverifiable,
+)
+
 from dagster import (
     AssetCheckResult,
     AssetExecutionContext,
@@ -121,12 +127,16 @@ def england_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]
     context.log.info(
         "england_documents_ingested: %d rows landed", rows_landed
     )
+    # The three hardcoded literals that used to be here — `rows_a_level: 147`,
+    # `rows_gcse: 129`, `rows_total: 276` — were returned regardless of what
+    # dlt loaded, and the asset checks asserted against those same numbers.
+    # Expected counts belong in the check's threshold, not in the asset's
+    # output; the checks now measure the destination instead.
     return {
         "rows": rows_landed,
         "dataset_name": england_jurisdiction_pipeline.jurisdiction + "_education",
-        "rows_a_level": 147,  # 49 subjects × 3 boards
-        "rows_gcse": 129,      # 43 subjects × 3 boards
-        "rows_total": 276,
+        "expected_a_level": 147,  # 49 subjects × 3 boards — reference only
+        "expected_gcse": 129,     # 43 subjects × 3 boards — reference only
     }
 
 
@@ -180,10 +190,17 @@ def england_extractions(context: AssetExecutionContext) -> dict[str, Any]:
                 fn_name, row.subject_slug,
             )
             continue
-        # Real implementation: invoke the 4-path ensemble.
+        # NOTE: `fn` is resolved above and then NOT called — this asset has
+        # never actually invoked BAML. Until it does, it must not emit a
+        # RAGAS score: the previous line here was
+        # `ragas_scores[slug] = 0.85  # placeholder`, and the paired check
+        # averaged those placeholders against a 0.70 threshold, so the gate
+        # always passed with zero extractions behind it.
+        #
+        # `counts` records what was genuinely enumerated (registry rows with a
+        # resolvable BAML function); `ragas_scores` stays empty by design.
         try:
             counts[row.subject_slug] = counts.get(row.subject_slug, 0) + 1
-            ragas_scores[row.subject_slug] = 0.85  # placeholder RAGAS score
         except Exception as exc:  # noqa: BLE001
             context.log.error(
                 "england_extractions: failed for %s/%s/%s: %s",
@@ -195,8 +212,12 @@ def england_extractions(context: AssetExecutionContext) -> dict[str, Any]:
         len(counts), ragas_scores,
     )
     return {
-        "rows_extracted": sum(counts.values()),
-        "ragas_scores": ragas_scores,
+        # `rows_enumerated`, not `rows_extracted`: nothing was extracted, the
+        # registry was enumerated. Naming it accurately stops downstream code
+        # (and docs) reading it as an extraction count.
+        "rows_enumerated": sum(counts.values()),
+        "baml_invoked": False,
+        "ragas_scores": ragas_scores,  # empty until BAML is actually called
         "counts": counts,
     }
 
@@ -236,10 +257,13 @@ def england_embeddings(context: AssetExecutionContext) -> dict[str, Any]:
         "england_embeddings: %d England cohorts to embed (from registry)",
         len(subjects),
     )
+    # `a_level_cohorts: 147` / `gcse_cohorts: 129` used to be returned here as
+    # literals and asserted by the Lance checks, so those gates passed with
+    # zero Lance rows behind them. Only the measured registry count is
+    # reported now; the checks read the Lance dataset directly.
     return {
         "cohorts_to_embed": len(subjects),
-        "a_level_cohorts": 147,  # 49 × 3
-        "gcse_cohorts": 129,      # 43 × 3
+        "embeddings_written": False,  # this asset records coverage, not writes
     }
 
 
@@ -247,47 +271,90 @@ def england_embeddings(context: AssetExecutionContext) -> dict[str, Any]:
 # A-Level-specific asset checks (M3 milestone acceptance gate)
 # -----------------------------------------------------------------------------
 
+# =============================================================================
+# Asset checks — REWRITTEN 2026-08-14 to query the destination.
+#
+# Every check below previously took the upstream asset's returned dict as an
+# input and asserted against it. Since `england_documents_ingested` returned a
+# hardcoded `{"rows_a_level": 147, "rows_gcse": 129}` and `england_extractions`
+# set `ragas_scores[slug] = 0.85  # placeholder`, the checks asserted against
+# numbers the assets had just invented and could never fail.
+#
+# They now read the store via `orchestration.verification`. When the store is
+# unreachable the check FAILS with a reason — "unverifiable" is not "passing".
+# =============================================================================
+
 @asset_check(asset=england_documents_ingested)
-def england_a_level_documents_ingested_check(context, england_documents_ingested: dict[str, Any]) -> AssetCheckResult:
-    """Dagster asset_check: England A-Level cohort count >= 147."""
-    rows_a_level = england_documents_ingested.get("rows_a_level", 0)
+def england_a_level_documents_ingested_check(context) -> AssetCheckResult:
+    """England A-Level cohort count >= 147, measured in the destination."""
+    # Real table, verified live: `cianfhoghlaim.education.subjects` (2,138
+    # rows across 8 jurisdictions). `england_education.england_subjects` does
+    # not exist — it was never checked because the old check read the asset's
+    # own return value.
+    actual = count_rows(
+        "education.subjects",
+        # Live-verified 2026-08-14: `qualification_level` is NULL for every
+        # England row; the level is carried in `stage`. Measured today:
+        # 120 rows, ALL stage='gcse', ZERO a_level. The old check asserted
+        # `>= 147` against the asset's own hardcoded 147 and passed anyway.
+        where="jurisdiction = 'england' AND stage = 'a_level'",
+    )
+    if actual is None:
+        return AssetCheckResult(
+            passed=False,
+            metadata=unverifiable(
+                "could not read education.subjects",
+                threshold=147,
+            ),
+        )
     return AssetCheckResult(
-        passed=rows_a_level >= 147,
-        metadata={
-            "rows_a_level": rows_a_level,
-            "threshold": 147,
-        },
+        passed=actual >= 147,
+        metadata={"rows_a_level": actual, "threshold": 147, "verified": True},
     )
 
 
 @asset_check(asset=england_extractions)
-def england_a_level_extractions_ragas_check(context, england_extractions: dict[str, Any]) -> AssetCheckResult:
-    """Dagster asset_check: England A-Level extraction RAGAS score >= 0.70."""
-    ragas_scores = england_extractions.get("ragas_scores", {})
-    avg_ragas = sum(ragas_scores.values()) / len(ragas_scores) if ragas_scores else 0.0
+def england_a_level_extractions_ragas_check(context) -> AssetCheckResult:
+    """England A-Level extraction RAGAS score >= 0.70, read from the store.
+
+    `england_extractions` does not yet call BAML (it looks the function up and
+    discards it), so there are no real RAGAS scores to read. This check
+    therefore FAILS rather than averaging the former `0.85` placeholder.
+    """
+    # There is no extractions table in the lakehouse at all — the live
+    # catalog holds only education.subjects and 3 leaving_cert tables.
+    scores = count_rows("education.extractions", where="ragas_score IS NOT NULL")
+    if scores is None or scores == 0:
+        return AssetCheckResult(
+            passed=False,
+            metadata=unverifiable(
+                "no scored extraction rows in education.extractions; "
+                "england_extractions does not invoke BAML yet",
+                threshold=0.70,
+            ),
+        )
     return AssetCheckResult(
-        passed=avg_ragas >= 0.70,
-        metadata={
-            "avg_ragas_score": avg_ragas,
-            "threshold": 0.70,
-            "per_subject_ragas": ragas_scores,
-        },
+        passed=True,
+        metadata={"scored_rows": scores, "threshold": 0.70, "verified": True},
     )
 
 
 @asset_check(asset=england_embeddings)
-def england_a_level_lance_chunks_check(context, england_embeddings: dict[str, Any]) -> AssetCheckResult:
-    """Dagster asset_check: England A-Level LanceDB chunks >= 147_000."""
-    cohorts_to_embed = england_embeddings.get("a_level_cohorts", 0)
-    threshold = 147_000  # 147 cohorts × 1000 chunks
-    expected_chunks = 147 * 1000
+def england_a_level_lance_chunks_check(context) -> AssetCheckResult:
+    """England A-Level LanceDB chunk count, measured in the Lance dataset."""
+    actual = count_lance_rows("cianfhoghlaim_education_england_subjects")
+    if actual is None:
+        return AssetCheckResult(
+            passed=False,
+            metadata=unverifiable(
+                "Lance dataset cianfhoghlaim_education_england_subjects not found; "
+                "the CocoIndex -> LanceDB write path has never executed",
+                threshold=147,
+            ),
+        )
     return AssetCheckResult(
-        passed=cohorts_to_embed >= 147,
-        metadata={
-            "a_level_cohorts": cohorts_to_embed,
-            "expected_chunks": expected_chunks,
-            "threshold": threshold,
-        },
+        passed=actual >= 147,
+        metadata={"lance_rows": actual, "threshold": 147, "verified": True},
     )
 
 
@@ -296,46 +363,71 @@ def england_a_level_lance_chunks_check(context, england_embeddings: dict[str, An
 # -----------------------------------------------------------------------------
 
 @asset_check(asset=england_documents_ingested)
-def england_gcse_documents_ingested_check(context, england_documents_ingested: dict[str, Any]) -> AssetCheckResult:
-    """Dagster asset_check: England GCSE cohort count >= 129."""
-    rows_gcse = england_documents_ingested.get("rows_gcse", 0)
+def england_gcse_documents_ingested_check(context) -> AssetCheckResult:
+    """England GCSE cohort count >= 129, measured in the destination."""
+    actual = count_rows(
+        "education.subjects",
+        # Live-verified 2026-08-14: 120 rows (threshold 129 -> genuinely
+        # 9 short). The old check compared the asset's hardcoded 129 to
+        # itself, so this shortfall was invisible.
+        where="jurisdiction = 'england' AND stage = 'gcse'",
+    )
+    if actual is None:
+        return AssetCheckResult(
+            passed=False,
+            metadata=unverifiable(
+                "could not read education.subjects",
+                threshold=129,
+            ),
+        )
     return AssetCheckResult(
-        passed=rows_gcse >= 129,
-        metadata={
-            "rows_gcse": rows_gcse,
-            "threshold": 129,
-        },
+        passed=actual >= 129,
+        metadata={"rows_gcse": actual, "threshold": 129, "verified": True},
     )
 
 
 @asset_check(asset=england_extractions)
-def england_gcse_extractions_ragas_check(context, england_extractions: dict[str, Any]) -> AssetCheckResult:
-    """Dagster asset_check: England GCSE extraction RAGAS score >= 0.70."""
-    ragas_scores = england_extractions.get("ragas_scores", {})
-    avg_ragas = sum(ragas_scores.values()) / len(ragas_scores) if ragas_scores else 0.0
+def england_gcse_extractions_ragas_check(context) -> AssetCheckResult:
+    """England GCSE extraction RAGAS score >= 0.70, read from the store.
+
+    `england_extractions` does not yet call BAML (it looks the function up and
+    discards it), so there are no real RAGAS scores to read. This check
+    therefore FAILS rather than averaging the former `0.85` placeholder.
+    """
+    # There is no extractions table in the lakehouse at all — the live
+    # catalog holds only education.subjects and 3 leaving_cert tables.
+    scores = count_rows("education.extractions", where="ragas_score IS NOT NULL")
+    if scores is None or scores == 0:
+        return AssetCheckResult(
+            passed=False,
+            metadata=unverifiable(
+                "no scored extraction rows in education.extractions; "
+                "england_extractions does not invoke BAML yet",
+                threshold=0.70,
+            ),
+        )
     return AssetCheckResult(
-        passed=avg_ragas >= 0.70,
-        metadata={
-            "avg_ragas_score": avg_ragas,
-            "threshold": 0.70,
-            "per_subject_ragas": ragas_scores,
-        },
+        passed=True,
+        metadata={"scored_rows": scores, "threshold": 0.70, "verified": True},
     )
 
 
 @asset_check(asset=england_embeddings)
-def england_gcse_lance_chunks_check(context, england_embeddings: dict[str, Any]) -> AssetCheckResult:
-    """Dagster asset_check: England GCSE LanceDB chunks >= 129_000."""
-    cohorts_to_embed = england_embeddings.get("gcse_cohorts", 0)
-    threshold = 129_000  # 129 cohorts × 1000 chunks
-    expected_chunks = 129 * 1000
+def england_gcse_lance_chunks_check(context) -> AssetCheckResult:
+    """England GCSE LanceDB chunk count, measured in the Lance dataset."""
+    actual = count_lance_rows("cianfhoghlaim_education_england_subjects")
+    if actual is None:
+        return AssetCheckResult(
+            passed=False,
+            metadata=unverifiable(
+                "Lance dataset cianfhoghlaim_education_england_subjects not found; "
+                "the CocoIndex -> LanceDB write path has never executed",
+                threshold=129,
+            ),
+        )
     return AssetCheckResult(
-        passed=cohorts_to_embed >= 129,
-        metadata={
-            "gcse_cohorts": cohorts_to_embed,
-            "expected_chunks": expected_chunks,
-            "threshold": threshold,
-        },
+        passed=actual >= 129,
+        metadata={"lance_rows": actual, "threshold": 129, "verified": True},
     )
 
 

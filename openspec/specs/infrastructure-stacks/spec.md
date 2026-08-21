@@ -2693,6 +2693,132 @@ crash-looped the container before the `2026-07-29` fix).
 - **THEN** the lint allows them (they're per-model, not the
   router-level crash-loop risk)
 
+### Requirement: Locket-shim version policy (v0.2.0 → v0.2.1 — fix-the-bug)
+
+The system SHALL pin the Locket shim to `ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1` (per the 2026-08-20 audit & fix). v0.2.1 fixes the regex mismatch (the v0.2.0 regex `\{\{\s*infisical:///([A-Za-z0-9_.\-]+)\?...` required Jinja braces + `?path=` query, but the canonical secrets.env uses the unwrapped `KEY=infisical://<workspace>/<path>/<key>` form) AND fixes the Dockerfile CMD (`["watch"]` → `["--mode", "watch"]` via ENTRYPOINT).
+
+#### Scenario: A new stack is added to `bonneagar/stacks/<name>/`
+
+- **GIVEN** the new stack has a `sidecar.yaml` declaring `image: ghcr.io/cianfhoghlaim/locket-shim`
+- **WHEN** `mise run devops:validate-stacks --strict` runs
+- **THEN** the image tag MUST be `infisical-0.2.1` or later
+- **AND** older tags `0.1.x`, `0.2.0` MUST fail with the message "Locket shim < 0.2.1 has the regex/CMD regression; bump to >= 0.2.1"
+
+### Requirement: Infisical-version policy (server-only pin + CLI hygiene)
+
+The system SHALL keep the self-hosted Infisical SERVER pinned to `v0.161.x` (the v0.161.12 image confirmed running on bunchloch). The Infisical CLI (managed via `mise tool install infisical@latest`) tracks the upstream `v0.43.x` release train. The audit's "v0.161.9 CLI" was incorrect — `v0.161.x` is the server, not the CLI.
+
+#### Scenario: A new IaC sidecar refers to Infisical
+
+- **GIVEN** a new `secrets.env` file declares `infisical://dev-baile/<svc>/<key>` refs
+- **WHEN** the Locket sidecar resolves the refs at container start
+- **THEN** the sidecar MUST point at `INFISICAL_URL` matching the target server (e.g. `http://host.docker.internal:8081` for local bunchloch; `http://132.145.27.89:8080` for the OCI master)
+- **AND** `.infisical.env` SHALL document the canonical comment explaining the server-pin vs CLI-hygiene split.
+
+### Requirement: Lakekeeper version policy (resolve the v0.13.1 vs v0.6.x naming ambiguity)
+
+The system SHALL resolve the Lakekeeper pin ambiguity: the running bunchloch image is `quay.io/lakekeeper/catalog:v0.13.1` while the upstream docs list the current line as `0.6.x`. Operator decision: 0.13.1 is either (a) a private fork's tag, or (b) a typo for the upstream `0.6.x` source. The `bonneagar/komodo/stacks/lakehouse-oci.toml` image tag MUST be reconciled to either pattern, NOT both.
+
+#### Scenario: A new IaC deployment references Lakekeeper
+
+- **WHEN** `iac:bootstrap` brings up a new lakehouse
+- **THEN** the Lakekeeper container image tag MUST be one of:
+  - `quay.io/lakekeeper/catalog:v0.13.1` (private fork pattern)
+  - `quay.io/lakekeeper/catalog:0.6.x` (upstream line; resolve the x from the docs)
+- **AND** the resolution SHALL be documented in the IaC TOML as a comment
+
+### Requirement: The lakehouse stack MUST route OTLP traces through a fan-out collector to both Logfire cloud AND Langfuse
+
+The lakehouse stack SHALL route OpenTelemetry traces emitted by its 16 services
+through the `otel-collector` service (which is part of the lakehouse compose
+project, optional profile `otel`) OR through the existing `logfire` stack's
+`logfire-otel` service (cross-stack fan-out via Docker DNS).
+
+The trace pipeline SHALL:
+1. **Receive** OTLP traces on gRPC :4317 + HTTP :4318
+2. **Batch** with `memory_limiter` + `batch` processors
+3. **Fan out** to BOTH:
+   - **Logfire cloud** (SaaS) via the `logfire` exporter + `LOGFIRE_TOKEN` env var
+   - **Langfuse** (self-hosted) via the `otlphttp/langfuse` exporter + `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY`
+4. **Health check** on :8888 (otelcol health extension)
+
+The `lakehouse:stack-doctor` SHALL fail any PR that removes `OTEL_EXPORTER_OTLP_ENDPOINT` from any of the 16 lakehouse services.
+
+#### Scenario: Operator brings up the lakehouse + observability stack
+
+- **WHEN** the operator runs `docker compose --profile otel up -d` from `bonneagar/stacks/lakehouse/`
+- **THEN** all 16 lakehouse services emit OTLP traces to `otel-collector:4317`
+- **AND** the otel-collector fans out to BOTH Logfire cloud + Langfuse
+- **AND** `mise run lakehouse:preflight` reports all 9 endpoints healthy + the 3 observability exports working
+
+#### Scenario: Operator brings up the lakehouse without the observability profile
+
+- **GIVEN** the operator only runs `docker compose -f compose.yaml -f sidecar.yaml up -d` (without `--profile otel`)
+- **WHEN** a lakehouse service emits an OTLP trace
+- **THEN** the trace goes to `http://otel-collector:4317`
+- **AND** the otel-collector service is NOT running (skipped because no `--profile otel`)
+- **AND** the trace is dropped silently (otelcol SDK retries with backoff)
+- **AND** the service continues to operate normally (degraded observability, not degraded functionality)
+
+#### Scenario: Cross-stack fan-out via the existing logfire stack
+
+- **GIVEN** the lakehouse stack is deployed (via Komodo)
+- **AND** the `logfire-bunchloch` stack is also deployed (via Komodo)
+- **WHEN** the operator sets `LAKEHOUSE_OTLP_ENDPOINT=http://logfire-otel:4317` in the lakehouse `.env.local`
+- **THEN** all 16 lakehouse services route traces to `logfire-otel:4317`
+- **AND** the logfire stack's collector (per its own `config/otelcol.yaml`) fans out to Logfire cloud + Langfuse
+- **AND** the trace is visible in BOTH backends
+
+### Requirement: The `mise run lakehouse:all:up` task MUST bring up the complete data plane
+
+The `data:all:up` mise task SHALL bring up the **complete data plane** in dependency order:
+1. `lakehouse` (16 services + 14 databases + 8 buckets)
+2. `logfire` (otel-collector + Langfuse + Logfire fan-out)
+3. `langfuse` (LLM observability web + worker)
+4. `mlflow` (experiment tracking)
+5. `dagster` (orchestration)
+
+The task SHALL use Komodo's stack-depends_on contract (not docker-compose cross-project depends_on which doesn't work). Operators SHALL see the full data plane come up in sequence via a single `mise run lakehouse:all:up` command.
+
+#### Scenario: Operator brings up the complete data plane
+
+- **WHEN** the operator runs `mise run lakehouse:all:up` on bunchloch
+- **THEN** lakehouse comes up first (16 services healthy)
+- **AND** logfire comes up second (otel-collector + Langfuse fan-out wired)
+- **AND** langfuse comes up third (uses lakehouse-postgres + lakehouse-garage)
+- **AND** mlflow comes up fourth (uses lakehouse-postgres + lakehouse-garage)
+- **AND** dagster comes up last (uses lakehouse-postgres + langfuse for tracing)
+- **AND** `mise run lakehouse:preflight` reports 9/9 endpoints healthy
+
+#### Scenario: Operator tears down the complete data plane
+
+- **WHEN** the operator runs `mise run lakehouse:all:down`
+- **THEN** dagster comes down first (the highest-level orchestration)
+- **AND** mlflow comes down second
+- **AND** langfuse comes down third
+- **AND** logfire comes down fourth
+- **AND** lakehouse comes down last (the foundation)
+
+### Requirement: The 95-stack catalogue includes unsloth-serve
+
+The Bonneagar `stacks/` directory SHALL contain 95 Docker Compose stacks (was 94), with the new `unsloth-serve` stack following the 6-file GOLD_STANDARD pattern plus 2 host-specific compose override files.
+
+#### Scenario: unsloth-serve stack passes the stack-doctor CI gate
+
+- **GIVEN** the new `bonneagar/stacks/unsloth-serve/` directory contains the 6 GOLD_STANDARD base files plus `compose.arm1-oci.yaml` and `compose.bunchloch.yaml`
+- **WHEN** `mise run cic:stack-doctor --strict` is run
+- **THEN** the unsloth-serve stack is reported as ✅ valid
+- **AND** the secrets.env file contains only `infisical://dev-baile/unsloth/api-key` (no bare values)
+- **AND** the pangolin.yaml declares the 2 private routes (`unsloth.cianfhoghlaim.ie` + `unsloth-api.cianfhoghlaim.ie`)
+- **AND** the blueprint.yaml contains the Komodo stack registration
+
+#### Scenario: unsloth-serve is on both Komodo resource-syncs
+
+- **WHEN** `bonneagar/komodo/resource-syncs/arm1-oci.toml` and `bonneagar/komodo/resource-syncs/bunchloch.toml` are updated
+- **THEN** `unsloth-serve` appears in both resource-syncs with the host-specific override (`compose.arm1-oci.yaml` on arm1-oci, `compose.bunchloch.yaml` on bunchloch)
+- **AND** the deploy order is preserved (lakehouse → litellm → langfuse → unsloth-serve → mudstack consumers)
+- **AND** the new Komodo procedure `unsloth-serve-deploy.toml` runs before the unsloth-serve stack is materialized
+
 ## Infrastructure (Control Plane) Stacks
 
 | Stack | Image(s) | Key Ports |

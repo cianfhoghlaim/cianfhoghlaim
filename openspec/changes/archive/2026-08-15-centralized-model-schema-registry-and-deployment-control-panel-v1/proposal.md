@@ -131,22 +131,22 @@ parity CocoIndex files, the 619 empty `1_ingestion/` YAMLs, and the
 ### D. Replace the actual duplication
 
 - **MODIFIED**: 40 European-nation CocoIndex files
-  (`cocoindex/european_nations/{albania,austria,…,ukraine}/education_embedding.py`)
-  collapsed into one factory-driven `cocoindex/european_nations/_factory.py`
+  (`cocoindex_flows/european_nations/{albania,austria,…,ukraine}/education_embedding.py`)
+  collapsed into one factory-driven `cocoindex_flows/european_nations/_factory.py`
   + a 40-row config table (mirrors `oideachais-cocoindex-v1-migration`'s
   factory pattern). Each nation becomes a row in a `NATION_CONFIG` dict;
   the factory iterates and instantiates a parameterized App. Net code
   reduction: ~3,200 LOC across 40 files → ~600 LOC in 1 factory.
 - **MODIFIED**: 6 Irish LC subject CocoIndex files
-  (`cocoindex/biep_parity/ireland_lc_{mathematics,chemistry,geography,english,gaeilge,computer_science}_embedding.py`)
+  (`cocoindex_flows/biep_parity/ireland_lc_{mathematics,chemistry,geography,english,gaeilge,computer_science}_embedding.py`)
   collapsed into one factory-driven
-  `cocoindex/biep_parity/ireland_lc_factory.py` (mirrors
+  `cocoindex_flows/biep_parity/ireland_lc_factory.py` (mirrors
   `ireland_jc_apps.py`'s factory pattern). Net code reduction: ~600 LOC
   across 6 files → ~150 LOC in 1 factory.
 - **MODIFIED**: 8 British Isles parity CocoIndex files
-  (`cocoindex/biep_parity/{ga,en,ni,sct,wls,isle_of_man,jersey,guernsey}_education_embedding.py`)
+  (`cocoindex_flows/biep_parity/{ga,en,ni,sct,wls,isle_of_man,jersey,guernsey}_education_embedding.py`)
   collapsed into one factory-driven
-  `cocoindex/biep_parity/bi_factory.py`. Net code reduction: ~960 LOC
+  `cocoindex_flows/biep_parity/bi_factory.py`. Net code reduction: ~960 LOC
   across 8 files → ~200 LOC in 1 factory.
 - **MODIFIED**: 10 per-jurisdiction Dagster asset wrappers
   (`orchestration/defs/2_materials/{ireland,england,scotland,wales,ni,sct_wls_ni,isle_of_man,jersey,guernsey,crown_dependencies}_education/generic_*_assets.py`)
@@ -483,20 +483,20 @@ Maps to 4 sub-goals:
 
 ### Phase 7 — CocoIndex factory dedup (~10 h)
 
-- Create `cocoindex/european_nations/_factory.py` with
+- Create `cocoindex_flows/european_nations/_factory.py` with
   `NATION_CONFIG` (40 rows) + `build_nation_app(nation) -> coco.App`
   function. Each nation becomes a row; the factory iterates and
   instantiates a parameterized App.
-- Delete the 40 `cocoindex/european_nations/<nation>/education_embedding.py`
+- Delete the 40 `cocoindex_flows/european_nations/<nation>/education_embedding.py`
   files (or make them 1-line shims that re-export the factory).
-- Create `cocoindex/biep_parity/ireland_lc_factory.py` with
+- Create `cocoindex_flows/biep_parity/ireland_lc_factory.py` with
   `LC_SUBJECT_CONFIG` (6 rows × 2 langs) + `build_lc_app(subject,
   language) -> coco.App`.
-- Delete the 6 `cocoindex/biep_parity/ireland_lc_<subject>_embedding.py`
+- Delete the 6 `cocoindex_flows/biep_parity/ireland_lc_<subject>_embedding.py`
   files.
-- Create `cocoindex/biep_parity/bi_factory.py` with
+- Create `cocoindex_flows/biep_parity/bi_factory.py` with
   `JURISDICTION_CONFIG` (8 rows) + `build_bi_app(jurisdiction) -> coco.App`.
-- Delete the 8 `cocoindex/biep_parity/{ga,en,ni,sct,wls,isle_of_man,jersey,guernsey}_education_embedding.py` files.
+- Delete the 8 `cocoindex_flows/biep_parity/{ga,en,ni,sct,wls,isle_of_man,jersey,guernsey}_education_embedding.py` files.
 - Quality gate: `mise run cocoindex:conformance` exits 0 (all factory
   Apps satisfy R1+R2+R3+R4); L3 Component `defs.yaml` files updated to
   point at the new factory modules.

@@ -27,6 +27,10 @@ You are the canonical Cianfhoghlaim marimo-notebook subagent. You author, debug,
 
 # Direct references
 
+# Quick code lookup (faster than ccc search for structural patterns):
+- `mise run core:ccc:grep "@app.cell" notebooks/` — STRUCTURAL search (no daemon needed; ccc 0.2.37+)
+- `bun run ccc:search "query"` — SEMANTIC search (needs the daemon; ~1s)
+
 - `notebooks/_shared/db.py` — `connect_biep_lakehouse()` + BIEP_SUBJECTS + helpers
 - `notebooks/nb_utils.py` — canonical notebook utilities
 - `notebooks/cli.py` — notebook registry CLI (the `notebook:list` source of truth)

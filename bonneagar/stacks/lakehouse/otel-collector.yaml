@@ -1,0 +1,85 @@
+# =============================================================================
+# OTEL COLLECTOR CONFIG (full config — added 2026-08-25)
+# =============================================================================
+# Per the 2026-08-25 (lakehouse-observability-and-cross-stack-integration-v1)
+# change. Replaces the minimal placeholder config with the full config that
+# matches the existing logfire stack's `config/otelcol.yaml` (per the
+# 2026-07-30-env-contract-and-observability-fanout-v1 spec delta).
+#
+# This file is mounted at /etc/otelcol-contrib/config.yaml inside the
+# `otel-collector` service (profile `otel`). Operators opt in via:
+#   docker compose --profile otel up -d
+#
+# Production deployments can also use the cross-stack logfire-otel
+# collector instead (set LAKEHOUSE_OTLP_ENDPOINT=http://logfire-otel:4317
+# in .env.local).
+# =============================================================================
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    timeout: 5s
+    send_batch_size: 1024
+  memory_limiter:
+    check_interval: 1s
+    limit_percentage: 80
+    spike_limit_percentage: 20
+  # Resource attributes that let Logfire group traces by service.
+  resource/logfire_metadata:
+    attributes:
+      - key: deployment.environment
+        value: ${env:LOGFIRE_ENVIRONMENT}
+        action: upsert
+      - key: logfire.project_name
+        value: ${env:LOGFIRE_PROJECT_NAME}
+        action: upsert
+
+exporters:
+  # Logfire cloud (SaaS) — requires LOGFIRE_TOKEN env var.
+  logfire:
+    timeout: 30s
+  # Langfuse self-hosted — forwards via OTLP/HTTP to langfuse-web:3000/api/public/otel.
+  # Requires LANGFUSE_PUBLIC_KEY + LANGFUSE_SECRET_KEY env vars; if empty,
+  # the exporter logs a warning and drops traces (collector still forwards to logfire).
+  otlphttp/langfuse:
+    endpoint: http://langfuse-web:3000/api/public/otel
+    timeout: 30s
+    headers:
+      Authorization: "Basic ${env:LANGFUSE_AUTH_HEADER}"
+  # MLflow tracking — forwards via OTLP/HTTP to mlflow:5000/api/2.0/mlflow/traces
+  # (requires mlflow 3.x with `MLFLOW_ENABLE_TRACE_STREAMING=true`).
+  otlphttp/mlflow:
+    endpoint: http://mlflow:5000/api/2.0/mlflow/traces
+    timeout: 30s
+  # Local debug logging so we can see OTEL pipeline activity.
+  debug:
+    verbosity: basic
+    sampling_initial: 5
+    sampling_thereafter: 200
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:8888
+  pprof:
+    endpoint: 0.0.0.0:1777
+  zpages:
+    endpoint: 0.0.0.0:55679
+
+service:
+  extensions: [health_check, pprof, zpages]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, resource/logfire_metadata, batch]
+      # Fan-out: every trace goes to ALL 3 backends (Logfire + Langfuse + MLflow).
+      exporters: [logfire, otlphttp/langfuse, otlphttp/mlflow, debug]
+  telemetry:
+    metrics:
+      address: 0.0.0.0:8889

@@ -36,7 +36,7 @@ jobs:
 
       # Post-v7 flattening (2026-07-17): the CocoIndex v1 Apps live at
       # cocoindex/** (was previously at cianfhoghlaim/cocoindex/**).
-      # The R1-R4 linter is at cocoindex/infrastructure/cocoindex_v1_conformance.py.
+      # The R1-R4 linter is at cocoindex_flows/infrastructure/cocoindex_v1_conformance.py.
       # AUDIT_EXIT is captured + propagated so the job fails when the
       # audit finds violations (was previously captured but not propagated,
       # so the job stayed green even when the audit failed).
@@ -85,7 +85,7 @@ jobs:
             1. Run the audit locally: `mise run cocoindex:conformance`
             2. The report lists every failing flow + the specific
                R1/R2/R3/R4 violation
-            3. Reference pattern: `cocoindex/biep_parity/ireland_lc_mathematics_embedding.py`
+            3. Reference pattern: `cocoindex_flows/biep_parity/ireland_lc_mathematics_embedding.py`
                (the canonical R1-R4 conforming flow; post-v7 path)
             4. R4-exempt marker for non-LanceDB flows (e.g. GeoParquet):
                ```python

@@ -87,6 +87,10 @@ class CelticMaterialsComponent(Component, Resolvable):
     baml_functions: list[str] = field(default_factory=list)
     source_assets: list[str] = field(default_factory=list)
     auxiliary_baml_functions: list[str] = field(default_factory=list)
+    # The 6 `2_materials/grading/<subject>/defs.yaml` files pair a grading
+    # function with an explain function (e.g. `b.GradeChemistryResponse` +
+    # `b.ExplainChemistryMarkingScheme`). Surfaced in asset metadata.
+    baml_explain_function: str | None = None
 
     # --- behavioural ---
     automation: Literal["eager", "on_cron"] | None = None
@@ -126,8 +130,19 @@ class CelticMaterialsComponent(Component, Resolvable):
             ireland_curriculum_partitions,
         )
 
-        group_name = f"2_materials_baml_extraction_{self.subject}"
-        asset_name = f"{self.subject}_baml_extraction"
+        # `subject` alone is not a unique identity: the 6
+        # `2_materials/grading/<subject>/defs.yaml` files and the
+        # `2_materials/baml_extraction/leaving_cert_<subject>/defs.yaml` files
+        # both declare e.g. `subject: gaeilge`, so naming purely by subject
+        # produced `Duplicate asset key: gaeilge_baml_extraction`.
+        #
+        # A grading component is distinguished by carrying a
+        # `baml_explain_function` (grade + explain-the-marking-scheme); use
+        # that to give it its own asset and group. Extraction components keep
+        # their existing names, so no established asset key changes.
+        kind = "grading" if self.baml_explain_function else "baml_extraction"
+        group_name = f"2_materials_{kind}_{self.subject}"
+        asset_name = f"{self.subject}_{kind}"
         partitions_def = self._resolve_partitions(ireland_curriculum_partitions)
         # AutomationCondition.cron() was renamed to .on_cron() in the
         # installed Dagster 1.13 — this same rename is needed in the other 4
@@ -181,6 +196,7 @@ class CelticMaterialsComponent(Component, Resolvable):
             }
             for key, value in (
                 ("auxiliary_baml_functions", self.auxiliary_baml_functions),
+                ("baml_explain_function", self.baml_explain_function),
                 ("validators", self.validators),
                 ("output_table", self.output_table),
                 ("privacy_gate", self.privacy_gate),

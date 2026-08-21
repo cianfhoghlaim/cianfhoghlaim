@@ -10,7 +10,7 @@ first**; the rest of the file is the full 97-spec catalogue.
 
 | Spec | Quadrant | One-liner |
 |:--|:--|:--|
-| [`centralized-model-registry`](specs/centralized-model-registry/spec.md) | shared | **NEW 2026-08-15**: The single canonical model registry (52 entries / 7 families: ocr_vision / text_llm / embedder / rerank / image_gen / voice / translation) — drives LiteLLM, BAML, agents, embedders, image-gen, voice, translation |
+| [`centralized-model-registry`](specs/centralized-model-registry/spec.md) | shared | **NEW 2026-08-15**: The single canonical model registry (76 entries / 7 families: ocr_vision / text_llm / embedder / rerank / image_gen / voice / translation) — drives LiteLLM, BAML, agents, embedders, image-gen, voice, translation |
 | [`centralized-schema-registry`](specs/centralized-schema-registry/spec.md) | shared | **NEW 2026-08-15**: BAML is the single source of truth — Pydantic + Zod are codegen; 96 hand-written Pydantic duplicates removed |
 | [`deployment-control-panel`](specs/deployment-control-panel/spec.md) | shared | **NEW 2026-08-15**: The 5-tab marimo control panel + web UI + CLI for picking models/pipelines/datasets/stacks; writes to `deployment-choice.yaml` |
 | [`british-isles-education-pipeline`](specs/british-isles-education-pipeline/spec.md) | cianfhoghlaim | The flagship — 6 Irish LC priority subjects (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) + gov.ie circulars — NCCA + SEC + DLT + BAML + 7 v1 CocoIndex flows + 42 Dagster assets + 6 marimo notebooks + 4 MotherDuck Dives + daily Flight |
@@ -39,12 +39,21 @@ openspec view                      # NEW 1.4: interactive dashboard of all specs
 openspec status <change-id>        # NEW 1.4: per-artifact completion check
 openspec show <change-id|spec>     # NEW 1.4: formatted view of one item
 openspec instructions <artifact>   # NEW 1.4: enriched template for one artifact
+openspec update                    # NEW 1.10: re-emit OpenSpec instruction files
+openspec schemas                   # NEW 1.10: list available workflow schemas (spec-driven, opsx, workspace-planning)
+openspec schemas --json            # NEW 1.10: same as above, JSON output
+openspec feedback <message>        # NEW 1.10: submit feedback to OpenSpec maintainers
+openspec templates                 # NEW 1.10: show resolved template paths for a schema
+openspec config                    # NEW 1.10: view and modify global OpenSpec configuration
+openspec workspace                 # NEW 1.10: set up and inspect coordination workspaces
+openspec context-store             # NEW 1.10: set up and inspect local context stores
+openspec initiative                # NEW 1.10: create and list coordinated initiatives
 openspec validate <change-id> --strict    # MUST pass before commit
 openspec validate --all --strict   # NEW: CI gate (equivalent to mise run openspec:validate-all)
 openspec archive <change-id> --yes        # after deploy
 ```
 
-### Priority skills (6 of 65)
+### Priority skills (6 of 166)
 
 | Skill | When to load |
 |:--|:--|
@@ -65,12 +74,12 @@ The mise.toml task catalogue is now organized by **6 domain namespaces**
 For openspec work specifically:
 
 ```bash
-mise run openspec:validate-all     # the canonical CI gate — validate every change + every spec in strict mode (131 items)
+mise run openspec:validate-all     # the canonical CI gate — validate every change + every spec in strict mode (132 items)
 mise run openspec:validate <id>   # validate one change with --strict (MUST pass before commit)
 mise run openspec:archive <id>    # archive a deployed change (merges deltas into canonical specs)
 mise run openspec:view            # interactive dashboard of all specs + changes (1.4+)
 mise run openspec:list-specs       # list all 97 capability specs
-mise run lint:skills               # validate .agents/skills/ metadata (65 skills pass)
+mise run lint:skills               # validate .agents/skills/ metadata (166 skills pass)
 mise run lint:drift-docs           # validate every AGENTS.md number claim against ground truth
 mise run sync:all                  # run all 14 sync layers (paths + ccc + cognee + skills + mcp + dagster + drift-docs + spec-agents + baml + stacks + dlt + agents + notebooks + firecrawl)
 ```

@@ -29,7 +29,7 @@
 - [ ] Retire the dangling 6-hour `ScheduleDefinition` at `biiep_ocr_ensemble.py:126-132`
 
 ## Stage 6 — CocoIndex consumes voted DuckLake output
-- [ ] Create `cocoindex/subjects/education_subject_embedding.py`
+- [ ] Create `cocoindex_flows/subjects/education_subject_embedding.py`
 
 ## Stage 7 — Spec delta + validation
 - [ ] Write spec delta to `openspec/changes/2026-08-08-biep-v3-production-readiness-v1/specs/infrastructure-stacks/spec.md`

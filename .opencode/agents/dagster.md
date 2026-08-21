@@ -28,6 +28,10 @@ You are the canonical Cianfhoghlaim Dagster authoring subagent. You author, scaf
 
 # Direct references
 
+# Quick code lookup (faster than ccc search for structural patterns):
+- `mise run core:ccc:grep "def \\\\NAME(" orchestration/` — STRUCTURAL search (no daemon needed; ccc 0.2.37+)
+- `bun run ccc:search "query"` — SEMANTIC search (needs the daemon; ~1s)
+
 - `orchestration/AGENTS.md` — the 5-layer defs/ tree + asset patterns
 - `orchestration/definitions.py` — the code-location entry
 - `orchestration/components/layer{1..5}_*.py` — the 5 KCG Components

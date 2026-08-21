@@ -26,10 +26,10 @@ turbo.json, package.json, tsconfig.json).
 #### Scenario: Retroactive cleanup runs as part of sync:paths
 - **WHEN** `sync:paths` is invoked the first time
 - **THEN** the task SHALL bulk-sed the 6 known source files with
-  `sruth/` refs (`cocoindex/knowledge_graph/multihop_search.py`,
-  `cocoindex/_shared/reranker.py`, `cocoindex/_shared/repo_type_detector.py`,
-  `cocoindex/infrastructure/arch_doc_cache.py`,
-  `cocoindex/infrastructure/cocoindex_v1_conformance.py`,
+  `sruth/` refs (`cocoindex_flows/knowledge_graph/multihop_search.py`,
+  `cocoindex_flows/_shared/reranker.py`, `cocoindex_flows/_shared/repo_type_detector.py`,
+  `cocoindex_flows/infrastructure/arch_doc_cache.py`,
+  `cocoindex_flows/infrastructure/cocoindex_v1_conformance.py`,
   `tests_pkg_temp/_oideachais/test_canuint_alignment.py`)
 - **AND** the task SHALL replace `sruth/cianfhoghlaim/cocoindex_flows`
   with `cocoindex/codebase_indexing`
@@ -366,6 +366,25 @@ The system SHALL ensure that `sync_health_job` and
 - **AND** `defs.schedules` includes both `sync_health_every_4h` +
   `dagster_sync_health_every_4h`
 - **AND** the `Daily sync_health cron` requirement is satisfied
+
+### Requirement: sync:baml extension for the 5 stage templates (Phase 5)
+
+The system SHALL extend the `knowledge-sync-loop` architecture with a
+`sync:baml` layer that validates the 5 BAML stage templates
+(`lc_extraction_template.baml`, `junior_cycle_template.baml`,
+`alevel_extraction_template.baml`, `gcse_extraction_template.baml`,
+`qpack_template.baml`).
+
+#### Scenario: sync:baml validates all 5 templates
+
+- **WHEN** the operator runs `mise run sync:baml`
+- **THEN** the system reports each template's coverage:
+ - `lc_extraction_template.baml` → 14 LC subjects
+ - `junior_cycle_template.baml` → 8 JC subjects
+ - `alevel_extraction_template.baml` → 15 A-Level × 3 boards
+ - `gcse_extraction_template.baml` → 9 GCSE × 3 boards
+ - `qpack_template.baml` → 46 subjects (cross-stage)
+- **AND** any drift report is written to `stedding/sync-reports/baml-{date}.md`
 
 ## Cross-references
 

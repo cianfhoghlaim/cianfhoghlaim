@@ -1,0 +1,50 @@
+# =============================================================================
+# Gitleaks configuration for the lakehouse stack + critical CI files
+# =============================================================================
+# Per the 2026-08-22 (lakehouse-config-and-env-var-hardening-v1) change.
+# Detects plaintext secrets in the lakehouse stack + dlt destinations +
+# notebooks/_shared schema helpers.
+#
+# Allowlist (legitimate documentation):
+#   - .env.local (gitignored; should never reach CI but defensive)
+#   - .env.example / .env.local.example (intentional documentation)
+#   - .env.dev (empty-value template)
+#   - openspec/changes/archive/** (historical archives)
+#   - bonneagar/stacks/lakehouse/secrets.env (canonical infisical:// URIs)
+# =============================================================================
+
+[extend]
+useDefault = true
+
+[allowlist]
+paths = [
+  '''\.env\.example$''',
+  '''\.env\.local\.example$''',
+  '''\.env\.dev$''',
+  '''\.env\.local$''',
+  '''openspec/changes/archive/.*''',
+  '''dlt_sources/common/secrets_test\.py$'''
+]
+
+regexes = [
+  # Allow the canonical infisical://dev-baile/... URIs (these are reference, not secrets)
+  '''infisical://dev-baile/[^/]+/[a-zA-Z0-9_-]+$''',
+  # Allow "devpassword" placeholder (used in .env.example as dev fallback)
+  '''devpassword''',
+  # Allow "devtoken" placeholder
+  '''devtoken'''
+]
+
+[extend.rules]
+  # Custom patterns for our stack
+  [[rules]]
+    id = "lakehouse-garage-rpc-secret"
+    description = "Garage RPC secret (real value, not a dev fallback)"
+    regex = '''GARAGE_RPC_SECRET=[a-f0-9]{64}'''
+    tags = ["secret", "garage"]
+
+  [[rules]]
+    id = "lakehouse-postgres-password"
+    description = "Postgres password (real value, not a dev fallback)"
+    regex = '''POSTGRES_PASSWORD=[a-f0-9]{40,}'''
+    tags = ["secret", "postgres"]

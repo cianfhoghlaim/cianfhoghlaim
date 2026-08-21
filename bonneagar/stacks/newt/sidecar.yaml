@@ -14,7 +14,9 @@
 
 services:
   locket:
-    image: ghcr.io/bpbradley/locket:infisical
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
+    environment:
+      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
     container_name: newt-locket
     user: "65532:65532"
     restart: unless-stopped
@@ -30,7 +32,7 @@ services:
       - "--infisical-client-id=c56cbe28-88a4-4793-95a1-835d5164d8ad"
       - "--infisical-client-secret=file:/run/secrets/infisical_secret"
       - "--infisical-default-environment=dev"
-      - "--infisical-url=http://host.docker.internal:8081"
+      - "--infisical-url=https://infisical.cianfhoghlaim.ie"
       - "--infisical-default-project-id=d18560c0-75d5-436f-a411-0bb758567196"
       - "--mode=watch"
       - "--map=/templates:/run/secrets/locket"

@@ -112,7 +112,7 @@ mise run models:list               # see the new entry
 | `ocr_vision` | 20 | `default`, `diagram`, `tier1_heavy`, `specialist`, `legacy` | `baml_src/clients*.baml`, BAML extraction pipeline |
 | `text_llm` | 13 | `default`, `strong`, `fast`, `irish`, `irish_fast`, `kimi`, `glm`, `m2`, `mimo`, `deepseek`, `hackathon_primary`, `hackathon_fallback_1`, `hackathon_fallback_2`, `long_context` | The 12-agent fleet, `spaces/_common/baml_client.py` |
 | `embedder` | 3 | `default`, `english_only`, `lightweight` | All CocoIndex Apps (BGE-M3 is canonical) |
-| `rerank` | 3 | `default`, `cohere`, `aliyun` | `cocoindex/_shared/reranker.py` |
+| `rerank` | 3 | `default`, `cohere`, `aliyun` | `cocoindex_flows/_shared/reranker.py` |
 | `image_gen` | 5 | `flux`, `z_image`, `qwen`, `sdxl`, `fibo` | `agents/image_generation.py` |
 | `voice` | 5 | `asr`, `asr_irish`, `tts`, `tts_irish`, `tts_legacy` | `agents/adk/voice_agent.py`, `chatterbox.py` |
 | `translation` | 3 | `default`, `multilingual`, `strong_multilingual` | `agents/translation.py`, `agents/adk/config.py` |

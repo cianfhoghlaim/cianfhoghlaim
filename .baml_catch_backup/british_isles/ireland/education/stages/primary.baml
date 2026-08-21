@@ -1,0 +1,147 @@
+// =============================================================================
+// Primary Curriculum (ages 4-12) — BAML Schema
+// Bilingual EN/GA extraction of the NCCA Primary Curriculum Framework.
+// Merged from:
+//   - baml/primary.baml (171 LOC) — the canonical primary curriculum
+//   - baml/cianfhoghlaim_other/primary.baml (45 LOC) — the URL-extraction variant
+// Moved (and extended) from docs/agents/BAML_COMPREHENSIVE_GUIDE.md:683-728.
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Enums
+// -----------------------------------------------------------------------------
+
+enum PrimaryStage {
+  STAGE1_JUNIOR_SENIOR_INFANTS
+    @description("Naíonáin Shóisearacha agus Shinsearacha, ages 4-6")
+  STAGE2_FIRST_SECOND_CLASS
+    @description("Rang 1 & 2, ages 6-8")
+  STAGE3_THIRD_FOURTH_CLASS
+    @description("Rang 3 & 4, ages 8-10")
+  STAGE4_FIFTH_SIXTH_CLASS
+    @description("Rang 5 & 6, ages 10-12")
+}
+
+enum PrimaryAreaCode {
+  PRIMARY_LANGUAGE_ENGLISH
+  PRIMARY_LANGUAGE_IRISH
+  PRIMARY_MATHEMATICS
+  PRIMARY_SESE_SCIENCE
+  PRIMARY_SESE_HISTORY
+  PRIMARY_SESE_GEOGRAPHY
+  PRIMARY_VISUAL_ARTS
+  PRIMARY_MUSIC
+  PRIMARY_DRAMA
+  PRIMARY_PHYSICAL_EDUCATION
+  PRIMARY_SPHE
+  PRIMARY_RELIGION
+  PRIMARY_STAND_ALONE_GAELGE
+}
+
+// -----------------------------------------------------------------------------
+// Classes (moved from BAML_COMPREHENSIVE_GUIDE.md:693-717 and extended)
+// -----------------------------------------------------------------------------
+
+class CompetencyLink {
+  competency_name string   @description("e.g., 'Being a Digital Learner'")
+  context string           @description("How this specific outcome supports the competency")
+}
+
+class PrimaryLearningOutcome {
+  id string?
+  text_en string
+  text_ga string?           @description("Irish translation of the outcome text")
+  element string            @description("The 'Element' of learning")
+  stage PrimaryStage
+  area PrimaryAreaCode
+  progression_continuum string?  @description("Description of how the outcome progresses across stages")
+  key_competencies CompetencyLink[]
+  action_verbs string[]      @description("e.g., 'investigate', 'analyse', 'create'")
+  cross_curricular_links string[] @description("Other primary areas this outcome links to")
+  @@stream.done
+}
+
+class PrimaryStrand {
+  name string              @description("e.g., 'Number', 'Data and Chance'")
+  name_ga string?           @description("Irish name of the strand")
+  description string
+  description_ga string?
+  outcomes PrimaryLearningOutcome[]
+  weighting_pct float?     @description("Approximate percentage weighting in the curriculum")
+}
+
+class PrimaryCurriculumArea {
+  name PrimaryAreaCode
+  rationale string
+  rationale_ga string?
+  strands PrimaryStrand[]
+  integration_links string[] @description("Explicit text mentioning other curriculum areas")
+  source_url string
+  document_year int
+  language string          @description("en | ga | bilingual")
+  @@stream.done
+}
+
+// -----------------------------------------------------------------------------
+// Functions
+// -----------------------------------------------------------------------------
+
+function ExtractPrimaryFramework(text: string,
+  stage: PrimaryStage,
+  area: PrimaryAreaCode) -> PrimaryCurriculumArea {  client ExtractEn
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+}
+
+
+function ExtractPrimaryLearningOutcomes(text: string,
+  stage: PrimaryStage,
+  area: PrimaryAreaCode) -> PrimaryLearningOutcome[] {  client ExtractEn
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+}
+
+
+function ExtractPrimaryFrameworkFromUrl(source_url: string,
+  stage: PrimaryStage,
+  area: PrimaryAreaCode) -> PrimaryCurriculumArea {  client ExtractEn
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+}
+
+// -----------------------------------------------------------------------------
+// Tests
+// -----------------------------------------------------------------------------
+
+// test ExtractPrimaryMathsTest {
+//   functions [ExtractPrimaryFramework]
+//   args {
+//     text "Number: count, compare, order. Strand 1: Number — Infants through 6th Class. Children explore numbers 0-20 (Infants), 0-100 (1st/2nd), 0-1000 (3rd/4th), 0-1,000,000 (5th/6th). Place value, operations, fractions."
+//     stage STAGE1_JUNIOR_SENIOR_INFANTS
+//     area PRIMARY_MATHEMATICS
+//   }
+// }

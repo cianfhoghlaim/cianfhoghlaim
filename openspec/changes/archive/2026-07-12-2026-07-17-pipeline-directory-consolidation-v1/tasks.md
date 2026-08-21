@@ -54,24 +54,24 @@ For each package (`baml_src/`, `dlt/`, `orchestration/defs/1_ingestion/`, `cocoi
 ## 6. cocoindex migration (largest — flat → hierarchical)
 
 - [ ] 6.1 Create subdirs: `_shared/`, `american_nations/`, `british_isles/{_cross,england,ireland,northern_ireland,scotland,wales,isle_of_man,jersey,guernsey}/`, `european_nations/<40>/`, `european_nations_cross/`, `commonwealth/<6>/`, `commonwealth_cross/`, `celtic/`, `subjects/`, `media/`, `portfolio/`, `knowledge_graph/`, `infrastructure/`, `corpus/`
-- [ ] 6.2 `git mv cocoindex/european_nations_{alb,...,xkx}_education_embedding.py` → `cocoindex/european_nations/<full>/education_embedding.py`
-- [ ] 6.3 `git mv cocoindex/european_nations_law_embedding.py` → `cocoindex/european_nations_cross/law_embedding.py`
-- [ ] 6.4 `git mv cocoindex/european_nations_medicine_embedding.py` → `cocoindex/european_nations_cross/medicine_embedding.py`
-- [ ] 6.5 `git mv cocoindex/commonwealth_*_education_embedding.py` → `cocoindex/commonwealth/<jurisdiction>/education_embedding.py`
-- [ ] 6.6 `git mv cocoindex/commonwealth_education_embedding.py` → `cocoindex/commonwealth_cross/education_embedding.py`
-- [ ] 6.7 `git mv cocoindex/americas_california_education_embedding.py` → `cocoindex/american_nations/united_states/california_education_embedding.py`
-- [ ] 6.8 `git mv cocoindex/american_nations_*_education_embedding.py` → `cocoindex/american_nations/<full>/education_embedding.py`
-- [ ] 6.9 `git mv cocoindex/{mathematics,chemistry,english,gaeilge,geography,computer_science,history,applied_mathematics,cross_subject_competency}_embedding.py` → `cocoindex/subjects/`
-- [ ] 6.10 `git mv cocoindex/{artwork,cv}_embedding.py` → `cocoindex/media/`
-- [ ] 6.11 `git mv cocoindex/{apple_photos_chunks,apple_photos_geospatial,apple_photos_metadata,ocr_aware_flow}.py` → `cocoindex/media/`
-- [ ] 6.12 `git mv cocoindex/{heritage,culture_heritage}_embedding.py` → `cocoindex/portfolio/`
-- [ ] 6.13 `git mv cocoindex/{cognify,multihop_search,terminology_linking,youtube_kg_embedding,file_graph}.py` → `cocoindex/knowledge_graph/`
-- [ ] 6.14 `git mv cocoindex/{codebase_indexing,api_indexing,config_indexing,filesystem_indexing,storage_indexing,agents_md,agent_registry,upstream_api_surface,upstream_blog_monitor,arch_doc_cache,cocoindex_v1_conformance,academic_history_flow,test_phase0_primitives,test_youtube_kg_smoke}.py` → `cocoindex/infrastructure/`
-- [ ] 6.15 `git mv cocoindex/{leabharlann_flow,leabharlann_embedding,root_pdfs_embedding,local_documents_embedding,government_circulars_embedding,university_embedding,duchas_embedding,unified_embedding}.py` → `cocoindex/corpus/`
-- [ ] 6.16 `git mv cocoindex/{celtic_curriculum_embedding,ud_celtic_embedding,gaeilge_embedding,gaois_embedding,mythology_embedding}.py` → `cocoindex/celtic/`
-- [ ] 6.17 `git mv cocoindex/ie_law_{courts,court_rules,judgements,legal_aid,piab}.py` → `cocoindex/british_isles/ireland/`
-- [ ] 6.18 `git mv cocoindex/ireland_legal_embedding.py` → `cocoindex/british_isles/ireland/legal_embedding.py`
-- [ ] 6.19 `git mv cocoindex/{languages,reranker,caighdean_standardize,repo_type_detector,repo_embedding,_lifespan,cli}.py` → `cocoindex/_shared/`
+- [ ] 6.2 `git mv cocoindex/european_nations_{alb,...,xkx}_education_embedding.py` → `cocoindex_flows/european_nations/<full>/education_embedding.py`
+- [ ] 6.3 `git mv cocoindex/european_nations_law_embedding.py` → `cocoindex_flows/european_nations_cross/law_embedding.py`
+- [ ] 6.4 `git mv cocoindex/european_nations_medicine_embedding.py` → `cocoindex_flows/european_nations_cross/medicine_embedding.py`
+- [ ] 6.5 `git mv cocoindex/commonwealth_*_education_embedding.py` → `cocoindex_flows/commonwealth/<jurisdiction>/education_embedding.py`
+- [ ] 6.6 `git mv cocoindex/commonwealth_education_embedding.py` → `cocoindex_flows/commonwealth_cross/education_embedding.py`
+- [ ] 6.7 `git mv cocoindex/americas_california_education_embedding.py` → `cocoindex_flows/american_nations/united_states/california_education_embedding.py`
+- [ ] 6.8 `git mv cocoindex/american_nations_*_education_embedding.py` → `cocoindex_flows/american_nations/<full>/education_embedding.py`
+- [ ] 6.9 `git mv cocoindex/{mathematics,chemistry,english,gaeilge,geography,computer_science,history,applied_mathematics,cross_subject_competency}_embedding.py` → `cocoindex_flows/subjects/`
+- [ ] 6.10 `git mv cocoindex/{artwork,cv}_embedding.py` → `cocoindex_flows/media/`
+- [ ] 6.11 `git mv cocoindex/{apple_photos_chunks,apple_photos_geospatial,apple_photos_metadata,ocr_aware_flow}.py` → `cocoindex_flows/media/`
+- [ ] 6.12 `git mv cocoindex/{heritage,culture_heritage}_embedding.py` → `cocoindex_flows/portfolio/`
+- [ ] 6.13 `git mv cocoindex/{cognify,multihop_search,terminology_linking,youtube_kg_embedding,file_graph}.py` → `cocoindex_flows/knowledge_graph/`
+- [ ] 6.14 `git mv cocoindex/{codebase_indexing,api_indexing,config_indexing,filesystem_indexing,storage_indexing,agents_md,agent_registry,upstream_api_surface,upstream_blog_monitor,arch_doc_cache,cocoindex_v1_conformance,academic_history_flow,test_phase0_primitives,test_youtube_kg_smoke}.py` → `cocoindex_flows/infrastructure/`
+- [ ] 6.15 `git mv cocoindex/{leabharlann_flow,leabharlann_embedding,root_pdfs_embedding,local_documents_embedding,government_circulars_embedding,university_embedding,duchas_embedding,unified_embedding}.py` → `cocoindex_flows/corpus/`
+- [ ] 6.16 `git mv cocoindex/{celtic_curriculum_embedding,ud_celtic_embedding,gaeilge_embedding,gaois_embedding,mythology_embedding}.py` → `cocoindex_flows/celtic/`
+- [ ] 6.17 `git mv cocoindex/ie_law_{courts,court_rules,judgements,legal_aid,piab}.py` → `cocoindex_flows/british_isles/ireland/`
+- [ ] 6.18 `git mv cocoindex/ireland_legal_embedding.py` → `cocoindex_flows/british_isles/ireland/legal_embedding.py`
+- [ ] 6.19 `git mv cocoindex/{languages,reranker,caighdean_standardize,repo_type_detector,repo_embedding,_lifespan,cli}.py` → `cocoindex_flows/_shared/`
 - [ ] 6.20 Add `cocoindex/LEGACY_ALIASES.md`
 - [ ] 6.21 Add deprecation shim `__init__.py` at the OLD paths
 

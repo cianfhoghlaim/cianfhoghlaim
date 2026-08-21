@@ -76,6 +76,9 @@ from orchestration.components.layer3_model_lifecycle import (
 # Same class of bug again — these three were referenced by `type:` in
 # defs/3_model_lifecycle/cognify/** and defs/2_materials/lc_extraction/
 # lc_subjects/ but the classes existed nowhere in the repo at all.
+from orchestration.components.biiep_ocr_ensemble_component import (
+    BIEPOCREnsembleComponent,
+)
 from orchestration.components.kcg_cognify_component import (
     CognifyIngestSensorsComponent,
     KCGCognifyComponent,
@@ -86,6 +89,7 @@ from orchestration.components.kcg_cognify_component import (
 # replaced in the 5-layer rewrite; existing consumers can import
 # the new names without breaking).
 __all__ = [
+    "BIEPOCREnsembleComponent",
     "BIEPSubjectComponent",
     "CelticAgentOpsComponent",
     "CelticAssetGenerationComponent",

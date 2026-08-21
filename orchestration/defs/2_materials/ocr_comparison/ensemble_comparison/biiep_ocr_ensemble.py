@@ -54,16 +54,28 @@ except ImportError:
 DEFAULT_BAML_FUNCTION = "b.ExtractJCCurriculum"
 
 
-@asset(
-    group_name="2_materials_curriculum_biiep_ensemble",
-    description=(
-        "BIEP v2 4-path OCR/VLM ensemble + RAGAS vote. "
-        "Per the 2026-07-22-biep-v2-ocr-vlm-pipeline-convergence-v1 change. "
-        "Runs Path 1 (BAML), Path 2 (Unstract), Path 3 (qwen3-vl-8b), "
-        "Path 4 (gemma-4-26B-A4B); writes 4 per-path DuckLake rows + "
-        "1 voted canonical row; asset check `ragas_score >= 0.70`."
-    ),
-)
+# ============================================================================
+# RETIRED 2026-08-14 — the `@asset` / `@asset_check` decorators below were
+# removed; these are now plain functions and emit nothing.
+#
+# `BIEPOCREnsembleComponent` (orchestration/components/
+# biiep_ocr_ensemble_component.py), wired from this directory's
+# `biiep_ocr_ensemble/defs.yaml`, owns the `biiep_ocr_ensemble` asset and its
+# RAGAS check. Keeping both produced
+# `Duplicate asset key: AssetKey(['biiep_ocr_ensemble'])`.
+#
+# The Component is the real implementation. What is below was not:
+#   * this function instantiates `EnsembledExtractor()` and NEVER calls
+#     `.extract()` — see its own "Placeholder" comment — returning a literal
+#     `{"rows_landed": 0, "ragas_passed": False, "ragas_score": 0.0}`;
+#   * `biiep_ocr_ensemble_ragas_check` below returns `passed=True` with a
+#     hardcoded `{"ragas_score": 0.85}`. It asserts against a number it
+#     invented, so it cannot fail. That is precisely the false-success
+#     pattern this repair exists to remove.
+#
+# Kept rather than deleted because the docstrings and the AssetSpec helper
+# document the intended 4-path design.
+# ============================================================================
 def biiep_ocr_ensemble(context: AssetExecutionContext) -> dict[str, Any]:
     """The orchestrator for the BIEP v2 OCR ensemble.
 
@@ -101,13 +113,9 @@ def biiep_ocr_ensemble(context: AssetExecutionContext) -> dict[str, Any]:
     }
 
 
-@asset_check(
-    asset=biiep_ocr_ensemble,
-    description=(
-        "The RAGAS score of the most recent ensemble invocation MUST be "
-        ">= 0.70 (the BIEP v2 production threshold)."
-    ),
-)
+# RETIRED 2026-08-14 — decorator removed; see the note above. The real check
+# lives in `BIEPOCREnsembleComponent` and reads the materialisation's actual
+# metadata instead of returning a hardcoded score.
 def biiep_ocr_ensemble_ragas_check(context: AssetCheckExecutionContext) -> AssetCheckResult:
     """Dagster asset_check: ragas_score >= 0.70."""
     if not RAGAS_AVAILABLE:

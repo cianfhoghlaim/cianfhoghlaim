@@ -24,8 +24,8 @@ The corresponding source code lives at:
 - `dlt/british_isles/ireland/education/{leaving_cert,junior_cycle,lc_extraction,...}.py`
   + `dlt/british_isles/ireland/education/junior_cycle_subjects/`
   + `dlt/british_isles/england/education/subjects/`
-- `cocoindex/subjects/*.py` (the 7 BIEP-v1 subject flows + 1 new JC flow)
-  + `cocoindex/british_isles/england/{aqa,ocr,edexcel}_education_embedding.py`
+- `cocoindex_flows/subjects/*.py` (the 7 BIEP-v1 subject flows + 1 new JC flow)
+  + `cocoindex_flows/british_isles/england/{aqa,ocr,edexcel}_education_embedding.py`
 - `orchestration/defs/2_materials/lc_extraction/`
   + `orchestration/defs/2_materials/junior_cycle/`
   + `orchestration/defs/2_materials/england_education/`

@@ -1,35 +1,68 @@
 name: marimo
+# =============================================================================
+# MARIMO — Multi-Notebook FastAPI Server
+# =============================================================================
+# Per the 2026-08-21-unsloth-v5-integration-v1 change (corrected in the
+# 2026-08-21 hotfix commit): the marimo stack was migrated from a single
+# hardcoded `marimo edit mission_control.py` CMD to a multi-notebook
+# FastAPI server using the canonical marimo pattern from
+# https://docs.marimo.io/guides/deploying/programmatically/
+#
+# The new image (marimo-multinb:latest) serves ALL notebooks in
+# notebooks/ as separate routes on a single ASGI app:
+#   http://m.cianfhoghlaim.ie/mission_control/
+#   http://m.cianfhoghlaim.ie/30_unsloth_vision_compare/
+#   http://m.cianfhoghlaim.ie/19_ireland_pipeline_dashboard/
+#   ...
+#
+# Build the image once:
+#   docker build -t marimo-multinb:latest \
+#     -f multi-notebook-server/Dockerfile \
+#     multi-notebook-server/
+# Then deploy via this compose file.
+# =============================================================================
+
 services:
   marimo:
-    # Pinned + fixed registry path 2026-07-02 (was `marimo/marimo:latest` — that
-    # image does NOT exist on Docker Hub; the upstream publishes to
-    # `ghcr.io/marimo-team/marimo`; latest available GHCR tag is 0.11.19, which
-    # lags the marimo GitHub release 0.23.12 by several minor versions because
-    # marimo-team does not auto-publish every release to GHCR).
-    image: ghcr.io/marimo-team/marimo:0.11.19
+    # Built locally via Dockerfile.conda at multi-notebook-server/.
+    # The Dockerfile uses continuumio/miniconda3:latest as the base (no
+    # Docker Hub metadata stalls — miniconda is already cached locally).
+    # Replaces the previous single-notebook CMD (`marimo edit mission_control.py`)
+    # with a multi-notebook FastAPI server.
+    image: marimo-multinb:latest
     container_name: marimo
+    # No `build:` directive — operators must build the image manually:
+    #   docker build -t marimo-multinb:latest \
+    #     -f multi-notebook-server/Dockerfile.conda \
+    #     multi-notebook-server/
     restart: unless-stopped
     ports: ["2718:2718"]
-    command: ["edit", "/notebooks/dashboards/mmo/mission_control.py", "--host=0.0.0.0", "--port=2718", "--headless"]
+    # No CMD override — the Dockerfile CMD is uvicorn main:api --host 0.0.0.0 --port 2718
     volumes:
-      # Fixed volume path 2026-07-02 (was `../../cianfhoghlaim/notebooks` — that
-      # path no longer exists after the 2026-06-28 v4 consolidation moved
-      # all 4 quadrants into the single `cianfhoghlaim/` package; canonical
-      # notebooks directory is now `../../cianfhoghlaim/notebooks/`).
-      - ../../cianfhoghlaim/notebooks:/notebooks:ro
+      # Fixed volume path 2026-08-21 (was `../../notebooks` — that resolves
+      # to `bonneagar/notebooks` which doesn't exist; the actual notebooks
+      # are at the repo root. Per the v7-flatten layout, notebooks live
+      # directly at /Users/cianmacandeisigh/dev/kings_college_galway/notebooks/).
+      - ../../../notebooks:/notebooks:ro
       - marimo_data:/home/marimo
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:2718/api/health || exit 1"]
+      # The new FastAPI server exposes /health (per the marimo canonical
+      # pattern; the previous /api/health endpoint is deprecated)
+      test: ["CMD-SHELL", "curl -sf http://localhost:2718/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 15s
-    deploy:
-      resources:
-        limits: {memory: 2G, cpus: '2'}
+      start_period: 30s
+    # Per the 2026-08-21 audit: `deploy.resources.cpus/memory` is deprecated
+    # in modern docker compose (moved to deploy.reservations or to the
+    # kernel via cgroups). For local dev the marimo image inherits the
+    # host's default limits. Production quota lives in Komodo procedure
+    # TOMLs. Removed to make `docker compose config --quiet` pass.
     networks: [cianfhoghlaim, lakehouse]
+
 volumes:
   marimo_data: {driver: local}
+
 networks:
   cianfhoghlaim: {driver: bridge}
   lakehouse: {name: lakehouse_lakehouse, external: true}

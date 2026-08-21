@@ -29,6 +29,10 @@ You are the data-platform functional subagent for the cianfhoghlaim monorepo. Yo
 
 # Direct references (mirrors guides.yml)
 
+# Quick code lookup (faster than ccc search for structural patterns):
+- `mise run core:ccc:grep "def \\\\NAME(" orchestration/` — STRUCTURAL search (no daemon needed; ccc 0.2.37+)
+- `bun run ccc:search "query"` — SEMANTIC search (needs the daemon; ~1s)
+
 - `dlt_sources/DATA_PLATFORM_ROUTER.md` — the master router for the data plane
 - `dlt_sources/AGENTS.md` — DLT conventions + the 13 jurisdiction subdirs
 - `baml_src/AGENTS.md` — BAML conventions + 320 files + 33 clients

@@ -110,6 +110,8 @@ services:
     container_name: lakehouse-olake-dev
     profiles: ["never-active"]
     command: ["sh", "-c", "echo '[dev] olake disabled — see compose.dev.yaml'; sleep infinity"]
+    healthcheck:
+      disable: true
 
   # nimtable needs a config.yaml file that the lakehouse compose doesn't
   # mount; it crashes immediately on startup. The nimtable service is a
@@ -120,6 +122,8 @@ services:
     container_name: lakehouse-nimtable-dev
     profiles: ["never-active"]
     command: ["sh", "-c", "echo '[dev] nimtable disabled (config.yaml missing)'; sleep infinity"]
+    healthcheck:
+      disable: true
 
 # Top-level secrets: block from sidecar.yaml references the production
 # Infisical secret file (../../infisical_secret). The base compose has

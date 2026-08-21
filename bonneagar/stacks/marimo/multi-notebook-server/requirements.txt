@@ -1,0 +1,23 @@
+# =============================================================================
+# Marimo Multi-Notebook FastAPI Server Dependencies
+# =============================================================================
+# Per the marimo docs (https://docs.marimo.io/guides/deploying/deploying_docker)
+# the recommended base image is python:3.11-slim. We add:
+#   - uv for fast package management
+#   - marimo (the multi-notebook ASGI runtime)
+#   - fastapi + uvicorn (the ASGI server wrapper)
+#   - the cianfhoghlaim shared deps (MODEL_REGISTRY + schema helpers)
+# =============================================================================
+
+# Pin to a specific marimo version that supports marimo.create_asgi_app()
+# (introduced in marimo 0.13.0+). The current stack pins marimo 0.11.19
+# (too old for the FastAPI multi-notebook pattern).
+marimo>=0.13.0,<1.0.0
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+# The cianfhoghlaim shared deps (mirrors notebooks/_shared/schema.py)
+ibis-framework[duckdb]>=9.0.0
+pandas>=2.2.0
+pyarrow>=15.0.0
+# LiteLLM client (for the OCR-Router proxy calls in 30_unsloth_vision_compare.py)
+litellm>=1.50.0

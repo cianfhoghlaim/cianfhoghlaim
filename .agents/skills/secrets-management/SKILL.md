@@ -360,3 +360,113 @@ Cross-references:
   BIEP extraction functions that consume `BAML_LLM_API_KEY`
 - [`.agents/skills/change-detection/SKILL.md`](../change-detection/SKILL.md) —
   the sensors that use `GOV_IE_SCRAPER_TOKEN` + `FIRECRAWL_API_KEY`
+
+## Post-archive update: 2026-08-21 (env-var fallback pattern)
+
+ADDED 2026-08-21 by the `2026-08-21-pangolin-infisical-komodo-core-24-7-redeploy-v1`
+openspec change. The pattern replaces the parallel local-Infisical-instance
+fallback with a single-source-of-truth (OCI Infisical) + a local `.env`
+mirror hydrated by the new `secrets_env_refresh` Dagster asset.
+
+### The 4 layers (revised)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  Layer 1: Source of truth (OCI Infisical — single)           │
+│  → dev-baile environment at                                  │
+│    https://infisical.cianfhoghlaim.ie (or api.infisical...) │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│  Layer 2: Template (committed to git)                        │
+│  → .infisical.env (URI refs only)                             │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│  Layer 3: Local mirror (the new pattern — ephemeral)          │
+│  → .env (hydrated by `mise run secrets:env` + the new       │
+│    Dagster asset `secrets_env_refresh` every 15 min)         │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│  Layer 4: Runtime (gitignored, mode=0700)                     │
+│  → Locket sidecar's `--fallback-file=/run/secrets/locket/     │
+│    env-fallback.env` env var (mounted from Layer 3)          │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Drift window
+
+- **Before** (parallel local Infisical): unbounded — every secret
+  added to OCI required manual mirror to local
+- **After** (env-var fallback): ≤ 15 min — the `secrets_env_refresh`
+  asset re-hydrates `.env` on a 15-min Komodo schedule
+
+### The 3 NEW components
+
+1. **`bons-locket-shim:infisical-0.2.1`** — the working Locket
+   (camelCase Infisical v0.161+ API). 96 of 98 sidecars now use this
+   image (was: 11 before the Locket migration). Source at
+   `bonneagar/locket-shim/cianfhoghlaim-locket-shim.py`. Supports
+   `--fallback-file=/run/secrets/locket/env-fallback.env` (reads from
+   the env-var mirror when OCI is unreachable).
+2. **`orchestration/defs/4_asset_generation/secrets/secrets_env_refresh.py`**
+   — the new Dagster asset that re-hydrates `.env` from OCI Infisical
+   every 15 min. Runs `infisical export --in-file .infisical.env
+   --out-file .env` with atomic write-temp + rename.
+3. **`bonneagar/komodo/schedules/secrets-env-refresh-15min.toml`** —
+   the 15-min Komodo schedule that triggers the Dagster asset.
+
+### Critical changes to `sidecar.yaml`
+
+Every `sidecar.yaml` MUST declare both:
+
+```yaml
+environment:
+  INFISICAL_URL: https://infisical.cianfhoghlaim.ie  # the OCI URL (not host.docker.internal)
+  LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env  # the env-var mirror
+volumes:
+  - ${INFISICAL_FALLBACK_FILE}:/run/secrets/locket/env-fallback.env:ro  # the operator sets this
+```
+
+The `INFISICAL_FALLBACK_FILE` shell env var points at the host's
+`.env` (e.g. `~/.env` or `/Users/<you>/.env`). The `mise run secrets:env`
+mise task hydrates `.env` from OCI Infisical on every `cd`.
+
+### When the OCI Infisical is down
+
+- **Locket sidecar** falls back to `LOCKET_FALLBACK_FILE` (the
+  hydrated `.env` from the most recent 15-min window)
+- **Logs** print `warn: OCI Infisical unreachable, using fallback file`
+- **Once OCI recovers**, the sidecar resumes fetching from OCI within
+  10s (Locket's `--mode=watch` poll interval)
+
+### Migration checklist (per the openspec change)
+
+- [ ] Remove the local Infisical containers (`infisical-backend`,
+  `infisical-db`, `infisical-redis` on bunchloch) — they're the
+  source of drift
+- [ ] Add the `LOCKET_FALLBACK_FILE` env var to every `sidecar.yaml`
+  (the Phase 6b Locket migration did this for 98 of 98 sidecars)
+- [ ] Flip `INFISICAL_URL` from `http://host.docker.internal:8081`
+  to `https://infisical.cianfhoghlaim.ie` (the Phase 6b did this for
+  the 6 referencing stacks)
+- [ ] Replace `image: ghcr.io/bpbradley/locket:infisical` with
+  `image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1` (the
+  Phase 6 Locket migration did this for 96 of 98 sidecars; the 2
+  exceptions are Newt-specific files: `pangolin/newt.sidecar.yaml` +
+  `newt/docker-compose.yaml`)
+- [ ] Add the Traefik route for `infisical.cianfhoghlaim.ie` on
+  `arm1-oci` (the file provider route in
+  `/opt/pangolin/config/traefik/dynamic_config.yml` + restart Traefik)
+- [ ] Update the Cloudflare DNS for `infisical.cianfhoghlaim.ie` to
+  point at the OCI public IP (`140.238.96.148` per the audit)
+- [ ] Seed the OCI Infisical with the `pangolin/` + `pocketid/`
+  + `tinyauth/` + `komodo/` + `forgejo/` + `garage/` + `middleware/`
+  secret paths (or restore the hardcoded fallback template)
+
+The `bons-locket-shim:infisical-0.2.1` is the working image until
+upstream `bpbradley/locket v0.18.0` ships stable
+(<https://github.com/bpbradley/locket/releases> — currently
+`v0.18.0-rc.2` (2026-07-17) and `v0.18.0-rc.1` (2026-07-10) are
+the only releases with the camelCase fix; no `v0.18.0` stable yet).

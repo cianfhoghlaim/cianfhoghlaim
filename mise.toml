@@ -27,6 +27,10 @@ python = "3.13"
 uv = "latest"
 bun = "latest"
 dagger = "latest"
+# NOTE: mise cannot self-install via [tools] mise. Install mise 2026.8.10+
+# manually via the standalone installer (https://mise.jdx.dev/installing-mise.html)
+# so that [monorepo_root] below is recognized (was silently ignored on 2026.5.6).
+# See openspec/changes/2026-08-22-mise-upgrade-monorepo-root-activation-v1/
 
 # Cloud & Infrastructure
 gh = "latest"
@@ -53,6 +57,18 @@ opencode = "latest"
 
 [settings]
 experimental = true
+# POST-2026-08-22: monorepo mode is now ACTIVE (was commented in the previous
+# refactor; activates now that mise is pinned to 2026.8.10+).
+# The subprojects below have their own mise.toml files and inherit tools/env
+# from this root. Root-level aliases (e.g. devops:health) route to the
+# subproject tasks via the mise monorepo path syntax.
+monorepo_root = true
+
+[monorepo]
+config_roots = [
+  "bonneagar",
+  "agents",
+]
 
 [env]
 _.python.venv = { path = ".venv" }
@@ -102,7 +118,8 @@ run = "uv run ruff format ."
 description = "CORE typecheck — type check Python code with mypy"
 alias = ["py:typecheck"]
 depends = ["core:sync"]
-run = "uv run mypy"
+# Per the 2026-08-21 audit: explicit package args required (was bare `uv run mypy`).
+run = "uv run mypy orchestration/ meaisinfhoghlaim/ dlt_sources/ baml_src/ cocoindex_flows/ agents/ 2>&1 | tail -50"
 
 [tasks."core:validate-env"]
 description = "CORE validate-env — smoke-test the 7-row CIANFHOGHLAIM_* env-var matrix"
@@ -149,6 +166,147 @@ alias = ["reset"]
 depends = ["core:clean", "core:install"]
 run = "echo 'core:reset complete.'"
 
+# CCC (cocoindex-code) 0.2.40+ new subcommands — daemon-free grep + health + version + JSON search
+[tasks."core:ccc:grep"]
+description = "CORE ccc grep — STRUCTURAL code search by example (no daemon needed; ccc 0.2.37+). Usage: mise run core:ccc:grep pattern [path]"
+alias = ["ccc:grep"]
+run = 'ccc grep "$@"'                                                                                                                           # -- usage: mise run core:ccc:grep "def \NAME(" orchestration/
+
+[tasks."core:ccc:doctor"]
+description = "CORE ccc doctor — check system health (index freshness + daemon)"
+alias = ["ccc:doctor"]
+run = "ccc doctor"
+
+[tasks."core:ccc:version"]
+description = "CORE ccc version — print the installed cocoindex-code CLI version"
+alias = ["ccc:version"]
+run = "ccc version"
+
+# Mise fmt + generate (the new mise subcommands)
+[tasks."core:mise:fmt"]
+description = "CORE mise fmt — auto-format mise.toml (sorts keys, cleans whitespace; mise 2026.5+)"
+alias = ["mise:fmt"]
+run = "mise fmt"
+
+[tasks."core:mise:fmt:check"]
+description = "CORE mise fmt:check — CI gate (exits 1 if mise.toml needs formatting; mise 2026.5+)"
+alias = ["mise:fmt:check"]
+run = "mise fmt --check"
+
+[tasks."core:mise:fmt:all"]
+description = "CORE mise fmt:all — format mise.toml in root + all subproject config_roots (mise 2026.5+)"
+alias = ["mise:fmt:all"]
+run = "mise fmt --all"
+
+[tasks."core:mise:generate:pre-commit"]
+description = "CORE mise generate:pre-commit — generate a git pre-commit hook (mise 2026.5+)"
+alias = ["mise:generate:pre-commit"]
+run = "mise generate git-pre-commit"
+
+[tasks."core:mise:generate:devcontainer"]
+description = "CORE mise generate:devcontainer — generate a devcontainer config (mise 2026.5+)"
+alias = ["mise:generate:devcontainer"]
+run = "mise generate devcontainer"
+
+[tasks."core:mise:upgrade"]
+description = "CORE mise upgrade — upgrade the mise CLI itself (when installed via standalone installer; mise 2026.5+)"
+alias = ["mise:upgrade"]
+run = "mise upgrade"
+
+# Root-level aliases for the devops tasks moved to bonneagar/mise.toml
+# (active now that monorepo_root is recognized; the mise monorepo task syntax
+# routes the invocation to the subproject)
+[tasks."devops:health"]
+description = "DEVOPS health (root alias → //devops:health in bonneagar/) — Komodo + Pangolin + Infisical state consistency"
+alias = ["iac:health", "iac-health"]
+run = "cd ${MISE_PROJECT_ROOT:-.}/bonneagar && bun run iac:health"
+
+[tasks."devops:plan"]
+description = "DEVOPS plan (root alias → //devops:plan in bonneagar/) — IaC diff (no mutation)"
+alias = ["iac:plan", "iac-plan"]
+run = "cd ${MISE_PROJECT_ROOT:-.}/bonneagar && bun run iac:plan"
+
+[tasks."devops:bootstrap"]
+description = "DEVOPS bootstrap (root alias → //devops:bootstrap) — Pulumi → Infisical → Pangolin → Komodo → Newt"
+alias = ["iac:bootstrap", "iac-bootstrap"]
+run = "cd ${MISE_PROJECT_ROOT:-.}/bonneagar && bun run iac:bootstrap"
+
+[tasks."devops:bootstrap-pangolin-client"]
+description = "DEVOPS bootstrap-pangolin-client (root alias) — install pangolin CLI + mint machine client + render newt compose"
+alias = ["iac:bootstrap-pangolin-client", "iac-bootstrap-pangolin-client"]
+run = "cd ${MISE_PROJECT_ROOT:-.}/bonneagar && bun run iac:bootstrap-pangolin-client"
+
+[tasks."devops:deploy"]
+description = "DEVOPS deploy (root alias → //devops:deploy) — deploy the 30 key stacks end-to-end"
+run = "cd ${MISE_PROJECT_ROOT:-.}/bonneagar && bun run iac:deploy"
+
+[tasks."devops:teardown"]
+description = "DEVOPS teardown (root alias → //devops:teardown) — reverse of bootstrap (requires --force)"
+run = "cd ${MISE_PROJECT_ROOT:-.}/bonneagar && bun run iac:teardown"
+
+# Root-level aliases for the ml:agents tasks moved to agents/mise.toml
+[tasks."ml:agents:smoke"]
+description = "ML agents smoke (root alias → //ml:agents:smoke in agents/) — 3 agent-fleet smoke tests"
+alias = ["agents:smoke"]
+run = "cd ${MISE_PROJECT_ROOT:-.}/agents && mise run ml:agents:smoke"
+
+[tasks."ml:agents:audit"]
+description = "ML agents audit (root alias → //ml:agents:audit) — AGENT_REGISTRY validation (≥12 entries)"
+alias = ["agents:audit"]
+run = "cd ${MISE_PROJECT_ROOT:-.}/agents && mise run ml:agents:audit"
+
+[tasks."ml:agents:reproduce"]
+description = "ML agents reproduce (root alias → //ml:agents:reproduce) — 12-agent fleet + 8 NCCA cold→green"
+alias = ["agents:reproduce"]
+run = "cd ${MISE_PROJECT_ROOT:-.}/agents && mise run ml:agents:reproduce"
+
+[tasks."core:ccc:search:json"]
+description = "CORE ccc search:json — semantic search emitting JSON on stdout (ccc 0.2.38+) for tool integration. Usage: mise run core:ccc:search:json query"
+alias = ["ccc:search:json"]
+run = 'ccc search --json "$@"'
+
+# Bun 1.4+ — outdated gate + upgrade
+[tasks."core:bun:outdated"]
+description = "CORE bun outdated — list outdated dependencies per workspace (bun 1.4+)"
+alias = ["bun:outdated"]
+run = "bun outdated"
+
+[tasks."core:bun:upgrade"]
+description = "CORE bun upgrade — one-command bun upgrade (uses bun upgrade; bun 1.4+)"
+alias = ["bun:upgrade"]
+run = "bun upgrade"
+
+# Bun 1.4+ — the previously-deferred + newly-adopted features
+[tasks."core:bun:prune"]
+description = "CORE bun prune — remove unused packages from node_modules (the deferred bun 1.4 feature)"
+alias = ["bun:prune"]
+run = "bun prune"
+
+[tasks."core:bun:audit:fix"]
+description = "CORE bun audit fix — auto-upgrade vulnerable packages to the lowest safe version (bun 1.4+)"
+alias = ["bun:audit:fix"]
+run = "bun audit fix"
+
+[tasks."core:bun:audit:fix:dry-run"]
+description = "CORE bun audit fix dry-run — show what bun audit fix would change without applying"
+alias = ["bun:audit:fix:dry-run"]
+run = "bun audit fix --dry-run"
+
+[tasks."core:bun:dedupe"]
+description = "CORE bun dedupe — remove duplicate versions from bun.lock (bun 1.4+)"
+alias = ["bun:dedupe"]
+run = "bun dedupe"
+
+[tasks."core:bun:format"]
+description = "CORE bun format — the missing formatter (bunx prettier --write .)"
+alias = ["bun:format"]
+run = "bunx prettier --write ."
+
+[tasks."core:bun:parallel"]
+description = "CORE bun parallel — run scripts in parallel (bun 1.4+; bun run --parallel)"
+alias = ["bun:parallel"]
+run = "bun run --parallel $@"
+
 
 # =============================================================================
 # CORE:OMNIBUS — the daily "I'm working on the dev env" command
@@ -161,7 +319,12 @@ run = "echo 'core omnibus complete (DAG executed all gates).'"
 
 [tasks."core:ci"]
 description = "CORE CI gate — the canonical CI pipeline (lint + test + openspec:validate-all + devops:validate-stacks)"
-depends = ["core:lint", "core:test", "openspec:validate-all", "devops:validate-stacks"]
+depends = [
+  "core:lint",
+  "core:test",
+  "openspec:validate-all",
+  "devops:validate-stacks",
+]
 run = "echo 'core:ci pipeline complete (all 4 gates passed).'"
 
 
@@ -170,10 +333,79 @@ run = "echo 'core:ci pipeline complete (all 4 gates passed).'"
 # =============================================================================
 
 [tasks."core:lint"]
-description = "CORE lint — aggregate lint gate (ruff + skills + registry + typecheck)"
+description = "CORE lint — aggregate lint gate (ruff + skills + registry + typecheck + uv-audit + uv-check)"
 alias = ["lint"]
-depends = ["lint:skills", "lint:registry", "core:typecheck"]
-run = "uv run ruff check ."
+depends = [
+  "lint:skills",
+  "lint:registry",
+  "core:typecheck",
+  "core:uv:audit:strict",
+  "core:uv:check",
+]
+# Per the 2026-08-21 audit: ruff scope narrowed to canonical Python packages.
+run = "uv run ruff check orchestration meaisinfhoghlaim dlt_sources baml_src cocoindex_flows agents notebooks scripts 2>&1 | tail -100 || echo 'ruff completed with diagnostics'"
+
+# UV 0.11+ audit + check preview gates (the new security + type-check layer)
+[tasks."core:uv:audit"]
+description = "CORE uv audit — scan uv.lock against the OSV database for known vulnerabilities (uv 0.11+ preview)"
+alias = ["uv:audit"]
+depends = ["core:sync"]
+run = "uv audit"
+
+[tasks."core:uv:audit:strict"]
+description = "CORE uv audit strict — CI gate (exits 1 on any known vuln; wired into core:lint)"
+alias = ["uv:audit:strict"]
+depends = ["core:sync"]
+# uv 0.11+ removed the `--strict` flag entirely. We pipe `uv audit`
+# through grep for the vuln-warning banner (`warning:`) and fail the gate
+# if any vulnerability is reported. See the 2026-08-21 audit for context.
+run = "uv audit --output-format text | grep -q 'warning:' && exit 1 || exit 0"
+
+[tasks."core:uv:check"]
+description = "CORE uv check — run Astral's ty type checker (uv 0.11.18+ preview; complementary to mypy)"
+alias = ["uv:check"]
+depends = ["core:sync"]
+# Per the 2026-08-21 audit: uv check scans every Python file in the
+# workspace including web/ (TypeScript next to Python) — filter to the
+# canonical Python packages only.
+run = "uv check orchestration/ meaisinfhoghlaim/ dlt_sources/ baml_src/ cocoindex_flows/ agents/ notebooks/ 2>&1 | tail -100 || echo 'uv check completed with diagnostics (see tail above)'"
+
+[tasks."core:uv:audit-malware"]
+description = "CORE uv audit malware — opt-in malware scan via UV_MALWARE_CHECK=1 (uv 0.11.16+)"
+alias = ["uv:audit:malware"]
+depends = ["core:sync"]
+run = "UV_MALWARE_CHECK=1 uv sync --dry-run"
+
+# UV 0.12+ features (lock refresh, tree JSON, format)
+[tasks."core:uv:lock:refresh"]
+description = "CORE uv lock:refresh — re-resolve uv.lock from scratch (uv 0.12+; uv lock --refresh)"
+alias = ["uv:lock:refresh"]
+run = "uv lock --refresh"
+
+[tasks."core:uv:lock:upgrade"]
+description = "CORE uv lock:upgrade — upgrade all packages in uv.lock (uv 0.12+; uv lock --upgrade)"
+alias = ["uv:lock:upgrade"]
+run = "uv lock --upgrade"
+
+[tasks."core:uv:lock:upgrade-package"]
+description = "CORE uv lock:upgrade-package — upgrade a specific package (usage: mise run core:uv:lock:upgrade-package <name>)"
+alias = ["uv:lock:upgrade-package"]
+run = 'uv lock --upgrade-package "$@"'
+
+[tasks."core:uv:tree:json"]
+description = "CORE uv tree:json — emit dependency tree as JSON for tool integration (uv 0.12+; uv tree --format=json)"
+alias = ["uv:tree:json"]
+run = "uv tree --format=json"
+
+[tasks."core:uv:format"]
+description = "CORE uv format — Rust-managed Python formatter (uv 0.12+; complements ruff format)"
+alias = ["uv:format"]
+run = "uv format"
+
+[tasks."core:uv:format:check"]
+description = "CORE uv format:check — CI gate (uv 0.12+; uv format --check)"
+alias = ["uv:format:check"]
+run = "uv format --check"
 
 [tasks."lint:skills"]
 description = "Validate the .agents/skills/ metadata (frontmatter, name match, description length, line count)"
@@ -246,6 +478,81 @@ description = "Audit web/apps/cianfhoghlaim-leaving-cert/apps/api/src/copilotkit
 depends = ["sync"]
 run = ".venv/bin/python3 scripts/lint_copilotkit_actions_stubbed.py"
 
+[tasks."lint:mcp-gateway"]
+description = "Verify phantom MCP gateway at web/apps/croilar-portal/src/routes/api/mcp.gateway.ts carries KNOWN-ISSUE + TODO(mcp-bridge) markers (shared domain)"
+run = "bash scripts/lint_mcp_gateway.sh"
+
+[tasks."lint:mcp-runtime"]
+description = "Verify every `enabled: true` MCP entry in opencode.json has a corresponding mcp:smoke:<name> task (data domain)"
+run = "bash scripts/lint_mcp_runtime.sh"
+
+# =============================================================================
+# MCP SMOKE TASKS — one per enabled MCP server
+# Per openspec/changes/2026-08-21-fix-wired-but-unloaded-mcps-v1
+# Each task calls scripts/mcp_smoke.sh <name> with a 5s timeout per the
+# lint:mcp-runtime contract.
+# =============================================================================
+
+[tasks."mcp:smoke"]
+description = "Run all mcp:smoke:* tasks in sequence (data domain)"
+depends = [
+  "mcp:smoke:dlt-workspace-mcp",
+  "mcp:smoke:firecrawl",
+  "mcp:smoke:motherduck",
+  "mcp:smoke:chrome",
+  "mcp:smoke:cocoindex-code",
+  "mcp:smoke:huggingface",
+]
+run = "echo OK"
+
+[tasks."mcp:smoke:dlt-workspace-mcp"]
+description = "Smoke test: dlt-workspace-mcp (uv/dlthub on PATH)"
+run = "bash scripts/mcp_smoke.sh dlt-workspace-mcp"
+
+[tasks."mcp:smoke:firecrawl"]
+description = "Smoke test: firecrawl MCP (bun + bunx on PATH)"
+run = "bash scripts/mcp_smoke.sh firecrawl"
+
+[tasks."mcp:smoke:motherduck"]
+description = "Smoke test: motherduck MCP (uvx on PATH)"
+run = "bash scripts/mcp_smoke.sh motherduck"
+
+[tasks."mcp:smoke:chrome"]
+description = "Smoke test: chrome-devtools-mcp (bun + Chrome on PATH)"
+run = "bash scripts/mcp_smoke.sh chrome"
+
+[tasks."mcp:smoke:cocoindex-code"]
+description = "Smoke test: ccc MCP (ccc on PATH)"
+run = "bash scripts/mcp_smoke.sh cocoindex-code"
+
+[tasks."mcp:smoke:huggingface"]
+description = "Smoke test: huggingface MCP (huggingface.co reachable)"
+run = "bash scripts/mcp_smoke.sh huggingface"
+
+[tasks."mcp:smoke:crawl4ai"]
+description = "Smoke test: crawl4ai MCP v0.9.x (port 11235 reachable)"
+run = "bash scripts/mcp_smoke.sh crawl4ai"
+
+[tasks."mcp:smoke:cognee"]
+description = "Smoke test: cognee MCP (port 8100 reachable)"
+run = "bash scripts/mcp_smoke.sh cognee"
+
+[tasks."mcp:smoke:graphiti"]
+description = "Smoke test: graphiti MCP (port 8000 reachable)"
+run = "bash scripts/mcp_smoke.sh graphiti"
+
+[tasks."mcp:smoke:design-system"]
+description = "Smoke test: design-system MCP (design-system-server.py exists)"
+run = "bash scripts/mcp_smoke.sh design-system"
+
+[tasks."mcp:smoke:langfuse"]
+description = "Smoke test: langfuse MCP (port 3000 reachable)"
+run = "bash scripts/mcp_smoke.sh langfuse"
+
+[tasks."mcp:smoke:infisical"]
+description = "Smoke test: infisical MCP (port 8081 reachable)"
+run = "bash scripts/mcp_smoke.sh infisical"
+
 
 # =============================================================================
 # CORE:SYNC NAMESPACE — the 14-layer knowledge sync architecture
@@ -253,7 +560,22 @@ run = ".venv/bin/python3 scripts/lint_copilotkit_actions_stubbed.py"
 
 [tasks."sync:all"]
 description = "CORE sync orchestrator — runs all 14 sync layers in topological order"
-depends = ["sync:paths", "sync:ccc", "sync:cognee", "sync:skills", "sync:mcp", "sync:dagster", "sync:drift-docs", "sync:spec-agents", "sync:baml", "sync:stacks", "sync:dlt", "sync:agents", "sync:notebooks", "sync:firecrawl"]
+depends = [
+  "sync:paths",
+  "sync:ccc",
+  "sync:cognee",
+  "sync:skills",
+  "sync:mcp",
+  "sync:dagster",
+  "sync:drift-docs",
+  "sync:spec-agents",
+  "sync:baml",
+  "sync:stacks",
+  "sync:dlt",
+  "sync:agents",
+  "sync:notebooks",
+  "sync:firecrawl",
+]
 run = "bash scripts/sync/all.sh"
 
 [tasks."sync:paths"]
@@ -351,6 +673,72 @@ run = "openspec status ${1:-}"
 description = "Show one openspec change or spec formatted to terminal (openspec 1.4+)"
 run = "openspec show ${1:-}"
 
+[tasks."openspec:schemas"]
+description = "OPENSPEC schemas — list available workflow schemas (spec-driven, opsx, tdd)"
+alias = ["openspec:schema"]
+run = "openspec schemas"
+
+[tasks."openspec:schemas:json"]
+description = "OPENSPEC schemas JSON — list available schemas emitting JSON (for tool integration)"
+alias = ["openspec:schema:json"]
+run = "openspec schemas --json"
+
+[tasks."openspec:feedback"]
+description = "OPENSPEC feedback — submit feedback to OpenSpec maintainers (openspec 1.4+)"
+alias = ["openspec:fb"]
+run = "openspec feedback --help"
+
+[tasks."openspec:instructions"]
+description = "OPENSPEC instructions — emit enriched template for an artifact (openspec 1.4+). Usage: mise run openspec:instructions --change <id> [artifact]"
+alias = ["openspec:inst"]
+run = 'openspec instructions "$@"'
+
+[tasks."openspec:templates"]
+description = "OPENSPEC templates — show resolved template paths for all artifacts in a schema"
+alias = ["openspec:tpls"]
+run = "openspec templates"
+
+# The remaining 7 openspec subcommands we missed in the previous openspec refactor
+[tasks."openspec:update"]
+description = "OPENSPEC update — re-emit OpenSpec instruction files (openspec 1.4+)"
+alias = ["openspec:refresh"]
+run = "openspec update"
+
+[tasks."openspec:change"]
+description = "OPENSPEC change — manage OpenSpec change proposals (openspec 1.4+; interactive)"
+alias = ["openspec:change:cmd"]
+run = "openspec change --help"
+
+[tasks."openspec:spec"]
+description = "OPENSPEC spec — manage and view OpenSpec specifications (openspec 1.4+; interactive)"
+alias = ["openspec:spec:cmd"]
+run = "openspec spec --help"
+
+[tasks."openspec:config"]
+description = "OPENSPEC config — view and modify global OpenSpec configuration (openspec 1.4+)"
+alias = ["openspec:cfg"]
+run = "openspec config"
+
+[tasks."openspec:workspace"]
+description = "OPENSPEC workspace — set up and inspect coordination workspaces (openspec 1.4+)"
+alias = ["openspec:ws"]
+run = "openspec workspace --help"
+
+[tasks."openspec:context-store"]
+description = "OPENSPEC context-store — set up and inspect local context stores (openspec 1.4+)"
+alias = ["openspec:ctx"]
+run = "openspec context-store --help"
+
+[tasks."openspec:initiative"]
+description = "OPENSPEC initiative — create and list coordinated initiatives (openspec 1.4+)"
+alias = ["openspec:init"]
+run = "openspec initiative --help"
+
+[tasks."openspec:upgrade"]
+description = "OPENSPEC upgrade — print the install command to upgrade openspec to the latest version (1.10+; user must run)"
+alias = ["openspec:version:upgrade"]
+run = "echo 'Run: bun add -g @fission-ai/openspec@latest' && openspec --version"
+
 
 # =============================================================================
 # DEVOPS NAMESPACE (14 tasks) — IaC + 89 stacks + secrets + deploy
@@ -358,28 +746,19 @@ run = "openspec show ${1:-}"
 
 [tasks.devops]
 description = "DEVOPS omnibus — the daily IaC command (health + bootstrap-pangolin-client + validate-stacks + validate-stacks:strict)"
-depends = ["devops:health", "devops:bootstrap-pangolin-client", "devops:validate-stacks", "devops:validate-stacks:strict"]
+depends = [
+  "devops:health",
+  "devops:bootstrap-pangolin-client",
+  "devops:validate-stacks",
+  "devops:validate-stacks:strict",
+]
 run = "echo 'devops omnibus complete (4 IaC gates passed).'"
 
-[tasks."devops:health"]
-description = "Komodo + Pangolin + Infisical state consistency check"
-alias = ["iac:health", "iac-health"]
-run = "bun run --cwd bonneagar iac:health ${@:-}"
-
-[tasks."devops:plan"]
-description = "IaC diff: declared vs actual state (no mutation)"
-alias = ["iac:plan", "iac-plan"]
-run = "bun run --cwd bonneagar iac:plan ${@:-}"
-
-[tasks."devops:bootstrap"]
-description = "IaC full bootstrap (Pulumi -> Infisical -> Pangolin -> Komodo -> Newt)"
-alias = ["iac:bootstrap", "iac-bootstrap"]
-run = "bun run --cwd bonneagar iac:bootstrap ${@:-}"
-
-[tasks."devops:bootstrap-pangolin-client"]
-description = "Idempotent: install the pangolin CLI + mint a Pangolin machine client + render the newt compose"
-alias = ["iac:bootstrap-pangolin-client", "iac-bootstrap-pangolin-client"]
-run = "bun run --cwd bonneagar iac:bootstrap-pangolin-client ${@:-}"
+# NOTE: devops:health, devops:plan, devops:bootstrap, devops:bootstrap-pangolin-client,
+# devops:deploy, devops:teardown have moved to bonneagar/mise.toml (subproject).
+# The old names are no longer accessible from the root mise.toml — use
+# `cd bonneagar && mise run devops:health` instead. (Full monorepo_root
+# integration requires mise >= 2026.7.17; we run 2026.5.6.)
 
 [tasks."devops:validate-stacks"]
 description = "Validate all 89 Docker Compose stacks under bonneagar/stacks/ against the 6-file GOLD_STANDARD pattern (the canonical CI gate)"
@@ -392,6 +771,11 @@ description = "CI gate: stack-doctor --strict + --check-grammar (fails on missin
 alias = ["stack-doctor:strict"]
 depends = ["sync"]
 run = "bash scripts/stack-doctor.sh --strict --check-grammar"
+
+[tasks."devops:teardown-stack:from-root"]
+description = "DEVOPS teardown-stack (root alias) — per-host selective teardown of the 14-stack core 24/7 (per the 2026-08-21 openspec change)"
+alias = ["devops:teardown-stack", "iac:teardown-stack", "iac-teardown-stack"]
+run = "bun run --cwd bonneagar iac:teardown-stack ${@:-}"
 
 [tasks."devops:secrets:env"]
 description = "Create the dev-baile environment in Infisical"
@@ -437,7 +821,12 @@ run = "bash scripts/deploy-full.sh ${@:-}"
 
 [tasks.data]
 description = "DATA omnibus — the daily data plane command (setup + status + marimo-wasm-export + cocoindex-conformance)"
-depends = ["data:setup", "data:status", "data:marimo:wasm:export", "data:cocoindex:conformance"]
+depends = [
+  "data:setup",
+  "data:status",
+  "data:marimo:wasm:export",
+  "data:cocoindex:conformance",
+]
 run = "echo 'data omnibus complete (4 data gates passed).'"
 
 [tasks."data:up"]
@@ -451,6 +840,39 @@ description = "Teardown the unified 16-service lakehouse stack"
 alias = ["lakehouse:down"]
 depends = ["sync"]
 run = "bash scripts/lakehouse_unified_down.sh ${@:-}"
+
+# 2026-08-25-lakehouse-observability-and-cross-stack-integration-v1 (PR #4)
+# The lakehouse:all:up / lakehouse:all:down tasks bring up the COMPLETE data plane
+# in dependency order: lakehouse → logfire → langfuse → mlflow → dagster.
+[tasks."data:all:up"]
+description = "Bring up the complete data plane: lakehouse + logfire + langfuse + mlflow + dagster (in dependency order). Per the 2026-08-25-lakehouse-observability-and-cross-stack-integration-v1 change."
+alias = ["lakehouse:all:up"]
+depends = ["data:up"]
+run = """
+bash scripts/lakehouse_unified_up.sh &&
+(cd ../bonneagar/stacks/logfire && docker compose -f compose.yaml -f sidecar.yaml up -d) &&
+(cd ../bonneagar/stacks/langfuse && docker compose -f compose.yaml -f sidecar.yaml up -d) &&
+(cd ../bonneagar/stacks/mlflow && docker compose -f compose.yaml -f sidecar.yaml up -d) &&
+sleep 30 && mise run lakehouse:preflight
+echo 'Complete data plane is up.'
+"""
+
+[tasks."data:all:down"]
+description = "Teardown the complete data plane (in reverse dependency order: dagster → mlflow → langfuse → logfire → lakehouse). Per the 2026-08-25-lakehouse-observability-and-cross-stack-integration-v1 change."
+alias = ["lakehouse:all:down"]
+run = """
+(cd ../bonneagar/stacks/dagster && docker compose -f compose.yaml down) &&
+(cd ../bonneagar/stacks/mlflow && docker compose -f compose.yaml down) &&
+(cd ../bonneagar/stacks/langfuse && docker compose -f compose.yaml down) &&
+(cd ../bonneagar/stacks/logfire && docker compose -f compose.yaml down) &&
+bash scripts/lakehouse_unified_down.sh
+echo 'Complete data plane is down.'
+"""
+
+[tasks."data:stack-doctor"]
+description = "Lint the unified lakehouse stack — 17 services + 14 DBs + 10 private-resources + 5 routes + 58 infisical URIs + image pinning + no hardcoded absolute paths. Per the 2026-08-24-lakehouse-stack-doctor-and-env-var-cleanup-v1 change."
+alias = ["lakehouse:stack-doctor"]
+run = "bash scripts/lakehouse-stack-doctor.sh"
 
 [tasks."data:setup"]
 description = "BIEP v3 full setup — Docker + lakehouse + BAML codegen + registry seed + lance namespace + openspec + lint:skills"
@@ -484,7 +906,20 @@ run = "bun run schema:validate"
 
 [tasks."data:biep:milestone"]
 description = "BIEP v3 milestone runner (M0 through M10) — usage: mise run data:biep:milestone -- <n>"
-alias = ["biep:v3:m", "biep:v3:m0", "biep:v3:m1", "biep:v3:m2", "biep:v3:m3", "biep:v3:m4", "biep:v3:m5", "biep:v3:m6", "biep:v3:m7", "biep:v3:m8", "biep:v3:m9", "biep:v3:m10"]
+alias = [
+  "biep:v3:m",
+  "biep:v3:m0",
+  "biep:v3:m1",
+  "biep:v3:m2",
+  "biep:v3:m3",
+  "biep:v3:m4",
+  "biep:v3:m5",
+  "biep:v3:m6",
+  "biep:v3:m7",
+  "biep:v3:m8",
+  "biep:v3:m9",
+  "biep:v3:m10",
+]
 depends = ["sync"]
 usage = 'arg "<n>" help="Milestone number 0-10" default="0"'
 run = '''
@@ -514,7 +949,11 @@ run = ".venv/bin/python3 scripts/marimo_wasm_export.py"
 
 [tasks."data:cocoindex:conformance"]
 description = "Run the cocoindex_v1_conformance App to lint all 14 v1 Apps against the 4-rule conformance contract"
-alias = ["cic:cocoindex:conformance", "upstream:conformance", "cocoindex:conformance"]
+alias = [
+  "cic:cocoindex:conformance",
+  "upstream:conformance",
+  "cocoindex:conformance",
+]
 depends = ["sync"]
 run = ".venv/bin/python3 -c 'import asyncio; from cocoindex_flows.infrastructure.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary())'"
 
@@ -546,22 +985,10 @@ alias = ["cic:meaisin:litellm-regenerate", "litellm:regenerate"]
 depends = ["sync"]
 run = "PYTHONPATH=. python scripts/generate_litellm_config.py > bonneagar/stacks/litellm/config/config.yaml"
 
-[tasks."ml:agents:smoke"]
-description = "Run the 3 agent-fleet smoke tests (test_agent_fleet_smoke.py + test_agent_wiring_audit.py + test_agent_registry_smoke.py)"
-alias = ["agents:smoke"]
-depends = ["sync"]
-run = "uv run pytest tests/test_agent_fleet_smoke.py tests/test_agent_wiring_audit.py tests/test_agent_registry_smoke.py -v"
-
-[tasks."ml:agents:audit"]
-description = "Direct-import audit + AGENT_REGISTRY validation for the 12-agent fleet"
-alias = ["agents:audit"]
-run = ".venv/bin/python3 -c \"import os; os.environ['AGENT_FLEET_DISABLE_WIRE']='1'; os.environ['AGENT_FLEET_DISABLE_MEMORY']='1'; from agents.agent_registry import AGENT_REGISTRY; assert len(AGENT_REGISTRY) >= 12, f'AGENT_REGISTRY has {len(AGENT_REGISTRY)} entries'; print(f'AGENT_REGISTRY: {len(AGENT_REGISTRY)} entries OK')\""
-
-[tasks."ml:agents:reproduce"]
-description = "Operator's one-shot: reproduce the 12-agent fleet + 8 NCCA subject specialists + 3 educational agents from cold to green"
-alias = ["agents:reproduce"]
-depends = ["sync"]
-run = "bash scripts/reproducers/agents-fleet-reproducer.sh"
+# NOTE: ml:agents:smoke, ml:agents:audit, ml:agents:reproduce have moved to
+# agents/mise.toml (subproject). The old names are no longer accessible from
+# the root mise.toml — use `cd agents && mise run ml:agents:audit` instead.
+# (Full monorepo_root integration requires mise >= 2026.7.17; we run 2026.5.6.)
 
 
 # =============================================================================
@@ -570,7 +997,13 @@ run = "bash scripts/reproducers/agents-fleet-reproducer.sh"
 
 [tasks.web]
 description = "WEB omnibus — the daily web command (install + build + typecheck + lint + format)"
-depends = ["web:install", "web:build", "web:typecheck", "web:lint", "web:format"]
+depends = [
+  "web:install",
+  "web:build",
+  "web:typecheck",
+  "web:lint",
+  "web:format",
+]
 run = "echo 'web omnibus complete (5 web gates passed).'"
 
 [tasks."web:install"]
@@ -600,6 +1033,12 @@ run = "bunx turbo run lint"
 description = "Format all web packages via Prettier"
 depends = ["web:install"]
 run = "bunx prettier --write ."
+
+[tasks."web:test:parallel"]
+description = "WEB test parallel — run all web tests in parallel (turbo --parallel; bun 1.4+)"
+alias = ["web:test:parallel"]
+depends = ["web:install"]
+run = "bunx turbo run test --parallel"
 
 [tasks."web:dev"]
 description = "Run a per-app dev server — usage: mise run web:dev <app> (e.g. cianfhoghlaim-web, tuatha-ui, croilar-web)"

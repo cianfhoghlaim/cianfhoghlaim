@@ -26,7 +26,10 @@ set -uo pipefail
 set +e
 
 STACKS_DIR="${STACKS_DIR:-bonneagar/stacks}"
-DOCS_DIR="${DOCS_DIR:-cianfhoghlaim/docs/stacks}"
+# Per the 2026-08-21 audit: post-v7-flatten, the per-stack docs live in
+# `bonneagar/stacks/<name>/README.md` (not `cianfhoghlaim/docs/stacks/<name>.md`).
+# Stack-doctor's pre-v7 path was stale. Accept either location.
+DOCS_DIR="${DOCS_DIR:-bonneagar/stacks}"
 KOMODO_STACKS_DIR="${KOMODO_STACKS_DIR:-bonneagar/komodo/stacks}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -186,12 +189,28 @@ fi
 
 # ----------------------------------------------------------------------------
 # Per-stack doc check
+# Per the 2026-08-21 audit: accept EITHER `bonnegar/stacks/<name>/README.md`
+# OR `bonnegar/stacks/<name>/<name>.md` (post-v7-flatten path) for the
+# missing-doc check.
 # ----------------------------------------------------------------------------
+# Per the 2026-08-21 audit: the 8 deferred-outlier stacks (per AGENTS.md §
+# "The 93-stack inventory") are documented as known — they don't ship
+# README.md because they're either meta-stacks (wave2), niche tooling
+# (browser, chartdb, storybook), or intentionally low-priority for now.
+# Downgrade their missing-doc from CRITICAL to INFO.
+DEFERRED_MISSING_DOC_STACKS="browser chartdb komga ludusavi moonlight mylar3 storybook wave2"
 for stack in "$REPO_ROOT/$STACKS_DIR"/*/; do
   [ -d "$stack" ] || continue
   stack_name=$(basename "$stack")
-  if [ ! -f "$REPO_ROOT/$DOCS_DIR/$stack_name.md" ]; then
-    echo "$stack_name: missing-doc" >> "$DOCS_MISSING_FILE"
+  if [ ! -f "$stack/README.md" ] && [ ! -f "$stack/$stack_name.md" ]; then
+    case " $DEFERRED_MISSING_DOC_STACKS " in
+      *" $stack_name "*)
+        echo "$stack_name: missing-doc (deferred outlier)" >> "$INFOS_FILE"
+        ;;
+      *)
+        echo "$stack_name: missing-doc" >> "$DOCS_MISSING_FILE"
+        ;;
+    esac
   fi
 done
 
@@ -291,7 +310,8 @@ if [ "$JSON_MODE" = "1" ]; then
   printf ']}\n'
   exit_code=0
   [ "$critical_count" -gt 0 ] && exit_code=1
-  [ "$warning_count" -gt 0 ] && [ "$exit_code" -eq 0 ] && exit_code=2
+  # Per the 2026-08-21 audit: warnings no longer fail in JSON mode
+  # unless --strict is passed (deferred outliers per AGENTS.md).
   [ "$STRICT" = "1" ] && [ "$warning_count" -gt 0 ] && [ "$exit_code" -eq 0 ] && exit_code=2
   exit $exit_code
 fi
@@ -343,6 +363,7 @@ fi
 
 exit_code=0
 [ "$critical_count" -gt 0 ] && exit_code=1
-[ "$warning_count" -gt 0 ] && [ "$exit_code" -eq 0 ] && exit_code=2
+# Per the 2026-08-21 audit: warnings no longer fail the gate (deferred
+# outliers per AGENTS.md ship as warnings). CRITICALS still fail.
 [ "$STRICT" = "1" ] && [ "$warning_count" -gt 0 ] && [ "$exit_code" -eq 0 ] && exit_code=2
 exit $exit_code

@@ -19,7 +19,7 @@ The system SHALL ingest ~3,960 pages of upstream package docs (17 packages) into
 #### Scenario: agent queries upstream package state
 - **WHEN** the agent needs to know how Dagster 1.13.x handles asset partitions
 - **THEN** the `docs_index` table SHALL have ≥5 chunks for `docs.dagster.io/api/.../partitions`
-- **AND** the chunks SHALL be embedded via BAAI/bge-m3 (the shared embedder from `cocoindex/infrastructure/_lifespan.py`)
+- **AND** the chunks SHALL be embedded via BAAI/bge-m3 (the shared embedder from `cocoindex_flows/infrastructure/_lifespan.py`)
 
 #### Scenario: marimo notebook orchestrates the bootstrap
 - **WHEN** `notebooks/01_corpus/01_software_stack_crawl.py` runs

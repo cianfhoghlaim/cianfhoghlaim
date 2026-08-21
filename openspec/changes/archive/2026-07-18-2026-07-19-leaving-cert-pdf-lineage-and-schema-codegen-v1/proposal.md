@@ -99,7 +99,7 @@ The 8 new requirements cover:
 | BAML `ExtractCurriculumSyllabus` + 4 sibling extractors | `baml_src/british_isles/ireland/education/lc_extraction/*.baml` | Live — `LineageTrace` is additive |
 | 7 per-subject `qpack_<subject>.baml` schemas | `baml_src/british_isles/ireland/education/subjects/` | Live |
 | 6 per-subject marimo notebooks | `notebooks/03_leaving_cert/<subject>_biep_v1.py` | Live |
-| CocoIndex parameterised App | `cocoindex/subjects/lc_subject_embedding.py` | Live (BIEP v1 canonical) |
+| CocoIndex parameterised App | `cocoindex_flows/subjects/lc_subject_embedding.py` | Live (BIEP v1 canonical) |
 | BIEPSubjectPage + BIEPVisualizations metadata | `apps/web/src/{components/BIEPSubjectPage.tsx, lib/bi-ep.ts}` | Live — R29 extends `BIEPVisualizations` |
 | Hono + Convex + BetterAuth + Storybook + 12 `<Ci*>` components | `apps/web/` | Live |
 | The 13 PDF directories + 4 root PDFs | `leaving_certificate/<subject>/{en,ga}/*.pdf` + `leaving_certificate/*.pdf` | The source of truth |

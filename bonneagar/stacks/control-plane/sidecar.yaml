@@ -14,7 +14,7 @@
 
 # Locket service config (the sidecar)
 locket:
-  image: ghcr.io/bpbradley/locket:infisical
+  image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
   user: "1000:1000"
   security_opt:
     - no-new-privileges:true
@@ -28,6 +28,7 @@ locket:
     INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
     INFISICAL_CLIENT_SECRET_FILE: /run/secrets/infisical/client_secret
     INFISICAL_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+    LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
     INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_DEFAULT_ENVIRONMENT:-dev}
     INFISICAL_DEFAULT_PATH: /
     # Locket mode (watch by default — hot-reload on secrets change)

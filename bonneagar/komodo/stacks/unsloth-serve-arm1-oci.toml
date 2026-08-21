@@ -1,10 +1,11 @@
 # =============================================================================
-# UNSLOTH-SERVE — Komodo-Orchestrated Stack (arm1-oci, GPU-backed, public)
+# UNSLOTH-SERVE — Komodo-Orchestrated Stack (arm1-oci, CPU-backed, public)
 # =============================================================================
-# Added by the 2026-08-21-unsloth-v5-integration-v1 change.
-# Public-facing GPU-backed inference server. The base compose.yaml is shared;
-# the override file `compose.arm1-oci.yaml` flips image + ngl + memory limits
-# + GPU passthrough.
+# Added by the 2026-08-21-unsloth-v5-integration-v1 change (corrected in
+# the 2026-08-21 hotfix commit): arm1-oci is the CPU-only host.
+# Public-facing CPU-backed inference server. The base compose.yaml is
+# shared; the override file `compose.arm1-oci.yaml` flips image + ngl
+# + memory limits for the CPU-only Oracle Cloud arm64 server.
 #
 # Architecture:
 #   arm1-oci — unsloth-serve (:8888 host → :8888 container, Studio UI)
@@ -24,8 +25,8 @@
 
 [[stack]]
 name = "unsloth-serve"
-description = "Unsloth Studio headless inference server — Qwen3.8-27B GGUF (arm1-oci, GPU, ports 8888 + 8889, unsloth.cianfhoghlaim.ie)"
-tags = ["host:arm1-oci", "tier:agent-platform", "type:inference-server", "domain:unsloth.cianfhoghlaim.ie", "stack:unsloth-serve"]
+description = "Unsloth Studio headless inference server — Qwen3.8-27B GGUF (arm1-oci, CPU, ports 8888 + 8889, unsloth.cianfhoghlaim.ie)"
+tags = ["host:arm1-oci", "tier:agent-platform", "type:inference-server", "domain:unsloth.cianfhoghlaim.ie", "stack:unsloth-serve", "cpu-only"]
 
 [stack.config]
 server_id = "arm1-oci"
@@ -42,10 +43,9 @@ file_paths = [
 LOCKET_MODE = "watch"
 INFISICAL_CLIENT_ID = "${INFISICAL_CLIENT_ID}"
 INFISICAL_SECRET_FILE = "${INFISICAL_SECRET_FILE}"
-# GPU base image (CUDA); full GPU offload; 12 GB memory limit
-UNSLOTH_IMAGE = "unsloth/unsloth:cuda-latest"
-# The arm1-oci compose override reads LLAMA_ARG_NGL=99 from this value
-LLAMA_ARG_NGL = "99"
+# The arm1-oci compose override reads these via env override
+UNSLOTH_IMAGE = "unsloth/unsloth:latest"
+UNSLOTH_PLATFORM = "linux-cpu"
+LLAMA_ARG_NGL = "0"
 LLAMA_ARG_CTX_SIZE = "32768"
-NVIDIA_VISIBLE_DEVICES = "all"
-NVIDIA_DRIVER_CAPABILITIES = "compute,utility"
+LLAMA_ARG_THREADS = "8"

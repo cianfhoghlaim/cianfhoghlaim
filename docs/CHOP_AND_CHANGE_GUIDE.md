@@ -66,7 +66,7 @@ any of these, **it is stale**:
 | Stale name | Current (post-v7) name | Where | Fixed in |
 |:--|:--|:--|:--|
 | `dlt/` (sub-package) | `dlt_sources/` | `dlt_sources/` | `2026-07-19-2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1` |
-| `bge-large-en-v1.5` | `BAAI/bge-m3` (1024-d, multilingual) | `cocoindex/_shared/_lifespan.py:107` | `2026-08-06-biep-v3-critical-path-fixes-v1` |
+| `bge-large-en-v1.5` | `BAAI/bge-m3` (1024-d, multilingual) | `cocoindex_flows/_shared/_lifespan.py:107` | `2026-08-06-biep-v3-critical-path-fixes-v1` |
 | `md:oideachais` | `md:cianfhoghlaim` | `notebooks/_shared/db.py:26` | `2026-08-06-biep-v3-critical-path-fixes-v1` |
 | `oideachais.*` (BAML namespace) | `cianfhoghlaim.*` | `baml_src/baml.toml`, every `.baml` file | `2026-07-26-biep-v3-root-namespace-rename-v1` (active) |
 | `cianchoghlaim` (typo) | `cianfhoghlaim` | 3,633 occurrences across 228 files (Docker network, container name prefix, DuckLake schema, S3 bucket, docstrings, prompts) | `2026-07-19-fix-cianchoghlaim-typo-v1` |
@@ -766,11 +766,11 @@ markdown, source code, DuckLake tables), chunk them, embed them with
 `bge-large-en-v1.5` per `2026-08-06-biep-v3-critical-path-fixes-v1`),
 and mount the resulting vectors into **LanceDB** via
 `lancedb.mount_table_target`. 179 `.py` files across 50+ subdirectories,
-18 enumerated v1 Apps in `cocoindex/__init__.py:39-58` (not 7 — the
+18 enumerated v1 Apps in `cocoindex_flows/__init__.py:39-58` (not 7 — the
 "7 BIEP Apps" framing is from an earlier batch), plus a 4-rule
 static-AST conformance linter, a CLI, and 7 shared modules. Every App
 imports the same shared `@coco.lifespan` from
-`cocoindex/_shared/_lifespan.py:113` (which provides `LANCE_DB`,
+`cocoindex_flows/_shared/_lifespan.py:113` (which provides `LANCE_DB`,
 `EMBEDDER`, and `RESOLVED_FILE_REGISTRY` as `coco.ContextKey`s).
 
 **OSS value (4 named open-source packages):**
@@ -781,10 +781,10 @@ imports the same shared `@coco.lifespan` from
   `RecursiveSplitter`, `SentenceTransformerEmbedder`. The v1 App
   pattern (`coco.App(coco.AppConfig(name=…))` at module scope +
   `lancedb.mount_table_target(LANCE_DB, …)`) is enforced by the
-  linter at `cocoindex/infrastructure/cocoindex_v1_conformance.py:178-195`.
+  linter at `cocoindex_flows/infrastructure/cocoindex_v1_conformance.py:178-195`.
 - **lancedb `>=0.34.0`** — the embedded vector target, reachable via
   `LanceAsyncConnection` (the `LANCE_DB` ContextKey at
-  `cocoindex/_shared/_lifespan.py:83`). Default URI is
+  `cocoindex_flows/_shared/_lifespan.py:83`). Default URI is
   `rest://lakehouse-lance-namespace:8182`. Native HNSW + IVF vector
   indexes (`declare_vector_index(column="embedding")`).
 - **sentence-transformers `>=5.6.0`** — provides
@@ -798,7 +798,7 @@ imports the same shared `@coco.lifespan` from
 **Chop-and-change steps (5):**
 
 1. **Copy the shared embedder unchanged.** Drop
-   `cocoindex/_shared/_lifespan.py` into your repo as
+   `cocoindex_flows/_shared/_lifespan.py` into your repo as
    `myproject/_shared/_lifespan.py`. Set `LANCEDB_URI` (default
    `rest://lakehouse-lance-namespace:8182` is local-dev only — point
    it at `lancedb://./storage/data/lancedb` for an embedded local DB)
@@ -815,10 +815,10 @@ imports the same shared `@coco.lifespan` from
    `localfs` with `s3` / `gdrive` / `oci_object_storage`. The schema
    (`Annotated[NDArray, EMBEDDER]`) is unchanged.
 4. **Add a new App for a new subject in 3 files.** (a) Add a row to
-   `cocoindex/subjects/lc_subject_config.yaml:19-35`. (b) Drop the
+   `cocoindex_flows/subjects/lc_subject_config.yaml:19-35`. (b) Drop the
    PDFs into `leaving_certificate/<your-subject>/` (or set
    `CIANFHOGHLAIM_<YOUR_SUBJECT>_ROOT`). (c) Re-run
-   `uv run cocoindex update cianfhoghlaim.cocoindex.subjects.lc_subject_embedding:app --subject=<your-slug>`.
+   `uv run cocoindex update cianfhoghlaim.cocoindex_flows.subjects.lc_subject_embedding:app --subject=<your-slug>`.
    The conformance linter will accept it as long as you kept the R1
    + R3 lines.
 5. **Use `coco.runtime()` + `@coco.lifespan` for non-Dagster hosting.**
@@ -852,7 +852,7 @@ codebase on disk with full read/write + AST awareness.
 <summary><b>Click to expand the full `cocoindex/` deep-cuts report (179 .py files)</b></summary>
 
 [Full deep-cuts verbatim — covers the BIEP-relevant subset (lc_subject_embedding.py + government_circulars_embedding.py), the 4-rule AST linter at
-`cocoindex/infrastructure/cocoindex_v1_conformance.py`, the CLI at `cocoindex/_shared/cli.py`, the 14 mise.toml tasks, the per-App source/target swap pattern. Includes the source/target swap table that maps localfs → S3 / Google Drive / OCI and LanceDB → Qdrant / Turbopuffer / Postgres+pgvector.]
+`cocoindex_flows/infrastructure/cocoindex_v1_conformance.py`, the CLI at `cocoindex_flows/_shared/cli.py`, the 14 mise.toml tasks, the per-App source/target swap pattern. Includes the source/target swap table that maps localfs → S3 / Google Drive / OCI and LanceDB → Qdrant / Turbopuffer / Postgres+pgvector.]
 
 </details>
 
@@ -1058,7 +1058,7 @@ Other notable actives: `2026-08-01-biep-v3-dlt-jurisdiction-pipeline-bugfix-v1` 
 | 4 | **notebooks** | The **`ibis-first` connection contract** at `notebooks/_shared/db.py:26` (`LAKEHOUSE_URI_DEFAULT = "md:cianfhoghlaim"`) — every notebook now imports `_shared.db` instead of raw `duckdb.connect()` | `notebooks/_shared/db.py`, `openspec/changes/2026-07-25-nb-utils-ibis-first-v1/` |
 | 5 | **baml_src** | The **canonical cross-jurisdiction registry** at `baml_src/british_isles/_cross/biep_subject.baml` (`BritishIslesSubject` + 8 enums) | `baml_src/british_isles/_cross/biep_subject.baml`, `openspec/changes/2026-07-27-biep-v3-canonical-registry-v1/proposal.md` |
 | 6 | **agents** | The canonical **`agents/root_agent.py` orchestrator** + the **LiteLLM-routed M3 chokepoint** at `agents/api/`. New agents MUST register in `agents/routing_keywords.py` | `agents/root_agent.py`, `agents/routing_keywords.py`, `agents/api/` |
-| 7 | **cocoindex** | The **`cocoindex/_shared/_lifespan.py` shared embedder** (`BAAI/bge-m3` 1024-d). Every new CocoIndex v1 App MUST mount its `lancedb.mount_table_target` against this single embedder | `cocoindex/_shared/_lifespan.py`, `.agents/skills/cocoindex/SKILL.md` |
+| 7 | **cocoindex** | The **`cocoindex_flows/_shared/_lifespan.py` shared embedder** (`BAAI/bge-m3` 1024-d). Every new CocoIndex v1 App MUST mount its `lancedb.mount_table_target` against this single embedder | `cocoindex_flows/_shared/_lifespan.py`, `.agents/skills/cocoindex/SKILL.md` |
 | 8 | **motherduck** | The **4 BIEP v3 jurisdiction Flights** at `motherduck/flights/{ireland_full_coverage_flight,england_full_coverage_flight,sct_wls_ni_flight,crown_dependencies_flight}.{sql,py}` (registered by `2026-08-02-biep-v3-motherduck-flights-v1`) | `motherduck/flights/config.yaml`, `motherduck/flights/ireland_full_coverage_flight.py`, `openspec/changes/2026-08-02-biep-v3-motherduck-flights-v1/proposal.md` |
 
 ---

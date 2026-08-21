@@ -25,6 +25,7 @@
     "health": "bun run cli.ts health",
     "rotate-auth": "bun run cli.ts rotate-auth",
     "teardown": "bun run cli.ts teardown --force",
+    "teardown-stack": "bun run cli.ts teardown-stack ${@:-}",
     "sync:secrets": "bun run cli.ts sync:secrets",
     "sync:resources": "bun run cli.ts sync:resources",
     "sync:procedures": "bun run cli.ts sync:procedures",

@@ -85,7 +85,9 @@ class KCGCognifyComponent(Component, Resolvable):
         # defs.yaml overrides via `automation_cron:`. The per-asset check
         # (fail-loudly contract) still fires on manual launch.
         if self.automation_cron == "manual":
-            _automation = dg.AutomationCondition.manual()
+            # Dagster 1.13 has no `AutomationCondition.manual()` — `None` is how
+            # "never auto-materialise, launch by hand" is expressed.
+            _automation = None
         else:
             _automation = dg.AutomationCondition.on_cron(self.automation_cron)
 

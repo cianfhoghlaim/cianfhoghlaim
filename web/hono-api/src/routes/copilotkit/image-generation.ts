@@ -228,7 +228,7 @@ imageGenApp.post("/register", async (c) => {
     indexed_at: new Date().toISOString(),
     record_id: hashStub(asset_url),
     error:
-      "cocoindex.media.image_generation_flow not yet plumbed through Hono (PR 5 in mega-change)",
+      "cocoindex_flows.media.image_generation_flow not yet plumbed through Hono (PR 5 in mega-change)",
     metadata,
   });
 });

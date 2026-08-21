@@ -45,7 +45,7 @@ directory, and Python module names.
 ### 2. Content renames (~770 files modified)
 
 Across `baml_src/british_isles/`, `dlt/british_isles/`, `dlt/common/`,
-`cocoindex/subjects/`, `cocoindex/british_isles/`, `motherduck/`,
+`cocoindex_flows/subjects/`, `cocoindex_flows/british_isles/`, `motherduck/`,
 `orchestration/`, `web/apps/cianfhoghlaim-web/`, `web/hono-api/`,
 `openspec/specs/`, `openspec/changes/`, `.agents/skills/`,
 `notebooks/*.py`, `notebooks/_shared/`, `AGENTS.md`, `README.md`,
@@ -76,7 +76,7 @@ Affected repos: cianfhoghlaim (single-repo change)
 ## Acceptance gates
 
 - `git grep -l "oideachais\." baml_src/british_isles/ dlt/british_isles/
-   cocoindex/subjects/ cocoindex/british_isles/ dlt/common/ motherduck/
+   cocoindex_flows/subjects/ cocoindex_flows/british_isles/ dlt/common/ motherduck/
    orchestration/ web/apps/cianfhoghlaim-web/ web/hono-api/ openspec/specs/
    openspec/changes/ .agents/ AGENTS.md README.md mise.toml docs/`
   returns ZERO non-`_legacy`/non-`commonwealth`/non-`api_sources`/non-`archive` matches

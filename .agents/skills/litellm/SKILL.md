@@ -1,23 +1,33 @@
 ---
 name: litellm
-description: Expert assistance for unified LLM access with LiteLLM v1.84–1.90 (per-model routing groups, cosign-verified Docker, OpenAI Realtime GA, OpenTelemetry v2 metrics, MCP gateway, vector stores, workflows, providers incl. OpenAI / Anthropic / Azure AI / Bedrock / DeepSeek / xAI / Gemini / ModelScope / LibertAI / Parasail / Pinstripes / TinyFish / FastCRW).
+description: Expert assistance for unified LLM access with LiteLLM v1.97 (per-model routing groups, cosign-verified Docker, MCP Gateway GA, OAuth 2.0 v2, DCR, Rust-based /v1/messages, tool-result guardrails, OpenTelemetry v2 metrics, vector stores, workflows, providers incl. OpenAI / Anthropic / Azure AI / Bedrock / DeepSeek / xAI / Gemini / ModelScope / LibertAI / Parasail / Pinstripes / TinyFish / FastCRW).
 ---
 
 # LiteLLM - Unified LLM Interface
 
-**Version:** 1.90.x | **Last Updated:** 2026-06-29
-**Live evidence**: PyPI `litellm==1.90.0` (2026-06-27); docs latest = "Six New Providers, OpenTelemetry v2 Parity & Streaming Reliability".
+**Version:** 1.97.0 | **Last Updated:** 2026-08-21
+**Live evidence**: PyPI `litellm==1.97.0` (2026-08-21); `ghcr.io/berriai/litellm-database:v1.97.0` pinned in `bonneagar/stacks/litellm/compose.yaml` per `openspec/changes/2026-08-21-litellm-1.91-to-1.97-and-mcp-oauth-2.0-v1/`.
+
+## What's new in v1.97 (the upgrade)
+
+The bump from v1.91.0 → v1.97.0 is per `2026-08-21-litellm-1.91-to-1.97-and-mcp-oauth-2.0-v1`. Highlights:
+
+- **MCP Gateway GA** (v1.85): the `/v1/mcp` endpoint is now stable. Expose MCP servers through the proxy.
+- **OAuth 2.0 v2** (v1.91): the v2 auth resolver replaces custom auth code. Hermes no longer needs its own `--auth` flag.
+- **DCR** (v1.95): Dynamic Client Registration support for MCP-OAuth clients.
+- **Rust `/v1/messages`** (v1.95): the Rust-based endpoint (used by Claude Code + Hermes). Routed via Pangolin `/v1/messages` path.
+- **Tool-result guardrails** (v1.97): safety hooks around MCP tool invocations.
 
 ## 0. Versioning & cosign verification (v1.84.0+)
 
 Starting with v1.84.0 LiteLLM follows PEP 440. The `-stable` suffix is gone.
-Both `litellm:1.90.0` and `litellm:v1.90.0` resolve to the same image.
+Both `litellm:1.97.0` and `litellm:v1.97.0` resolve to the same image.
 All Docker images are cosign-signed with the key from commit `0112e53`:
 
 ```bash
 cosign verify \
   --key https://raw.githubusercontent.com/BerriAI/litellm/0112e53046018d726492c814b3644b7d376029d0/cosign.pub \
-  ghcr.io/berriai/litellm:v1.90.0
+  ghcr.io/berriai/litellm-database:v1.97.0
 ```
 
 ## Overview

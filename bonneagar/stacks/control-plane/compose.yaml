@@ -17,7 +17,7 @@ name: control-plane
 # Locket resolves the {{ infisical:///SECRET }} refs in each service's
 # secrets.env into /run/secrets/locket/secrets.env at container startup.
 x-locket-common: &locket-common
-  image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+  image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
   user: "1000:1000"
   security_opt:
     - no-new-privileges:true
