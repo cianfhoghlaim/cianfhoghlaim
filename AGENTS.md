@@ -44,7 +44,7 @@ The **3 new post-2026-08-15 specs** (centralized-model-registry + centralized-sc
 
 | Spec | One-liner |
 |:--|:--|
-| [`centralized-model-registry`](openspec/specs/centralized-model-registry/spec.md) | The single canonical model registry (52 entries / 7 families) — drives LiteLLM, BAML, agents, embedders, image-gen, voice, translation |
+| [`centralized-model-registry`](openspec/specs/centralized-model-registry/spec.md) | The single canonical model registry (76 entries / 7 families) — drives LiteLLM, BAML, agents, embedders, image-gen, voice, translation |
 | [`centralized-schema-registry`](openspec/specs/centralized-schema-registry/spec.md) | BAML is the single source of truth — Pydantic + Zod are codegen; 96 hand-written Pydantic duplicates removed |
 | [`deployment-control-panel`](openspec/specs/deployment-control-panel/spec.md) | The 5-tab marimo control panel + web UI + CLI for picking models/pipelines/datasets/stacks; writes to `deployment-choice.yaml` |
 
@@ -66,11 +66,11 @@ mise run web                      # web/apps + web/packages + web/hono-api + Tur
 # Surgical subcommands (when you know exactly what you want)
 mise run lint:skills              # validate .agents/skills/ metadata (65 skills pass)
 mise run lint:drift-docs          # validate every AGENTS.md number claim against ground truth
-mise run openspec:validate-all    # CI gate for every openspec change + spec (131 items pass)
+mise run openspec:validate-all    # CI gate for every openspec change + spec (132 items pass)
 mise run devops:validate-stacks   # validate all 89 Docker Compose stacks against the 6-file GOLD_STANDARD
 mise run data:dagster:up          # launch the Dagster UI on :3335
 mise run data:biep:milestone -- 1 # run BIEP v3 milestone m1
-mise run ml:registry:audit         # verify all 24 VISION_MODELS are live on HF Hub
+mise run ml:registry:audit         # verify all 22 ocr_vision models are live on HF Hub
 mise run web:dev tuatha-ui        # per-app dev server via Turbo filter
 ```
 
@@ -358,7 +358,7 @@ To ensure you use the appropriate skills for the different aspects of the projec
 ### Codebase Exploration & General Development
 - **Code Search**: Use [`ccc`](.agents/skills/ccc/SKILL.md) (CocoIndex Code) for semantic search over the codebase. Prefer `ccc search` over raw `grep`/`find` to get context-aware, relevant files instantly.
 - **Python Quality**: Use [`dignified-python`](.agents/skills/dignified-python/SKILL.md) for LBYL exception handling patterns, ABC interfaces, and explicit module boundaries.
-- **Centralized Registries**: Load [`centralized-registry`](.agents/skills/centralized-registry/SKILL.md) when adding/changing/toggling any model, schema, pipeline, or stack. The canonical surfaces are `MODEL_REGISTRY` (52 entries / 7 families), `notebooks/_shared/schema.py` (5 introspection helpers), `deployment-choice.yaml` (the enablement file), and the `00_control_panel.py` marimo notebook (the 5-tab UI).
+- **Centralized Registries**: Load [`centralized-registry`](.agents/skills/centralized-registry/SKILL.md) when adding/changing/toggling any model, schema, pipeline, or stack. The canonical surfaces are `MODEL_REGISTRY` (76 entries / 7 families), `notebooks/_shared/schema.py` (5 introspection helpers), `deployment-choice.yaml` (the enablement file), and the `00_control_panel.py` marimo notebook (the 5-tab UI).
 
 ### Core Data Platform (`dlt/` + `orchestration/`)
 - **Orchestration**: Load [`dagster`](.agents/skills/dagster/SKILL.md) (specifically the expert routing rules inside it). This ensures you know how to build `MultiPartitionsDefinition` and avoid absolute namespace errors.

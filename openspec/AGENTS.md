@@ -10,7 +10,7 @@ first**; the rest of the file is the full 97-spec catalogue.
 
 | Spec | Quadrant | One-liner |
 |:--|:--|:--|
-| [`centralized-model-registry`](specs/centralized-model-registry/spec.md) | shared | **NEW 2026-08-15**: The single canonical model registry (52 entries / 7 families: ocr_vision / text_llm / embedder / rerank / image_gen / voice / translation) — drives LiteLLM, BAML, agents, embedders, image-gen, voice, translation |
+| [`centralized-model-registry`](specs/centralized-model-registry/spec.md) | shared | **NEW 2026-08-15**: The single canonical model registry (76 entries / 7 families: ocr_vision / text_llm / embedder / rerank / image_gen / voice / translation) — drives LiteLLM, BAML, agents, embedders, image-gen, voice, translation |
 | [`centralized-schema-registry`](specs/centralized-schema-registry/spec.md) | shared | **NEW 2026-08-15**: BAML is the single source of truth — Pydantic + Zod are codegen; 96 hand-written Pydantic duplicates removed |
 | [`deployment-control-panel`](specs/deployment-control-panel/spec.md) | shared | **NEW 2026-08-15**: The 5-tab marimo control panel + web UI + CLI for picking models/pipelines/datasets/stacks; writes to `deployment-choice.yaml` |
 | [`british-isles-education-pipeline`](specs/british-isles-education-pipeline/spec.md) | cianfhoghlaim | The flagship — 6 Irish LC priority subjects (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) + gov.ie circulars — NCCA + SEC + DLT + BAML + 7 v1 CocoIndex flows + 42 Dagster assets + 6 marimo notebooks + 4 MotherDuck Dives + daily Flight |
@@ -65,7 +65,7 @@ The mise.toml task catalogue is now organized by **6 domain namespaces**
 For openspec work specifically:
 
 ```bash
-mise run openspec:validate-all     # the canonical CI gate — validate every change + every spec in strict mode (131 items)
+mise run openspec:validate-all     # the canonical CI gate — validate every change + every spec in strict mode (132 items)
 mise run openspec:validate <id>   # validate one change with --strict (MUST pass before commit)
 mise run openspec:archive <id>    # archive a deployed change (merges deltas into canonical specs)
 mise run openspec:view            # interactive dashboard of all specs + changes (1.4+)
