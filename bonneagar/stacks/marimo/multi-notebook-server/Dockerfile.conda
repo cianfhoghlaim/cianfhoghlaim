@@ -1,0 +1,41 @@
+# syntax=docker/dockerfile:1.4
+# =============================================================================
+# Marimo Multi-Notebook FastAPI Server (conda-forge base)
+# =============================================================================
+# Builds on continuumio/miniconda3:latest (Python 3.13 base). Uses
+# conda + pip to install the marimo + FastAPI dependencies.
+#
+# Build:
+#   docker build -t marimo-multinb:latest \
+#     -f multi-notebook-server/Dockerfile.conda \
+#     multi-notebook-server/
+# =============================================================================
+
+FROM continuumio/miniconda3:latest
+
+WORKDIR /app
+
+# Install marimo + FastAPI dependencies via pip (conda is too slow)
+RUN pip install --no-cache-dir \
+    'marimo>=0.13.0,<1.0.0' \
+    'fastapi>=0.110.0' \
+    'uvicorn[standard]>=0.27.0' \
+    'ibis-framework[duckdb]>=9.0.0' \
+    'pandas>=2.2.0' \
+    'pyarrow>=15.0.0' \
+    'litellm>=1.50.0'
+
+# Copy the FastAPI + marimo app
+COPY main.py .
+
+# Mount point for the notebooks (read-only)
+RUN mkdir -p /notebooks
+
+EXPOSE 2718
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost:2718/health || exit 1
+
+# Entrypoint
+CMD ["uvicorn", "main:api", "--host", "0.0.0.0", "--port", "2718"]
