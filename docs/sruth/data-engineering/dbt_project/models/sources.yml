@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: pypi_analytics
+    schema: main
+    tables:
+      - name: downloads
+
+
+
