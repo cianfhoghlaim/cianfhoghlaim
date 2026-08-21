@@ -713,3 +713,44 @@
     - .opencode/agents/proposal-author.md
   tags: [openspec, spec-driven, opsx, proposal, scenario, add, modified, removed, archive, validate]
   domain: "00-tooling"
+
+- title: "Unsloth v5: Studio + Hermes + OpenClaw + OpenCode integration"
+  description: |
+    The 2026-08-21 Unsloth v5 integration. Unsloth is now a 3-product platform
+    (Desktop + Studio + Core) and the OpenCode/Hermes/OpenClaw integrations
+    all converge on `unsloth start <agent> --model unsloth/<model>:UD-Q4_K_XL`.
+    The unsloth-serve stack at bonneagar/stacks/unsloth-serve/ hosts the
+    studio headless server; the 20 new MODEL_REGISTRY entries (52 → 76 total)
+    route through the unsloth-serve API at :8889. The 10-way comparison
+    notebook at notebooks/30_unsloth_vision_compare.py is the human-driven
+    surface for comparing 6 Unsloth VLMs + 4 classical OCRs.
+    Use when the user asks "set up Unsloth", "Unsloth Studio integration",
+    "Unsloth Studio with Hermes/OpenClaw/OpenCode", "Qwen3.8 local fallback",
+    "Vision Fine-tuning with Unsloth", "Unsloth Dynamic 3.0 GGUFs", or
+    "set up the marimo 10-way comparison notebook".
+  files:
+    - bonneagar/stacks/unsloth-serve/compose.yaml
+    - bonneagar/stacks/unsloth-serve/compose.arm1-oci.yaml
+    - bonneagar/stacks/unsloth-serve/compose.bunchloch.yaml
+    - bonneagar/stacks/unsloth-serve/sidecar.yaml
+    - bonneagar/stacks/unsloth-serve/secrets.env
+    - bonneagar/stacks/unsloth-serve/pangolin.yaml
+    - bonneagar/stacks/unsloth-serve/blueprint.yaml
+    - bonneagar/stacks/unsloth-serve/README.md
+    - bonneagar/komodo/procedures/deploy-unsloth-serve-bunchloch.toml
+    - bonneagar/komodo/procedures/deploy-unsloth-serve-arm1-oci.toml
+    - bonneagar/komodo/stacks/unsloth-serve-bunchloch.toml
+    - bonneagar/komodo/stacks/unsloth-serve-arm1-oci.toml
+    - bonneagar/stacks/hermes/config/hermes.yaml
+    - bonneagar/stacks/openclaw/config/openclaw.json
+    - opencode.json
+    - bonneagar/stacks/litellm/config/config.yaml
+    - bonneagar/stacks/ocr-router/compose.yaml
+    - meaisinfhoghlaim/models/registry.py
+    - meaisinfhoghlaim/models/model_registry.py
+    - meaisinfhoghlaim/training/modal_finetune/finetune_irish.py
+    - meaisinfhoghlaim/training/modal_finetune/finetune_unsloth_local.py
+    - notebooks/30_unsloth_vision_compare.py
+    - openspec/changes/2026-08-21-unsloth-v5-vision-llm-hermes-openclaw-opencode-marimo-integration-v1/
+  tags: [unsloth, hermes, openclaw, opencode, qwen3.8, deepseek-v4, kimi-k2.7, vision-fine-tuning, dynamic-3.0, m3-fallback, marimo, 10-way-comparison]
+  domain: "00-tooling"

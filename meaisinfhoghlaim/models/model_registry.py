@@ -560,6 +560,186 @@ def _text_llm_entries() -> dict[str, ModelRegistryEntry]:
                 "chain (`spaces/_common/baml_client.py:71`)."
             ),
         ),
+        # ── v6 (Unsloth v5 integration) — 10 new text_llm entries (2026-08-21) ──
+        # All served via the unsloth-serve stack at :8889 (Unsloth Studio
+        # headless OpenAI/Anthropic-compatible endpoint). All entries use
+        # backend="unsloth" and litellm_alias="local/unsloth/<key>".
+        "qwen3.8-27b": ModelRegistryEntry(
+            key="qwen3.8-27b",
+            family="text_llm",
+            role="unsloth_fallback",
+            display_name="Qwen 3.8 27B (Unsloth Studio, local coding fallback)",
+            unsloth_id="unsloth/Qwen3.8-27B-GGUF",
+            mlx_id=None,
+            upstream_id="Qwen/Qwen3.8-27B",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/qwen3.8-27b",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Qwen 3.8 27B Dynamic 3.0 GGUF, the new Unsloth flagship "
+                "(5.1M downloads in 5 days post-launch). Served via "
+                "unsloth-serve. Primary local fallback when the M3 plan "
+                "Kimi-K2.6 / GLM-5.1 / minimax-M2.5 quota is exhausted. "
+                "Reportedly rivals the U.S. frontier coding models on "
+                "agentic benchmarks. 21.8 GB Q4_K_M."
+            ),
+        ),
+        "qwen3.8-2.4t-a95b": ModelRegistryEntry(
+            key="qwen3.8-2.4t-a95b",
+            family="text_llm",
+            role="unsloth_heavy",
+            display_name="Qwen 3.8 2.4T-A95B (Unsloth Studio, MoE)",
+            unsloth_id="unsloth/Qwen3.8-2.4T-A95B-GGUF",
+            mlx_id=None,
+            upstream_id="Qwen/Qwen3.8-2.4T-A95B",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/qwen3.8-2.4t-a95b",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Qwen 3.8 2.4T-A95B MoE (2.4T total / 95B active). "
+                "Heavy reasoning tier. Served via unsloth-serve on arm1-oci."
+            ),
+        ),
+        "deepseek-v4-pro": ModelRegistryEntry(
+            key="deepseek-v4-pro",
+            family="text_llm",
+            role="unsloth_reasoning",
+            display_name="DeepSeek V4 Pro (Unsloth Studio, local reasoning)",
+            unsloth_id="unsloth/DeepSeek-V4-Pro-0813-GGUF",
+            mlx_id=None,
+            upstream_id="deepseek-ai/DeepSeek-V4-Pro-0813",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/deepseek-v4-pro",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "DeepSeek V4 Pro 0813 (deepseek-ai, 2026-08). Reasoning "
+                "specialist. Served via unsloth-serve. Local fallback "
+                "for the M3 chokepoint deepseek-v4-flash."
+            ),
+        ),
+        "deepseek-v4-flash": ModelRegistryEntry(
+            key="deepseek-v4-flash",
+            family="text_llm",
+            role="unsloth_fast",
+            display_name="DeepSeek V4 Flash (Unsloth Studio, local fast)",
+            unsloth_id="unsloth/DeepSeek-V4-Flash-0731",
+            mlx_id=None,
+            upstream_id="deepseek-ai/DeepSeek-V4-Flash-0731",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/deepseek-v4-flash",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "DeepSeek V4 Flash 0731 (deepseek-ai, 2026-07). "
+                "Fast reasoning tier. Served via unsloth-serve."
+            ),
+        ),
+        "kimi-k2.7-code": ModelRegistryEntry(
+            key="kimi-k2.7-code",
+            family="text_llm",
+            role="unsloth_coding",
+            display_name="Kimi K2.7 Code (Unsloth Studio, coding)",
+            unsloth_id="unsloth/Kimi-K2.7-Code-GGUF",
+            mlx_id=None,
+            upstream_id="moonshotai/Kimi-K2.7-Code",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/kimi-k2.7-code",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Kimi K2.7 Code (moonshotai, 2026-08). Coding specialist. "
+                "Served via unsloth-serve. Local fallback for the coding "
+                "agent when opencode-go Kimi-K2.6 quota is exhausted."
+            ),
+        ),
+        "kimi-k3": ModelRegistryEntry(
+            key="kimi-k3",
+            family="text_llm",
+            role="unsloth_kimi",
+            display_name="Kimi K3 (Unsloth Studio)",
+            unsloth_id="unsloth/Kimi-K3-GGUF",
+            mlx_id=None,
+            upstream_id="moonshotai/Kimi-K3",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/kimi-k3",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Kimi K3 (moonshotai, 2026-08). Served via unsloth-serve. "
+                "Latest moonshotai flagship."
+            ),
+        ),
+        "nemotron-3.5-lightning-30b-a3b": ModelRegistryEntry(
+            key="nemotron-3.5-lightning-30b-a3b",
+            family="text_llm",
+            role="unsloth_nemotron",
+            display_name="NVIDIA Nemotron 3.5 Lightning 30B-A3B (Unsloth Studio)",
+            unsloth_id="unsloth/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF",
+            mlx_id=None,
+            upstream_id="nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/nemotron-3.5-lightning-30b-a3b",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "NVIDIA Nemotron 3.5 Lightning 30B-A3B MoE (2026-08). "
+                "Served via unsloth-serve."
+            ),
+        ),
+        "muse-glimmer-30b": ModelRegistryEntry(
+            key="muse-glimmer-30b",
+            family="text_llm",
+            role="unsloth_muse",
+            display_name="Muse Glimmer 30B (Unsloth Studio, Meta)",
+            unsloth_id="unsloth/Muse-Glimmer-30B-GGUF",
+            mlx_id=None,
+            upstream_id="meta-muse/Muse-Glimmer-30B",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/muse-glimmer-30b",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Muse Glimmer 30B (Meta Muse, 2026-08). Served via "
+                "unsloth-serve. Open-source Muse-Glimmer variant."
+            ),
+        ),
+        "minimax-m2.5": ModelRegistryEntry(
+            key="minimax-m2.5",
+            family="text_llm",
+            role="unsloth_local_minimax",
+            display_name="minimax M2.5 (Unsloth Studio, local)",
+            unsloth_id="unsloth/MiniMax-M2.5-GGUF",
+            mlx_id=None,
+            upstream_id="MiniMaxAI/MiniMax-M2.5",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/minimax-m2.5",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "minimax M2.5 (MiniMax, 2026-08). Served via unsloth-serve. "
+                "Local fallback for the M3 plan minimax-m3 chokepoint."
+            ),
+        ),
+        "magistral-small-2509": ModelRegistryEntry(
+            key="magistral-small-2509",
+            family="text_llm",
+            role="unsloth_magistral",
+            display_name="Magistral Small 2509 (Unsloth Studio, reasoning)",
+            unsloth_id="unsloth/Magistral-Small-2509-GGUF",
+            mlx_id=None,
+            upstream_id="mistralai/Magistral-Small-2509",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/magistral-small-2509",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Magistral Small 2509 (mistralai, 2026-09). Reasoning "
+                "specialist. Served via unsloth-serve."
+            ),
+        ),
     }
     return entries
 
@@ -580,7 +760,7 @@ def _embedder_entries() -> dict[str, ModelRegistryEntry]:
             litellm_alias="embedding-bge-m3",
             env_var="CIANFHOGHLAIM_EMBED_MODEL",
             notes=(
-                "Canonical 1024-d embedder. Used by cocoindex/_shared/_lifespan.py "
+                "Canonical 1024-d embedder. Used by cocoindex_flows/_shared/_lifespan.py "
                 "and shared across all CocoIndex v1 Apps. Default."
             ),
         ),
@@ -618,6 +798,42 @@ def _embedder_entries() -> dict[str, ModelRegistryEntry]:
                 "Lightweight 384-d embedder. Faster inference than BGE-M3. "
                 "Listed in notebooks/16_speedrun_mmo_01_mission_control.py "
                 "embedder dropdown."
+            ),
+        ),
+        # ── v6 (Unsloth v5 integration) — 2 new embedder entries (2026-08-21) ──
+        "qwen3-embedding-4b": ModelRegistryEntry(
+            key="qwen3-embedding-4b",
+            family="embedder",
+            role="unsloth_emb_qwen",
+            display_name="Qwen 3 Embedding 4B (Unsloth Studio)",
+            unsloth_id="unsloth/Qwen3-Embedding-4B-unsloth-bnb-4bit",
+            mlx_id=None,
+            upstream_id="Qwen/Qwen3-Embedding-4B",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/qwen3-embedding-4b",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Qwen 3 Embedding 4B (Qwen, 2026-08). Unsloth BnB-4bit "
+                "fine-tuning-ready. Served via unsloth-serve. Local "
+                "embedder alternative to BGE-M3."
+            ),
+        ),
+        "embeddinggemma-300m": ModelRegistryEntry(
+            key="embeddinggemma-300m",
+            family="embedder",
+            role="unsloth_emb_gemma",
+            display_name="EmbeddingGemma 300M (Unsloth Studio)",
+            unsloth_id="unsloth/EmbeddingGemma-300M",
+            mlx_id=None,
+            upstream_id="google/embeddinggemma-300m",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/embeddinggemma-300m",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "EmbeddingGemma 300M (Google, 2026-08). Lightweight "
+                "embedder. Served via unsloth-serve."
             ),
         ),
     }
@@ -747,6 +963,41 @@ def _image_gen_entries() -> dict[str, ModelRegistryEntry]:
             env_var=None,
             notes="FIBO local image generation (legacy curriculum asset).",
         ),
+        # ── v6 (Unsloth v5 integration) — 2 new image_gen entries (2026-08-21) ──
+        "local/image/diffusiongemma-26b-a4b": ModelRegistryEntry(
+            key="local/image/diffusiongemma-26b-a4b",
+            family="image_gen",
+            role="unsloth_diffusion",
+            display_name="DiffusionGemma 26B-A4B (Unsloth Studio)",
+            unsloth_id="unsloth/diffusiongemma-26B-A4B-it-GGUF",
+            mlx_id=None,
+            upstream_id="google/diffusiongemma-26B-A4B-it",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/diffusiongemma-26b-a4b",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "DiffusionGemma 26B-A4B MoE (Google, 2026-08). "
+                "Served via unsloth-serve. The new diffusion flagship."
+            ),
+        ),
+        "local/image/qwen-image-2512": ModelRegistryEntry(
+            key="local/image/qwen-image-2512",
+            family="image_gen",
+            role="unsloth_qwen_image",
+            display_name="Qwen-Image 2512 (Unsloth Studio)",
+            unsloth_id="unsloth/Qwen-Image-2512-GGUF",
+            mlx_id=None,
+            upstream_id="Qwen/Qwen-Image-2512",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/qwen-image-2512",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Qwen-Image 2512 (Qwen, 2026-08). Served via unsloth-serve. "
+                "Updated Qwen-Image model."
+            ),
+        ),
     }
 
 
@@ -829,6 +1080,41 @@ def _voice_entries() -> dict[str, ModelRegistryEntry]:
             notes=(
                 "DEPRECATED 2026-08-15: legacy full-path HF ID. Migrated "
                 "consumers to the short key `chatterbox`."
+            ),
+        ),
+        # ── v6 (Unsloth v5 integration) — 2 new voice entries (2026-08-21) ──
+        "orpheus-tts-3b": ModelRegistryEntry(
+            key="orpheus-tts-3b",
+            family="voice",
+            role="unsloth_tts",
+            display_name="Orpheus TTS 3B (Unsloth Studio)",
+            unsloth_id="unsloth/orpheus-3b-0.1-ft-unsloth-bnb-4bit",
+            mlx_id=None,
+            upstream_id="canopyai/orpheus-3b-0.1-ft",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/orpheus-3b-0.1-ft",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Orpheus TTS 3B (canopyai, 2026). Served via unsloth-serve. "
+                "Open-source TTS alternative to Chatterbox."
+            ),
+        ),
+        "sesame-csm-1b": ModelRegistryEntry(
+            key="sesame-csm-1b",
+            family="voice",
+            role="unsloth_tts_csm",
+            display_name="Sesame CSM 1B (Unsloth Studio)",
+            unsloth_id="unsloth/Sesame-CSM-1B",
+            mlx_id=None,
+            upstream_id="sesame/csm-1b",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/sesame-csm-1b",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Sesame CSM 1B (sesame, 2026). Served via unsloth-serve. "
+                "Conversational Speech Model."
             ),
         ),
     }

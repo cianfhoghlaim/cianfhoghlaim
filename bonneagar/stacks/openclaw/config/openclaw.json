@@ -16,7 +16,21 @@
     "model": "minimax-m3",
     "api_key_env": "OPENAI_API_KEY"
   },
-  "fallback_chain": [],
+  "fallback_chain": [
+    {
+      "name": "unsloth",
+      "base_url": "http://unsloth:8889",
+      "api": "anthropic-messages",
+      "auth_header": true,
+      "models": [
+        { "id": "unsloth/Qwen3.8-27B-GGUF", "name": "Local Qwen3.8" },
+        { "id": "unsloth/DeepSeek-V4-Pro-0813-GGUF", "name": "Local DeepSeek-V4" },
+        { "id": "unsloth/Kimi-K2.7-Code-GGUF", "name": "Local Kimi-K2.7-Code" }
+      ],
+      "trigger_on": "rate_limit",
+      "notes": "Per the 2026-08-21-unsloth-v5-integration-v1 change. Triggered when the litellm upstream returns 429 (M3 plan quota exhausted). Single shared UNSLOTH_API_KEY (same as hermes + openchamber)."
+    }
+  ],
   "channels": {
     "telegram": {
       "enabled": true,

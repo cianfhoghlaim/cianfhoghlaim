@@ -53,6 +53,7 @@ resource_path = [
   "bonneagar/komodo/stacks/openclaw-arm1-oci.toml",
   "bonneagar/komodo/stacks/openchamber-arm1-oci.toml",
   "bonneagar/komodo/stacks/hermes-arm1-oci.toml",
+  "bonneagar/komodo/stacks/unsloth-serve-arm1-oci.toml",
   "bonneagar/komodo/builds/openchamber-arm1-oci.toml",
   "bonneagar/komodo/builds/openclaw-arm1-oci.toml",
   "bonneagar/komodo/builds/hermes-arm1-oci.toml",

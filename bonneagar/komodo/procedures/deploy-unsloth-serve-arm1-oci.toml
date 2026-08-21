@@ -1,0 +1,84 @@
+# Komodo procedure: deploy unsloth-serve (arm1-oci, GPU-backed, public)
+# Per the 2026-08-21-unsloth-v5-integration-v1 change.
+# The GPU-backed variant for production serving of hermes/openclaw/webchat.
+# The bunchloch variant is deployed via deploy-unsloth-serve-bunchloch.toml.
+
+# Stage 0: pre-reqs
+[[stage.action]]
+type = "CheckEnvVar"
+name = "check-prereqs"
+vars = ["INFISICAL_CLIENT_ID", "INFISICAL_SECRET_FILE", "UNSLOTH_API_KEY", "UNSLOTH_MODEL_ID"]
+
+[[stage.action]]
+type = "CheckResourceCeiling"
+name = "check-arm1-oci-utilization"
+server_id = "arm1-oci"
+max_cpu_pct = 80
+max_memory_pct = 80
+
+# Stage 1: dependency services
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-pangolin-arm1-oci"
+procedure = "deploy-pangolin-arm1-oci"
+
+[[stage.action]]
+type = "RunProcedure"
+name = "deploy-infisical-arm1-oci"
+procedure = "deploy-infisical-arm1-oci"
+
+# Stage 2: deploy the unsloth-serve stack (GPU variant)
+[[stage.action]]
+type = "DeployStack"
+name = "deploy-unsloth-serve"
+stack = "unsloth-serve"
+server_id = "arm1-oci"
+
+# Stage 3: pangolin routes (PUBLIC — unsloth.cianfhoghlaim.ie +
+# unsloth-api.cianfhoghlaim.ie both terminate on arm1-oci)
+[[stage.action]]
+type = "ApplyBlueprint"
+name = "apply-pangolin-blueprint"
+blueprint = "unsloth-serve/blueprint.yaml"
+
+# Stage 4: health verification
+# /v1/models is the lightweight OpenAI-compatible liveness check
+[[stage.action]]
+type = "HttpCheck"
+name = "health-check-studio-ui"
+url = "https://unsloth.cianfhoghlaim.ie/"
+expected_status = 200
+timeout_s = 60
+
+[[stage.action]]
+type = "HttpCheck"
+name = "health-check-api-endpoint"
+url = "https://unsloth-api.cianfhoghlaim.ie/v1/models"
+headers = { Authorization = "Bearer ${UNSLOTH_API_KEY}" }
+expected_status = 200
+expected_body_contains = "\"data\""
+timeout_s = 60
+
+# Stage 5: verify the loaded model
+[[stage.action]]
+type = "HttpCheck"
+name = "verify-loaded-model"
+url = "https://unsloth-api.cianfhoghlaim.ie/v1/models"
+headers = { Authorization = "Bearer ${UNSLOTH_API_KEY}" }
+expected_body_contains = "Qwen3.8"
+timeout_s = 60
+
+# Stage 6: verify the agent-platform can reach the unsloth-serve API
+# (the 5 agent stacks all read the same UNSLOTH_API_KEY via Locket)
+[[stage.action]]
+type = "HttpCheck"
+name = "verify-agent-reachability"
+url = "https://unsloth-api.cianfhoghlaim.ie/v1/chat/completions"
+method = "POST"
+headers = {
+  Authorization = "Bearer ${UNSLOTH_API_KEY}",
+  "Content-Type" = "application/json",
+}
+body = '{"model":"unsloth/Qwen3.8-27B-GGUF","messages":[{"role":"user","content":"ping"}],"max_tokens":5}'
+expected_status = 200
+timeout_s = 120
