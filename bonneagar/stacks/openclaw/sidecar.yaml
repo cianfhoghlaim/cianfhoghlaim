@@ -1,6 +1,6 @@
 services:
   locket:
-    # NOTE: replaced locket v0.17.3 with ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    # NOTE: replaced locket v0.17.3 with ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
     # because locket v0.17.3 has a bug where it sends API requests with
     # snake_case query params (project_id, secret_path) but Infisical
     # v0.161+ requires camelCase (projectId, secretPath). Every locket
@@ -12,7 +12,7 @@ services:
     # uses the CORRECT camelCase field names. It's a temporary fix until
     # locket v0.18+ ships with the fix in source (already in the
     # upstream repo at stedding/locket v0.18.0-rc.1).
-    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
     container_name: openclaw-locket
     restart: unless-stopped
     user: "65532:65532"

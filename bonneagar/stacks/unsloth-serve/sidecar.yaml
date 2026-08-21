@@ -2,9 +2,9 @@ services:
   locket:
     # NOTE: same shim pattern as hermes/openclaw (the upstream
     # `bpbradley/locket:infisical` has a camelCase bug — we ship
-    # `ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0` which uses
+    # `ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1` which uses
     # the correct camelCase field names for Infisical v0.161+).
-    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
     container_name: unsloth-serve-locket
     restart: unless-stopped
     user: "65532:65532"

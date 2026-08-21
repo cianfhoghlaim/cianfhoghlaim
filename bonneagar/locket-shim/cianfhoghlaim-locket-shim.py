@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-cianfhoghlaim-locket-shim.py — v0.2.0
+cianfhoghlaim-locket-shim.py — v0.2.1
 
 A drop-in replacement for the locket v0.17.3 sidecar that uses the
 CORRECT camelCase field names for the Infisical v0.161+ REST API.
@@ -16,8 +16,20 @@ The next locket release (v0.18.0-rc.1) has the fix in source
 shipped image is pulled into the agent-platform clusters, this shim
 performs the same job correctly.
 
+FORMAT (v0.2.1): The actual canonical secrets.env format is the
+"unwrapped" form `KEY=infisical://<workspace>/<path>/<key>` — NO
+`{{ }}` jinja braces and NO `?path=` query string. The workspace
+(typically `dev-baile`) is the Infisical project slug, and the
+remaining slash-separated path + key is the secret path inside that
+project. The path defaults to INFISICAL_DEFAULT_PATH (the stack
+folder) when only a key is present, e.g. `infisical://dev-baile/litellm/master_key`
+resolves to workspace=dev-baile, path=/litellm, key=master_key.
+
+The Jinja form `{{ infisical:///KEY?path=/X&env=dev }}` is still
+accepted for backward compatibility with older secrets.env files.
+
 Usage as a sidecar in any bonneagar/*/sidecar.yaml:
-  image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+  image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
   environment:
     INFISICAL_URL: http://host.docker.internal:8081
     INFISICAL_CLIENT_ID: <bons-iac uuid>
@@ -44,17 +56,53 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-REF_RE = re.compile(
+# Two regex flavors are accepted:
+#   1. Unwrapped (canonical, post-v0.2.1):
+#      KEY=infisical://<workspace>/<path>/<key>
+#      e.g. LITELLM_MASTER_KEY=infisical://dev-baile/litellm/master_key
+#      The workspace = Infisical project; the path + key = the secret
+#      lookup. If the URI has only 1 segment after workspace
+#      (e.g. `infisical://dev-baile/master_key`), the path defaults
+#      to INFISICAL_DEFAULT_PATH (set per-sidecar).
+#   2. Jinja (legacy, still supported):
+#      {{ infisical:///KEY?path=/X&env=dev&project_id=... }}
+#      with `?path=` and friends as overrides.
+UNWRAPPED_RE = re.compile(
+    r"infisical://(?P<workspace>[A-Za-z0-9_\-]+)/(?P<rest>[A-Za-z0-9_.\-/]+)"
+)
+JINJA_RE = re.compile(
     r"\{\{\s*infisical:///([A-Za-z0-9_.\-]+)\?(?P<q>[^}\s]+)\s*\}\}"
 )
 
 
 def parse_refs(template: str) -> list[tuple[str, dict[str, str]]]:
-    """Return [(key, {path, env, project_id, ...})] for every {{ infisical:///KEY?path=/X&... }}."""
+    """Return [(key, {path, env, project_id, workspace, ...})] for every match.
+
+    For the unwrapped format the tuple is (key, {'workspace': ..., 'path': ..., 'rest': ...}).
+    For the jinja format it's (key, {<query-params>}).
+    The caller (process_once) reads `workspace`/`path`/`rest` from opts to
+    resolve the secret.
+    """
     out: list[tuple[str, dict[str, str]]] = []
-    for m in REF_RE.finditer(template):
+    # Unwrapped format first (canonical).
+    for m in UNWRAPPED_RE.finditer(template):
+        workspace = m.group("workspace")
+        rest = m.group("rest").strip("/")
+        # If the rest is a single segment (no slash), treat it as the key
+        # with path defaulted by the caller. Otherwise split into path/key
+        # at the rightmost slash.
+        if "/" in rest:
+            path, key = rest.rsplit("/", 1)
+            path = "/" + path
+        else:
+            path = None  # caller will default to args.default_path
+            key = rest
+        out.append((key, {"workspace": workspace, "path": path or "", "rest": rest}))
+    # Jinja format (legacy).
+    for m in JINJA_RE.finditer(template):
         key = m.group(1)
         q = dict(urllib.parse.parse_qsl(m.group("q"), keep_blank_values=True))
+        q.setdefault("workspace", "")
         out.append((key, q))
     return out
 
@@ -122,15 +170,32 @@ def fetch_secret(
 
 
 def render(template: str, secrets: dict[str, str], project_id: str) -> str:
-    """Replace every {{ infisical:///KEY?... }} with the resolved value."""
-    def repl(m: re.Match[str]) -> str:
+    """Replace every infisical://... reference with the resolved value.
+
+    Handles both the unwrapped form (KEY=infisical://workspace/path/key) and
+    the legacy jinja form ({{ infisical:///KEY?path=... }}).
+    """
+    def unwrapped_repl(m: re.Match[str]) -> str:
+        workspace = m.group("workspace")
+        rest = m.group("rest").strip("/")
+        # Mirror the parse_refs() logic so the key matches.
+        if "/" in rest:
+            _, key = rest.rsplit("/", 1)
+        else:
+            key = rest
+        if key in secrets:
+            return secrets[key]
+        return f"# locket-shim: unresolved {m.group(0)}"
+
+    def jinja_repl(m: re.Match[str]) -> str:
         key = m.group(1)
         if key in secrets:
             return secrets[key]
-        # No value resolved (404 or error) — leave a comment for debugging.
         return f"# locket-shim: unresolved {m.group(0)}"
 
-    return REF_RE.sub(repl, template)
+    template = UNWRAPPED_RE.sub(unwrapped_repl, template)
+    template = JINJA_RE.sub(jinja_repl, template)
+    return template
 
 
 def write_atomic(path: Path, content: str) -> None:
@@ -168,7 +233,9 @@ def process_once(args: argparse.Namespace) -> dict[str, str]:
 
     secrets: dict[str, str] = {}
     for key, opts in refs:
-        secret_path = opts.get("path", args.default_path)
+        # Unwrapped form uses opts['path'] (may be empty -> default).
+        # Jinja form uses opts['path'] from query string or defaults.
+        secret_path = opts.get("path") or args.default_path
         env = opts.get("env", args.environment)
         proj = opts.get("project_id", args.project_id)
         sec_type = opts.get("type", "shared")

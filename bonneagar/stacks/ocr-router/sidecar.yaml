@@ -1,7 +1,7 @@
 # =============================================================================
 # OCR-ROUTER - Locket Sidecar Configuration
 # =============================================================================
-# Uses ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0 (the drop-in
+# Uses ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1 (the drop-in
 # replacement for the broken locket v0.17.3 — snake_case → 422 → passthrough
 # bug). See bonneagar/scripts/cianfhoghlaim-locket-shim.py for the shim
 # and stacks/openclaw/sidecar.yaml for the canonical pattern.
@@ -9,7 +9,7 @@
 
 services:
   locket:
-    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
     container_name: ocr-router-locket
     restart: unless-stopped
     user: "65532:65532"

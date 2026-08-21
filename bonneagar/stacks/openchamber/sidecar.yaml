@@ -1,7 +1,7 @@
 services:
   locket:
     # NOTE: replaced locket v0.17.3 with the renamed
-    # `ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0` because locket
+    # `ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1` because locket
     # v0.17.3 has a bug where it sends API requests with snake_case query
     # params (project_id, secret_path) but Infisical v0.161+ requires
     # camelCase (projectId, secretPath). Every locket call returned 422,
@@ -23,7 +23,7 @@ services:
     # the openchamber arm1-oci sidecar consistent with the bunchloch
     # local Infisical dev project (per task 5.1 — fixed Locket
     # injection consistent with local Infisical dev project).
-    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
     container_name: openchamber-locket
     restart: unless-stopped
     user: "65532:65532"

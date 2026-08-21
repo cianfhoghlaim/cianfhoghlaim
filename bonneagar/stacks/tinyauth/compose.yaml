@@ -34,7 +34,7 @@ services:
   # cannot start.
   # ---------------------------------------------------------------------------
   locket:
-    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
     container_name: tinyauth-locket
     restart: unless-stopped
     user: "65532:65532"

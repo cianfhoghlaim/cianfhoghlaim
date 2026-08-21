@@ -33,7 +33,7 @@ name: newt-arm1-oci
 
 services:
   locket:
-    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
     container_name: newt-arm1-oci-locket
     user: "65532:65532"
     restart: unless-stopped
