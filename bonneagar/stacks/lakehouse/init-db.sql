@@ -67,6 +67,21 @@ CREATE DATABASE litellm;         -- litellm stack model registry (was: standalon
 -- is gone — replaced by this shared database on lakehouse-postgres.
 CREATE DATABASE cognee_cianfhoghlaim;  -- cognee KG + pgvector (was: dedicated cognee-postgres)
 
+-- CHANGED 2026-08-23 (lakehouse-production-config-and-lance-sidecar-modernization-v1):
+-- Cognee now connects as a dedicated `cognee` user (NOT the shared `lakekeeper`
+-- superuser) for security best-practice (per Lakekeeper config docs). The
+-- cognee user has permissions ONLY on the cognee_cianfhoghlaim database — no
+-- read/write access to the other 13 databases.
+--
+-- The actual password is set by a post-init SQL script
+-- (bonneagar/stacks/lakehouse/init-cognee-user.sql) that runs via
+-- docker-entrypoint-initdb.d/ AFTER this main init-db.sql. The cognee service
+-- then reads COGNEE_POSTGRES_PASSWORD from the Locket-resolved env var.
+-- For dev: the placeholder password is the same as POSTGRES_PASSWORD.
+CREATE USER cognee;  -- password set later by init-cognee-user.sql
+GRANT ALL PRIVILEGES ON DATABASE cognee_cianfhoghlaim TO cognee;
+GRANT ALL ON SCHEMA public TO cognee;
+
 -- ---------------------------------------------------------------------------
 -- Olake CDC source DB (added 2026-08-22-lakehouse-config-and-env-var-hardening-v1)
 -- ---------------------------------------------------------------------------

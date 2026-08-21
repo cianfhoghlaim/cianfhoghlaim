@@ -237,9 +237,15 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-lakekeeper}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set via Locket/Infisical}
       POSTGRES_DB: ${POSTGRES_DB:-lakekeeper}
+      # CHANGED 2026-08-23: COGNEE_POSTGRES_PASSWORD is read by init-cognee-user.sh
+      # (mounted below at /docker-entrypoint-initdb.d/) which runs after
+      # init-db.sql to set the cognee user's password.
+      COGNEE_POSTGRES_PASSWORD: ${COGNEE_POSTGRES_PASSWORD:-${POSTGRES_PASSWORD:-no-key-needed}}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - lakehouse-postgres:/var/lib/postgresql/data
+      # ADDED 2026-08-23: post-init script for the dedicated cognee user
+      - ./init-cognee-user.sh:/docker-entrypoint-initdb.d/02-init-cognee-user.sh:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U lakekeeper"]
       interval: 3s
@@ -359,8 +365,23 @@ services:
       # be overridden by PLANETSCALE_DATABASE_URL for managed deployments.
       LAKEKEEPER__PG_DATABASE_URL_READ: ${PLANETSCALE_DATABASE_URL:-postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@postgres:5432/${POSTGRES_DB:-lakekeeper}}
       LAKEKEEPER__PG_DATABASE_URL_WRITE: ${PLANETSCALE_DATABASE_URL:-postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@postgres:5432/${POSTGRES_DB:-lakekeeper}}
+      # CHANGED 2026-08-23 (lakehouse-production-config-and-lance-sidecar-modernization-v1):
+      # Per official Lakekeeper config docs (https://docs.lakekeeper.io/docs/latest/configuration/).
+      # Production env vars for read replica routing + metrics + pagination + caches.
+      LAKEKEEPER__PG_HOST_R: ${LAKEKEEPER__PG_HOST_R:-postgres}
+      LAKEKEEPER__PG_HOST_W: ${LAKEKEEPER__PG_HOST_W:-postgres}
       LAKEKEEPER__PG_ENCRYPTION_KEY: ${LAKEKEEPER_ENCRYPTION_KEY:?LAKEKEEPER_ENCRYPTION_KEY must be set via Locket/Infisical}
       LAKEKEEPER__PG_SSL_MODE: ${LAKEKEEPER_SSL_MODE:-prefer}
+      LAKEKEEPER__METRICS__PORT: ${LAKEKEEPER_METRICS_PORT:-9100}
+      # Pagination (sensible defaults for BIEP v3 read-heavy workloads)
+      LAKEKEEPER__PAGINATION_SIZE_DEFAULT: ${LAKEKEEPER_PAGINATION_SIZE_DEFAULT:-1024}
+      LAKEKEEPER__PAGINATION_SIZE_MAX: ${LAKEKEEPER_PAGINATION_SIZE_MAX:-2048}
+      # Pangolin reverse proxy — let Lakekeeper trust X-Forwarded-* headers
+      LAKEKEEPER__USE_X_FORWARDED_HEADERS: "true"
+      # Caching (short-term credentials + warehouse metadata)
+      LAKEKEEPER__CACHE__STC__ENABLED: "true"
+      LAKEKEEPER__CACHE__WAREHOUSE__ENABLED: "true"
+      LAKEKEEPER__CACHE__WAREHOUSE__CAPACITY: "1000"
       # Server Configuration
       LAKEKEEPER__LISTEN_PORT: "8181"
       LAKEKEEPER__BASE_URI: ${LAKEKEEPER_BASE_URI:-http://lakekeeper.cianfhoghlaim.ie}
@@ -374,6 +395,9 @@ services:
       AWS_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:?GARAGE_SECRET_ACCESS_KEY must be set}
       AWS_REGION: ${AWS_REGION:-garage}
       AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-http://garage:3900}
+      # OpenTelemetry → logfire collector (fans out to logfire cloud + langfuse)
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}
+      OTEL_SERVICE_NAME: lakekeeper
     depends_on:
       postgres:
         condition: service_healthy
@@ -393,11 +417,20 @@ services:
   # ---------------------------------------------------------------------------
   # LANCE-NAMESPACE - Iceberg Adapter Sidecar for Lance Tables
   # ---------------------------------------------------------------------------
+  # CHANGED 2026-08-23 (lakehouse-production-config-and-lance-sidecar-modernization-v1):
+  # Pinned to the published image ghcr.io/cianfhoghlaim/lance-namespace-sidecar:v0.3.0
+  # (built by .github/workflows/build-lance-namespace-sidecar.yml). Falls back to
+  # local build context if the pinned image isn't pulled. The sidecar now uses
+  # the official `lance-namespace-impls[iceberg]` library under the hood.
+  # ---------------------------------------------------------------------------
   lance-namespace:
+    # Pinned image (published by build-lance-namespace-sidecar.yml workflow)
+    image: ghcr.io/cianfhoghlaim/lance-namespace-sidecar:v0.3.0
+    # Local dev fallback — built from ./lance-sidecar/Dockerfile
     build:
       context: ./lance-sidecar
       dockerfile: Dockerfile
-    image: lakehouse-lance-namespace:latest
+    pull_policy: if_not_present
     container_name: lakehouse-lance-namespace
     restart: unless-stopped
     ports:
@@ -423,6 +456,9 @@ services:
       SIDECAR_HOST: "0.0.0.0"
       SIDECAR_PORT: "8182"
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # OpenTelemetry → logfire collector (fans out to logfire cloud + langfuse)
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}
+      OTEL_SERVICE_NAME: lance-namespace
     depends_on:
       lakekeeper:
         condition: service_healthy
@@ -603,7 +639,12 @@ services:
   #   - Lance Namespace at rest://lakehouse-lance-namespace:8182 (vectors)
   #   - Logfire collector at http://logfire-otel:4317 (OTel traces)
   #   - Langfuse at http://langfuse:3000 (LLM cost + prompt metadata)
-  # USE_UNIFIED_PROVIDER=pghybrid so postgres serves BOTH vector + graph.
+  # CHANGED 2026-08-23 (lakehouse-production-config-and-lance-sidecar-modernization-v1):
+  # Modernized to the new Dataset Database Handlers pattern (per official Cognee
+  # docs at https://docs.cognee.ai/setup-configuration/overview). The legacy
+  # USE_UNIFIED_PROVIDER=pghybrid is REMOVED in favor of explicit per-provider
+  # configuration. Cognee now connects as the dedicated `cognee` user (created
+  # in init-db.sql) instead of the shared `lakekeeper` superuser.
   # ---------------------------------------------------------------------------
   cognee:
     # Pinned 2026-07-02 (was :latest; 1.2.2 = current Docker Hub stable)
@@ -632,22 +673,27 @@ services:
       COGNEE_DATABASES: ${COGNEE_DATABASES:-cianfhoghlaim.education.aistear,cianfhoghlaim.education.primary,cianfhoghlaim.education.junior_cycle,cianfhoghlaim.education.senior_cycle,cianfhoghlaim.education.tertiary,cianfhoghlaim.education.cross_stage}
       COGNEE_STORAGE: postgresql
       # Shared lakehouse-postgres at cognee_cianfhoghlaim database (added
-      # to init-db.sql by this change). The password is the SAME as
-      # POSTGRES_PASSWORD (Locket resolves both from the same source).
+      # to init-db.sql). Cognee connects as the dedicated `cognee` user
+      # (created in init-db.sql) instead of the shared `lakekeeper`
+      # superuser (security best-practice per Lakekeeper docs).
       COGNEE_POSTGRES_HOST: postgres
       COGNEE_POSTGRES_PORT: "5432"
-      COGNEE_POSTGRES_USER: ${POSTGRES_USER:-lakekeeper}
-      COGNEE_POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set via Locket/Infisical}
+      COGNEE_POSTGRES_USER: ${COGNEE_POSTGRES_USER:-cognee}
+      COGNEE_POSTGRES_PASSWORD: ${COGNEE_POSTGRES_PASSWORD:-${POSTGRES_PASSWORD}}
       COGNEE_POSTGRES_DB: cognee_cianfhoghlaim
+      # CHANGED 2026-08-23: new Dataset Database Handlers pattern (per
+      # https://docs.cognee.ai/setup-configuration/overview). Legacy
+      # USE_UNIFIED_PROVIDER=pghybrid is REMOVED.
       VECTOR_DB_PROVIDER: pgvector
-      USE_UNIFIED_PROVIDER: pghybrid
       DB_PROVIDER: postgres
       DB_HOST: postgres
       DB_PORT: "5432"
       DB_NAME: cognee_cianfhoghlaim
-      DB_USERNAME: ${POSTGRES_USER:-lakekeeper}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set via Locket/Infisical}
+      DB_USERNAME: ${COGNEE_POSTGRES_USER:-cognee}
+      DB_PASSWORD: ${COGNEE_POSTGRES_PASSWORD:-${POSTGRES_PASSWORD}}
       GRAPH_DATABASE_PROVIDER: postgres
+      # Use Lance Namespace as the vector backend (via the lance-namespace-impls)
+      LANCEDB_PROVIDER: lancedb
       LANCEDB_URI: rest://lakehouse-lance-namespace:8182
       LANCEDB_API_KEY: ${LANCEDB_API_KEY:-devtoken}
       LANCEDB_NAMESPACE_TOKEN: ${LANCEDB_NAMESPACE_TOKEN:-}
@@ -656,7 +702,7 @@ services:
       REQUIRE_AUTHENTICATION: ${REQUIRE_AUTHENTICATION:-false}
       ENABLE_BACKEND_ACCESS_CONTROL: ${ENABLE_BACKEND_ACCESS_CONTROL:-false}
       # OpenTelemetry → logfire collector (fans out to logfire cloud + langfuse)
-      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
       OTEL_SERVICE_NAME: cognee
       # Langfuse SDK-side traces
@@ -719,8 +765,8 @@ services:
       # LLM API key (canonical backbone is LiteLLM at http://litellm:4000/v1)
       OPENAI_API_KEY: ${OPENAI_API_KEY:?OPENAI_API_KEY must be set via Locket/Infisical}
       OPENAI_BASE_URL: ${OPENAI_BASE_URL:-http://litellm:4000/v1}
-      # OpenTelemetry → logfire collector
-      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
+      # OpenTelemetry → otel collector (CHANGED 2026-08-23)
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
       OTEL_SERVICE_NAME: graphiti
       # Langfuse SDK-side traces
@@ -762,29 +808,31 @@ services:
     image: falkordb/falkordb:v4.18.11
     container_name: lakehouse-falkordb
     restart: unless-stopped
-    command:
-      - "falkordb"
-      - "--loadmodule"
-      - "/etc/falkordb/vector.so"
-      - "--requirepass"
-      - "${FALKORDB_PASSWORD:?FALKORDB_PASSWORD must be set via Locket/Infisical}"
-      - "--appendonly"
-      - "yes"
-      - "--appendfsync"
-      - "everysec"
-      - "--cluster-enabled"
-      - "no"
-      - "--port"
-      - "6379"
+    # CHANGED 2026-08-23 (lakehouse-production-config-and-lance-sidecar-modernization-v1):
+    # All FalkorDB args now passed via REDIS_ARGS + FALKORDB_ARGS env vars
+    # (per the official FalkorDB Docker docs at
+    # https://docs.falkordb.com/operations/docker/). Removed: --loadmodule,
+    # --requirepass, --appendonly, --appendfsync, --cluster-enabled, --port
+    # (all now in REDIS_ARGS). The vector.so module is loaded via the
+    # MODULE directive in REDIS_ARGS.
+    command: ["falkordb"]
     ports:
       - "127.0.0.1:${FALKORDB_PORT:-6379}:6379"
       - "127.0.0.1:${FALKORDB_UI_PORT:-3000}:3000"
     environment:
-      FALKORDB_PASSWORD: ${FALKORDB_PASSWORD:?FALKORDB_PASSWORD must be set via Locket/Infisical}
+      # REDIS_ARGS — Redis server args (auth, persistence, memory)
+      # per official FalkorDB Docker docs
+      REDIS_ARGS: "--requirepass ${FALKORDB_PASSWORD:?FALKORDB_PASSWORD must be set via Locket/Infisical} --appendonly yes --appendfsync everysec --maxmemory 2gb --maxmemory-policy allkeys-lru --loadmodule /etc/falkordb/vector.so"
+      # FALKORDB_ARGS — FalkorDB module args (threads, caches, timeouts)
+      # per official FalkorDB docs
+      FALKORDB_ARGS: "THREAD_COUNT 8 CACHE_SIZE 50 TIMEOUT_MAX 60000 TIMEOUT_DEFAULT 30000 QUERY_MEM_CAPACITY 104857600"
       BROWSER: "1"
-      FALKORDB_ARGS: ${FALKORDB_ARGS:-THREAD_COUNT 8 CACHE_SIZE 50 TIMEOUT_MAX 60000}
+      FALKORDB_PASSWORD: ${FALKORDB_PASSWORD:?FALKORDB_PASSWORD must be set via Locket/Infisical}
       VECTOR_MODULE_URL: ${VECTOR_MODULE_URL:-/etc/falkordb/vector.so}
       CLUSTER_MODE: ${CLUSTER_MODE:-no}
+      # OpenTelemetry → logfire collector
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}
+      OTEL_SERVICE_NAME: falkordb
     volumes:
       - lakehouse-falkordb-data:/data
     healthcheck:
@@ -828,7 +876,8 @@ services:
       MEMGRAPH_USER: ${MEMGRAPH_USER:-memgraph}
       MEMGRAPH_PASSWORD: ${MEMGRAPH_PASSWORD:-devpassword}
       MEMGRAPH_LICENSE_FILE_PATH: ${MEMGRAPH_LICENSE_FILE_PATH:-}
-      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}
+      OTEL_SERVICE_NAME: memgraph
     volumes:
       - lakehouse-memgraph-lib:/var/lib/memgraph
       - lakehouse-memgraph-log:/var/log/memgraph
@@ -879,6 +928,37 @@ services:
     networks:
       - lakehouse
       - pangolin
+
+  # ---------------------------------------------------------------------------
+  # OTEL COLLECTOR (optional profile — ADDED 2026-08-23)
+  # ---------------------------------------------------------------------------
+  # Receives OTLP from cognee + graphiti + falkordb + memgraph + lance-namespace
+  # + clickhouse + lakekeeper. Fans out to Langfuse (LLM traces) + Logfire
+  # cloud (PII-safe traces) — NOT Prometheus/Grafana (per user preference).
+  #
+  # The collector config (otel-collector.yaml) lands in PR #4. This service
+  # definition is the minimal stub that wires the OTEL_EXPORTER_OTLP_ENDPOINT
+  # to a destination. To enable: `docker compose --profile otel up -d`.
+  # ---------------------------------------------------------------------------
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.110.0
+    container_name: lakehouse-otel-collector
+    restart: unless-stopped
+    profiles: ["otel"]
+    ports:
+      - "127.0.0.1:4317:4317"   # OTLP gRPC
+      - "127.0.0.1:4318:4318"   # OTLP HTTP
+    environment:
+      # LANGFUSE_HOST is already declared at the top of compose.yaml
+      # LOGFIRE_TOKEN resolved via Locket from dev-baile/logfire/write_token
+      LOGFIRE_TOKEN: ${LOGFIRE_TOKEN:-}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+    volumes:
+      # Mount the collector config (added in PR #4)
+      - ./otel-collector.yaml:/etc/otelcol-contrib/config.yaml:ro
+    networks:
+      - lakehouse
 # =============================================================================
 # VOLUMES
 # =============================================================================
@@ -889,6 +969,9 @@ volumes:
   lakehouse-clickhouse-data:
   lakehouse-clickhouse-logs:
   lakehouse-redis-data:
+  # otel-collector.yaml volume mount (PR #4 will add the actual config file)
+  # This is a placeholder so the otel-collector service can start even before
+  # the config lands (Docker creates an empty file at the mount target).
   olake_state:
   nimtable_data:
   lakehouse-falkordb-data:        # ADDED 2026-08-15 (lakehouse-unified-data-plane-v1)

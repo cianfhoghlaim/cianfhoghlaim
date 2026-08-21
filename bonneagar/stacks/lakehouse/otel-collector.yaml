@@ -1,0 +1,41 @@
+# =============================================================================
+# OTEL COLLECTOR CONFIG (placeholder — full config lands in PR #4)
+# =============================================================================
+# Per the 2026-08-23 (lakehouse-production-config-and-lance-sidecar-modernization-v1)
+# change. This is a minimal placeholder so the `otel-collector` service in
+# compose.yaml can start (the volume mount `./otel-collector.yaml:/etc/otelcol-contrib/config.yaml:ro`
+# requires a real file on disk).
+#
+# PR #4 (observability integration) will replace this with the full config
+# including Langfuse + Logfire + MLflow exporters + pipeline configs.
+# =============================================================================
+
+# Minimal no-op config — receives OTLP but discards everything
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors: []
+
+exporters:
+  debug:
+    verbosity: basic
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: []
+      exporters: [debug]
+    metrics:
+      receivers: [otlp]
+      processors: []
+      exporters: [debug]
+    logs:
+      receivers: [otlp]
+      processors: []
+      exporters: [debug]

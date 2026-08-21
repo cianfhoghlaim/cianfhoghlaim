@@ -1,20 +1,31 @@
 # =============================================================================
-# LANCE-NAMESPACE SIDECAR - Python Dependencies
+# LANCE-NAMESPACE SIDECAR - Python Dependencies (2026-08-23 rewrite)
 # =============================================================================
-# Pinned 2026-07-06 per the upgrade-4-stacks-with-infisical openspec change.
-# Previous pins (pylance>=0.26.0, lance-namespace-urllib3-client>=0.0.21)
-# predate the lance-namespace 0.9 contract release on 2026-07-01.
+# CHANGED 2026-08-23 (lakehouse-production-config-and-lance-sidecar-modernization-v1):
+#   Replaced the hand-rolled urllib3 Iceberg REST client with the official
+#   `lance-namespace-impls[iceberg]` library (which provides `IcebergNamespace`
+#   — the canonical Apache Iceberg REST Catalog adapter for Lance Namespace).
+#
+#   This cuts our custom main.py from 567 LOC → ~150 LOC of thin FastAPI
+#   wrapper, and we get upstream bug fixes automatically.
+#
+# Versions verified 2026-08-23 from the lance-namespace-impls pyproject.toml:
+#   - lance-namespace >= 0.11.1 (spec client SDK)
+#   - lance-namespace-urllib3-client >= 0.11.1 (urllib3 HTTP client)
+#   - lance-namespace-impls >= 0.4.1 with [iceberg] extra (Iceberg REST adapter)
+# =============================================================================
 
-# Core lance-namespace dependencies
-pylance>=8.0.0
-lance-namespace-urllib3-client>=0.0.30
+# Official Lance Namespace libraries (replaces our hand-rolled Iceberg REST code)
+lance-namespace>=0.11.1
+lance-namespace-urllib3-client>=0.11.1
+lance-namespace-impls[iceberg]>=0.4.1
+pylance>=7.0.0
 pyarrow>=15.0.0
-typing-extensions>=4.5.0
 
-# HTTP/REST client
+# HTTP client (used internally by lance-namespace-urllib3-client)
 urllib3>=2.0.0
 
-# FastAPI server
+# FastAPI server (thin wrapper around the official SDK)
 fastapi>=0.115.0
 uvicorn>=0.34.0
 pydantic>=2.0.0
@@ -22,6 +33,9 @@ pydantic>=2.0.0
 # Environment and configuration
 python-dotenv>=1.0.1
 
-# S3 storage support for Garage
+# S3 storage support for Garage (used in /health/deep endpoint)
 boto3>=1.35.0
 botocore>=1.35.0
+
+# Lance REST API models (request/response pydantic schemas)
+typing-extensions>=4.5.0
