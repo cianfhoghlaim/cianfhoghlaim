@@ -26,9 +26,10 @@ The 3 priority `mise run` tasks shipped by the 2026-07-30 → 2026-08-01 trilogy
 
 | Task | One-line purpose |
 |:--|:--|
-| [`cic:stack-doctor`](AGENTS.md) | Validate all 93 Docker Compose stacks against the 6-file `GOLD_STANDARD` (the canonical CI gate) |
+| [`cic:stack-doctor`](AGENTS.md) | Validate all 94 Docker Compose stacks against the 6-file `GOLD_STANDARD` (the canonical CI gate) |
 | [`stack-doctor:strict`](AGENTS.md) | `cic:stack-doctor` + `--strict --check-grammar` — fails on missing `infisical://` refs OR mixed bare/Jinja grammar in any `secrets.env` (Change 1, 2026-07-30) |
-| [`deploy:full`](bonneagar/AGENTS.md#deployfull-orchestrator) | One-command 7-phase full-stack deploy orchestrator (preflight → control-plane → lakehouse → data → agents → materialize → sensor health), with a resumable checkpoint at `~/.cianfhoghlaim/deploy-state.json` (Change 3, 2026-08-01) |
+| [`lint:mcp-runtime`](openspec/changes/2026-08-21-fix-wired-but-unloaded-mcps-v1/) | Verify every `enabled: true` MCP entry in `opencode.json` has a corresponding `mcp:smoke:<name>` task (NEW in 2026-08-21) |
+| [`deploy:full`](bonneagar/AGENTS.md#deployfull-orchestrator) | One-command 10-phase full-stack deploy orchestrator (preflight → auth → oidc → pangolin → control-plane → lakehouse → data → ocr → agent-surfaces → dagster-materialize), with a resumable checkpoint at `~/.cianfhoghlaim/deploy-state.json` (Change 3, 2026-08-01, extended to 10 phases by 2026-08-15) |
 
 Plus the **safety gate** for any `iac:bootstrap`, `iac:plan`, or `km deploy stack <arm-oci-*>` from opencode: [`preflight:arm-oci`](AGENTS.md#opencode-safety) (mandatory per the 2026-07-09 repo-boundary-lockdown openspec change).
 
@@ -55,6 +56,16 @@ Plus the **safety gate** for any `iac:bootstrap`, `iac:plan`, or `km deploy stac
 > AI + LiteLLM + Letta + Cognee + Graphiti + Langfuse + MLflow) are each
 > real, working open-source compositions. You can copy any slice
 > independently.
+>
+> **The 12-MCP agent surface is the new foundation layer** (added
+> 2026-08-21). All agent runtime tools are now wired via `opencode.json`
+> + `.mcp.json` with one canonical surface per domain — ccc for code
+> search, firecrawl + crawl4ai + chrome for web data, dlt-workspace +
+> motherduck for data engineering, cognee + graphiti + design-system
+> for knowledge/memory, langfuse for observability, infisical for
+> secrets, huggingface for model hub. See
+> [`openspec/changes/2026-08-21-mcp-server-revival-overview.md`](openspec/changes/2026-08-21-mcp-server-revival-overview.md)
+> for the canonical inventory.
 >
 > **You can take the same data pipelines and rewire them for any other
 > jurisdiction.** The `dlt_sources/` + `baml_src/` + `cocoindex_flows/` +
@@ -165,6 +176,7 @@ nearly-identical CocoIndex Apps that the audit found.
 - [`notebooks/_shared/schema.py`](notebooks/_shared/schema.py) — the 5 introspection helpers (`schema_introspect`, `schema_introspect_table`, `list_dlt_sources`, `list_cocoindex_apps`, `list_baml_classes`).
 - [`notebooks/00_control_panel.py`](notebooks/00_control_panel.py) — the 5-tab marimo control panel (Models / Pipelines / Datasets / Stacks / Registry).
 - [`deployment-choice.yaml`](deployment-choice.yaml) — the canonical enablement file (read/written by the notebook + web UI + CLI).
+- [`opencode.json`](opencode.json) — the **12-MCP agent surface** (added 2026-08-21). One canonical entry per domain: ccc / firecrawl / crawl4ai / chrome / dlt-workspace / motherduck / cognee / graphiti / design-system / langfuse / infisical / huggingface.
 
 **The 4 supporting artifacts:**
 
@@ -465,7 +477,9 @@ Date**: 4 years from publication. **Change License**: AGPL v3.0.
 
 ## Quick start for new operators
 
-The full per-stack onboarding scripts (Pocket ID + Komodo + Pangolin
+> **Start here.** The canonical onboarding doc is [`NEW-USER-ONBOARDING.md`](NEW-USER-ONBOARDING.md) (~380 lines: 1-command setup + the 10-step cluster bringup + the 12-MCP verification checklist + the 3 secrets + the troubleshooting FAQ). The 60-second quick path is [`CHEATSHEET.md`](CHEATSHEET.md).
+
+The per-stack onboarding scripts (Pocket ID + Komodo + Pangolin
 for the auth mesh; Tuatha + SpacetimeDB for the educational MMO)
 live in their respective hub READMEs rather than the root, to keep
 this entry-point scannable:
