@@ -25,6 +25,10 @@ You are the canonical Cianfhoghlaim mise-task authoring subagent. You author, re
 
 # Direct references
 
+# Quick code lookup (faster than ccc search for structural patterns):
+- `mise run core:ccc:grep "\\[tasks\\." mise.toml` — STRUCTURAL search (no daemon needed; ccc 0.2.37+)
+- `bun run ccc:search "query"` — SEMANTIC search (needs the daemon; ~1s)
+
 - `mise.toml` — the canonical task catalogue (9 namespaces after the 2026-08-19 refactor)
 - `mise-tasks/<namespace>/<name>.sh` — the file tasks (with `#MISE` frontmatter)
 - `.infisical.env` — the secret template (committed)

@@ -1,0 +1,39 @@
+# bonneagar/ subproject — IaC + 89 Docker stacks + Komodo + Pangolin + Locket + Infisical
+# ---------------------------------------------------------------------------------
+# Inherits from the monorepo root mise.toml (tools, env, task_templates).
+# Subproject tasks: the devops:* namespace extensions (moved from root in the
+# 2026-08-22-mise-monorepo-mode-and-subprojects-v1 change).
+
+[tasks."devops:health"]
+description = "DEVOPS health — Komodo + Pangolin + Infisical state consistency (subproject task; expected to be run from inside bonneagar/)"
+alias = ["iac:health", "iac-health"]
+run = "bun run iac:health ${@:-}"
+
+[tasks."devops:plan"]
+description = "DEVOPS plan — IaC diff (declared vs actual state, no mutation)"
+alias = ["iac:plan", "iac-plan"]
+run = "bun run iac:plan ${@:-}"
+
+[tasks."devops:bootstrap"]
+description = "DEVOPS bootstrap — Pulumi → Infisical → Pangolin → Komodo → Newt"
+alias = ["iac:bootstrap", "iac-bootstrap"]
+run = "bun run iac:bootstrap ${@:-}"
+
+[tasks."devops:bootstrap-pangolin-client"]
+description = "DEVOPS bootstrap-pangolin-client — install pangolin CLI + mint machine client + render newt compose"
+alias = ["iac:bootstrap-pangolin-client", "iac-bootstrap-pangolin-client"]
+run = "bun run iac:bootstrap-pangolin-client ${@:-}"
+
+[tasks."devops:deploy"]
+description = "DEVOPS deploy — Deploy the 30 key stacks end-to-end"
+run = "bun run iac:deploy ${@:-}"
+
+[tasks."devops:teardown"]
+description = "DEVOPS teardown — Reverse of devops:bootstrap (requires --force)"
+run = "bun run iac:teardown ${@:-}"
+
+
+[tasks."devops:teardown-stack"]
+description = "DEVOPS teardown-stack — Per-host selective teardown of the 14-stack core 24/7 (per the 2026-08-21 openspec change). Requires --force."
+run = "bun run iac:teardown-stack ${@:-}"
+

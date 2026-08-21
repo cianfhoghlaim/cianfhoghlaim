@@ -1,0 +1,20 @@
+# agents/ subproject — 12-agent fleet + 8 NCCA subjects + 3 educational agents
+# -----------------------------------------------------------------------------------
+# Inherits from the monorepo root mise.toml (tools, env, task_templates).
+# Subproject tasks: the ml:agents:* namespace extensions (moved from root in the
+# 2026-08-22-mise-monorepo-mode-and-subprojects-v1 change).
+
+[tasks."ml:agents:smoke"]
+description = "ML agents smoke — Run the 3 agent-fleet smoke tests (subproject task; requires AGENT_FLEET_DISABLE_* env)"
+alias = ["agents:smoke"]
+run = "AGENT_FLEET_DISABLE_WIRE=1 AGENT_FLEET_DISABLE_MEMORY=1 uv run pytest tests/test_agent_fleet_smoke.py tests/test_agent_wiring_audit.py tests/test_agent_registry_smoke.py -v"
+
+[tasks."ml:agents:audit"]
+description = "ML agents audit — Direct-import audit + AGENT_REGISTRY validation (≥12 entries)"
+alias = ["agents:audit"]
+run = ".venv/bin/python3 -c \"import os; os.environ['AGENT_FLEET_DISABLE_WIRE']='1'; os.environ['AGENT_FLEET_DISABLE_MEMORY']='1'; from agents.agent_registry import AGENT_REGISTRY; assert len(AGENT_REGISTRY) >= 12, f'AGENT_REGISTRY has {len(AGENT_REGISTRY)} entries'; print(f'AGENT_REGISTRY: {len(AGENT_REGISTRY)} entries OK')\""
+
+[tasks."ml:agents:reproduce"]
+description = "ML agents reproduce — 12-agent fleet + 8 NCCA + 3 educational agents cold→green"
+alias = ["agents:reproduce"]
+run = "bash scripts/reproducers/agents-fleet-reproducer.sh"

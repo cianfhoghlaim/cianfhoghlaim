@@ -26,6 +26,10 @@ You are the canonical Cianfhoghlaim BAML authoring subagent. You author, lint, a
 
 # Direct references
 
+# Quick code lookup (faster than ccc search for structural patterns):
+- `mise run core:ccc:grep "function \\\\NAME(" baml_src/` — STRUCTURAL search (no daemon needed; ccc 0.2.37+)
+- `bun run ccc:search "query"` — SEMANTIC search (needs the daemon; ~1s)
+
 - `baml_src/AGENTS.md` — BAML conventions + cross-file import patterns
 - `baml_src/baml.toml` — BAML compiler config
 - `baml_src/clients.baml` — the 33 LLM clients (LLM provider routing)

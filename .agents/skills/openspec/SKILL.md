@@ -24,7 +24,7 @@ written. Local install: **`@fission-ai/openspec@1.4.1`** (per
 ## Quick start — the 4 priority commands
 
 ```bash
-openspec list --specs                    # list all 96 capability specs
+openspec list --specs                    # list all 97 capability specs
 openspec list                            # list all 78 pending changes
 openspec view                            # interactive dashboard (NEW 1.4)
 openspec status <change-id>              # artifact completion check (NEW 1.4)
@@ -32,6 +32,11 @@ openspec show <change-id|spec-id>        # formatted view (NEW 1.4)
 openspec validate <change-id> --strict   # MUST pass before commit
 openspec validate --all --strict         # validate everything (CI gate)
 openspec archive <change-id> --yes       # after deploy
+openspec schemas                         # NEW 1.4: list available workflow schemas (spec-driven, opsx, tdd)
+openspec schemas --json                  # NEW 1.4: same as above, JSON output
+openspec feedback <message>              # NEW 1.4: submit feedback to OpenSpec maintainers
+openspec instructions --change <id>     # NEW 1.4: emit enriched template for an artifact
+openspec templates                       # NEW 1.4: show resolved template paths for a schema
 ```
 
 The new 1.4 subcommands (`view`, `status`, `show`, `instructions`,

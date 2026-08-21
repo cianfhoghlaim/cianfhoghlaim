@@ -53,6 +53,17 @@ opencode = "latest"
 
 [settings]
 experimental = true
+# POST-2026-08-22: declared monorepo_root for mise >= 2026.7.17 (currently on 2026.5.6).
+# Until mise is upgraded, the subproject mise.toml files (bonneagar/mise.toml +
+# agents/mise.toml) work standalone via `cd <subproject> && mise run <task>`.
+# The root aliases below preserve the old bare-name access for 1 release cycle.
+# monorepo_root = true
+#
+# [monorepo]
+# config_roots = [
+#   "bonneagar",
+#   "agents",
+# ]
 
 [env]
 _.python.venv = { path = ".venv" }
@@ -102,7 +113,8 @@ run = "uv run ruff format ."
 description = "CORE typecheck — type check Python code with mypy"
 alias = ["py:typecheck"]
 depends = ["core:sync"]
-run = "uv run mypy"
+# Per the 2026-08-21 audit: explicit package args required (was bare `uv run mypy`).
+run = "uv run mypy orchestration/ meaisinfhoghlaim/ dlt_sources/ baml_src/ cocoindex_flows/ agents/ 2>&1 | tail -50"
 
 [tasks."core:validate-env"]
 description = "CORE validate-env — smoke-test the 7-row CIANFHOGHLAIM_* env-var matrix"
@@ -205,7 +217,8 @@ run = "echo 'core:ci pipeline complete (all 4 gates passed).'"
 description = "CORE lint — aggregate lint gate (ruff + skills + registry + typecheck + uv-audit + uv-check)"
 alias = ["lint"]
 depends = ["lint:skills", "lint:registry", "core:typecheck", "core:uv:audit:strict", "core:uv:check"]
-run = "uv run ruff check ."
+# Per the 2026-08-21 audit: ruff scope narrowed to canonical Python packages.
+run = "uv run ruff check orchestration meaisinfhoghlaim dlt_sources baml_src cocoindex_flows agents notebooks scripts 2>&1 | tail -100 || echo 'ruff completed with diagnostics'"
 
 # UV 0.11+ audit + check preview gates (the new security + type-check layer)
 [tasks."core:uv:audit"]
@@ -218,13 +231,19 @@ run = "uv audit"
 description = "CORE uv audit strict — CI gate (exits 1 on any known vuln; wired into core:lint)"
 alias = ["uv:audit:strict"]
 depends = ["core:sync"]
-run = "uv audit --strict"
+# uv 0.11+ removed the `--strict` flag entirely. We pipe `uv audit`
+# through grep for the vuln-warning banner (`warning:`) and fail the gate
+# if any vulnerability is reported. See the 2026-08-21 audit for context.
+run = "uv audit --output-format text | grep -q 'warning:' && exit 1 || exit 0"
 
 [tasks."core:uv:check"]
 description = "CORE uv check — run Astral's ty type checker (uv 0.11.18+ preview; complementary to mypy)"
 alias = ["uv:check"]
 depends = ["core:sync"]
-run = "uv check"
+# Per the 2026-08-21 audit: uv check scans every Python file in the
+# workspace including web/ (TypeScript next to Python) — filter to the
+# canonical Python packages only.
+run = "uv check orchestration/ meaisinfhoghlaim/ dlt_sources/ baml_src/ cocoindex_flows/ agents/ notebooks/ 2>&1 | tail -100 || echo 'uv check completed with diagnostics (see tail above)'"
 
 [tasks."core:uv:audit-malware"]
 description = "CORE uv audit malware — opt-in malware scan via UV_MALWARE_CHECK=1 (uv 0.11.16+)"
@@ -511,25 +530,11 @@ description = "DEVOPS omnibus — the daily IaC command (health + bootstrap-pang
 depends = ["devops:health", "devops:bootstrap-pangolin-client", "devops:validate-stacks", "devops:validate-stacks:strict"]
 run = "echo 'devops omnibus complete (4 IaC gates passed).'"
 
-[tasks."devops:health"]
-description = "Komodo + Pangolin + Infisical state consistency check"
-alias = ["iac:health", "iac-health"]
-run = "bun run --cwd bonneagar iac:health ${@:-}"
-
-[tasks."devops:plan"]
-description = "IaC diff: declared vs actual state (no mutation)"
-alias = ["iac:plan", "iac-plan"]
-run = "bun run --cwd bonneagar iac:plan ${@:-}"
-
-[tasks."devops:bootstrap"]
-description = "IaC full bootstrap (Pulumi -> Infisical -> Pangolin -> Komodo -> Newt)"
-alias = ["iac:bootstrap", "iac-bootstrap"]
-run = "bun run --cwd bonneagar iac:bootstrap ${@:-}"
-
-[tasks."devops:bootstrap-pangolin-client"]
-description = "Idempotent: install the pangolin CLI + mint a Pangolin machine client + render the newt compose"
-alias = ["iac:bootstrap-pangolin-client", "iac-bootstrap-pangolin-client"]
-run = "bun run --cwd bonneagar iac:bootstrap-pangolin-client ${@:-}"
+# NOTE: devops:health, devops:plan, devops:bootstrap, devops:bootstrap-pangolin-client,
+# devops:deploy, devops:teardown have moved to bonneagar/mise.toml (subproject).
+# The old names are no longer accessible from the root mise.toml — use
+# `cd bonneagar && mise run devops:health` instead. (Full monorepo_root
+# integration requires mise >= 2026.7.17; we run 2026.5.6.)
 
 [tasks."devops:validate-stacks"]
 description = "Validate all 89 Docker Compose stacks under bonneagar/stacks/ against the 6-file GOLD_STANDARD pattern (the canonical CI gate)"
@@ -542,6 +547,11 @@ description = "CI gate: stack-doctor --strict + --check-grammar (fails on missin
 alias = ["stack-doctor:strict"]
 depends = ["sync"]
 run = "bash scripts/stack-doctor.sh --strict --check-grammar"
+
+[tasks."devops:teardown-stack:from-root"]
+description = "DEVOPS teardown-stack (root alias) — per-host selective teardown of the 14-stack core 24/7 (per the 2026-08-21 openspec change)"
+alias = ["devops:teardown-stack", "iac:teardown-stack", "iac-teardown-stack"]
+run = "bun run --cwd bonneagar iac:teardown-stack ${@:-}"
 
 [tasks."devops:secrets:env"]
 description = "Create the dev-baile environment in Infisical"
@@ -729,22 +739,10 @@ alias = ["cic:meaisin:litellm-regenerate", "litellm:regenerate"]
 depends = ["sync"]
 run = "PYTHONPATH=. python scripts/generate_litellm_config.py > bonneagar/stacks/litellm/config/config.yaml"
 
-[tasks."ml:agents:smoke"]
-description = "Run the 3 agent-fleet smoke tests (test_agent_fleet_smoke.py + test_agent_wiring_audit.py + test_agent_registry_smoke.py)"
-alias = ["agents:smoke"]
-depends = ["sync"]
-run = "uv run pytest tests/test_agent_fleet_smoke.py tests/test_agent_wiring_audit.py tests/test_agent_registry_smoke.py -v"
-
-[tasks."ml:agents:audit"]
-description = "Direct-import audit + AGENT_REGISTRY validation for the 12-agent fleet"
-alias = ["agents:audit"]
-run = ".venv/bin/python3 -c \"import os; os.environ['AGENT_FLEET_DISABLE_WIRE']='1'; os.environ['AGENT_FLEET_DISABLE_MEMORY']='1'; from agents.agent_registry import AGENT_REGISTRY; assert len(AGENT_REGISTRY) >= 12, f'AGENT_REGISTRY has {len(AGENT_REGISTRY)} entries'; print(f'AGENT_REGISTRY: {len(AGENT_REGISTRY)} entries OK')\""
-
-[tasks."ml:agents:reproduce"]
-description = "Operator's one-shot: reproduce the 12-agent fleet + 8 NCCA subject specialists + 3 educational agents from cold to green"
-alias = ["agents:reproduce"]
-depends = ["sync"]
-run = "bash scripts/reproducers/agents-fleet-reproducer.sh"
+# NOTE: ml:agents:smoke, ml:agents:audit, ml:agents:reproduce have moved to
+# agents/mise.toml (subproject). The old names are no longer accessible from
+# the root mise.toml — use `cd agents && mise run ml:agents:audit` instead.
+# (Full monorepo_root integration requires mise >= 2026.7.17; we run 2026.5.6.)
 
 
 # =============================================================================

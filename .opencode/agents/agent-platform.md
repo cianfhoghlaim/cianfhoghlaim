@@ -31,6 +31,10 @@ You are the agent-platform functional subagent for the cianfhoghlaim monorepo. Y
 
 # Direct references (mirrors guides.yml)
 
+# Quick code lookup (faster than ccc search for structural patterns):
+- `mise run core:ccc:grep "def \\\\NAME(" agents/meaisinfhoghlaim/` — STRUCTURAL search (no daemon needed; ccc 0.2.37+)
+- `bun run ccc:search "query"` — SEMANTIC search (needs the daemon; ~1s)
+
 - `agents/AGENTS.md` — the 13-agent fleet + 8 NCCA subject specialists
 - `agents/meaisinfhoghlaim/AGENTS.md` — the AI/ML services per-area
 - `meaisinfhoghlaim/README.md` — model registry + schema registry

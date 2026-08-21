@@ -44,7 +44,7 @@ openspec validate --all --strict   # NEW: CI gate (equivalent to mise run opensp
 openspec archive <change-id> --yes        # after deploy
 ```
 
-### Priority skills (6 of 65)
+### Priority skills (6 of 166)
 
 | Skill | When to load |
 |:--|:--|
