@@ -176,6 +176,34 @@ mise run lakehouse:preflight --json                 # machine-readable
 mise run lakehouse:preflight --strict-cognify       # require 4 graph DB backends
 ```
 
+## Observability (added 2026-08-25)
+
+The 10 **application services** in the unified lakehouse stack emit OpenTelemetry traces via `OTEL_EXPORTER_OTLP_ENDPOINT`. Traces fan out to 3 backends:
+
+- **Logfire cloud** (SaaS) via `LOGFIRE_TOKEN` env var
+- **Langfuse** (self-hosted) via `LANGFUSE_PUBLIC_KEY` + `LANGFUSE_SECRET_KEY`
+- **MLflow** (local tracking) via `MLFLOW_TRACKING_URI`
+
+Two modes:
+1. **Local mode** (`docker compose --profile otel up -d`) — uses the in-stack `otel-collector` service for fan-out
+2. **Cross-stack mode** (production) — uses the existing `logfire-bunchloch` stack's `logfire-otel` collector
+
+See `docs/observability/lakehouse-otel-fanout.md` for the full architecture.
+
+The `lakehouse:stack-doctor` script enforces that every application service sets `OTEL_EXPORTER_OTLP_ENDPOINT` (storage infra + read-only web UIs are exempt).
+
+## Cross-Stack Orchestration (added 2026-08-25)
+
+```bash
+# Bring up the COMPLETE data plane with one command
+mise run lakehouse:all:up    # alias: data:all:up
+# → lakehouse (16 services) → logfire → langfuse → mlflow → dagster
+#    (in dependency order; verified via mise run lakehouse:preflight)
+
+# Teardown in reverse order
+mise run lakehouse:all:down  # alias: data:all:down
+```
+
 ## Deprecated Stacks
 
 The 5 standalone graph DB stacks (`cognee/`, `graphiti/`, `falkordb/`, `memgraph/`, `lancedb/`) carry 1-line deprecation banners pointing at this unified stack. They are kept as readable shadow stacks for one release cycle; deletion is deferred to `2026-XX-XX-delete-deprecated-graph-db-stacks`. **Do NOT deploy any of the deprecated stacks** — they will fail to resolve `lakehouse-postgres` by Docker DNS (the network is `lakehouse_lakehouse` external, not the deprecated stack's local bridge).

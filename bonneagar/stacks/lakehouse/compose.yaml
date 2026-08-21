@@ -102,13 +102,19 @@ services:
       - lakehouse
       - pangolin
   # ---------------------------------------------------------------------------
-  # GARAGE INIT - Create Buckets for Lakehouse via Admin API
+  # GARAGE INIT - Create Buckets for Lakehouse via Admin API (Python rewrite)
   # ---------------------------------------------------------------------------
-  # Uses alpine with curl to initialize Garage via its HTTP Admin API
-  # Garage v1.x distroless image has no shell, so we use a separate container
+  # CHANGED 2026-08-24 (lakehouse-stack-doctor-and-env-var-cleanup-v1):
+  # Replaced the 50-line bash entrypoint with the Python garage_init.py
+  # script (using boto3). The image is now python:3.11-slim + boto3.
+  # Easier to test + maintain + integrate with Locket than raw curl.
   # ---------------------------------------------------------------------------
+  # CHANGED 2026-08-24 (lakehouse-stack-doctor-and-env-var-cleanup-v1):
+  # Replaced the 50-line bash entrypoint with the Python garage_init.py
+  # script (using boto3). The image is now python:3.11-slim + boto3
+  # (mounted from the lance-sidecar/requirements.txt pattern).
   garage-init:
-    image: curlimages/curl:latest
+    image: python:3.11-slim
     container_name: lakehouse-garage-init
     depends_on:
       garage:
@@ -117,97 +123,14 @@ services:
       GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN:?GARAGE_ADMIN_TOKEN must be set via Locket/Infisical}
       GARAGE_ACCESS_KEY_ID: ${GARAGE_ACCESS_KEY_ID:?GARAGE_ACCESS_KEY_ID must be set via Locket/Infisical}
       GARAGE_SECRET_ACCESS_KEY: ${GARAGE_SECRET_ACCESS_KEY:?GARAGE_SECRET_ACCESS_KEY must be set via Locket/Infisical}
-    entrypoint: ["/bin/sh", "-c"]
-    command:
-      - |
-        set -e
-        ADMIN_URL="http://garage:3904"
-        AUTH="Authorization: Bearer $${GARAGE_ADMIN_TOKEN}"
-
-        echo "Waiting for Garage admin API..."
-        sleep 3
-
-        echo "Checking node layout..."
-        # Get node ID
-        NODE_ID=$$(curl -sf "$${ADMIN_URL}/v1/status" -H "$${AUTH}" | grep -o '"node":"[^"]*"' | cut -d'"' -f4)
-        echo "Node ID: $$NODE_ID"
-
-        # Check if layout already configured
-        LAYOUT_VERSION=$$(curl -sf "$${ADMIN_URL}/v1/layout" -H "$${AUTH}" | grep -o '"version":[0-9]*' | head -1 | cut -d':' -f2)
-        echo "Current layout version: $$LAYOUT_VERSION"
-
-        if [ "$$LAYOUT_VERSION" = "0" ]; then
-          echo "Configuring node layout..."
-          # Stage layout change
-          curl -sf -X POST "$${ADMIN_URL}/v1/layout" \
-            -H "$${AUTH}" \
-            -H "Content-Type: application/json" \
-            -d "[{\"id\": \"$$NODE_ID\", \"zone\": \"dc1\", \"capacity\": 100000000000, \"tags\": []}]" || echo "Layout staging may have failed"
-
-          # Apply layout
-          curl -sf -X POST "$${ADMIN_URL}/v1/layout/apply" \
-            -H "$${AUTH}" \
-            -H "Content-Type: application/json" \
-            -d '{"version": 1}' || echo "Layout apply may have failed"
-
-          echo "Layout configured!"
-          sleep 2
-        else
-          echo "Layout already configured"
-        fi
-
-        echo "Creating access key..."
-        KEY_RESPONSE=$$(curl -sf -X POST "$${ADMIN_URL}/v1/key" \
-          -H "$${AUTH}" \
-          -H "Content-Type: application/json" \
-          -d '{"name": "lakehouse"}' 2>/dev/null || echo "exists")
-
-        if [ "$$KEY_RESPONSE" = "exists" ]; then
-          echo "Key may already exist, fetching..."
-          KEY_RESPONSE=$$(curl -sf "$${ADMIN_URL}/v1/key?search=lakehouse" -H "$${AUTH}")
-        fi
-
-        ACCESS_KEY_ID=$$(echo "$$KEY_RESPONSE" | grep -o '"accessKeyId":"[^"]*"' | head -1 | cut -d'"' -f4)
-        echo "Access Key ID: $$ACCESS_KEY_ID"
-        echo "Creating buckets..."
-        # REVERTED 2026-08-13: the 2026-08-01 rename of `ducklake` ->
-        # `ducklake-cianfhoghlaim` was made to match a default in
-        # `destinations_cianfhoghlaim.py` that has since been corrected back
-        # to `ducklake` — the live-seeded catalog has always used `ducklake`,
-        # and attaching with a DATA_PATH the catalog doesn't know fails with
-        # "DATA_PATH parameter does not match existing data path in the
-        # catalog". A fresh `docker compose up` was provisioning a bucket
-        # nothing attaches to. `ducklake` is now the DuckLake bucket.
-        #
-        # `ducklake-cianfhoghlaim` is retained solely because
-        # `MOTHERDUCK_S3_BUCKET` still points at it for the BYOB/BYOC path;
-        # that path has no implementation in the code today. Do not use it
-        # for DuckLake.
-        # 8 buckets total (3 lakehouse-internal + 1 motherduck-byob + 4 downstream)
-
-        for bucket in iceberg lance ducklake ducklake-cianfhoghlaim langfuse-events langfuse-media langfuse-exports mlflow-artifacts; do
-          curl -sf -X POST "$${ADMIN_URL}/v1/bucket" \
-            -H "$${AUTH}" \
-            -H "Content-Type: application/json" \
-            -d "{\"globalAlias\": \"$$bucket\"}" \
-            || echo "Bucket $$bucket may already exist"
-        done
-
-        echo "Getting bucket IDs and granting permissions..."
-        for bucket in iceberg lance ducklake ducklake-cianfhoghlaim langfuse-events langfuse-media langfuse-exports mlflow-artifacts; do
-          BUCKET_RESPONSE=$$(curl -sf "$${ADMIN_URL}/v1/bucket?globalAlias=$$bucket" -H "$${AUTH}")
-          BUCKET_ID=$$(echo "$$BUCKET_RESPONSE" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
-          if [ -n "$$BUCKET_ID" ] && [ -n "$$ACCESS_KEY_ID" ]; then
-            curl -sf -X POST "$${ADMIN_URL}/v1/bucket/allow" \
-              -H "$${AUTH}" \
-              -H "Content-Type: application/json" \
-              -d "{\"bucketId\": \"$$BUCKET_ID\", \"accessKeyId\": \"$$ACCESS_KEY_ID\", \"permissions\": {\"read\": true, \"write\": true, \"owner\": true}}" \
-              || echo "Permission already set for $$bucket"
-            echo "Granted access to $$bucket"
-          fi
-        done
-
-        echo "Garage initialization complete!"
+      GARAGE_ADMIN_URL: ${GARAGE_ADMIN_URL:-http://garage:3904}
+      GARAGE_S3_ENDPOINT: ${GARAGE_S3_ENDPOINT:-http://garage:3900}
+      GARAGE_REGION: ${GARAGE_REGION:-garage}
+    volumes:
+      - ./garage_init.py:/app/garage_init.py:ro
+    working_dir: /app
+    entrypoint: ["python", "/app/garage_init.py"]
+    command: []
     restart: "no"
     networks:
       - lakehouse
@@ -511,6 +434,10 @@ services:
       # Server
       SERVER_PORT: "3000"
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # ADDED 2026-08-25 (lakehouse-observability-and-cross-stack-integration-v1):
+      # OpenTelemetry → otel collector (fans out to Langfuse + Logfire + MLflow)
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}
+      OTEL_SERVICE_NAME: nimtable
     volumes:
       - nimtable_data:/var/lib/nimtable
     depends_on:
@@ -534,8 +461,6 @@ services:
     networks:
       - lakehouse
       - pangolin
-  # ---------------------------------------------------------------------------
-  # OLAKE - CDC Engine (MongoDB / Postgres / MySQL → Iceberg)
   # ---------------------------------------------------------------------------
   # Open-source CDC engine from olake-io. Persists checkpoint state to the
   # `olake_state` Postgres DB + named volume. Admin via `docker exec`.
@@ -568,6 +493,10 @@ services:
       WRITER_S3_REGION: garage
       # Logging
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # ADDED 2026-08-25 (lakehouse-observability-and-cross-stack-integration-v1):
+      # OpenTelemetry → otel collector (fans out to Langfuse + Logfire + MLflow)
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}
+      OTEL_SERVICE_NAME: olake
     volumes:
       - ./olake/config.json:/mnt/config/config.json:ro
       - ./olake/catalog.json:/mnt/config/catalog.json:ro
@@ -930,15 +859,20 @@ services:
       - pangolin
 
   # ---------------------------------------------------------------------------
-  # OTEL COLLECTOR (optional profile — ADDED 2026-08-23)
+  # OTEL COLLECTOR (optional profile — COMPLETED 2026-08-25)
   # ---------------------------------------------------------------------------
-  # Receives OTLP from cognee + graphiti + falkordb + memgraph + lance-namespace
-  # + clickhouse + lakekeeper. Fans out to Langfuse (LLM traces) + Logfire
-  # cloud (PII-safe traces) — NOT Prometheus/Grafana (per user preference).
+  # CHANGED 2026-08-25 (lakehouse-observability-and-cross-stack-integration-v1):
+  # The full collector config (otel-collector.yaml) lands now. Receives OTLP
+  # from cognee + graphiti + falkordb + memgraph + lance-namespace +
+  # clickhouse + lakekeeper. Fans out to:
+  #   1. Logfire cloud (SaaS) via `logfire` exporter + LOGFIRE_TOKEN
+  #   2. Langfuse (self-hosted) via `otlphttp/langfuse` exporter + LANGFUSE_PUBLIC_KEY/SECRET_KEY
+  #   3. MLflow (local) via `otlphttp/mlflow` exporter + MLFLOW_TRACKING_URI
   #
-  # The collector config (otel-collector.yaml) lands in PR #4. This service
-  # definition is the minimal stub that wires the OTEL_EXPORTER_OTLP_ENDPOINT
-  # to a destination. To enable: `docker compose --profile otel up -d`.
+  # Production deployments can also use the CROSS-STACK `logfire-otel`
+  # collector (set LAKEHOUSE_OTLP_ENDPOINT=http://logfire-otel:4317 in
+  # .env.local). To enable this local fan-out:
+  #   docker compose --profile otel up -d
   # ---------------------------------------------------------------------------
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.110.0
@@ -948,12 +882,24 @@ services:
     ports:
       - "127.0.0.1:4317:4317"   # OTLP gRPC
       - "127.0.0.1:4318:4318"   # OTLP HTTP
+      - "127.0.0.1:8888:8888"   # Collector health
+      - "127.0.0.1:8889:8889"   # Collector metrics
     environment:
-      # LANGFUSE_HOST is already declared at the top of compose.yaml
-      # LOGFIRE_TOKEN resolved via Locket from dev-baile/logfire/write_token
+      # CHANGED 2026-08-25 (lakehouse-observability-and-cross-stack-integration-v1):
+      # Full env vars for the otel-collector fan-out to Logfire + Langfuse + MLflow
+      # (per otel-collector.yaml). These env vars are referenced by the
+      # collector config via ${env:VAR_NAME} substitution.
       LOGFIRE_TOKEN: ${LOGFIRE_TOKEN:-}
+      LOGFIRE_PROJECT_NAME: ${LOGFIRE_PROJECT_NAME:-oideachas-celtic-education}
+      LOGFIRE_ENVIRONMENT: ${LOGFIRE_ENVIRONMENT:-development}
+      # Langfuse Basic auth header (base64-encoded "PUBLIC_KEY:SECRET_KEY")
+      # Constructed by Locket sidecar from LANGFUSE_PUBLIC_KEY + LANGFUSE_SECRET_KEY.
+      LANGFUSE_AUTH_HEADER: ${LANGFUSE_AUTH_HEADER:-}
+      # Fallback raw keys (for collectors that compose the header themselves)
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      # MLflow tracking URI (so otelhttp/mlflow exporter can fan out)
+      MLFLOW_TRACKING_URI: ${MLFLOW_TRACKING_URI:-http://mlflow:5000}
     volumes:
       # Mount the collector config (added in PR #4)
       - ./otel-collector.yaml:/etc/otelcol-contrib/config.yaml:ro

@@ -170,6 +170,17 @@ description = "CORE ccc search:json — semantic search emitting JSON on stdout 
 alias = ["ccc:search:json"]
 run = 'ccc search --json "$@"'
 
+# Bun 1.4+ — outdated gate + upgrade
+[tasks."core:bun:outdated"]
+description = "CORE bun outdated — list outdated dependencies per workspace (bun 1.4+)"
+alias = ["bun:outdated"]
+run = "bun outdated"
+
+[tasks."core:bun:upgrade"]
+description = "CORE bun upgrade — one-command bun upgrade (uses bun upgrade; bun 1.4+)"
+alias = ["bun:upgrade"]
+run = "bun upgrade"
+
 
 # =============================================================================
 # CORE:OMNIBUS — the daily "I'm working on the dev env" command
@@ -464,6 +475,31 @@ run = "openspec status ${1:-}"
 [tasks."openspec:show"]
 description = "Show one openspec change or spec formatted to terminal (openspec 1.4+)"
 run = "openspec show ${1:-}"
+
+[tasks."openspec:schemas"]
+description = "OPENSPEC schemas — list available workflow schemas (spec-driven, opsx, tdd)"
+alias = ["openspec:schema"]
+run = "openspec schemas"
+
+[tasks."openspec:schemas:json"]
+description = "OPENSPEC schemas JSON — list available schemas emitting JSON (for tool integration)"
+alias = ["openspec:schema:json"]
+run = "openspec schemas --json"
+
+[tasks."openspec:feedback"]
+description = "OPENSPEC feedback — submit feedback to OpenSpec maintainers (openspec 1.4+)"
+alias = ["openspec:fb"]
+run = "openspec feedback --help"
+
+[tasks."openspec:instructions"]
+description = "OPENSPEC instructions — emit enriched template for an artifact (openspec 1.4+). Usage: mise run openspec:instructions --change <id> [artifact]"
+alias = ["openspec:inst"]
+run = 'openspec instructions "$@"'
+
+[tasks."openspec:templates"]
+description = "OPENSPEC templates — show resolved template paths for all artifacts in a schema"
+alias = ["openspec:tpls"]
+run = "openspec templates"
 
 
 # =============================================================================

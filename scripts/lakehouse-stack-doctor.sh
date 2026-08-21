@@ -27,7 +27,7 @@ STACK_DIR="${REPO_ROOT}/bonneagar/stacks/lakehouse"
 
 # Track failures
 FAILURES=0
-FAILURES_DETAIL=()
+declare -a FAILURES_DETAIL=()
 
 # Color helpers (if stdout is a tty)
 if [[ -t 1 ]]; then
@@ -280,6 +280,51 @@ done
 
 if [[ "$HEALTHCHECK_OK" == "true" ]]; then
     check "all healthchecks have interval + timeout (canonical template)" ok
+fi
+
+# -----------------------------------------------------------------------------
+# Check 9 (ADDED 2026-08-25-lakehouse-observability-and-cross-stack-integration-v1):
+# OTEL_EXPORTER_OTLP_ENDPOINT must be set on every APPLICATION service that emits traces.
+# Storage infrastructure (garage + postgres + clickhouse + redis) is EXEMPT —
+# these don't emit application traces (their traces are emitted by the
+# services that USE them — e.g., lakekeeper emits postgres query traces
+# via sqlx, not by postgres itself).
+# -----------------------------------------------------------------------------
+echo ""
+echo "=== compose.yaml OTEL_EXPORTER_OTLP_ENDPOINT ==="
+# Services EXEMPT from the OTEL check (storage infrastructure + read-only web UIs)
+# that don't emit application traces:
+#   - garage / postgres / clickhouse / redis → storage infrastructure
+#   - lancedb-viewer / memgraph-lab → read-only web UIs (Rust / JS viewers)
+#   - otel-collector / garage-init / lakekeeper-migrate → meta-services
+OTEL_EXEMPT=("garage" "postgres" "clickhouse" "redis" "lancedb-viewer" "memgraph-lab" "otel-collector" "garage-init" "lakekeeper-migrate")
+# Walk every service and verify OTEL_EXPORTER_OTLP_ENDPOINT is set
+OTEL_OK=true
+for service_name in $(python3 -c "
+import yaml
+d = yaml.safe_load(open('${COMPOSE_FILE}'))
+for name in d.get('services', {}).keys():
+    print(name)
+" 2>/dev/null); do
+    # Skip exempt services (storage infra + 1-shot jobs)
+    skip=false
+    for exempt in "${OTEL_EXEMPT[@]}"; do
+        if [[ "$service_name" == "$exempt" ]]; then skip=true; break; fi
+    done
+    if [[ "$skip" == "true" ]]; then continue; fi
+
+    # Check if OTEL_EXPORTER_OTLP_ENDPOINT is in the service's env
+    if grep -A 80 "^  ${service_name}:" "$COMPOSE_FILE" | grep -qE "OTEL_EXPORTER_OTLP_ENDPOINT:"; then
+        continue
+    else
+        echo -e "  ${RED}✗${NC} application service '${service_name}' missing OTEL_EXPORTER_OTLP_ENDPOINT"
+        FAILURES=$((FAILURES + 1))
+        OTEL_OK=false
+    fi
+done
+
+if [[ "$OTEL_OK" == "true" ]]; then
+    check "every application service has OTEL_EXPORTER_OTLP_ENDPOINT (observability fan-out)" ok
 fi
 
 # -----------------------------------------------------------------------------

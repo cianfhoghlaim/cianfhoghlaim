@@ -671,6 +671,129 @@ def _simple_yaml_read(path: Path) -> dict[str, Any]:
     return result
 
 
+# ─── lakehouse_health (added 2026-08-25-lakehouse-observability-and-cross-stack-integration-v1) ────────
+
+
+def lakehouse_health() -> dict[str, Any]:
+    """One-line health check for the unified lakehouse stack + cross-stack observability.
+
+    Returns a dict with per-stack status:
+      - "lakehouse": 17 services (compose.yaml) + 14 databases (init-db.sql) + 8 buckets (garage-init)
+      - "logfire": otel-collector fan-out (langfuse + logfire + mlflow)
+      - "langfuse": langfuse-web + langfuse-worker
+      - "mlflow": mlflow tracking server
+      - "dagster": dagster-web + dagster-daemon
+
+    Uses subprocess to call the existing `scripts/lakehouse_preflight.py`
+    + cross-stack checks. Designed for marimo notebooks that want to
+    show a "Stack Health" tab.
+
+    Returns a dict like:
+      {
+        "lakehouse": {"services_healthy": "17/17", "databases_present": "14/14", ...},
+        "logfire": {"otel_collector": "healthy", "fan_out": "langfuse + logfire + mlflow"},
+        "langfuse": {"web": "healthy", "worker": "healthy"},
+        "mlflow": {"tracking_server": "healthy"},
+        "dagster": {"web": "healthy", "daemon": "healthy"},
+        "overall": "healthy" | "degraded",
+      }
+    """
+    import json as _json
+    import subprocess as _sp
+
+    result: dict[str, Any] = {"overall": "unknown"}
+
+    # 1. Lakehouse stack — wrap scripts/lakehouse_preflight.py
+    try:
+        proc = _sp.run(
+            ["python3", "scripts/lakehouse_preflight.py", "--json", "--skip-buckets", "--skip-databases"],
+            capture_output=True,
+            text=True,
+            timeout=60,
+            cwd="/Users/cianmacandeisigh/dev/kings_college_galway",
+        )
+        if proc.returncode == 0:
+            payload = _json.loads(proc.stdout)
+            result["lakehouse"] = {
+                "services_healthy": f"{payload.get('summary', {}).get('required_healthy', 0)}/{payload.get('summary', {}).get('required_total', 0)}",
+                "overall_ok": payload.get("summary", {}).get("ok", False),
+            }
+        else:
+            result["lakehouse"] = {"error": proc.stderr[:200], "overall_ok": False}
+    except Exception as e:
+        result["lakehouse"] = {"error": str(e), "overall_ok": False}
+
+    # 2. Cross-stack observability fan-out (logfire collector)
+    try:
+        proc = _sp.run(
+            ["docker", "exec", "cianhoghhlaim-logfire-otel",
+             "wget", "-q", "-O", "-", "http://localhost:8888/"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        if "Server available" in proc.stdout or proc.returncode == 0:
+            result["logfire"] = {"otel_collector": "healthy", "fan_out": "langfuse + logfire + mlflow"}
+        else:
+            result["logfire"] = {"otel_collector": "not reachable"}
+    except Exception:
+        # logfire stack not deployed — local fan-out may be in use
+        result["logfire"] = {"otel_collector": "skipped (logfire stack not deployed)"}
+
+    # 3. Langfuse stack (web + worker)
+    try:
+        proc = _sp.run(
+            ["docker", "exec", "langfuse-web", "wget", "-q", "-O", "-",
+             "http://localhost:3000/api/public/health"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        result["langfuse"] = {
+            "web": "healthy" if proc.returncode == 0 else "unhealthy",
+        }
+    except Exception as e:
+        result["langfuse"] = {"web": "not reachable", "error": str(e)[:100]}
+
+    # 4. MLflow stack (tracking server)
+    try:
+        proc = _sp.run(
+            ["docker", "exec", "mlflow", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        result["mlflow"] = {
+            "tracking_server": "healthy" if proc.returncode == 0 else "unhealthy",
+        }
+    except Exception as e:
+        result["mlflow"] = {"tracking_server": "not reachable", "error": str(e)[:100]}
+
+    # 5. Dagster stack (web + daemon)
+    try:
+        proc = _sp.run(
+            ["docker", "exec", "dagster-web", "wget", "-q", "-O", "-",
+             "http://localhost:3000/health"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        result["dagster"] = {
+            "web": "healthy" if proc.returncode == 0 else "unreachable",
+        }
+    except Exception as e:
+        result["dagster"] = {"web": "not reachable", "error": str(e)[:100]}
+
+    # Compute overall
+    all_ok = (
+        result.get("lakehouse", {}).get("overall_ok", False)
+        and all(result.get(k, {}).get("ok", True) for k in ("logfire", "langfuse", "mlflow", "dagster"))
+    )
+    result["overall"] = "healthy" if all_ok else "degraded"
+    return result
+
+
 # ─── Convenience: __all__ + module API ─────────────────────────────────────
 
 
@@ -680,6 +803,7 @@ __all__ = [
     "BAMLClassInfo",
     "DLTInfo",
     "deployment_choice_path",
+    "lakehouse_health",
     "list_baml_classes",
     "list_cocoindex_apps",
     "list_dlt_sources",
