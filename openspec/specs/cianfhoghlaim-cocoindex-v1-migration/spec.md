@@ -204,7 +204,7 @@ parameter (introduced in v1.0.x per
 
 #### Scenario: A `@coco.fn(memo=True)` site has a module-level prompt constant
 
-- **GIVEN** `cocoindex/european_nations_cross/education_embedding.py:30`
+- **GIVEN** `cocoindex_flows/european_nations_cross/education_embedding.py:30`
   declares `IRISH_LC_PROMPT_V1 = "..."` and uses it at line 87 inside
   `@coco.fn(memo=True)`
 - **WHEN** `IRISH_LC_PROMPT_V1` changes
@@ -236,7 +236,7 @@ parameter (introduced in v1.0.x per
   refreshes the CocoIndex venv
 - **THEN** all 196 CocoIndex files in `cocoindex/**/*.py` MUST
   AST-parse cleanly under v1.0.20
-- **AND** the canonical `cocoindex/european_nations/_factory.py`
+- **AND** the canonical `cocoindex_flows/european_nations/_factory.py`
   factory pattern MUST continue to work (tested by
   `mise run cic:cocoindex:v1-conformance`)
 - **AND** no breaking change introduced by v1.0.15-v1.0.20 affects

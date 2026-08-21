@@ -599,7 +599,7 @@ NCCA JC subjects:
 - **4 BAML extraction functions** at
   `baml_src/british_isles/ireland/education/junior_cycle/`
   (ExtractJCCurriculum, ExtractCBADescriptor, ExtractJCShortCourse, ExtractJCExamPaper)
-- **1 CocoIndex v1 App** at `cocoindex/subjects/junior_cycle_embedding.py`
+- **1 CocoIndex v1 App** at `cocoindex_flows/subjects/junior_cycle_embedding.py`
   producing 36 LanceDB tables `cianfhoghlaim.jc.<subject>.<year>_<lang>`
   (18 subjects × 2 langs)
 - **72+ Dagster assets** at
@@ -640,7 +640,7 @@ Physics, Computer Science, History, Geography) × 2 qualification levels
   (3 boards × 9 subjects), tagged with `country_code="england"`,
   `jurisdiction="england"`, `exam_board ∈ {aqa,ocr,edexcel}`,
   `qualification_level ∈ {gcse,a_level}`
-- **3 CocoIndex v1 Apps** at `cocoindex/british_isles/england/{aqa,ocr,edexcel}_education_embedding.py`,
+- **3 CocoIndex v1 Apps** at `cocoindex_flows/british_isles/england/{aqa,ocr,edexcel}_education_embedding.py`,
   producing 27 LanceDB tables `cianfhoghlaim.england.<board>.<subject>.<level>`
 - **81+ Dagster assets** at
   `orchestration/defs/2_materials/england_education/{aqa,ocr,edexcel}/`

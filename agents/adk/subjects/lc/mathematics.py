@@ -117,7 +117,7 @@ async def get_cross_jurisdictional_equivalences(parameters: dict[str, Any]) -> d
 
 async def semantic_search(parameters: dict[str, Any]) -> dict[str, Any]:
     """Semantic search over the Mathematics embeddings (BGE-M3 1024-d)."""
-    from cocoindex.biep_parity.ireland_lc_factory import search_mathematics
+    from cocoindex_flows.biep_parity.ireland_lc_factory import search_mathematics
     return await search_mathematics(
         query=parameters["query"],
         top_k=parameters.get("top_k", 10),
