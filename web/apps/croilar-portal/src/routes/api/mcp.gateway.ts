@@ -22,10 +22,24 @@ import { createFileRoute } from "@tanstack/react-router";
  * }
  */
 
+// =============================================================================
+// KNOWN-ISSUE (2026-08-21): LiteLLM does not currently proxy MCPs at
+// `${LITELLM_BASE_URL}/mcp/${server}`. This gateway is a placeholder.
+// See: openspec/changes/2026-08-21-document-phantom-mcp-gateway-gap-v1/
+// Future: replaced by the BAML → oRPC → MCP type-safe bridge per
+// `2026-08-21-baml-orpc-mcp-typesafe-bridge-v1` (not yet drafted).
+//
+// Until that change lands, callers of this route will receive LiteLLM
+// error responses (the ${server} sub-path is not a real LiteLLM route).
+// The 25+ MCP servers listed in the categories below are aspirational;
+// the canonical MCP surface today is the 12 entries in
+// openspec/changes/2026-08-21-mcp-server-revival-overview.md.
+// =============================================================================
+
 // LiteLLM base URL (from environment or default)
 const LITELLM_BASE_URL = process.env.LITELLM_BASE_URL || "http://litellm:4000";
 
-// MCP server categories for documentation
+// MCP server categories for documentation (aspirational — see KNOWN-ISSUE above)
 const MCP_SERVER_CATEGORIES = {
   browser: ["browserbase", "chrome-devtools", "firecrawl-mcp"],
   knowledge: ["cognee-mcp", "qdrant", "memgraph"],
@@ -89,6 +103,10 @@ export const Route = createFileRoute("/api/mcp/gateway")({
             },
           };
 
+          // TODO(mcp-bridge): see KNOWN-ISSUE above. LiteLLM does not currently
+          // proxy MCPs at this URL — callers will receive LiteLLM error responses.
+          // This will be replaced by the real BAML → oRPC → MCP bridge per
+          // `2026-08-21-baml-orpc-mcp-typesafe-bridge-v1`.
           const response = await fetch(`${LITELLM_BASE_URL}/mcp/${server}`, {
             method: "POST",
             headers: {

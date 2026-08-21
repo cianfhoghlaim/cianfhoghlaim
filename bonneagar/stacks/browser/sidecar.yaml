@@ -1,0 +1,72 @@
+# =============================================================================
+# BROWSER - Locket Sidecar (Infisical secret injection)
+# =============================================================================
+# Per the 6-file GOLD_STANDARD pattern. This sidecar injects Infisical
+# secrets into the browser-grid, skyvern, stagehand-local, and solver-service
+# containers at runtime via the shared tmpfs `stack-secrets` volume.
+#
+# Stack state (2026-08-21):
+# - browser-grid: Patchright stealth Chromium
+# - skyvern: vision-based semantic navigation (opt-in via BROWSER_ENABLE_SKYVERN=1)
+# - stagehand-local: AI-powered UI interactions (opt-in via BROWSER_ENABLE_STAGEHAND=1)
+# - solver-service: Turnstile CAPTCHA solver (optional)
+# - stagehand-proxy: OpenAI-compatible proxy for Stagehand
+#
+# Per openspec/changes/2026-08-21-complete-browserbase-archive-and-crawl4ai-mcp-v1
+# Browserbase cloud integration removed from MCP surface; the browser stack
+# retains it as an OPTIONAL FALLBACK (env vars commented in secrets.env).
+
+services:
+  locket:
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    container_name: browser-locket
+    restart: unless-stopped
+    user: "65532:65532"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    command:
+      - "--provider=infisical"
+      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--map=/templates:/run/secrets/locket"
+      - "--mode=${LOCKET_MODE:-watch}"
+    secrets:
+      - infisical_secret
+    volumes:
+      - ./secrets.env:/templates/secrets.env:ro
+      - stack-secrets:/run/secrets/locket
+    healthcheck:
+      test: ["CMD", "/locket", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - stack
+
+  # browser-grid, skyvern, stagehand-local, solver-service, stagehand-proxy
+  # all consume secrets from the shared stack-secrets volume
+  browser-grid:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - stack-secrets:/run/secrets/locket:ro
+
+secrets:
+  infisical_secret:
+    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+
+volumes:
+  stack-secrets:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=700
+
+networks:
+  stack:
+    driver: bridge

@@ -175,15 +175,6 @@
       ],
       "enabled": true
     },
-    "browserbase": {
-      "type": "remote",
-      "url": "https://mcp.browserbase.com/mcp",
-      "headers": {
-        "Authorization": "Bearer {env:BROWSERBASE_API_KEY}"
-      },
-      "enabled": false,
-      "timeout": 60000
-    },
     "firecrawl": {
       "type": "local",
       "command": [
@@ -195,6 +186,15 @@
         "FIRECRAWL_API_KEY": "{env:FIRECRAWL_API_KEY}"
       },
       "enabled": true
+    },
+    "crawl4ai": {
+      "type": "remote",
+      "url": "https://crawl4ai-mcp.cianfhoghlaim.ie/sse",
+      "headers": {
+        "Authorization": "Bearer {env:CRAWL4AI_JWT_SECRET}"
+      },
+      "enabled": true,
+      "timeout": 60000
     },
     "infisical": {
       "type": "local",
@@ -209,7 +209,7 @@
         "INFISICAL_HOST_URL": "http://localhost:8081",
         "INFISICAL_PROJECT_ID": "${INFISICAL_PROJECT_ID}"
       },
-      "enabled": false
+      "enabled": true
     },
     "motherduck": {
       "type": "local",
@@ -254,7 +254,7 @@
         "COGNEE_API_KEY": "infisical://dev-baile/cognee/api_key",
         "LLM_API_KEY": "${DEEPSEEK_API_KEY}"
       },
-      "enabled": false
+      "enabled": true
     },
     "graphiti": {
       "type": "local",
@@ -270,7 +270,7 @@
         "NEO4J_USER": "neo4j",
         "NEO4J_PASSWORD": "devpassword"
       },
-      "enabled": false
+      "enabled": true
     },
     "langfuse": {
       "type": "local",
@@ -284,7 +284,7 @@
         "LANGFUSE_SECRET_KEY": "infisical://dev-baile/langfuse/secret_key",
         "LANGFUSE_HOST": "http://localhost:3000"
       },
-      "enabled": false
+      "enabled": true
     },
     "hermes": {
       "type": "local",
@@ -347,6 +347,19 @@
     "huggingface": {
       "type": "remote",
       "url": "https://huggingface.co/mcp?login",
+      "enabled": true
+    },
+    "design-system": {
+      "type": "local",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "web/apps/cianfhoghlaim-leaving-cert/apps/web/packages/mcp/design-system-server.py"
+      ],
+      "args": [
+        "--stdio"
+      ],
       "enabled": true
     }
   },

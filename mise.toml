@@ -149,6 +149,27 @@ alias = ["reset"]
 depends = ["core:clean", "core:install"]
 run = "echo 'core:reset complete.'"
 
+# CCC (cocoindex-code) 0.2.40+ new subcommands — daemon-free grep + health + version + JSON search
+[tasks."core:ccc:grep"]
+description = "CORE ccc grep — STRUCTURAL code search by example (no daemon needed; ccc 0.2.37+). Usage: mise run core:ccc:grep pattern [path]"
+alias = ["ccc:grep"]
+run = 'ccc grep "$@"'  # -- usage: mise run core:ccc:grep "def \NAME(" orchestration/
+
+[tasks."core:ccc:doctor"]
+description = "CORE ccc doctor — check system health (index freshness + daemon)"
+alias = ["ccc:doctor"]
+run = "ccc doctor"
+
+[tasks."core:ccc:version"]
+description = "CORE ccc version — print the installed cocoindex-code CLI version"
+alias = ["ccc:version"]
+run = "ccc version"
+
+[tasks."core:ccc:search:json"]
+description = "CORE ccc search:json — semantic search emitting JSON on stdout (ccc 0.2.38+) for tool integration. Usage: mise run core:ccc:search:json query"
+alias = ["ccc:search:json"]
+run = 'ccc search --json "$@"'
+
 
 # =============================================================================
 # CORE:OMNIBUS — the daily "I'm working on the dev env" command
@@ -170,10 +191,35 @@ run = "echo 'core:ci pipeline complete (all 4 gates passed).'"
 # =============================================================================
 
 [tasks."core:lint"]
-description = "CORE lint — aggregate lint gate (ruff + skills + registry + typecheck)"
+description = "CORE lint — aggregate lint gate (ruff + skills + registry + typecheck + uv-audit + uv-check)"
 alias = ["lint"]
-depends = ["lint:skills", "lint:registry", "core:typecheck"]
+depends = ["lint:skills", "lint:registry", "core:typecheck", "core:uv:audit:strict", "core:uv:check"]
 run = "uv run ruff check ."
+
+# UV 0.11+ audit + check preview gates (the new security + type-check layer)
+[tasks."core:uv:audit"]
+description = "CORE uv audit — scan uv.lock against the OSV database for known vulnerabilities (uv 0.11+ preview)"
+alias = ["uv:audit"]
+depends = ["core:sync"]
+run = "uv audit"
+
+[tasks."core:uv:audit:strict"]
+description = "CORE uv audit strict — CI gate (exits 1 on any known vuln; wired into core:lint)"
+alias = ["uv:audit:strict"]
+depends = ["core:sync"]
+run = "uv audit --strict"
+
+[tasks."core:uv:check"]
+description = "CORE uv check — run Astral's ty type checker (uv 0.11.18+ preview; complementary to mypy)"
+alias = ["uv:check"]
+depends = ["core:sync"]
+run = "uv check"
+
+[tasks."core:uv:audit-malware"]
+description = "CORE uv audit malware — opt-in malware scan via UV_MALWARE_CHECK=1 (uv 0.11.16+)"
+alias = ["uv:audit:malware"]
+depends = ["core:sync"]
+run = "UV_MALWARE_CHECK=1 uv sync --dry-run"
 
 [tasks."lint:skills"]
 description = "Validate the .agents/skills/ metadata (frontmatter, name match, description length, line count)"
@@ -519,6 +565,34 @@ description = "Teardown the unified 16-service lakehouse stack"
 alias = ["lakehouse:down"]
 depends = ["sync"]
 run = "bash scripts/lakehouse_unified_down.sh ${@:-}"
+
+# 2026-08-25-lakehouse-observability-and-cross-stack-integration-v1 (PR #4)
+# The lakehouse:all:up / lakehouse:all:down tasks bring up the COMPLETE data plane
+# in dependency order: lakehouse → logfire → langfuse → mlflow → dagster.
+[tasks."data:all:up"]
+description = "Bring up the complete data plane: lakehouse + logfire + langfuse + mlflow + dagster (in dependency order). Per the 2026-08-25-lakehouse-observability-and-cross-stack-integration-v1 change."
+alias = ["lakehouse:all:up"]
+depends = ["data:up"]
+run = """
+bash scripts/lakehouse_unified_up.sh &&
+(cd ../bonneagar/stacks/logfire && docker compose -f compose.yaml -f sidecar.yaml up -d) &&
+(cd ../bonneagar/stacks/langfuse && docker compose -f compose.yaml -f sidecar.yaml up -d) &&
+(cd ../bonneagar/stacks/mlflow && docker compose -f compose.yaml -f sidecar.yaml up -d) &&
+sleep 30 && mise run lakehouse:preflight
+echo 'Complete data plane is up.'
+"""
+
+[tasks."data:all:down"]
+description = "Teardown the complete data plane (in reverse dependency order: dagster → mlflow → langfuse → logfire → lakehouse). Per the 2026-08-25-lakehouse-observability-and-cross-stack-integration-v1 change."
+alias = ["lakehouse:all:down"]
+run = """
+(cd ../bonneagar/stacks/dagster && docker compose -f compose.yaml down) &&
+(cd ../bonneagar/stacks/mlflow && docker compose -f compose.yaml down) &&
+(cd ../bonneagar/stacks/langfuse && docker compose -f compose.yaml down) &&
+(cd ../bonneagar/stacks/logfire && docker compose -f compose.yaml down) &&
+bash scripts/lakehouse_unified_down.sh
+echo 'Complete data plane is down.'
+"""
 
 [tasks."data:stack-doctor"]
 description = "Lint the unified lakehouse stack — 17 services + 14 DBs + 10 private-resources + 5 routes + 58 infisical URIs + image pinning + no hardcoded absolute paths. Per the 2026-08-24-lakehouse-stack-doctor-and-env-var-cleanup-v1 change."
