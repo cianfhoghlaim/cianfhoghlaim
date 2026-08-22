@@ -9,7 +9,68 @@ when_to_use: "mise task author | DAG designer | CI gate author | shell scripter 
 [mise](https://mise.jdx.dev/) is the canonical tool manager + task
 runner for this repo. The `mise.toml` at the repo root defines the 9
 task namespaces + ~60 file tasks in `mise-tasks/`. Local install:
-**`mise 2026.5.6`** (latest 2026.8.8 available).
+**`mise 2026.5.6`** (latest 2026.8.10 available).
+
+## First-time mise install (CRITICAL — read this before running anything)
+
+The `[settings] monorepo_root = true` flag in this repo's `mise.toml`
+**requires mise 2026.8.10+**. On older versions (like the 2026.5.6
+that ships with macOS via Homebrew) you will see this warning on every
+`mise` invocation:
+
+```
+mise WARN  unknown field in ~/dev/kings_college_galway/mise.toml: settings.monorepo_root
+```
+
+The flag is silently ignored — your tasks still work, but the
+`bonneagar/` + `agents/` subprojects don't get their inherited tools
+or per-subproject tasks. **Install the standalone 2026.8.10 build to
+unlock monorepo mode.**
+
+### Install steps (one-time, ~30s)
+
+```bash
+# 1. Uninstall the Homebrew/system version (if any)
+brew uninstall mise 2>/dev/null || true
+
+# 2. Install via the standalone installer (mise cannot self-install via [tools])
+curl https://mise.run | sh
+# OR via cargo: cargo install mise
+
+# 3. Activate in your shell (~/.zshrc or ~/.bashrc)
+echo 'eval "$(~/.local/bin/mise activate zsh)"' >> ~/.zshrc  # or bash
+
+# 4. Reload + verify
+source ~/.zshrc
+mise --version  # MUST print 2026.8.10 or later
+
+# 5. Now `cd` into the repo; mise will see the [tools] + [settings] blocks
+cd ~/dev/kings_college_galway
+mise install     # installs the pinned python + uv + bun + dagger + etc.
+mise doctor      # confirms everything is healthy
+```
+
+### Why not just `mise use python@3.13`?
+
+The standalone installer is the only way to get a mise version newer
+than your package manager ships. The mise CLI itself can't upgrade
+itself (the `[tools] mise = "..."` field doesn't work — try it and
+you'll get a chicken-and-egg error). The version pinned in this
+repo's `mise.toml` (per the 2026-08-22-mise-upgrade-monorepo-root-activation-v1
+change) is a *target* version, not an *install* version.
+
+### Verify the monorepo is active
+
+After install + `mise install`, you should see (in `mise tasks --all`):
+
+```
+//devops:health               DEVOPS health (subproject root alias)
+devops:health                 DEVOPS health (root alias)
+```
+
+The `//devops:health` entry means the subproject is being picked up.
+If you only see `devops:health` (without `//`), the monorepo mode
+isn't active — your mise is too old.
 
 ## Quick start — the 6 domain namespaces
 

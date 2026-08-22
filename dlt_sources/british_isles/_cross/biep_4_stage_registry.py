@@ -75,7 +75,7 @@ TOTAL_DLT_FLOWS: int = 14 + 8 + 27 + 45  # 94 DLT sources total
 
 # ============================================================================
 # PDF source directories (the canonical paths)
-// ============================================================================
+# ============================================================================
 
 PDF_ROOT = Path("leaving_certificate")  # Ireland LC
 JUNIOR_CYCLE_PDF_ROOT = Path("junior_cycle")  # Ireland JC — to be created
@@ -94,7 +94,7 @@ JUNIOR_CYCLE_PDF_ROOT = Path(
 
 # ============================================================================
 # The canonical BIEP subject → BAML extraction map
-// ============================================================================
+# ============================================================================
 
 # Each subject maps to the canonical BAML extraction function
 # (the schema-driven codegen pipeline in Phase 7 emits these mappings)
@@ -120,7 +120,7 @@ BIEP_BAML_FUNCTIONS: dict[str, dict[str, str]] = {
 
 # ============================================================================
 # The DLT resource generator — emits per-subject canonical rows
-// ============================================================================
+# ============================================================================
 
 @dlt.resource(
     table_name="biep_subject_extraction_runs",
@@ -183,7 +183,7 @@ def biep_subject_extraction_runs(
 
 # ============================================================================
 # The 4 DLT sources (one per stage)
-// ============================================================================
+# ============================================================================
 
 @dlt.resource(
     table_name="ireland_lc_extractions",
@@ -251,7 +251,7 @@ def england_a_level_extraction_summaries(
 
 # ============================================================================
 # The summary manifest (the canonical artifact that the codegen consumes)
-// ============================================================================
+# ============================================================================
 
 def get_biep_stage_summary() -> dict[str, Any]:
     """Return the canonical BIEP 4-stage summary manifest.

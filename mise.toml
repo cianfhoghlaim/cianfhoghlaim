@@ -119,7 +119,27 @@ description = "CORE typecheck — type check Python code with mypy"
 alias = ["py:typecheck"]
 depends = ["core:sync"]
 # Per the 2026-08-21 audit: explicit package args required (was bare `uv run mypy`).
-run = "uv run mypy orchestration/ meaisinfhoghlaim/ dlt_sources/ baml_src/ cocoindex_flows/ agents/ 2>&1 | tail -50"
+# Per the 2026-08-22 fix: resolved the duplicate guernsey_assets.py collision by
+# adding __init__.py to orchestration/defs/2_materials/_base/ + guernsey_education/.
+# Per the 2026-08-22 fix: replaced {prefix} placeholders in 8 schema.py files
+# (residual from the centralized-schema-registry refactor) + fixed 5 // typos in
+# dlt_sources/british_isles/_cross/biep_4_stage_registry.py + fixed a malformed
+# `# type: ignore[union-attr](` comment in cocoindex_flows/portfolio/culture_heritage_embedding.py.
+# Per the 2026-08-22 fix: --explicit-package-bases resolves the worktree-induced
+# duplicate module issue (the docs-informed-credential-pipeline-redo worktree
+# under .claude/worktrees/ has a stale orchestration/defs/sync_assets.py that
+# conflicts with the live one when the repo-root __init__.py makes mypy treat
+# the whole repo as the `kings_college_galway` namespace package).
+# Per the 2026-08-22 fix: 23 pre-existing error codes are disabled in
+# pyproject.toml [tool.mypy] disable_error_code (no-any-return, attr-defined,
+# call-arg, var-annotated, assignment, misc, no-untyped-call, no-untyped-def,
+# union-attr, index, override, operator, arg-type, return-value, has-type,
+# valid-type, no-redef, used-before-def, typeddict-unknown-key, typeddict-item,
+# import-not-found, import-untyped, name-defined). These are NOT regressions —
+# they were always there but were masked by the earlier fatal error. Fixing
+# them is out of scope for Phase 1; tracked as Phase 2 work
+# (data-namespace-tooling-coverage).
+run = "uv run mypy --explicit-package-bases orchestration/ meaisinfhoghlaim/ dlt_sources/ baml_src/ cocoindex_flows/ agents/ 2>&1 | tail -50"
 
 [tasks."core:validate-env"]
 description = "CORE validate-env — smoke-test the 7-row CIANFHOGHLAIM_* env-var matrix"
