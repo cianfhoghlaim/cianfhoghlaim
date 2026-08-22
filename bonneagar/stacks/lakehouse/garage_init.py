@@ -44,7 +44,9 @@ GARAGE_ADMIN_TOKEN = os.getenv("GARAGE_ADMIN_TOKEN", "")
 GARAGE_ACCESS_KEY_NAME = os.getenv("GARAGE_ACCESS_KEY_ID", "lakehouse")
 GARAGE_SECRET_ACCESS_KEY = os.getenv("GARAGE_SECRET_ACCESS_KEY", "")
 
-# 8 buckets created by garage-init (per the lakehouse README + compose.yaml comment)
+# 9 buckets created by garage-init (per the lakehouse README + compose.yaml comment)
+# ADDED 2026-08-25 (tg4-foghlaim-corpus-v1): `tg4-media` for the TG4 +
+# Foghlaim multimodal media corpus (MP4 + VTT + frame PNGs).
 LAKEHOUSE_BUCKETS = [
     "iceberg",                           # Lakekeeper warehouse root
     "lance",                              # Lance Namespace sidecar tables
@@ -54,6 +56,7 @@ LAKEHOUSE_BUCKETS = [
     "langfuse-media",                     # Langfuse media uploads
     "langfuse-exports",                   # Langfuse batch exports
     "mlflow-artifacts",                   # MLflow experiment artifacts
+    "tg4-media",                          # TG4 + Foghlaim multimodal corpus
 ]
 
 MAX_RETRIES = 60
@@ -210,7 +213,7 @@ def _ensure_access_key() -> str:
 
 
 def _ensure_buckets(s3: boto3.client, access_key_id: str) -> None:
-    """Create the 8 lakehouse buckets + grant access to the access key."""
+    """Create the 9 lakehouse buckets + grant access to the access key."""
     import urllib3
     import json
 

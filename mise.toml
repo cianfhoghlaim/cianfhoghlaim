@@ -686,6 +686,30 @@ run = "bash scripts/sync/notebooks.sh"
 description = "Layer 14: Firecrawl dual-search sync (the CCC concept guides + index refresh)"
 run = "bash scripts/sync/firecrawl-ccc.sh"
 
+# =============================================================================
+# TG4 + FOGHLAIM MEDIA CORPUS (tg4-foghlaim-corpus-v1, 2026-08-25)
+# =============================================================================
+# 3 tasks for the new multimodal Irish-language media corpus:
+#   - sync:tg4-player     : DLT ingestion of the TG4 on-demand player catalog
+#   - sync:tg4-foghlaim   : DLT ingestion of the Foghlaim Nuxt.js lessons
+#   - sync:tg4-all        : chain both + refresh the v1 App
+
+[tasks."sync:tg4-player"]
+description = "DLT ingestion: TG4.ie on-demand player catalog (8 genres + Bailiúcháin) via Brightcove Playback API"
+run = "uv run python -m dlt_sources.cli run-pipeline tg4_player_shows"
+
+[tasks."sync:tg4-foghlaim"]
+description = "DLT ingestion: Foghlaim.tg4.ie lesson catalog (3 levels × 11+ subjects) via Firecrawl + Brightcove + yt-dlp"
+run = "uv run python -m dlt_sources.cli run-pipeline foghlaim_lessons"
+
+[tasks."sync:tg4-all"]
+description = "Chain the TG4 player + Foghlaim DLT ingestions + refresh the v1 App"
+depends = [
+  "sync:tg4-player",
+  "sync:tg4-foghlaim",
+]
+run = "bash scripts/sync/tg4_all.sh"
+
 
 # =============================================================================
 # OPENSPEC NAMESPACE (8 tasks) — change management

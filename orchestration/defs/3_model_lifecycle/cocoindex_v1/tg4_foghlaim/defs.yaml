@@ -1,0 +1,53 @@
+# defs/3_model_lifecycle/cocoindex_v1/tg4_foghlaim/defs.yaml
+#
+# L3 CelticModelLifecycleComponent for the Tg4FoghlaimEmbedding v1 App.
+# Per the cianfhoghlaim-cocoindex-v1 skill, the R1–R4 conformance contract
+# is enforced at build_defs time by the Component. is_virtual=True so
+# the 4 LanceDB tables (tg4_segments, tg4_frame_captions, tg4_triples,
+# tg4_quality_audits) mirror their L1 upstream automatically.
+type: orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_name: Tg4FoghlaimEmbedding
+  module: cianfhoghlaim.cocoindex_flows.media.tg4_foghlaim_embedding
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  # The 4 LanceDB tables mounted by the App:
+  lance_tables:
+    - tg4_segments
+    - tg4_frame_captions
+    - tg4_triples
+    - tg4_quality_audits
+  # The 2 DuckLake source tables read by the App:
+  ducklake_sources:
+    - cianfhoghlaim.tg4.player_shows
+    - cianfhoghlaim.tg4.foghlaim_lessons
+  # Refreshing once a day is enough; TG4 / Foghlaim don't churn every minute.
+  refresh_interval_secs: 86400
+  # 1 frame per 10 seconds is the canonical Qwen3-VL-8B sweet spot.
+  frame_sample_fps: 0.1
+  # 5% of episodes run the expensive WhisperX audio audit + every
+  # NCCA-tagged lesson (per the cost-ordering in the proposal).
+  quality_audit_sample_rate: 0.05
+  # Backs the App with the canonical registry models — no App-level
+  # HuggingFace IDs (per meaisinfhoghlaim.AGENTS.md DO NOT).
+  backbones:
+    caption: qwen3-vl-8b
+    diagram_pointing: molmo2-8b
+  # Audio transcription routes through the existing WhisperX aligner.
+  audio_leg: cianfhoghlaim.meaisinfhoghlaim.process.transcript_aligner.WhisperXAligner
+  # The 4 BAML fns called per episode (per the cost-ordering):
+  baml_functions:
+    - ClassifyTg4Episode
+    - ExtractSpeakerLineup
+    - ExtractWorksheetAnswers
+    - AuditTranscriptQuality
+  # Subtitle canonical: Brightcove text_tracks WebVTT (per the
+  # user decision). Audio re-decode is the proof-of-alignment audit.
+  subtitle_canonical_source: brightcove_text_tracks_vtt
+  audio_audit_source: whisperx
+  # New Infisical secret contract (public value, versioned for audit):
+  infisical_secrets:
+    - infisical://dev-baile/cianfhoghlaim/tg4-brightcove-account-id
+    - infisical://dev-baile/cianfhoghlaim/tg4-brightcove-policy-key
+    - infisical://dev-baile/cianfhoghlaim/firecrawl-api-key
