@@ -1,0 +1,41 @@
+# =============================================================================
+# DAGSTER DAEMON CONFIG (Dagster 1.13+ declarative format)
+# =============================================================================
+# ADDED 2026-08-22 (lakehouse-observability-stacks-modernization-v1).
+# Per the official Dagster docs at https://docs.dagster.io/deployment/execution/dagster-daemon
+#
+# This file is mounted at /opt/dagster/home/dagster-daemon.yaml inside the
+# dagster-daemon container. It defines daemon-specific config:
+# scheduler tuning, sensor concurrency, run monitoring.
+#
+# IMPORTANT: The dagster-daemon is officially SINGLETON (1 replica max).
+# Per the docs: "Multiple daemon replicas are NOT supported." The compose
+# sets `deploy.replicas: 1` (implicit) to enforce this constraint.
+# =============================================================================
+
+# Scheduler: how Dagster processes schedule ticks
+scheduler:
+  max_catchup_runs: 5
+  # Catchup window (seconds) — if Dagster was down, this many seconds
+  # of schedules are backfilled on restart.
+  catchup_window_seconds: 3600
+
+# Sensors: how Dagster processes sensor ticks
+sensors:
+  use_threads: true
+  num_workers: 8
+  # When a sensor tick takes longer than this, it's logged as a warning
+  evaluation_timeout_seconds: 60
+
+# Run monitoring: how Dagster detects + restarts crashed run workers
+run_monitoring:
+  start_timeout_seconds: 180
+  cancel_timeout_seconds: 180
+  max_resume_run_attempts: 3
+
+# ADDED 2026-08-22 (PR #5): Tag concurrency limits (the 1.13+ feature)
+tag_concurrency_limits:
+  - key: "ci_run"
+    limit: 4
+  - key: "biiep_v3"
+    limit: 2
