@@ -586,22 +586,25 @@ The v4 migration contract covers:
 
 ### Requirement: LiteLLM v1.91 → v1.97 router updates
 
-The system SHALL upgrade LiteLLM from `>=1.91,<1.98` to `>=1.97,<1.98`. The v1.97 release introduces:
+The system SHALL upgrade LiteLLM from `v1.91.0` to `v1.97.0` and adopt:
 
-1. **MCP Gateway GA** (v1.85.0) — single endpoint with per-key ACL.
-2. **MCP OAuth 2.0 v2 resolver** (v1.91.0) — Hermes can drop its custom auth code.
-3. **MCP DCR (Dynamic Client Registration)** (v1.95.0) — agents can self-register as MCP clients.
-4. **Tool-result guardrails** (v1.97.0) — output-side safety filters.
-5. **SAML 2.0 SSO** (v1.95.0) — operator-driven SSO login for the `litellm` web UI.
+- **MCP Gateway GA** (v1.85.0) — single endpoint with per-key ACL.
+- **OAuth 2.0 v2 resolver** (v1.91.0) — replaces Hermes's custom auth code.
+- **MCP DCR (Dynamic Client Registration)** (v1.95.0) — new agents self-register without manual secret minting.
+- **Rust `/v1/messages` endpoint** (v1.95.0) — high-throughput message bus, exposed via Pangolin reverse proxy under the LITELLM private resource.
 
-The running bunchloch image bumps from `ghcr.io/berriai/litellm-database:v1.91.0` to `:v1.97.0`. The Pangolin reverse proxy MUST expose `/v1/messages` (the Rust-based v1.95.0 endpoint) on the LITELLM subdomain.
+#### Scenario: A new agent connects via MCP-OAuth 2.0 v2 + DCR
 
-#### Scenario: A new LiteLLM model routes through the upgraded gateway
+- **GIVEN** the platform is on LiteLLM v1.97 with MCP Gateway GA + OAuth 2.0 v2 + DCR enabled
+- **WHEN** a 12-agent fleet agent connects to `http://litellm.cianfhoghlaim.ie/v1/mcp` for the first time
+- **THEN** the DCR flow auto-registers the agent client (no manual operator step)
+- **AND** the OAuth 2.0 v2 token flows back to the agent
+- **AND** subsequent requests succeed with the v2 token
 
-- **GIVEN** the platform is on LiteLLM v1.97 with the MCP Gateway GA
-- **WHEN** a 12-agent fleet agent connects to `http://litellm.cianfhoghlaim.ie/v1/mcp`
-- **THEN** the gateway authenticates the agent via OAuth 2.0 v2 (or DCR for first-time agents)
-- **AND** the model's tool-result guardrails are applied per the agent's ACL
+#### Scenario: The Pangolin reverse-proxy exposes /v1/messages
+
+- **WHEN** `curl -s http://litellm.cianfhoghlaim.ie/v1/messages -X POST -d '{"messages": [...]}' -H 'content-type: application/json'` is called
+- **THEN** the request routes through the Pangolin reverse proxy → LiteLLM Rust `/v1/messages` endpoint → response < 200ms
 
 ### Requirement: Langfuse v4 server + SDK deployed before 2026-11-16
 
