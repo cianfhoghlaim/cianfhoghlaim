@@ -155,8 +155,12 @@ def _emit_langfuse_event(change: dict[str, Any]) -> None:  # pragma: no cover - 
         return
     try:
         lf = Langfuse()
-        with lf.start_as_current_span(
+        # Langfuse v4 migration (per the 2026-08-22-langfuse-v3-to-v4-code-migration-v1
+        # openspec change): the v3 method is renamed to
+        # `start_as_current_observation` with an explicit `as_type` parameter.
+        with lf.start_as_current_observation(
             name=f"england_change_detection.{change['board']}",
+            as_type="span",
             input={"change": change},
         ) as span:
             span.update(tags={"board": change["board"]})

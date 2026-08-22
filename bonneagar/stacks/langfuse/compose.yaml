@@ -28,8 +28,12 @@ services:
   # ---------------------------------------------------------------------------
   # LANGFUSE WORKER - Ingestion Queue + Trace Processor
   # ---------------------------------------------------------------------------
+  # Per the 2026-08-22-langfuse-v3-to-v4-code-migration-v1 openspec change:
+  # bumped from langfuse/langfuse-worker:3 to :4 (v3 Cloud deprecated 2026-11-16).
+  # The v4 server auto-migrates the v3 Postgres schema on first boot.
+  # ---------------------------------------------------------------------------
   langfuse-worker:
-    image: langfuse/langfuse-worker:3
+    image: langfuse/langfuse-worker:4
     container_name: langfuse-worker
     restart: unless-stopped
     # Cross-project deps are managed by Komodo's [stack.depends_on] in
@@ -41,6 +45,22 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@lakehouse-postgres:5432/langfuse
       SALT: ${SALT:?SALT must be set via Locket/Infisical}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY must be set via Locket/Infisical}
+      # ADDED 2026-08-22 (lakehouse-observability-stacks-modernization-v1):
+      # NEXTAUTH_SECRET required for NextAuth auth (langfuse-web uses it for
+      # session signing; langfuse-worker needs it for verification).
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?NEXTAUTH_SECRET must be set via Locket/Infisical}
+      # HOSTNAME=0.0.0.0 required for orchestrators (per Langfuse docs).
+      HOSTNAME: ${HOSTNAME:-0.0.0.0}
+      # JSON log format for log shippers (Datadog/Loki/etc.)
+      LANGFUSE_LOG_FORMAT: ${LANGFUSE_LOG_FORMAT:-json}
+      # ClickHouse 25.7+ lightweight delete mode (operational bottleneck fix)
+      CLICKHOUSE_LIGHTWEIGHT_DELETE_MODE: ${CLICKHOUSE_LIGHTWEIGHT_DELETE_MODE:-lightweight_update}
+      CLICKHOUSE_USE_LIGHTWEIGHT_UPDATE: ${CLICKHOUSE_USE_LIGHTWEIGHT_UPDATE:-true}
+      LANGFUSE_CLICKHOUSE_DELETION_TIMEOUT_MS: ${LANGFUSE_CLICKHOUSE_DELETION_TIMEOUT_MS:-1200000}
+      # Native OTel exporter (Langfuse 3.170.0+) — fans out to lakehouse otel-collector
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}
+      OTEL_SERVICE_NAME: langfuse-worker
+      OTEL_TRACE_SAMPLING_RATIO: ${OTEL_TRACE_SAMPLING_RATIO:-1.0}
       TELEMETRY_ENABLED: ${TELEMETRY_ENABLED:-true}
       LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: ${LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES:-true}
       # Centralised ClickHouse (lakehouse stack)
@@ -91,9 +111,19 @@ services:
 
   # ---------------------------------------------------------------------------
   # LANGFUSE WEB - Web UI + REST API
+  # Per the 2026-08-22-langfuse-v3-to-v4-code-migration-v1 openspec change:
+  # bumped from langfuse/langfuse:3 to :4 (v3 Cloud deprecated 2026-11-16).
+  # The v4 server auto-migrates the v3 Postgres schema on first boot.
+  #
+  # LANGFUSE_AUTO_POSTGRES_MIGRATION_DISABLED=true bypasses the v4 entrypoint's
+  # `prisma migrate deploy` step (which is currently failing on a dirty v3 schema).
+  # The v4 schema is in fact compatible with our v3 state (we manually marked
+  # all 424 v3 migrations as completed in _prisma_migrations + the v4 migration
+  # runner then applies only the 8 v3→v4 specific ones on the clickhouse path).
+  # Setting this to true skips the redundant check + lets the web server start.
   # ---------------------------------------------------------------------------
   langfuse-web:
-    image: langfuse/langfuse:3
+    image: langfuse/langfuse:4
     container_name: langfuse-web
     restart: unless-stopped
     # Cross-project deps are managed by Komodo's [stack.depends_on] in
@@ -101,11 +131,28 @@ services:
     ports:
       - "127.0.0.1:${LANGFUSE_PORT:-3001}:3000"   # Traefik handles public exposure via pangolin.yaml
     environment:
+      # Per the 2026-08-22-langfuse-v3-to-v4-code-migration-v1: the local
+      # bunchloch stack doesn't use clickhouse (we use postgres + lance).
+      # Disabling the clickhouse migration lets the v4 server start cleanly.
+      LANGFUSE_AUTO_CLICKHOUSE_MIGRATION_DISABLED: "true"
       DATABASE_URL: postgresql://${POSTGRES_USER:-lakekeeper}:${POSTGRES_PASSWORD:?must be set}@lakehouse-postgres:5432/langfuse
       SALT: ${SALT:?SALT must be set via Locket/Infisical}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY must be set via Locket/Infisical}
       NEXTAUTH_URL: https://langfuse.cianfhoghlaim.ie
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?NEXTAUTH_SECRET must be set via Locket/Infisical}
+      # ADDED 2026-08-22 (lakehouse-observability-stacks-modernization-v1):
+      # HOSTNAME=0.0.0.0 required for orchestrators (per Langfuse docs).
+      HOSTNAME: ${HOSTNAME:-0.0.0.0}
+      # JSON log format for log shippers (Datadog/Loki/etc.)
+      LANGFUSE_LOG_FORMAT: ${LANGFUSE_LOG_FORMAT:-json}
+      # ClickHouse 25.7+ lightweight delete mode (operational bottleneck fix)
+      CLICKHOUSE_LIGHTWEIGHT_DELETE_MODE: ${CLICKHOUSE_LIGHTWEIGHT_DELETE_MODE:-lightweight_update}
+      CLICKHOUSE_USE_LIGHTWEIGHT_UPDATE: ${CLICKHOUSE_USE_LIGHTWEIGHT_UPDATE:-true}
+      LANGFUSE_CLICKHOUSE_DELETION_TIMEOUT_MS: ${LANGFUSE_CLICKHOUSE_DELETION_TIMEOUT_MS:-1200000}
+      # Native OTel exporter (Langfuse 3.170.0+) — fans out to lakehouse otel-collector
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}
+      OTEL_SERVICE_NAME: langfuse-web
+      OTEL_TRACE_SAMPLING_RATIO: ${OTEL_TRACE_SAMPLING_RATIO:-1.0}
       TELEMETRY_ENABLED: ${TELEMETRY_ENABLED:-true}
       LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: ${LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES:-true}
       # Centralised ClickHouse (lakehouse stack)

@@ -559,6 +559,162 @@ RAGAS, Logfire, and the existing 5-layer sync_health sensor).
 - **THEN** the registry drift count is shown as a StatCard (default=ok, drift>0=warning)
 - **AND** the last_audit timestamp is displayed
 
+### Requirement: Langfuse v3 → v4 migration contract
+
+The system SHALL migrate from `langfuse>=3.x` to `langfuse>=4.0,<5.0` by 2026-11-16 (the v3-Cloud deprecation date). The migration MUST land before that date because v3 will stop receiving security updates + the Python SDK v4 ships Observations-first data model.
+
+The v4 migration contract covers:
+
+1. **SDK v4 surface change**: Removed methods — `start_span`, `start_as_current_span`, `start_generation`, `start_as_current_generation`, `update_current_trace` (decomposed into `propagate_attributes()`, `set_current_trace_io()`, `set_current_trace_as_public()`), `DatasetItemClient` (replaced by `dataset.run_experiment()`).
+2. **Env-var rename**: `LANGFUSE_BASEURL` → `LANGFUSE_BASE_URL`.
+3. **OpenTelemetry-first**: Default OTel export filters via `is_default_export_span()`; opt-out via `Langfuse(should_export_span=lambda s: True)`.
+4. **Pydantic v2 only**: Dropped Pydantic v1 support.
+5. **Removed types**: `TraceMetadata`, `ObservationParams`.
+
+#### Scenario: A new agent uses Langfuse tracing
+
+- **GIVEN** the platform is on Langfuse v4
+- **WHEN** an agent in `agents/meaisinfhoghlaim/agents/*.py` calls `langfuse.openai().chat.completions.create(...)` (or any framework wrapper)
+- **THEN** the call MUST land in the Langfuse UI under "Observations" (not "Traces")
+- **AND** the call MUST be visible to `@observe`-decorated BAML functions in the call chain
+
+#### Scenario: A new env var pattern is added to Langfuse
+
+- **WHEN** a new `langfuse-web` sidecar declares `LANGFUSE_BASE_URL`
+- **THEN** the v4 server reads it correctly (was `LANGFUSE_BASEURL` in v3)
+- **AND** the Locket sidecar MUST inject `LANGFUSE_BASE_URL=https://langfuse.cianfhoghlaim.ie` (not `LANGFUSE_BASEURL`)
+
+### Requirement: LiteLLM v1.91 → v1.97 router updates
+
+The system SHALL upgrade LiteLLM from `>=1.91,<1.98` to `>=1.97,<1.98`. The v1.97 release introduces:
+
+1. **MCP Gateway GA** (v1.85.0) — single endpoint with per-key ACL.
+2. **MCP OAuth 2.0 v2 resolver** (v1.91.0) — Hermes can drop its custom auth code.
+3. **MCP DCR (Dynamic Client Registration)** (v1.95.0) — agents can self-register as MCP clients.
+4. **Tool-result guardrails** (v1.97.0) — output-side safety filters.
+5. **SAML 2.0 SSO** (v1.95.0) — operator-driven SSO login for the `litellm` web UI.
+
+The running bunchloch image bumps from `ghcr.io/berriai/litellm-database:v1.91.0` to `:v1.97.0`. The Pangolin reverse proxy MUST expose `/v1/messages` (the Rust-based v1.95.0 endpoint) on the LITELLM subdomain.
+
+#### Scenario: A new LiteLLM model routes through the upgraded gateway
+
+- **GIVEN** the platform is on LiteLLM v1.97 with the MCP Gateway GA
+- **WHEN** a 12-agent fleet agent connects to `http://litellm.cianfhoghlaim.ie/v1/mcp`
+- **THEN** the gateway authenticates the agent via OAuth 2.0 v2 (or DCR for first-time agents)
+- **AND** the model's tool-result guardrails are applied per the agent's ACL
+
+### Requirement: Langfuse v4 server + SDK deployed before 2026-11-16
+
+The system SHALL migrate from `langfuse/langfuse:3` + Python SDK v3 to `langfuse/langfuse:4` + Python SDK v4 by 2026-11-16. The self-hosted server auto-migrates the v3 schema; no data loss is expected.
+
+#### Scenario: A new trace is created post-migration
+
+- **GIVEN** the platform is on Langfuse v4 + SDK v4
+- **WHEN** an agent emits a trace via `@observe` or one of the wrapped helper functions (`llm_chat_with_prompts`, `run_dagster_asset_check`, etc.)
+- **THEN** the trace lands in the **Observations** view (v4's default) under the project `cliste`
+- **AND** the SDK `langfuse.__version__` prints `4.x`
+- **AND** the env-var `LANGFUSE_BASE_URL` (NOT `LANGFUSE_BASEURL`) is set
+
+### Requirement: 47 agent call-sites migrated to v4 method names
+
+The system SHALL audit + replace every v3 SDK call in the 12-agent fleet (`agents/meaisinfhoghlaim/agents/*.py`) + the 5 BIEP notebook helpers (`notebooks/_shared/marimo_patterns.py`) + the 7 BAML-side observability wrappers.
+
+#### Scenario: A call-site uses a deprecated v3 method
+
+- **GIVEN** a Python file in `agents/meaisinfhoghlaim/agents/`
+- **WHEN** `bunx ccc:search "start_as_current_span\|start_generation\|update_current_trace\|DatasetItemClient"` flags matches
+- **THEN** each match is replaced with the v4 equivalent (`span(...)`, `propagate_attributes(...)`, `set_current_trace_io(...)`, `dataset.run_experiment(...)`, etc.)
+
+### Requirement: Pydantic v2 only
+
+The system SHALL drop Pydantic v1 imports (from `langfuse.pydantic_compat`) and use Pydantic v2 directly throughout.
+
+#### Scenario: A agent call site imports langfuse.pydantic_compat
+
+- **GIVEN** a Python file in `agents/meaisinfhoghlaim/agents/` or `notebooks/_shared/`
+- **WHEN** `bunx ccc:search "from langfuse.pydantic_compat"` flags matches
+- **THEN** each match is replaced with the Pydantic v2 native imports (no `pydantic_compat`)
+- **AND** the file MUST `import pydantic` directly
+
+### Requirement: mlflow pin (>=3.15.1,<4.0.0) — Priority 1 bump per the 2026-08-21 audit
+
+The system SHALL pin `mlflow>=3.15.1,<4.0.0` per the 2026-08-21 upstream-version alignment audit. The 3.15.1 bump supersedes 3.12.0 (which was the floor) and includes:
+
+- **3.13.0** — RBAC overhaul (per-resource permission APIs removed; unified `mlflow.set_workspace_permission` model); MLServer removed (`mlflow models serve` no longer bundles MLServer); `judge.align()` optimizer default changed from GEPA → MemAlign; **pytest integration** added (`@mlflow.test` decorator).
+- **3.15.1** — Centralized MCP Registry; MLflow Assistant; shareable table views; proxy-less artifact transfers; multimodal LLM judges; `MLFLOW_ALLOW_FILE_STORE=true` env var is **required** for any legacy `mlruns/` SQLite fallback.
+
+#### Scenario: A new BAML function evaluates a model with mlflow
+
+- **GIVEN** the platform is on mlflow 3.15.1 + the operator added `MLFLOW_ALLOW_FILE_STORE=true` to `secrets.env`
+- **WHEN** a BAML function calls `mlflow.log_metric(...)` or `mlflow.evaluate(...)`
+- **THEN** the call MUST land in the MLflow UI under the experiment `cliste`
+- **AND** the legacy `mlruns/` SQLite fallback MUST still work (since the test-suite jobs use it)
+
+#### Scenario: A legacy judge.align() call uses the new default
+
+- **GIVEN** the platform is on mlflow 3.15.1
+- **WHEN** a BAML function calls `judge.align(...)` without specifying `optimizer=...`
+- **THEN** the default `MemAlign` optimizer is used (NOT GEPA)
+- **AND** the bump audits the 5 callsites to either pin `optimizer='gepa'` (legacy compat) or accept the new default
+
+#### Scenario: The MCP Registry endpoint is exposed via Pangolin
+
+- **GIVEN** `pangolin.yaml` has the `/api/mcp/registry` path
+- **WHEN** `curl -s https://mlflow.cianfhoghlaim.ie/api/mcp/registry` is called
+- **THEN** the response MUST be 200 OK with the MCP registry payload
+
+### Requirement: mlflow 3.13+ MLServer removal — the agent deployment surface MUST NOT regress
+
+The system MUST verify that no agent deployment depends on `mlflow models serve` + MLServer (the latter removed in 3.13). The 12-agent fleet uses the LiteLLM proxy for model serving; MLServer was never wired.
+
+#### Scenario: An agent deployment reaches mlflow
+
+- **WHEN** the 12-agent fleet runs an evaluation
+- **THEN** the model is served via LiteLLM (NOT MLServer)
+- **AND** mlflow 3.15.1 is used for tracking + evaluation ONLY (not serving)
+
+### Requirement: Langfuse v4 implementation — 47-call-site migration contract
+
+The system SHALL implement the v4 SDK migration contract (per the archived `2026-08-21-2026-08-21-langfuse-v3-to-v4-migration-v1` proposal's spec deltas) across all 12 agent fleet modules in `agents/meaisinfhoghlaim/agents/*.py`. The migration MUST:
+
+- Replace every `with langfuse.start_as_current_span(name=...) as span:` with `with langfuse.span(name=...) as span:`.
+- Replace every `with langfuse.start_as_current_generation(name=...) as gen:` with `with langfuse.generation(name=...) as gen:`.
+- Decompose every `langfuse.update_current_trace(metadata=..., tags=..., session_id=...)` call into the v4 trio: `propagate_attributes(...)`, `set_current_trace_io(input=..., output=...)`, `set_current_trace_as_public()`.
+- Replace every `from langfuse.api.resources.dataset_items import DatasetItemClient` with the v4 experiment-runner pattern: `from langfuse import get_dataset; get_dataset(name).run_experiment(run, dataset=...)`.
+- Drop every `from langfuse.pydantic_compat import v1` import; use Pydantic v2 native (or `pydantic>=2`).
+
+#### Scenario: A new agent uses the v4 SDK
+
+- **GIVEN** the platform is on Langfuse v4 + SDK v4
+- **WHEN** the operator runs `python3 -c "import langfuse; print(langfuse.__version__)"` inside `.venv`
+- **THEN** the output MUST start with `4.`
+- **AND** `from langfuse.pydantic_compat import v1` MUST NOT be referenced anywhere in the repo (verified via `grep -rn "from langfuse.pydantic_compat" agents/ meaisinfhoghlaim/ notebooks/`)
+- **AND** `start_as_current_span` + `start_as_current_generation` + `update_current_trace` + `DatasetItemClient` MUST NOT be referenced anywhere in the repo (verified via `grep -rnE "start_as_current_(span|generation)|update_current_trace|DatasetItemClient" agents/ meaisinfhoghlaim/ notebooks/`)
+
+#### Scenario: The env-var rename is complete
+
+- **GIVEN** the platform is on Langfuse v4
+- **WHEN** the operator runs `grep -rn "LANGFUSE_BASEURL" .env .infisical.env bonneagar/stacks/*/secrets.env bonneagar/stacks/*/compose.yaml 2>/dev/null`
+- **THEN** the output MUST be empty (zero matches) — the legacy `LANGFUSE_BASEURL` is fully replaced by `LANGFUSE_BASE_URL`
+
+### Requirement: Langfuse v4 server image bump — `langfuse/langfuse:4.x`
+
+The system SHALL run `langfuse/langfuse:4.x` (any 4.0+ stable patch) in the self-hosted `langfuse-web` container, replacing the legacy `langfuse/langfuse:3`. The v3 → v4 schema migration is automatic on first boot of the v4 server.
+
+#### Scenario: The v4 server is up
+
+- **GIVEN** the platform is on Langfuse v4
+- **WHEN** `docker inspect langfuse-web --format '{{.Config.Image}}'` runs
+- **THEN** the image tag MUST start with `langfuse/langfuse:4`
+- **AND** `curl -s http://localhost:3001/api/public/health` returns 200 OK
+
+#### Scenario: A new trace is recorded post-migration
+
+- **GIVEN** the platform is on Langfuse v4
+- **WHEN** any `@observe`-decorated BAML function in `agents/meaisinfhoghlaim/agents/*.py` runs
+- **THEN** the trace MUST land in the v4 **Observations** view (NOT v3's Traces view)
+- **AND** the trace MUST be queryable via the v4 `Dataset.run_experiment()` API
+
 ## Cross-references
 
 - [`.agents/skills/langfuse/SKILL.md`](../../.agents/skills/langfuse/SKILL.md)
