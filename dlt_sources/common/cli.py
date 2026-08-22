@@ -35,6 +35,9 @@ DLT_SOURCES = (
     "github_repos",
     "spotify_api",
     "soundcloud_scraper",
+    "youtube_videos",
+    "tg4_player_shows",
+    "foghlaim_lessons",
 )
 
 

@@ -1,7 +1,8 @@
 # americas-california-pipeline Specification
 
 ## Purpose
-TBD - created by archiving change 2026-07-11-americas-california-pipeline-v1. Update Purpose after archive.
+The Americas pipeline surface covers Brazil + Mexico + US California across the Cianfhoghlaim monorepo. It defines 6 invariants: the canonical americas/ directory path, the per-jurisdiction sub-state convention (united_states/california), the Spanish + Portuguese + English language mappings, the per-jurisdiction education source mappings, the cross-jurisdiction registry integration, and the per-stage (education/law/medicine/government/statistics) source routing.
+
 ## Requirements
 ### Requirement: Americas path contract (with US sub-state)
 

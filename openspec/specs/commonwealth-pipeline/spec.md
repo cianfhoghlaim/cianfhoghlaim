@@ -1,7 +1,8 @@
 # commonwealth-pipeline Specification
 
 ## Purpose
-TBD - created by archiving change 2026-07-11-commonwealth-pipeline-v1. Update Purpose after archive.
+The Commonwealth of Nations pipeline surface covers Australia + Canada (12 provinces + Quebec/Montreal) + India + New Zealand + Nigeria (federal + 36 states) + South Africa across the Cianfhoghlaim monorepo. It defines 12 invariants: the canonical commonwealth/ directory path, the per-nation + per-state + per-province sub-state convention, the English + French language support, the per-nation education system mappings (ACARA, provincial ministries, NCERT, NZQA, NECO, DBE), the cross-nation registry integration, the per-stage source routing, the Indigenous language support (Māori, Hindi, Yoruba, Igbo, Zulu, Xhosa, Afrikaans), the Quebec/Montreal French-language handling, the federal/state split for Nigeria, the per-nation BAML extraction templates, the per-nation cognitive layer rules, and the per-nation marimo notebook convention.
+
 ## Requirements
 ### Requirement: Commonwealth of Nations path contract
 

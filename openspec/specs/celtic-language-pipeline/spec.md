@@ -1,7 +1,8 @@
 # celtic-language-pipeline Specification
 
 ## Purpose
-TBD - created by archiving change 2026-07-17-gaois-celtic-language-pipeline-v1. Update Purpose after archive.
+The Celtic-language pipeline surface covers Irish + Welsh + Scottish + Manx + Cornish + Breton across the Cianfhoghlaim monorepo. It defines 9 invariants: the canonical Gaois + Celtic language source paths (Logainm, Téarma, Ainm, Gaois, Dúchas, Canúint), the 6-language support matrix, the British Isles education connection (cymraeg for Wales LC, gaidhlig for Scotland LC, gaelg for Isle of Man, kernewek for Cornwall, brezhoneg for Brittany cross-border), the per-language BAML extraction templates, the BAML ensemble fallback chain, the canonical cross-corpus knowledge graph edges, the per-language cognitive layer rules, the per-language Cognee cluster naming, and the per-language marimo notebook convention.
+
 ## Requirements
 ### Requirement: Canonical Gaois + Celtic language pipeline path contract
 

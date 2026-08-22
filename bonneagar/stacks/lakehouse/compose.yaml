@@ -25,7 +25,7 @@
 #   ONE COMMAND:  mise run lakehouse:up  (canonical entry-point)
 #
 # SERVICES (16 total — added 5 graph DB backends 2026-08-15):
-#   - garage:             S3-compatible storage (7 buckets total)
+#   - garage:             S3-compatible storage (9 buckets total — added tg4-media 2026-08-25)
 #   - garage-init:        Bucket initialization (iceberg, lance, ducklake,
 #                         langfuse-events, langfuse-media, langfuse-exports,
 #                         mlflow-artifacts) [centralise-data-plane 2026-07]

@@ -5,6 +5,14 @@ services:
     image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
     environment:
       LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
+      INFISICAL_URL: ${INFISICAL_URL}
+      INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
+      INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+      INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_ENV}
+      INFISICAL_DEFAULT_PATH: /litellm
+      LOCKET_MODE: ${LOCKET_MODE:-watch}
+      LOCKET_SRC: /templates/secrets.env
+      LOCKET_DST: /run/secrets/locket
     container_name: litellm-locket
     restart: unless-stopped
     user: "65532:65532"
@@ -18,20 +26,11 @@ services:
     # tmpfs) during atomic writes. We keep cap_drop: [ALL] +
     # no-new-privileges for the rest of the hardening.
     read_only: false
-    environment:
-      INFISICAL_URL: ${INFISICAL_URL}
-      INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
-      INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}
-      INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_ENV}
-      INFISICAL_DEFAULT_PATH: /litellm
-      LOCKET_MODE: ${LOCKET_MODE:-watch}
-      LOCKET_SRC: /templates/secrets.env
-      LOCKET_DST: /run/secrets/locket
     secrets:
       - infisical_secret
     volumes:
       - ./secrets.env:/templates/secrets.env:ro
-      - ${INFISICAL_FALLBACK_FILE}:/run/secrets/locket/env-fallback.env:ro
+      - ${INFISICAL_FALLBACK_FILE:-/dev/null}:/run/secrets/locket/env-fallback.env:ro
       - stack-secrets:/run/secrets/locket
     healthcheck:
       test:

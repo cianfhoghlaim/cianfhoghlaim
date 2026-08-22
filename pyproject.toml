@@ -54,7 +54,7 @@ dependencies = [
     "ibis-framework[duckdb]>=10",
     "lancedb>=0.15",
     "langfuse>=4.0,<5.0",
-    "litellm>=1.97.0",
+    "litellm>=1.97,<1.98",  # bumped from >=1.97.0 per 2026-08-22-litellm-1.91-to-1.97-image-bump-v1
     "logfire>=4.15.1",
     "marimo>=0.23.10",
     "openai>=2.32.0",

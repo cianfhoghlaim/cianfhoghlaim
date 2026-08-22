@@ -17,31 +17,30 @@ services:
   # DAGSTER WEBSERVER
   # ---------------------------------------------------------------------------
   dagster:
-    # Pinned 2026-07-02 (was `ghcr.io/cianfhoghlaim/dagster:latest` — the
-    # org-private image is replaced with `dagster-local:latest`, a locally-built
-    # image from `stacks/dagster/Dockerfile.dagster` (modeled on
-    # dagster-io/dagster/examples/deploy_docker). Build locally with:
-    #   docker build -f stacks/dagster/Dockerfile.dagster -t dagster-local:latest stacks/dagster/
-    # No public dagster image exists; this is the only path to a working
-    # dagster in dev mode).
-    image: dagster-local:latest
-    build:
-      # Context: 2 dirs up (the repo root) so the Dockerfile can
-      # `COPY cianfhoghlaim` from `../../cianfhoghlaim` (per the
-      # 2026-07-03-infrastructure-foundation change). The Dockerfile
-      # is still in the stack dir.
-      context: ../..
-      dockerfile: bonneagar/stacks/dagster/Dockerfile.dagster
+    # CHANGED 2026-08-22 (lakehouse-observability-stacks-modernization-v1):
+    # Pinned to the OFFICIAL `dagster/dagster-webserver:1.13.18` (latest
+    # stable). Replaces the locally-built `dagster-local:latest` image (which
+    # required a separate Dockerfile build step). Dagster 1.13+ ships:
+    # - Components scaffolding pattern (per
+    #   https://docs.dagster.io/concepts/components)
+    # - Declarative Automation (per
+    #   https://docs.dagster.io/concepts/automation)
+    # - Improved OTel support
+    image: dagster/dagster-webserver:1.13.18
     container_name: dagster-unified
     restart: unless-stopped
-    # Run as root in dev so the dagster-home volume (root-owned) is
-    # writable. In production the Dockerfile would `chown` the volume
-    # at build time and the user would be `1000:1000`.
-    user: "0:0"
+    # ADDED 2026-08-22 (lakehouse-observability-stacks-modernization-v1):
+    # Dagster 1.13+ image runs as non-root (uid 1000). The dagster-home volume
+    # is mounted with matching ownership. Removed the dev-only `user: "0:0"`
+    # workaround that was needed for the locally-built `dagster-local` image.
+    # Note: Dagster daemon is OFFICIALLY SINGLETON (1 replica max).
     ports:
       - "${DAGSTER_PORT:-3335}:3000"
     environment:
       DAGSTER_HOME: /opt/dagster/home
+      # ADDED 2026-08-22: Point Dagster at the lakehouse otel-collector for
+      # OTel fan-out (was previously the logfire stack, now the unified collector).
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}
       # DuckLake (via the cianfhoghlaim DLT destinations factory)
       USE_DUCKLAKE: ${USE_DUCKLAKE:-true}
       DUCKLAKE_POSTGRES_HOST: ${DUCKLAKE_POSTGRES_HOST:-lakehouse-postgres}
@@ -64,13 +63,14 @@ services:
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-pk-lf-dev}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-sk-lf-dev}
       LANGFUSE_HOST: ${LANGFUSE_HOST:-https://langfuse.cianfhoghlaim.ie}
-      # Logfire (OTel collector for self-hosted trace sink)
-      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
       # LanceDB (the lakehouse-lance-namespace REST adapter)
       LANCEDB_URI: ${LANCEDB_URI:-rest://lakehouse-lance-namespace:8182}
     volumes:
       - dagster-storage:/opt/dagster/storage
       - dagster-home:/opt/dagster/home
+      # ADDED 2026-08-22: Mount declarative config files
+      - ./dagster.yaml:/opt/dagster/home/dagster.yaml:ro
+      - ./workspace.yaml:/opt/dagster/home/workspace.yaml:ro
     healthcheck:
       test: ["CMD", "curl", "-sf", "http://localhost:3000/server_info"]
       interval: 30s
@@ -89,20 +89,17 @@ services:
   # ---------------------------------------------------------------------------
   # DAGSTER DAEMON - Schedules, Sensors, Run Queue
   # ---------------------------------------------------------------------------
+  # CHANGED 2026-08-22 (lakehouse-observability-stacks-modernization-v1):
+  # Pinned to OFFICIAL `dagster/dagster-daemon:1.13.18`. Dagster daemon is
+  # OFFICIALLY SINGLETON (1 replica max). deploy.replicas: 1 is implicit.
   dagster-daemon:
-    # Same local-built image as the webserver (per Change 7 pinning
-    # policy — no `ghcr.io/cianfhoghlaim/*`).
-    image: dagster-local:latest
-    build:
-      context: ../..
-      dockerfile: bonneagar/stacks/dagster/Dockerfile.dagster
+    image: dagster/dagster-daemon:1.13.18
     container_name: dagster-daemon
     restart: unless-stopped
-    # Run as root in dev (see dagster webserver comment).
-    user: "0:0"
     command: ["dagster-daemon", "run"]
     environment:
       DAGSTER_HOME: /opt/dagster/home
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://otel-collector:4317}
       USE_DUCKLAKE: ${USE_DUCKLAKE:-true}
       DUCKLAKE_POSTGRES_HOST: ${DUCKLAKE_POSTGRES_HOST:-lakehouse-postgres}
       DUCKLAKE_POSTGRES_PORT: ${DUCKLAKE_POSTGRES_PORT:-5432}
@@ -121,6 +118,10 @@ services:
     volumes:
       - dagster-storage:/opt/dagster/storage
       - dagster-home:/opt/dagster/home
+      # ADDED 2026-08-22: Mount daemon-specific config + workspace config
+      - ./dagster.yaml:/opt/dagster/home/dagster.yaml:ro
+      - ./dagster-daemon.yaml:/opt/dagster/home/dagster-daemon.yaml:ro
+      - ./workspace.yaml:/opt/dagster/home/workspace.yaml:ro
     depends_on:
       dagster:
         condition: service_healthy
@@ -135,6 +136,8 @@ services:
         limits:
           cpus: '2'
           memory: 2G
+      # Dagster daemon is officially SINGLETON (1 replica max)
+      replicas: 1
     networks:
       - cianfhoghlaim
       - lakehouse

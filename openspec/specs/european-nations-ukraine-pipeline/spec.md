@@ -1,7 +1,8 @@
 # european-nations-ukraine-pipeline Specification
 
 ## Purpose
-TBD - created by archiving change 2026-07-15-eu-pilot-upgrade-v1. Update Purpose after archive.
+The Ukraine pipeline surface provides British-Isles parity per-subject depth for the Cianfhoghlaim monorepo. It defines 12 invariants: the canonical european_nations/ukraine/ directory path, the ZNO (ЗНО) national testing curriculum, the NMT (НМТ) university admission pipeline, the Ukrainian + Russian + English language handling, the per-subject (11 LC subjects + 9 ZNO subjects) coverage matrix, the per-region sub-state convention (24 oblasts + Crimea + Kyiv), the per-grade (primary + secondary + lyceum) source mapping, the cross-corpus knowledge graph edges, the BAML extraction templates for Ukrainian-language syllabi, the cognitive layer rules for Ukrainian history + literature, the marimo notebook convention, and the public-data integration with the Ukrainian Ministry of Education.
+
 ## Requirements
 ### Requirement: Ukraine per-subject depth
 

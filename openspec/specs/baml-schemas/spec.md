@@ -1,7 +1,8 @@
 # baml-schemas Specification
 
 ## Purpose
-TBD - created by archiving change 2026-08-17-hygiene-drift-cleanup-v1. Update Purpose after archive.
+The BAML schemas surface codifies the BAML ClientRegistry pattern for OCR ensemble fallback chains across the Cianfhoghlaim monorepo. It defines 2 invariants: the canonical BAML file layout (per the centralized-schema-registry + the 2026-08-17-hygiene-drift-cleanup-v1 change) with baml_src/clients/ + baml_src/commonwealth/ + baml_src/european_nations/ + baml_src/european_union/, and the ClientRegistry-based fallback chain pattern (per the centralized-model-registry refactor) that selects the lowest-cost model that meets the per-subject accuracy threshold.
+
 ## Requirements
 ### Requirement: BAML ClientRegistry pattern for OCR ensemble fallback chain
 

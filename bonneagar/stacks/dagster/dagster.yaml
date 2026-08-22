@@ -1,0 +1,47 @@
+# =============================================================================
+# DAGSTER INSTANCE CONFIG (Dagster 1.13+ declarative format)
+# =============================================================================
+# ADDED 2026-08-22 (lakehouse-observability-stacks-modernization-v1).
+# Per the official Dagster docs at https://docs.dagster.io/deployment/oss/dagster-yaml
+#
+# This file is mounted at /opt/dagster/home/dagster.yaml inside the
+# dagster webserver + daemon containers. It defines the instance-level
+# config (storage backend, run coordinator, telemetry, etc).
+# =============================================================================
+
+instance_class:
+  module: dagster._core.instance.core
+  class: DagsterInstance
+
+# Code servers: how user code is loaded and executed
+code_servers:
+  local_startup_timeout: 120
+
+# Run coordinator: the policy Dagster uses to manage the set of runs
+# in the queue (QueuedRunCoordinator per the docs).
+# Uses PostgreSQL for run queue (so runs survive daemon restarts).
+run_coordinator:
+  module: dagster._core.run_coordinator
+  class: QueuedRunCoordinator
+
+# Run launcher: how runs are executed (in-process for dev; Docker for prod)
+run_launcher:
+  module: dagster._core.launcher
+  class: DefaultRunLauncher
+
+# Telemetry: collect non-identifiable frontend/backend usage (default: enabled)
+telemetry:
+  enabled: true
+
+# Compute logs: where Dagster writes stdout/stderr from user code
+compute_logs:
+  module: dagster._core.storage.noop_compute_log_manager
+  class: NoOpComputeLogManager
+
+# ADDED 2026-08-22 (PR #5): OpenTelemetry exporter for native OTel fan-out
+# (the Dagster daemon's Python tracing emits to the otel-collector)
+# Note: Dagster's first-party OTel support requires the dagster-otel package
+# or instrumenting from user code via opentelemetry-sdk. For Dagster's
+# internal traces (e.g. sensor ticks), the recommended approach is to set
+# OTEL_EXPORTER_OTLP_ENDPOINT in the container env (already wired in
+# compose.yaml via lakehouse:otlp fan-out).

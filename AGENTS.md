@@ -89,6 +89,11 @@ mise run core:uv:tree:json         # uv tree --format=json (programmatic)
 mise run core:uv:format            # uv format (Python formatter, uv 0.12+)
 mise run openspec:upgrade          # print the bun add -g @fission-ai/openspec@1.10.0 command
 
+# New in 2026-08-23 dev-tooling-refactor v3 (version pinning + spec hygiene):
+mise run core:tool-versions:report          # print a table of all installed tools + resolved versions
+mise run core:tool-versions:check-stale    # exit 1 if any pinned tool is > 1 major behind latest
+mise run lint:spec:purpose                 # fail CI if any openspec has a TBD Purpose section
+
 # Subproject tasks (after mise 2026.8.10+ is installed, the root aliases route to subprojects):
 cd bonneagar && mise run devops:health   # IaC subproject
 cd agents && mise run ml:agents:smoke    # agent-fleet subproject
@@ -495,3 +500,68 @@ This automatically routes extraction to the highly curated `stedding/ingest_queu
 Upon finishing a complex task, pipeline update, or major deployment, you **MUST** execute the synchronization script:
 `./scripts/sync_agent_docs.sh`
 This updates the local telemetry blocks across `README.md` and ensures no rogue imports were introduced.
+
+### 5. Concurrent-Write Safety Protocol (NEW 2026-08-22)
+
+**Problem:** Multiple agents (orchestrator, 5 subagents, IDE sessions, hooks) operate against the same git working tree concurrently. Without a guard, an agent's carefully-staged diff can be wiped out by another agent's `git reset` / `git checkout --` / `git restore` / `git stash` operation. This was the root cause of the 2026-08-22 incident where 8 PR #5 file modifications were lost mid-session.
+
+**Mandatory 4-step file edit protocol** (every file edit, every agent, every session):
+
+```bash
+# STEP 1 — BEFORE editing: verify the file is in the expected state
+git status -- <path/to/file>
+git diff -- <path/to/file>   # should be empty for tracked files
+sha256sum <path/to/file>    # record the hash for cross-check
+
+# STEP 2 — Make the edit (use Edit tool, Write tool, or shell sed/awk)
+# ... your edit here ...
+
+# STEP 3 — AFTER editing: verify the diff is what you expected
+git diff -- <path/to/file>
+sha256sum <path/to/file>    # should differ from STEP 1
+
+# STEP 4 — Stage ONLY the intended files (NOT `git add -A` which scoops up unrelated changes)
+git add <path/to/file>
+git status -- <path/to/file>   # verify staged state
+
+# COMMIT — always commit immediately after staging, in the SAME shell context
+git commit -m "..."
+git push origin <branch>
+```
+
+**If STEP 3 reveals unexpected changes** (different line counts, missing hunks, extra files):
+- **ABORT** the commit immediately
+- Run `git status` to inspect the full working tree
+- Look for concurrent-agent artifacts: `.tmp_*` directories, branch-switch commits, stash entries, reflog
+- Run `git reflog --date=iso | head -20` to see recent operations
+- Re-apply the lost edits if possible; otherwise escalate to the orchestrator
+
+**Forbidden patterns** (always cause concurrent-write disasters):
+- ❌ `git add -A` / `git add .` — scoops up unrelated changes from concurrent agents
+- ❌ `git stash --include-untracked` followed by `git stash pop` — race conditions with other stashes
+- ❌ `git reset --hard` without first running `git stash`
+- ❌ `git checkout -- <path>` without first verifying the file is clean
+- ❌ `git restore --staged <path>` without re-running the safety protocol
+- ❌ Multi-agent commits on the same branch without explicit coordination
+- ❌ `git commit --amend` if any concurrent agent may have pushed between commit and push
+
+**Safe patterns** (use these instead):
+- ✅ `git add <specific/path>` — explicit file list
+- ✅ `git status -- <path>` before AND after each edit
+- ✅ One commit per task (not mega-commits with many unrelated changes)
+- ✅ Use `git worktree add <path> <branch>` to isolate multi-agent work
+- ✅ Commit IMMEDIATELY after staging (don't batch)
+
+**The "CLAIM A FILE" pattern** (when multiple agents touch the same area):
+```bash
+# Agent A claims the dagster files
+echo "$(date -Iseconds) agent A claims dagster/*" > /tmp/agent-claims.log
+
+# Agent B waits or picks a different area
+# Agent A finishes, commits, then releases the claim
+echo "$(date -Iseconds) agent A releases dagster/*" >> /tmp/agent-claims.log
+```
+
+**Full openspec contract:** see `openspec/specs/repo-hygiene-agent-routing/spec.md` (3 ADDED Requirements added by `2026-08-22-concurrent-agent-write-safety-v1`).
+
+**Reference incident:** the 2026-08-22 PR #5 file-loss event — see `openspec/changes/archive/2026-08-22-2026-08-22-lakehouse-observability-stacks-modernization-v1/proposal.md` § Notes section for the post-mortem.

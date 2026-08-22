@@ -1,0 +1,22 @@
+# =============================================================================
+# DAGSTER WORKSPACE CONFIG (Dagster 1.13+ declarative format)
+# =============================================================================
+# ADDED 2026-08-22 (lakehouse-observability-stacks-modernization-v1).
+# Per the official Dagster docs at https://docs.dagster.io/concepts/code-locations/workspace
+#
+# This file is mounted at /opt/dagster/home/workspace.yaml inside the
+# dagster webserver + daemon containers. It declares the code locations
+# that Dagster loads user code from.
+#
+# The cianfhoghlaim codebase uses the dagster 1.13+ Components pattern
+# (per openspec/specs/dagster-5-layer-component-architecture) — code
+# locations are loaded from `orchestration/defs/`.
+# =============================================================================
+
+load_from:
+  - python_module: orchestration.defs
+
+# ADDED 2026-08-22 (PR #5): Additional code locations for BIEP v3 +
+# the legacy An_scruduain data sources.
+# - python_module: orchestration.v3_biiep
+# - python_module: orchestration.sources
