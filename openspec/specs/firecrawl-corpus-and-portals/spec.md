@@ -1,7 +1,8 @@
 # firecrawl-corpus-and-portals Specification
 
 ## Purpose
-TBD - created by archiving change 2026-08-14-firecrawl-corpus-and-examinations-ie-v1. Update Purpose after archive.
+The Firecrawl observability surface covers every scrape call made via the Firecrawl MCP server (or SDK) across the Cianfhoghlaim monorepo. It defines 6 invariants: every firecrawl_* call MUST write 1 row to cianfhoghlaim.firecrawl_meta.scrapes (the canonical observability table), the dual-search CCC integration pattern (per the 2026-08-14-firecrawl-corpus-and-examinations-ie-v1 change), the 14 concept guide validation step, the 5M monthly budget allocation per pipeline (with 150% lint gate), the examinations.ie portal-specific bypass (uses state-exams-ie credentials from Infisical), and the per-jurisdiction portal URL whitelist.
+
 ## Requirements
 ### Requirement: every Firecrawl call is logged to firecrawl_meta.scrapes
 The system SHALL write one row to `cianfhoghlaim.firecrawl_meta.scrapes` for every firecrawl_* call (SDK or MCP).

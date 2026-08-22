@@ -23,10 +23,17 @@
 
 [tools]
 # Core tools
+# Per the 2026-08-23-dev-tooling-version-pinning-v1 change: 7 pipeline-
+# critical tools are pinned to their EXACT latest stable version (verified
+# 2026-08-22). This gives full determinism — every `mise install` resolves
+# the same versions regardless of when it's run. Bumping any of these
+# requires an openspec change that documents the new version + any breaking
+# changes. External infra tools (gh, cloudflared, gcloud, oci, sops, aqua,
+# zoxide) remain on `latest` per the dev-tooling-surfaces spec convention.
 python = "3.13"
-uv = "latest"
-bun = "latest"
-dagger = "latest"
+uv = "0.12.5"
+bun = "1.4.0"
+dagger = "0.21.1"
 # NOTE: mise cannot self-install via [tools] mise. Install mise 2026.8.10+
 # manually via the standalone installer (https://mise.jdx.dev/installing-mise.html)
 # so that [monorepo_root] below is recognized (was silently ignored on 2026.5.6).
@@ -37,17 +44,17 @@ gh = "latest"
 cloudflared = "latest"
 gcloud = "latest"
 oci = "latest"
-pulumi = "latest"
-infisical = "latest"
+pulumi = "3.259.0"
+infisical = "0.43.125"
 
 # Data tools
-duckdb = "latest"
+duckdb = "1.5.5"
 sops = "latest"
 
 # Package managers
 aqua = "latest"
 zoxide = "latest"
-opencode = "latest"
+opencode = "1.18.21"
 
 # OpenSpec (spec-driven change management).
 # NOT installed via mise — install once with:
@@ -201,6 +208,19 @@ run = "ccc doctor"
 description = "CORE ccc version — print the installed cocoindex-code CLI version"
 alias = ["ccc:version"]
 run = "ccc version"
+
+# Per the 2026-08-23-dev-tooling-version-pinning-v1 change: tool version
+# observability tasks. `core:tool-versions:report` shows the resolved
+# toolchain; `core:tool-versions:check-stale` warns on > 1 major drift.
+[tasks."core:tool-versions:report"]
+description = "CORE tool-versions report — emit a structured table of all installed tools + their resolved versions (per the 2026-08-23-dev-tooling-version-pinning-v1 change)"
+alias = ["tool-versions:report"]
+run = "bash scripts/tool-versions-report.sh"
+
+[tasks."core:tool-versions:check-stale"]
+description = "CORE tool-versions check-stale — compare pinned ranges vs latest released; exits 1 if any tool is > 1 major behind (per the 2026-08-23-dev-tooling-version-pinning-v1 change)"
+alias = ["tool-versions:check-stale"]
+run = "bash scripts/check_tool_versions_stale.sh"
 
 # Mise fmt + generate (the new mise subcommands)
 [tasks."core:mise:fmt"]
@@ -362,6 +382,11 @@ depends = [
   "core:uv:audit:strict",
   "core:uv:check",
 ]
+# Per the 2026-08-23-dev-tooling-tbd-purpose-refresh-batch-data-specs-v1 change:
+# `lint:spec:purpose` is wired as a separate task (not a core:lint sub-gate)
+# until Phase 5.1.2 + 5.1.3 fill in the remaining 19 TBD Purpose fields
+# (agent + infra + oideachais specs). Once all 89 specs have non-TBD
+# Purpose, the gate can be promoted to a core:lint sub-gate.
 # Per the 2026-08-21 audit: ruff scope narrowed to canonical Python packages.
 run = "uv run ruff check orchestration meaisinfhoghlaim dlt_sources baml_src cocoindex_flows agents notebooks scripts 2>&1 | tail -100 || echo 'ruff completed with diagnostics'"
 
@@ -435,6 +460,13 @@ run = "bash .agents/skills/lint-skills.sh"
 description = "Audit agents/, baml_src/, notebooks/, web/, orchestration/, spaces/, meaisinfhoghlaim/ for hardcoded model strings not routed through MODEL_REGISTRY"
 depends = ["sync"]
 run = ".venv/bin/python3 scripts/registry_audit.py --strict"
+
+# Per the 2026-08-23-dev-tooling-tbd-purpose-refresh-batch-data-specs-v1 change:
+# fail CI if any spec under openspec/specs/*/spec.md still has a TBD Purpose field.
+[tasks."lint:spec:purpose"]
+description = "Validate that every openspec has a non-TBD Purpose section (per the 2026-08-23-dev-tooling-tbd-purpose-refresh-batch-data-specs-v1 change)"
+alias = ["lint:spec-purpose"]
+run = "bash -c 'TBD_FILES=$(grep -rl \"^## Purpose\" openspec/specs/*/spec.md 2>/dev/null | xargs grep -l \"TBD - created by archiving change\" 2>/dev/null); TOTAL=$(grep -rl \"^## Purpose\" openspec/specs/*/spec.md 2>/dev/null | wc -l); FILLED=$((TOTAL - $(echo \"$TBD_FILES\" | grep -c .))); if [ -n \"$TBD_FILES\" ]; then echo \"FAIL: $((TOTAL - FILLED)) specs still have TBD Purpose:\"; echo \"$TBD_FILES\"; exit 1; else echo \"OK: all $TOTAL specs have non-TBD Purpose\"; exit 0; fi'"
 
 [tasks."lint:guides-yml"]
 description = "Validate every path in .cocoindex_code/guides.yml resolves on disk"

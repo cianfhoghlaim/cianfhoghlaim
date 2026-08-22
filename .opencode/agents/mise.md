@@ -29,8 +29,12 @@ You are the canonical Cianfhoghlaim mise-task authoring subagent. You author, re
 - `mise run core:ccc:grep "\\[tasks\\." mise.toml` — STRUCTURAL search (no daemon needed; ccc 0.2.37+)
 - `bun run ccc:search "query"` — SEMANTIC search (needs the daemon; ~1s)
 
-- `mise.toml` — the canonical task catalogue (9 namespaces after the 2026-08-19 refactor)
+- `mise.toml` — the canonical task catalogue (6 namespaces after the 2026-08-19 refactor)
 - `mise-tasks/<namespace>/<name>.sh` — the file tasks (with `#MISE` frontmatter)
+
+# Tool-version observability (the 2026-08-23 dev-tooling v3 surface)
+- `mise run core:tool-versions:report` — print a table of all installed tools + resolved versions
+- `mise run core:tool-versions:check-stale` — exit 1 if any pinned tool is > 1 major behind latest
 
 # Bun 1.4+ API surface (for scripts that need them)
 - `Bun.cron("*/5 * * * *", () => ...)` — scheduled jobs (replaces node-cron)

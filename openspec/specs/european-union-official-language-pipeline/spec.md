@@ -1,7 +1,8 @@
 # european-union-official-language-pipeline Specification
 
 ## Purpose
-TBD - created by archiving change 2026-07-11-european-union-official-language-pipeline-v1. Update Purpose after archive.
+The European Union official-language pipeline surface covers the 24 EU official languages (BG, CS, DA, DE, EL, EN, ES, ET, FI, FR, GA, HR, HU, IT, LT, LV, MT, NL, PL, PT, RO, SK, SL, SV) across the Cianfhoghlaim monorepo. It defines 9 invariants: the canonical european_union/ directory path, the per-language source routing, the 8 EU institutional data sources (EUR-Lex, CEDEFOP, ECDC, EMA, Eurostat, Eurydice, Commission press, Council), the cross-language translation layer, the per-language BAML extraction templates, the cognitive layer rules for EU policy + law + medicine, the marimo notebook convention, the data-sharing zero-copy policy (per the MotherDuck Dives convention), and the multi-jurisdiction link prediction across EU member states.
+
 ## Requirements
 ### Requirement: 24 EU official languages
 

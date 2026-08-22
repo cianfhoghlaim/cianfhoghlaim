@@ -1,7 +1,8 @@
 # motherduck-connections Specification
 
 ## Purpose
-TBD - created by archiving change 2026-08-15-cascading-registry-integration-v1. Update Purpose after archive.
+The MotherDuck connection surface registers the 5th web application surface (the analytics consumer) across the Cianfhoghlaim monorepo. It defines 1 invariant: the canonical MotherDuck connection registration contract covers 4 connection methods (Postgres endpoint + native DuckDB API + JDBC + MCP), the cascading-registry integration pattern (per the 2026-08-15-cascading-registry-integration-v1 change), the read-only service account convention, the access-token rotation policy, the Duckling instance size requirements per dataset size, and the read scaling policy.
+
 ## Requirements
 ### Requirement: motherduck-connections MUST register the 5th web surface
 
