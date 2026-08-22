@@ -245,7 +245,7 @@ def _make_app() -> Any:
             vector_dim=EMBED_DIM,
         )
         table.declare_vector_index(column="embedding")  # R4
-        async for jsonl_file in localfs.walk_dir(  # type: ignore[union-attr](
+        async for jsonl_file in localfs.walk_dir(  # type: ignore[union-attr]
             source_root,
             recursive=True,
             live=True,
