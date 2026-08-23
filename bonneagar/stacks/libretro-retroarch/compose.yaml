@@ -1,0 +1,32 @@
+name: libretro-retroarch
+description: |
+  Headless libretro + 6 cores (Mesen / snes9x / gambatte / mgba
+  / genesis_plus_gx / pcsx_rearmed). The deterministic
+  capture surface for Golden Sun (GBA via mgba) + Pokémon
+  (GB via gambatte) + the LC/JC education-game prototypes.
+  Part of the reference-corpus spine for the
+  2026-08-23-tuatha-media-intel-gameplay-capture-research-v1
+  change.
+version: "0.1.0"
+services:
+  libretro:
+    image: linuxserver/libretro:latest
+    container_name: libretro
+    restart: unless-stopped
+    ports:
+      - "55355:55355"   # the libretro netcommand port
+    environment:
+      - LIBRETRO_CORES=mesen,snes9x,gambatte,mgba,genesis_plus_gx,pcsx_rearmed
+    volumes:
+      - libretro-data:/config
+      - libretro-roms:/roms  # the romm-managed ROM mount
+    networks:
+      - libretro-net
+volumes:
+  libretro-data:
+    driver: local
+  libretro-roms:
+    driver: local
+networks:
+  libretro-net:
+    driver: bridge

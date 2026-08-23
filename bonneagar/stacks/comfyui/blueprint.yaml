@@ -1,0 +1,22 @@
+name: comfyui
+description: |
+  The Komodo blueprint for the comfyui stack. Maps the 4
+  env-file keys (per the GOLD_STANDARD pattern) to the
+  Locket-injected secrets.
+version: "0.1.0"
+blueprint:
+  name: comfyui
+  description: ComfyUI node-graph image gen
+  type: deployment
+  run_dir: .
+  env_files:
+    - source: secrets.env
+      target: .env
+  resources:
+    - compose.yaml
+    - sidecar.yaml
+  variables:
+    - name: COMFYUI_HF_TOKEN
+      from: locket:infisical://dev-baile/cianfhoghlaim/comfyui-hf-token
+    - name: COMFYUI_API_KEY
+      from: locket:infisical://dev-baile/cianfhoghlaim/comfyui-api-key

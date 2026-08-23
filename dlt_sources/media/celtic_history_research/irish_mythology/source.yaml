@@ -1,0 +1,17 @@
+source:
+  id: celtic_history_irish_mythology
+  medium: celtic_history
+  work: "Irish mythology (the body of myths native to Ireland; the Celtic-history research surface for the downstream theming change)"
+  firecrawl_plan: n/a          # GATED; stub for the downstream theming change
+  vlm_primary: n/a
+  vlm_secondary: n/a
+  baml_functions: []
+  lance_table: media_descriptors_celtic_history
+  ducklake_schema: cianfhoghlaim.media.celtic_history
+  licence_summary: CC-BY-SA-4.0
+  shippable_default: false
+  legal_notes: "Celtic-history STUB for the downstream theming change. GATED. The user's own clippings at `cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/` is the canonical source for the future theming change."
+  acquisition_path: []         # GATED
+  input_sources:
+    - "https://en.wikipedia.org/wiki/Irish_mythology"  # GATED
+status: stub

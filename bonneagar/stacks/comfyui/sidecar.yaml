@@ -1,0 +1,22 @@
+name: comfyui
+description: |
+  The Locket sidecar (per bonneagar/AGENTS.md § Locket sidecar
+  pattern) that injects the COMFYUI_HF_TOKEN + COMFYUI_API_KEY
+  secrets at runtime.
+version: "0.1.0"
+services:
+  comfyui-sidecar:
+    image: ghcr.io/cianfhoghlaim/locket-sidecar:1.10.0
+    container_name: comfyui-sidecar
+    restart: unless-stopped
+    environment:
+      - LOCKET_INFISICAL_PATH=infisical://dev-baile/cianfhoghlaim/comfyui
+      - LOCKET_TARGET_SERVICE=comfyui
+    volumes:
+      - /var/run/locket:/var/run/locket:ro
+    networks:
+      - comfyui-net
+networks:
+  comfyui-net:
+    external: true
+    name: comfyui_comfyui-net

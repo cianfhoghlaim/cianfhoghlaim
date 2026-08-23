@@ -1,0 +1,25 @@
+source:
+  id: wheel_of_time_prose
+  medium: prose
+  work: "The Wheel of Time (Robert Jordan, books 1-11; Brandon Sanderson, books 12-14)"
+  firecrawl_plan: plan_a_keyless
+  vlm_primary: qwen3.6-27b-mtp
+  vlm_secondary: gemma-4-12b
+  baml_functions:
+    - ExtractProseDescriptor
+  lance_table: media_descriptors
+  ducklake_schema: cianfhoghlaim.media
+  licence_summary: fair-use-description
+  shippable_default: false
+  legal_notes: "Short passage quotations only (the Wheel of Time is copyrighted; the descriptor is a fair-use summary of the magic-system architecture, not a verbatim copy)."
+  acquisition_path:
+    - wikisource_text_pull
+    - wikipedia_summary_pull
+  input_sources:
+    - "https://en.wikipedia.org/wiki/The_Wheel_of_Time"
+    - "https://en.wikisource.org/wiki/The_Eye_of_the_World"
+    - "https://wot.fandom.com/wiki/Aes_Sedai"
+    - "https://wot.fandom.com/wiki/One_Power"
+    - "https://wot.fandom.com/wiki/Saidar"
+    - "https://wot.fandom.com/wiki/Saidin"
+    - "https://wot.fandom.com/wiki/Tel'aran'rhiod"

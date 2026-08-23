@@ -1,0 +1,54 @@
+source:
+  id: crown_dependencies_government
+  medium: official
+  work: "Crown Dependencies — Isle of Man Government + States of Jersey + States of Guernsey (the 3 British Crown Dependencies)"
+  jurisdiction: crown_dependencies
+  firecrawl_plan: plan_a_keyless
+  vlm_primary: olmocr-2-7b
+  vlm_secondary: qwen3-vl-8b
+  baml_functions:
+    - ExtractOfficialDocumentDescriptor
+  lance_table: media_descriptors
+  ducklake_schema: cianfhoghlaim.media.official.crown_dependencies
+  licence_summary: OGL-3.0
+  shippable_default: false
+  legal_notes: "Crown Dependencies government + police. The 3 British Crown Dependencies (Isle of Man + Jersey + Guernsey) are self-governing Crown Dependencies of the UK Crown — NOT part of the UK. They have their own legislative assemblies + police forces + courts."
+  acquisition_path:
+    - firecrawl_scrape_html
+    - firecrawl_parse_pdfs
+  sources:
+    # Isle of Man
+    - body: isle_of_man_government
+      title: Isle of Man Government
+      url: "https://www.gov.im/"
+      rights_holder: "Isle of Man Government"
+    - body: isle_of_man_constabulary
+      title: Isle of Man Constabulary
+      url: "https://www.iompolice.im/"
+      rights_holder: "Isle of Man Constabulary"
+    - body: tynwald
+      title: Tynwald (Isle of Man legislature)
+      url: "https://www.tynwald.org.im/"
+      rights_holder: "Tynwald"
+    - body: isle_of_man_courts
+      title: Isle of Man Courts of Justice
+      url: "https://www.courts.im/"
+      rights_holder: "Isle of Man Courts of Justice"
+    # Jersey
+    - body: states_of_jersey
+      title: States of Jersey
+      url: "https://www.gov.je/"
+      rights_holder: "States of Jersey"
+    - body: states_of_jersey_police
+      title: States of Jersey Police
+      url: "https://www.jersey.police.uk/"
+      rights_holder: "States of Jersey Police"
+    # Guernsey
+    - body: states_of_guernsey
+      title: States of Guernsey
+      url: "https://www.gov.gg/"
+      rights_holder: "States of Guernsey"
+    - body: guernsey_police
+      title: Guernsey Police
+      url: "https://www.guernsey.police.uk/"
+      rights_holder: "Bailiwick of Guernsey Police"

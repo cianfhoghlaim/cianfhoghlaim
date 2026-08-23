@@ -2,6 +2,7 @@
 
 import base64
 import time
+from pathlib import Path
 from typing import Any
 
 import structlog
@@ -32,22 +33,79 @@ class CDPBackend(BrowserBackend):
         self._browser: Any = None
         self._context: Any = None
         self._page: Any = None
+        self._user_data_dir: Path | None = None
+        self._storage_state_path: Path | None = None
 
-    async def initialize(self) -> None:
-        """Connect to browser-grid via CDP."""
+    async def initialize(
+        self,
+        *,
+        user_data_dir: Path | None = None,
+        storage_state_path: Path | None = None,
+    ) -> None:
+        """Connect to browser-grid via CDP.
+
+        Accepts the new SSO kwargs (see `BrowserBackend.initialize`).
+        Persistent-context behaviour:
+
+          - If `user_data_dir` is set, we launch a *separate* local
+            Chromium with `launch_persistent_context(user_data_dir)`
+            instead of `connect_over_cdp`. This is the only way to
+            get true cookie persistence with Playwright + CDP.
+          - If only `storage_state_path` is set, we attach to the
+            existing CDP grid and call `new_context(storage_state=...)`
+            to pre-load cookies from the JSON file.
+          - If neither is set, behaviour is unchanged.
+        """
+        self._user_data_dir = user_data_dir
+        self._storage_state_path = storage_state_path
+
         try:
             from playwright.async_api import async_playwright
 
             self._playwright = await async_playwright().start()
+
+            if user_data_dir is not None:
+                # Persistent-context mode: bypass the grid and launch
+                # a local Chromium with the user-data dir. This is
+                # what auth flows need — cookies survive across runs.
+                user_data_dir.mkdir(parents=True, exist_ok=True)
+                self._browser = await self._playwright.chromium.launch_persistent_context(
+                    user_data_dir=str(user_data_dir),
+                    headless=self.config.stagehand_headless,
+                    viewport={"width": 1920, "height": 1080},
+                )
+                self._context = self._browser  # the persistent-context IS the browser
+                self._page = (
+                    self._context.pages[0]
+                    if self._context.pages
+                    else await self._context.new_page()
+                )
+                logger.info(
+                    "cdp_persistent_context_initialized",
+                    user_data_dir=str(user_data_dir),
+                    storage_state_path=(
+                        str(storage_state_path) if storage_state_path else None
+                    ),
+                )
+                return
+
+            # Default CDP-grid path.
             self._browser = await self._playwright.chromium.connect_over_cdp(
                 self.config.cdp_url
             )
-            self._context = await self._browser.new_context(
-                viewport={"width": 1920, "height": 1080},
-            )
+            kwargs: dict[str, Any] = {"viewport": {"width": 1920, "height": 1080}}
+            if storage_state_path is not None and storage_state_path.exists():
+                kwargs["storage_state"] = str(storage_state_path)
+            self._context = await self._browser.new_context(**kwargs)
             self._page = await self._context.new_page()
 
-            logger.info("cdp_connected", url=self.config.cdp_url)
+            logger.info(
+                "cdp_connected",
+                url=self.config.cdp_url,
+                storage_state_path=(
+                    str(storage_state_path) if storage_state_path else None
+                ),
+            )
 
         except Exception as e:
             raise BackendError(

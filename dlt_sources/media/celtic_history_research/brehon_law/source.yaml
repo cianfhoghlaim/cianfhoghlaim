@@ -1,0 +1,17 @@
+source:
+  id: celtic_history_brehon_law
+  medium: celtic_history
+  work: "Brehon law (the ancient Irish law system; the Celtic-history research surface for the downstream theming change)"
+  firecrawl_plan: n/a
+  vlm_primary: n/a
+  vlm_secondary: n/a
+  baml_functions: []
+  lance_table: media_descriptors_celtic_history
+  ducklake_schema: cianfhoghlaim.media.celtic_history
+  licence_summary: CC-BY-SA-4.0
+  shippable_default: false
+  legal_notes: "Celtic-history STUB. GATED for the downstream theming change. The user's own clippings at `cian_mac_an_déisigh_uí_liatháin/identity/lineage/references/clippings/` is the canonical source for the future theming change."
+  acquisition_path: []
+  input_sources:
+    - "https://en.wikipedia.org/wiki/Brehon_law"  # GATED
+status: stub

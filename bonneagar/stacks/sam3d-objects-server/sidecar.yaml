@@ -1,0 +1,20 @@
+name: sam3d-objects-server
+description: |
+  The Locket sidecar that injects the SAM3D_API_KEY at runtime.
+version: "0.1.0"
+services:
+  sam3d-sidecar:
+    image: ghcr.io/cianfhoghlaim/locket-sidecar:1.10.0
+    container_name: sam3d-sidecar
+    restart: unless-stopped
+    environment:
+      - LOCKET_INFISICAL_PATH=infisical://dev-baile/cianfhoghlaim/sam3d
+      - LOCKET_TARGET_SERVICE=sam3d
+    volumes:
+      - /var/run/locket:/var/run/locket:ro
+    networks:
+      - sam3d-net
+networks:
+  sam3d-net:
+    external: true
+    name: sam3d-objects-server_sam3d-net

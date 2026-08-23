@@ -1,0 +1,39 @@
+source:
+  id: ncca_sec_dfe_sqa_wjec_desc
+  medium: official
+  work: "NCCA + SEC / examinations.ie + DfE + SQA + WJEC + DESC educational body documents (curriculum specs + exam papers + marking schemes)"
+  firecrawl_plan: plan_a_keyless
+  vlm_primary: olmocr-2-7b
+  vlm_secondary: qwen3-vl-8b
+  baml_functions:
+    - ExtractOfficialDocumentDescriptor
+  lance_table: media_descriptors
+  ducklake_schema: cianfhoghlaim.media
+  licence_summary: fair-use-description
+  shippable_default: false
+  legal_notes: "Class E (educational body subset) — the 2 NCCA research PDFs (the user-named ones at the root of leaving_certificate/) + the 12 NCCA Leaving Certificate syllabus PDFs (en + ga parity). Per-source rights_holder + licence declared in the DLT resource. The descriptor is a structured summary — NEVER a verbatim copy of the full page. The 12 Wikipedia entries (Tuatha Dé Danann, etc.) were MOVED to dlt_sources/media/celtic_history_research/ per the 2026-08-23 refactor."
+  acquisition_path:
+    - firecrawl_parse_pdfs   # syllabus + research PDFs
+  input_sources:
+    # NCCA research PDFs (the 2 user-named ones at the root of leaving_certificate/)
+    - "leaving_certificate/the-potential-of-online-learning-environments_en.pdf"
+    - "leaving_certificate/key-competencies-in-senior-cycle_en.pdf"
+    # NCCA Leaving Certificate syllabus PDFs (en + ga parity)
+    - "leaving_certificate/biology/en/SCSEC07_Biology_Syllabus_Eng.pdf"
+    - "leaving_certificate/biology/ga/SCSEC07_Biology_Syllabus_Gaeilge.pdf"
+    - "leaving_certificate/geography/en/SCSEC17_Geography_syllabus_eng.pdf"
+    - "leaving_certificate/geography/ga/SCSEC17_Geography_Syllabus_gaeilge.pdf"
+    - "leaving_certificate/history/en/SCSEC20_History_syllabus_eng.pdf"
+    - "leaving_certificate/history/ga/SCSEC20_History_syllabus_Gaeilge.pdf"
+    - "leaving_certificate/english/en/SCSEC14_English_Syllabus.pdf"
+    - "leaving_certificate/mathematics/en/SCSEC25_Maths_syllabus_examination-2015_English.pdf"
+    - "leaving_certificate/mathematics/ga/SCSEC25_Maths_syllabus_examination2015_gaeilge.pdf"
+    - "leaving_certificate/gaeilge/SCSEC16_Gaeilge_guidelines.pdf"
+    - "leaving_certificate/applied_mathematics/en/Leaving-Certificate-Specification-Applied-Mathematics_EN_1.pdf"
+    - "leaving_certificate/ukrainian/LC570ALP000EV.pdf"
+    # The SEC / examinations.ie surface is ingested via
+    # `dlt_sources/british_isles/ireland/education/examinations.py`
+    # (the BIEP v3 surface, the canonical leaving_cert pipeline).
+    # The DfE / SQA / WJEC / DESC surfaces are ingested via
+    # their respective jurisdiction pipelines in
+    # `dlt_sources/british_isles/{england,scotland,wales,isle_of_man,northern_ireland}/education/`.

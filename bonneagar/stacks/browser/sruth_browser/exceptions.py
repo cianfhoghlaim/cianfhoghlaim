@@ -106,3 +106,31 @@ class NoBackendError(BrowserAgentError):
             message = f"No backend registered that supports operation {operation}"
         super().__init__(message)
         self.operation = operation
+
+
+class UoGAuthExpired(BrowserAgentError):
+    """UoG Campus Identity SSO session cookie has expired mid-run.
+
+    Raised by `core/auth.py::UoGSsoLogin.login()` after a single
+    refresh attempt failed. The DLT source translates this into a
+    `status="auth_failed"` row so the asset materialisation does not
+    crash.
+    """
+
+    def __init__(self, message: str = "UoG SSO session expired"):
+        super().__init__(message)
+        self.auth_kind = "uog_sso"
+
+
+class SecretBackendUnavailable(BrowserAgentError):
+    """A configured secret backend could not be reached (e.g. Infisical 5xx).
+
+    Raised by `core/secrets.py::SecretsResolver.get()` when a backend
+    is configured but unreachable. The resolver falls through to the
+    next backend before raising this; callers catching
+    `BrowserAgentError` see the same shape as for `NoBackendError`.
+    """
+
+    def __init__(self, backend: str, message: str):
+        super().__init__(f"Secret backend {backend!r} unavailable: {message}")
+        self.backend = backend

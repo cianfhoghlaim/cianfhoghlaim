@@ -1,0 +1,35 @@
+source:
+  id: ni_departments
+  medium: official
+  work: "Northern Ireland government departments (the non-police / non-defence departmental surface — Health NI + Education NI + Department for the Economy)"
+  jurisdiction: ni_departments
+  firecrawl_plan: plan_a_keyless
+  vlm_primary: olmocr-2-7b
+  vlm_secondary: qwen3-vl-8b
+  baml_functions:
+    - ExtractOfficialDocumentDescriptor
+  lance_table: media_descriptors
+  ducklake_schema: cianfhoghlaim.media.official.ni_departments
+  licence_summary: OGL-3.0
+  shippable_default: false
+  legal_notes: "Northern Ireland non-police / non-defence departments. The PSNI (police) lives at `dlt_sources/media/official/government/uk/` (since PSNI is a UK-level body funded by the Northern Ireland Office). The NI Executive + NI Assembly + CCEA + ETI live at `dlt_sources/british_isles/northern_ireland/education/`."
+  acquisition_path:
+    - firecrawl_scrape_html
+    - firecrawl_parse_pdfs
+  sources:
+    - body: health_ni
+      title: Department of Health (Northern Ireland)
+      url: "https://www.health-ni.gov.uk/"
+      rights_holder: "Department of Health (Northern Ireland)"
+    - body: education_ni
+      title: Department of Education (Northern Ireland)
+      url: "https://www.education-ni.gov.uk/"
+      rights_holder": "Department of Education (Northern Ireland)"
+    - body: economy_ni
+      title: Department for the Economy (Northern Ireland)
+      url: "https://www.economy-ni.gov.uk/"
+      rights_holder: "Department for the Economy (Northern Ireland)"
+    - body: nidirect
+      title: nidirect (Northern Ireland government services portal)
+      url: "https://www.nidirect.gov.uk/"
+      rights_holder: "Northern Ireland Executive"

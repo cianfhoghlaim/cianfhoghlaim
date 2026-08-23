@@ -11,6 +11,7 @@ import json
 import os
 import time
 import urllib.request
+from pathlib import Path
 from typing import Any
 
 import structlog
@@ -60,8 +61,20 @@ class StagehandBackend(BrowserBackend):
         self._context = None
         self._page = None
 
-    async def initialize(self) -> None:
-        """Initialize connection to Stealth Grid and Stagehand SDK."""
+    async def initialize(
+        self,
+        *,
+        user_data_dir: Path | None = None,
+        storage_state_path: Path | None = None,
+    ) -> None:
+        """Initialize connection to Stealth Grid and Stagehand SDK.
+
+        Accepts the new SSO kwargs (see `BrowserBackend.initialize`).
+        When `user_data_dir` is set, the Stagehand session launches a
+        local Chromium with persistent-context mode instead of
+        attaching to the Stealth Grid — this is the only way to get
+        cookies that survive across runs (Campus Identity SSO).
+        """
         cdp_url_env = os.environ.get("BROWSER_CDP_URL", "http://127.0.0.1:9223")
         bb_api_key = os.environ.get("BROWSERBASE_API_KEY", "local")
         model_api_key = os.environ.get("MODEL_API_KEY") or os.environ.get("OPENAI_API_KEY") or ""
@@ -113,16 +126,41 @@ class StagehandBackend(BrowserBackend):
             logger.info("Initializing Stagehand Playwright connection", cdp_url=cdp_url)
             self._playwright = await async_playwright().start()
 
-            if "playwright" in cdp_url:
-                self._browser = await self._playwright.chromium.connect(cdp_url)
+            if user_data_dir is not None:
+                # Persistent-context mode (SSO cookies survive).
+                user_data_dir.mkdir(parents=True, exist_ok=True)
+                self._context = (
+                    await self._playwright.chromium.launch_persistent_context(
+                        user_data_dir=str(user_data_dir),
+                        headless=self.config.stagehand_headless,
+                        viewport={"width": 1920, "height": 1080},
+                        storage_state=(
+                            str(storage_state_path)
+                            if storage_state_path and storage_state_path.exists()
+                            else None
+                        ),
+                    )
+                )
+                self._browser = self._context  # alias so close() works uniformly
+                logger.info(
+                    "stagehand_persistent_context_initialized",
+                    user_data_dir=str(user_data_dir),
+                )
             else:
-                self._browser = await self._playwright.chromium.connect_over_cdp(cdp_url)
+                if "playwright" in cdp_url:
+                    self._browser = await self._playwright.chromium.connect(cdp_url)
+                else:
+                    self._browser = await self._playwright.chromium.connect_over_cdp(cdp_url)
 
-            self._context = (
-                self._browser.contexts[0]
-                if self._browser.contexts
-                else await self._browser.new_context()
-            )
+                kwargs: dict[str, Any] = {"viewport": {"width": 1920, "height": 1080}}
+                if storage_state_path is not None and storage_state_path.exists():
+                    kwargs["storage_state"] = str(storage_state_path)
+                self._context = (
+                    self._browser.contexts[0]
+                    if self._browser.contexts
+                    else await self._browser.new_context(**kwargs)
+                )
+
             self._page = (
                 self._context.pages[0]
                 if self._context.pages

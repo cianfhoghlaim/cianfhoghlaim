@@ -1,0 +1,28 @@
+name: sam3-server
+description: |
+  Facebook SAM3 image segmentation (Apache 2.0). The sprite
+  segmentation surface for the Djinn sprites (Golden Sun)
+  + the boon-orb icons (Hades) + the type-chart icons
+  (Pokémon). Part of the reference-corpus spine for the
+  2026-08-23-tuatha-media-intel-gameplay-capture-research-v1
+  change.
+version: "0.1.0"
+services:
+  sam3-server:
+    image: ghcr.io/facebookresearch/sam3:latest
+    container_name: sam3-server
+    restart: unless-stopped
+    ports:
+      - "8283:8283"   # the SAM3 REST API
+    environment:
+      - SAM3_MODEL=sam3-base
+    volumes:
+      - sam3-data:/data
+    networks:
+      - sam3-net
+volumes:
+  sam3-data:
+    driver: local
+networks:
+  sam3-net:
+    driver: bridge
