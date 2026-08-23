@@ -261,6 +261,18 @@ description = "DEVOPS health (root alias → //devops:health in bonneagar/) — 
 alias = ["iac:health", "iac-health"]
 run = "cd ${MISE_PROJECT_ROOT:-.}/bonneagar && bun run iac:health"
 
+# Per the 2026-08-23-infra-stack-doctor-and-gold-standard-modernization-v1 change:
+# 2 new tasks wrapping the stack-doctor audit + drift report.
+[tasks."devops:stack:gold-standard-audit"]
+description = "DEVOPS stack gold-standard-audit — fail CI if any stack is missing any of the 6 GOLD_STANDARD files (compose.yaml + sidecar.yaml + secrets.env + pangolin.yaml + blueprint.yaml + .env.example). Per the 2026-08-23-infra-stack-doctor-and-gold-standard-modernization-v1 change."
+alias = ["stack:gold-standard-audit", "iac:stack-gold-standard"]
+run = "bash scripts/stack-doctor.sh --strict 2>&1 | tail -50"
+
+[tasks."devops:stack:drift-report"]
+description = "DEVOPS stack drift-report — emit a per-stack drift summary (informational, never fails). Per the 2026-08-23-infra-stack-doctor-and-gold-standard-modernization-v1 change."
+alias = ["stack:drift-report", "iac:stack-drift"]
+run = "bash scripts/stack-doctor.sh 2>&1 | tail -100"
+
 [tasks."devops:plan"]
 description = "DEVOPS plan (root alias → //devops:plan in bonneagar/) — IaC diff (no mutation)"
 alias = ["iac:plan", "iac-plan"]
@@ -283,6 +295,18 @@ run = "cd ${MISE_PROJECT_ROOT:-.}/bonneagar && bun run iac:deploy"
 [tasks."devops:teardown"]
 description = "DEVOPS teardown (root alias → //devops:teardown) — reverse of bootstrap (requires --force)"
 run = "cd ${MISE_PROJECT_ROOT:-.}/bonneagar && bun run iac:teardown"
+
+# Per the 2026-08-23-infra-pangolin-and-infisical-latest-v1 change: 2 new
+# upgrade-check tasks for the Pangolin + Infisical infrastructure tools.
+[tasks."devops:pangolin:upgrade"]
+description = "DEVOPS pangolin upgrade — check the latest Pangolin version + print the changelog URL. Per the 2026-08-23-infra-pangolin-and-infisical-latest-v1 change."
+alias = ["pangolin:upgrade"]
+run = "bash -c 'echo \"=== Pangolin Latest Version ===\"; LATEST=$(curl -sS https://api.github.com/repos/fossorial-oath/Pangolin/releases/latest | grep tag_name | head -1 | cut -d\\\" -f4); echo \"Latest Pangolin: $LATEST\"; echo \"Local pangolin: $(pangolin --version 2>/dev/null || echo unknown)\"; echo \"Changelog: https://github.com/fossorial-oath/Pangolin/releases\"'"
+
+[tasks."devops:infisical:upgrade"]
+description = "DEVOPS infisical upgrade — check the latest Infisical version + print the changelog URL. Per the 2026-08-23-infra-pangolin-and-infisical-latest-v1 change."
+alias = ["infisical:upgrade"]
+run = "bash -c 'echo \"=== Infisical Latest Version ===\"; LATEST=$(curl -sS https://api.github.com/repos/Infisical/cli/releases/latest | grep tag_name | head -1 | cut -d\\\" -f4); echo \"Latest Infisical: $LATEST\"; echo \"Local infisical: $(infisical --version 2>/dev/null || echo unknown)\"; echo \"Changelog: https://github.com/Infisical/cli/releases\"'"
 
 # Root-level aliases for the ml:agents tasks moved to agents/mise.toml
 [tasks."ml:agents:smoke"]
@@ -923,6 +947,18 @@ run = "bun run scripts/init-vault.ts"
 description = "Inject secrets via Locket sidecar and run a command"
 alias = ["locket:exec"]
 run = "locket exec -- ${@}"
+
+# Per the 2026-08-23-infra-locket-shim-v0-3-and-sidecar-pattern-v1 change:
+# 2 new tasks wrapping Locket v0.3+ features (rotation + audit).
+[tasks."devops:locket:rotate"]
+description = "DEVOPS locket rotate — trigger a secret rotation via the Locket sidecar /rotate endpoint (Locket v0.3+ feature). Per the 2026-08-23-infra-locket-shim-v0-3-and-sidecar-pattern-v1 change."
+alias = ["locket:rotate"]
+run = "bash -c 'echo \"=== Locket Secret Rotation ===\"; curl -sS -X POST -H \"Authorization: Bearer ${LOCKET_TOKEN}\" http://locket:7777/rotate 2>/dev/null | head -20 || echo \"Locket sidecar not reachable — run on the host that has the sidecar\"'"
+
+[tasks."devops:locket:audit"]
+description = "DEVOPS locket audit — query the locket_audit.scrapes DuckLake table and emit the last 100 secret fetches per service. Per the 2026-08-23-infra-locket-shim-v0-3-and-sidecar-pattern-v1 change."
+alias = ["locket:audit"]
+run = "bash -c 'echo \"=== Locket Audit (last 100 fetches per service) ===\"; uv run python -c \"from duckdb import connect; conn = connect(\\\"md:cianfhoghlaim\\\"); print(conn.execute(\\\"SELECT service, COUNT(*) AS fetches, MAX(fetched_at) AS last_fetch FROM cianfhoghlaim.locket_audit.scrapes WHERE fetched_at > now() - INTERVAL \\x27 7 days\\x27 GROUP BY service ORDER BY fetches DESC LIMIT 20\\\").fetchdf().to_string())\" 2>/dev/null || echo \"(locket_audit.scrapes table not yet provisioned — schema is per the v0.3 migration)\"'"
 
 [tasks."devops:stack"]
 description = "Per-stack lifecycle (up | down | logs) — usage: mise run devops:stack <name> <action>"
