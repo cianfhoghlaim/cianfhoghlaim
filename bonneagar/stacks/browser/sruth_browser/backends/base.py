@@ -1,6 +1,7 @@
 """Abstract base class for browser backends."""
 
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import Any
 
 from ..browser_types import (
@@ -19,8 +20,25 @@ class BrowserBackend(ABC):
     backend_type: BackendType
 
     @abstractmethod
-    async def initialize(self) -> None:
-        """Initialize the backend connection."""
+    async def initialize(
+        self,
+        *,
+        user_data_dir: Path | None = None,
+        storage_state_path: Path | None = None,
+    ) -> None:
+        """Initialize the backend connection.
+
+        New in cianfhoghlaim-uog-exam-papers: optional SSO kwargs.
+        Backends ignore them when both are None (anonymous mode).
+        When `user_data_dir` is set the backend opens a Playwright
+        persistent context that survives across runs; when
+        `storage_state_path` is set it pre-loads cookies + localStorage
+        from the JSON file at that path.
+
+        See: openspec/changes/2026-08-23-uog-exam-papers-sso-v1/
+             specs/cianfhoghlaim-uog-exam-papers/spec.md
+             (Requirement: Browser backend SSO support)
+        """
         pass
 
     @abstractmethod
