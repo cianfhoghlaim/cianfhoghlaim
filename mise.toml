@@ -717,6 +717,19 @@ run = "bash scripts/sync/stacks.sh"
 description = "Layer 11: DLT source sync orchestrator (drift + ccc + cognee + test + lint)"
 run = "bash scripts/sync/dlt.sh"
 
+# Per the 2026-08-23-data-cocoindex-v1-0-14-features-v1 change: 2 new tasks
+# wrapping the CocoIndex v1.0.14+ App/flow surface.
+[tasks."data:cocoindex:apps:list"]
+description = "DATA cocoindex apps-list — enumerate all BIEP v1 Apps (6 LC subjects + government_circulars). Per the 2026-08-23-data-cocoindex-v1-0-14-features-v1 change."
+alias = ["cocoindex:apps:list", "cocoindex:list"]
+run = "bash -c 'ls cocoindex_flows/biep_parity/ 2>/dev/null && echo \"---\" && ls cocoindex_flows/ 2>/dev/null | head -20'"
+
+[tasks."data:cocoindex:flows:status"]
+description = "DATA cocoindex flows-status — check the freshness + last-run timestamp of a named v1 App. Usage: mise run data:cocoindex:flows:status -- <app_name>. Per the 2026-08-23-data-cocoindex-v1-0-14-features-v1 change."
+usage = 'app_name "<name>" help="The BIEP v1 App name (e.g. ireland_lc_mathematics)"'
+alias = ["cocoindex:flows:status"]
+run = "bash -c 'APP=${1:-ireland_lc_mathematics}; echo \"=== CocoIndex Flow Status: $APP ===\"; echo \"Last refresh: $(stat -f %Sm cocoindex_flows/biep_parity/${APP}* 2>/dev/null | head -1)\"; echo \"File count: $(ls cocoindex_flows/biep_parity/${APP}* 2>/dev/null | wc -l)\"'"
+
 [tasks."sync:agents"]
 description = "Layer 12: agent definitions sync orchestrator (drift + ccc + cognee + test + lint)"
 run = "bash scripts/sync/agents.sh"
@@ -1038,6 +1051,25 @@ alias = ["schema:generate", "baml:generate"]
 depends = ["ts:install"]
 run = "bun run schema:generate"
 
+# Per the 2026-08-23-data-dlt-1-30-features-v1 change: 3 new tasks
+# wrapping the DLT 1.30+ `refresh` + `dlt[hub]` features.
+[tasks."data:dlt:refresh"]
+description = "DATA dlt refresh — trigger an incremental refresh of a named pipeline (supplants `replace`; DLT 1.30+). Usage: mise run data:dlt:refresh -- <pipeline_name>. Per the 2026-08-23-data-dlt-1-30-features-v1 change."
+usage = 'pipeline "<name>" help="The DLT pipeline to refresh"'
+alias = ["dlt:refresh"]
+run = "uv run python -m dlt_sources.cli refresh ${1:-ireland_jurisdiction_pipeline}"
+
+[tasks."data:dlt:hub:install"]
+description = "DATA dlt hub install — add the dlthub plugin (DLT 1.30+; for deployment workflows). Per the 2026-08-23-data-dlt-1-30-features-v1 change."
+alias = ["dlt:hub:install"]
+run = "uv add dlt[hub] 2>&1 | tail -5"
+
+[tasks."data:dlt:hub:deploy"]
+description = "DATA dlt hub deploy — scaffold a deployment manifest for a named pipeline (DLT 1.30+; supports github_actions / airflow / kubernetes). Usage: mise run data:dlt:hub:deploy -- <pipeline> <destination>. Per the 2026-08-23-data-dlt-1-30-features-v1 change."
+usage = 'args "<pipeline> <destination>" help="The pipeline + destination (github_actions/airflow/kubernetes)"'
+alias = ["dlt:hub:deploy"]
+run = "uv run dlt deploy ${1:-ireland_jurisdiction_pipeline} ${2:-github_actions} 2>&1 | tail -20"
+
 [tasks."data:schema:validate"]
 description = "CI drift gate for the generated Zod schemas (regenerate in-memory + byte-diff against committed bi-ep.gen.ts)"
 alias = ["schema:validate", "baml:test"]
@@ -1200,6 +1232,20 @@ alias = ["cic:meaisin:litellm-regenerate", "litellm:regenerate"]
 depends = ["sync"]
 run = "PYTHONPATH=. python scripts/generate_litellm_config.py > bonneagar/stacks/litellm/config/config.yaml"
 
+# Per the 2026-08-23-integration-litellm-1-97-features-v1 change: 2 new
+# tasks wrapping LiteLLM v1.97+ features (MCP Gateway GA + OAuth 2.0 v2).
+[tasks."data:litellm:mcp:gateway"]
+description = "DATA litellm mcp:gateway — boot the LiteLLM MCP Gateway daemon (v1.97+ GA). Per the 2026-08-23-integration-litellm-1-97-features-v1 change."
+alias = ["litellm:mcp:gateway", "litellm:mcp-gateway"]
+depends = ["sync"]
+run = "bash -c 'echo \"=== LiteLLM MCP Gateway ===\"; echo \"Configured MCP servers:\"; grep -E \"^mcp_servers:|^[[:space:]]+[a-z_-]+:\" bonneagar/stacks/litellm/config/config.yaml 2>/dev/null | head -20 || echo \"(none configured yet)\"; echo; echo \"To boot the gateway: docker compose -f bonneagar/stacks/litellm/compose.yaml up litellm\"'"
+
+[tasks."data:litellm:oauth:v2"]
+description = "DATA litellm oauth:v2 — enable OAuth 2.0 v2 (DCR) + show the dynamic client registration endpoint. Per the 2026-08-23-integration-litellm-1-97-features-v1 change."
+alias = ["litellm:oauth:v2", "litellm:oauth-v2"]
+depends = ["sync"]
+run = "bash -c 'echo \"=== LiteLLM OAuth 2.0 v2 (DCR) ===\"; echo \"Enable in config: litellm.settings.enable_oauth2_v2 = true\"; echo \"DCR endpoint: POST /oauth2/v2/register\"; echo \"Token endpoint: POST /oauth2/v2/token\"; echo \"Introspection: POST /oauth2/v2/introspect\"'"
+
 # NOTE: ml:agents:smoke, ml:agents:audit, ml:agents:reproduce have moved to
 # agents/mise.toml (subproject). The old names are no longer accessible from
 # the root mise.toml — use `cd agents && mise run ml:agents:audit` instead.
@@ -1225,6 +1271,18 @@ run = "echo 'web omnibus complete (5 web gates passed).'"
 description = "Install all TypeScript dependencies for the web workspaces (bun workspaces)"
 alias = ["ts:install"]
 run = "bun install"
+
+# Per the 2026-08-23-integration-copilotkit-v2-and-ag-ui-protocol-v1 change:
+# targeted install tasks for the 2 canonical agentic-frontend deps.
+[tasks."web:install:copilotkit"]
+description = "WEB install copilotkit — install the 2 canonical CopilotKit v2 deps (react-core + react-ui). Per the 2026-08-23-integration-copilotkit-v2-and-ag-ui-protocol-v1 change."
+alias = ["ts:install:copilotkit"]
+run = "bun add @copilotkit/react-core @copilotkit/react-ui"
+
+[tasks."web:install:ag-ui"]
+description = "WEB install ag-ui — install the AG-UI protocol types (per the 2026-08-23-integration-copilotkit-v2-and-ag-ui-protocol-v1 change)."
+alias = ["ts:install:ag-ui"]
+run = "bun add @ag-ui/core"
 
 [tasks."web:build"]
 description = "Build all web packages via Turborepo"

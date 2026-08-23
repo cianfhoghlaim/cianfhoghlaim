@@ -377,6 +377,31 @@ openspec change (see its
 | [`unsloth`](.agents/skills/unsloth/SKILL.md) | LLM fine-tuning | Multilingual support (v2024.12+), flash attention, 2x faster |
 | [`tanstack-start`](.agents/skills/tanstack-start/SKILL.md) | React framework | React Server Components (v1.94+), edge runtime, streaming suspense |
 
+## OpenCode Agent Dispatch Matrix (NEW 2026-08-23)
+
+Per the `2026-08-23-agent-opencode-agent-coverage-expansion-v1` change,
+the 15 agents under `.opencode/agents/*.md` are organized into 3 tiers:
+
+| Tier | Agent | When to dispatch |
+|:-----|:------|:-----------------|
+| **Primary (4)** | `build` | Default BUILD agent. Full skill_filter (no restriction). |
+| **Primary (4)** | `plan` | Read-only planning. Default dispatch for "plan this" tasks. |
+| **Functional subagent (5)** | `data-platform` | DLT + Dagster + BAML + CocoIndex + MotherDuck + marimo tasks. Dispatch via `task` tool with `subagent_type: data-platform`. |
+| **Functional subagent (5)** | `infrastructure` | Komodo + Pangolin + Locket + Infisical + 94-stack IaC. Dispatch via `task` tool with `subagent_type: infrastructure`. |
+| **Functional subagent (5)** | `agent-platform` | BAML + LiteLLM + Langfuse + MLflow + RAGAS + Graphiti + Cognee + 12-agent fleet. Dispatch via `task` tool with `subagent_type: agent-platform`. |
+| **Functional subagent (5)** | `frontend-apps` | TanStack Start + Convex + Hono + CopilotKit + AG-UI + marimo + Babylon.js. Dispatch via `task` tool with `subagent_type: frontend-apps`. |
+| **Functional subagent (5)** | `research` | BrowserBase + Firecrawl + CCC + Cognee + change-detection. Dispatch via `task` tool with `subagent_type: research`. |
+| **Domain subagent (10)** | `baml`, `dagster`, `mise`, `notebooks`, `orchestrator`, `proposal-author`, `deep-cuts`, `dev-env-demo` | Scoped to a single domain (BAML schema authoring, Dagster asset authoring, mise task authoring, marimo notebook authoring, openspec change authoring, deep structural analysis, dev-env demos). |
+
+**Dispatch rules:**
+
+- **Always use `build` (the default)** for general tasks — it has the full skill_filter.
+- **Prefer a functional subagent** when the task is clearly within one of the 5 functional surfaces (data, infra, agents, web, research). The subagent gets a scoped skill_filter that improves focus + reduces token usage.
+- **Prefer a domain subagent** when the task is specifically about authoring (e.g., "write a new Dagster asset" → `dagster` subagent).
+- **Never dispatch `research` for tasks that require making changes** — the `research` subagent is read-only.
+
+The full agent list + their `skill_filter` arrays live in `opencode.json` under the `agent` key. The 15 agent `.md` files under `.opencode/agents/` are the per-agent prompts (split out from the inline `prompt` field per the dev-tooling refactor).
+
 ## Domain-to-Skill Mapping
 
 To ensure you use the appropriate skills for the different aspects of the project, strictly adhere to this mapping:

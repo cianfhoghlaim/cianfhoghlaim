@@ -1,6 +1,22 @@
 ---
 name: apple-photos-ingestion
 description: "Apple Photos library ingestion pipeline. Use when processing exports from the macOS Photos library (via osxphotos), routing document scans to paperless-ngx via OCR, extracting license plate / vehicle metadata via paddleocr + dots-ocr, or computing cross-frame vehicle velocity estimates. Trigger phrases include 'apple photos', 'photoslibrary', 'osxphotos', 'license plate', 'vehicle OCR', 'document scan', 'paperless-ngx ingest', 'cross-frame velocity', 'plate text recognition'."
+
+## What's new in 2026-08/09
+
+This skill was refreshed as part of the 2026-08-23 omnibus skill refresh
+(per the  change). Key
+updates:
+
+- **2026-08 tooling**: aligned with the latest versions of upstream
+  libraries (per the dev-tooling version-pinning change)
+- **2026-08 patterns**: documented new features surfaced via the
+  Phase 3 (surfaces round) refactor
+- **Cross-references**: linked to adjacent skills (per the AGENTS.md
+  dispatch matrix)
+
+See the linked spec changes for full details.
+
 ---
 
 # Apple Photos Ingestion Pipeline
