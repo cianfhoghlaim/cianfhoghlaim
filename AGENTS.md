@@ -111,13 +111,13 @@ the task for the domain you're working on today:
 # Daily "I'm working on X" commands (omnibus tasks per domain)
 mise run core                     # dev env (sync + install + lint + test + format)
 mise run core:ci                  # the canonical CI gate (lint + test + openspec:validate-all + devops:validate-stacks)
-mise run devops                   # IaC + 94 stacks + Komodo/Pangolin/Locket/Infisical
+mise run devops                   # IaC + 99 stacks + Komodo/Pangolin/Locket/Infisical
 mise run data                     # lakehouse + BIEP + Dagster + baml_src + CocoIndex + motherduck + notebooks
 mise run ml                       # meaisinfhoghlaim (OCR/HTR/Alignment/Celtic) + 12-agent fleet + MODEL_REGISTRY
 mise run web                      # web/apps + web/packages + web/hono-api + Turborepo
 
 # Surgical subcommands (when you know exactly what you want)
-mise run lint:skills              # validate .agents/skills/ metadata (166 skills pass)
+mise run lint:skills              # validate .agents/skills/ metadata (65 skills pass)
 mise run lint:drift-docs          # validate every AGENTS.md number claim against ground truth
 mise run openspec:validate-all    # CI gate for every openspec change + spec (146 items pass)
 mise run devops:validate-stacks   # validate all 94 Docker Compose stacks against the 6-file GOLD_STANDARD
@@ -174,7 +174,7 @@ mise run openspec:validate         # run `openspec validate --strict` against th
 | `langfuse` | 3000 | `langfuse.cianfhoghlaim.ie` (LLM observability) |
 | `lakehouse` | 3900-3904, 5433, 8181-8182 | internal (Garage S3 + Postgres + Lakekeeper) |
 
-The full inventory of 94 stacks is at
+The full inventory of 99 stacks is at
 [`bonneagar/AGENTS.md`](bonneagar/AGENTS.md) (the IaC subdirectory
 owns the stack catalogue; see the `## Repo Boundary` section below).
 

@@ -1,7 +1,8 @@
 # drift-remediation Specification
 
 ## Purpose
-TBD - created by archiving change 2026-07-30-drift-remediation-everything-bagel-v1. Update Purpose after archive.
+The drift detection + auto-remediation surface covers the per-area drift monitoring (paths + CCC + Cognee + skills + MCP + Dagster + docs) across the Cianfhoghlaim monorepo. It defines 4 invariants: the 8-layer sync orchestrator (sync:all), the 5 feedback loops (paths → CCC → Cognee → skills → MCP), the per-layer drift reports, and the auto-remediation hooks for transient drift.
+
 ## Requirements
 ### Requirement: Dagster schedule expectations are restored on file truncation
 

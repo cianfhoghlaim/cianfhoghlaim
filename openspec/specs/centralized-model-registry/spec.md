@@ -1,7 +1,8 @@
 # centralized-model-registry Specification
 
 ## Purpose
-TBD - created by archiving change 2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1. Update Purpose after archive.
+The canonical model registry surface covers the 76 entries / 7 model families (ocr_vision / text_llm / embedder / rerank / image_gen / voice / translation) across the Cianfhoghlaim monorepo. It defines 5 invariants: the single MODEL_REGISTRY (meaisinfhoghlaim/models/model_registry.py), the notebook _shared/schema.py introspection helpers, the deployment-choice.yaml enablement file, the 00_control_panel marimo notebook UI, and the litellm-regenerate sync workflow.
+
 ## Requirements
 ### Requirement: Single canonical model registry covering all model families
 

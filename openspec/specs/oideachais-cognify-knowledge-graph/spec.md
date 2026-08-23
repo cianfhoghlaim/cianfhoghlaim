@@ -1,7 +1,8 @@
 # oideachais-cognify-knowledge-graph Specification
 
 ## Purpose
-TBD - created by archiving change 2026-07-14-oideachais-cognify-knowledge-graph-v1. Update Purpose after archive.
+The oideachais cognify knowledge-graph surface covers the 5-stage cross-stage cognify (extraction → cognify → embedding → cross-cite → LanceDB vector + Cognee cluster) across the Cianfhoghlaim monorepo. It defines 4 invariants: the 5-stage orchestrator (sync:cognify), the 3 leabharlann cognify templates (cognify_curriculum / cognify_papers / cognify_marking), the 3 cross-archive FalkorDB edges (CrossLinguistic / CrossSubject / CrossStage), and the per-stage LanceDB HNSW index.
+
 ## Requirements
 ### Requirement: Phase 1 complete — 9 requirements all functional end-to-end
 

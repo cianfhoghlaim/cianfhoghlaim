@@ -1,7 +1,8 @@
 # oideachais-university-deep-extraction Specification
 
 ## Purpose
-TBD - created by archiving change 2026-07-15-oideachais-university-deep-extraction-v1. Update Purpose after archive.
+The oideachais university deep-extraction surface covers the per-university website deep extraction (BAML + DLT + Dagster + CocoIndex v1 + marimo + Cognee cross-archive) — the reusable template for any British Isles university. It defines 12 invariants: the canonical university_pipeline pattern (UniversityPipelineBase), the per-university BAML extraction templates, the Dagster assets (documents_ingested + syllabus_extracted + cognified), the per-source src/ + dst/ convention, and the Cognee cross-archive edges.
+
 ## Requirements
 ### Requirement: Pre-v7 stub retired — see cianfhoghlaim-university-deep-extraction
 

@@ -1,7 +1,8 @@
 # meaisinfoghlaim-ocr-htr Specification
 
 ## Purpose
-TBD - created by archiving change 2026-08-10-ocr-vision-activation-v1. Update Purpose after archive.
+The meaisínfhoghlaim OCR & HTR capability covers the 24-entry OCR/HTR/VLM model registry + the 6 CLASSICAL_OCR backends + the BIEP v2 4-path EnsembledExtractor across the Cianfhoghlaim monorepo. It defines 4 invariants: the MODEL_REGISTRY.ocr_vision namespace with all 24 entries (Pylaia / TrOCR / PaddleOCR / Tesseract / dots.ocr / VLMs), the per-subject BAML ensemble fallback chain pattern that selects the lowest-cost model that meets the accuracy threshold, the EnsembledExtractor 4-path strategy (docling + Pylaia + VLM + consensus), and the langfuse + mlflow observability layer for every OCR invocation.
+
 ## Requirements
 ### Requirement: `_run_path_baml()` SHALL call the real BAML function
 

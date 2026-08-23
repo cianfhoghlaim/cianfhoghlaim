@@ -1,7 +1,8 @@
 # baml-quality-bulk-sweep Specification
 
 ## Purpose
-TBD - created by archiving change 2026-12-XX-mega-3d-baml-quality-v1. Update Purpose after archive.
+The BAML quality bulk-sweep surface codifies the 3-day BAML quality pass across the Cianfhoghlaim monorepo. It defines 4 invariants: every BAML function gets a test block (the 11 test types), every extracted type gets a fixture + an integration test, every BAML client gets a fallback chain (the 7-stage chain), and the Mega-3D test suite runs green (per the 2026-08-15 dev-tooling refactor).
+
 ## Requirements
 ### Requirement: BAML Domain Templates
 

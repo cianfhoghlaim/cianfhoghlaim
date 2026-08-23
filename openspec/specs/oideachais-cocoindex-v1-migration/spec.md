@@ -1,7 +1,8 @@
 # oideachais-cocoindex-v1-migration Specification
 
 ## Purpose
-TBD - created by archiving change 2026-07-13-cocoindex-v1-non-priority-flows-v1. Update Purpose after archive.
+The oideachais CocoIndex v1 migration surface covers the 7 v1 CocoIndex Apps (6 LC subjects + government_circulars) across the Cianfhoghlaim monorepo. It defines 1 invariant: the canonical migration pattern from v0.x (the LocalFS-only lineage) to v1.0.14+ (the 17-connector surface with the 4-rule conformance contract).
+
 ## Requirements
 ### Requirement: Pre-v7 stub retired — see cianfhoghlaim-cocoindex-v1-migration
 

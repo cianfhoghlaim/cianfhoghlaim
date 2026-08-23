@@ -1,7 +1,8 @@
 # pangolin-integration-api Specification
 
 ## Purpose
-TBD - created by archiving change 2026-08-17-hygiene-drift-cleanup-v1. Update Purpose after archive.
+The Pangolin integration API surface covers the reverse-proxy tunnel API for exposing local services through Pangolin across the Cianfhoghlaim monorepo. It defines 1 invariant: the canonical tunnel-config contract (TunnelConfig + ResourcePolicy + NewtWireGuard) that the Pangolin CLI consumes to provision a tunnel.
+
 ## Requirements
 ### Requirement: Pangolin OIDC + Auto Provision Users + PKCE S256
 

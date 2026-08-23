@@ -75,7 +75,7 @@ The mise.toml task catalogue is now organized by **6 domain namespaces**
 For openspec work specifically:
 
 ```bash
-mise run openspec:validate-all     # the canonical CI gate — validate every change + every spec in strict mode (132 items)
+mise run openspec:validate-all     # the canonical CI gate — validate every change + every spec in strict mode (163 items)
 mise run openspec:validate <id>   # validate one change with --strict (MUST pass before commit)
 mise run openspec:archive <id>    # archive a deployed change (merges deltas into canonical specs)
 mise run openspec:view            # interactive dashboard of all specs + changes (1.4+)

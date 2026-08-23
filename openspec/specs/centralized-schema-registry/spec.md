@@ -1,7 +1,8 @@
 # centralized-schema-registry Specification
 
 ## Purpose
-TBD - created by archiving change 2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1. Update Purpose after archive.
+The centralized schema registry surface codifies BAML as the source of truth for schemas across the Cianfhoghlaim monorepo. It defines 5 invariants: the BAML .baml files (baml_src/) are the canonical schema source, the codegen emits Pydantic (Python) + Zod (TypeScript), the 96 hand-written Pydantic duplicates are removed, the schema-codegen skill drives the codegen workflow, and the deployment-control-panel ties it all together.
+
 ## Requirements
 ### Requirement: BAML is the single source of truth for all structured data shapes
 

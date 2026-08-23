@@ -1,7 +1,8 @@
 # oideachais-pipeline Specification
 
 ## Purpose
-TBD - created by archiving change 2026-07-10-wire-english-lc5-and-resolve-ie-duplicates-v1. Update Purpose after archive.
+The oideachais pipeline surface covers the Celtic education curriculum pipeline (Dagster + DLT + DuckLake + LanceDB + BAML) across the Cianfhoghlaim monorepo. It defines 16 invariants: the 5-layer KCG component chain (Ingestion → Materials → Model Lifecycle → Asset Generation → Agent Operations), the 6 LC priority subjects, the gov.ie circulars, the 42 Dagster assets, the 6 marimo notebooks, the 4 MotherDuck Dives, and the daily Dagster Flight.
+
 ## Requirements
 ### Requirement: No legacy 972-LOC ie-namespace duplicate pairs remain in `dlt/british_isles/ireland/education/`
 

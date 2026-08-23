@@ -1,7 +1,8 @@
 # docs-informed-content-generation Specification
 
 ## Purpose
-TBD - created by archiving change 2026-08-08-docs-informed-quest-and-credential-generation-v1. Update Purpose after archive.
+The docs-informed content generation surface covers the docs → content pipeline (notebooks → blog posts → social cards → tutorials) across the Cianfhoghlaim monorepo. It defines 2 invariants: the canonical source-of-truth flow (notebooks/_shared/ → openspec/changes/ → docs/), and the GitHub Action that regenerates the content on every spec change.
+
 ## Requirements
 ### Requirement: Canonical extraction-to-generation wiring pattern
 

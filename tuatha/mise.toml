@@ -1,0 +1,75 @@
+# The mise task namespace for the new `tuatha/` sub-project.
+#
+# Per the 2026-08-19-domain-driven-mise-task-catalog-v1 convention,
+# the new project adopts the `data:media-intel:*` namespace
+# (carries over from the parent's
+# 2026-08-23-tuatha-media-intel-gameplay-capture-research-v1
+# change) + the new `tuatha:*` namespace (per the 2026-08-25
+# consolidation change).
+#
+# 9 + 4 = 13 tasks total.
+
+[tasks."tuatha:install"]
+description = "Install the new tuatha/ project dependencies (uv-managed workspace). Per the new pyproject.toml: baml-py, google-adk, cognee, graphiti-core, lancedb, letta, litellm, dlt, dagster, cocoindex, langfuse, mlflow, ragas, hono, pyconvex, copilotkit, pydantic, python-dotenv, structlog, websockets, httpx + dev extras."
+depends = ["sync"]
+run = "uv sync"
+
+[tasks."tuatha:test"]
+description = "Run the test suite (pytest). Tests live at tuatha/tests/. The existing test_subject_router_smoke.py has 20 smoke tests for the 8 NCCA subject agents + the 3 educational agents. The new test_consolidation.py verifies the 6 quality gates."
+depends = ["tuatha:install"]
+run = "uv run pytest"
+
+[tasks."tuatha:lint"]
+description = "Run ruff + mypy on the new tuatha/ project. Per the pyproject.toml ruff config (line-length 100 + the canonical rule selection)."
+depends = ["tuatha:install"]
+run = "uv run ruff check tuatha/ tests/"
+
+[tasks."tuatha:typecheck"]
+description = "Run mypy on the new tuatha/ project. Per the pyproject.toml mypy config (Python 3.11 + strict mode + warn_unused_ignores + warn_redundant_casts)."
+depends = ["tuatha:install"]
+run = "uv run mypy tuatha/"
+
+[tasks."tuatha:openspec-validate"]
+description = "Run openspec validate --strict on the consolidation change (2026-08-25-tuatha-british-isles-mmo-consolidation-v1). The canonical change that documents the consolidation."
+depends = ["sync"]
+run = "openspec validate 2026-08-25-tuatha-british-isles-mmo-consolidation-v1 --strict"
+
+[tasks."tuatha:media-intel:comics-hickman"]
+description = "Class A — Ingest the Jonathan Hickman Marvel run (FF 570-611, FF 1-23, Future Foundation, Avengers 2012, New Avengers 2013, Infinity, Secret Wars 2015, House of X, Powers of X, X-Men 2019, Krakoa crossovers) via the marvel_hickman_panel_descriptors DLT resource. Plan A keyless Firecrawl (Wikipedia + Marvel wiki transcripts). Routes through ExtractComicDescriptor BAML (qwen3-vl-8b default via MODEL_REGISTRY)."
+depends = ["tuatha:install"]
+run = "USE_LOCAL_SCRAPES=true uv run python -c 'from dlt_sources.media.comics.hickman_marvel.scrape import marvel_hickman_panel_descriptors; rows = list(marvel_hickman_panel_descriptors()); print(f\"marvel_hickman_panel_descriptors: {len(rows)} rows\")'"
+
+[tasks."tuatha:media-intel:prose-wot"]
+description = "Class B — Ingest The Wheel of Time passages (the 0-pixel control group) via the wheel_of_time_passage_descriptors DLT resource. Plan A keyless Firecrawl (Wikisource + Wikipedia summary). Routes through ExtractProseDescriptor BAML (qwen3.6-27b-mtp default via MODEL_REGISTRY). vfx_vocabulary.particle_class defaults to 'ink' for prose-as-medium."
+depends = ["tuatha:install"]
+run = "USE_LOCAL_SCRAPES=true uv run python -c 'from dlt_sources.media.prose.wheel_of_time.scrape import wheel_of_time_passage_descriptors; rows = list(wheel_of_time_passage_descriptors()); print(f\"wheel_of_time_passage_descriptors: {len(rows)} rows\")'"
+
+[tasks."tuatha:media-intel:animation-atla"]
+description = "Class C — Ingest Avatar: The Last Airbender + The Legend of Korra + the Aang-film continuity frames via the avatar_frame_descriptors DLT resource. Plan A keyless Firecrawl (Wikipedia + Avatar wiki concept-art thumbs). Routes through ExtractAnimationDescriptor BAML (molmo2-8b default via MODEL_REGISTRY). The 4+1 element vocabulary (air / water / fire / earth / spirit) is captured via the power_event.element field."
+depends = ["tuatha:install"]
+run = "USE_LOCAL_SCRAPES=true uv run python -c 'from dlt_sources.media.animation.atla_korra_aang_film.scrape import avatar_frame_descriptors; rows = list(avatar_frame_descriptors()); print(f\"avatar_frame_descriptors: {len(rows)} rows\")'"
+
+[tasks."tuatha:media-intel:games-capture"]
+description = "Class D — Local-capture only (no Firecrawl). Ingests the deterministic libretro headless capture for Golden Sun + the sunshine stream capture for Hades 1/2 + WoW + the libretro gambatte capture for Pokémon. Stored in stedding/ingest_queue/retro/ per the retro-game-design-catalogue spec. Routes through ExtractGameplayDescriptor BAML (qwen3-vl-8b default via MODEL_REGISTRY). The descriptor is description-only — no copyrighted game screenshots in the shippable asset output."
+depends = ["tuatha:install"]
+run = "uv run python -c 'from dlt_sources.media.games.hades_wow_golden_sun_pokemon.capture import gameplay_capture_descriptors; rows = list(gameplay_capture_descriptors()); print(f\"gameplay_capture_descriptors: {len(rows)} rows\")'"
+
+[tasks."tuatha:media-intel:official-pdfs"]
+description = "Class E — Ingest the 2 NCCA research PDFs (leaving_certificate/the-potential-of-online-learning-environments_en.pdf + leaving_certificate/key-competencies-in-senior-cycle_en.pdf) + the 12 NCCA LC syllabus PDFs (en + ga parity) + the 36 official records (UK + Éire + Crown Dependencies government + 5 departments sub-buckets) via the ncca_sec_dfe_sqa_wjec_desc_source DLT resource. Plan A keyless Firecrawl (firecrawl_scrape + firecrawl_parse). Routes through ExtractOfficialDocumentDescriptor BAML (olmocr-2-7b default via MODEL_REGISTRY). The 2 user-named NCCA research PDFs at the root of leaving_certificate/ are the canonical sources for what NCCA says about certificates and online learning."
+depends = ["tuatha:install"]
+run = "USE_LOCAL_SCRAPES=true uv run python -c 'from dlt_sources.media.official.ncca_sec_celt_duchas_wikipedia.scrape import ncca_sec_dfe_sqa_wjec_desc_source; src = ncca_sec_dfe_sqa_wjec_desc_source(); rows = [r for s in src for r in s]; print(f\"ncca_sec_dfe_sqa_wjec_desc: {len(rows)} rows\")'"
+
+[tasks."tuatha:dlt:uk-government"]
+description = "Class E — UK government sub-bucket. Ingest the 18 UK police + defence + army + Acts + Treaties records via the uk_government_source DLT resource (Met Police + BTP + PSNI; MoD + British Army + Royal Navy + RAF; Home Office + FCDO + MoJ + DoH; Acts of Union 1707/1800 + Anglo-Irish Treaty 1921 + Good Friday Agreement 1998 + Windsor Framework 2023 + UK Internal Market Act 2020 + UK Withdrawal Act 2020). Plan A keyless Firecrawl. OGL-3.0."
+depends = ["tuatha:install"]
+run = "USE_LOCAL_SCRAPES=true uv run python -c 'from dlt_sources.media.official.government.uk.scrape import uk_government_source; src = uk_government_source(); rows = [r for s in src for r in s]; print(f\"uk_government: {len(rows)} rows\")'"
+
+[tasks."tuatha:dlt:ie-government"]
+description = "Class E — Éire government sub-bucket. Ingest the 15 Garda + Defence + Oireachtas + Acts + Treaties records via the ie_government_source DLT resource (Garda + Irish Defence Forces + Naval + Air Corps; DoD + DoJ + DFA + Oireachtas + President; Government of Ireland Act 1920 + Statute of Westminster 1931 + Treaty of Limerick 1691 + Bunreacht na hÉireann 1937 + Anglo-Irish Treaty 1921 + Good Friday Agreement 1998). Plan A keyless Firecrawl. PSI for departmental pages; OGL-3.0 for the Acts."
+depends = ["tuatha:install"]
+run = "USE_LOCAL_SCRAPES=true uv run python -c 'from dlt_sources.media.official.government.ie.scrape import ie_government_source; src = ie_government_source(); rows = [r for s in src for r in s]; print(f\"ie_government: {len(rows)} rows\")'"
+
+[tasks."tuatha:dlt:crown-deps"]
+description = "Class E — Crown Dependencies sub-bucket. Ingest the 8 IoM + Jersey + Guernsey records via the crown_dependencies_government_source DLT resource (IoM Government + IoM Constabulary + Tynwald + IoM Courts; States of Jersey + States of Jersey Police; States of Guernsey + Guernsey Police). Plan A keyless Firecrawl. OGL-3.0."
+depends = ["tuatha:install"]
+run = "USE_LOCAL_SCRAPES=true uv run python -c 'from dlt_sources.media.official.government.crown_dependencies.scrape import crown_dependencies_government_source; src = crown_dependencies_government_source(); rows = [r for s in src for r in s]; print(f\"crown_dependencies_government: {len(rows)} rows\")'"
