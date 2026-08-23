@@ -1,0 +1,39 @@
+source:
+  id: uk_departments
+  medium: official
+  work: "United Kingdom government departments (the non-police/non-defence departmental surface — NHS + DWP + transport + education + environment + work-and-pensions)"
+  jurisdiction: uk_departments
+  firecrawl_plan: plan_a_keyless
+  vlm_primary: olmocr-2-7b
+  vlm_secondary: qwen3-vl-8b
+  baml_functions:
+    - ExtractOfficialDocumentDescriptor
+  lance_table: media_descriptors
+  ducklake_schema: cianfhoghlaim.media.official.uk_departments
+  licence_summary: OGL-3.0
+  shippable_default: false
+  legal_notes: "UK non-police / non-defence / non-Home-Office / non-FCDO / non-MoJ / non-DoH departments. OGL v3.0. The police / defence / army / MoD / Home Office / FCDO / MoJ / DoH surface lives at `dlt_sources/media/official/government/uk/` per the 2026-08-23 refactor."
+  acquisition_path:
+    - firecrawl_scrape_html
+    - firecrawl_parse_pdfs
+  sources:
+    - body: nhs_england
+      title: NHS England
+      url: "https://www.england.nhs.uk/"
+      rights_holder: "NHS England"
+    - body: dwp
+      title: Department for Work and Pensions
+      url: "https://www.gov.uk/government/organisations/department-for-work-and-pensions"
+      rights_holder: "Department for Work and Pensions"
+    - body: transport_uk
+      title: Department for Transport
+      url: "https://www.gov.uk/government/organisations/department-for-transport"
+      rights_holder: "Department for Transport"
+    - body: education_uk
+      title: Department for Education (UK)
+      url: "https://www.gov.uk/government/organisations/department-for-education"
+      rights_holder: "Department for Education"
+    - body: environment_uk
+      title: Department for Environment, Food and Rural Affairs
+      url: "https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs"
+      rights_holder: "DEFRA"

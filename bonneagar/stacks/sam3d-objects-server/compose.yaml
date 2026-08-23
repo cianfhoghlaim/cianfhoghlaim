@@ -1,0 +1,29 @@
+name: sam3d-objects-server
+description: |
+  Facebook SAM-3D-Objects sprite-to-3D (Apache 2.0). The
+  sprite-to-3D surface for the Djinn sprites (Golden Sun)
+  + the boon-orb icons (Hades) + the type-chart icons
+  (Pokémon). Stored as .glb files in the lakehouse S3 backend.
+  Part of the reference-corpus spine for the
+  2026-08-23-tuatha-media-intel-gameplay-capture-research-v1
+  change.
+version: "0.1.0"
+services:
+  sam3d-objects-server:
+    image: ghcr.io/facebookresearch/sam-3d-objects:latest
+    container_name: sam3d-objects-server
+    restart: unless-stopped
+    ports:
+      - "8284:8284"   # the SAM-3D-Objects REST API
+    environment:
+      - SAM3D_MODEL=sam-3d-objects-base
+    volumes:
+      - sam3d-data:/data
+    networks:
+      - sam3d-net
+volumes:
+  sam3d-data:
+    driver: local
+networks:
+  sam3d-net:
+    driver: bridge

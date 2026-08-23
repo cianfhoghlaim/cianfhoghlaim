@@ -201,6 +201,26 @@ AGENT_REGISTRY: dict[str, AgentFleetWiring] = {
         letta_agent_id="kcg-image-generation-agent",
         litellm_routing_key="image_generation",
     ),
+    # ---------------------------------------------------------------------
+    # Media-Intel Descriptor agent (per 2026-08-23-tuatha-media-
+    # intel-gameplay-capture-research-v1). The 5-tool ADK agent
+    # that orchestrates the 5 per-medium BAML extractor
+    # functions in baml_src/media/. The reference-corpus spine
+    # for the Hickman + WoT + ATLA + Hades+WoW+Golden Sun +
+    # NCCA+SEC+CELT+Dúchas+Wikipedia ingestion.
+    # ---------------------------------------------------------------------
+    "media_descriptor_agent": AgentFleetWiring(
+        agent_name="media_descriptor_agent",
+        module_slug="media_descriptor",
+        module_path="cianfhoghlaim.agents.meaisinfhoghlaim.media_intel.media_descriptor_agent",
+        framework=AgentFramework.ADK,
+        display_name="Media-Intel Descriptor Agent",
+        baml_prefix="MediaDesc",
+        langfuse_trace_name="agent.media_descriptor.extract",
+        cognee_dataset="oideachais_media_descriptors",
+        letta_agent_id="kcg-media-descriptor-agent",
+        litellm_routing_key="media_descriptor",
+    ),
 }
 
 
@@ -225,7 +245,7 @@ FRAMEWORK_AVAILABLE: dict[AgentFramework, bool] = {
 
 
 def list_agent_names() -> list[str]:
-    """Return the sorted list of the 13 main agent names."""
+    """Return the sorted list of the 14 main agent names."""
     return sorted(AGENT_REGISTRY.keys())
 
 

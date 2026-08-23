@@ -1,0 +1,28 @@
+name: comfyui
+description: |
+  ComfyUI node-graph image gen wired to unsloth-serve + HF
+  models from the same providers as the OCR_VISION-24 family.
+  Part of the reference-corpus spine for the
+  2026-08-23-tuatha-media-intel-gameplay-capture-research-v1
+  change.
+version: "0.1.0"
+services:
+  comfyui:
+    image: yanwk/comfyui-boot:latest
+    container_name: comfyui
+    restart: unless-stopped
+    ports:
+      - "8188:8188"   # ComfyUI API; distinct from the lakehouse :8181
+    environment:
+      - COMFYUI_PORT=8188
+    volumes:
+      - comfyui-data:/home/comfyui
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - comfyui-net
+volumes:
+  comfyui-data:
+    driver: local
+networks:
+  comfyui-net:
+    driver: bridge

@@ -1,0 +1,15 @@
+name: libretro-retroarch
+description: |
+  The Pangolin private resource for the libretro-retroarch
+  stack. Exposes the libretro netcommand interface.
+version: "0.1.0"
+resources:
+  libretro.cianfhoghlaim.ie:
+    subdomain: libretro
+    target_service: libretro
+    target_port: 55355
+    auth_method: pocketid
+    header_filter: []
+    credentials:
+      - header: x-libretro-key
+        infisical_path: infisical://dev-baile/cianfhoghlaim/libretro-api-key

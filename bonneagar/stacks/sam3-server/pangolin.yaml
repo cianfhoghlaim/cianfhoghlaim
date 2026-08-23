@@ -1,0 +1,15 @@
+name: sam3-server
+description: |
+  The Pangolin private resource for the sam3-server stack.
+  Exposes the SAM3 REST API to the Pangolin tunnel.
+version: "0.1.0"
+resources:
+  sam3.cianfhoghlaim.ie:
+    subdomain: sam3
+    target_service: sam3-server
+    target_port: 8283
+    auth_method: pocketid
+    header_filter: []
+    credentials:
+      - header: x-sam3-key
+        infisical_path: infisical://dev-baile/cianfhoghlaim/sam3-api-key

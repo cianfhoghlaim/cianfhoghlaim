@@ -1,0 +1,25 @@
+source:
+  id: marvel_hickman_comics
+  medium: comic
+  work: "Jonathan Hickman Marvel run (FF 570-611, FF 1-23, Future Foundation, Avengers 2012, New Avengers 2013, Infinity, Secret Wars 2015, House of X, Powers of X, X-Men 2019, Krakoa crossovers)"
+  firecrawl_plan: plan_a_keyless
+  vlm_primary: qwen3-vl-8b
+  vlm_secondary: gemma-4-12b
+  baml_functions:
+    - ExtractComicDescriptor
+  lance_table: media_descriptors
+  ducklake_schema: cianfhoghlaim.media
+  licence_summary: fair-use-description
+  shippable_default: false
+  legal_notes: "Panel images are analysed but never committed. Only the textual descriptor (per the 7-axis MediaDescriptor schema) is stored. Per the media-intel-corpus spec, every descriptor ships with `shippable: false` enforced; the provenance.rights_holder references Marvel Comics."
+  acquisition_path:
+    - wikipedia_summary_pull
+    - marvel_wiki_transcript_pull
+    - wikimedia_commons_panel_image_pull  # only Wikipedia-Commons-licensed panels
+  input_sources:
+    - "https://en.wikipedia.org/wiki/Fantastic_Four_(comics)"
+    - "https://en.wikipedia.org/wiki/House_of_X"
+    - "https://en.wikipedia.org/wiki/Powers_of_X"
+    - "https://en.wikipedia.org/wiki/Secret_Wars_(2015_miniseries)"
+    - "https://marvel.fandom.com/wiki/Fantastic_Four_Vol_1_570-611"
+    - "https://marvel.fandom.com/wiki/House_of_X"

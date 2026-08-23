@@ -300,6 +300,41 @@ description = "ML agents reproduce (root alias → //ml:agents:reproduce) — 12
 alias = ["agents:reproduce"]
 run = "cd ${MISE_PROJECT_ROOT:-.}/agents && mise run ml:agents:reproduce"
 
+# Per the 2026-08-23-agent-meaisinfhoghlaim-upgrade-cycle-v1 change: 6 new
+# upgrade tasks for the 5 frameworks + an omnibus. Each runs `uv add
+# <pkg>@latest && uv sync && mise run ml:agents:smoke` from the agents
+# subproject to verify nothing broke.
+[tasks."ml:agents:upgrade:pydantic-ai"]
+description = "ML agents upgrade pydantic-ai — bump pydantic-ai to latest + uv sync + ml:agents:smoke (per the 2026-08-23-agent-meaisinfhoghlaim-upgrade-cycle-v1 change)"
+run = "cd ${MISE_PROJECT_ROOT:-.}/agents && uv add pydantic-ai@latest && uv sync && mise run ml:agents:smoke"
+
+[tasks."ml:agents:upgrade:google-adk"]
+description = "ML agents upgrade google-adk — bump google-adk to latest + uv sync + ml:agents:smoke (per the 2026-08-23-agent-meaisinfhoghlaim-upgrade-cycle-v1 change)"
+run = "cd ${MISE_PROJECT_ROOT:-.}/agents && uv add google-adk@latest && uv sync && mise run ml:agents:smoke"
+
+[tasks."ml:agents:upgrade:agno"]
+description = "ML agents upgrade agno — bump agno to latest + uv sync + ml:agents:smoke (per the 2026-08-23-agent-meaisinfhoghlaim-upgrade-cycle-v1 change)"
+run = "cd ${MISE_PROJECT_ROOT:-.}/agents && uv add agno@latest && uv sync && mise run ml:agents:smoke"
+
+[tasks."ml:agents:upgrade:pipecat"]
+description = "ML agents upgrade pipecat — bump pipecat-ai to latest + uv sync + ml:agents:smoke (per the 2026-08-23-agent-meaisinfhoghlaim-upgrade-cycle-v1 change)"
+run = "cd ${MISE_PROJECT_ROOT:-.}/agents && uv add pipecat-ai@latest && uv sync && mise run ml:agents:smoke"
+
+[tasks."ml:agents:upgrade:copilotkit"]
+description = "ML agents upgrade copilotkit — bump copilotkit to latest + uv sync + ml:agents:smoke (per the 2026-08-23-agent-meaisinfhoghlaim-upgrade-cycle-v1 change)"
+run = "cd ${MISE_PROJECT_ROOT:-.}/agents && uv add copilotkit@latest && uv sync && mise run ml:agents:smoke"
+
+[tasks."ml:agents:upgrade:all"]
+description = "ML agents upgrade all — bump all 5 frameworks sequentially (pydantic-ai + google-adk + agno + pipecat + copilotkit). USE WITH CAUTION — each framework may have breaking changes."
+depends = [
+  "ml:agents:upgrade:pydantic-ai",
+  "ml:agents:upgrade:google-adk",
+  "ml:agents:upgrade:agno",
+  "ml:agents:upgrade:pipecat",
+  "ml:agents:upgrade:copilotkit",
+]
+run = "echo 'ml:agents:upgrade:all complete — review per-framework diffs above'"
+
 [tasks."core:ccc:search:json"]
 description = "CORE ccc search:json — semantic search emitting JSON on stdout (ccc 0.2.38+) for tool integration. Usage: mise run core:ccc:search:json query"
 alias = ["ccc:search:json"]
@@ -455,6 +490,14 @@ run = "uv format --check"
 [tasks."lint:skills"]
 description = "Validate the .agents/skills/ metadata (frontmatter, name match, description length, line count)"
 run = "bash .agents/skills/lint-skills.sh"
+
+# Per the 2026-08-22-agent-skill-refresh-and-dedup-v1 change: fail CI if any
+# DEPRECATED skill (marked in frontmatter description) is > 50 lines.
+# DEPRECATED skills must be redirect-only stubs (≤ 10 lines).
+[tasks."lint-skill:deprecated-cleanup"]
+description = "Validate that DEPRECATED skill files are redirect-only stubs (≤ 50 lines; per the 2026-08-22-agent-skill-refresh-and-dedup-v1 change)"
+alias = ["lint:skill-deprecated", "lint:deprecated"]
+run = "bash -c 'FAIL=0; for f in $(grep -rl \"DEPRECATED\" .agents/skills/*/SKILL.md 2>/dev/null); do lines=$(wc -l < \"$f\" 2>/dev/null); if [ \"$lines\" -gt 50 ]; then echo \"FAIL: $f has $lines lines (max 50 for redirect-only stubs)\"; FAIL=1; fi; done; if [ \"$FAIL\" -eq 1 ]; then exit 1; else echo \"OK: all DEPRECATED skill files are ≤ 50 lines\"; exit 0; fi'"
 
 [tasks."lint:registry"]
 description = "Audit agents/, baml_src/, notebooks/, web/, orchestration/, spaces/, meaisinfhoghlaim/ for hardcoded model strings not routed through MODEL_REGISTRY"
@@ -968,6 +1011,27 @@ alias = ["dagster:dev", "dagster:oideachais", "cic:dagster:dev"]
 depends = ["sync"]
 run = "uv run dagster dev -m orchestration.definitions ${@:-}"
 
+# Per the 2026-08-23-data-dagster-1-13-features-v1 change: 3 new tasks
+# wrapping the Dagster 1.13+ `dg` CLI surface.
+[tasks."data:dagster:list-assets"]
+description = "DATA dagster list-assets — emit a JSON dump of all Dagster assets (key + group + kinds + description). Per the 2026-08-23-data-dagster-1-13-features-v1 change."
+alias = ["dagster:list-assets"]
+depends = ["sync"]
+run = "uv run dagster asset list --output json 2>/dev/null | head -200 || uv run python -c 'import json; from orchestration.definitions import defs; print(json.dumps([{\"key\": a.key.to_user_string(), \"group\": a.group_names, \"description\": a.description} for a in defs.get_asset_graph().assets_defs_by_key.values()][:200], indent=2))'"
+
+[tasks."data:dagster:materialize"]
+description = "DATA dagster materialize — materialize a named asset via the dg CLI (e.g., mise run data:dagster:materialize -- lc5_mathematics_ingested). Per the 2026-08-23-data-dagster-1-13-features-v1 change."
+usage = 'asset_key "<key>" help="The asset key to materialize (e.g. lc5_mathematics_ingested)"'
+alias = ["dagster:materialize"]
+depends = ["sync"]
+run = "uv run dagster asset materialize --asset-key ${1:-lc5_mathematics_ingested} 2>&1 | tail -30"
+
+[tasks."data:dagster:cli-info"]
+description = "DATA dagster cli-info — emit the 5 KCG component paths (YAML output). Per the 2026-08-23-data-dagster-1-13-features-v1 change."
+alias = ["dagster:cli-info"]
+depends = ["sync"]
+run = "bash -c 'cat <<EOF\nkcg-components:\n  L1_ingestion: orchestration/components/layer1_ingestion.py\n  L2_materials: orchestration/components/layer2_materials.py\n  L3_model_lifecycle: orchestration/components/layer3_model_lifecycle.py\n  L4_asset_generation: orchestration/components/layer4_asset_generation.py\n  L5_agent_ops: orchestration/components/layer5_agent_ops.py\nEOF'"
+
 [tasks."data:schema:generate"]
 description = "Regenerate the BIEP v1 lineage registry + Zod/TanStack DB collection schemas (committed artifacts)"
 alias = ["schema:generate", "baml:generate"]
@@ -1032,6 +1096,81 @@ alias = [
 ]
 depends = ["sync"]
 run = ".venv/bin/python3 -c 'import asyncio; from cocoindex_flows.infrastructure.cocoindex_v1_conformance import run_conformance_check; report = asyncio.run(run_conformance_check()); print(report.summary())'"
+
+
+# =============================================================================
+# DATA: MEDIA-INTEL NAMESPACE (5 tasks)
+# Per the 2026-08-23-tuatha-media-intel-gameplay-capture-research-v1
+# change. The 5-class source registry (comics / prose /
+# animation / games / official) + the 7-axis MediaDescriptor
+# pipeline. Plan A keyless Firecrawl default. Local-capture
+# only for Class D (Hades + WoW + Golden Sun + Pokémon).
+# =============================================================================
+
+[tasks."data:media-intel:comics-hickman"]
+description = "Class A — Ingest the Jonathan Hickman Marvel run (FF 570-611 → Krakoa crossovers) via the marvel_hickman_panel_descriptors DLT resource. Plan A keyless Firecrawl (Wikipedia + Marvel wiki transcripts). Routes through ExtractComicDescriptor BAML (qwen3-vl-8b default via MODEL_REGISTRY)."
+depends = ["sync"]
+run = "USE_LOCAL_SCRAPES=true .venv/bin/python3 -c 'from dlt_sources.media.comics.hickman_marvel.scrape import marvel_hickman_panel_descriptors; rows = list(marvel_hickman_panel_descriptors()); print(f\"marvel_hickman_panel_descriptors: {len(rows)} rows\")'"
+
+[tasks."data:media-intel:prose-wot"]
+description = "Class B — Ingest The Wheel of Time passages (the 0-pixel control group) via the wheel_of_time_passage_descriptors DLT resource. Plan A keyless Firecrawl (Wikisource + Wikipedia). Routes through ExtractProseDescriptor BAML (qwen3.6-27b-mtp default via MODEL_REGISTRY). vfx_vocabulary.particle_class defaults to 'ink' for prose-as-medium."
+depends = ["sync"]
+run = "USE_LOCAL_SCRAPES=true .venv/bin/python3 -c 'from dlt_sources.media.prose.wheel_of_time.scrape import wheel_of_time_passage_descriptors; rows = list(wheel_of_time_passage_descriptors()); print(f\"wheel_of_time_passage_descriptors: {len(rows)} rows\")'"
+
+[tasks."data:media-intel:animation-atla"]
+description = "Class C — Ingest Avatar: The Last Airbender + The Legend of Korra + the Aang-film continuity frames via the avatar_frame_descriptors DLT resource. Plan A keyless Firecrawl (Wikipedia + Avatar wiki concept-art thumbs). Routes through ExtractAnimationDescriptor BAML (molmo2-8b default via MODEL_REGISTRY). The 4+1 element vocabulary (air / water / fire / earth / spirit) is captured via the power_event.element field."
+depends = ["sync"]
+run = "USE_LOCAL_SCRAPES=true .venv/bin/python3 -c 'from dlt_sources.media.animation.atla_korra_aang_film.scrape import avatar_frame_descriptors; rows = list(avatar_frame_descriptors()); print(f\"avatar_frame_descriptors: {len(rows)} rows\")'"
+
+[tasks."data:media-intel:games-capture"]
+description = "Class D — Local-capture only (no Firecrawl). Ingests the deterministic libretro headless capture for Golden Sun + the sunshine stream capture for Hades 1/2 + WoW + the libretro gambatte capture for Pokémon. Stored in stedding/ingest_queue/retro/ per the retro-game-design-catalogue spec. Routes through ExtractGameplayDescriptor BAML (qwen3-vl-8b default via MODEL_REGISTRY). The descriptor is description-only — no copyrighted game screenshots in the shippable asset output."
+depends = ["sync"]
+run = ".venv/bin/python3 -c 'from dlt_sources.media.games.hades_wow_golden_sun_pokemon.capture import gameplay_capture_descriptors; rows = list(gameplay_capture_descriptors()); print(f\"gameplay_capture_descriptors: {len(rows)} rows\")'"
+
+[tasks."data:media-intel:educational-bodies"]
+description = "Class E (educational body sub-bucket) — Ingest the 2 NCCA research PDFs (leaving_certificate/the-potential-of-online-learning-environments_en.pdf + leaving_certificate/key-competencies-in-senior-cycle_en.pdf) + the 12 NCCA Leaving Certificate syllabus PDFs (en + ga parity) via the ncca_sec_dfe_sqa_wjec_desc_source DLT resource. Plan A keyless Firecrawl (firecrawl_parse). Routes through ExtractOfficialDocumentDescriptor BAML (olmocr-2-7b default via MODEL_REGISTRY). The 2 user-named NCCA research PDFs at the root of leaving_certificate/ are the canonical sources for what NCCA says about certificates and online learning. The 12 Wikipedia entries were MOVED to dlt_sources/media/celtic_history_research/ (gated for the downstream theming change)."
+depends = ["sync"]
+run = "USE_LOCAL_SCRAPES=true .venv/bin/python3 -c 'from dlt_sources.media.official.ncca_sec_celt_duchas_wikipedia.scrape import ncca_sec_dfe_sqa_wjec_desc_source; src = ncca_sec_dfe_sqa_wjec_desc_source(); rows = [r for s in src for r in s]; print(f\"ncca_sec_dfe_sqa_wjec_desc: {len(rows)} rows\")'"
+
+[tasks."data:media-intel:uk-government"]
+description = "Class E (UK government sub-bucket) — Ingest the UK police (Met + BTP + PSNI) + UK defence (MoD + British Army + Royal Navy + RAF) + UK Home Office + FCDO + MoJ + DoH + 7 UK Acts + Treaties via the uk_government_source DLT resource. Plan A keyless Firecrawl (firecrawl_scrape + firecrawl_parse). OGL v3.0. Routes through ExtractOfficialDocumentDescriptor BAML (olmocr-2-7b default via MODEL_REGISTRY). The 18 records emit across 3 @dlt.resource (uk_police_defence_army_pages + uk_departments_pages + uk_acts_treaties_pages)."
+depends = ["sync"]
+run = "USE_LOCAL_SCRAPES=true .venv/bin/python3 -c 'from dlt_sources.media.official.government.uk.scrape import uk_government_source; src = uk_government_source(); rows = [r for s in src for r in s]; print(f\"uk_government: {len(rows)} rows\")'"
+
+[tasks."data:media-intel:ie-government"]
+description = "Class E (Éire government sub-bucket) — Ingest An Garda Síochána + Irish Defence Forces + Naval + Air Corps + DoD + DoJ + DFA + Oireachtas + Office of the President + 6 Acts + Treaties via the ie_government_source DLT resource. Plan A keyless Firecrawl (firecrawl_scrape + firecrawl_parse). PSI (or OGL-3.0 for the Acts). Routes through ExtractOfficialDocumentDescriptor BAML (olmocr-2-7b default via MODEL_REGISTRY). The 15 records emit across 3 @dlt.resource (ie_police_defence_pages + ie_departments_pages + ie_acts_treaties_pages)."
+depends = ["sync"]
+run = "USE_LOCAL_SCRAPES=true .venv/bin/python3 -c 'from dlt_sources.media.official.government.ie.scrape import ie_government_source; src = ie_government_source(); rows = [r for s in src for r in s]; print(f\"ie_government: {len(rows)} rows\")'"
+
+[tasks."data:media-intel:crown-deps-government"]
+description = "Class E (Crown Dependencies government sub-bucket) — Ingest Isle of Man Government + IoM Constabulary + Tynwald + IoM Courts + States of Jersey + States of Jersey Police + States of Guernsey + Guernsey Police via the crown_dependencies_government_source DLT resource. Plan A keyless Firecrawl (firecrawl_scrape). OGL-3.0. The 3 British Crown Dependencies (IoM + Jersey + Guernsey) are self-governing Crown Dependencies of the UK Crown."
+depends = ["sync"]
+run = "USE_LOCAL_SCRAPES=true .venv/bin/python3 -c 'from dlt_sources.media.official.government.crown_dependencies.scrape import crown_dependencies_government_source; src = crown_dependencies_government_source(); rows = [r for s in src for r in s]; print(f\"crown_dependencies_government: {len(rows)} rows\")'"
+
+[tasks."data:media-intel:uk-departments"]
+description = "Class E (UK departments sub-bucket) — Ingest NHS England + DWP + Transport + Education + DEFRA via the uk_departments_source DLT resource. Plan A keyless Firecrawl (firecrawl_scrape). OGL-3.0. The non-police / non-defence departmental surface; the police + defence + MoD + Home Office + FCDO + MoJ + DoH surface lives at data:media-intel:uk-government."
+depends = ["sync"]
+run = "USE_LOCAL_SCRAPES=true .venv/bin/python3 -c 'from dlt_sources.media.official.departments.uk.scrape import uk_departments_source; src = uk_departments_source(); rows = [r for s in src for r in s]; print(f\"uk_departments: {len(rows)} rows\")'"
+
+[tasks."data:media-intel:ie-departments"]
+description = "Class E (Éire departments sub-bucket) — Ingest DoH (IE) + DoEdu (IE) + HSE via the ie_departments_source DLT resource. Plan A keyless Firecrawl (firecrawl_scrape). PSI. The non-police / non-defence departmental surface; the Garda + Defence + DoD + DoJ + DFA + Oireachtas + President surface lives at data:media-intel:ie-government."
+depends = ["sync"]
+run = "USE_LOCAL_SCRAPES=true .venv/bin/python3 -c 'from dlt_sources.media.official.departments.ie.scrape import ie_departments_source; src = ie_departments_source(); rows = [r for s in src for r in s]; print(f\"ie_departments: {len(rows)} rows\")'"
+
+[tasks."data:media-intel:sct-departments"]
+description = "Class E (Scotland departments sub-bucket) — Ingest NHS Scotland + Education Scotland + Scottish Government via the sct_departments_source DLT resource. Plan A keyless Firecrawl (firecrawl_scrape). OGL-3.0. The devolved Scottish departmental surface."
+depends = ["sync"]
+run = "USE_LOCAL_SCRAPES=true .venv/bin/python3 -c 'from dlt_sources.media.official.departments.sct.scrape import sct_departments_source; src = sct_departments_source(); rows = [r for s in src for r in s]; print(f\"sct_departments: {len(rows)} rows\")'"
+
+[tasks."data:media-intel:wls-departments"]
+description = "Class E (Wales departments sub-bucket) — Ingest NHS Wales + HEIW + Welsh Government via the wls_departments_source DLT resource. Plan A keyless Firecrawl (firecrawl_scrape). OGL-3.0. The devolved Welsh departmental surface."
+depends = ["sync"]
+run = "USE_LOCAL_SCRAPES=true .venv/bin/python3 -c 'from dlt_sources.media.official.departments.wls.scrape import wls_departments_source; src = wls_departments_source(); rows = [r for s in src for r in s]; print(f\"wls_departments: {len(rows)} rows\")'"
+
+[tasks."data:media-intel:ni-departments"]
+description = "Class E (Northern Ireland departments sub-bucket) — Ingest DoH (NI) + DE (NI) + DfE (NI) + nidirect via the ni_departments_source DLT resource. Plan A keyless Firecrawl (firecrawl_scrape). OGL-3.0. The devolved NI departmental surface."
+depends = ["sync"]
+run = "USE_LOCAL_SCRAPES=true .venv/bin/python3 -c 'from dlt_sources.media.official.departments.ni.scrape import ni_departments_source; src = ni_departments_source(); rows = [r for s in src for r in s]; print(f\"ni_departments: {len(rows)} rows\")'"
 
 
 # =============================================================================

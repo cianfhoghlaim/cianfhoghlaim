@@ -1,0 +1,21 @@
+name: libretro-retroarch
+description: |
+  The Locket sidecar that injects the LIBRETRO_API_KEY
+  (the netcommand auth secret) at runtime.
+version: "0.1.0"
+services:
+  libretro-sidecar:
+    image: ghcr.io/cianfhoghlaim/locket-sidecar:1.10.0
+    container_name: libretro-sidecar
+    restart: unless-stopped
+    environment:
+      - LOCKET_INFISICAL_PATH=infisical://dev-baile/cianfhoghlaim/libretro
+      - LOCKET_TARGET_SERVICE=libretro
+    volumes:
+      - /var/run/locket:/var/run/locket:ro
+    networks:
+      - libretro-net
+networks:
+  libretro-net:
+    external: true
+    name: libretro-retroarch_libretro-net

@@ -1,0 +1,31 @@
+source:
+  id: wls_departments
+  medium: official
+  work: "Wales government departments (the non-police / non-defence departmental surface — NHS Wales + Health Wales + Social Services Wales)"
+  jurisdiction: wls_departments
+  firecrawl_plan: plan_a_keyless
+  vlm_primary: olmocr-2-7b
+  vlm_secondary: qwen3-vl-8b
+  baml_functions:
+    - ExtractOfficialDocumentDescriptor
+  lance_table: media_descriptors
+  ducklake_schema: cianfhoghlaim.media.official.wls_departments
+  licence_summary: OGL-3.0
+  shippable_default: false
+  legal_notes: "Wales non-police / non-defence departments. The Welsh Government + Senedd Cymru + WJEC live at `dlt_sources/media/official/government/uk/` (per the BIEP v3 pattern for the Welsh curriculum authorities) + the curriculum surface at `dlt_sources/british_isles/wales/education/`."
+  acquisition_path:
+    - firecrawl_scrape_html
+    - firecrawl_parse_pdfs
+  sources:
+    - body: nhs_wales
+      title: NHS Wales
+      url: "https://phw.nhs.wales/"
+      rights_holder: "NHS Wales"
+    - body: health_wales
+      title: Health Education and Improvement Wales (HEIW)
+      url: "https://heiw.nhs.wales/"
+      rights_holder: "HEIW"
+    - body: welsh_government
+      title: Welsh Government
+      url: "https://www.gov.wales/"
+      rights_holder: "Welsh Government"

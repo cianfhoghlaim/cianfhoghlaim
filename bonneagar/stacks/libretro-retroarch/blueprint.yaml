@@ -1,0 +1,18 @@
+name: libretro-retroarch
+description: |
+  The Komodo blueprint for the libretro-retroarch stack.
+version: "0.1.0"
+blueprint:
+  name: libretro-retroarch
+  description: Headless libretro + 6 cores
+  type: deployment
+  run_dir: .
+  env_files:
+    - source: secrets.env
+      target: .env
+  resources:
+    - compose.yaml
+    - sidecar.yaml
+  variables:
+    - name: LIBRETRO_API_KEY
+      from: locket:infisical://dev-baile/cianfhoghlaim/libretro-api-key

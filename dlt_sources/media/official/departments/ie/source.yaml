@@ -1,0 +1,31 @@
+source:
+  id: ie_departments
+  medium: official
+  work: "Éire government departments (the non-police / non-defence departmental surface — Health + Education + HSE)"
+  jurisdiction: ie_departments
+  firecrawl_plan: plan_a_keyless
+  vlm_primary: olmocr-2-7b
+  vlm_secondary: qwen3-vl-8b
+  baml_functions:
+    - ExtractOfficialDocumentDescriptor
+  lance_table: media_descriptors
+  ducklake_schema: cianfhoghlaim.media.official.ie_departments
+  licence_summary: PSI
+  shippable_default: false
+  legal_notes: "IE non-police / non-defence departments. The police + defence + DoD + DoJ + DFA + Oireachtas + President surface lives at `dlt_sources/media/official/government/ie/` per the 2026-08-23 refactor."
+  acquisition_path:
+    - firecrawl_scrape_html
+    - firecrawl_parse_pdfs
+  sources:
+    - body: doh_ie
+      title: Department of Health (Ireland)
+      url: "https://www.gov.ie/en/department-of-health/"
+      rights_holder: "Department of Health (Ireland)"
+    - body: doedu_ie
+      title: Department of Education (Ireland)
+      url: "https://www.gov.ie/en/department-of-education/"
+      rights_holder: "Department of Education (Ireland)"
+    - body: hse
+      title: Health Service Executive (HSE)
+      url: "https://www.hse.ie/"
+      rights_holder: "Health Service Executive"

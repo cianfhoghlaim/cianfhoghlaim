@@ -90,6 +90,10 @@ enabled_datasets:
   isle_of_man_education: true
   jersey_education: true
   guernsey_education: true
+  media_intel_corpus: false       # 2026-08-23-tuatha-media-intel-gameplay-capture-research-v1
+                                    # The 5-class source registry (comics / prose /
+                                    # animation / games / official). Default false
+                                    # until the change is built + archived.
 enabled_stacks:
   litellm: true
   llama_swap: true
@@ -100,6 +104,13 @@ enabled_stacks:
   lakehouse: true
   openclaw: true
   openchamber: true
+  comfyui: false                  # 2026-08-23-tuatha-media-intel-gameplay-capture-research-v1
+  libretro_retroarch: false       # 2026-08-23-tuatha-media-intel-gameplay-capture-research-v1
+  sam3_server: false              # 2026-08-23-tuatha-media-intel-gameplay-capture-research-v1
+  sam3d_objects_server: false     # 2026-08-23-tuatha-media-intel-gameplay-capture-research-v1
 monitoring:
   registry_audit: true
   baml_ts_codegen: true
+  media_intel_coverage: false     # 2026-08-23-tuatha-media-intel-gameplay-capture-research-v1
+                                    # The L6 asset_check that fails the run if any
+                                    # of the 5 source classes has 0 rows.

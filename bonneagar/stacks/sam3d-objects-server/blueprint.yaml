@@ -1,0 +1,18 @@
+name: sam3d-objects-server
+description: |
+  The Komodo blueprint for the sam3d-objects-server stack.
+version: "0.1.0"
+blueprint:
+  name: sam3d-objects-server
+  description: Facebook SAM-3D-Objects sprite-to-3D
+  type: deployment
+  run_dir: .
+  env_files:
+    - source: secrets.env
+      target: .env
+  resources:
+    - compose.yaml
+    - sidecar.yaml
+  variables:
+    - name: SAM3D_API_KEY
+      from: locket:infisical://dev-baile/cianfhoghlaim/sam3d-api-key

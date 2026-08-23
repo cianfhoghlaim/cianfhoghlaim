@@ -1,0 +1,25 @@
+source:
+  id: hades_wow_golden_sun_pokemon_games
+  medium: game
+  work: "Hades 1 + Hades 2 + World of Warcraft + Golden Sun (GBA via libretro) + Pokémon (GB/GBA via libretro)"
+  firecrawl_plan: n/a          # local-capture only; no Firecrawl
+  vlm_primary: qwen3-vl-8b
+  vlm_secondary: gemma-4-12b
+  baml_functions:
+    - ExtractGameplayDescriptor
+  lance_table: media_descriptors
+  ducklake_schema: cianfhoghlaim.media
+  licence_summary: fair-use-description
+  shippable_default: false
+  legal_notes: "Class D is local-capture only. Owned titles only: Hades 1 + 2 (installed on bunchloch), World of Warcraft (installed on bunchloch), Golden Sun (owned ROM via romm + libretro mgba core), Pokémon (owned ROM via romm + libretro gambatte core). Game screenshots beyond the libretro headless output (which are stored in stedding/ingest_queue/retro/ per the retro-game-design-catalogue spec) are NEVER in the shippable asset output. Per the media-intel-corpus spec, every descriptor ships with `shippable: false` enforced."
+  acquisition_path:
+    - sunshine_streaming_capture  # for Hades + WoW
+    - moonlight_pairing          # the local Moonlight client
+    - ludusavi_save_state        # deterministic save-state restore
+    - libretro_retroarch_headless_capture  # for Golden Sun + Pokémon
+    - sam3_sprite_segmentation   # for Djinn sprites + boon-orb icons
+  input_sources:
+    - "stedding://retro/gba/golden_sun/"             # the Golden Sun ROM
+    - "stedding://retro/gb/pokemon_red_blue/"        # the Pokémon ROM
+    - "stedding://sunshine/hades_1/screen_capture/"  # the sunshine stream target
+    - "stedding://sunshine/wow/screen_capture/"      # the WoW stream target

@@ -1,0 +1,88 @@
+source:
+  id: ie_government
+  medium: official
+  work: "Éire government — Garda Síochána, Irish Defence Forces, Department of Defence, Department of Justice, Department of Foreign Affairs, Oireachtas, Office of the President, and the major Acts + Treaties"
+  jurisdiction: ie
+  firecrawl_plan: plan_a_keyless
+  vlm_primary: olmocr-2-7b
+  vlm_secondary: qwen3-vl-8b
+  baml_functions:
+    - ExtractOfficialDocumentDescriptor
+  lance_table: media_descriptors
+  ducklake_schema: cianfhoghlaim.media.official.ie
+  licence_summary: PSI         # Public Sector Information Licence (Ireland)
+  shippable_default: false
+  legal_notes: "Éire government + Garda + Defence + Oireachtas + Acts + Treaties. PSI licence. The BAML extractor emits a structured summary, NEVER a verbatim copy."
+  acquisition_path:
+    - firecrawl_scrape_html
+    - firecrawl_parse_pdfs
+  sources:
+    # Police + Defence
+    - body: garda
+      title: An Garda Síochána (Ireland's national police)
+      url: "https://www.garda.ie/"
+      rights_holder: "An Garda Síochána"
+    - body: irish_defence_forces
+      title: Irish Defence Forces
+      url: "https://www.military.ie/"
+      rights_holder: "Department of Defence (Ireland)"
+    - body: naval_service
+      title: Naval Service (Ireland)
+      url: "https://www.military.ie/en/the-irish-defence-forces/naval-service"
+      rights_holder: "Department of Defence (Ireland)"
+    - body: air_corps
+      title: Air Corps (Ireland)
+      url: "https://www.military.ie/en/the-irish-defence-forces/air-corps"
+      rights_holder: "Department of Defence (Ireland)"
+    # Departments
+    - body: department_of_defence_ie
+      title: Department of Defence (Ireland)
+      url: "https://www.gov.ie/en/department-of-defence/"
+      rights_holder: "Department of Defence (Ireland)"
+    - body: department_of_justice_ie
+      title: Department of Justice (Ireland)
+      url: "https://www.gov.ie/en/department-of-justice/"
+      rights_holder: "Department of Justice (Ireland)"
+    - body: department_of_foreign_affairs_ie
+      title: Department of Foreign Affairs (Ireland)
+      url: "https://www.dfa.ie/"
+      rights_holder: "Department of Foreign Affairs (Ireland)"
+    - body: oireachtas
+      title: Houses of the Oireachtas (Dáil + Seanad)
+      url: "https://www.oireachtas.ie/"
+      rights_holder: "Houses of the Oireachtas"
+    - body: office_of_the_president
+      title: Office of the President of Ireland
+      url: "https://president.ie/"
+      rights_holder: "Office of the President of Ireland"
+    # Acts + Treaties
+    - body: government_of_ireland_act_1920
+      title: Government of Ireland Act 1920
+      url: "https://www.irishstatutebook.ie/eli/1920/act/67/enacted/en/html"
+      rights_holder: "Crown copyright"
+      licence: "OGL-3.0"
+    - body: statute_of_westminster_1931
+      title: Statute of Westminster 1931
+      url: "https://www.irishstatutebook.ie/eli/1931/act/4/enacted/en/html"
+      rights_holder": "Crown copyright"
+      licence: "OGL-3.0"
+    - body: treaty_of_limerick_1691
+      title: Treaty of Limerick 1691
+      url: "https://www.irishstatutebook.ie/eli/1691/act/2/enacted/en/html"
+      rights_holder: "Crown copyright"
+      licence: "OGL-3.0"
+    - body: bunreacht_na_h_eireann_1937
+      title: Constitution of Ireland (Bunreacht na hÉireann) 1937
+      url: "https://www.irishstatutebook.ie/eli/1937/cautored/en/html"
+      rights_holder": "Government of Ireland"
+      licence: "PSI"
+    - body: good_friday_agreement_1998_ie
+      title: Good Friday Agreement (Belfast Agreement) 1998 — Ireland
+      url: "https://www.gov.ie/en/department-of-the-taoiseach/publications/the-belfast-agreement/"
+      rights_holder: "Government of Ireland"
+      licence: "PSI"
+    - body: anglo_irish_treaty_1921
+      title: Anglo-Irish Treaty 1921 — Ireland
+      url: "https://www.dfa.ie/media/dfa/alldfawebsitemedia/our-role-policies/anglo-irish-treaty/Anglo-Irish-Treaty.pdf"
+      rights_holder: "Crown copyright"
+      licence: "OGL-3.0"

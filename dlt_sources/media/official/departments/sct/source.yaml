@@ -1,0 +1,31 @@
+source:
+  id: sct_departments
+  medium: official
+  work: "Scotland government departments (the non-police / non-defence departmental surface — NHS Scotland + Education Scotland)"
+  jurisdiction: sct_departments
+  firecrawl_plan: plan_a_keyless
+  vlm_primary: olmocr-2-7b
+  vlm_secondary: qwen3-vl-8b
+  baml_functions:
+    - ExtractOfficialDocumentDescriptor
+  lance_table: media_descriptors
+  ducklake_schema: cianfhoghlaim.media.official.sct_departments
+  licence_summary: OGL-3.0
+  shippable_default: false
+  legal_notes: "Scotland non-police / non-defence departments. Police Scotland + Scottish Courts + Crown Office live at `dlt_sources/media/official/government/uk/` (since they fall under UK-level legislation). The Scottish Government + Education Scotland + NHS Scotland are devolved departments."
+  acquisition_path:
+    - firecrawl_scrape_html
+    - firecrawl_parse_pdfs
+  sources:
+    - body: nhs_scotland
+      title: NHS Scotland
+      url: "https://www.scot.nhs.uk/"
+      rights_holder: "NHS Scotland"
+    - body: education_scotland
+      title: Education Scotland
+      url: "https://education.gov.scot/"
+      rights_holder: "Education Scotland"
+    - body: scottish_government
+      title: Scottish Government
+      url: "https://www.gov.scot/"
+      rights_holder": "Scottish Government"

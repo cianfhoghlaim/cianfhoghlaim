@@ -1,0 +1,102 @@
+source:
+  id: uk_government
+  medium: official
+  work: "United Kingdom government — police, defence, army, Home Office, FCDO, MoJ, Department of Health, and the major UK Acts + Treaties"
+  jurisdiction: uk
+  firecrawl_plan: plan_a_keyless
+  vlm_primary: olmocr-2-7b
+  vlm_secondary: qwen3-vl-8b
+  baml_functions:
+    - ExtractOfficialDocumentDescriptor
+  lance_table: media_descriptors
+  ducklake_schema: cianfhoghlaim.media.official.uk
+  licence_summary: OGL-3.0        # Open Government Licence v3.0 (most UK gov pages)
+  shippable_default: false
+  legal_notes: "UK government + police + defence + army + Acts + treaties. Crown copyright; Open Government Licence v3.0. The BAML extractor emits a structured summary, NEVER a verbatim copy. Per-source `licence` may vary (Crown copyright for Acts, OGL v3.0 for departmental pages)."
+  acquisition_path:
+    - firecrawl_scrape_html
+    - firecrawl_parse_pdfs
+  sources:
+    # Police
+    - body: metropolitan_police
+      title: Metropolitan Police Service
+      url: "https://www.met.police.uk/"
+      rights_holder: "Metropolitan Police Service"
+    - body: btp
+      title: British Transport Police
+      url: "https://www.btp.police.uk/"
+      rights_holder: "British Transport Police"
+    - body: psni
+      title: Police Service of Northern Ireland
+      url: "https://www.psni.police.uk/"
+      rights_holder: "Police Service of Northern Ireland"
+    # Defence
+    - body: mod
+      title: Ministry of Defence
+      url: "https://www.gov.uk/government/organisations/ministry-of-defence"
+      rights_holder: "Ministry of Defence"
+    - body: british_army
+      title: British Army
+      url: "https://www.army.mod.uk/"
+      rights_holder: "Ministry of Defence"
+    - body: royal_navy
+      title: Royal Navy
+      url: "https://www.royalnavy.mod.uk/"
+      rights_holder: "Ministry of Defence"
+    - body: raf
+      title: Royal Air Force
+      url: "https://www.raf.mod.uk/"
+      rights_holder: "Ministry of Defence"
+    # Departments (the canonical government surface)
+    - body: home_office
+      title: Home Office
+      url: "https://www.gov.uk/government/organisations/home-office"
+      rights_holder: "Home Office"
+    - body: fcdo
+      title: Foreign, Commonwealth & Development Office
+      url: "https://www.gov.uk/government/organisations/foreign-commonwealth-development-office"
+      rights_holder: "FCDO"
+    - body: moj
+      title: Ministry of Justice
+      url: "https://www.gov.uk/government/organisations/ministry-of-justice"
+      rights_holder: "Ministry of Justice"
+    - body: doh
+      title: Department of Health and Social Care
+      url: "https://www.gov.uk/government/organisations/department-of-health-and-social-care"
+      rights_holder: "Department of Health and Social Care"
+    # Acts + Treaties (Crown copyright; OGL v3.0)
+    - body: act_of_union_1707
+      title: Acts of Union 1707 (England + Scotland → Great Britain)
+      url: "https://www.legislation.gov.uk/aosp/1707/7"
+      rights_holder: "Crown copyright"
+      licence: "OGL-3.0"
+    - body: act_of_union_1800
+      title: Acts of Union 1800 (Great Britain + Ireland → UK)
+      url: "https://www.legislation.gov.uk/aosp/1800/67"
+      rights_holder: "Crown copyright"
+      licence: "OGL-3.0"
+    - body: anglo_irish_treaty_1921
+      title: Anglo-Irish Treaty 1921
+      url: "https://www.dfa.ie/media/dfa/alldfawebsitemedia/our-role-policies/anglo-irish-treaty/Anglo-Irish-Treaty.pdf"
+      rights_holder: "Crown copyright"
+      licence: "OGL-3.0"
+    - body: good_friday_agreement_1998
+      title: Good Friday Agreement (Belfast Agreement) 1998
+      url: "https://www.gov.uk/government/publications/the-belfast-agreement"
+      rights_holder: "Crown copyright"
+      licence: "OGL-3.0"
+    - body: windsor_framework_2023
+      title: Windsor Framework 2023
+      url: "https://www.gov.uk/government/publications/the-windsor-framework"
+      rights_holder: "Crown copyright"
+      licence: "OGL-3.0"
+    - body: uk_internal_market_act_2020
+      title: UK Internal Market Act 2020
+      url: "https://www.legislation.gov.uk/ukpga/2020/27/contents"
+      rights_holder: "Crown copyright"
+      licence: "OGL-3.0"
+    - body: uk_withdrawal_act_2020
+      title: UK Withdrawal from the European Union (Continuity) Act 2020
+      url: "https://www.legislation.gov.uk/ukpga/2020/25/contents"
+      rights_holder: "Crown copyright"
+      licence: "OGL-3.0"

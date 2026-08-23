@@ -1,0 +1,17 @@
+source:
+  id: celtic_history_aran_islands
+  medium: celtic_history
+  work: "Aran Islands (the Irish-speaking Gaeltacht islands off the west coast of Ireland; the Celtic-history research surface for the downstream theming change)"
+  firecrawl_plan: n/a
+  vlm_primary: n/a
+  vlm_secondary: n/a
+  baml_functions: []
+  lance_table: media_descriptors_celtic_history
+  ducklake_schema: cianfhoghlaim.media.celtic_history
+  licence_summary: CC-BY-SA-4.0
+  shippable_default: false
+  legal_notes: "Celtic-history STUB. GATED for the downstream theming change. The Tailte Éireann Gaeltacht boundary data + the CSO Census 2022 Profile 8 data + the Gaeloideachas school lists (per `agents/tuatha/gaeilge.md`) are the canonical sources for the future theming change."
+  acquisition_path: []
+  input_sources:
+    - "https://en.wikipedia.org/wiki/Aran_Islands"  # GATED
+status: stub

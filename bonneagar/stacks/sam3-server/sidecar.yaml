@@ -1,0 +1,20 @@
+name: sam3-server
+description: |
+  The Locket sidecar that injects the SAM3_API_KEY at runtime.
+version: "0.1.0"
+services:
+  sam3-sidecar:
+    image: ghcr.io/cianfhoghlaim/locket-sidecar:1.10.0
+    container_name: sam3-sidecar
+    restart: unless-stopped
+    environment:
+      - LOCKET_INFISICAL_PATH=infisical://dev-baile/cianfhoghlaim/sam3
+      - LOCKET_TARGET_SERVICE=sam3
+    volumes:
+      - /var/run/locket:/var/run/locket:ro
+    networks:
+      - sam3-net
+networks:
+  sam3-net:
+    external: true
+    name: sam3-server_sam3-net

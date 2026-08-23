@@ -1,0 +1,27 @@
+source:
+  id: avatar_animation
+  medium: animation
+  work: "Avatar: The Last Airbender + The Legend of Korra + Aang-film continuity"
+  firecrawl_plan: plan_a_keyless
+  vlm_primary: molmo2-8b
+  vlm_secondary: qwen3-vl-8b
+  baml_functions:
+    - ExtractAnimationDescriptor
+  lance_table: media_descriptors
+  ducklake_schema: cianfhoghlaim.media
+  licence_summary: fair-use-description
+  shippable_default: false
+  legal_notes: "Animation frame stills are NEVER stored. Only the textual descriptor (per the 7-axis MediaDescriptor schema) is written. The Wikipedia + Avatar wiki concept-art thumbnails (the Wikimedia-Commons-licensed subset) are the only visual source."
+  acquisition_path:
+    - wikipedia_summary_pull
+    - avatar_wiki_concept_art_thumb_pull  # Wikimedia-Commons-licensed only
+  input_sources:
+    - "https://en.wikipedia.org/wiki/Avatar:_The_Last_Airbender"
+    - "https://en.wikipedia.org/wiki/The_Legend_of_Korra"
+    - "https://avatar.fandom.com/wiki/Airbending"
+    - "https://avatar.fandom.com/wiki/Waterbending"
+    - "https://avatar.fandom.com/wiki/Earthbending"
+    - "https://avatar.fandom.com/wiki/Firebending"
+    - "https://avatar.fandom.com/wiki/Energybending"
+    - "https://avatar.fandom.com/wiki/Avatar_State"
+    - "https://en.wikipedia.org/wiki/The_Last_Airbender_(film)"

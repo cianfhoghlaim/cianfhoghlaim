@@ -1,0 +1,17 @@
+source:
+  id: celtic_history_isle_of_skye
+  medium: celtic_history
+  work: "Isle of Skye (the Scottish Gaelic-speaking island; the Celtic-history research surface for the downstream theming change)"
+  firecrawl_plan: n/a
+  vlm_primary: n/a
+  vlm_secondary: n/a
+  baml_functions: []
+  lance_table: media_descriptors_celtic_history
+  ducklake_schema: cianfhoghlaim.media.celtic_history
+  licence_summary: CC-BY-SA-4.0
+  shippable_default: false
+  legal_notes: "Celtic-history STUB. GATED for the downstream theming change."
+  acquisition_path: []
+  input_sources:
+    - "https://en.wikipedia.org/wiki/Isle_of_Skye"  # GATED
+status: stub

@@ -1,0 +1,18 @@
+name: sam3-server
+description: |
+  The Komodo blueprint for the sam3-server stack.
+version: "0.1.0"
+blueprint:
+  name: sam3-server
+  description: Facebook SAM3 image segmentation
+  type: deployment
+  run_dir: .
+  env_files:
+    - source: secrets.env
+      target: .env
+  resources:
+    - compose.yaml
+    - sidecar.yaml
+  variables:
+    - name: SAM3_API_KEY
+      from: locket:infisical://dev-baile/cianfhoghlaim/sam3-api-key

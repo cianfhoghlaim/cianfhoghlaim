@@ -1,0 +1,16 @@
+name: comfyui
+description: |
+  The Pangolin private resource for the comfyui stack.
+  Exposes the ComfyUI REST API to the Pangolin tunnel.
+  Reference: bonneagar/AGENTS.md § Pangolin resources.
+version: "0.1.0"
+resources:
+  comfyui.cianfhoghlaim.ie:
+    subdomain: comfyui
+    target_service: comfyui
+    target_port: 8188
+    auth_method: pocketid
+    header_filter: []
+    credentials:
+      - header: x-comfyui-key
+        infisical_path: infisical://dev-baile/cianfhoghlaim/comfyui-api-key

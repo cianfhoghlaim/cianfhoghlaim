@@ -1,0 +1,16 @@
+name: sam3d-objects-server
+description: |
+  The Pangolin private resource for the sam3d-objects-server
+  stack. Exposes the SAM-3D-Objects REST API to the Pangolin
+  tunnel.
+version: "0.1.0"
+resources:
+  sam3d.cianfhoghlaim.ie:
+    subdomain: sam3d
+    target_service: sam3d-objects-server
+    target_port: 8284
+    auth_method: pocketid
+    header_filter: []
+    credentials:
+      - header: x-sam3d-key
+        infisical_path: infisical://dev-baile/cianfhoghlaim/sam3d-api-key
