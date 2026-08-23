@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS cianfhoghlaim.ocr_results (
 - **AND** runs `CREATE SCHEMA IF NOT EXISTS cianfhoghlaim.cianfhoghlaim`
 - **AND** runs `CREATE TABLE IF NOT EXISTS cianfhoghlaim.cianfhoghlaim.ocr_results (...)`
 
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: `_run_path_baml()` SHALL call the real BAML function
 

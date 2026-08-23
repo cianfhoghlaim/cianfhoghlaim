@@ -3,7 +3,7 @@
 ## Phase 1 — Foundation (4 tasks, ~2 hours)
 - [x] T1.1 Create `meaisinfoghlaim/backends/scanned_detector.py`
 - [x] T1.2 Update `meaisinfoghlaim/backends/__init__.py` to re-export `ScannedPDFReport` and `is_scanned_pdf`
-- [ ] T1.3 Add unit tests for `is_scanned_pdf()`
+- [x] T1.3 Add unit tests for `is_scanned_pdf()`. ✓ — `tests/test_scanned_detector.py` exists (173 lines, 7 test functions).
 - [x] T1.4 `mise run lint:registry`
 
 ## Phase 2 — Wire scanned-PDF detection (2 tasks)
