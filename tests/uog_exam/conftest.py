@@ -31,6 +31,20 @@ if (
 ):
     sys.path.insert(0, str(_SRUTH_BROWSER_ROOT))
 
+# 2026-08-23-uog-official-docs-and-nui-superset-v1 — extend the path
+# injection to also include `dlt_sources/british_isles/ireland/education/university`
+# so the relative imports in `uog_official_docs_vlm.py` resolve cleanly
+# when a sibling is loading `exam_papers/uog_exam_vlm` via the absolute
+# `dlt_sources.…` namespace.
+_OFFICIAL_DOCS_PARENT = (
+    _REPO_ROOT / "dlt_sources" / "british_isles" / "ireland" / "education" / "university"
+)
+if (
+    _OFFICIAL_DOCS_PARENT.is_dir()
+    and str(_OFFICIAL_DOCS_PARENT) not in sys.path
+):
+    sys.path.insert(0, str(_OFFICIAL_DOCS_PARENT))
+
 
 # --------------------------------------------------------------------------- #
 # Fixture-only OOG env (default behaviour for every test in this package).
