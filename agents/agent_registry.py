@@ -28,7 +28,6 @@ Extended by openspec/changes/2026-08-13-web-monorepo-consolidation-and-agent-int
 from __future__ import annotations
 
 import logging
-from typing import Any
 
 from .wiring import AgentFleetWiring, AgentFramework
 
@@ -203,16 +202,25 @@ AGENT_REGISTRY: dict[str, AgentFleetWiring] = {
     ),
     # ---------------------------------------------------------------------
     # Media-Intel Descriptor agent (per 2026-08-23-tuatha-media-
-    # intel-gameplay-capture-research-v1). The 5-tool ADK agent
+    # intel-gameplay-capture-research-v1). The 10-tool ADK agent
     # that orchestrates the 5 per-medium BAML extractor
     # functions in baml_src/media/. The reference-corpus spine
     # for the Hickman + WoT + ATLA + Hades+WoW+Golden Sun +
     # NCCA+SEC+CELT+Dúchas+Wikipedia ingestion.
+    # Re-routed 2026-08-25 (per 2026-08-25-tuatha-british-isles-
+    # mmo-consolidation-v1): the module now lives in the new
+    # tuatha/ independent sub-project at
+    # /Users/cianmacandeisigh/dev/kings_college_galway/tuatha/
+    # (the British Isles Formative Assessment MMO). The
+    # cianfhoghlaim.agents.meaisinfhoghlaim.media_intel
+    # location is retained as a back-compat re-export until
+    # the parent's meaisinfhoghlaim/media_intel/ is removed
+    # in a subsequent change.
     # ---------------------------------------------------------------------
     "media_descriptor_agent": AgentFleetWiring(
         agent_name="media_descriptor_agent",
         module_slug="media_descriptor",
-        module_path="cianfhoghlaim.agents.meaisinfhoghlaim.media_intel.media_descriptor_agent",
+        module_path="tuatha.agents.media_intel.media_descriptor_agent",
         framework=AgentFramework.ADK,
         display_name="Media-Intel Descriptor Agent",
         baml_prefix="MediaDesc",
