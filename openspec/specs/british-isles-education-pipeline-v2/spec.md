@@ -56,131 +56,20 @@ The 5 sequential openspec changes that landed this v2 umbrella:
 | `2026-07-22-biep-v2-ocr-vlm-pipeline-convergence-v1` | ✅ archived | OCR/VLM ensemble + RAGAS vote |
 | `2026-07-23-biep-v2-marimo-portal-v1` | ✅ archived | 4 cross-jurisdiction notebooks |
 | `2026-07-24-biep-v2-gov-uk-change-detection-v1` | ✅ archived | AQA/OCR/Edexcel change sensors |
-
 ## Requirements
+### Requirement: v2 retirement — see british-isles-education-pipeline-v3
 
-### Requirement: 4-jurisdiction BIEP coverage
+The system SHALL recognize that `british-isles-education-pipeline-v2` is a transitional retirement marker. The canonical capability is `british-isles-education-pipeline-v3` (25 requirements) which covers the 5-milestone sequential plan + the 6-deferred-jurisdiction plan (M5-M10) + the 2-scanner-domain plan + the 4-cadence scheduling policy + the 5-phase pattern (Ingestion → Extraction → Embedding → ibis logging → Analytics).
 
-The system SHALL provide a full BIEP-grade pipeline for **4 jurisdictions**:
+The original v1 spec `british-isles-education-pipeline` (41 requirements) covers the original LC subjects + gov.ie circulars; the v3 spec layers on top of v1 with the milestone plan + 8-jurisdiction expansion.
 
-- Republic of Ireland Leaving Certificate (EN + GA) — 6 LC priority subjects
-- Republic of Ireland Junior Cycle (EN + GA) — 18 subjects + 16 short courses + 36 CBAs
-- England A-Level (EN, AQA + OCR + Edexcel) — 9 priority subjects × 3 boards
-- England GCSE (EN, AQA + OCR + Edexcel) — 9 priority subjects × 3 boards
+Per the 2026-08-22-openspec-audit-and-merge-v1 audit + the 2026-08-22-archive-biep-v1-v2-retirement-v1 retirement change.
 
-The corresponding source code SHALL be at:
+#### Scenario: Agent looks up the canonical BIEP v3 spec
 
-- `baml_src/british_isles/<jurisdiction>/education/` per jurisdiction
-- `dlt/british_isles/<jurisdiction>/education/` per jurisdiction
-- `cocoindex/<jurisdiction>/<subject>_embedding.py` per subject
-- `orchestration/defs/2_materials/<jurisdiction>/` per jurisdiction
-- `notebooks/04_biep_v2/` for the cross-jurisdiction portal
-
-#### Scenario: 4-jurisdiction mise run dagster:oideachais
-
-- **WHEN** a teacher clicks "Materialize all" in the Dagster UI for the
-  4-jurisdiction BIEP v2 pipeline
-- **THEN** the L1 ingest + L2 BAML + L3 embed assets for all 4
-  jurisdictions materialise within minutes
-- **AND** the 4 MotherDuck Dives surface the topic coverage per jurisdiction
-- **AND** the daily Flight re-runs BAML extraction on any new PDFs
-- **AND** the 4 marimo notebooks at `notebooks/04_biep_v2/` render the
-  cross-jurisdiction cohort
-
-### Requirement: 4-path OCR/VLM ensemble with RAGAS voting
-
-The system SHALL provide the canonical ensemble extractor at
-`meaisinfhoghlaim/ocr/ensemble/ensembled_extractor.py` that runs **4 paths
-in parallel** for any incoming PDF, lands each path's output in a
-separate per-path DuckLake table, and votes the canonical row via the
-RAGAS `biiep_extraction_consensus` metric:
-
-- **Path 1** (BAML) — `Docling-serve` → text → BAML function
-- **Path 2** (Unstract) — `Docling-serve` → Unstract workflow → JSON
-- **Path 3** (qwen3-vl-8b) — page-level image → qwen3-vl-8b raw response
-- **Path 4** (gemma-4-26B-A4B) — page-level image → gemma-4-26B-A4B raw response
-
-Per-path DuckLake tables follow the convention
-`cianfhoghlaim.education.british_isles.<jurisdiction>.<scope>.<subject>.<path>`:
-
-- `.baml_canonical` (Path 1)
-- `.unstract_json` (Path 2)
-- `.qwen3_vl` (Path 3)
-- `.gemma4` (Path 4)
-- `.voted_canonical` (the RAGAS-voted result)
-
-#### Scenario: 4-path ensemble on any of the 4 jurisdictions
-
-- **GIVEN** any of the 4 jurisdiction pipelines (LC / JC / A-Level / GCSE)
-  has a new PDF
-- **WHEN** the `biiep_ocr_ensemble` Dagster asset materialises the row
-- **THEN** all 4 paths run in parallel
-- **AND** all 4 path outputs land in the per-jurisdiction per-path DuckLake
-  table
-- **AND** the RAGAS `biiep_extraction_consensus` metric ranks the 4 outputs
-- **AND** the highest-scoring output lands in `...voted_canonical`
-- **AND** the asset check `ragas_score >= 0.70` passes
-
-### Requirement: Cross-jurisdiction marimo portal
-
-The system SHALL provide 4 marimo notebooks at `notebooks/04_biep_v2/`:
-
-- `00_biep_v2_overview.py` — single-pane view across LC + JC + A-Level + GCSE
-- `01_junior_cycle_explorer.py` — JC drill-down
-- `02_england_explorer.py` — AQA/OCR/Edexcel comparison
-- `03_ocr_ensemble_audit.py` — the full audit trail for any BAML-extracted record
-
-All 4 notebooks SHALL:
-
-- Use the **ibis-first contract** (no raw `duckdb.connect()`)
-- Render against the live lakehouse (`ibis.duckdb.connect("md:oideachais")` +
-  `ibis.lancedb.connect("rest://lakehouse-lance-namespace:8182")`)
-- Have a `## KCG patterns used` docstring referencing the `ibis` and
-  `marimo` skills
-- Run on `marimo run <path> --headless`
-
-The system SHALL also provide:
-
-- **3 Hono API endpoints** at `web/hono-api/src/routes/biep-v2/{lc,jc,england}.ts`
-- **1 TanStack Start public page** at `web/apps/cianfhoghlaim-web/src/routes/biep-v2/index.tsx`
-
-#### Scenario: Full audit trail in 03_ocr_ensemble_audit.py
-
-- **WHEN** a researcher selects any BAML-extracted record in
-  `03_ocr_ensemble_audit.py`
-- **THEN** all 8 panels render:
-  1. Source PDF page
-  2. Docling DocTags XML
-  3. Unstract JSON output
-  4. qwen3-vl-8b raw response
-  5. gemma-4-26B-A4B raw response
-  6. RAGAS `biiep_extraction_consensus` score bar chart
-  7. Final BAML Pydantic object
-  8. Langfuse trace link
-
-### Requirement: England ChangeDetection freshness guarantee
-
-The system SHALL provide 3 ChangeDetection.io monitors (one per awarding
-body) and 1 Dagster sensor that re-runs the BAML extraction on any
-changed AQA / OCR / Edexcel specification.
-
-The sensor MUST:
-
-- Subscribe to the 3 ChangeDetection.io webhook endpoints
-- Resolve to the per-board DAG asset key
-- Trigger the `england_england_re_extraction_job`
-- Emit a Langfuse trace event
-- Write an audit row to `cianfhoghlaim.education.british_isles.england.changes`
-- Fire Slack + email alerts
-
-#### Scenario: AQA GCSE mathematics spec change re-runs the ensemble
-
-- **WHEN** AQA publishes a new version of the GCSE Mathematics specification
-- **THEN** the ChangeDetection.io `aqa_monitor.yaml` fires the webhook
-- **AND** the Dagster sensor triggers the `england_england_re_extraction_job`
-- **AND** the Change 3 4-path ensemble re-runs + RAGAS votes
-- **AND** a Slack alert posts to `#kcg-biep-v2`
-- **AND** an email alert posts to `kcg-curriculum@cianfhoghlaim.ie`
+- **WHEN** an agent reads `openspec/list --specs` to find the 5-milestone BIEP plan
+- **THEN** the agent SHOULD load `british-isles-education-pipeline-v3` (the canonical)
+- **AND** the transitional v2 spec is preserved as a retirement marker
 
 ## Cross-references
 
