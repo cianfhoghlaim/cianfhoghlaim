@@ -7,7 +7,7 @@
 
 ## Why
 
-Of the **276 England CocoIndex Apps already defined** (3 boards × 43 GCSE subjects + 3 × 49 A-Level subjects = 276 Apps in `cocoindex/biep_parity/england_{gcse,a_level}_apps.py`), **zero are wired into a DLT source or Dagster asset**. Per the BIEP v2 spec, this was scoped as out-of-scope (deferred to v2). With the post-v7 flattening + BAML v3 + Dagster 5-layer architecture now stable, the England pipeline is ready for activation.
+Of the **276 England CocoIndex Apps already defined** (3 boards × 43 GCSE subjects + 3 × 49 A-Level subjects = 276 Apps in `cocoindex_flows/biep_parity/england_{gcse,a_level}_apps.py`), **zero are wired into a DLT source or Dagster asset**. Per the BIEP v2 spec, this was scoped as out-of-scope (deferred to v2). With the post-v7 flattening + BAML v3 + Dagster 5-layer architecture now stable, the England pipeline is ready for activation.
 
 This change:
 1. Adds 6 DLT sources (`gcse_{aqa,ocr,edexcel}_source.py` + `a_level_{aqa,ocr,edexcel}_source.py`) consuming from `stedding/site_scrape_samples/england/`
