@@ -1,7 +1,8 @@
 # centralize-cross-cutting-docs Specification
 
 ## Purpose
-TBD - created by archiving change 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1. Update Purpose after archive.
+The cross-cutting docs centralization surface covers the per-area AGENTS.md + per-spec AGENTS.md convention across the Cianfhoghlaim monorepo. It defines 3 invariants: every quadrant has an AGENTS.md (root + openspec + agents + bonneagar + meaisinfhoghlaim + web), every spec has a sibling AGENTS.md (≤ 30 lines), and the anti-drift contract (mise run lint:drift-docs) validates every number claim against ground truth.
+
 ## Requirements
 ### Requirement: lint:drift-docs is the canonical anti-drift gate
 

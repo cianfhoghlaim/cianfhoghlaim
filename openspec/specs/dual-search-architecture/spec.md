@@ -1,7 +1,8 @@
 # dual-search-architecture Specification
 
 ## Purpose
-TBD - created by archiving change 2026-08-14-firecrawl-mcp-ccc-dual-search-v1. Update Purpose after archive.
+The dual-search workflow surface covers the CCC + Cognee + Firecrawl search orchestration across the Cianfhoghlaim monorepo. It defines 5 invariants: the CCC semantic code search, the Cognee knowledge graph search, the Firecrawl MCP web search, the merge step (CC + Cognee local first, Firecrawl as fallback), and the Langfuse trace tag for every search session.
+
 ## Requirements
 ### Requirement: ccc search precedes any grep/find
 The system SHALL enforce that every agent session runs `bun run ccc:search` before any `grep` or `find` call (existing convention — formalised here).

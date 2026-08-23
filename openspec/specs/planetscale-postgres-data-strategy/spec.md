@@ -1,7 +1,8 @@
 # planetscale-postgres-data-strategy Specification
 
 ## Purpose
-TBD - created by archiving change 2026-07-19-planetscale-postgres-landscape-v1. Update Purpose after archive.
+The PlanetScale Postgres data strategy surface covers the 9-step strategy for migrating from the current lakehouse (DuckLake + MotherDuck) to a PlanetScale Postgres backend. It defines 9 invariants: the migration phases (1: shadow writes, 2: dual-read, 3: cutover, 4: cleanup), the data integrity checks (per phase), the rollback strategy (per phase), the cost projections, the schema mapping (DuckDB types → PlanetScale types), the connection pool config, the per-jurisdiction sub-shard layout, the observability layer (planetexplorer + PlanetScale API), and the deprecation timeline for DuckLake.
+
 ## Requirements
 ### Requirement: Data substrate decision tree (R1)
 

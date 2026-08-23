@@ -432,20 +432,19 @@ run = "echo 'core:ci pipeline complete (all 4 gates passed).'"
 # =============================================================================
 
 [tasks."core:lint"]
-description = "CORE lint — aggregate lint gate (ruff + skills + registry + typecheck + uv-audit + uv-check)"
+description = "CORE lint — aggregate lint gate (ruff + skills + registry + typecheck + uv-audit + uv-check + spec-purpose)"
 alias = ["lint"]
 depends = [
   "lint:skills",
   "lint:registry",
+  "lint:spec:purpose",
   "core:typecheck",
   "core:uv:audit:strict",
   "core:uv:check",
 ]
-# Per the 2026-08-23-dev-tooling-tbd-purpose-refresh-batch-data-specs-v1 change:
-# `lint:spec:purpose` is wired as a separate task (not a core:lint sub-gate)
-# until Phase 5.1.2 + 5.1.3 fill in the remaining 19 TBD Purpose fields
-# (agent + infra + oideachais specs). Once all 89 specs have non-TBD
-# Purpose, the gate can be promoted to a core:lint sub-gate.
+# Per the 2026-08-23 dev-tooling-refactor v3 (Phase 5): all 100 specs have
+# non-TBD Purpose fields now (Phase 2.3 + 5.1.2 + 5.1.3 + 5.1.4).
+# `lint:spec:purpose` is now promoted to a core:lint sub-gate.
 # Per the 2026-08-21 audit: ruff scope narrowed to canonical Python packages.
 run = "uv run ruff check orchestration meaisinfhoghlaim dlt_sources baml_src cocoindex_flows agents notebooks scripts 2>&1 | tail -100 || echo 'ruff completed with diagnostics'"
 

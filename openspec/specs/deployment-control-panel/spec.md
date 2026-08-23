@@ -1,7 +1,8 @@
 # deployment-control-panel Specification
 
 ## Purpose
-TBD - created by archiving change 2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1. Update Purpose after archive.
+The deployment control panel surface covers the 5-tab marimo notebook + web UI + CLI for picking models/pipelines/datasets/stacks across the Cianfhoghlaim monorepo. It defines 7 invariants: the canonical deployment-choice.yaml enablement file, the 5 tabs (Models / Pipelines / Datasets / Stacks / Registry), the web UI mirror at web/apps/cianfhoghlaim-web/src/components/DeploymentControlPanel.tsx, the CLI at scripts/set_deployment_choice.py, the audit log on every change, the schema introspection helpers in notebooks/_shared/schema.py, and the sync to litellm + Dagster configs on save.
+
 ## Requirements
 ### Requirement: One marimo control-panel notebook with 5 tabs
 

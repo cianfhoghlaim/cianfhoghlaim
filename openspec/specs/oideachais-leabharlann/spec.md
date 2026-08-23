@@ -1,7 +1,8 @@
 # oideachais-leabharlann Specification
 
 ## Purpose
-TBD - created by archiving change 2026-07-15-oideachais-leabharlann-v1. Update Purpose after archive.
+The oideachais leabharlann surface covers the 4 dlt sources + 3 v1 CocoIndex Apps for the leabharlann/ corpus (the 4th leabharlann sub-corpus). It defines 3 invariants: the canonical leabharlann/ directory path, the per-subject BAML extraction templates, and the per-corpus CocoIndex v1 App structure.
+
 ## Requirements
 ### Requirement: Pre-v7 stub retired — see cianfhoghlaim-leabharlann
 

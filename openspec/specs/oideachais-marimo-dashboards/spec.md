@@ -1,7 +1,8 @@
 # oideachais-marimo-dashboards Specification
 
 ## Purpose
-TBD - created by archiving change 2026-07-12-baml-cocoindex-tutorials-v1. Update Purpose after archive.
+The oideachais marimo dashboards surface covers the 11 marimo notebooks for the 5 educational stages + the leabharlann full-stack demo. It defines 1 invariant: the canonical notebook prefix scheme (01_overview_setup → 26_aistear_dashboard → 28_knowledge_graph_health).
+
 ## Requirements
 ### Requirement: 5 new BAML+CocoIndex tutorial notebooks render in marimo edit + dual-mode CLI
 

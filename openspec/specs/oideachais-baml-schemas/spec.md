@@ -1,7 +1,8 @@
 # oideachais-baml-schemas Specification
 
 ## Purpose
-TBD - created by archiving change 2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1. Update Purpose after archive.
+The oideachais BAML schemas surface covers the 9 BAML extraction templates for the 6 Irish Leaving Certificate priority subjects (Mathematics / Chemistry / Geography / Gaeilge / English / Computer Science) + the gov.ie circulars + the university syllabus pipeline across the Cianfhoghlaim monorepo. It defines 12 invariants: the 9 canonical extraction functions (ExtractCurriculumSyllabus / ExtractExamPaperLayout / ExtractMarkingSchemeGuideline / ExtractCrossLinguisticConcept / ExtractSyllabusDiagram + 4 variants), the 3 extraction clients (ExtractEn / ExtractEnStrong / LocalVision), and the per-subject BAML test blocks.
+
 ## Requirements
 ### Requirement: BAML surface compiles cleanly across the 8 jurisdiction packs
 

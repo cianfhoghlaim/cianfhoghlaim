@@ -1,7 +1,8 @@
 # repo-hygiene-agent-routing Specification
 
 ## Purpose
-TBD - created by archiving change 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1. Update Purpose after archive.
+The repo hygiene + agent routing surface covers the per-spec AGENTS.md convention + the concurrent-agent-write safety protocol across the Cianfhoghlaim monorepo. It defines 3 invariants: every spec has a sibling AGENTS.md (≤ 30 lines), the concurrent-write safety 4-step protocol (verify → edit → verify → stage), and the anti-drift contract that detects cross-agent conflicts before commit.
+
 ## Requirements
 ### Requirement: Per-spec AGENTS.md sibling
 

@@ -1,7 +1,8 @@
 # learn-to-earn-token-credential Specification
 
 ## Purpose
-TBD - created by archiving change 2026-08-08-learn-to-earn-x402-credential-pipeline-v1. Update Purpose after archive.
+The Learn-to-Earn token + credential surface covers the x402 payment protocol + the credential issuance flow (token + on-chain credential + revocation list) across the Cianfhoghlaim monorepo. It defines 1 invariant: the canonical token-credential contract that ties the educational activity (notebook completion / LC subject mastery / Celtic language fluency) to a portable credential that third parties can verify.
+
 ## Requirements
 ### Requirement: Badge-gated, non-transferable achievement token
 

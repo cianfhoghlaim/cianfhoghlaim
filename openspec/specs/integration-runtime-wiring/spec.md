@@ -1,7 +1,8 @@
 # integration-runtime-wiring Specification
 
 ## Purpose
-TBD - created by archiving change 2026-12-XX-mega-3d-baml-quality-v1. Update Purpose after archive.
+The integration runtime wiring surface covers the agent runtime → tool integration across the Cianfhoghlaim monorepo. It defines 3 invariants: the runtime layer (orchestration/components/layer5_agent_ops.py), the tool layer (orchestration/components/layer1_ingestion.py + layer3_model_lifecycle.py), and the canonical adapter pattern (each tool exposes a single function-shaped entry point).
+
 ## Requirements
 ### Requirement: Marimo Integration Runtime Wired into 4 Stage Dashboards
 
