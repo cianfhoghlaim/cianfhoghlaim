@@ -148,6 +148,13 @@ Plus the **safety gate** for any `iac:bootstrap`, `iac:plan`, or `km deploy stac
    Cloud free-tier for the control plane + Garage S3 storage + the
    Komodo / Pangolin / Infisical / Locket / Pocket ID / TinyAuth /
    Traefik mesh).
+6. **NEW 2026-08-23** — Ingests **any university student's personal
+   archive** (the maintainer's three UoG programmes are the worked
+   example: BA Maths & Education, HDip Software Design, Diploma
+   sa Ghaeilge C1) at F-granularity (per-question answers, per-assignment
+   topics, handwritten-maths HTR) and joins it to the official
+   `ModuleDescriptor` corpus via 10 typed Cognee edges. See
+   [Tertiary-Level Personal Archive Pipeline](#tertiary-level-personal-archive-pipeline-new-2026-08-23--f-granularity) below.
 
 The author is a [registered member of the Teaching
 Council](cian_mac_an_déisigh_uí_liatháin/teaching/teaching_registration.pdf),
@@ -313,6 +320,127 @@ Eurydice + multi-nation Commonwealth + Americas expansions), the
 same `JurisdictionAssetsBase` pattern scales to ~30-line
 per-jurisdiction subclasses instead of ~380-line hand-written asset
 files.
+
+### Tertiary-Level Personal Archive Pipeline (NEW 2026-08-23) — F-granularity
+
+A student's personal university archive is treated as a first-class
+citizen at the same level as the Leaving Cycle subject pipeline. The
+pipeline lifts any user's `leabharlann/<university>/` corpus
+(auto-discovered from folder structure, no curated drop-PDF UI as
+primary entry) to **feature parity with the Leaving Cycle subject
+pipeline** — typed artefacts → assignments → questions → topics →
+code cells → reading items → CA marks → transcript rows at
+**F-granularity** (per-question), joined to the transcript for ground
+truth, embedded in LanceDB via 4 CocoIndex v1 Apps, with 10 typed
+Cognee cross-archive edges (including a cross-module
+`Topic-RELATED-TO-Topic` graph), and surfaced via the canonical 8-tab
+Marimo notebook + Convex chat action + CopilotKit component + Genie
+UI tile + Google ADK agent.
+
+Reference: [`openspec/changes/2026-08-23-uog-personal-archive-tertiary-modules-v1/`](openspec/changes/2026-08-23-uog-personal-archive-tertiary-modules-v1/)
+
+#### Worked examples (the case study)
+
+The University of Galway (Ollscoil na Gaillimhe) corpus — covering
+**three programmes** the maintainer completed — is the canonical
+worked example:
+
+| Programme | Modules (examples) | Artefact volume |
+|---|---|---|
+| **BA Mathematics & Education** (2013–2017) | `CS4423` Networks, `MA335` Mathematical Statistics, `ST311/ST312` Applied Statistics, `MP491` Non-Linear Systems, Numerical Analysis 2, Modelling 2, ISLP labs | ~300 MB across 9 module folders |
+| **Higher Diploma in Software Design & Development** (2019–2020) | `CT511` Software Engineering, `CT545` Enterprise Java, `CT853` Algorithmics, `CT861` Computer Architecture, `CT870` Internet Programming, `CT874` Programming 1 | ~50 MB across 6 module folders |
+| **Diploma sa Ghaeilge C1** (2020–2021) | `GA101` / `GA201` Ceart na Gaeilge, `GA114` Saíocht, `GA81010` Éisteacht agus Labhairt, `G100` Cruinneas, `GF101` / `GF107` | ~80 MB across 7 module folders |
+
+**Three example usage purposes** the pipeline surfaces end-to-end
+(the per-question answers are chatable via the ADK agent
+`personal_archive_module_assistant`):
+
+##### 1. CS4423 Networks → eigenvector centrality, neighbours, M.Sc. AI bridge
+
+The CS4423 (Networks) folder is the canonical worked example for
+F-granularity extraction. From the 5 assignment PDFs plus the
+lecture notes plus the past exam, the pipeline produces:
+
+- **Module dossier** — every assignment + every question + my answer
+  text + my mark + the HTR backend used + the LaTeX form of any
+  maths + the topics covered.
+- **Topic graph** — `eigenvector_centrality`, `neighbours_in_networks`,
+  `graph_laplacian`, etc. The Cognee `Topic-RELATED_TO-Topic` edge
+  then connects these to the M.Sc. AI future-modules story (because
+  eigenvector centrality shows up in graph neural networks, which the
+  maintainer will study next year on the MA in AI).
+- **Transcript join** — exact match on `(module_code, academic_year)`
+  against the BA Maths & Education transcript; CS4423, 2020–21, A1.
+
+##### 2. MP491 Non-Linear Systems → handwritten maths, HTR ensemble
+
+MP491 (Non-Linear Systems) is the canonical worked example for the
+HTR pipeline. The handwritten answers were authored on an iPad with
+an Apple Pencil in the Goodnotes app, then exported as vector PDFs.
+The pipeline routes them through the **6-backend HTR ensemble**
+(nougat + olmocr-2-7b + CogVLM + gemma-3 majority-vote consensus,
+with nougat as the single-VLM best-of-breed fallback for scientific
+papers):
+
+- `my_answer_text` — the verbatim OCR'd answer.
+- `my_answer_latex` — the LaTeX form (e.g. `\int_0^1 x^2 \, dx`).
+- `htr_backend_used` — which of the 6 backends produced the answer.
+- `htr_confidence` — 0.0–1.0, exposed in the Marimo notebook for
+  manual override.
+
+##### 3. Numerical Analysis 2 (splines, interpolation) → M.Sc. AI handoff
+
+Numerical Analysis 2 covers splines and interpolation — topics
+directly relevant to the M.Sc. AI modules the maintainer is starting
+in 2027-09. The pipeline extracts the topics, joins them to the
+official UoG `ModuleDescriptor` (from the existing
+`2026-07-15-cianfhoghlaim-university-deep-extraction-v1` change),
+and emits the cross-module Cognee edge that lights up in the future
+M.Sc. AI Marimo notebook.
+
+#### Transferability — the user-facing promise
+
+Any university student can point the pipeline at their own
+`leabharlann/<university>/` corpus by setting the 9 `UNIVERSITY_*`
+env vars (see `.env.example`) and calling
+`personal_archive_source(UniversityPersonalArchiveConfig(...))`. The
+same 8 DLT resources, 7 BAML functions, 4 CocoIndex Apps, 10 Cognee
+edges, 6 Dagster assets, 8 Marimo tabs, 5 Convex queries, CopilotKit
++ Genie + ADK agent, and 12 tests run unchanged. The canonical
+`UniversityPersonalArchiveConfig` Pydantic v2 model is the single
+surface for "who is the student, what is the institution, what
+regex matches the module codes, where do the transcripts live".
+
+#### Quickstart
+
+```bash
+# Validate the openspec change
+openspec validate 2026-08-23-uog-personal-archive-tertiary-modules-v1 --strict
+
+# Run the personal-archive test suite (12 passing)
+uv run pytest tests/personal_archive/ -v
+
+# Materialise the DuckLake tables
+uv run python -c "
+import duckdb
+from dlt_sources._lakehouse import register_personal_archive_tables
+con = duckdb.connect(':memory:')
+register_personal_archive_tables(con)
+print(sorted(t[0] for t in con.execute('SHOW TABLES').fetchall()))
+"
+
+# Open the 8-tab Marimo notebook (Health / Filters / Materials /
+# URL Health / Heatmap / Recent / Lance Search / SQL Console)
+marimo edit notebooks/15_personal_archive.py
+
+# Auto-classify a sample artefact
+uv run python -c "
+from pathlib import Path
+from dlt_sources.filesystem.uog_personal_archive import _classify_file
+p = Path('leabharlann/ollscoil_na_gaillimhe/mata/networks/CS4423 - Networks/cian_mac_liathain_assignment_3.pdf')
+print(_classify_file(p))
+"
+```
 
 ## The agent fleet
 
