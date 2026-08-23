@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass, field
-from typing import Any
 
 # Per the centralized-registry contract: model_for() is the
 # canonical resolution helper. No hardcoded model strings.
@@ -56,7 +55,26 @@ class LiteLlmConfig:
         a model string; route through model_for(family, role).
         """
         if model_for is not None:
-            return model_for(family, role)
+            # The OCR_VISION family only supports a few canonical
+            # roles (default / legacy / lightweight / primary /
+            # specialist). For roles that don't exist in the
+            # registry (e.g., 'media_descriptor'), fall back to
+            # the family default.
+            available_roles_for_ocr = {
+                "default",
+                "legacy",
+                "lightweight",
+                "primary",
+                "specialist",
+            }
+            actual_role = role
+            if family == "ocr_vision" and role not in available_roles_for_ocr:
+                actual_role = "default"
+            try:
+                return model_for(family, actual_role)
+            except KeyError:
+                # Final fallback: return the kcg-prefixed stub.
+                return f"kcg-{family}-{actual_role}"
         # Graceful fallback for unit tests in isolation.
         return f"kcg-{family}-{role}"
 
@@ -200,7 +218,7 @@ class TuathaConfig:
     baml: BamlClientsConfig = field(default_factory=BamlClientsConfig)
 
     @classmethod
-    def from_env(cls) -> "TuathaConfig":
+    def from_env(cls) -> TuathaConfig:
         """Build the canonical config from environment variables.
 
         Per the centralized-secrets-management contract: all

@@ -25,7 +25,6 @@ from typing import Any
 from .config import TuathaConfig
 from .routing import SubjectAgentWiring
 
-
 # ── The 4 canonical workflow context types ─────────────────
 
 

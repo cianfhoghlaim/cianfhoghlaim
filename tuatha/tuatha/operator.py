@@ -7,13 +7,12 @@ queries).
 """
 from __future__ import annotations
 
-import asyncio
 from dataclasses import dataclass
 from typing import Any
 
 from .config import TuathaConfig
-from .routing import SubjectAgentWiring, build_wire
 from .orchestrator import TuathaOrchestrator
+from .routing import SubjectAgentWiring
 
 
 @dataclass(frozen=True)
