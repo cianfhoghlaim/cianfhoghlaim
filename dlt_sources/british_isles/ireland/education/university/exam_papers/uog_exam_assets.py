@@ -28,19 +28,13 @@ from pathlib import Path
 
 import structlog
 from dagster import AssetKey, AssetSpec, MaterializeResult, MetadataValue, asset
-
-from sruth_browser.core.auth import UoGSsoLogin
 from sruth_browser.core.secrets import UoGSsoConfig
 from sruth_browser.tools.uog_exam_scraper import (
-    UoGExamMaterial,
-    UoGExamMaterialType,
     UoGExamScraper,
 )
 
 from .uog_exam_papers_source import (
-    DEFAULT_RATELIMIT_MS,
     V1_SCHOOL_WHITELIST,
-    uog_exam_papers_source,
 )
 
 logger = structlog.get_logger(__name__)
@@ -145,7 +139,7 @@ def uog_exam_login_health(context) -> MaterializeResult:
                 elapsed = (datetime.now(UTC) - t0).total_seconds() * 1000
                 await browser.close()
                 return ok, elapsed
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             context.log.warning(
                 "uog_exam_login_health_probe_failed", error=str(exc)
             )
@@ -204,7 +198,7 @@ def uog_exam_module_discovery(context) -> MaterializeResult:
                 try:
                     for code in scraper.discover_module_codes(school_slug):
                         codes.append(code)
-                except Exception as exc:  # noqa: BLE001
+                except Exception as exc:
                     context.log.warning(
                         "uog_school_discovery_failed",
                         school_slug=school_slug,
@@ -334,7 +328,7 @@ def uog_exam_papers_ocr_extract(context) -> MaterializeResult:
     extracted = 0
     failures: list[str] = []
     try:
-        from baml_client import b  # type: ignore[import-not-found]
+        from baml_client import b as _baml_b  # type: ignore[import-not-found]
     except ImportError:
         context.log.warning(
             "uog_exam_papers_ocr_extract_baml_client_not_generated"
@@ -360,13 +354,13 @@ def uog_exam_papers_ocr_extract(context) -> MaterializeResult:
             continue
         try:
             text = pdf.read_bytes().decode("utf-8", errors="ignore")
-            b.ExtractUoGExamPaper(
+            _baml_b.ExtractUoGExamPaper(
                 pdf_text=text[:50_000],
                 module_code=module_code,
                 academic_year=academic_year,
             )
             extracted += 1
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             failures.append(f"{pdf.name}: {exc}")
 
     return MaterializeResult(
@@ -402,7 +396,7 @@ def uog_exam_papers_ocr_extract(context) -> MaterializeResult:
 def uog_exam_los_map(context) -> MaterializeResult:
     """Join exam-paper rows with `ModuleDescriptor` rows and emit LO maps."""
     try:
-        from baml_client import b  # type: ignore[import-not-found]
+        from baml_client import b as _baml_b2  # noqa: F401  # type: ignore[import-not-found]
     except ImportError:
         context.log.warning(
             "uog_exam_los_map_baml_client_not_generated"
@@ -448,11 +442,11 @@ uog_exam_assets = [
 
 
 __all__ = [
+    "GROUP_NAME",
     "uog_exam_assets",
     "uog_exam_login_health",
+    "uog_exam_los_map",
     "uog_exam_module_discovery",
     "uog_exam_papers_download",
     "uog_exam_papers_ocr_extract",
-    "uog_exam_los_map",
-    "GROUP_NAME",
 ]

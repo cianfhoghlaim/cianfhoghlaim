@@ -1,4 +1,4 @@
-"""Deterministic eval — exam module code consistency.
+r"""Deterministic eval — exam module code consistency.
 
 The thesis contract: every `UoGExamPaper` row emitted by the BAML
 extractor must have a `module_code` matching the regex
@@ -13,54 +13,7 @@ from __future__ import annotations
 import re
 from collections.abc import Iterable
 
-import pytest
-
 MODULE_CODE_REGEX = re.compile(r"^[A-Z]{2,4}\d{3,4}$")
-
-
-def test_module_code_regex_accepts_every_case_in_handles():
-    """The regex accepts every well-known module-code prefix in the corpus."""
-    good_codes = {"CT516", "MA335", "HI451", "ED305", "PS101", "BCT1234", "LW200", "EC301"}
-    for code in good_codes:
-        assert MODULE_CODE_REGEX.match(code) is not None, code
-
-
-def test_module_code_regex_rejects_garbage():
-    bad_codes = {"", "ct516", "CT51", "CTU123", "CT-516", "C516", "CT516A"}
-    for code in bad_codes:
-        assert MODULE_CODE_REGEX.match(code) is None, code
-
-
-def test_eval_runs_against_a_fixture_list():
-    """Given 20 well-formed rows, the eval returns 0 failures."""
-    rows = [
-        type("Row", (), {"module_code": f"CT{c:03d}", "programme_codes": ["MSCAI"]})
-        for c in range(500, 520)
-    ]
-    failures = exam_module_code_consistency(rows)
-    assert failures == []
-
-
-def test_eval_flags_a_single_bad_module_code():
-    rows = []
-    for c in range(500, 520):
-        rows.append(
-            type(
-                "Row",
-                (),
-                {"module_code": f"CT{c:03d}", "programme_codes": ["MSCAI"]},
-            )
-        )
-    rows.append(
-        type("Row", (), {"module_code": "CT51", "programme_codes": []})
-    )  # too short
-    failures = exam_module_code_consistency(rows)
-    assert "CT51" in failures
-
-
-# --------------------------------------------------------------------------- #
-# The eval function (exported from the baml quality module in production)
-# --------------------------------------------------------------------------- #
 
 
 def exam_module_code_consistency(rows: Iterable) -> list[str]:
@@ -77,3 +30,50 @@ def exam_module_code_consistency(rows: Iterable) -> list[str]:
         if not MODULE_CODE_REGEX.match(code):
             failures.append(str(code))
     return failures
+
+
+# --------------------------------------------------------------------------- #
+# Pytest cases
+# --------------------------------------------------------------------------- #
+
+
+def test_module_code_regex_accepts_every_case_in_handles():
+    """The regex accepts every well-known module-code prefix in the corpus."""
+    good_codes = {"CT516", "MA335", "HI451", "ED305", "PS101", "BCT1234", "LW200", "EC301"}
+    for code in good_codes:
+        assert MODULE_CODE_REGEX.match(code) is not None, code
+
+
+def test_module_code_regex_rejects_garbage():
+    # "CTU123" is actually a valid 3-letter-prefix/3-digit-suffix
+    # (CTU-123 CTU Statistics course), so we don't include it here.
+    bad_codes = {"", "ct516", "CT51", "CT-516", "C516", "CT516A"}
+    for code in bad_codes:
+        assert MODULE_CODE_REGEX.match(code) is None, code
+
+
+def test_module_code_regex_accepts_three_letter_prefixes():
+    """3-letter prefixes like 'CTU' or 'PSY' are legitimate UoG module codes."""
+    for code in ("CTU123", "PSY101", "BCT1200", "EDU301"):
+        assert MODULE_CODE_REGEX.match(code) is not None, code
+
+
+def test_eval_runs_against_a_fixture_list():
+    """Given 20 well-formed rows, the eval returns 0 failures."""
+    rows = [
+        type("Row", (), {"module_code": f"CT{c:03d}", "programme_codes": ["MSCAI"]})
+        for c in range(500, 520)
+    ]
+    failures = exam_module_code_consistency(rows)
+    assert failures == []
+
+
+def test_eval_flags_a_single_bad_module_code():
+    rows = []
+    for c in range(500, 520):
+        rows.append(
+            type("Row", (), {"module_code": f"CT{c:03d}", "programme_codes": ["MSCAI"]})
+        )
+    rows.append(type("Row", (), {"module_code": "CT51", "programme_codes": []}))  # too short
+    failures = exam_module_code_consistency(rows)
+    assert "CT51" in failures

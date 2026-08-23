@@ -37,14 +37,14 @@ import re
 from collections.abc import AsyncIterator
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 from typing import Any
 from urllib.parse import urljoin
 
 import structlog
 
-from ..core.auth import UOG_SSO_HEALTH_URL, UoGSsoLogin
+from ..core.auth import UoGSsoLogin
 from ..core.secrets import UoGSsoConfig
 from ..exceptions import UoGAuthExpired
 
@@ -62,7 +62,7 @@ PUBLIC_MODULE_REGISTRY_URL: str = (
 DEFAULT_RATELIMIT_MS: int = 1_000
 
 
-class UoGExamMaterialType(str, Enum):
+class UoGExamMaterialType(StrEnum):
     PAPER = "paper"
     MARKING_SCHEME = "marking_scheme"
     MODEL_SOLUTION = "model_solution"
@@ -376,7 +376,19 @@ class UoGExamScraper:
             "ED305",  # ? (legacy author archive uses this)
         ]
 
-    def _fixture_material(self, module_code: str) -> UoGExamMaterial:
+    def _fixture_material(
+        self,
+        module_code: str,
+        *,
+        material_type: UoGExamMaterialType = UoGExamMaterialType.PAPER,
+    ) -> UoGExamMaterial:
+        suffix_map = {
+            UoGExamMaterialType.PAPER: "AUT",
+            UoGExamMaterialType.MARKING_SCHEME: "MS",
+            UoGExamMaterialType.MODEL_SOLUTION: "SOL",
+            UoGExamMaterialType.SUPPLEMENTARY_PAPER: "SUPP",
+        }
+        suffix = suffix_map.get(material_type, "AUT").lower()
         return UoGExamMaterial(
             module_code=module_code,
             module_title=f"[fixture] {module_code}",
@@ -384,14 +396,16 @@ class UoGExamScraper:
             school_slug="computer-science",
             academic_year=2023,
             sitting="AUTUMN",
-            material_type=UoGExamMaterialType.PAPER,
+            material_type=material_type,
             paper_format="PDF_UPLOAD",
             source_url=(
                 f"https://exams.universityofgalway.ie/fixture/"
-                f"{module_code}/2023/AUT.pdf"
+                f"{module_code}/2023/{suffix}.pdf"
             ),
-            title="[fixture] no real credentials configured",
-            content_hash=hashlib.sha256(module_code.encode()).hexdigest()[:16],
+            title=f"[fixture] {material_type.value}",
+            content_hash=hashlib.sha256(
+                f"{module_code}:{material_type.value}".encode()
+            ).hexdigest()[:16],
             bytes=0,
         )
 

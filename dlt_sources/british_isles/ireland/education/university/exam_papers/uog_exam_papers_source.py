@@ -27,20 +27,18 @@ Reference: openspec/changes/2026-08-23-uog-exam-papers-sso-v1/
 
 from __future__ import annotations
 
-import hashlib
 from collections.abc import Iterator
 from typing import Any
 
-import structlog
 import dlt
-
+import structlog
 from sruth_browser.core.secrets import UoGSsoConfig
 from sruth_browser.tools.uog_exam_scraper import (
     DEFAULT_RATELIMIT_MS,
+    V1_SCHOOL_WHITELIST,
     UoGExamMaterial,
     UoGExamMaterialType,
     UoGExamScraper,
-    V1_SCHOOL_WHITELIST,
 )
 
 logger = structlog.get_logger(__name__)
@@ -78,26 +76,33 @@ def _scrape_all_materials(
     years: list[int] | None = None,
     school_slug: str | None = None,
 ) -> Iterator[UoGExamMaterial]:
-    """Run the scraper synchronously for `modules` × `years` (helper for DLT)."""
+    """Run the scraper synchronously for `modules` x `years` (helper for DLT)."""
     import asyncio
+
+    cfg = UoGSsoConfig.from_resolver()
+    if not cfg.has_real_credentials():
+        # Fixture mode → emit FOUR placeholder rows per module
+        # (one per material_type) so every DLT resource has at least
+        # one row to merge in CI.
+        for module_code in modules:
+            for material_type in (
+                UoGExamMaterialType.PAPER,
+                UoGExamMaterialType.MARKING_SCHEME,
+                UoGExamMaterialType.MODEL_SOLUTION,
+                UoGExamMaterialType.SUPPLEMENTARY_PAPER,
+            ):
+                fixture = UoGExamScraper(cfg)._fixture_material(
+                    module_code, material_type=material_type
+                )
+                yield fixture
+        return
 
     async def _collect() -> list[UoGExamMaterial]:
         out: list[UoGExamMaterial] = []
-        cfg = UoGSsoConfig.from_resolver()
-        if not cfg.has_real_credentials():
-            # Fixture mode → emit one placeholder per module so the
-            # DLT resources have at least one row to merge in CI.
-            for module_code in modules:
-                scraper = UoGExamScraper(cfg)
-                async with scraper:
-                    for m in [m async for m in scraper.list_papers(module_code)]:
-                        out.append(m)
-            return out
-        scraper = UoGExamScraper(cfg)
-        async with scraper:
+        async with UoGExamScraper(cfg) as scraper:
             await scraper.login()
             for module_code in modules:
-                for m in scraper.list_papers(module_code):
+                async for m in scraper.list_papers(module_code):
                     if years is None or m.academic_year in years:
                         out.append(m)
         return out
@@ -136,10 +141,9 @@ def uog_exam_papers_source(
     """
     cfg = UoGSsoConfig.from_resolver()
     if modules is None:
-        if cfg.has_real_credentials():
-            modules = []  # will be discovered via the index
-        else:
-            modules = ["CT516", "CT511", "MA335", "ED305"]
+        modules = (
+            [] if cfg.has_real_credentials() else ["CT516", "CT511", "MA335", "ED305"]
+        )
 
     has_real = cfg.has_real_credentials()
 
@@ -326,9 +330,9 @@ def all_schools_source() -> Any:
 
 
 __all__ = [
-    "uog_exam_papers_source",
-    "msc_ai_source",
-    "computer_science_source",
-    "all_schools_source",
     "V1_SCHOOL_WHITELIST",
+    "all_schools_source",
+    "computer_science_source",
+    "msc_ai_source",
+    "uog_exam_papers_source",
 ]
