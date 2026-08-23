@@ -790,6 +790,41 @@ depends = [
 ]
 run = "bash scripts/sync/tg4_all.sh"
 
+# Phase C additions (the data-plane functional subagent task).
+#  - data:tg4_foghlaim:m1   : run the BIEP v3 M1 milestone (the TG4 ingestion leg)
+#  - data:tg4_foghlaim:lint : aggregate lint sweep (drift-docs + BAML + cocoindex conformance)
+[tasks."data:tg4_foghlaim:m1"]
+description = "Phase C M1 milestone — run the BIEP v3 milestone script gated through the TG4 + Foghlaim corpus (m1.py + DLT ingestions on stedding cache)"
+alias = ["tg4:foghlaim:m1"]
+depends = ["sync:tg4-all"]
+run = '''
+echo "[data:tg4_foghlaim:m1] resolving the BIEP m1 milestone script"
+SCRIPT="$(ls -1 scripts/m1_*.py 2>/dev/null | head -1 || true)"
+if [ -z "${SCRIPT}" ]; then
+  echo "WARN: no scripts/m1_*.py found; falling back to sync:tg4-all" >&2
+  mise run sync:tg4-all
+else
+  USE_LOCAL_SCRAPES=true .venv/bin/python3 "${SCRIPT}"
+fi
+'''
+
+[tasks."data:tg4_foghlaim:lint"]
+description = "Phase C aggregate lint — drift-docs + BAML stub-prompt + cocoindex v1 conformance + dlt-nested-hints (the 4 linters that touch the TG4 + Foghlaim surface)"
+alias = ["tg4:foghlaim:lint"]
+depends = ["core:install"]
+run = '''
+set -e
+echo "[data:tg4_foghlaim:lint] drift-docs …"
+mise run lint:drift-docs
+echo "[data:tg4_foghlaim:lint] BAML stub-prompt lint …"
+mise run lint:baml-stub-prompts
+echo "[data:tg4_foghlaim:lint] CocoIndex v1 conformance (covers tg4_foghlaim_embedding) …"
+mise run data:cocoindex:conformance
+echo "[data:tg4_foghlaim:lint] dlt nested-hints lint …"
+mise run lint:dlt:nested-hints
+echo "[data:tg4_foghlaim:lint] ALL GREEN"
+'''
+
 
 # =============================================================================
 # OPENSPEC NAMESPACE (8 tasks) — change management
