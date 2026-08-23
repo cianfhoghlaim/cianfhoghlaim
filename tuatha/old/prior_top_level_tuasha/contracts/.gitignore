@@ -1,0 +1,7 @@
+# Foundry / Forge dependencies
+lib/forge-std/
+
+# Deployment artifacts
+out/
+broadcast/
+cache/
