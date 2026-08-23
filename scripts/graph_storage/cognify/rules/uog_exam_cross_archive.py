@@ -211,15 +211,15 @@ def populate_uog_exam_covers_module(
             "edges_created": int(stats.get("relationships_created", 0)),
             "stub": False,
         }
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         logger.warning("uog_exam_covers_module_failed", error=str(exc))
         return {"queries_executed": 0, "edges_created": 0, "stub": True}
 
 
 __all__ = [
+    "_build_uog_exam_covers_module_query",
     "_is_valid_module_code",
     "_text_overlap_ratio",
-    "_build_uog_exam_covers_module_query",
     "build_uog_exam_covers_module_query",
     "populate_uog_exam_covers_module",
 ]

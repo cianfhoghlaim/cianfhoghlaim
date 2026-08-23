@@ -3,11 +3,33 @@
 from __future__ import annotations
 
 import hashlib
+import sys
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
 import pytest
+
+# --------------------------------------------------------------------------- #
+# Make `sruth_browser` importable in this repo's flat layout.
+#
+# `sruth_browser` lives at `bonneagar/stacks/browser/sruth_browser/`. At
+# production runtime it is installed as a separate package (the
+# sruth-browser Docker stack) and the Python interpreter is rooted at
+# that stack's directory. In the standalone repo-test environment we
+# only have the cianfhoghlaim repo root on `sys.path`, so we inject the
+# path here at conftest import time. This is a no-op in production.
+# --------------------------------------------------------------------------- #
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+_SRUTH_BROWSER_ROOT = (
+    _REPO_ROOT / "bonneagar" / "stacks" / "browser"
+)
+if (
+    _SRUTH_BROWSER_ROOT.is_dir()
+    and str(_SRUTH_BROWSER_ROOT) not in sys.path
+):
+    sys.path.insert(0, str(_SRUTH_BROWSER_ROOT))
 
 
 # --------------------------------------------------------------------------- #

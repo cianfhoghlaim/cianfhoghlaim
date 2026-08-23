@@ -6,11 +6,6 @@ Reference: dlt_sources/british_isles/ireland/education/university/
 
 from __future__ import annotations
 
-from pathlib import Path
-from unittest.mock import patch
-
-import pytest
-
 from dlt_sources.british_isles.ireland.education.university.exam_papers.uog_exam_vlm import (
     UOG_VLM_MODEL_REGISTRY,
     UoGExamVLMConfig,
@@ -91,6 +86,6 @@ def test_run_thesis_eval_emits_one_row_per_model_per_paper(monkeypatch, tmp_path
     )
 
     rows = run_thesis_eval([pdf1, pdf2], module_codes, years)
-    assert len(rows) == 8  # 2 papers × 4 models
+    assert len(rows) == 8  # 2 papers x 4 models
     models_seen = {r.model for r in rows}
     assert models_seen == {"glm-4.6v-flash", "qwen3-vl-7b", "olmocr-2-7b", "gemma-3-9b-it"}

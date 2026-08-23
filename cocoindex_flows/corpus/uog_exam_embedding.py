@@ -43,11 +43,10 @@ except ImportError as exc:  # pragma: no cover - defensive
 
 
 from .._shared._lifespan import (  # noqa: E402
-    EMBEDDER,
     EMBED_MODEL,
+    EMBEDDER,
     LANCE_DB,
 )
-
 
 UOG_EXAM_DUCKLAKE_TABLE = "cianfhoghlaim.education.ie.uog_exam_papers"
 LANCEDB_TABLE_NAME = "uog_exam_papers"
@@ -68,8 +67,8 @@ def _read_uog_exam_ducklake() -> list[dict[str, Any]]:
         con = duckdb.connect(db_path, read_only=True)
         rows = con.execute(f"SELECT * FROM {UOG_EXAM_DUCKLAKE_TABLE}").fetchall()
         columns = [d[0] for d in con.description]
-        return [dict(zip(columns, r)) for r in rows]
-    except Exception as exc:  # noqa: BLE001 - defensive
+        return [dict(zip(columns, r, strict=False)) for r in rows]
+    except Exception as exc:
         logger.warning(
             "uog_exam_ducklake_read_failed",
             table=UOG_EXAM_DUCKLAKE_TABLE,
@@ -199,9 +198,9 @@ else:
 
 
 __all__ = [
+    "COCOINDEX_AVAILABLE",
+    "LANCEDB_TABLE_NAME",
+    "UOG_EXAM_DUCKLAKE_TABLE",
     "UoGExamPapersApp",
     "UoGExamQuestionChunk",
-    "UOG_EXAM_DUCKLAKE_TABLE",
-    "LANCEDB_TABLE_NAME",
-    "COCOINDEX_AVAILABLE",
 ]

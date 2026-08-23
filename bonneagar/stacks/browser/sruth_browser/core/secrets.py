@@ -26,12 +26,9 @@ Logging:
 
 from __future__ import annotations
 
-import functools
-import logging
 import os
-import subprocess
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Final
 
@@ -68,7 +65,7 @@ FIXTURE_ONLY_VALUES: Final[frozenset[str]] = frozenset(
 )
 
 
-@dataclass(frozen=True)
+@dataclass
 class SecretsResolver:
     """Resolve a single secret by name through the priority chain.
 
@@ -80,6 +77,10 @@ class SecretsResolver:
     is any chance env vars have been re-set (the asset materialisation
     process is fine to share a process-wide resolver via
     `get_default_secrets_resolver()`).
+
+    NOT frozen=True on purpose: tests need to mock-patch the
+    `_try_*` methods with `unittest.mock.patch.object`, and frozen
+    dataclasses disallow that.
     """
 
     infisical_token: str | None = None
@@ -89,8 +90,10 @@ class SecretsResolver:
 
     cache_ttl_seconds: float = 60.0  # cache each lookup for 60 s
 
-    _process_cache: dict[str, tuple[float, str | None, str | None]] = {}  # noqa: RUF012
-    _logged_op_doc_only: bool = False  # noqa: RUF012
+    _process_cache: dict[str, tuple[float, str | None, str | None]] = field(
+        default_factory=dict
+    )
+    _logged_op_doc_only: bool = False
 
     @classmethod
     def from_env(cls) -> SecretsResolver:
@@ -174,6 +177,38 @@ class SecretsResolver:
     def _try_env(self, name: str) -> tuple[str | None, str]:
         value = os.environ.get(name)
         return value, "env"
+
+    # ------------------------------------------------------------------ #
+    # Cache helpers
+    # ------------------------------------------------------------------ #
+
+    def _cache_get(self, name: str) -> tuple[float, str | None, str | None] | None:
+        entry = self._process_cache.get(name)
+        if entry is None:
+            return None
+        cached_at, _value, _backend = entry
+        # Honour the per-TTL: any entry older than `cache_ttl_seconds`
+        # is considered stale so we re-hit the backend.
+        if (time.time() - cached_at) >= self.cache_ttl_seconds:
+            self._process_cache.pop(name, None)
+            return None
+        return entry
+
+    def _cache_put(self, name: str, value: str | None, backend: str) -> None:
+        self._process_cache[name] = (time.time(), value, backend)
+
+    def _log_first_time(self, name: str, backend: str, *, hit: bool) -> None:
+        """Emit the canonical `secrets_backend_resolved` log line ONCE per (name, process)."""
+        cache_key = f"_logged::{name}"
+        if cache_key in self._process_cache:
+            return
+        self._process_cache[cache_key] = (time.time(), None, backend)
+        logger.info(
+            "secrets_backend_resolved",
+            name=name,
+            backend=backend,
+            hit=hit,
+        )
 
     def _try_op_doc_only(self, name: str) -> tuple[str | None, str]:
         """1Password CLI is documented only — never invoked.

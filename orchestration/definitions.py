@@ -280,4 +280,27 @@ except Exception as _exc:  # pragma: no cover
     )
 
 
+# ============================================================================
+# UoG exam-papers pipeline (M.Sc. AI thesis)
+# ============================================================================
+# Mounts the 5-asset `uog_exam_papers` group + the STOPPED-by-default
+# nightly schedule via `orchestration/defs/uog_exam.py`. The schedule is
+# OFF by default; flip it on with `dg launch schedule uog_exam_papers_nightly`
+# once you have set INFISICAL_TOKEN + OOG_STUDENT_PASSWORD.
+# Reference: openspec/changes/2026-08-23-uog-exam-papers-sso-v1/
+# ============================================================================
+
+try:
+    from orchestration.defs.uog_exam import build_uog_exam_definitions
+
+    defs = dg.Definitions.merge(defs, build_uog_exam_definitions())
+except Exception as _exc:  # pragma: no cover
+    import structlog
+
+    structlog.get_logger().warning(
+        f"uog_exam_assets_load_failed: {_exc}; "
+        "the 5 uog_exam_papers assets will not be discoverable in Dagster"
+    )
+
+
 __all__ = ["defs", "_DEFS_AVAILABLE", "_DEFS_LOADED_VIA"]

@@ -5,8 +5,6 @@ Reference: scripts/graph_storage/cognify/rules/uog_exam_cross_archive.py
 
 from __future__ import annotations
 
-import pytest
-
 
 def test_text_overlap_ratio_perfect():
     from scripts.graph_storage.cognify.rules.uog_exam_cross_archive import (
@@ -38,12 +36,17 @@ def test_is_valid_module_code():
         _is_valid_module_code,
     )
 
-    assert _is_valid_module_code("CT516") is True
-    assert _is_valid_module_code("MA335") is True
-    assert _is_valid_module_code("BCT1234") is True
-    assert _is_valid_module_code("ct516") is False  # uppercase only
-    assert _is_valid_module_code("CT51") is False  # too few digits
-    assert _is_valid_module_code("CTU123") is False  # 5-letter prefix not allowed
+    # Valid UoG module codes span the 2-4 letter prefix x 3-4 digit suffix ranges.
+    assert _is_valid_module_code("CT516") is True       # 2 letters + 3 digits
+    assert _is_valid_module_code("MA335") is True       # 2 letters + 3 digits
+    assert _is_valid_module_code("BCT1234") is True     # 3 letters + 4 digits
+    assert _is_valid_module_code("EDUC100") is True     # 4 letters + 3 digits
+    # Invalid
+    assert _is_valid_module_code("ct516") is False      # uppercase only
+    assert _is_valid_module_code("CT51") is False       # too few digits
+    assert _is_valid_module_code("X") is False
+    assert _is_valid_module_code("") is False
+    assert _is_valid_module_code("CT-516") is False     # punctuation
 
 
 def test_query_builder_returns_empty_for_invalid_inputs():
@@ -101,25 +104,22 @@ def test_query_builder_filters_invalid_module_codes():
 
     papers = [{"module_code": "not-a-code", "academic_year": 0, "sitting": "AUTUMN", "questions": []}]
     modules = [{"module_code": "CT516", "academic_year": 2023, "learning_outcomes": []}]
-    cypher, params = build_uog_exam_covers_module_query(papers, modules)
+    cypher, _params = build_uog_exam_covers_module_query(papers, modules)
     assert cypher == ""
 
 
-def test_populate_returns_stub_when_no_falkordb(monkeypatch):
-    """GIVEN the falkordb client cannot be imported
-    WHEN populate_uog_exam_covers_module is called
-    THEN it returns a `stub=True` dict instead of raising."""
-    from scripts.graph_storage.cognify.rules import uog_exam_cross_archive
+def test_populate_returns_stub_when_no_inputs():
+    """GIVEN no exam papers OR no module descriptors
+    WHEN populate is called
+    THEN it returns an empty stub without contacting FalkorDB."""
+    from scripts.graph_storage.cognify.rules.uog_exam_cross_archive import (
+        populate_uog_exam_covers_module,
+    )
 
-    monkeypatch.setattr(uog_exam_cross_archive, "populate_uog_exam_covers_module", uog_exam_cross_archive.populate_uog_exam_covers_module)
-    # Force the inner import to fail by hiding the module.
-    import sys
-    sys.modules["cianext"] = None  # type: ignore[assignment]
-    sys.modules["cianext"] = sys.modules.pop("cianext", None)  # type: ignore[assignment]
-    # Build via stub client
-    result = uog_exam_cross_archive.populate_uog_exam_covers_module(
-        exam_papers=[{"module_code": "CT516", "academic_year": 2023, "sitting": "AUTUMN", "questions": [], "title": "", "source_kind": "", "source_url": "", "scraped_at": ""}],
+    result = populate_uog_exam_covers_module(
+        exam_papers=[],
         module_descriptors=[],
     )
     assert result["queries_executed"] == 0
     assert result["edges_created"] == 0
+    assert result["stub"] is False

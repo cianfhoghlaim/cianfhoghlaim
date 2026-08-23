@@ -14,23 +14,22 @@ Why this file exists:
 
 Two entry points:
 
-  - `UoGExamVLMConfig`  – thin Pydantic config for "what model + DPI to
+  - `UoGExamVLMConfig`  - thin Pydantic config for "what model + DPI to
                           use".
-  - `run_vlm_eval(...)` – per-paper extract helper used by both the
+  - `run_vlm_eval(...)` - per-paper extract helper used by both the
                           `uog_exam_papers_ocr_extract` Dagster asset
                           and the standalone MLflow eval script.
-  - `run_thesis_eval(...)` – runs the 4-VLM comparison and returns a
-                             CSV-shaped DataFrame ready for MLflow.
+  - `run_thesis_eval(...)` - runs the 4-VLM comparison and returns a
+                              CSV-shaped DataFrame ready for MLflow.
 
 Reference: openspec/changes/2026-08-23-uog-exam-papers-sso-v1/
 """
 
 from __future__ import annotations
 
-import logging
 import os
 from collections.abc import Iterable
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -114,26 +113,23 @@ def pdf_to_images(
 ) -> list[bytes]:
     """Render each page of `pdf_path` to a PNG byte blob.
 
-    Uses PyMuPDF (`pymupdf`) when available, falls back to a no-op
+    Uses PyMuPDF (`pymupdf`) when available, falls back to the older
+    `fitz` import path (the pre-2024 alias), and finally to a no-op
     return so the import path doesn't crash on a workstation that
     hasn't installed the OCR stack yet.
     """
+    _mupdf: Any | None = None
     try:
-        import pymupdf  # PyMuPDF (renamed in 2024; pymupdf==1.24+)
-    except Exception:  # noqa: BLE001
+        import pymupdf as _mupdf  # PyMuPDF (renamed in 2024; pymupdf==1.24+)
+    except Exception:
         try:
-            import fitz  # type: ignore[no-redef]
+            import fitz as _mupdf  # type: ignore[no-redef]
         except ImportError:
             logger.warning(
                 "uog_vlm_pdf_to_images_pymupdf_missing",
                 pdf_path=str(pdf_path),
             )
             return []
-
-    try:
-        import pymupdf as _mupdf  # type: ignore[no-redef]
-    except Exception:  # noqa: BLE001
-        import fitz as _mupdf  # type: ignore[no-redef]
 
     images: list[bytes] = []
     with _mupdf.open(str(pdf_path)) as doc:  # type: ignore[union-attr]
@@ -175,7 +171,7 @@ def run_vlm_eval(
         }
 
     try:
-        from baml_client import b  # type: ignore[import-not-found]
+        from baml_client import b as _baml_b  # type: ignore[import-not-found]
     except ImportError:
         return {
             "status": "baml_client_missing",
@@ -188,7 +184,7 @@ def run_vlm_eval(
     # `image_url` blocks (LiteLLM handles data URLs cleanly).
     # We save them to a sidecar so the cache survives a restart.
     try:
-        result = b.ExtractUoGExamPaperFromImages(
+        result = _baml_b.ExtractUoGExamPaperFromImages(
             images=[_bytes_to_data_url(img) for img in images],
             module_code=module_code,
             academic_year=academic_year,
@@ -204,7 +200,7 @@ def run_vlm_eval(
                 result.model_dump() if hasattr(result, "model_dump") else result
             ),
         }
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         logger.warning(
             "uog_vlm_eval_failed",
             model=cfg.model,
@@ -328,9 +324,9 @@ def run_thesis_eval(
 
 __all__ = [
     "UOG_VLM_MODEL_REGISTRY",
+    "ThesisEvalRow",
     "UoGExamVLMConfig",
     "pdf_to_images",
-    "run_vlm_eval",
     "run_thesis_eval",
-    "ThesisEvalRow",
+    "run_vlm_eval",
 ]

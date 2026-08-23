@@ -23,6 +23,7 @@ from .uog_exam_assets import (
     uog_exam_papers_ocr_extract,
 )
 from .uog_exam_papers_source import (
+    V1_SCHOOL_WHITELIST,
     all_schools_source,
     computer_science_source,
     msc_ai_source,
@@ -38,24 +39,25 @@ from .uog_exam_vlm import (
 )
 
 __all__ = [
-    # DLT source
-    "uog_exam_papers_source",
-    "msc_ai_source",
-    "computer_science_source",
-    "all_schools_source",
-    # Dagster assets
-    "uog_exam_assets",
-    "uog_exam_login_health",
-    "uog_exam_module_discovery",
-    "uog_exam_papers_download",
-    "uog_exam_papers_ocr_extract",
-    "uog_exam_los_map",
     "GROUP_NAME",
     # VLM evaluation
     "UOG_VLM_MODEL_REGISTRY",
-    "UoGExamVLMConfig",
-    "pdf_to_images",
-    "run_vlm_eval",
-    "run_thesis_eval",
+    "V1_SCHOOL_WHITELIST",
     "ThesisEvalRow",
+    "UoGExamVLMConfig",
+    "all_schools_source",
+    "computer_science_source",
+    "msc_ai_source",
+    "pdf_to_images",
+    "run_thesis_eval",
+    "run_vlm_eval",
+    # Dagster assets
+    "uog_exam_assets",
+    "uog_exam_login_health",
+    "uog_exam_los_map",
+    "uog_exam_module_discovery",
+    "uog_exam_papers_download",
+    "uog_exam_papers_ocr_extract",
+    # DLT source
+    "uog_exam_papers_source",
 ]
