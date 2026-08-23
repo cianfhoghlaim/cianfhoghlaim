@@ -214,12 +214,15 @@ class BonneagarLakehouseDestination:
 DESTINATION_CHOICES = ("local", "motherduck", "bonneagar")
 
 
-def get_destination(name: str) -> Any:
+def get_destination(name: str | None = None) -> Any:
     """Resolve a string destination to its `dlt_target()`.
 
     `name` MUST be one of `"local"`, `"motherduck"`, or
-    `"bonneagar"`. The default is `"local"`.
+    `"bonneagar"`. When `name` is `None` or empty, the
+    `DUCKLAKE_DESTINATION` env var is consulted (default `local`).
     """
+    if not name:
+        name = os.environ.get("DUCKLAKE_DESTINATION", "local")
     if name not in DESTINATION_CHOICES:
         raise ValueError(
             f"Unknown destination {name!r}; expected one of "

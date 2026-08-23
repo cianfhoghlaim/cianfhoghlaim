@@ -2,6 +2,59 @@
 
 This project uses standard GitHub/Forgejo issues for task tracking. Please use `gh` or standard `git` workflows.
 
+## New in 2026-08-23-uog-personal-archive-tertiary-modules-v1 (UoG personal archive → tertiary subject pipeline)
+
+Lifts `leabharlann/ollscoil_na_gaillimhe/` + transcript PDFs to
+feature parity with the leaving-cycle subject pipeline (4 CocoIndex
+v1 Apps, 10 typed Cognee edges, 6 Dagster assets, 8-tab Marimo
+notebook, Convex + CopilotKit + Genie + ADK, tests + observability +
+thesis figures).
+
+**Source**: `leabharlann/ollscoil_na_gaillimhe/` (auto-discovered; no curated drop-PDF UI as primary entry).
+
+**F-granularity destination**: per-question, per-assignment, per-topic — chatable via `notebooks/15_personal_archive.py`, Convex `chatOverMyArchive`, CopilotKit `<AskMyArchive />`, Genie tile, ADK agent `personal_archive_module_assistant`.
+
+**Transferability**: 9 env vars + a generic `UniversityPersonalArchiveConfig` Pydantic model; any university student can point it at their own `leabharlann/<university>/` corpus.
+
+**Key file paths**:
+
+| Layer | Path |
+|---|---|
+| Openspec proposal + tasks | `openspec/changes/2026-08-23-uog-personal-archive-tertiary-modules-v1/{proposal.md,tasks.md}` |
+| Spec | `openspec/changes/2026-08-23-uog-personal-archive-tertiary-modules-v1/specs/cianfhoghlaim-personal-archive-typed-modules/spec.md` |
+| BAML schema | `baml_src/british_isles/ireland/education/university/personal_archive_extraction.baml` |
+| DLT source | `dlt_sources/filesystem/uog_personal_archive.py` |
+| HTR ensemble | `dlt_sources/filesystem/_htr_ensemble.py` |
+| Generic factory | `dlt_sources/british_isles/ireland/education/university/personal_archive/uog_personal_archive_source.py` |
+| DuckLake tables | `dlt_sources/_lakehouse/personal_archive_destinations.py` |
+| CocoIndex Apps | `cocoindex_flows/british_isles/ireland/education/university/personal_archive_embedding.py` |
+| Cognee edges | `scripts/graph_storage/cognify/rules/personal_archive_typed_edges.py` |
+| Marimo notebook | `notebooks/15_personal_archive.py` |
+| Dagster assets | `orchestration/defs/uog_personal_archive.py` |
+| Convex chat | `web/apps/cianfhoghlaim/convex/personalArchive.ts` |
+| CopilotKit | `web/apps/cianfhoghlaim/components/AskMyArchive.tsx` |
+| Genie UI | `web/apps/cianfhoghlaim/genie/personal_archive_browser.ts` |
+| ADK agent | `agents/adk/personal_archive_module_assistant.py` |
+| Thesis figures | `orchestration/defs/uog_personal_archive_figures.py` |
+| Grafana dashboard | `observability/dashboards/personal_archive.json` |
+| Tests | `tests/personal_archive/` (12 tests) |
+
+**Quickstart**:
+
+```bash
+# Run the test suite (12 passing)
+uv run pytest tests/personal_archive/ -v
+
+# Validate the openspec change
+uv run openspec validate 2026-08-23-uog-personal-archive-tertiary-modules-v1 --strict
+
+# Materialise the DuckLake tables (smoke test)
+uv run python -c "import duckdb; from dlt_sources._lakehouse import register_personal_archive_tables; con = duckdb.connect(':memory:'); register_personal_archive_tables(con); print('OK')"
+
+# Auto-classify a sample file
+uv run python -c "from pathlib import Path; from dlt_sources.filesystem.uog_personal_archive import _classify_file; print(_classify_file(Path('leabharlann/ollscoil_na_gaillimhe/mata/networks/CS4423 - Networks/cian_mac_liathain_assignment_3.pdf')))"
+```
+
 ## Priority quick reference
 
 The 5 priority skills, the 4 priority commands, the 4 priority

@@ -321,6 +321,7 @@ for _uog_official_docs_group_module in (
     "orchestration.defs.nui_federation",
     "orchestration.defs.uog_students_union",
     "orchestration.defs.british_isles_tertiary",
+    "orchestration.defs.uog_personal_archive",
 ):
     try:
         _mod = __import__(

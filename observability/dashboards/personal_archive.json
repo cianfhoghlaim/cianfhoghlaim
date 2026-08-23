@@ -1,0 +1,165 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {"type": "grafana", "uid": "-- Grafana --"},
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "UoG personal-archive pipeline observability dashboard (WS12). Source: openspec/changes/2026-08-23-uog-personal-archive-tertiary-modules-v1/. Tables: cianfhoghlaim.education.ie.personal_archive_*, cianfhoghlaim.education.ie.student_transcripts.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "id": 1,
+      "title": "Artefact count by module",
+      "type": "stat",
+      "datasource": {"type": "postgres", "uid": "${DS_DUCKLAKE_POSTGRES}"},
+      "gridPos": {"h": 6, "w": 6, "x": 0, "y": 0},
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT module_code, COUNT(*) AS artefacts FROM cianfhoghlaim.education.ie.personal_archive_artefacts GROUP BY module_code ORDER BY artefacts DESC",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "HTR backend distribution",
+      "type": "piechart",
+      "datasource": {"type": "postgres", "uid": "${DS_DUCKLAKE_POSTGRES}"},
+      "gridPos": {"h": 6, "w": 6, "x": 6, "y": 0},
+      "options": {
+        "displayLabels": ["name", "percent"],
+        "legend": {"displayMode": "list", "placement": "right", "showLegend": true},
+        "pieType": "donut",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT htr_backend, COUNT(*) AS n FROM cianfhoghlaim.education.ie.personal_archive_artefacts GROUP BY htr_backend",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Transcript join coverage %",
+      "type": "gauge",
+      "datasource": {"type": "postgres", "uid": "${DS_DUCKLAKE_POSTGRES}"},
+      "gridPos": {"h": 6, "w": 6, "x": 12, "y": 0},
+      "options": {
+        "min": 0,
+        "max": 100,
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT 100.0 * (SELECT COUNT(*) FROM cianfhoghlaim.education.ie.personal_archive_artefacts a JOIN cianfhoghlaim.education.ie.student_transcripts t ON a.module_code = t.module_code AND a.academic_year = t.academic_year) / NULLIF((SELECT COUNT(*) FROM cianfhoghlaim.education.ie.personal_archive_artefacts), 0) AS coverage_pct",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Question count per assignment",
+      "type": "barchart",
+      "datasource": {"type": "postgres", "uid": "${DS_DUCKLAKE_POSTGRES}"},
+      "gridPos": {"h": 6, "w": 6, "x": 18, "y": 0},
+      "options": {
+        "orientation": "horizontal",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "showValue": "auto"
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT a.artefact_id, a.artefact_title, COUNT(q.question_id) AS question_count FROM cianfhoghlaim.education.ie.personal_archive_assignments a LEFT JOIN cianfhoghlaim.education.ie.personal_archive_questions q ON q.artefact_id = a.artefact_id GROUP BY a.artefact_id, a.artefact_title ORDER BY question_count DESC LIMIT 25",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Topic heatmap (programme × topic_category)",
+      "type": "table",
+      "datasource": {"type": "postgres", "uid": "${DS_DUCKLAKE_POSTGRES}"},
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 6},
+      "options": {"showHeader": true},
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT t.programme, t.topic_category, COUNT(*) AS topic_count FROM cianfhoghlaim.education.ie.personal_archive_topics t GROUP BY t.programme, t.topic_category ORDER BY t.programme, topic_count DESC",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Recent (last 24h) materialisations",
+      "type": "table",
+      "datasource": {"type": "postgres", "uid": "${DS_DUCKLAKE_POSTGRES}"},
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 14},
+      "options": {"showHeader": true},
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "SELECT artefact_id, artefact_title, module_code, academic_year, scraped_at FROM cianfhoghlaim.education.ie.personal_archive_artefacts WHERE scraped_at >= NOW() - INTERVAL '24 hours' ORDER BY scraped_at DESC",
+          "refId": "A"
+        }
+      ]
+    }
+  ],
+  "refresh": "5m",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["uog-personal-archive", "biep", "ducklake"],
+  "templating": {
+    "list": [
+      {
+        "current": {"selected": false, "text": "DuckLake Postgres", "value": "ducklake-postgres"},
+        "hide": 0,
+        "includeAll": false,
+        "label": "Datasource",
+        "multi": false,
+        "name": "DS_DUCKLAKE_POSTGRES",
+        "options": [],
+        "query": "postgres",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      }
+    ]
+  },
+  "time": {"from": "now-7d", "to": "now"},
+  "timepicker": {},
+  "timezone": "",
+  "title": "UoG Personal Archive — Pipeline Observability",
+  "uid": "uog-personal-archive-v1",
+  "version": 1,
+  "weekStart": ""
+}
