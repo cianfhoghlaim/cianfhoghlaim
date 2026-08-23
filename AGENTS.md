@@ -2,6 +2,59 @@
 
 This project uses standard GitHub/Forgejo issues for task tracking. Please use `gh` or standard `git` workflows.
 
+## New in 2026-08-23-uog-personal-archive-tertiary-modules-v1 (UoG personal archive → tertiary subject pipeline)
+
+Lifts `leabharlann/ollscoil_na_gaillimhe/` + transcript PDFs to
+feature parity with the leaving-cycle subject pipeline (4 CocoIndex
+v1 Apps, 10 typed Cognee edges, 6 Dagster assets, 8-tab Marimo
+notebook, Convex + CopilotKit + Genie + ADK, tests + observability +
+thesis figures).
+
+**Source**: `leabharlann/ollscoil_na_gaillimhe/` (auto-discovered; no curated drop-PDF UI as primary entry).
+
+**F-granularity destination**: per-question, per-assignment, per-topic — chatable via `notebooks/15_personal_archive.py`, Convex `chatOverMyArchive`, CopilotKit `<AskMyArchive />`, Genie tile, ADK agent `personal_archive_module_assistant`.
+
+**Transferability**: 9 env vars + a generic `UniversityPersonalArchiveConfig` Pydantic model; any university student can point it at their own `leabharlann/<university>/` corpus.
+
+**Key file paths**:
+
+| Layer | Path |
+|---|---|
+| Openspec proposal + tasks | `openspec/changes/2026-08-23-uog-personal-archive-tertiary-modules-v1/{proposal.md,tasks.md}` |
+| Spec | `openspec/changes/2026-08-23-uog-personal-archive-tertiary-modules-v1/specs/cianfhoghlaim-personal-archive-typed-modules/spec.md` |
+| BAML schema | `baml_src/british_isles/ireland/education/university/personal_archive_extraction.baml` |
+| DLT source | `dlt_sources/filesystem/uog_personal_archive.py` |
+| HTR ensemble | `dlt_sources/filesystem/_htr_ensemble.py` |
+| Generic factory | `dlt_sources/british_isles/ireland/education/university/personal_archive/uog_personal_archive_source.py` |
+| DuckLake tables | `dlt_sources/_lakehouse/personal_archive_destinations.py` |
+| CocoIndex Apps | `cocoindex_flows/british_isles/ireland/education/university/personal_archive_embedding.py` |
+| Cognee edges | `scripts/graph_storage/cognify/rules/personal_archive_typed_edges.py` |
+| Marimo notebook | `notebooks/15_personal_archive.py` |
+| Dagster assets | `orchestration/defs/uog_personal_archive.py` |
+| Convex chat | `web/apps/cianfhoghlaim/convex/personalArchive.ts` |
+| CopilotKit | `web/apps/cianfhoghlaim/components/AskMyArchive.tsx` |
+| Genie UI | `web/apps/cianfhoghlaim/genie/personal_archive_browser.ts` |
+| ADK agent | `agents/adk/personal_archive_module_assistant.py` |
+| Thesis figures | `orchestration/defs/uog_personal_archive_figures.py` |
+| Grafana dashboard | `observability/dashboards/personal_archive.json` |
+| Tests | `tests/personal_archive/` (12 tests) |
+
+**Quickstart**:
+
+```bash
+# Run the test suite (12 passing)
+uv run pytest tests/personal_archive/ -v
+
+# Validate the openspec change
+uv run openspec validate 2026-08-23-uog-personal-archive-tertiary-modules-v1 --strict
+
+# Materialise the DuckLake tables (smoke test)
+uv run python -c "import duckdb; from dlt_sources._lakehouse import register_personal_archive_tables; con = duckdb.connect(':memory:'); register_personal_archive_tables(con); print('OK')"
+
+# Auto-classify a sample file
+uv run python -c "from pathlib import Path; from dlt_sources.filesystem.uog_personal_archive import _classify_file; print(_classify_file(Path('leabharlann/ollscoil_na_gaillimhe/mata/networks/CS4423 - Networks/cian_mac_liathain_assignment_3.pdf')))"
+```
+
 ## Priority quick reference
 
 The 5 priority skills, the 4 priority commands, the 4 priority
@@ -376,6 +429,31 @@ openspec change (see its
 |-------|---------|--------------|
 | [`unsloth`](.agents/skills/unsloth/SKILL.md) | LLM fine-tuning | Multilingual support (v2024.12+), flash attention, 2x faster |
 | [`tanstack-start`](.agents/skills/tanstack-start/SKILL.md) | React framework | React Server Components (v1.94+), edge runtime, streaming suspense |
+
+## OpenCode Agent Dispatch Matrix (NEW 2026-08-23)
+
+Per the `2026-08-23-agent-opencode-agent-coverage-expansion-v1` change,
+the 15 agents under `.opencode/agents/*.md` are organized into 3 tiers:
+
+| Tier | Agent | When to dispatch |
+|:-----|:------|:-----------------|
+| **Primary (4)** | `build` | Default BUILD agent. Full skill_filter (no restriction). |
+| **Primary (4)** | `plan` | Read-only planning. Default dispatch for "plan this" tasks. |
+| **Functional subagent (5)** | `data-platform` | DLT + Dagster + BAML + CocoIndex + MotherDuck + marimo tasks. Dispatch via `task` tool with `subagent_type: data-platform`. |
+| **Functional subagent (5)** | `infrastructure` | Komodo + Pangolin + Locket + Infisical + 94-stack IaC. Dispatch via `task` tool with `subagent_type: infrastructure`. |
+| **Functional subagent (5)** | `agent-platform` | BAML + LiteLLM + Langfuse + MLflow + RAGAS + Graphiti + Cognee + 12-agent fleet. Dispatch via `task` tool with `subagent_type: agent-platform`. |
+| **Functional subagent (5)** | `frontend-apps` | TanStack Start + Convex + Hono + CopilotKit + AG-UI + marimo + Babylon.js. Dispatch via `task` tool with `subagent_type: frontend-apps`. |
+| **Functional subagent (5)** | `research` | BrowserBase + Firecrawl + CCC + Cognee + change-detection. Dispatch via `task` tool with `subagent_type: research`. |
+| **Domain subagent (10)** | `baml`, `dagster`, `mise`, `notebooks`, `orchestrator`, `proposal-author`, `deep-cuts`, `dev-env-demo` | Scoped to a single domain (BAML schema authoring, Dagster asset authoring, mise task authoring, marimo notebook authoring, openspec change authoring, deep structural analysis, dev-env demos). |
+
+**Dispatch rules:**
+
+- **Always use `build` (the default)** for general tasks — it has the full skill_filter.
+- **Prefer a functional subagent** when the task is clearly within one of the 5 functional surfaces (data, infra, agents, web, research). The subagent gets a scoped skill_filter that improves focus + reduces token usage.
+- **Prefer a domain subagent** when the task is specifically about authoring (e.g., "write a new Dagster asset" → `dagster` subagent).
+- **Never dispatch `research` for tasks that require making changes** — the `research` subagent is read-only.
+
+The full agent list + their `skill_filter` arrays live in `opencode.json` under the `agent` key. The 15 agent `.md` files under `.opencode/agents/` are the per-agent prompts (split out from the inline `prompt` field per the dev-tooling refactor).
 
 ## Domain-to-Skill Mapping
 

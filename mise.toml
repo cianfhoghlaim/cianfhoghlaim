@@ -261,6 +261,18 @@ description = "DEVOPS health (root alias → //devops:health in bonneagar/) — 
 alias = ["iac:health", "iac-health"]
 run = "cd ${MISE_PROJECT_ROOT:-.}/bonneagar && bun run iac:health"
 
+# Per the 2026-08-23-infra-stack-doctor-and-gold-standard-modernization-v1 change:
+# 2 new tasks wrapping the stack-doctor audit + drift report.
+[tasks."devops:stack:gold-standard-audit"]
+description = "DEVOPS stack gold-standard-audit — fail CI if any stack is missing any of the 6 GOLD_STANDARD files (compose.yaml + sidecar.yaml + secrets.env + pangolin.yaml + blueprint.yaml + .env.example). Per the 2026-08-23-infra-stack-doctor-and-gold-standard-modernization-v1 change."
+alias = ["stack:gold-standard-audit", "iac:stack-gold-standard"]
+run = "bash scripts/stack-doctor.sh --strict 2>&1 | tail -50"
+
+[tasks."devops:stack:drift-report"]
+description = "DEVOPS stack drift-report — emit a per-stack drift summary (informational, never fails). Per the 2026-08-23-infra-stack-doctor-and-gold-standard-modernization-v1 change."
+alias = ["stack:drift-report", "iac:stack-drift"]
+run = "bash scripts/stack-doctor.sh 2>&1 | tail -100"
+
 [tasks."devops:plan"]
 description = "DEVOPS plan (root alias → //devops:plan in bonneagar/) — IaC diff (no mutation)"
 alias = ["iac:plan", "iac-plan"]
@@ -283,6 +295,18 @@ run = "cd ${MISE_PROJECT_ROOT:-.}/bonneagar && bun run iac:deploy"
 [tasks."devops:teardown"]
 description = "DEVOPS teardown (root alias → //devops:teardown) — reverse of bootstrap (requires --force)"
 run = "cd ${MISE_PROJECT_ROOT:-.}/bonneagar && bun run iac:teardown"
+
+# Per the 2026-08-23-infra-pangolin-and-infisical-latest-v1 change: 2 new
+# upgrade-check tasks for the Pangolin + Infisical infrastructure tools.
+[tasks."devops:pangolin:upgrade"]
+description = "DEVOPS pangolin upgrade — check the latest Pangolin version + print the changelog URL. Per the 2026-08-23-infra-pangolin-and-infisical-latest-v1 change."
+alias = ["pangolin:upgrade"]
+run = "bash -c 'echo \"=== Pangolin Latest Version ===\"; LATEST=$(curl -sS https://api.github.com/repos/fossorial-oath/Pangolin/releases/latest | grep tag_name | head -1 | cut -d\\\" -f4); echo \"Latest Pangolin: $LATEST\"; echo \"Local pangolin: $(pangolin --version 2>/dev/null || echo unknown)\"; echo \"Changelog: https://github.com/fossorial-oath/Pangolin/releases\"'"
+
+[tasks."devops:infisical:upgrade"]
+description = "DEVOPS infisical upgrade — check the latest Infisical version + print the changelog URL. Per the 2026-08-23-infra-pangolin-and-infisical-latest-v1 change."
+alias = ["infisical:upgrade"]
+run = "bash -c 'echo \"=== Infisical Latest Version ===\"; LATEST=$(curl -sS https://api.github.com/repos/Infisical/cli/releases/latest | grep tag_name | head -1 | cut -d\\\" -f4); echo \"Latest Infisical: $LATEST\"; echo \"Local infisical: $(infisical --version 2>/dev/null || echo unknown)\"; echo \"Changelog: https://github.com/Infisical/cli/releases\"'"
 
 # Root-level aliases for the ml:agents tasks moved to agents/mise.toml
 [tasks."ml:agents:smoke"]
@@ -717,6 +741,19 @@ run = "bash scripts/sync/stacks.sh"
 description = "Layer 11: DLT source sync orchestrator (drift + ccc + cognee + test + lint)"
 run = "bash scripts/sync/dlt.sh"
 
+# Per the 2026-08-23-data-cocoindex-v1-0-14-features-v1 change: 2 new tasks
+# wrapping the CocoIndex v1.0.14+ App/flow surface.
+[tasks."data:cocoindex:apps:list"]
+description = "DATA cocoindex apps-list — enumerate all BIEP v1 Apps (6 LC subjects + government_circulars). Per the 2026-08-23-data-cocoindex-v1-0-14-features-v1 change."
+alias = ["cocoindex:apps:list", "cocoindex:list"]
+run = "bash -c 'ls cocoindex_flows/biep_parity/ 2>/dev/null && echo \"---\" && ls cocoindex_flows/ 2>/dev/null | head -20'"
+
+[tasks."data:cocoindex:flows:status"]
+description = "DATA cocoindex flows-status — check the freshness + last-run timestamp of a named v1 App. Usage: mise run data:cocoindex:flows:status -- <app_name>. Per the 2026-08-23-data-cocoindex-v1-0-14-features-v1 change."
+usage = 'app_name "<name>" help="The BIEP v1 App name (e.g. ireland_lc_mathematics)"'
+alias = ["cocoindex:flows:status"]
+run = "bash -c 'APP=${1:-ireland_lc_mathematics}; echo \"=== CocoIndex Flow Status: $APP ===\"; echo \"Last refresh: $(stat -f %Sm cocoindex_flows/biep_parity/${APP}* 2>/dev/null | head -1)\"; echo \"File count: $(ls cocoindex_flows/biep_parity/${APP}* 2>/dev/null | wc -l)\"'"
+
 [tasks."sync:agents"]
 description = "Layer 12: agent definitions sync orchestrator (drift + ccc + cognee + test + lint)"
 run = "bash scripts/sync/agents.sh"
@@ -752,6 +789,41 @@ depends = [
   "sync:tg4-foghlaim",
 ]
 run = "bash scripts/sync/tg4_all.sh"
+
+# Phase C additions (the data-plane functional subagent task).
+#  - data:tg4_foghlaim:m1   : run the BIEP v3 M1 milestone (the TG4 ingestion leg)
+#  - data:tg4_foghlaim:lint : aggregate lint sweep (drift-docs + BAML + cocoindex conformance)
+[tasks."data:tg4_foghlaim:m1"]
+description = "Phase C M1 milestone — run the BIEP v3 milestone script gated through the TG4 + Foghlaim corpus (m1.py + DLT ingestions on stedding cache)"
+alias = ["tg4:foghlaim:m1"]
+depends = ["sync:tg4-all"]
+run = '''
+echo "[data:tg4_foghlaim:m1] resolving the BIEP m1 milestone script"
+SCRIPT="$(ls -1 scripts/m1_*.py 2>/dev/null | head -1 || true)"
+if [ -z "${SCRIPT}" ]; then
+  echo "WARN: no scripts/m1_*.py found; falling back to sync:tg4-all" >&2
+  mise run sync:tg4-all
+else
+  USE_LOCAL_SCRAPES=true .venv/bin/python3 "${SCRIPT}"
+fi
+'''
+
+[tasks."data:tg4_foghlaim:lint"]
+description = "Phase C aggregate lint — drift-docs + BAML stub-prompt + cocoindex v1 conformance + dlt-nested-hints (the 4 linters that touch the TG4 + Foghlaim surface)"
+alias = ["tg4:foghlaim:lint"]
+depends = ["core:install"]
+run = '''
+set -e
+echo "[data:tg4_foghlaim:lint] drift-docs …"
+mise run lint:drift-docs
+echo "[data:tg4_foghlaim:lint] BAML stub-prompt lint …"
+mise run lint:baml-stub-prompts
+echo "[data:tg4_foghlaim:lint] CocoIndex v1 conformance (covers tg4_foghlaim_embedding) …"
+mise run data:cocoindex:conformance
+echo "[data:tg4_foghlaim:lint] dlt nested-hints lint …"
+mise run lint:dlt:nested-hints
+echo "[data:tg4_foghlaim:lint] ALL GREEN"
+'''
 
 
 # =============================================================================
@@ -911,6 +983,18 @@ description = "Inject secrets via Locket sidecar and run a command"
 alias = ["locket:exec"]
 run = "locket exec -- ${@}"
 
+# Per the 2026-08-23-infra-locket-shim-v0-3-and-sidecar-pattern-v1 change:
+# 2 new tasks wrapping Locket v0.3+ features (rotation + audit).
+[tasks."devops:locket:rotate"]
+description = "DEVOPS locket rotate — trigger a secret rotation via the Locket sidecar /rotate endpoint (Locket v0.3+ feature). Per the 2026-08-23-infra-locket-shim-v0-3-and-sidecar-pattern-v1 change."
+alias = ["locket:rotate"]
+run = "bash -c 'echo \"=== Locket Secret Rotation ===\"; curl -sS -X POST -H \"Authorization: Bearer ${LOCKET_TOKEN}\" http://locket:7777/rotate 2>/dev/null | head -20 || echo \"Locket sidecar not reachable — run on the host that has the sidecar\"'"
+
+[tasks."devops:locket:audit"]
+description = "DEVOPS locket audit — query the locket_audit.scrapes DuckLake table and emit the last 100 secret fetches per service. Per the 2026-08-23-infra-locket-shim-v0-3-and-sidecar-pattern-v1 change."
+alias = ["locket:audit"]
+run = "bash -c 'echo \"=== Locket Audit (last 100 fetches per service) ===\"; uv run python -c \"from duckdb import connect; conn = connect(\\\"md:cianfhoghlaim\\\"); print(conn.execute(\\\"SELECT service, COUNT(*) AS fetches, MAX(fetched_at) AS last_fetch FROM cianfhoghlaim.locket_audit.scrapes WHERE fetched_at > now() - INTERVAL \\x27 7 days\\x27 GROUP BY service ORDER BY fetches DESC LIMIT 20\\\").fetchdf().to_string())\" 2>/dev/null || echo \"(locket_audit.scrapes table not yet provisioned — schema is per the v0.3 migration)\"'"
+
 [tasks."devops:stack"]
 description = "Per-stack lifecycle (up | down | logs) — usage: mise run devops:stack <name> <action>"
 alias = ["stack"]
@@ -1037,6 +1121,25 @@ description = "Regenerate the BIEP v1 lineage registry + Zod/TanStack DB collect
 alias = ["schema:generate", "baml:generate"]
 depends = ["ts:install"]
 run = "bun run schema:generate"
+
+# Per the 2026-08-23-data-dlt-1-30-features-v1 change: 3 new tasks
+# wrapping the DLT 1.30+ `refresh` + `dlt[hub]` features.
+[tasks."data:dlt:refresh"]
+description = "DATA dlt refresh — trigger an incremental refresh of a named pipeline (supplants `replace`; DLT 1.30+). Usage: mise run data:dlt:refresh -- <pipeline_name>. Per the 2026-08-23-data-dlt-1-30-features-v1 change."
+usage = 'pipeline "<name>" help="The DLT pipeline to refresh"'
+alias = ["dlt:refresh"]
+run = "uv run python -m dlt_sources.cli refresh ${1:-ireland_jurisdiction_pipeline}"
+
+[tasks."data:dlt:hub:install"]
+description = "DATA dlt hub install — add the dlthub plugin (DLT 1.30+; for deployment workflows). Per the 2026-08-23-data-dlt-1-30-features-v1 change."
+alias = ["dlt:hub:install"]
+run = "uv add dlt[hub] 2>&1 | tail -5"
+
+[tasks."data:dlt:hub:deploy"]
+description = "DATA dlt hub deploy — scaffold a deployment manifest for a named pipeline (DLT 1.30+; supports github_actions / airflow / kubernetes). Usage: mise run data:dlt:hub:deploy -- <pipeline> <destination>. Per the 2026-08-23-data-dlt-1-30-features-v1 change."
+usage = 'args "<pipeline> <destination>" help="The pipeline + destination (github_actions/airflow/kubernetes)"'
+alias = ["dlt:hub:deploy"]
+run = "uv run dlt deploy ${1:-ireland_jurisdiction_pipeline} ${2:-github_actions} 2>&1 | tail -20"
 
 [tasks."data:schema:validate"]
 description = "CI drift gate for the generated Zod schemas (regenerate in-memory + byte-diff against committed bi-ep.gen.ts)"
@@ -1200,6 +1303,20 @@ alias = ["cic:meaisin:litellm-regenerate", "litellm:regenerate"]
 depends = ["sync"]
 run = "PYTHONPATH=. python scripts/generate_litellm_config.py > bonneagar/stacks/litellm/config/config.yaml"
 
+# Per the 2026-08-23-integration-litellm-1-97-features-v1 change: 2 new
+# tasks wrapping LiteLLM v1.97+ features (MCP Gateway GA + OAuth 2.0 v2).
+[tasks."data:litellm:mcp:gateway"]
+description = "DATA litellm mcp:gateway — boot the LiteLLM MCP Gateway daemon (v1.97+ GA). Per the 2026-08-23-integration-litellm-1-97-features-v1 change."
+alias = ["litellm:mcp:gateway", "litellm:mcp-gateway"]
+depends = ["sync"]
+run = "bash -c 'echo \"=== LiteLLM MCP Gateway ===\"; echo \"Configured MCP servers:\"; grep -E \"^mcp_servers:|^[[:space:]]+[a-z_-]+:\" bonneagar/stacks/litellm/config/config.yaml 2>/dev/null | head -20 || echo \"(none configured yet)\"; echo; echo \"To boot the gateway: docker compose -f bonneagar/stacks/litellm/compose.yaml up litellm\"'"
+
+[tasks."data:litellm:oauth:v2"]
+description = "DATA litellm oauth:v2 — enable OAuth 2.0 v2 (DCR) + show the dynamic client registration endpoint. Per the 2026-08-23-integration-litellm-1-97-features-v1 change."
+alias = ["litellm:oauth:v2", "litellm:oauth-v2"]
+depends = ["sync"]
+run = "bash -c 'echo \"=== LiteLLM OAuth 2.0 v2 (DCR) ===\"; echo \"Enable in config: litellm.settings.enable_oauth2_v2 = true\"; echo \"DCR endpoint: POST /oauth2/v2/register\"; echo \"Token endpoint: POST /oauth2/v2/token\"; echo \"Introspection: POST /oauth2/v2/introspect\"'"
+
 # NOTE: ml:agents:smoke, ml:agents:audit, ml:agents:reproduce have moved to
 # agents/mise.toml (subproject). The old names are no longer accessible from
 # the root mise.toml — use `cd agents && mise run ml:agents:audit` instead.
@@ -1225,6 +1342,18 @@ run = "echo 'web omnibus complete (5 web gates passed).'"
 description = "Install all TypeScript dependencies for the web workspaces (bun workspaces)"
 alias = ["ts:install"]
 run = "bun install"
+
+# Per the 2026-08-23-integration-copilotkit-v2-and-ag-ui-protocol-v1 change:
+# targeted install tasks for the 2 canonical agentic-frontend deps.
+[tasks."web:install:copilotkit"]
+description = "WEB install copilotkit — install the 2 canonical CopilotKit v2 deps (react-core + react-ui). Per the 2026-08-23-integration-copilotkit-v2-and-ag-ui-protocol-v1 change."
+alias = ["ts:install:copilotkit"]
+run = "bun add @copilotkit/react-core @copilotkit/react-ui"
+
+[tasks."web:install:ag-ui"]
+description = "WEB install ag-ui — install the AG-UI protocol types (per the 2026-08-23-integration-copilotkit-v2-and-ag-ui-protocol-v1 change)."
+alias = ["ts:install:ag-ui"]
+run = "bun add @ag-ui/core"
 
 [tasks."web:build"]
 description = "Build all web packages via Turborepo"

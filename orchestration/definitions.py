@@ -303,4 +303,46 @@ except Exception as _exc:  # pragma: no cover
     )
 
 
+# ============================================================================
+# UoG official-docs + NUI federation + Students' Union + British Isles
+# tertiary pipeline (M.Sc. AI thesis deliverable 2)
+# ============================================================================
+# Mounts the 4 new groups:
+#  - orchestration/defs/uog_official_docs.py   (5 assets)
+#  - orchestration/defs/nui_federation.py       (3 assets)
+#  - orchestration/defs/uog_students_union.py  (2 assets)
+#  - orchestration/defs/british_isles_tertiary.py (5 assets, off-by-default)
+#
+# Reference: openspec/changes/2026-08-23-uog-official-docs-and-nui-superset-v1/
+# ============================================================================
+
+for _uog_official_docs_group_module in (
+    "orchestration.defs.uog_official_docs",
+    "orchestration.defs.nui_federation",
+    "orchestration.defs.uog_students_union",
+    "orchestration.defs.british_isles_tertiary",
+    "orchestration.defs.uog_personal_archive",
+):
+    try:
+        _mod = __import__(
+            _uog_official_docs_group_module, fromlist=["__all__"]
+        )
+        _assets = [
+            getattr(_mod, name)
+            for name in getattr(_mod, "__all__", [])
+            if hasattr(_mod, name) and callable(getattr(_mod, name))
+        ]
+        if _assets:
+            defs = dg.Definitions.merge(
+                defs,
+                dg.Definitions(assets=_assets),
+            )
+    except Exception as _exc:  # pragma: no cover
+        import structlog
+
+        structlog.get_logger().warning(
+            f"{_uog_official_docs_group_module}_load_failed: {_exc}"
+        )
+
+
 __all__ = ["defs", "_DEFS_AVAILABLE", "_DEFS_LOADED_VIA"]

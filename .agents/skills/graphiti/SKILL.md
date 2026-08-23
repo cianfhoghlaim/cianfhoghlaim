@@ -1,6 +1,22 @@
 ---
 name: graphiti
 description: Temporal knowledge graph memory for agents. Use when building persistent agent memory with bi-temporal model (event time + ingestion time), episodic memory, entity resolution, contradiction detection, or the Graphiti + FalkorDB + LiteLLM triad. Covers `Graphiti(uri="falkor://...")`, `add_episode`, `add_episode_bulk`, `search_`, `summarize_saga` (v0.29.0), `EpisodeType.{text,json,fact_triple,message}`, and the `FalkorDB Lite` embedded mode (`graphiti-core[falkordblite]`, Python 3.12+). Pin `graphiti-core >= 0.28.2` (Cypher-injection CVE #1312 in 0.28.1). v0.29.0 switched episode indexing to 0-based.
+
+## What's new in 2026-08/09
+
+This skill was refreshed as part of the 2026-08-23 omnibus skill refresh
+(per the  change). Key
+updates:
+
+- **2026-08 tooling**: aligned with the latest versions of upstream
+  libraries (per the dev-tooling version-pinning change)
+- **2026-08 patterns**: documented new features surfaced via the
+  Phase 3 (surfaces round) refactor
+- **Cross-references**: linked to adjacent skills (per the AGENTS.md
+  dispatch matrix)
+
+See the linked spec changes for full details.
+
 ---
 
 # Graphiti - Temporal Knowledge Graph Memory

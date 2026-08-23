@@ -1,0 +1,64 @@
+# defs/1_ingestion/apple_photos/defs.yaml
+#
+# L1 Ingestion Component for the Apple Photos 5th-leabharlann-corpus
+# assets. Per the apple-photos-ingestion spec + the
+# 2026-08-23-phase-d-apple-photos-implementation-v1 openspec change.
+#
+# Wires the 8 assets in __init__.py into the canonical 5-layer
+# group_names (3 L1 ingestion + 3 L2 materials + 2 L3 asset checks).
+#
+# The 3 L1 assets wrap the 3 DLT sources in
+# `dlt_sources/apple_photos/`:
+#   - apple_photos_library_export → library_export.apple_photos_source
+#   - apple_photos_documents_route → document_scans.apple_photos_documents_source
+#   - apple_photos_vehicles_route → vehicles.apple_photos_vehicles_source
+#
+# The 3 L2 assets wrap the 3 v1 CocoIndex Apps in
+# `cocoindex_flows/media/`:
+#   - apple_photos_metadata_index → apple_photos_metadata
+#   - apple_photos_chunks_index → apple_photos_chunks
+#   - apple_photos_geospatial_index → apple_photos_geospatial (gated)
+#
+# The 2 L3 asset checks assert the L2 materials are populated.
+#
+# The privacy gate (LEABHARLANN_PHOTOS_INCLUDE_GPS) is enforced at
+# 2 layers: DLT source layer (_read_exif strips GPS) + Dagster asset
+# layer (apple_photos_geospatial_index records GPS_GATE=off in
+# Materialization metadata).
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: filesystem.apple_photos
+  domain: apple_photos
+  nation: ie  # the user's personal corpus (lives at leabharlann/photos/)
+  automation: on_cron
+  automation_cron: "0 3 * * *"
+  state_backed: false
+  state_refresh_interval: monthly
+  dlt_source: dlt_sources.apple_photos.library_export.apple_photos_source
+  destination_tables:
+    - cianfhoghlaim.apple_photos.apple_photos
+    - cianfhoghlaim.apple_photos.apple_photos_documents_routed
+    - cianfhoghlaim.apple_photos.vehicle_observations
+  fallback_resources:
+    - leabharlann/photos/
+  tags:
+    - apple_photos
+    - privacy_gated
+    - leabharlann
+  metadata:
+    layer: "1_ingestion"
+    privacy_gate_env: LEABHARLANN_PHOTOS_INCLUDE_GPS
+    privacy_gate_default: "false"
+    spec: openspec/specs/apple-photos-ingestion/spec.md
+    openspec_change: openspec/changes/2026-08-23-phase-d-apple-photos-implementation-v1
+    l1_assets:
+      - apple_photos_library_export
+      - apple_photos_documents_route
+      - apple_photos_vehicles_route
+    l2_assets:
+      - apple_photos_metadata_index
+      - apple_photos_chunks_index
+      - apple_photos_geospatial_index
+    l3_asset_checks:
+      - apple_photos_metadata_check
+      - apple_photos_chunks_check

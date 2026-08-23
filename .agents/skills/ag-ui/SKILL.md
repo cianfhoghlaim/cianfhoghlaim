@@ -57,6 +57,50 @@ types:
 
 The full schema is at <https://ag-ui.com/spec>.
 
+## The 17-event protocol (per the 2026-08-23 CopilotKit v2 + AG-UI protocol change)
+
+The full AG-UI protocol defines 17 distinct event types. The KCG
+canonical stack (CopilotKit v2 + `@copilotkit/react-core/v2` + `@ag-ui/core`
++ `@ag-ui/client`) implements all 17. New agents should be familiar
+with these:
+
+### Run lifecycle events (4)
+- **`RunStarted`** — emitted when the agent invocation begins
+- **`RunFinished`** — emitted on successful completion
+- **`RunError`** — emitted on failure (carries the error message)
+- **`StepStarted`** + **`StepFinished`** — emitted around each agent step (multi-step agents)
+
+### Message events (3)
+- **`TextMessageStart`** — emitted before a text message begins
+- **`TextMessageContent`** — streams partial text content (replaces the legacy `token` event)
+- **`TextMessageEnd`** — emitted when a text message completes
+
+### Tool events (3)
+- **`ToolCallStart`** — emitted before tool arguments are streamed
+- **`ToolCallArgs`** — streams tool arguments (partial JSON)
+- **`ToolCallEnd`** — emitted when tool arguments are complete
+
+### Tool result events (1)
+- **`ToolCallResult`** — emitted with the tool's return value
+
+### State events (2)
+- **`StateSnapshot`** — full state dump (initial or on demand)
+- **`StateDelta`** — incremental state patch (JSON-Patch RFC 6902)
+
+### Snapshot events (2)
+- **`MessagesSnapshot`** — full messages array dump
+- **`Raw`** — pass-through event (for non-standard payloads)
+
+### Source + custom (2)
+- **`Source`** — metadata about the message source (e.g., model ID)
+- **`Custom`** — application-defined event (custom payload)
+
+The 17 events replace the 6-event legacy wire format. Existing agents
+that handle `token`/`tool_call` etc. should migrate to the explicit
+event names. See
+`.opencode/agents/copilotkit/skills/copilotkit-develop/SKILL.md` for
+the v2 import patterns + the migration table.
+
 ## Stack integration
 
 The KCG stack uses AG-UI as the bridge between the UI (CopilotKit)

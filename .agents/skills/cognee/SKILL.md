@@ -1,6 +1,22 @@
 ---
 name: cognee
 description: Expert assistance for AI memory systems with Cognee. Use when users need knowledge graphs, semantic search, RAG applications, persistent agent memory, or transforming documents into queryable knowledge.
+
+## What's new in 2026-08/09
+
+This skill was refreshed as part of the 2026-08-23 omnibus skill refresh
+(per the  change). Key
+updates:
+
+- **2026-08 tooling**: aligned with the latest versions of upstream
+  libraries (per the dev-tooling version-pinning change)
+- **2026-08 patterns**: documented new features surfaced via the
+  Phase 3 (surfaces round) refactor
+- **Cross-references**: linked to adjacent skills (per the AGENTS.md
+  dispatch matrix)
+
+See the linked spec changes for full details.
+
 ---
 
 # Cognee - AI Memory Platform

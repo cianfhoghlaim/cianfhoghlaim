@@ -52,6 +52,34 @@ UOG_SECRET_NAMES: Final[frozenset[str]] = frozenset(
     }
 )
 
+# 2026-08-23-uog-official-docs-and-nui-superset-v1 (WS4) — extends the
+# secret whitelist to the wider British Isles tertiary surface + the
+# 3 DuckLake destinations. Same naming convention (`OOG_` prefix +
+# uppercase) so a single `SecretsResolver.get(name)` covers the whole
+# universe without case-sensitivity tweaks.
+UNIVERSITY_SSO_SECRET_NAMES: Final[frozenset[str]] = frozenset(
+    {
+        # British Isles tertiary SSO (QUB, Ulster, etc.)
+        "UNIVERSITY_SSO_STUDENT_ID",
+        "UNIVERSITY_SSO_PASSWORD",
+        "UNIVERSITY_SSO_USER_DATA_DIR",
+        "UNIVERSITY_SSO_STORAGE_STATE_PATH",
+        # Per-institution overrides (e.g. QUB-specific)
+        "QUB_SSO_STUDENT_ID",
+        "QUB_SSO_PASSWORD",
+        "ULSTER_SSO_STUDENT_ID",
+        "ULSTER_SSO_PASSWORD",
+        # Stage 0 audit + Firecrawl
+        "FIRECRAWL_API_KEY",
+        "STAGE_0_MAX_CREDITS",  # integer string, defaults to "20"
+        # DuckLake destinations
+        "MOTHERDUCK_TOKEN",
+        "BONNEAGAR_LAKEHOUSE_URI",
+        "DUCKLAKE_POSTGRES_PASSWORD",
+        "OOG_LOCAL_DUCKDB_PATH",
+    }
+)
+
 # A small set of well-known placeholders. Any resolver hit that returns
 # one of these is treated as "fixture-only" by `UoGSsoConfig.has_real_credentials()`.
 FIXTURE_ONLY_VALUES: Final[frozenset[str]] = frozenset(
@@ -297,11 +325,109 @@ class UoGSsoConfig:
         return True
 
 
+# --------------------------------------------------------------------------- #
+# 2026-08-23-uog-official-docs-and-nui-superset-v1 (WS4) —
+# British Isles tertiary SSO + DuckLake secrets
+# --------------------------------------------------------------------------- #
+
+
+@dataclass(frozen=True)
+class UniversitySsoConfig:
+    """Pydantic-anchored SSO + DuckLake secrets surface.
+
+    Adds the `UNIVERSITY_SSO_*`, `QUB_SSO_*`, `ULSTER_SSO_*`,
+    `FIRECRAWL_API_KEY`, `MOTHERDUCK_TOKEN`,
+    `BONNEAGAR_LAKEHOUSE_URI`, and `DUCKLAKE_POSTGRES_PASSWORD`
+    keys to the resolved secret set, on top of the existing
+    `OOG_STUDENT_*` keys.
+
+    The British Isles tertiary factory
+    (`BITertiaryDeepExtractionConfig`) consumes this class so a
+    single asset materialisation can drive QUB + Ulster + the
+    rest of the universe without per-institution code.
+    """
+
+    student_id: str | None
+    student_password: str | None
+    storage_state_path: Path | None = None
+    user_data_dir: Path | None = None
+    institution_id: str = ""  # which university the SSO belongs to
+
+    firecrawl_api_key: str | None = None
+    motherduck_token: str | None = None
+    bonneagar_lakehouse_uri: str | None = None
+    ducklake_postgres_password: str | None = None
+    local_duckdb_path: str | None = None
+    stage_0_max_credits: int = 20
+
+    @classmethod
+    def from_resolver(
+        cls,
+        resolver: SecretsResolver | None = None,
+    ) -> UniversitySsoConfig:
+        r = resolver or get_default_secrets_resolver()
+        storage_state = r.get("UNIVERSITY_SSO_STORAGE_STATE_PATH")
+        user_data = r.get("UNIVERSITY_SSO_USER_DATA_DIR")
+        # Per-institution fallback: <INST>_SSO_<KEY> overrides the
+        # generic UNIVERSITY_SSO_<KEY>. This lets the QUB pipeline
+        # fall back from UNIVERSITY_SSO_PASSWORD to QUB_SSO_PASSWORD
+        # when the operator prefers per-institution secret names.
+        student_id = (
+            r.get("QUB_SSO_STUDENT_ID")
+            or r.get("ULSTER_SSO_STUDENT_ID")
+            or r.get("UNIVERSITY_SSO_STUDENT_ID")
+            or r.get("OOG_STUDENT_ID")
+        )
+        student_password = (
+            r.get("QUB_SSO_PASSWORD")
+            or r.get("ULSTER_SSO_PASSWORD")
+            or r.get("UNIVERSITY_SSO_PASSWORD")
+            or r.get("OOG_STUDENT_PASSWORD")
+        )
+        local_duckdb_path = r.get("OOG_LOCAL_DUCKDB_PATH")
+        return cls(
+            student_id=student_id,
+            student_password=student_password,
+            storage_state_path=(
+                Path(storage_state).expanduser() if storage_state else None
+            ),
+            user_data_dir=Path(user_data).expanduser() if user_data else None,
+            firecrawl_api_key=r.get("FIRECRAWL_API_KEY"),
+            motherduck_token=r.get("MOTHERDUCK_TOKEN"),
+            bonneagar_lakehouse_uri=r.get("BONNEAGAR_LAKEHOUSE_URI"),
+            ducklake_postgres_password=r.get("DUCKLAKE_POSTGRES_PASSWORD"),
+            local_duckdb_path=local_duckdb_path or None,
+        )
+
+    def has_real_credentials(self) -> bool:
+        if not self.student_id or not self.student_password:
+            return False
+        if self.student_password in FIXTURE_ONLY_VALUES:
+            return False
+        if self.student_id in FIXTURE_ONLY_VALUES:
+            return False
+        return True
+
+    def has_motherduck(self) -> bool:
+        return bool(
+            self.motherduck_token
+            and self.motherduck_token not in FIXTURE_ONLY_VALUES
+        )
+
+    def has_bonneagar_lakehouse(self) -> bool:
+        return bool(
+            self.ducklake_postgres_password
+            and self.ducklake_postgres_password not in FIXTURE_ONLY_VALUES
+        )
+
+
 __all__ = [
     "SecretsResolver",
     "get_default_secrets_resolver",
     "reset_default_secrets_resolver",
     "UoGSsoConfig",
+    "UniversitySsoConfig",
     "UOG_SECRET_NAMES",
+    "UNIVERSITY_SSO_SECRET_NAMES",
     "FIXTURE_ONLY_VALUES",
 ]

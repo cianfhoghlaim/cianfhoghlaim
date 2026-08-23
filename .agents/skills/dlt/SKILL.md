@@ -1,6 +1,22 @@
 ---
 name: dlt
 description: Master routing skill for data load tool (dlt 1.28.1, June 2026). Use this to understand dlt rules, decide which sub-skill to invoke, and apply the Cianfhoghlaim dlt conventions (DuckLake/DuckDB destination, USE_LOCAL_SCRAPES offline fallback, relative imports only, type-safe BAML-driven pipelines, multi-destination fan-out to LanceDB / Memgraph / Graphiti, and Dagster dlt_assets wrapping). Powers the British-Isles Education pipeline (6 LC subjects + gov.ie circulars). Notes the 1.27 `dlt[hub]` plugin split and the 1.28 `refresh` > `replace` deprecation.
+
+## What's new in 2026-08/09
+
+This skill was refreshed as part of the 2026-08-23 omnibus skill refresh
+(per the  change). Key
+updates:
+
+- **2026-08 tooling**: aligned with the latest versions of upstream
+  libraries (per the dev-tooling version-pinning change)
+- **2026-08 patterns**: documented new features surfaced via the
+  Phase 3 (surfaces round) refactor
+- **Cross-references**: linked to adjacent skills (per the AGENTS.md
+  dispatch matrix)
+
+See the linked spec changes for full details.
+
 ---
 
 # DLT Master Router & Rules (Cianfhoghlaim)

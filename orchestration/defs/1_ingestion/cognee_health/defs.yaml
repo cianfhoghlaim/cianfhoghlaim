@@ -1,0 +1,21 @@
+# defs/1_ingestion/cognee_health/defs.yaml
+#
+# L1 CelticIngestionComponent for the cognee_health_check asset.
+# Per the 2026-08-23-dlt-sources-ccc-audit-and-realignment-v1 audit
+# (Decision 5) + the indexing-and-cognition spec.
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  asset_name: cognee_health_check
+  module: orchestration.defs.1_ingestion.cognee_health
+  polling_interval_seconds: 21600  # Every 6 hours
+  clusters:
+    - docs-data-eng
+    - docs-bonneagar
+    - docs-agents
+    - docs-ml
+    - docs-teanga
+    - docs-web
+    - docs-tuatha
+  alert_threshold: 1  # Alert if any cluster is down
+  automation_cron: "0 */6 * * *"  # Every 6 hours
+  conformance_required: true

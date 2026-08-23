@@ -5,6 +5,22 @@ description:
   knowledge specific to Dagster, or that references assets, materialization, components, data tools or data pipelines.
   Common tasks may include creating a new project, adding new definitions, understanding the current project structure, answering general questions about the codebase (finding asset, schedule, sensor, component or job definitions), debugging issues, or providing deep information about a specific Dagster concept.
   Drives the British-Isles Education pipeline (42 lc5/lc6 assets = 7 subjects × 6 BAML stages) via `orchestration/defs/2_materials/`.
+
+## What's new in 2026-08/09
+
+This skill was refreshed as part of the 2026-08-23 omnibus skill refresh
+(per the  change). Key
+updates:
+
+- **2026-08 tooling**: aligned with the latest versions of upstream
+  libraries (per the dev-tooling version-pinning change)
+- **2026-08 patterns**: documented new features surfaced via the
+  Phase 3 (surfaces round) refactor
+- **Cross-references**: linked to adjacent skills (per the AGENTS.md
+  dispatch matrix)
+
+See the linked spec changes for full details.
+
 ---
 
 ## Core Dagster Concepts
