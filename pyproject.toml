@@ -34,6 +34,12 @@ dependencies = [
     "dagster-webserver>=1.13",
     "dagster-shared>=1.13",
     "dagster-graphql>=1.13",
+    # Added 2026-08-23 (Phase A4 — dlt-sources-ccc-audit-and-realignment-v1):
+    # dagster-mlflow plugin for native MLflow tracing from Dagster assets
+    # (the mlflow stack runs v3.15.1 per PR #5; this plugin wires Dagster
+    # assets to the MLflow Tracking API without going through the
+    # standalone mlflow.client wrapper).
+    "dagster-mlflow>=0.22.0",
     # Pin boto3/botocore upper bound — dlt[filesystem]>=1.30.0 requires
     # botocore<1.43.77 (the newer botocore breaks s3 filesystem source).
     "boto3<1.43.77",

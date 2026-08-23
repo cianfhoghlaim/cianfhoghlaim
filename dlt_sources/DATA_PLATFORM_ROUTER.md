@@ -21,7 +21,7 @@ entrypoint that:
 
 | Sub-package | Canonical doc | Size | What it documents |
 |:--|:--|--:|:--|
-| `dlt_sources/` | [`./AGENTS.md`](AGENTS.md) | 251 lines | 1,905 `.py` files, 920 `@dlt.source`, 13 sub-trees (BIEP focus: 8 British Isles nations × 5 stages), the BIEP v3 generic pipeline pattern |
+| `dlt_sources/` | [`./AGENTS.md`](AGENTS.md) | 251 lines | 1,957 `.py` files, 928 `@dlt.source`, 15 sub-trees (BIEP focus: 8 British Isles nations × 5 stages + 40 European nations + 6 Commonwealth + 4 Americas + 1 Cross-British Isles), the BIEP v3 generic pipeline pattern |
 | `baml_src/` | [`../baml_src/AGENTS.md`](../baml_src/AGENTS.md) | — | 319 `.baml` files, 5 canonical `lc6` extraction functions (`ExtractCurriculumSyllabus`, `ExtractExamPaperLayout`, `ExtractMarkingSchemeGuideline`, `ExtractCrossLinguisticConcept`, `ExtractSyllabusDiagram`), 3 clients (`ExtractEn`, `ExtractEnStrong`, `LocalVision`) |
 | `cocoindex/` | [`../cocoindex/AGENTS.md`](../cocoindex/AGENTS.md) | 214 lines | 94 explicit `coco.App(...)` instances + 378 factory Apps, 190 `.py` files, 9 sub-trees, the R1-R4 conformance contract, shared `_lifespan.py` (the `BAAI/bge-m3` 1024-d embedder) |
 | `orchestration/` | [`../orchestration/AGENTS.md`](../orchestration/AGENTS.md) | — | ~833 Dagster assets, 5-layer KCG Component architecture (Ingestion / Materials / Model Lifecycle / Asset Generation / Agent Operations), 6 jurisdictions (`ireland`, `england`, `scotland`, `wales`, `ni`, `isle_of_man`), the `JurisdictionAssetsBase` pattern |
@@ -223,5 +223,38 @@ mise run notebook:control-panel    # open the 5-tab marimo control panel
 
 ---
 
-**Last updated**: 2026-08-13 (initial creation — `openspec/changes/2026-08-13-skill-consolidation-and-extension-v1/`).
+**Last updated**: 2026-08-23 (CCC audit findings + 14 new per-subtree AGENTS.md + leabharlann_education_notes bridge + dagster-mlflow + cognee_health_check sensor — per `openspec/changes/2026-08-23-dlt-sources-ccc-audit-and-realignment-v1/`).
 **Owner**: Build agent.
+
+## Per-subtree inventory (CCC audit 2026-08-23)
+
+| Subtree | .py | @dlt.source | @dlt.resource | Tangent served | AGENTS.md |
+|:--|--:|--:|--:|:--|:--|
+| `american_nations/` | 51 | 24 | 24 | 4 Americas jurisdictions (BR + MX + US + VE) | ✓ (new 2026-08-23) |
+| `api_sources/` | 11 | 6 | 14 | Cross-corpus API sources (YouTube + Spotify + SoundCloud + GitHub + LinkedIn + ResearchGate + TG4 + Foghlaim) | ✓ (new) |
+| `apple_photos/` | 1 | 1 | 2 | 5th leabharlann corpus (macOS Photos library) | ✓ (new) |
+| `british_isles/` | 237 | 106 | 273 | BIEP v3 flagship (8 jurisdictions × 5 stages + 5 verticals) | ✓ (new) |
+| `common/` | 28 | 3 | 4 | Cross-corpus helpers (destinations, registry, base classes) | README ✓ |
+| `commonwealth/` | 633 | 292 | 292 | 6 Commonwealth jurisdictions (AU + CA + IN + NZ + NG + ZA) | ✓ (new) |
+| `crypteolas/` | 15 | 18 | 49 | Tuatha's Crypteolas achievement ledger (defi + github + local + docs) | ✓ (new) |
+| `european_nations/` | 859 | 407 | 407 | 40 European nations × 5 verticals via `_shared/nation_source.py` | ✓ (new) |
+| `european_union/` | 27 | 19 | 18 | EU pilot + Ukraine depth upgrade | ✓ (new) |
+| `filesystem/` | 17 | 8 | 39 | File system sources (leaving_cert + zotero + takeout + UoG) | ✓ (new) |
+| `jobs/` | 2 | 0 | 1 | Dagster job entry points | ✓ (new) |
+| `language/` | 25 | 11 | 45 | Celtic language sources (ainm + canuint + duchas + gaois + heritage + tearma + UD) | ✓ (new) |
+| `media/` | 22 | 9 | 30 | Media sources (animation + comics + games + official + celtic_history + prose) | ✓ (new) |
+| `official_media/` | 20 | 2 | 2 | Official media (Instagram + fediverse + companies_house + hmgcc + ggy) | ✓ (new) |
+| `portfolio/` | 7 | 2 | 8 | Croilar portfolio (artwork + cv + labels + source + teaching) | ✓ (new) |
+| **Total** | **1,957** | **928** | **1,188** | **15 subtrees, 1,116 source+resource decorators** | **14/15 + README** |
+
+### Audit findings
+
+1. **14 of 15 subtrees had no AGENTS.md** — gap-fill completed 2026-08-23.
+2. **The `university_of_galway_deep.py` DLT source is orphaned** — not referenced from `ireland_jurisdiction_pipeline.py`. Spec delta added to BIEP v3 to wire it into the 5-phase pattern.
+3. **No cross-repo bridge for leabharlann maths + CS notes** — added `dlt_sources/api_sources/leabharlann_education_notes.py` (the cross-repo bridge).
+4. **dagster-mlflow plugin not wired** — added to `pyproject.toml` dependencies.
+5. **No `cognee_health_check` sensor** — added `orchestration/sensors/cognee_health_check_sensor.py` + `orchestration/defs/1_ingestion/cognee_health/` + the `cognee_health_change_job`.
+
+### Post-audit deployment
+
+The Phase C (TG4 + Foghlaim), Phase B (Tuatha), Phase D (Apple Photos), Phase E (Hackathon) tangents all use this dlt_sources tree as their foundation. Per-corpus DuckLake schema isolation is deferred to per-tangent work (each tangent owns its own schema).

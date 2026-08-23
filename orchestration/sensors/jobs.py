@@ -73,4 +73,16 @@ __all__ = [
     "isle_of_man_registry_change_job",
     "jersey_registry_change_job",
     "guernsey_registry_change_job",
+    "cognee_health_change_job",
 ]
+
+
+# Added 2026-08-23 (Phase A5 — dlt-sources-ccc-audit-and-realignment-v1):
+# The cognee_health_check sensor emits RunRequests that map to
+# the `cognee_health_check` asset (per the indexing-and-cognition spec).
+cognee_health_change_job = define_asset_job(
+    name="cognee_health_change_job",
+    selection=["cognee_health_check"],
+)
+
+# Update the __all__ list
