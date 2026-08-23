@@ -8,7 +8,8 @@
     "log_level": "info",
     "dm_policy": "pairing",
     "allow_from": [],
-    "state_dir": "/home/node/.openclaw/state"
+    "state_dir": "/home/node/.openclaw/state",
+    "bind": "0.0.0.0"
   },
   "provider": {
     "name": "litellm",
@@ -19,16 +20,25 @@
   "fallback_chain": [
     {
       "name": "unsloth",
-      "base_url": "http://unsloth:8889",
+      "base_url": "http://host.docker.internal:8888",
       "api": "anthropic-messages",
       "auth_header": true,
       "models": [
-        { "id": "unsloth/Qwen3.8-27B-GGUF", "name": "Local Qwen3.8" },
-        { "id": "unsloth/DeepSeek-V4-Pro-0813-GGUF", "name": "Local DeepSeek-V4" },
-        { "id": "unsloth/Kimi-K2.7-Code-GGUF", "name": "Local Kimi-K2.7-Code" }
+        {
+          "id": "unsloth/Qwen3.8-27B-GGUF",
+          "name": "Local Qwen3.8"
+        },
+        {
+          "id": "unsloth/DeepSeek-V4-Pro-0813-GGUF",
+          "name": "Local DeepSeek-V4"
+        },
+        {
+          "id": "unsloth/Kimi-K2.7-Code-GGUF",
+          "name": "Local Kimi-K2.7-Code"
+        }
       ],
       "trigger_on": "rate_limit",
-      "notes": "Per the 2026-08-21-unsloth-v5-integration-v1 change. Triggered when the litellm upstream returns 429 (M3 plan quota exhausted). Single shared UNSLOTH_API_KEY (same as hermes + openchamber)."
+      "notes": "Per the 2026-08-21-unsloth-v5-architecture-refinement-v1 change. Unsloth Studio runs on bunchloch host; Docker containers reach it via host.docker.internal:8888. Public exposure via https://unsloth.cianfhoghlaim.ie (Pangolin private resource). Single shared UNSLOTH_API_KEY (same as hermes + openchamber)."
     }
   ],
   "channels": {

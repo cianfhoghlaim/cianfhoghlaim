@@ -1,151 +1,127 @@
-# Unsloth Serve
+# Unsloth Studio Integration
 
-The Unsloth Studio headless inference server. Hosts the 3-product Unsloth
-stack (Desktop + Studio + Core) as a Docker container, exposing both the
-Studio UI on `:8888` and the OpenAI/Anthropic-compatible API on `:8889`.
+## Architecture
 
-## Why two compose override files (arm1-oci + M4 Max)?
+The Unsloth Studio runs **directly on the host** (bunchloch, the MacBook M4 Max) at
+`127.0.0.1:8888`. The Docker stack directory is intentionally minimal — Unsloth is a
+**host process**, not a Docker container.
 
-Unsloth has different runtime requirements per host (per the 2026-08-21
-hotfix commit — bunchloch is the M4 Max GPU host via Apple Silicon
-Metal/MLX, arm1-oci is the CPU-only host):
-
-| Host | Image | GPU | Memory | Public? | Use case |
-|:--|:--|:--|:--|:--|:--|
-| **`arm1-oci`** | `unsloth/unsloth:latest` | `-ngl 0` (CPU-only, Oracle Cloud arm64) | 10 GB | Yes (Pangolin) | Production serving for hermes/openclaw/webchat |
-| **`bunchloch`** | `unsloth/unsloth:latest` | `-ngl 99` (Metal/MLX, M4 Max 48 GB unified memory) | 16 GB | No (`127.0.0.1` only) | Dev mode + the marimo 10-way comparison notebook + the Studio UI |
-
-The base `compose.yaml` is shared. The two override files differ only in
-`image`, `LLAMA_ARG_NGL`, `LLAMA_ARG_THREADS`, `UNSLOTH_PLATFORM`,
-`deploy.resources.limits.memory`, and the bind host.
-
-## Deployed model
-
-The default `unsloth run` command loads `unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL`
-(the new flagship — 5.1M downloads in 5 days post-launch). This is the
-fallback for the M3 token-plan chokepoint (Kimi-K2.6 / GLM-5.1 / MiniMax-M2.5).
-
-To serve a different model, override via env:
-```bash
-UNSLOTH_MODEL_ID=unsloth/DeepSeek-V4-Pro-0813-GGUF docker compose -f compose.yaml -f sidecar.yaml up -d
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│ INTERNET (Pangolin Enterprise Edition on arm1-oci)                      │
+│                                                                          │
+│   https://unsloth.cianfhoghlaim.ie/v1/chat/completions                  │
+│         │                                                                │
+│         ▼                                                                │
+│   Pangolin private resource target:                                      │
+│   http://host.docker.internal:8888                                       │
+│         │ (via Newt WireGuard tunnel from bunchloch)                     │
+│         ▼                                                                │
+└──────────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌──────────────────────────────────────────────────────────────────────────┐
+│ BUNCHLOCH (MacBook M4 Max)                                               │
+│                                                                          │
+│   Docker containers (cianfhoghlaim network):                             │
+│     • litellm    ─────┐                                                   │
+│     • hermes     ─────┤                                                   │
+│     • openclaw   ─────┼──► host.docker.internal:8888  ──► Studio      │
+│     • openchamber ────┤                                                   │
+│     • newt (Pangolin client)                                              │
+│     • marimo     ─────┘                                                   │
+│                                                                          │
+│   Unsloth Studio (host, port 8888):                                     │
+│     • /v1/chat/completions (OpenAI-compatible)                          │
+│     • /v1/messages         (Anthropic-compatible)                       │
+│     • llama-server under the hood                                        │
+│     • 1 API key: sk-unsloth-...                                         │
+└──────────────────────────────────────────────────────────────────────────┘
 ```
 
-## Endpoints
+This is **exactly the same pattern as hermes/openclaw/marimo** — service runs
+locally on bunchloch, Pangolin on arm1-oci exposes it via a private resource,
+Newt bridges them via WireGuard.
 
-| Endpoint | Port | Compatible with |
-|:--|:--|:--|
-| `/v1/chat/completions` | 8889 | OpenAI SDK, opencode, Cursor, Continue, Cline, Open WebUI, curl |
-| `/v1/messages` | 8889 | Claude Code, Anthropic SDK, OpenClaw, hermes-agent |
-| `/v1/models` | 8889 | OpenAI models list |
-| Studio UI | 8888 | Any browser (Pangolin-protected) |
+## URLs
 
-Both APIs support streaming, tool calling (OpenAI `tools` / Anthropic
-`tools`), and vision inputs. Services: web search, code execution
-(server-side), and self-healing tool calls (per Unsloth's 2026-08 API).
-
-## 5 integrations wired in via the umbrella OpenSpec change
-
-The 5 agent runtimes consume this server via the `unsloth start <agent>`
-meta-command pattern:
-
-| Agent | `unsloth start <agent>` |
+| Path | URL |
 |:--|:--|
-| Claude Code | `unsloth start claude` |
-| OpenAI Codex | `unsloth start codex` |
-| Hermes Agent | `unsloth start hermes` |
-| OpenClaw | `unsloth start openclaw` |
-| OpenCode | `unsloth start opencode` |
+| **Public** (external users) | `https://unsloth.cianfhoghlaim.ie/v1/chat/completions` (via Pangolin) |
+| **Public** (Anthropic) | `https://unsloth.cianfhoghlaim.ie/v1/messages` |
+| **Internal** (Docker on bunchloch) | `http://host.docker.internal:8888/v1/chat/completions` |
+| **Local-only** (host machine) | `http://127.0.0.1:8888/` (Studio UI) |
 
-Plus `unsloth start pi` for Pi Coding Agent.
+Both the public URL (via Pangolin + Newt tunnel) and the internal URL (direct
+Docker → host) reach the same Studio on bunchloch. Single source of truth.
 
-## Usage
+## Litellm integration
 
-### Production (arm1-oci, CPU-only, public via Pangolin)
+The 22 litellm routes for `local/unsloth/*` point at
+`http://host.docker.internal:8888/v1` (internal path). The `vision`/`text`/`coding`
+aliases fall through to this backend after the M3 chokepoint (Kimi-K2.6 / GLM-5.1 /
+minimax-m3). For public URL fallback, see `local/public-unsloth-qwen3.8-27b` which
+points at `https://unsloth.cianfhoghlaim.ie/v1` (the Pangolin path).
 
-```bash
-docker compose \
-  -f compose.yaml \
-  -f compose.arm1-oci.yaml \
-  -f sidecar.yaml \
-  --env-file ../../.env \
-  up -d
-```
+## API key storage
 
-The sidecar pulls `UNSLOTH_API_KEY` from Infisical via Locket.
+The Unsloth API key (`sk-unsloth-...`) lives in two places:
 
-### Dev mode (bunchloch, M4 Max MLX, local)
+1. **Production**: `infisical://dev-baile/unsloth/api_key` (Infisical vault).
+   The Locket sidecar in `bonneagar/stacks/litellm/sidecar.yaml` injects it into
+   the litellm container's env block at container start.
+2. **Local dev**: Hardcoded in `bonneagar/stacks/litellm/.env` as a fallback
+   (when Infisical is offline).
 
-**Option A: With Locket sidecar (when Infisical is healthy)**
+The key only has access to the local Studio (loopback). If compromised, the
+attacker can only reach the local Studio which is bound to `127.0.0.1:8888`.
 
-```bash
-docker compose \
-  -f compose.yaml \
-  -f compose.m4-max.yaml \
-  -f sidecar.yaml \
-  --env-file ../../.env \
-  up -d
-```
+## Verification
 
-**Option B: Without Infisical (local-dev fallback, no Locket)**
+Run the 7-step verification protocol:
 
 ```bash
-cd bonneagar/stacks/unsloth-serve/
-cp .env.example .env
-# edit .env to set UNSLOTH_API_KEY
-docker compose \
-  -f compose.yaml \
-  -f compose.m4-max.yaml \
-  -f compose.local-dev.yaml \
-  --env-file .env \
-  up -d
-```
+# Step 1: Studio health
+curl -fs http://localhost:8888/api/auth/status
 
-The `compose.local-dev.yaml` overlay REMOVES the Locket sidecar
-dependency. The container reads `UNSLOTH_API_KEY` directly from
-the mounted `.env` file.
+# Step 2: Studio status (empty models)
+curl -fs -H "Authorization: Bearer sk-unsloth-..." http://localhost:8888/api/inference/status
 
-### Verify
+# Step 3: Studio flags (100+ entries)
+curl -fs -H "Authorization: Bearer sk-unsloth-..." http://localhost:8888/api/inference/llama-flags | jq '.flags | keys | length'
 
-```bash
-# Verify the API is serving models (any mode)
-curl -s http://localhost:8889/v1/models \
-  -H "Authorization: Bearer $UNSLOTH_API_KEY" | jq
-
-# Confirm the loaded model
-curl -s http://localhost:8889/v1/models \
-  -H "Authorization: Bearer $UNSLOTH_API_KEY" | jq '.data[0].id'
-
-# Trigger a chat completion (first load takes ~81s on M4 Max CPU)
-curl -s http://localhost:8889/v1/chat/completions \
-  -H "Authorization: Bearer $UNSLOTH_API_KEY" \
+# Step 4: Studio error path (no model loaded)
+curl -fs -X POST -H "Authorization: Bearer sk-unsloth-..." http://localhost:8888/v1/chat/completions \
   -H "Content-Type: application/json" \
-  -d '{"model":"unsloth/Qwen3.8-27B-GGUF","messages":[{"role":"user","content":"ping"}],"max_tokens":5}' | jq
+  -d '{"model":"unsloth/Qwen3.8-27B-GGUF","messages":[{"role":"user","content":"hi"}]}'
+
+# Step 5: Litellm routes (22 unsloth)
+curl -fs -H "Authorization: Bearer $LITELLM_MASTER_KEY" http://localhost:4000/v1/models \
+  | jq '.data[] | select(.id | startswith("local/unsloth/")) | .id' | wc -l
+
+# Step 6: Litellm passthrough (proves litellm → host.docker.internal:8888 → Studio)
+curl -fs -X POST -H "Authorization: Bearer $LITELLM_MASTER_KEY" http://localhost:4000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model":"local/unsloth/qwen3.8-27b","messages":[{"role":"user","content":"hi"}],"max_tokens":5}'
+
+# Step 7: Marimo notebook renders
+mise run notebook:unsloth-compare
 ```
 
-## Network
+## Source
 
-The unsloth-serve container joins both `cianfhoghlaim` (the agent fleet)
-and `lakehouse` (the model cache + observability). The volume mount
-`../../../stedding/huggingface/unsloth:/models/unsloth:ro` is shared
-with `llama-swap` — both serve the same GGUF cache.
+Per the 2026-08-21-unsloth-v5-architecture-refinement-v1 change (the
+follow-up to 2026-08-21-unsloth-v5-integration-v1). The original change tried
+to run unsloth in a Docker container; this refinement removes the container
+and uses Pangolin + Newt + host.docker.internal instead — consistent with the
+rest of the Bonneagar stack.
 
-## Secrets
+## Related files
 
-A single shared secret scope:
-- `infisical://dev-baile/unsloth/api_key` (the long-running daemon key)
-- `infisical://dev-baile/unsloth/model_id` (the default model ID)
-- `infisical://dev-baile/unsloth/otel_exporter_otlp_endpoint`
-
-The 5 agent stacks (hermes, openclaw, openchamber, cianfhoghlaim,
-openclaw-arm1-oci) all read the same key via Locket.
-
-**Local-dev fallback:** `compose.local-dev.yaml` reads from a mounted
-`.env` file at `/etc/unsloth/.env` (the entrypoint checks Locket first,
-falls back to `.env` if Locket is empty).
-
-## Cost
-
-- **Compute:** 0 (runs on existing bunchloch M4 Max + arm1-oci)
-- **API tokens:** Saves up to ~80% of M3 plan spend during heavy agent sessions
-- **Storage:** ~50 GB on the GGUF cache for 5 commonly-used quants
-- **Infisical:** 1 new secret scope (`unsloth/`); 0 new projects
+- `bonneagar/stacks/litellm/config/config.yaml` — 22 unsloth routes + 1 public alias
+- `bonneagar/stacks/hermes/secrets.env` — `UNSLOTH_BASE_URL` env var
+- `bonneagar/stacks/openclaw/config/openclaw.json` — `fallback_chain` block
+- `opencode.json` — `unsloth-studio` provider block
+- `bonneagar/pangolin/agent-fleet.yaml` — `unsloth` private resource
+- `openspec/changes/2026-08-21-unsloth-v5-architecture-refinement-v1/` — follow-up change
+- `openspec/changes/archive/2026-08-21-2026-08-21-unsloth-v5-vision-llm-hermes-openclaw-opencode-marimo-integration-v1/` — archived original change

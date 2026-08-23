@@ -76,16 +76,27 @@ services:
       # Webhook ports — internal only (upstream services dial in)
       - "127.0.0.1:8443:8443"   # Telegram webhook
       - "127.0.0.1:8090:8090"   # WhatsApp Cloud webhook
-      - "127.0.0.1:8080:8080"   # SMS webhook
+      # SMS webhook. Host side moved 8080 -> 8647 on 2026-08-23: llama-swap
+      # binds 0.0.0.0:8080, so this mapping collided and the whole hermes
+      # container failed to start with "port is already allocated". The
+      # container-side port is unchanged, so nothing inside hermes cares.
+      - "127.0.0.1:8647:8080"   # SMS webhook
       - "127.0.0.1:8645:8645"   # WeCom / BlueBubbles
     environment:
       HERMES_STATE_DIR: /home/hermes/.hermes
-      HERMES_CONFIG: /home/hermes/.hermes/config/hermes.yaml
+      # HERMES_HOME is the real variable; current Hermes reads
+      # $HERMES_HOME/config.yaml. There is no HERMES_CONFIG variable — the
+      # previous setting here pointed at config/hermes.yaml (legacy schema)
+      # and was silently ignored, so Hermes started with no LLM provider.
+      HERMES_HOME: /home/hermes/.hermes
       HERMES_PORT: "9119"
       HERMES_MCP_PORT: "9120"
       HERMES_LOG_LEVEL: ${HERMES_LOG_LEVEL:-info}
       # LLM provider — LiteLLM is the primary path (M3 chokepoint)
-      OPENAI_BASE_URL: http://litellm:4000/v1
+      # host.docker.internal, not the container name: hermes is on the
+      # `cianfhoghlaim` network and litellm is not necessarily on it. The host
+      # route is the pattern used consistently across this fleet.
+      OPENAI_BASE_URL: http://host.docker.internal:4000/v1
       # OPENAI_API_KEY is injected by Locket from LITELLM_MASTER_KEY
       # 3-layer auth — operator's Pocket ID subject (from day one)
       HERMES_OPERATOR_POCKET_ID_SUBJECT: ${HERMES_OPERATOR_POCKET_ID_SUBJECT}
@@ -94,7 +105,7 @@ services:
       # against the unsloth-serve API at http://unsloth:8889/v1.
       # UNSLOTH_API_KEY is injected by Locket from dev-baile/unsloth/api_key.
       UNSLOTH_PROVIDER: ${UNSLOTH_PROVIDER:-false}
-      UNSLOTH_BASE_URL: http://unsloth:8889/v1
+      UNSLOTH_BASE_URL: ${UNSLOTH_BASE_URL:-http://host.docker.internal:8888/v1}
       # Observability
       OTEL_SERVICE_NAME: hermes-agent
       OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
@@ -103,6 +114,8 @@ services:
     volumes:
       - hermes-state:/home/hermes/.hermes/state
       - ./config:/home/hermes/.hermes/config:ro
+      # The active config, at the path Hermes actually reads.
+      - ./config/config.yaml:/home/hermes/.hermes/config.yaml:ro
       # NOTE: do NOT mount a volume at /opt/data — the image ships with
       # /opt/data owned by the internal `hermes:hermes` user (a non-root
       # user specific to the upstream image). Mounting our volume there
