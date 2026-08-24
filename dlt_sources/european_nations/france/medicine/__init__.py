@@ -1,4 +1,9 @@
-"""Re-export the fra medicine DLT source module."""
-from dlt_sources.european_nations.fra.medicine import has_sante  # noqa: F401
+"""dlt_sources/european_nations/france/medicine — DLT sources (empty).
 
-__all__ = ["has_sante"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
+from __future__ import annotations
+
+__all__ = []

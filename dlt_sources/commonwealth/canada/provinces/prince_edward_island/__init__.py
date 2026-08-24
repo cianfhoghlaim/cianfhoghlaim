@@ -1,4 +1,9 @@
-"""Prince Edward Island (pe) national pipeline — re-exports the per-domain sub-trees."""
-from dlt_sources.commonwealth.can.pe import education, government, law, medicine, statistics
+"""dlt_sources/commonwealth/canada/provinces/prince_edward_island — DLT sources (empty).
 
-__all__ = ["education", "government", "law", "medicine", "statistics"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
+from __future__ import annotations
+
+__all__ = []

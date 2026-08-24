@@ -1,4 +1,9 @@
-"""Czechia (Czechia) education sub-tree — per-subject + root."""
-from dlt_sources.european_nations.cze.education import subjects  # noqa: F401
+"""dlt_sources/european_nations/czechia/education — DLT sources (empty).
 
-__all__ = ["subjects"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
+from __future__ import annotations
+
+__all__ = []

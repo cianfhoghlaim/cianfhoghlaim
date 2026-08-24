@@ -1,21 +1,18 @@
-"""British Isles subject registry (BIEP v3 cross-cutting).
+"""dlt_sources/british_isles/_cross — DLT sources.
 
-Per the 2026-07-27-biep-v3-canonical-registry-v1 change.
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location. The `__init__.py` re-exports the local source modules.
+
+Legacy import paths still work via re-export shims at the old locations.
 """
-from dlt_sources.british_isles._cross.registry_api import (
-    SubjectRegistryRow,
-    query_by_jurisdiction,
-    query_by_concept,
-    query_by_stage,
-    query_cross_jurisdiction_bridges,
-    insert_subject,
-)
+from __future__ import annotations
 
-__all__ = [
-    "SubjectRegistryRow",
-    "query_by_jurisdiction",
-    "query_by_concept",
-    "query_by_stage",
-    "query_cross_jurisdiction_bridges",
-    "insert_subject",
-]
+from . import biep_4_path_ensemble_runner  # noqa: F401
+from . import biep_4_stage_registry  # noqa: F401
+from . import connection  # noqa: F401
+from . import jurisdiction_pipeline_base  # noqa: F401
+from . import registry_api  # noqa: F401
+from . import registry_loader  # noqa: F401
+
+__all__ = ['biep_4_path_ensemble_runner', 'biep_4_stage_registry', 'connection', 'jurisdiction_pipeline_base', 'registry_api', 'registry_loader']

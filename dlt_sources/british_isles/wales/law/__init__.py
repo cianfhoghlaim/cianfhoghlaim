@@ -1,6 +1,9 @@
-"""cianfhoghlaim.cianfhoghlaim.dlt.british_isles.wales.law — Wales statutory-law sub-package."""
+"""dlt_sources/british_isles/wales/law — DLT sources (empty).
+
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
 from __future__ import annotations
 
-from dlt_sources.british_isles.wales.law import legislation
-
-__all__ = ["legislation"]
+__all__ = []

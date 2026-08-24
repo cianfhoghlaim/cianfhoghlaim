@@ -1,4 +1,9 @@
-"""Re-export the Venezuela law DLT source module."""
-from dlt_sources.americas.Venezuela.law import tsj  # noqa: F401
+"""dlt_sources/american_nations/venezuela/law — DLT sources (empty).
 
-__all__ = ["tsj"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
+from __future__ import annotations
+
+__all__ = []

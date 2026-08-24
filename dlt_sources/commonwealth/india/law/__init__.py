@@ -1,4 +1,9 @@
-"""Re-export the India law DLT source module."""
-from dlt_sources.commonwealth.ind.law import india_code  # noqa: F401
+"""dlt_sources/commonwealth/india/law — DLT sources (empty).
 
-__all__ = ["india_code"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
+from __future__ import annotations
+
+__all__ = []

@@ -1,6 +1,13 @@
-"""EU statistics institutional sub-tree."""
+"""dlt_sources/european_union/statistics — DLT sources.
+
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location. The `__init__.py` re-exports the local source modules.
+
+Legacy import paths still work via re-export shims at the old locations.
+"""
 from __future__ import annotations
 
-from dlt_sources.europeanunion.statistics import eurostat
+from . import eurostat  # noqa: F401
 
-__all__ = ["eurostat"]
+__all__ = ['eurostat']

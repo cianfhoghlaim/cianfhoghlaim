@@ -7,6 +7,7 @@ change.
 Honours ``USE_LOCAL_SCRAPES=true`` by reading from
 ``stedding/ingest_queue/commonwealth/can/mb/education/<lang>/``.
 """
+
 from __future__ import annotations
 import dlt
 
@@ -50,7 +51,7 @@ def mb_ministry_of_education(language=None):
     from pathlib import Path
 
     cache_dir = Path("stedding/ingest_queue/commonwealth/can/mb/education")
-    languages = (language,) if language else ('en', 'fr')
+    languages = (language,) if language else ("en", "fr")
     for lang in languages:
         lang_dir = cache_dir / lang
         if not lang_dir.exists():
@@ -59,7 +60,11 @@ def mb_ministry_of_education(language=None):
             try:
                 payload = json.loads(json_path.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError) as exc:
-                logger.warning("mb_ministry_of_education_cache_parse_failed", path=str(json_path), error=str(exc))
+                logger.warning(
+                    "mb_ministry_of_education_cache_parse_failed",
+                    path=str(json_path),
+                    error=str(exc),
+                )
                 continue
             metadata = payload.get("metadata", {}) if isinstance(payload, dict) else {}
             markdown = payload.get("markdown", "") if isinstance(payload, dict) else ""
@@ -68,8 +73,14 @@ def mb_ministry_of_education(language=None):
                 "domain": DOMAIN,
                 "language": lang,
                 "url": metadata.get("sourceURL") or metadata.get("url") or "",
-                "title": (payload.get("title") or metadata.get("title", "") if isinstance(payload, dict) else ""),
-                "content_hash": f"sha256:{hashlib.sha256(markdown.encode()).hexdigest()[:16]}" if markdown else "",
+                "title": (
+                    payload.get("title") or metadata.get("title", "")
+                    if isinstance(payload, dict)
+                    else ""
+                ),
+                "content_hash": f"sha256:{hashlib.sha256(markdown.encode()).hexdigest()[:16]}"
+                if markdown
+                else "",
                 "source": SLUG,
                 "extracted_at": datetime.now(UTC).isoformat(),
             }

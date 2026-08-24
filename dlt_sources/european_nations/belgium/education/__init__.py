@@ -1,8 +1,9 @@
-"""Belgium (Belgium) education per-subject DLT sub-tree."""
-from dlt_sources.european_nations.bel.education.subjects import (
-    mathematics, chemistry, biology, physics, language, computing_science,
-)
+"""dlt_sources/european_nations/belgium/education — DLT sources (empty).
 
-__all__ = [
-    'mathematics', 'chemistry', 'biology', 'physics', 'language', 'computing_science',
-]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
+from __future__ import annotations
+
+__all__ = []

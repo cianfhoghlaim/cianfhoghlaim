@@ -1,4 +1,13 @@
-"""Re-export the Kogi medicine DLT source."""
-from dlt_sources.commonwealth.nga.states.nga_kog.medicine import nga_kog_health_authority  # noqa: F401
+"""dlt_sources/commonwealth/nigeria/states/kogi/medicine — DLT sources.
 
-__all__ = ["nga_kog_health_authority"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location. The `__init__.py` re-exports the local source modules.
+
+Legacy import paths still work via re-export shims at the old locations.
+"""
+from __future__ import annotations
+
+from . import health_authority  # noqa: F401
+
+__all__ = ['health_authority']

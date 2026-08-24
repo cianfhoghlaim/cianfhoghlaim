@@ -1,4 +1,9 @@
-"""Nigerian federal medicine DLT re-exports."""
-from dlt_sources.commonwealth.nga.medicine import fmhds, ncdc, nphcda
+"""dlt_sources/commonwealth/nigeria/medicine — DLT sources (empty).
 
-__all__ = ["fmhds", "ncdc", "nphcda"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
+from __future__ import annotations
+
+__all__ = []

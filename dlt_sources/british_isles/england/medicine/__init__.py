@@ -1,13 +1,9 @@
-"""cianfhoghlaim.cianfhoghlaim.dlt.british_isles.england.medicine — England medicine sub-package.
+"""dlt_sources/british_isles/england/medicine — DLT sources (empty).
 
-Phase 7 of the openspec change.
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
 """
 from __future__ import annotations
 
-from dlt_sources.british_isles.england.medicine import (
-    gmc,
-    nhs_england,
-    nice,
-)
-
-__all__ = ["gmc", "nhs_england", "nice"]
+__all__ = []

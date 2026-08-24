@@ -1,6 +1,9 @@
-"""Government of Jersey (jersey) per-island education sub-tree (Phase 2 split)."""
-from dlt_sources.british_isles.jersey.education.island import (
-    jersey_education,
-)  # noqa: F401
+"""dlt_sources/british_isles/jersey/education — DLT sources (empty).
 
-__all__ = ["jersey_education"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
+from __future__ import annotations
+
+__all__ = []
