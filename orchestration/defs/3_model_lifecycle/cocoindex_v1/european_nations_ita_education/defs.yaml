@@ -13,7 +13,7 @@ attributes:
   conformance_required: true
   apps:
     - app_name: ita_UPPER_EDUCATION_EMBEDDING
-      module: cianfhoghlaim.cocoindex.european_nations_ita_education_embedding
+      module: cianfhoghlaim.cocoindex_flows.european_nations._factory
       source: european_nations
       lance_table: cianfhoghlaim.european_nations.ita.education_chunks
   schedule:

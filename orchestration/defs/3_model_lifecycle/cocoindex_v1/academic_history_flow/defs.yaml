@@ -9,7 +9,7 @@
 type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: AcademicHistoryFlow
-  module: cianfhoghlaim.cocoindex.academic_history_flow
+  module: cianfhoghlaim.cocoindex_flows.infrastructure.academic_history_flow
   embedding_model: BAAI/bge-m3
   hnsw_index: true
   conformance_required: true

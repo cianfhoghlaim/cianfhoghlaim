@@ -8,7 +8,7 @@
 type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: IrelandSyllabusOCRFflow
-  module: cianfhoghlaim.cocoindex.ocr_aware_flow
+  module: cianfhoghlaim.cocoindex_flows.infrastructure.ocr_aware_flow
   embedding_model: BAAI/bge-m3
   hnsw_index: true
   conformance_required: true

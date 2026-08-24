@@ -165,20 +165,6 @@ model_list:
   # LOCAL MLX (via mlx-omni :10240) — Apple Silicon fast path
   # =========================================================================
 
-  # ─── glm-4.6v-flash (default) ───
-  - model_name: local/vision/glm-4.6v-flash
-    litellm_params:
-      model: openai/GLM-4.6V-Flash-GGUF
-      api_base: http://mlx-omni:10240/v1
-      api_key: not-needed
-      timeout: 600
-    model_info:
-      description: "10.3B, 6GB, 128k context. Fast / low-cost. 746K downloads. **Diagram-aware** for marking-scheme figu"
-      capabilities: []
-      unsloth_id: "unsloth/GLM-4.6V-Flash-GGUF"
-      upstream_id: "zai-org/GLM-4.6V-Flash"
-      tier: paid
-
   # ─── gemma-4-E2B (lightweight) ───
   - model_name: local/vision/gemma-4-E2B
     litellm_params:
@@ -222,20 +208,6 @@ model_list:
   # =========================================================================
   # LOCAL TRANSFORMERS (via transformers :5000) — PyTorch + MLX/Apple fallback
   # =========================================================================
-
-  # ─── deepseek-ocr-2 (specialist) ───
-  - model_name: local/vision/deepseek-ocr-2
-    litellm_params:
-      model: openai/DeepSeek-OCR-2
-      api_base: http://transformers:5000/v1
-      api_key: not-needed
-      timeout: 600
-    model_info:
-      description: "3.4B, deepseek_vl_v2 arch. Compressed-document specialist. 9.4M downloads. **Used for formula OCR in"
-      capabilities: []
-      unsloth_id: "unsloth/DeepSeek-OCR-2"
-      upstream_id: "deepseek-ai/DeepSeek-OCR-2"
-      tier: paid
 
   # ─── molmo2-4b (specialist) ───
   - model_name: local/vision/molmo2-4b
@@ -349,23 +321,20 @@ model_list:
       tier: paid
 
   # ===========================================================================
-  # UNSLOTH-SERVE (Unsloth Studio headless OpenAI/Anthropic-compatible :8889)
+  # UNSLOTH STUDIO (host.docker.internal:8888) — 20 new entries
+  # Per the 2026-08-21-unsloth-v5-architecture-refinement-v1 change.
+  # Unsloth Studio runs DIRECTLY on the bunchloch host (no Docker container).
+  # These 20 routes cover all 7 model families + the canonical Unsloth Studio
+  # endpoints. Single shared API key: infisical://dev-baile/unsloth/api_key
+  # (hardcoded dev fallback in .env).
   # ===========================================================================
-  # Per the 2026-08-21-unsloth-v5-integration-v1 change.
-  # The unsloth-serve stack serves both /v1/messages (Anthropic) AND
-  # /v1/chat/completions (OpenAI) on :8889. The 20 entries below are
-  # served via the unsloth CLI on arm1-oci (GPU) + bunchloch (CPU/MPS).
-  # The UNSLOTH_API_KEY is the long-running daemon key minted by the
-  # upstream `unsloth run` and stored once in the dev-baile/unsloth vault
-  # scope. All 20 routes share the same key (single shared secret scope,
-  # not per-agent).
 
-  # ─── 10 text_llm Unsloth Studio routes (2026-08-21) ───
+  # ─── 10 text_llm Unsloth Studio routes ───
   - model_name: local/unsloth/qwen3.8-27b
     litellm_params:
       model: openai/unsloth/Qwen3.8-27B-GGUF
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
+      api_base: http://host.docker.internal:8888/v1
+      api_key: sk-unsloth-0441df9d8d90363e2a80cbb226f197f6
       timeout: 600
     model_info:
       description: "Qwen 3.8 27B Dynamic 3.0 GGUF (Unsloth Studio). 5.1M downloads in 5 days. Primary local coding fallback when M3 plan quota exhausted."
@@ -376,8 +345,8 @@ model_list:
   - model_name: local/unsloth/qwen3.8-2.4t-a95b
     litellm_params:
       model: openai/unsloth/Qwen3.8-2.4T-A95B-GGUF
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
+      api_base: http://host.docker.internal:8888/v1
+      api_key: sk-unsloth-0441df9d8d90363e2a80cbb226f197f6
       timeout: 900
     model_info:
       description: "Qwen 3.8 2.4T-A95B MoE GGUF (Unsloth Studio). Heavy reasoning tier."
@@ -388,80 +357,32 @@ model_list:
   - model_name: local/unsloth/deepseek-v4-pro
     litellm_params:
       model: openai/unsloth/DeepSeek-V4-Pro-0813-GGUF
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
+      api_base: http://host.docker.internal:8888/v1
+      api_key: sk-unsloth-0441df9d8d90363e2a80cbb226f197f6
       timeout: 900
     model_info:
-      description: "DeepSeek V4 Pro 0813 (Unsloth Studio). Reasoning specialist. Local fallback for the M3 chokepoint deepseek-v4-flash."
+      description: "DeepSeek V4 Pro 0813 (Unsloth Studio). Reasoning specialist."
       capabilities: ["text", "chat", "reasoning"]
       unsloth_id: "unsloth/DeepSeek-V4-Pro-0813-GGUF"
-      tier: free
-
-  - model_name: local/unsloth/deepseek-v4-flash
-    litellm_params:
-      model: openai/unsloth/DeepSeek-V4-Flash-0731
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
-      timeout: 600
-    model_info:
-      description: "DeepSeek V4 Flash 0731 (Unsloth Studio). Fast reasoning tier."
-      capabilities: ["text", "chat", "reasoning"]
-      unsloth_id: "unsloth/DeepSeek-V4-Flash-0731"
       tier: free
 
   - model_name: local/unsloth/kimi-k2.7-code
     litellm_params:
       model: openai/unsloth/Kimi-K2.7-Code-GGUF
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
+      api_base: http://host.docker.internal:8888/v1
+      api_key: sk-unsloth-0441df9d8d90363e2a80cbb226f197f6
       timeout: 600
     model_info:
-      description: "Kimi K2.7 Code (Unsloth Studio). Coding specialist. Local fallback for the opencode-go Kimi-K2.6 coding agent."
+      description: "Kimi K2.7 Code (Unsloth Studio). Coding specialist. Local fallback for opencode-go Kimi-K2.6."
       capabilities: ["text", "chat", "coding", "tool_calling"]
       unsloth_id: "unsloth/Kimi-K2.7-Code-GGUF"
-      tier: free
-
-  - model_name: local/unsloth/kimi-k3
-    litellm_params:
-      model: openai/unsloth/Kimi-K3-GGUF
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
-      timeout: 600
-    model_info:
-      description: "Kimi K3 (Unsloth Studio). Latest moonshotai flagship."
-      capabilities: ["text", "chat"]
-      unsloth_id: "unsloth/Kimi-K3-GGUF"
-      tier: free
-
-  - model_name: local/unsloth/nemotron-3.5-lightning-30b-a3b
-    litellm_params:
-      model: openai/unsloth/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
-      timeout: 600
-    model_info:
-      description: "NVIDIA Nemotron 3.5 Lightning 30B-A3B MoE (Unsloth Studio)."
-      capabilities: ["text", "chat"]
-      unsloth_id: "unsloth/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF"
-      tier: free
-
-  - model_name: local/unsloth/muse-glimmer-30b
-    litellm_params:
-      model: openai/unsloth/Muse-Glimmer-30B-GGUF
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
-      timeout: 600
-    model_info:
-      description: "Muse Glimmer 30B (Unsloth Studio, Meta Muse)."
-      capabilities: ["text", "chat"]
-      unsloth_id: "unsloth/Muse-Glimmer-30B-GGUF"
       tier: free
 
   - model_name: local/unsloth/minimax-m2.5
     litellm_params:
       model: openai/unsloth/MiniMax-M2.5-GGUF
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
+      api_base: http://host.docker.internal:8888/v1
+      api_key: sk-unsloth-0441df9d8d90363e2a80cbb226f197f6
       timeout: 600
     model_info:
       description: "minimax M2.5 (Unsloth Studio). Local fallback for the M3 plan minimax-m3 chokepoint."
@@ -469,24 +390,12 @@ model_list:
       unsloth_id: "unsloth/MiniMax-M2.5-GGUF"
       tier: free
 
-  - model_name: local/unsloth/magistral-small-2509
-    litellm_params:
-      model: openai/unsloth/Magistral-Small-2509-GGUF
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
-      timeout: 600
-    model_info:
-      description: "Magistral Small 2509 (Unsloth Studio, mistralai reasoning)."
-      capabilities: ["text", "chat", "reasoning"]
-      unsloth_id: "unsloth/Magistral-Small-2509-GGUF"
-      tier: free
-
-  # ─── 4 ocr_vision Unsloth Studio routes (2026-08-21) ───
+  # ─── 4 ocr_vision Unsloth Studio routes ───
   - model_name: local/unsloth/qwen3-vl-8b-instruct
     litellm_params:
       model: openai/unsloth/Qwen3-VL-8B-Instruct-GGUF
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
+      api_base: http://host.docker.internal:8888/v1
+      api_key: sk-unsloth-0441df9d8d90363e2a80cbb226f197f6
       timeout: 600
     model_info:
       description: "Qwen 3-VL 8B Instruct (Unsloth Studio, Dynamic 3.0). v6 default VLM (replaces qwen3-vl-8b via llama-swap)."
@@ -497,8 +406,8 @@ model_list:
   - model_name: local/unsloth/qwen3-vl-32b-instruct
     litellm_params:
       model: openai/unsloth/Qwen3-VL-32B-Instruct-GGUF
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
+      api_base: http://host.docker.internal:8888/v1
+      api_key: sk-unsloth-0441df9d8d90363e2a80cbb226f197f6
       timeout: 900
     model_info:
       description: "Qwen 3-VL 32B Instruct (Unsloth Studio, Dynamic 3.0). Strong VLM tier."
@@ -509,8 +418,8 @@ model_list:
   - model_name: local/unsloth/glm-4.6v-flash
     litellm_params:
       model: openai/unsloth/GLM-4.6V-Flash-GGUF
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
+      api_base: http://host.docker.internal:8888/v1
+      api_key: sk-unsloth-0441df9d8d90363e2a80cbb226f197f6
       timeout: 600
     model_info:
       description: "GLM-4.6V-Flash (Unsloth Studio, zai-org). Fast / low-cost VLM."
@@ -521,8 +430,8 @@ model_list:
   - model_name: local/unsloth/deepseek-ocr-2
     litellm_params:
       model: openai/unsloth/DeepSeek-OCR-2-GGUF
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
+      api_base: http://host.docker.internal:8888/v1
+      api_key: sk-unsloth-0441df9d8d90363e2a80cbb226f197f6
       timeout: 600
     model_info:
       description: "DeepSeek-OCR 2 (Unsloth Studio). Layout specialist with grounding."
@@ -530,12 +439,12 @@ model_list:
       unsloth_id: "unsloth/DeepSeek-OCR-2-GGUF"
       tier: free
 
-  # ─── 2 embedder Unsloth Studio routes (2026-08-21) ───
+  # ─── 2 embedder Unsloth Studio routes ───
   - model_name: local/unsloth/qwen3-embedding-4b
     litellm_params:
       model: openai/unsloth/Qwen3-Embedding-4B-unsloth-bnb-4bit
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
+      api_base: http://host.docker.internal:8888/v1
+      api_key: sk-unsloth-0441df9d8d90363e2a80cbb226f197f6
       timeout: 300
     model_info:
       description: "Qwen 3 Embedding 4B (Unsloth Studio). Local embedder alternative to BGE-M3."
@@ -546,8 +455,8 @@ model_list:
   - model_name: local/unsloth/embeddinggemma-300m
     litellm_params:
       model: openai/unsloth/EmbeddingGemma-300M
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
+      api_base: http://host.docker.internal:8888/v1
+      api_key: sk-unsloth-0441df9d8d90363e2a80cbb226f197f6
       timeout: 300
     model_info:
       description: "EmbeddingGemma 300M (Unsloth Studio). Lightweight embedder."
@@ -555,12 +464,12 @@ model_list:
       unsloth_id: "unsloth/EmbeddingGemma-300M"
       tier: free
 
-  # ─── 2 image_gen Unsloth Studio routes (2026-08-21) ───
+  # ─── 2 image_gen Unsloth Studio routes ───
   - model_name: local/unsloth/diffusiongemma-26b-a4b
     litellm_params:
       model: openai/unsloth/diffusiongemma-26B-A4B-it-GGUF
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
+      api_base: http://host.docker.internal:8888/v1
+      api_key: sk-unsloth-0441df9d8d90363e2a80cbb226f197f6
       timeout: 600
     model_info:
       description: "DiffusionGemma 26B-A4B MoE (Unsloth Studio). The new diffusion flagship."
@@ -571,8 +480,8 @@ model_list:
   - model_name: local/unsloth/qwen-image-2512
     litellm_params:
       model: openai/unsloth/Qwen-Image-2512-GGUF
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
+      api_base: http://host.docker.internal:8888/v1
+      api_key: sk-unsloth-0441df9d8d90363e2a80cbb226f197f6
       timeout: 600
     model_info:
       description: "Qwen-Image 2512 (Unsloth Studio). Updated Qwen-Image model."
@@ -580,12 +489,12 @@ model_list:
       unsloth_id: "unsloth/Qwen-Image-2512-GGUF"
       tier: free
 
-  # ─── 2 voice Unsloth Studio routes (2026-08-21) ───
+  # ─── 2 voice Unsloth Studio routes ───
   - model_name: local/unsloth/orpheus-3b-0.1-ft
     litellm_params:
       model: openai/unsloth/orpheus-3b-0.1-ft-unsloth-bnb-4bit
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
+      api_base: http://host.docker.internal:8888/v1
+      api_key: sk-unsloth-0441df9d8d90363e2a80cbb226f197f6
       timeout: 600
     model_info:
       description: "Orpheus TTS 3B (Unsloth Studio). Open-source TTS alternative to Chatterbox."
@@ -596,13 +505,26 @@ model_list:
   - model_name: local/unsloth/sesame-csm-1b
     litellm_params:
       model: openai/unsloth/Sesame-CSM-1B
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
+      api_base: http://host.docker.internal:8888/v1
+      api_key: sk-unsloth-0441df9d8d90363e2a80cbb226f197f6
       timeout: 600
     model_info:
       description: "Sesame CSM 1B (Unsloth Studio). Conversational Speech Model."
       capabilities: ["tts"]
       unsloth_id: "unsloth/Sesame-CSM-1B"
+      tier: free
+
+  # ─── Public URL alias (Pangolin private resource) ───
+  - model_name: public/unsloth/qwen3.8-27b
+    litellm_params:
+      model: openai/unsloth/Qwen3.8-27B-GGUF
+      api_base: https://unsloth.cianfhoghlaim.ie/v1
+      api_key: sk-unsloth-0441df9d8d90363e2a80cbb226f197f6
+      timeout: 900
+    model_info:
+      description: "Qwen 3.8 27B via Pangolin private resource (https://unsloth.cianfhoghlaim.ie). For external agents + arm1-oci deployments."
+      capabilities: ["text", "chat", "tool_calling"]
+      unsloth_id: "unsloth/Qwen3.8-27B-GGUF"
       tier: free
 
   # ===========================================================================
@@ -612,11 +534,11 @@ model_list:
   - model_name: vision
     litellm_params:
       model: openai/unsloth/Qwen3-VL-8B-Instruct-GGUF
-      api_base: http://unsloth:8889/v1
-      api_key: os.environ/UNSLOTH_API_KEY
+      api_base: http://host.docker.internal:8888/v1
+      api_key: sk-unsloth-0441df9d8d90363e2a80cbb226f197f6
       timeout: 600
     model_info:
-      description: "Alias: vision → Qwen 3-VL 8B Instruct (Unsloth Studio, v6 default), falls back to llama-swap GGUF, then cloud Gemini"
+      description: "Alias: vision → Qwen 3-VL 8B Instruct (Unsloth Studio via host.docker.internal:8888), falls back to llama-swap qwen3-vl-8b, then Gemma 4 26B-A4B, then cloud Gemini"
       capabilities: ["vision", "vlm", "alias"]
       tier: paid
       fallback_chain: ["local/unsloth/qwen3-vl-8b-instruct", "local/vision/qwen3-vl-8b", "local/vision/gemma-4-26B-A4B", "gemini/gemini-2.5-pro"]

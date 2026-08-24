@@ -44,6 +44,11 @@ services:
     volumes:
       - ./config:/app/config:ro
       - ../../stedding/huggingface:/stedding/huggingface:ro  # shared HF cache (read-only)
+    # Per the 2026-08-21-unsloth-v5-architecture-refinement-v1 change:
+    # OrbStack does not auto-resolve host.docker.internal in /etc/hosts.
+    # We map it explicitly to the Docker host gateway IP.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       # Gateway
       LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:?LITELLM_MASTER_KEY must be set via Locket/Infisical}

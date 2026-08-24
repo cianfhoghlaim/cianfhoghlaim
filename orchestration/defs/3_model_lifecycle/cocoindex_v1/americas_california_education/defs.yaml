@@ -13,7 +13,7 @@ attributes:
   conformance_required: true
   apps:
     - app_name: AmericasCaliforniaEducationEmbedding
-      module: cianfhoghlaim.cocoindex.americas_california_education_embedding
+      module: cianfhoghlaim.cocoindex_flows.american_nations.united_states.california_education_embedding
       source: americas
       lance_table: cianfhoghlaim.americas.education_chunks
   schedule:

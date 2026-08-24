@@ -14,7 +14,7 @@ attributes:
   conformance_required: true
   apps:
     - app_name: EuropeanNationsMedicineEmbedding
-      module: cianfhoghlaim.cocoindex.european_nations_medicine_embedding
+      module: cianfhoghlaim.cocoindex_flows.european_nations_cross.medicine_embedding
       source: european_nations
       lance_table: cianfhoghlaim.eu_nations.medicine_chunks
   schedule:

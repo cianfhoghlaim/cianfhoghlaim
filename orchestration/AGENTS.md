@@ -18,7 +18,7 @@ For platform-wide context, load [`../AGENTS.md`](../AGENTS.md).
 ```bash
 mise run dagster:dev                 # Launch the consolidated Dagster UI on :3000
 mise run sync:all                    # Run all 7 sync layers (paths + ccc + cognee + skills + mcp + drift-docs + dagster)
-mise run sync:dagster                # Layer 6: validate ~833 Dagster assets via AST parsing
+mise run sync:dagster                # Layer 6: validate ~190 Dagster assets via AST parsing + per-group breakdown
 mise run lint:drift-docs             # Anti-drift lint (validates every AGENTS.md number claim)
 ```
 
@@ -26,11 +26,12 @@ mise run lint:drift-docs             # Anti-drift lint (validates every AGENTS.m
 
 | Path | Why it matters |
 |:--|:--|
-| `orchestration/definitions.py` | The consolidated code-location entry-point (199 assets + 31 jobs + 6 schedules + 16 sensors + 22 asset checks) |
-| `orchestration/defs/` | The 5-layer `defs/` tree (`1_ingestion/`, `2_materials/`, `3_model_lifecycle/`, `4_asset_generation/`, `5_agent_ops/`) |
+| `orchestration/definitions.py` | The consolidated code-location entry-point (~190 assets across 192 `defs.yaml` files + 145 Python `@asset` decorators + 8 `@sensor` + 1 `@schedule` + 54 `@asset_check`; auto-detected by `mise run sync:dagster`) |
+| `orchestration/defs/` | The 5-layer `defs/` tree (`1_ingestion/`, `2_materials/`, `3_model_lifecycle/`, `4_asset_generation/`, `5_agent_ops/`) — 192 defs.yaml files as of Wave 0 |
+| `orchestration/defs/3_model_lifecycle/cocoindex_v1/` | 96 CocoIndex v1 defs.yaml files (the L3 layer). Module paths were repaired by the 2026-08-24-wave-0-cocoindex-module-path-repair-v1 change (was: 85/96 broken, now: 0 broken) |
 | `orchestration/defs/sync_assets.py` | The `sync_health` asset + Layer 6 metadata emitter |
 | `orchestration/automation/sync_schedules.py` | The `0 */4 * * *` cron that materialises `sync_health` |
-| `orchestration/components/` | The 5 KCG Dagster Components (Declarative Automation + State-Backed) |
+| `orchestration/components/` | The 5 KCG Dagster Components (Declarative Automation + State-Backed) + the per-pipeline-kind handlers |
 | `orchestration/dbt_translator.py` | The dbt-to-DuckLake bridge for BIEP v3 |
 
 ## Adjacent specs

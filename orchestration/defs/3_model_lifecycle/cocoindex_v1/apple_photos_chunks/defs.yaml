@@ -8,7 +8,7 @@
 type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: ApplePhotosChunks
-  module: cianfhoghlaim.cocoindex.apple_photos_chunks
+  module: cianfhoghlaim.cocoindex_flows.media_personal.apple_photos_chunks
   embedding_model: BAAI/bge-m3
   hnsw_index: true
   conformance_required: true

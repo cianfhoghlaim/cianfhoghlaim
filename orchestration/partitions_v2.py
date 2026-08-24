@@ -302,13 +302,17 @@ year_partitions = StaticPartitionsDefinition(
 
 # Generic 2-axis `scope × year` partition (used by all 5 BIEP v3
 # jurisdiction pipelines)
+#
+# NOTE: The partition name was corrected from `cianhoghlaim_scope` (typo,
+# missing 'f') to `cianfhoghlaim_scope` as part of the
+# 2026-08-24-wave-0-cocoindex-module-path-repair-v1 openspec change.
+# Verified via `grep -rn "cianhoghlaim_scope" orchestration` that no
+# `defs.yaml` file referenced the typo'd name (only `partitions_v2.py`
+# declared it), so this is a self-contained string swap with zero
+# migration impact.
 biiep_v3_scope_year_partition = MultiPartitionsDefinition(
-    # NOTE: "cianhoghlaim_scope" (missing f) is the pre-existing, documented
-    # partition-name typo tracked separately — fixing it requires a LanceDB
-    # table migration (see the KCG refactor roadmap's Plan 2), not just a
-    # string swap, so it is deliberately left as-is here.
     partitions_defs={
-        "scope": DynamicPartitionsDefinition(name="cianhoghlaim_scope"),
+        "scope": DynamicPartitionsDefinition(name="cianfhoghlaim_scope"),
         "year": year_partitions,
     }
 )

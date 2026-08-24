@@ -107,11 +107,11 @@
       }
     },
     "unsloth-studio": {
-      "name": "Unsloth Studio (local unsloth-serve :8889) — the 2026-08-21 fallback when the M3 token plan quota is exhausted; same UNSLOTH_API_KEY as hermes/openclaw/openchamber",
+      "name": "Unsloth Studio (host.docker.internal:8888) — the 2026-08-21 fallback when the M3 token plan quota is exhausted; same UNSLOTH_API_KEY as hermes/openclaw/openchamber. Per the 2026-08-21-unsloth-v5-architecture-refinement-v1 change: Unsloth Studio runs directly on the bunchloch host, not in a Docker container.",
       "api": "openai",
       "options": {
         "apiKey": "{env:UNSLOTH_API_KEY}",
-        "baseURL": "http://unsloth:8889/v1/",
+        "baseURL": "http://host.docker.internal:8888/v1/",
         "timeout": 600000
       },
       "models": {

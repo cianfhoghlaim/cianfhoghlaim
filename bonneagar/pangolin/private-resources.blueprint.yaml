@@ -1,212 +1,295 @@
 # =============================================================================
-# Private Resources Blueprint - ML Infrastructure
+# Pangolin private (client) resources — declarative source of truth
 # =============================================================================
-# Defines private resources accessible via Pangolin client with DNS aliases.
-# When connected via Pangolin client, these domain names will resolve to
-# the internal services without requiring public DNS or SSO.
+# Applied with:
+#   bash bonneagar/pangolin/apply-blueprint.sh
+# or manually:
+#   curl -X PUT "$PANGOLIN_API/v1/org/$ORG_ID/blueprint" \
+#     -H "Authorization: Bearer $PANGOLIN_API_KEY" \
+#     -H "Content-Type: application/json" \
+#     -d "{\"blueprint\": \"$(base64 -w0 private-resources.blueprint.yaml)\"}"
 #
-# USAGE:
-#   Import via Pangolin UI: Settings > Blueprints
-#   Or via API:
-#     curl -X PUT https://pangolin.cianfhoghlaim.ie/api/v1/org/{orgId}/blueprint \
-#       -H "Authorization: Bearer $PANGOLIN_API_KEY" \
-#       -H "Content-Type: application/json" \
-#       -d '{"blueprint": "'"$(base64 -w0 private-resources.blueprint.yaml)"'"}'
+# Applying is a RECONCILIATION, not an append. For every entry Pangolin
+# rewrites the site bindings, the per-client grants and the per-user grants
+# to match this file exactly. Re-applying an unchanged file is a no-op.
 #
-# PREREQUISITES:
-#   - Pangolin client installed on your device
-#   - Connected to the organization via Pangolin client
-#   - Sites: arm1-oci, arm1-oci must exist
+# -----------------------------------------------------------------------------
+# THE FOUR RULES THAT MAKE OR BREAK A BLUEPRINT
+# -----------------------------------------------------------------------------
+# 1. The YAML key is the resource's `niceId`, and it is the upsert key.
+#    Change the key and you create a SECOND resource, you do not rename the
+#    first one.
+#
+# 2. `sites:` matches `sites.niceId` — NOT the site's display name.
+#    Pangolin auto-generates niceIds as random animal names. Look them up:
+#      sqlite3 /opt/pangolin/config/db/db.sqlite \
+#        'select siteId, name, niceId, online from sites;'
+#    Getting this wrong is the single most common failure and produces:
+#      "No valid sites found for private private resource <name> in org <org>"
+#
+# 3. `users:` matches the account email and `machines:` matches
+#    `clients.niceId`. Both are silently ignored if they do not resolve, so a
+#    typo yields a resource that exists but that nobody can reach.
+#
+# 4. `roles:` must NOT contain "Admin". Admin access is implicit and Pangolin
+#    rejects the blueprint outright: "Admin role cannot be included in roles".
+#
+# -----------------------------------------------------------------------------
+# LICENSING
+# -----------------------------------------------------------------------------
+# `mode: http` and `mode: ssh` are gated behind the licensed tier
+# (tierMatrix.advancedPrivateResources). Without a licence Pangolin refuses:
+#   "HTTP private resources are not included in your current plan."
+# Unlicensed deployments can still use `mode: host` and `mode: cidr`, which
+# expose the target by alias IP + port rather than by hostname over TLS.
+#
+# -----------------------------------------------------------------------------
+# HISTORY
+# -----------------------------------------------------------------------------
+# 2026-08-23: Rewritten. The previous revision declared 15 resources (mlflow,
+# langfuse, lancedb, falkordb, qdrant, memgraph, cognee, graphiti, komodo,
+# forgejo, postgres-*, mailcow-*) against sites "arm1-oci" / "oci-free" /
+# "bunchloch" and users "eolas@cianfhoghlaim.ie". None of those site strings
+# were niceIds, and that user account does not exist, so the file could never
+# apply — three attempts on 2026-07-26 are still recorded in the `blueprints`
+# table, all failing with "No valid sites found". Those entries were removed
+# rather than carried forward: an IaC file that has never successfully applied
+# is not a description of infrastructure, it is a wish. Add resources back one
+# at a time, verifying each per bonneagar/docs/deploy-private-resource-from-scratch.md.
 # =============================================================================
 
 private-resources:
   # ---------------------------------------------------------------------------
-  # Observability - MLflow & Langfuse
+  # OpenChamber — OpenCode web/desktop UI running on the workload host.
   # ---------------------------------------------------------------------------
-  mlflow:
-    name: "MLflow Tracking Server"
-    mode: host
-    destination: mlflow-server
-    site: arm1-oci
-    alias: mlflow.cianfhoghlaim.ie
+  # Reached from the phone/laptop Pangolin (Olm) client at
+  # https://openchamber.cianfhoghlaim.ie. Newt terminates TLS on the alias
+  # address using a Pangolin-issued certificate, then proxies plain HTTP to
+  # the destination.
+  #
+  # destination `host.docker.internal` is deliberate: OpenChamber is the native
+  # macOS app bound to 127.0.0.1 only, and newt runs in Docker. OrbStack maps
+  # host.docker.internal to the macOS host loopback, so the app is reachable
+  # from the container WITHOUT binding 0.0.0.0 and exposing it on the LAN.
+  # On a Linux workload host where the service is a sibling container, use the
+  # container name instead. Verify before applying:
+  #   docker exec newt wget -qO- http://<destination>:<port>/ | head -c 100
+  #
+  # destination-port 57123 is OpenChamber's `desktopLocalPort`, persisted in
+  # ~/.config/openchamber/settings.json. It is stable across restarts but is
+  # NOT a documented contract — if it changes, this file must follow or the
+  # resource 502s.
+  openchamber:
+    name: OpenChamber
+    mode: http
+    scheme: http
+    ssl: true
+    sites:
+      # niceId of site "macbook" (siteId 6) — the MacBook workload host.
+      # NB: the site *named* "bunchloch" (siteId 8,
+      # well-worn-middle-east-blind-mole-rat) is a separate, dead registration.
+      # Despite "bunchloch" being the name used throughout these docs for this
+      # machine, it is NOT the site that serves it.
+      - worried-upper-galilee-mountains-blind-mole-rat
+    destination: host.docker.internal
+    destination-port: 57123
+    full-domain: openchamber.cianfhoghlaim.ie
+    enabled: true
     users:
-      - eolas@cianfhoghlaim.ie
-    machines:
-      - crazy-siberian-chipmunk
-
-  langfuse:
-    name: "Langfuse LLM Observability"
-    mode: host
-    destination: langfuse-web
-    site: arm1-oci
-    alias: langfuse.cianfhoghlaim.ie
-    users:
-      - eolas@cianfhoghlaim.ie
-    machines:
-      - crazy-siberian-chipmunk
-
-  # ---------------------------------------------------------------------------
-  # Vector & Graph Databases
-  # ---------------------------------------------------------------------------
-  lancedb:
-    name: "LanceDB Vector Database"
-    mode: host
-    destination: lancedb
-    site: arm1-oci
-    alias: lancedb.cianfhoghlaim.ie
-    users:
-      - eolas@cianfhoghlaim.ie
-    machines:
-      - crazy-siberian-chipmunk
-
-  falkordb:
-    name: "FalkorDB Graph Database"
-    mode: host
-    destination: falkordb
-    site: arm1-oci
-    alias: falkordb.cianfhoghlaim.ie
-    users:
-      - eolas@cianfhoghlaim.ie
-    machines:
-      - crazy-siberian-chipmunk
-
-  qdrant:
-    name: "Qdrant Vector Database"
-    mode: host
-    destination: qdrant
-    site: oci-free
-    alias: qdrant.cianfhoghlaim.ie
-    users:
-      - eolas@cianfhoghlaim.ie
-    machines:
-      - rectangular-trinidad-worm-snake
-
-  memgraph:
-    name: "Memgraph Graph Database"
-    mode: host
-    destination: memgraph
-    site: arm1-oci
-    alias: memgraph.cianfhoghlaim.ie
-    users:
-      - eolas@cianfhoghlaim.ie
-    machines:
-      - crazy-siberian-chipmunk
+      - cian.deacy@icloud.com
+    roles: []
+    machines: []
 
   # ---------------------------------------------------------------------------
-  # AI Memory & Knowledge
+  # Infisical — secrets vault (self-hosted).
   # ---------------------------------------------------------------------------
-  cognee:
-    name: "Cognee AI Memory"
-    mode: host
-    destination: cognee
-    site: arm1-oci
-    alias: cognee.cianfhoghlaim.ie
+  # Restored 2026-08-23. Previously bound to the dead "bunchloch" site with
+  # destination "localhost:8081" — doubly wrong: the site was offline, and
+  # "localhost" inside the newt container is newt itself, not the host.
+  #
+  # This one matters more than its size suggests: Locket sidecars resolve
+  # secrets from Infisical, so while it is unreachable, stacks that depend on
+  # it start without secrets (hermes and openclaw are both in that state).
+  infisical:
+    name: Infisical
+    mode: http
+    scheme: http
+    ssl: true
+    sites:
+      - worried-upper-galilee-mountains-blind-mole-rat   # site "macbook"
+    destination: host.docker.internal
+    destination-port: 8081
+    full-domain: infisical.cianfhoghlaim.ie
+    enabled: true
     users:
-      - eolas@cianfhoghlaim.ie
-    machines:
-      - crazy-siberian-chipmunk
-
-  graphiti:
-    name: "Graphiti Temporal Knowledge Graph"
-    mode: host
-    destination: graphiti
-    site: arm1-oci
-    alias: graphiti.cianfhoghlaim.ie
-    users:
-      - eolas@cianfhoghlaim.ie
-    machines:
-      - crazy-siberian-chipmunk
-
-  # ---------------------------------------------------------------------------
-  # Infrastructure Services
-  # ---------------------------------------------------------------------------
-  komodo:
-    name: "Komodo Container Orchestration"
-    mode: host
-    destination: core
-    site: oci-free
-    alias: komodo.cianfhoghlaim.ie
-    users:
-      - eolas@cianfhoghlaim.ie
-    machines:
-      - rectangular-trinidad-worm-snake
-
-  forgejo:
-    name: "Forgejo Git Server"
-    mode: host
-    destination: forgejo
-    site: oci-free
-    alias: git.cianfhoghlaim.ie
-    users:
-      - eolas@cianfhoghlaim.ie
-    machines:
-      - rectangular-trinidad-worm-snake
+      - cian.deacy@icloud.com
+    roles: []
+    machines: []
 
   # ---------------------------------------------------------------------------
-  # PostgreSQL Databases (direct access)
+  # Unsloth Studio — local model server, first tier of the fallback chain.
   # ---------------------------------------------------------------------------
-  postgres-langfuse:
-    name: "PostgreSQL - Langfuse"
-    mode: host
-    destination: langfuse-postgres
-    site: arm1-oci
-    alias: langfuse-db.cianfhoghlaim.ie
+  # Runs natively on the host (not a container), same pattern as OpenChamber.
+  # UNAUTHENTICATED: anything reaching this can run inference and read loaded
+  # models. Access control is the tunnel plus the grant below.
+  unsloth:
+    name: Unsloth Studio
+    mode: http
+    scheme: http
+    ssl: true
+    sites:
+      - worried-upper-galilee-mountains-blind-mole-rat
+    destination: host.docker.internal
+    destination-port: 8888
+    full-domain: unsloth.cianfhoghlaim.ie
+    enabled: true
     users:
-      - eolas@cianfhoghlaim.ie
-    machines:
-      - crazy-siberian-chipmunk
-
-  postgres-mlflow:
-    name: "PostgreSQL - MLflow"
-    mode: host
-    destination: mlflow-postgres
-    site: arm1-oci
-    alias: mlflow-db.cianfhoghlaim.ie
-    users:
-      - eolas@cianfhoghlaim.ie
-    machines:
-      - crazy-siberian-chipmunk
+      - cian.deacy@icloud.com
+    roles: []
+    machines: []
 
   # ---------------------------------------------------------------------------
-  # Mailcow (bunchloch) — 3 routes for mail.cianfhoghlaim.ie
+  # Marimo — the centralised entrypoint to the lakehouse.
   # ---------------------------------------------------------------------------
-  # v4 move: per-stack canonical sources live at
-  #   cianfhoghlaim/stacks/mailcow-dockerized/pangolin.yaml  (6-label form)
-  #   cianfhoghlaim/stacks/mailcow-dockerized/blueprint.yaml (Komodo resource sync)
-  # These 3 entries mirror the per-stack definitions in v3 alias form
-  # for backward compatibility with the existing Komodo machinery.
-  # The 2 internal-only routes (imap, smtp) are bound to 127.0.0.1 only
-  # — v1 is receive-only for IMAP sync, no outbound relay.
+  # DuckLake is a Postgres catalog PLUS an S3 data path; a client needs both.
+  # Rather than exposing lakehouse-postgres and Garage over the tunnel — which
+  # would mean distributing database and S3 credentials to every roaming
+  # device, and putting the catalog's write path on the network — the notebook
+  # server is exposed instead. It runs on the workload host and reaches both
+  # over the internal Docker network, so no data primitive crosses the tunnel.
+  #
+  # Verified 2026-08-23: ATTACH 'ducklake:postgres:…' from this container
+  # reaches ducklake_cianfhoghlaim (2156 snapshots, education/leaving_cert
+  # schemas). The ducklake, postgres and httpfs extensions are baked into the
+  # image — see stacks/marimo/multi-notebook-server/Dockerfile.conda.
+  #
+  # UNAUTHENTICATED: marimo notebooks execute arbitrary Python. Reaching this
+  # is equivalent to code execution on the workload host.
+  marimo:
+    name: Marimo Notebooks
+    mode: http
+    scheme: http
+    ssl: true
+    sites:
+      - worried-upper-galilee-mountains-blind-mole-rat
+    destination: host.docker.internal
+    destination-port: 2718
+    full-domain: marimo.cianfhoghlaim.ie
+    enabled: true
+    users:
+      - cian.deacy@icloud.com
+    roles: []
+    machines: []
+
   # ---------------------------------------------------------------------------
-  mailcow-webmail:
-    name: "Mailcow Webmail (SOGo + Admin)"
-    mode: host
-    destination: nginx-mailcow
-    site: bunchloch
-    alias: mail.cianfhoghlaim.ie
+  # LanceDB viewer — read-only table browser for the Lance vector store.
+  # ---------------------------------------------------------------------------
+  lance-viewer:
+    name: LanceDB Viewer
+    mode: http
+    scheme: http
+    ssl: true
+    sites:
+      - worried-upper-galilee-mountains-blind-mole-rat
+    destination: host.docker.internal
+    destination-port: 8088
+    full-domain: lance-viewer.cianfhoghlaim.ie
+    enabled: true
     users:
-      - eolas@cianfhoghlaim.ie
-    machines:
-      - bunchloch
+      - cian.deacy@icloud.com
+    roles: []
+    machines: []
 
-  mailcow-imap:
-    name: "Mailcow IMAPS (internal)"
-    mode: host
-    destination: dovecot-mailcow
-    site: bunchloch
-    alias: imap.cianfhoghlaim.ie
+  # ---------------------------------------------------------------------------
+  # LiteLLM — the model gateway (second tier of the fallback chain).
+  # ---------------------------------------------------------------------------
+  # Exposing the gateway rather than each backend is deliberate: one endpoint
+  # reaches every tier behind it, including the fallback chain, and LiteLLM is
+  # the only one of them with real authentication (master key).
+  litellm:
+    name: LiteLLM Gateway
+    mode: http
+    scheme: http
+    ssl: true
+    sites:
+      - worried-upper-galilee-mountains-blind-mole-rat
+    destination: host.docker.internal
+    destination-port: 4000
+    full-domain: litellm.cianfhoghlaim.ie
+    enabled: true
     users:
-      - eolas@cianfhoghlaim.ie
-    machines:
-      - bunchloch
+      - cian.deacy@icloud.com
+    roles: []
+    machines: []
 
-  mailcow-smtp:
-    name: "Mailcow SMTP Submission (internal)"
-    mode: host
-    destination: postfix-mailcow
-    site: bunchloch
-    alias: smtp.cianfhoghlaim.ie
+  # ---------------------------------------------------------------------------
+  # llama-swap — local GGUF serving with dynamic model swapping.
+  # ---------------------------------------------------------------------------
+  # UNAUTHENTICATED. Exposed for direct debugging of a specific local tier;
+  # ordinary traffic should go through the LiteLLM gateway above.
+  llama-swap:
+    name: llama-swap
+    mode: http
+    scheme: http
+    ssl: true
+    sites:
+      - worried-upper-galilee-mountains-blind-mole-rat
+    destination: host.docker.internal
+    destination-port: 8080
+    full-domain: llama-swap.cianfhoghlaim.ie
+    enabled: true
     users:
-      - eolas@cianfhoghlaim.ie
-    machines:
-      - bunchloch
+      - cian.deacy@icloud.com
+    roles: []
+    machines: []
+
+  # ---------------------------------------------------------------------------
+  # OpenClaw — agent gateway (WebSocket RPC + HTTP API).
+  # ---------------------------------------------------------------------------
+  # The gateway MUST be started with `--bind lan` (set in the openclaw stack's
+  # sidecar.yaml command). Its default binds container loopback, which Docker
+  # cannot port-forward to — the port looks published on the host while every
+  # connection is refused, and this resource would 502.
+  openclaw:
+    name: OpenClaw Gateway
+    mode: http
+    scheme: http
+    ssl: true
+    sites:
+      - worried-upper-galilee-mountains-blind-mole-rat
+    destination: host.docker.internal
+    destination-port: 18789
+    full-domain: openclaw.cianfhoghlaim.ie
+    enabled: true
+    users:
+      - cian.deacy@icloud.com
+    roles: []
+    machines: []
+
+  # ---------------------------------------------------------------------------
+  # NOT YET DECLARED: hermes
+  # ---------------------------------------------------------------------------
+  # hermes.cianfhoghlaim.ie -> host.docker.internal:9119 is the intended entry,
+  # but the container does not currently serve. Declaring a resource whose
+  # destination is dead produces exactly the silent failure this whole exercise
+  # was about, so it stays out until `curl 127.0.0.1:9119/api/health` returns
+  # 200. See stacks/hermes/README.md for the current state.
+
+  # ---------------------------------------------------------------------------
+  # TEMPLATE — copy, rename the key, and verify before applying.
+  # ---------------------------------------------------------------------------
+  # my-service:
+  #   name: My Service
+  #   mode: http              # http|ssh need a licence; host|cidr do not
+  #   scheme: http            # how newt talks to the destination
+  #   ssl: true               # newt terminates TLS for full-domain
+  #   sites:
+  #     - <site-niceId>       # from `select niceId from sites;`
+  #   destination: my-container-or-host
+  #   destination-port: 8080
+  #   full-domain: my-service.example.com
+  #   enabled: true
+  #   users:
+  #     - you@example.com     # account email
+  #   roles: []               # never "Admin"
+  #   machines: []            # clients.niceId, empty = all of the user's clients
