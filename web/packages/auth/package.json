@@ -10,12 +10,13 @@
   },
   "dependencies": {
     "@cianfhoghlaim/ui-kit": "workspace:*",
-    "better-auth": "^1.3.11"
+    "better-auth": "^1.7.0"
   },
   "devDependencies": {
     "typescript": "^5.8.3"
   },
   "peerDependencies": {
+    "convex": "^1.19.0",
     "react": "^19.2.0"
   }
 }
