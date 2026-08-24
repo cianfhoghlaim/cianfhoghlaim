@@ -88,6 +88,25 @@ from orchestration.components.kcg_cognify_component import (
 # Backward-compat aliases (the 3 legacy `celtic_*` Components were
 # replaced in the 5-layer rewrite; existing consumers can import
 # the new names without breaking).
+
+# Wave 2 — vertical pipelines (2026-08-24-wave-2-orchestration-vertical-pipelines-v1)
+from orchestration.components.pipeline_factory import (
+    PipelineFactoryComponent,
+)
+from orchestration.components.pipeline_kind_handlers import (
+    PIPELINE_KIND_HANDLERS,
+    BasePipelineHandler,
+    ComicsHandler,
+    CryptoHandler,
+    ExamPapersHandler,
+    MediaHandler,
+    OfficialDocsHandler,
+    PdfHandler,
+    PersonalArchiveHandler,
+    PipelineContext,
+    SyllabusHandler,
+)
+
 __all__ = [
     "BIEPOCREnsembleComponent",
     "BIEPSubjectComponent",
@@ -106,4 +125,17 @@ __all__ = [
     "JuniorCycleSubjectComponent",
     "KCGCognifyComponent",
     "KCGSubjectPilotFactoryComponent",
+    # Wave 2
+    "PIPELINE_KIND_HANDLERS",
+    "BasePipelineHandler",
+    "ComicsHandler",
+    "CryptoHandler",
+    "ExamPapersHandler",
+    "MediaHandler",
+    "OfficialDocsHandler",
+    "PdfHandler",
+    "PersonalArchiveHandler",
+    "PipelineContext",
+    "PipelineFactoryComponent",
+    "SyllabusHandler",
 ]

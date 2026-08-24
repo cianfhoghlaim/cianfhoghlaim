@@ -1,20 +1,13 @@
-"""EU institutional pipeline — shared helpers + registries."""
+"""dlt_sources/european_union/_shared — DLT sources.
+
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location. The `__init__.py` re-exports the local source modules.
+
+Legacy import paths still work via re-export shims at the old locations.
+"""
 from __future__ import annotations
 
-from dlt_sources.european_union._shared.registries import (
-    EU_CACHE_ROOT,
-    EU_DEFAULT_LANGUAGE,
-    EU_INSTITUTIONS,
-    EU_LANGUAGES,
-    EUInstitutionalSource,
-    use_local_scrapes,
-)
+from . import registries  # noqa: F401
 
-__all__ = [
-    "EU_CACHE_ROOT",
-    "EU_DEFAULT_LANGUAGE",
-    "EU_INSTITUTIONS",
-    "EU_LANGUAGES",
-    "EUInstitutionalSource",
-    "use_local_scrapes",
-]
+__all__ = ['registries']

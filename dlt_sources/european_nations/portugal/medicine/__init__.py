@@ -1,4 +1,9 @@
-"""Re-export the Portugal medicine DLT source module."""
-from dlt_sources.european_nations.prt.medicine import public_health_prt  # noqa: F401
+"""dlt_sources/european_nations/portugal/medicine — DLT sources (empty).
 
-__all__ = ["public_health_prt"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
+from __future__ import annotations
+
+__all__ = []

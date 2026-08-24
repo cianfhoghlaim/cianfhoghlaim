@@ -8,6 +8,7 @@ change.
 Honours ``USE_LOCAL_SCRAPES=true`` by reading from
 ``stedding/ingest_queue/commonwealth/nga/states/Ebonyi State/law/legislation/<lang>/``.
 """
+
 from __future__ import annotations
 import dlt
 
@@ -64,7 +65,9 @@ def nga_ebi_legislation(language=None):
             try:
                 payload = json.loads(json_path.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError) as exc:
-                logger.warning("nga_ebi_legislation_cache_parse_failed", path=str(json_path), error=str(exc))
+                logger.warning(
+                    "nga_ebi_legislation_cache_parse_failed", path=str(json_path), error=str(exc)
+                )
                 continue
             metadata = payload.get("metadata", {}) if isinstance(payload, dict) else {}
             markdown = payload.get("markdown", "") if isinstance(payload, dict) else ""
@@ -74,8 +77,14 @@ def nga_ebi_legislation(language=None):
                 "domain": "law",
                 "language": lang,
                 "url": metadata.get("sourceURL") or metadata.get("url") or "",
-                "title": (payload.get("title") or metadata.get("title", "") if isinstance(payload, dict) else ""),
-                "content_hash": f"sha256:{hash(markdown) & 0xFFFFFFFFFFFFFFFF:016x}" if markdown else "",
+                "title": (
+                    payload.get("title") or metadata.get("title", "")
+                    if isinstance(payload, dict)
+                    else ""
+                ),
+                "content_hash": f"sha256:{hash(markdown) & 0xFFFFFFFFFFFFFFFF:016x}"
+                if markdown
+                else "",
                 "source": SLUG,
                 "extracted_at": datetime.now(UTC).isoformat(),
             }

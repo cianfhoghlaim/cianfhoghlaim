@@ -1,55 +1,9 @@
-"""EU institutional pipeline — canonical path + cross-region contract.
+"""dlt_sources/european_union — DLT sources (empty).
 
-Implements the EU institutional half of the
-`european-union-official-language-pipeline` capability
-(``openspec/specs/european-union-official-language-pipeline/spec.md``).
-
-The umbrella spec for the global expansion is
-``openspec/specs/cross-region-pipeline/spec.md`` — every file in this
-directory obeys the canonical contract:
-
-    dlt/european_union/<institution>/<source>.py
-    source_id = european_union.<institution>.<source_slug>
-    language  ∈ {bg, hr, cs, da, nl, en, et, fi, fr, de, el, hu,
-                 ga, it, lv, lt, mt, pl, pt, ro, sk, sl, es, sv}
-
-Re-exports the per-institution submodules so call sites can do:
-
-    from dlt_sources.european_union import eur_lex, eurydice, ema
-    pipeline.run(eur_lex.regulations_source())
-
-or import the specific source function:
-
-    from dlt_sources.european_union.eur_lex.regulations import (
-        eur_lex_regulations_source,
-    )
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
 """
 from __future__ import annotations
 
-from dlt_sources.european_union import (
-    education,
-    government,
-    medicine,
-    publications_office,
-    statistics,
-)
-from dlt_sources.european_union.eur_lex import (
-    cjeu_case_law,
-    decisions,
-    directives,
-    regulations,
-    treaties,
-)
-
-__all__ = [
-    "cjeu_case_law",
-    "decisions",
-    "directives",
-    "education",
-    "government",
-    "medicine",
-    "publications_office",
-    "regulations",
-    "statistics",
-    "treaties",
-]
+__all__ = []

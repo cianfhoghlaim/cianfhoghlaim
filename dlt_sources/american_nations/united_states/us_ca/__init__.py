@@ -1,4 +1,9 @@
-"""California (California) Americas pipeline — re-exports the per-domain sub-trees."""
-from dlt_sources.americas.us.us_ca import education, government, law, medicine, statistics
+"""dlt_sources/american_nations/united_states/us_ca — DLT sources (empty).
 
-__all__ = ["education", "government", "law", "medicine", "statistics"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
+from __future__ import annotations
+
+__all__ = []

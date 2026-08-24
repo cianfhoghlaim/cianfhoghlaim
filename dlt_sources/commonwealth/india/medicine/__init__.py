@@ -1,4 +1,9 @@
-"""Re-export the India medicine DLT source module."""
-from dlt_sources.commonwealth.ind.medicine import nmc  # noqa: F401
+"""dlt_sources/commonwealth/india/medicine — DLT sources (empty).
 
-__all__ = ["nmc"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
+from __future__ import annotations
+
+__all__ = []

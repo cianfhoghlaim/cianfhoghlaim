@@ -1,4 +1,13 @@
-"""Re-export the Jigawa law DLT source."""
-from dlt_sources.commonwealth.nga.states.nga_jig.law import nga_jig_legislation  # noqa: F401
+"""dlt_sources/commonwealth/nigeria/states/jigawa/law — DLT sources.
 
-__all__ = ["nga_jig_legislation"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location. The `__init__.py` re-exports the local source modules.
+
+Legacy import paths still work via re-export shims at the old locations.
+"""
+from __future__ import annotations
+
+from . import legislation  # noqa: F401
+
+__all__ = ['legislation']

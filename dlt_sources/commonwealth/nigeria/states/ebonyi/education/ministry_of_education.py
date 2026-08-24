@@ -8,6 +8,7 @@ change.
 Honours ``USE_LOCAL_SCRAPES=true`` by reading from
 ``stedding/ingest_queue/commonwealth/nga/states/Ebonyi State/education/ministry_of_education/<lang>/``.
 """
+
 from __future__ import annotations
 import dlt
 
@@ -54,7 +55,9 @@ DEFAULT_LANGUAGE = "en"
 )
 def nga_ebi_ministry_of_education(language=None):
     """Yield state rows from the canonical cache."""
-    cache_dir = Path("stedding/ingest_queue/commonwealth/nga/states/Ebonyi State/education/ministry_of_education")
+    cache_dir = Path(
+        "stedding/ingest_queue/commonwealth/nga/states/Ebonyi State/education/ministry_of_education"
+    )
     languages = (language,) if language else ("en", "ig")
     for lang in languages:
         lang_dir = cache_dir / lang
@@ -64,7 +67,11 @@ def nga_ebi_ministry_of_education(language=None):
             try:
                 payload = json.loads(json_path.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError) as exc:
-                logger.warning("nga_ebi_ministry_of_education_cache_parse_failed", path=str(json_path), error=str(exc))
+                logger.warning(
+                    "nga_ebi_ministry_of_education_cache_parse_failed",
+                    path=str(json_path),
+                    error=str(exc),
+                )
                 continue
             metadata = payload.get("metadata", {}) if isinstance(payload, dict) else {}
             markdown = payload.get("markdown", "") if isinstance(payload, dict) else ""
@@ -74,8 +81,14 @@ def nga_ebi_ministry_of_education(language=None):
                 "domain": "education",
                 "language": lang,
                 "url": metadata.get("sourceURL") or metadata.get("url") or "",
-                "title": (payload.get("title") or metadata.get("title", "") if isinstance(payload, dict) else ""),
-                "content_hash": f"sha256:{hash(markdown) & 0xFFFFFFFFFFFFFFFF:016x}" if markdown else "",
+                "title": (
+                    payload.get("title") or metadata.get("title", "")
+                    if isinstance(payload, dict)
+                    else ""
+                ),
+                "content_hash": f"sha256:{hash(markdown) & 0xFFFFFFFFFFFFFFFF:016x}"
+                if markdown
+                else "",
                 "source": SLUG,
                 "extracted_at": datetime.now(UTC).isoformat(),
             }

@@ -1,6 +1,9 @@
-"""US sub-state pipeline — re-exports the per-state sub-trees."""
+"""dlt_sources/american_nations/united_states — DLT sources (empty).
+
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
 from __future__ import annotations
 
-from dlt_sources.americas.us import us_ca
-
-__all__ = ["us_ca"]
+__all__ = []

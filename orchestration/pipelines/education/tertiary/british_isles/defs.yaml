@@ -1,0 +1,36 @@
+# orchestration/pipelines/education/tertiary/british_isles/defs.yaml
+#
+# L3 PipelineFactoryComponent for British Isles tertiary education
+# (all UK + IE universities).
+#
+# Pipeline kind: official_docs — HTML scraping across all UK/IE unis.
+#
+# Reference: openspec/changes/2026-08-24-wave-2-orchestration-vertical-pipelines-v1/
+type: orchestration.components.PipelineFactoryComponent
+attributes:
+  dlt_source: dlt_sources.education.tertiary.british_isles
+  pipeline_kind: official_docs
+  embedding_model: BAAI/bge-large-en-v1.5
+  hnsw_index: true
+  conformance_required: true
+  destinations:
+    - ducklake_cianfhoghlaim
+  processing:
+    - cocoindex_live_update
+    - ag_ui_auto_gen
+  schedules:
+    - cron: "0 10 * * *"
+      timezone: UTC
+  sensors:
+    - upstream_change
+  tags:
+    - tertiary
+    - british_isles
+    - uk
+    - ireland
+  metadata:
+    openspec_change: 2026-08-24-wave-2-orchestration-vertical-pipelines-v1
+    spec: orchestration-vertical-pipelines
+    kind: official_docs
+    legacy_files:
+      - orchestration/defs/british_isles_tertiary.py

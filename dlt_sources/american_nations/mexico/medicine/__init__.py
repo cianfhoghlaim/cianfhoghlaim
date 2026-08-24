@@ -1,4 +1,9 @@
-"""Re-export the Mexico medicine DLT source module."""
-from dlt_sources.americas.Mexico.medicine import ssa  # noqa: F401
+"""dlt_sources/american_nations/mexico/medicine — DLT sources (empty).
 
-__all__ = ["ssa"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
+from __future__ import annotations
+
+__all__ = []

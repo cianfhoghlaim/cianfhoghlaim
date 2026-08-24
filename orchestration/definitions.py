@@ -152,6 +152,34 @@ except Exception as _exc:  # pragma: no cover
 
 
 # ============================================================================
+# Wave 2: Vertical pipelines (2026-08-24-wave-2-orchestration-vertical-pipelines-v1)
+# ============================================================================
+# The new `orchestration/pipelines/` namespace mirrors `dlt_sources/`
+# domain-first layout. Each per-pipeline `defs.yaml` declares a
+# `PipelineFactoryComponent` (or one of the 5 KCG Components) and is
+# loaded by `dg.load_defs()` exactly like the horizontal `defs/` tree.
+#
+# To support BOTH the horizontal (`defs/{1_ingestion,...,5_agent_ops}/`)
+# AND the vertical (`pipelines/<domain>/<jurisdiction>/`) trees, we
+# merge their `Definitions` objects below.
+
+try:
+    from orchestration import pipelines as _pipelines_pkg
+
+    _pipelines_defs = dg.load_defs(defs_root=_pipelines_pkg)
+    defs = dg.Definitions.merge(defs, _pipelines_defs)
+    _DEFS_LOADED_VIA = f"{_DEFS_LOADED_VIA} + pipelines (Wave 2 vertical)"
+except AttributeError:
+    _DEFS_LOADED_VIA = f"{_DEFS_LOADED_VIA} + pipelines unavailable (Dagster <1.13)"
+except Exception as _exc:  # pragma: no cover
+    import structlog
+
+    structlog.get_logger().warning(
+        f"dg.load_defs_pipelines_failed: {_exc}; continuing without vertical pipelines"
+    )
+
+
+# ============================================================================
 # Jurisdiction-level ingestion assets (post-2026-08-15)
 # ============================================================================
 # Per the `centralized-model-registry` + `dagster-5-layer-component-architecture`

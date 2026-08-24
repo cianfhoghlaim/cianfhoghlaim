@@ -1,13 +1,14 @@
-"""Commonwealth institutional sub-tree.
+"""dlt_sources/commonwealth/official — DLT sources.
 
-Re-exports the canonical Commonwealth Secretariat + Commonwealth
-Foundation DLT sources.
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location. The `__init__.py` re-exports the local source modules.
+
+Legacy import paths still work via re-export shims at the old locations.
 """
 from __future__ import annotations
 
-from dlt_sources.commonwealth.official import (
-    commonwealth_foundation,
-    commonwealth_secretariat,
-)
+from . import commonwealth_foundation  # noqa: F401
+from . import commonwealth_secretariat  # noqa: F401
 
-__all__ = ["commonwealth_foundation", "commonwealth_secretariat"]
+__all__ = ['commonwealth_foundation', 'commonwealth_secretariat']

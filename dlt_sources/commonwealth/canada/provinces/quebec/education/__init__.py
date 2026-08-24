@@ -1,4 +1,18 @@
-"""Re-export the qc education DLT source."""
-from dlt_sources.commonwealth.can.qc.education import qc_ministry_of_education  # noqa: F401
+"""dlt_sources/commonwealth/canada/provinces/quebec/education — DLT sources.
 
-__all__ = ["qc_ministry_of_education"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location. The `__init__.py` re-exports the local source modules.
+
+Legacy import paths still work via re-export shims at the old locations.
+"""
+from __future__ import annotations
+
+from . import cssdm  # noqa: F401
+from . import emsb  # noqa: F401
+from . import lbpsb  # noqa: F401
+from . import mcgill_universities  # noqa: F401
+from . import mees  # noqa: F401
+from . import ministry_of_education  # noqa: F401
+
+__all__ = ['cssdm', 'emsb', 'lbpsb', 'mcgill_universities', 'mees', 'ministry_of_education']

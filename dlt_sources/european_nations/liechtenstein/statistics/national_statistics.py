@@ -16,6 +16,7 @@ Honours ``USE_LOCAL_SCRAPES=true`` by reading from
 
 Reference: ``openspec/changes/2026-07-13-eu-nations-full-depth-expansion-v1/``.
 """
+
 from __future__ import annotations
 import dlt
 
@@ -43,7 +44,7 @@ class LiechtensteinNationalStatisticsSource(NationSource):
             country_code="lie",
             domain="statistics",
             source_slug="national_statistics",
-            supported_languages=('de',),
+            supported_languages=("de",),
             document_type="statistics_document",
             extra_metadata={
                 "canonical_root": "https://www.llv.li",

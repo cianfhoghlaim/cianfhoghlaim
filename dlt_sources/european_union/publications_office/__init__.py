@@ -1,13 +1,14 @@
-"""Publications Office of the EU sub-tree.
+"""dlt_sources/european_union/publications_office — DLT sources.
 
-Re-exports the canonical DLT sources for the Publications Office
-catalogue + CELLAR metadata repository.
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location. The `__init__.py` re-exports the local source modules.
+
+Legacy import paths still work via re-export shims at the old locations.
 """
 from __future__ import annotations
 
-from dlt_sources.europeanunion.publications_office import (
-    cellar_documents,
-    eu_publications,
-)
+from . import cellar_documents  # noqa: F401
+from . import eu_publications  # noqa: F401
 
-__all__ = ["cellar_documents", "eu_publications"]
+__all__ = ['cellar_documents', 'eu_publications']

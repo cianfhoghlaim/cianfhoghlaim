@@ -1,4 +1,13 @@
-"""Re-export the Kwara law DLT source."""
-from dlt_sources.commonwealth.nga.states.nga_kwa.law import nga_kwa_legislation  # noqa: F401
+"""dlt_sources/commonwealth/nigeria/states/kwara/law — DLT sources.
 
-__all__ = ["nga_kwa_legislation"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location. The `__init__.py` re-exports the local source modules.
+
+Legacy import paths still work via re-export shims at the old locations.
+"""
+from __future__ import annotations
+
+from . import legislation  # noqa: F401
+
+__all__ = ['legislation']

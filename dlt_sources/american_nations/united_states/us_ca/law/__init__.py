@@ -1,4 +1,13 @@
-"""Re-export the California law DLT source module."""
-from dlt_sources.americas.us.us_ca.law import ca_leginfo  # noqa: F401
+"""dlt_sources/american_nations/united_states/us_ca/law — DLT sources.
 
-__all__ = ["ca_leginfo"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location. The `__init__.py` re-exports the local source modules.
+
+Legacy import paths still work via re-export shims at the old locations.
+"""
+from __future__ import annotations
+
+from . import ca_leginfo  # noqa: F401
+
+__all__ = ['ca_leginfo']

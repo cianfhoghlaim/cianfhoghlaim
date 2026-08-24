@@ -1,4 +1,9 @@
-"""Poland (pol) national pipeline — re-exports the per-domain sub-trees."""
-from dlt_sources.european_nations.pol import education, government, law, medicine, statistics
+"""dlt_sources/european_nations/poland — DLT sources (empty).
 
-__all__ = ["education", "government", "law", "medicine", "statistics"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
+from __future__ import annotations
+
+__all__ = []

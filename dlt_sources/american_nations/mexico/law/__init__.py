@@ -1,4 +1,9 @@
-"""Re-export the Mexico law DLT source module."""
-from dlt_sources.americas.Mexico.law import dof  # noqa: F401
+"""dlt_sources/american_nations/mexico/law — DLT sources (empty).
 
-__all__ = ["dof"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
+from __future__ import annotations
+
+__all__ = []

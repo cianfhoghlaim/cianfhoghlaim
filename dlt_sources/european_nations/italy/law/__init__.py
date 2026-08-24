@@ -1,4 +1,9 @@
-"""Re-export the ita law DLT source module."""
-from dlt_sources.european_nations.ita.law import gazzetta_ufficiale  # noqa: F401
+"""dlt_sources/european_nations/italy/law — DLT sources (empty).
 
-__all__ = ["gazzetta_ufficiale"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
+from __future__ import annotations
+
+__all__ = []

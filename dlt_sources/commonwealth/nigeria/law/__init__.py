@@ -1,4 +1,9 @@
-"""Nigerian federal law DLT re-exports."""
-from dlt_sources.commonwealth.nga.law import nass
+"""dlt_sources/commonwealth/nigeria/law — DLT sources (empty).
 
-__all__ = ["nass"]
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change, this package was migrated from its legacy jurisdiction-first
+location.
+"""
+from __future__ import annotations
+
+__all__ = []

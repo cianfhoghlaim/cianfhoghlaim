@@ -16,6 +16,7 @@ Honours ``USE_LOCAL_SCRAPES=true`` by reading from
 
 Reference: ``openspec/changes/2026-07-13-eu-nations-full-depth-expansion-v1/``.
 """
+
 from __future__ import annotations
 import dlt
 
