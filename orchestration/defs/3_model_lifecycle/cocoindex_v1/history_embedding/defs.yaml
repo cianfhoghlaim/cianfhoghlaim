@@ -7,7 +7,7 @@
 type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: HistoryEmbedding
-  module: cianfhoghlaim.cocoindex.history_embedding
+  module: cianfhoghlaim.cocoindex_flows.cultural_heritage.embedding
   embedding_model: BAAI/bge-m3
   hnsw_index: true
   conformance_required: true

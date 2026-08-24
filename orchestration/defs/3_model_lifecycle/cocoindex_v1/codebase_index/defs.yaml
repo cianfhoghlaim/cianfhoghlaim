@@ -7,7 +7,7 @@
 type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: CodebaseIndex
-  module: cianfhoghlaim.cocoindex.codebase_indexing
+  module: cianfhoghlaim.cocoindex_flows.infrastructure.codebase_indexing
   embedding_model: BAAI/bge-large-en-v1.5
   hnsw_index: true
   conformance_required: true

@@ -13,7 +13,7 @@ attributes:
   conformance_required: true
   apps:
     - app_name: QuebecMontrealEducationEmbedding
-      module: cianfhoghlaim.cocoindex.quebec_montreal_education_embedding
+      module: cianfhoghlaim.cocoindex_flows.commonwealth.canada.provinces.quebec.montreal_education_embedding
       source: commonwealth
       lance_table: cianfhoghlaim.commonwealth.can.qc.education_chunks
   schedule:

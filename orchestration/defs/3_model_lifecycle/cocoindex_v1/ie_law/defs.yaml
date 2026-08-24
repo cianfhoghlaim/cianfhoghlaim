@@ -7,23 +7,23 @@ type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   apps:
     - app_name: PIABEmbedding
-      module: cianfhoghlaim.cocoindex.ie_law_piab
+      module: cianfhoghlaim.cocoindex_flows.british_isles.ireland.ie_law_piab
       source: piab
       lance_table: cianfhoghlaim.law.ie.piab_chunks
     - app_name: CourtsEmbedding
-      module: cianfhoghlaim.cocoindex.ie_law_courts
+      module: cianfhoghlaim.cocoindex_flows.british_isles.ireland.ie_law_courts
       source: courts
       lance_table: cianfhoghlaim.law.ie.courts_chunks
     - app_name: JudgementsEmbedding
-      module: cianfhoghlaim.cocoindex.ie_law_judgements
+      module: cianfhoghlaim.cocoindex_flows.british_isles.ireland.ie_law_judgements
       source: judgements
       lance_table: cianfhoghlaim.law.ie.judgements_chunks
     - app_name: CourtRulesEmbedding
-      module: cianfhoghlaim.cocoindex.ie_law_court_rules
+      module: cianfhoghlaim.cocoindex_flows.british_isles.ireland.ie_law_court_rules
       source: court_rules
       lance_table: cianfhoghlaim.law.ie.court_rules_chunks
     - app_name: LegalAidEmbedding
-      module: cianfhoghlaim.cocoindex.ie_law_legal_aid
+      module: cianfhoghlaim.cocoindex_flows.british_isles.ireland.ie_law_legal_aid
       source: legal_aid
       lance_table: cianfhoghlaim.law.ie.legal_aid_chunks
   embedding_model: BAAI/bge-m3

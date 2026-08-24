@@ -10,7 +10,7 @@
 type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: IrelandLegalEmbedding
-  module: cianfhoghlaim.cocoindex.ireland_legal_embedding
+  module: cianfhoghlaim.cocoindex_flows.british_isles.ireland.ireland_legal_embedding
   embedding_model: BAAI/bge-m3
   hnsw_index: true
   conformance_required: true

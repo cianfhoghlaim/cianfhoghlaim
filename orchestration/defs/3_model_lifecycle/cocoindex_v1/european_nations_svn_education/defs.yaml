@@ -13,7 +13,7 @@ attributes:
   conformance_required: true
   apps:
     - app_name: SVNEducationEmbedding
-      module: cianfhoghlaim.cocoindex.european_nations_svn_education_embedding
+      module: cianfhoghlaim.cocoindex_flows.european_nations._factory
       source: european_nations
       lance_table: cianfhoghlaim.lc.european_nations.svn.education_chunks
   schedule:

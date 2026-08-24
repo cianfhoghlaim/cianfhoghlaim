@@ -14,7 +14,7 @@ attributes:
   conformance_required: true
   apps:
     - app_name: EuropeanUnionOfficialEmbedding
-      module: cianfhoghlaim.cocoindex.european_union_official_embedding
+      module: cianfhoghlaim.cocoindex_flows.european_union.official_embedding
       source: european_union
       lance_table: cianfhoghlaim.eu.official_chunks
   schedule:

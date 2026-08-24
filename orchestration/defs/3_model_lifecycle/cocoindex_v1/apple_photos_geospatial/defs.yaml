@@ -8,7 +8,7 @@
 type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: ApplePhotosGeospatial
-  module: cianfhoghlaim.cocoindex.apple_photos_geospatial
+  module: cianfhoghlaim.cocoindex_flows.media_personal.apple_photos_geospatial
   embedding_model: null
   hnsw_index: false
   conformance_required: true

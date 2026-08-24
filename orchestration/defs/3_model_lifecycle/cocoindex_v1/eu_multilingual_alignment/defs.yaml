@@ -11,7 +11,7 @@ attributes:
   conformance_required: true
   apps:
     - app_name: EUMultilingualAlignmentEmbedding
-      module: cianfhoghlaim.cocoindex.eu_multilingual_alignment_embedding
+      module: cianfhoghlaim.cocoindex_flows.european_nations._factory
       source: european_union
       lance_table: cianfhoghlaim.eu.multilingual_alignment_chunks
   schedule:

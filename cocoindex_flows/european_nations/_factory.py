@@ -36,7 +36,7 @@ from cocoindex.resources.id import IdGenerator
 from cocoindex.ops.text import RecursiveSplitter
 from numpy.typing import NDArray
 
-from ..._shared._lifespan import (
+from .._shared._lifespan import (
     EMBEDDER,
     LANCE_DB,
     shared_lifespan,
@@ -200,14 +200,7 @@ for _nation in NATION_CONFIG:
     _main = _build_app_main(_nation, _Chunk, _process_fn)
     _app_name = f"{_nation.app_slug}_education_embedding"
     _app = coco.App(
-        coco.AppConfig(
-            name=_app_name,
-            description=(
-                f"Multilingual 1024-d BGE-M3 embeddings of every "
-                f"{_nation.display_name} per-subject education row "
-                f"(EU full-depth expansion)."
-            ),
-        ),
+        coco.AppConfig(name=_app_name),
         _main,
     )
     # Inject into module namespace

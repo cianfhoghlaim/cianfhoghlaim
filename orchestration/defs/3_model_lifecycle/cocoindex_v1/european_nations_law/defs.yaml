@@ -14,7 +14,7 @@ attributes:
   conformance_required: true
   apps:
     - app_name: EuropeanNationsLawEmbedding
-      module: cianfhoghlaim.cocoindex.european_nations_law_embedding
+      module: cianfhoghlaim.cocoindex_flows.european_nations_cross.law_embedding
       source: european_nations
       lance_table: cianfhoghlaim.eu_nations.law_chunks
   schedule:

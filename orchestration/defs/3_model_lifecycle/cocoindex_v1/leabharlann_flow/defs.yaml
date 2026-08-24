@@ -8,7 +8,7 @@
 type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: LeabharlannFlow
-  module: cianfhoghlaim.cocoindex.leabharlann_flow
+  module: cianfhoghlaim.cocoindex_flows.corpus.leabharlann_embedding
   embedding_model: BAAI/bge-m3
   hnsw_index: true
   conformance_required: true

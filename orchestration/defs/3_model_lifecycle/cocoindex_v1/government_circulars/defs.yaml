@@ -12,7 +12,7 @@ type: orchestration.components.CelticModelLifecycleComponent
 attributes:
   app_name: GovernmentCircularsEmbedding
   app_group: government_circulars
-  module: cianfhoghlaim.cocoindex.government_circulars_embedding
+  module: cianfhoghlaim.cocoindex_flows.corpus.government_circulars_embedding
   embedding_model: BAAI/bge-m3
   hnsw_index: true
   conformance_required: true

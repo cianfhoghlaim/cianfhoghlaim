@@ -293,12 +293,13 @@ class CelticModelLifecycleComponent(Component, Resolvable):
                 raise dg.Failure(
                     description=(
                         f"cocoindex_v1_module_import_failed module={module_path} "
-                        f"err={exc}. Note: 88 of the 95 L3 defs.yaml files still "
-                        "use the pre-refactor flat layout "
-                        "(`cianfhoghlaim.cocoindex.<app>`) while the real package "
-                        "is `cocoindex/<subpkg>/<app>` at the repo root, AND the "
-                        "PyPI `cocoindex` package is not installed. Both are "
-                        "Wave 0 items in the KCG refactor roadmap."
+                        f"err={exc}. The pre-refactor flat layout "
+                        "(`cianfhoghlaim.cocoindex.<app>`) was repaired by "
+                        "the 2026-08-24-wave-0-cocoindex-module-path-repair-v1 "
+                        "openspec change (85 defs.yaml files updated). If this "
+                        "Failure persists, check (1) the v0 CocoIndex straggler "
+                        "audit (Wave 3), (2) the module-path migration map in "
+                        "`openspec/specs/cocoindex-v1-module-path-migration/spec.md`."
                     )
                 ) from exc
 

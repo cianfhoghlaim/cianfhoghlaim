@@ -13,7 +13,7 @@ attributes:
   conformance_required: true
   apps:
     - app_name: CommonwealthEducationEmbedding
-      module: cianfhoghlaim.cocoindex.commonwealth_education_embedding
+      module: cianfhoghlaim.cocoindex_flows.biep_parity.lc_subject_embedding
       source: commonwealth
       lance_table: oideachais.commonwealth.education_chunks
   schedule:

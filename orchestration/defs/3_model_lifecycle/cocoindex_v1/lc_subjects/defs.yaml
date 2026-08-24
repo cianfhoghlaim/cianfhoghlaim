@@ -16,23 +16,23 @@ attributes:
   subjects:
     - name: mathematics
       app_name: MathematicsEmbedding
-      module: cianfhoghlaim.cocoindex.mathematics_embedding
+      module: cianfhoghlaim.cocoindex_flows.subjects.lc_subject_embedding
     - name: chemistry
       app_name: ChemistryEmbedding
-      module: cianfhoghlaim.cocoindex.chemistry_embedding
+      module: cianfhoghlaim.cocoindex_flows.subjects.lc_subject_embedding
     - name: geography
       app_name: GeographyEmbedding
-      module: cianfhoghlaim.cocoindex.geography_embedding
+      module: cianfhoghlaim.cocoindex_flows.subjects.lc_subject_embedding
     - name: gaeilge
       app_name: GaeilgeEmbedding
-      module: cianfhoghlaim.cocoindex.gaeilge_embedding
+      module: cianfhoghlaim.cocoindex_flows.celtic.gaeilge_embedding
       language: ga  # Gaeilge is Irish-only per BIEP v1 spec
     - name: english
       app_name: EnglishEmbedding
-      module: cianfhoghlaim.cocoindex.english_embedding
+      module: cianfhoghlaim.cocoindex_flows.subjects.lc_subject_embedding
     - name: computer_science
       app_name: ComputerScienceEmbedding
-      module: cianfhoghlaim.cocoindex.computer_science_embedding
+      module: cianfhoghlaim.cocoindex_flows.subjects.lc_subject_embedding
   schedules:
     daily_lc_subject_reindex:
       cron: "0 3 * * *"
