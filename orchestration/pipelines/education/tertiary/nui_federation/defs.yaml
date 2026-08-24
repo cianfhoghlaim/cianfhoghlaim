@@ -1,0 +1,43 @@
+# orchestration/pipelines/education/tertiary/nui_federation/defs.yaml
+#
+# L3 PipelineFactoryComponent for the NUI (National University of
+# Ireland) federation — includes UoG + UCD + UCC + NUIG + NUI Maynooth.
+#
+# Pipeline kind: official_docs — HTML scraping + federation-level
+# schema inference.
+#
+# Reference: openspec/changes/2026-08-24-wave-2-orchestration-vertical-pipelines-v1/
+type: orchestration.components.PipelineFactoryComponent
+attributes:
+  dlt_source: dlt_sources.education.tertiary.nui_federation
+  pipeline_kind: official_docs
+  embedding_model: BAAI/bge-large-en-v1.5
+  hnsw_index: true
+  conformance_required: true
+  destinations:
+    - ducklake_cianfhoghlaim
+  processing:
+    - cocoindex_live_update
+    - ag_ui_auto_gen
+  schedules:
+    - cron: "0 8 * * *"
+      timezone: UTC
+  sensors:
+    - upstream_change
+  tags:
+    - tertiary
+    - nui
+    - federation
+    - multi_institution
+  metadata:
+    openspec_change: 2026-08-24-wave-2-orchestration-vertical-pipelines-v1
+    spec: orchestration-vertical-pipelines
+    kind: official_docs
+    institution: nui_federation
+    legacy_files:
+      - orchestration/defs/nui_federation.py
+    member_institutions:
+      - university_of_galway
+      - university_college_dublin
+      - university_college_cork
+      - maynooth_university

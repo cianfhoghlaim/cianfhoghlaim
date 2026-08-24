@@ -1,0 +1,37 @@
+# orchestration/pipelines/media_intel/defs.yaml
+#
+# L3 PipelineFactoryComponent for the cross-medium media intel pipeline
+# (compares animation + comics + games + celtic_history_research).
+#
+# Pipeline kind: media — codec probe + thumbnail + embeddings across
+# multiple media sources.
+#
+# Reference: openspec/changes/2026-08-24-wave-2-orchestration-vertical-pipelines-v1/
+type: orchestration.components.PipelineFactoryComponent
+attributes:
+  dlt_source: dlt_sources.media_intel
+  pipeline_kind: media
+  embedding_model: BAAI/bge-large-en-v1.5
+  hnsw_index: true
+  conformance_required: true
+  destinations:
+    - ducklake_cianfhoghlaim
+  processing:
+    - baml_extraction
+    - cocoindex_live_update
+    - marimo_dashboard
+  schedules:
+    - cron: "0 14 * * 0"
+      timezone: UTC
+  sensors:
+    - upstream_change
+  tags:
+    - media_intel
+    - cross_medium
+    - comparison
+  metadata:
+    openspec_change: 2026-08-24-wave-2-orchestration-vertical-pipelines-v1
+    spec: orchestration-vertical-pipelines
+    kind: media
+    legacy_files:
+      - orchestration/defs/media_intel.py

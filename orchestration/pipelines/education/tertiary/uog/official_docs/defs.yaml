@@ -1,0 +1,40 @@
+# orchestration/pipelines/education/tertiary/uog/official_docs/defs.yaml
+#
+# L3 PipelineFactoryComponent for the University of Galway official
+# docs pipeline (module pages + research outputs + faculty pages).
+#
+# Pipeline kind: official_docs — HTML scraping + schema inference
+# for AG-UI auto-generation. The legacy flat file was
+# `uog_official_docs.py`.
+#
+# Reference: openspec/changes/2026-08-24-wave-2-orchestration-vertical-pipelines-v1/
+type: orchestration.components.PipelineFactoryComponent
+attributes:
+  dlt_source: dlt_sources.education.tertiary.uog.official_docs
+  pipeline_kind: official_docs
+  embedding_model: BAAI/bge-large-en-v1.5
+  hnsw_index: true
+  conformance_required: true
+  destinations:
+    - ducklake_cianfhoghlaim
+  processing:
+    - cocoindex_live_update
+    - ag_ui_auto_gen
+  schedules:
+    - cron: "0 6 * * *"
+      timezone: UTC
+  sensors:
+    - upstream_change
+  tags:
+    - tertiary
+    - uog
+    - official_docs
+    - module_pages
+    - ag-ui
+  metadata:
+    openspec_change: 2026-08-24-wave-2-orchestration-vertical-pipelines-v1
+    spec: orchestration-vertical-pipelines
+    kind: official_docs
+    institution: university_of_galway
+    legacy_files:
+      - orchestration/defs/uog_official_docs.py
