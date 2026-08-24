@@ -140,9 +140,8 @@ def _lc_table_count() -> int:
 
 if COCOINDEX_AVAILABLE:
     # R4 — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`.
-    @coco.function(
-        lifespan=shared_lifespan,
-    )
+    @coco.fn(
+        )
     async def jc_subject_embedding_flow(
         subject: str,
         year: int,

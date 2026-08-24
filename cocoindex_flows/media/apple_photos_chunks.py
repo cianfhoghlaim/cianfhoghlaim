@@ -97,10 +97,8 @@ class ApplePhotoChunkRecord:
 
 if COCOINDEX_AVAILABLE:
 
-    @coco.App(shared_lifespan)  # type: ignore[misc]
-    def apple_photos_chunks_app(
-        builder: coco.AppBuilder,  # type: ignore[valid-type]
-    ) -> None:
+    # [Wave 3 fix] @coco.App(shared_lifespan) was the v0 decorator; replaced with coco.App(...) at end of file
+    def _wave3_main_fn(builder: coco.AppBuilder):  # type: ignore[valid-type]
         """Index the apple_photos_ocr_chunks DuckLake table into apple_photos_chunks."""
         builder.set_source(  # type: ignore[attr-defined]
             "chunks",
@@ -112,7 +110,7 @@ if COCOINDEX_AVAILABLE:
 
         id_gen = IdGenerator()  # type: ignore[call-arg]
 
-        @coco.function(  # type: ignore[misc]
+        @coco.fn(  # type: ignore[misc]
             executor=coco.FunctionExecutor(parallelism=8),  # type: ignore[attr-defined]
         )
         async def index_chunk(row: dict) -> ApplePhotoChunkRecord:  # type: ignore[no-untyped-def,unused-ignore]

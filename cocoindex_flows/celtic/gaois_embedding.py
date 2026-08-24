@@ -143,7 +143,6 @@ if COCOINDEX_AVAILABLE:
             domain=str(row.get("domain", row.get("category", ""))),
             language=str(row.get("language", "both")),
             category=row.get("category"),
-            description=text,
             embedding=None,  # populated by the embedder at App materialization
         )
 

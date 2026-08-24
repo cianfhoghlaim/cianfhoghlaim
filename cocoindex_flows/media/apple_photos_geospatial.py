@@ -123,7 +123,7 @@ if COCOINDEX_AVAILABLE and PRIVACY_GATE:
             ),
         )
 
-        @coco.function(  # type: ignore[misc]
+        @coco.fn(  # type: ignore[misc]
             executor=coco.FunctionExecutor(parallelism=4),  # type: ignore[attr-defined]
         )
         async def photo_to_geo(row: dict) -> ApplePhotoGeoRecord:  # type: ignore[no-untyped-def,unused-ignore]
@@ -162,7 +162,7 @@ if COCOINDEX_AVAILABLE and PRIVACY_GATE:
             ),
         )
 
-        @coco.function(  # type: ignore[misc]
+        @coco.fn(  # type: ignore[misc]
             executor=coco.FunctionExecutor(parallelism=4),  # type: ignore[attr-defined]
         )
         async def vehicle_to_geo(row: dict) -> VehicleObservationGeoRecord:  # type: ignore[no-untyped-def,unused-ignore]

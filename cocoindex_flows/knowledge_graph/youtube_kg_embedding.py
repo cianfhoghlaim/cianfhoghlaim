@@ -102,7 +102,7 @@ class VideoSegmentRecord:
     # (which reads CIANFHOGHLAIM_EMBED_MODEL). The previous hardcoded
     # "BAAI/bge-m3" string was replaced with the shared symbol so the
     # canonical env knob (CIANFHOGHLAIM_EMBED_MODEL) propagates here.
-    embedding: Annotated[list[float], EMBED_MODEL]
+    embedding: Annotated[list[float], EMBED_MODEL] = field(default_factory=list)
 
 
 @dataclass
@@ -123,7 +123,7 @@ class VideoFrameCaptionRecord:
     # (which reads CIANFHOGHLAIM_EMBED_MODEL). The previous hardcoded
     # "BAAI/bge-m3" string was replaced with the shared symbol so the
     # canonical env knob (CIANFHOGHLAIM_EMBED_MODEL) propagates here.
-    embedding: Annotated[list[float], EMBED_MODEL]
+    embedding: Annotated[list[float], EMBED_MODEL] = field(default_factory=list)
 
 
 @dataclass
@@ -143,7 +143,7 @@ class VideoTripleRecord:
     # (which reads CIANFHOGHLAIM_EMBED_MODEL). The previous hardcoded
     # "BAAI/bge-m3" string was replaced with the shared symbol so the
     # canonical env knob (CIANFHOGHLAIM_EMBED_MODEL) propagates here.
-    embedding: Annotated[list[float], EMBED_MODEL]
+    embedding: Annotated[list[float], EMBED_MODEL] = field(default_factory=list)
 
 
 # ---------------------------------------------------------------------------
@@ -153,10 +153,8 @@ class VideoTripleRecord:
 
 if COCOINDEX_AVAILABLE_LOCAL and coco is not None:
 
-    @coco.App(shared_lifespan)  # type: ignore[misc]
-    def youtube_kg_embedding_app(
-        builder: coco.AppBuilder,  # type: ignore[valid-type]
-    ) -> None:
+    # [Wave 3 fix] @coco.App(shared_lifespan) was the v0 decorator; replaced with coco.App(...) at end of file
+    def _wave3_main_fn(builder: coco.AppBuilder):  # type: ignore[valid-type]
         """Mount the 3 LanceDB tables + read from the DuckLake `youtube_videos` table."""
 
         builder.set_source(  # type: ignore[attr-defined]
@@ -182,7 +180,7 @@ if COCOINDEX_AVAILABLE_LOCAL and coco is not None:
             table_name=LANCEDB_TABLE_TRIPLES,
         )
 
-        @coco.function(  # type: ignore[misc]
+        @coco.fn(  # type: ignore[misc]
             executor=coco.FunctionExecutor(parallelism=4),  # type: ignore[attr-defined]
         )
         async def process_video(row: dict) -> dict[str, list[Any]]:  # type: ignore[no-untyped-def]

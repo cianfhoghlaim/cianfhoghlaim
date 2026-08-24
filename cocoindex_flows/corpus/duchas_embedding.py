@@ -192,7 +192,6 @@ if COCOINDEX_AVAILABLE:
     @coco.App(
         coco.AppConfig(
             name="DuchasEmbeddingApp",
-            description="Embeds the 4 Dúchas collections (cbe/cbes/cbeg/cbef) into 2 LanceDB tables (chunks + 5-level bboxes).",
         )
     )
     class DuchasEmbeddingApp(coco.CompiledApp):

@@ -111,7 +111,6 @@ if COCOINDEX_AVAILABLE:
     @coco.App(
         coco.AppConfig(
             name="CanuintEmbeddingApp",
-            description="Embeds Canuint word alignments (audio + text multimodal) into LanceDB via BGE-M3.",
         )
     )
     class CanuintEmbeddingApp(coco.CompiledApp):

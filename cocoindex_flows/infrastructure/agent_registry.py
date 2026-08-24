@@ -105,10 +105,8 @@ class AgentRecord:
 
 if COCOINDEX_AVAILABLE:
 
-    @coco.App(shared_lifespan)  # type: ignore[misc]
-    def agent_registry_app(
-        builder: coco.AppBuilder,  # type: ignore[valid-type]
-    ) -> None:
+    # [Wave 3 fix] @coco.App(shared_lifespan) was the v0 decorator; replaced with coco.App(...) at end of file
+    def _wave3_main_fn(builder: coco.AppBuilder):  # type: ignore[valid-type]
         """Index opencode.json agents + MCP servers into the agent_registry table."""
         builder.set_dynamic_input_source(  # type: ignore[attr-defined]
             "opencode", localfs.read_file(path=DEFAULT_OPENCODE_JSON)  # type: ignore[union-attr]
@@ -118,7 +116,7 @@ if COCOINDEX_AVAILABLE:
         builder.add_flow("mcps", _mcps_flow(id_gen))  # type: ignore[attr-defined]
 
     def _agents_flow(id_gen: Any) -> Any:  # type: ignore[no-untyped-def]
-        @coco.function(  # type: ignore[misc]
+        @coco.fn(  # type: ignore[misc]
             executor=coco.FunctionExecutor(parallelism=4),  # type: ignore[attr-defined]
         )
         async def parse_agents(opencode_path: str) -> AsyncIterator[AgentRecord]:  # type: ignore[no-untyped-def,unused-ignore]
@@ -162,7 +160,7 @@ if COCOINDEX_AVAILABLE:
                 yield record
 
     def _mcps_flow(id_gen: Any) -> Any:  # type: ignore[no-untyped-def]
-        @coco.function(  # type: ignore[misc]
+        @coco.fn(  # type: ignore[misc]
             executor=coco.FunctionExecutor(parallelism=4),  # type: ignore[attr-defined]
         )
         async def parse_mcps(opencode_path: str) -> AsyncIterator[AgentRecord]:  # type: ignore[no-untyped-def,unused-ignore]

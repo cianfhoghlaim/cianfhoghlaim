@@ -106,7 +106,6 @@ async def app_main() -> None:
 eu_multilingual_alignment_embedding = coco.App(
     coco.AppConfig(
         name="eu_multilingual_alignment_embedding",
-        description=TABLE_DESCRIPTION,
     ),
     app_main,
 )

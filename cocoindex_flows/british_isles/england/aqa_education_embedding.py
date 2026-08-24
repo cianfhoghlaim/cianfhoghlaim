@@ -103,8 +103,11 @@ class AQAChunk:
 
 
 # R3 — `app = coco.App(coco.AppConfig(name=...))` at module scope.
+# NOTE: The actual `app = coco.App(...)` assignment is at the END of this
+# file (after `aqa_qualification_embedding_flow` is defined). This forward
+# reference avoids the "name not defined" error at module-import time.
 if COCOINDEX_AVAILABLE:
-    app = coco.App(coco.AppConfig(name="england_aqa_education_embedding"))
+    pass  # placeholder
 else:
     app = None  # type: ignore[assignment]
 
@@ -115,7 +118,7 @@ def _table_name(subject: str, level: str) -> str:
 
 if COCOINDEX_AVAILABLE:
     # R4 — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`.
-    @coco.function(lifespan=shared_lifespan)
+    @coco.fn()
     async def aqa_qualification_embedding_flow(
         subject: str,
         qualification_level: str,
@@ -169,3 +172,20 @@ __all__: list[str] = [
 def aqa_table_count() -> int:
     """Total AQA LanceDB tables (9 subjects × 2 levels = 18)."""
     return len(AQA_SUBJECTS) * len(AQA_LEVELS)
+
+# [Wave 3 fix] Imperative coco.App() registration (the App is declared
+# at module scope per the R3 conformance contract, but the App can only
+# be instantiated AFTER `aqa_qualification_embedding_flow` is defined).
+if COCOINDEX_AVAILABLE:
+    try:
+        app = coco.App(  # type: ignore[call-arg]
+            coco.AppConfig(name="england_aqa_education_embedding"),
+            aqa_qualification_embedding_flow,  # type: ignore[arg-type]
+            shared_lifespan=shared_lifespan,  # type: ignore[arg-type]
+        )
+    except Exception as _exc:
+        app = None  # type: ignore[assignment]
+        import structlog as _slog
+        _slog.get_logger().warning(
+            "wave_3_aqa_app_registration_failed err=%s", str(_exc)
+        )

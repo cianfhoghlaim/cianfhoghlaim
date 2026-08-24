@@ -135,7 +135,7 @@ class Tg4SegmentRecord:
     biep_stage: str
     dialect: str  # connacht | munster | ulster | mixed | unknown
     irish_purity_score: float
-    embedding: Annotated[list[float], EMBED_MODEL]
+    embedding: Annotated[list[float], EMBED_MODEL] = field(default_factory=list)
 
 
 @dataclass
@@ -153,7 +153,7 @@ class Tg4FrameCaptionRecord:
     diagram_points: list[str] = field(default_factory=list)
     biep_subject: str = ""
     image_path: str | None = None
-    embedding: Annotated[list[float], EMBED_MODEL]
+    embedding: Annotated[list[float], EMBED_MODEL] = field(default_factory=list)
 
 
 @dataclass
@@ -171,7 +171,7 @@ class Tg4TripleRecord:
     source_frame_idx: int | None = None
     chain_summary: str | None = None
     biep_subject: str = ""
-    embedding: Annotated[list[float], EMBED_MODEL]
+    embedding: Annotated[list[float], EMBED_MODEL] = field(default_factory=list)
 
 
 @dataclass
@@ -189,7 +189,7 @@ class Tg4QualityAuditRecord:
     assessment: str  # "high_quality" | "medium_quality" | "low_quality"
     notes: str
     biep_subject: str
-    embedding: Annotated[list[float], EMBED_MODEL]
+    embedding: Annotated[list[float], EMBED_MODEL] = field(default_factory=list)
 
 
 # ---------------------------------------------------------------------------
@@ -364,10 +364,8 @@ def _should_audit(pid: str, has_worksheet: bool, biep_subject: str) -> bool:
 
 if COCOINDEX_AVAILABLE_LOCAL and coco is not None:
 
-    @coco.App(shared_lifespan)  # type: ignore[misc]
-    def tg4_foghlaim_embedding_app(
-        builder: coco.AppBuilder,  # type: ignore[valid-type]
-    ) -> None:
+    # [Wave 3 fix] @coco.App(shared_lifespan) was the v0 decorator; replaced with coco.App(...) at end of file
+    def _wave3_main_fn(builder: coco.AppBuilder):  # type: ignore[valid-type]
         """Mount the 4 LanceDB tables + read from the 2 DuckLake tables.
 
         The R4 conformance (vector index) is added by the L3 Component
@@ -408,7 +406,7 @@ if COCOINDEX_AVAILABLE_LOCAL and coco is not None:
             table_name=LANCEDB_TABLE_QUALITY_AUDITS,
         )
 
-        @coco.function(  # type: ignore[misc]
+        @coco.fn(  # type: ignore[misc]
             executor=coco.FunctionExecutor(parallelism=4),  # type: ignore[attr-defined]
         )
         async def process_tg4_episode(row: dict) -> dict[str, list[Any]]:  # type: ignore[no-untyped-def]

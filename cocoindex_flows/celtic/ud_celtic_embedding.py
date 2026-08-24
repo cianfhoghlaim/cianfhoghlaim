@@ -134,7 +134,6 @@ if COCOINDEX_AVAILABLE:
     @coco.App(
         coco.AppConfig(
             name="UDCelticEmbeddingApp",
-            description="Embeds the 13 UD Celtic treebanks into LanceDB via BGE-M3 (multilingual 1024-d).",
         )
     )
     class UDCelticEmbeddingApp(coco.CompiledApp):

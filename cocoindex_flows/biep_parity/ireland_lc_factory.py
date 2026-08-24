@@ -161,14 +161,7 @@ for _subject in LC_SUBJECT_CONFIG:
         _main = _build_app_main(_subject, _language, _Chunk, _process_fn)
         _app_name = f"ireland_lc_{_subject.slug}_untiered_{_language}_embedding"
         _app = coco.App(
-            coco.AppConfig(
-                name=_app_name,
-                description=(
-                    f"Multilingual 1024-d BGE-M3 embeddings of every "
-                    f"Ireland LC {_subject.display_name} row "
-                    f"({_language.upper()}, BIEP v3 untiered)."
-                ),
-            ),
+            coco.AppConfig(name=_app_name),
             _main,
         )
         globals()[_app_name] = _app

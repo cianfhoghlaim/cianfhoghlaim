@@ -36,7 +36,7 @@ from .aqa_education_embedding import AQAChunk as OCRChunk  # type: ignore  # noq
 if COCOINDEX_AVAILABLE:
     app = coco.App(coco.AppConfig(name="england_ocr_education_embedding"))
 
-    @coco.function(lifespan=shared_lifespan)
+    @coco.fn(lifespan=shared_lifespan)
     async def ocr_qualification_embedding_flow(  # type: ignore[no-redef]
         subject: str,
         qualification_level: str,
