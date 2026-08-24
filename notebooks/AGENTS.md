@@ -236,6 +236,6 @@ The 5 canonical CLI flags are:
 | [`motherduck`](../.agents/skills/motherduck/SKILL.md) | The MotherDuck / DuckLake lakehouse the notebooks query |
 | [`centralized-registry`](../.agents/skills/centralized-registry/SKILL.md) | The model + schema registry (the control panel reads) |
 | [`ibis`](../.agents/skills/ibis/SKILL.md) | The ibis-first contract (BIEP v3 mandate) |
-| [`notebooks-sync`](../.agents/skills/notebooks-sync/SKILL.md) | Layer 11 of the knowledge sync loop (validates the 59 notebooks) |
+| [`notebooks-sync`](../.agents/skills/notebooks-sync/SKILL.md) | Layer 11 of the knowledge sync loop (validates the 67 notebooks) |
 
 <!-- generated: 2026-08-10; updated per the 2026-08-10-marimo-v14-cascading-effects-verification-v1 change -->

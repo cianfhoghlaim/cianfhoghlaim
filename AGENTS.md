@@ -117,7 +117,7 @@ mise run ml                       # meaisinfhoghlaim (OCR/HTR/Alignment/Celtic) 
 mise run web                      # web/apps + web/packages + web/hono-api + Turborepo
 
 # Surgical subcommands (when you know exactly what you want)
-mise run lint:skills              # validate .agents/skills/ metadata (65 skills pass)
+mise run lint:skills              # validate .agents/skills/ metadata (166 skills pass)
 mise run lint:drift-docs          # validate every AGENTS.md number claim against ground truth
 mise run openspec:validate-all    # CI gate for every openspec change + spec (146 items pass)
 mise run devops:validate-stacks   # validate all 94 Docker Compose stacks against the 6-file GOLD_STANDARD
