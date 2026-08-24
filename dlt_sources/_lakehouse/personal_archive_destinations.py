@@ -354,3 +354,14 @@ __all__ = [
     "get_personal_archive_table_names",
     "get_personal_archive_dialect_namespace",
 ]
+
+
+# === Wave 4 (2026-08-24-wave-4-ducklake-v1-hardening-v1) re-export ===
+# This file is now BOTH the legacy personal_archive implementation
+# AND a re-export shim for the layer-grouped destinations. New code
+# SHOULD import from `dlt_sources.common.destinations.filesystem`.
+from dlt_sources.common.destinations import (  # noqa: E402,F401
+    named_destinations,
+    DESTINATIONS,
+)
+from dlt_sources.common.destinations.filesystem import get_filesystem_destination  # noqa: E402,F401

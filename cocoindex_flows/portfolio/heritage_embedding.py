@@ -116,7 +116,6 @@ if COCOINDEX_AVAILABLE:
     @coco.App(
         coco.AppConfig(
             name="HeritageEmbeddingApp",
-            description="Embeds the heritage sites + hidden heritages records into LanceDB via BGE-M3 (multilingual 1024-d).",
         )
     )
     class HeritageEmbeddingApp(coco.CompiledApp):

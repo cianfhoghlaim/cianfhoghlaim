@@ -157,13 +157,7 @@ for _jurisdiction in JURISDICTION_CONFIG:
     _main = _build_app_main(_jurisdiction, _Chunk, _process_fn)
     _app_name = f"{_jurisdiction.slug}_education_embedding"
     _app = coco.App(
-        coco.AppConfig(
-            name=_app_name,
-            description=(
-                f"Multilingual 1024-d BGE-M3 embeddings of every "
-                f"{_jurisdiction.display_name} education row (BIEP v3 parity)."
-            ),
-        ),
+        coco.AppConfig(name=_app_name),
         _main,
     )
     globals()[_app_name] = _app

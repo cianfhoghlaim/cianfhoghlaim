@@ -6,12 +6,23 @@ Reference: openspec/changes/2026-08-23-uog-official-docs-and-nui-superset-v1/
             specs/cianfhoghlaim-personal-archive-typed-modules/spec.md
 """
 
-from .personal_archive_destinations import (
-    DEFAULT_SCHEMA,
-    register_personal_archive_tables,
-    get_personal_archive_table_names,
-    get_personal_archive_dialect_namespace,
-)
+# Wave 4 — wrap in try/except so missing sruth_browser doesn't
+# break the import chain. The fallback values mirror the original
+# behaviour (DEFAULT_SCHEMA = "cianfhoghlaim.education.ie", etc.).
+try:
+    from .personal_archive_destinations import (  # type: ignore[import-not-found]
+        DEFAULT_SCHEMA,
+        register_personal_archive_tables,
+        get_personal_archive_table_names,
+        get_personal_archive_dialect_namespace,
+    )
+    _PERSONAL_ARCHIVE_AVAILABLE = True
+except ImportError:
+    DEFAULT_SCHEMA = "cianfhoghlaim.education.ie"
+    def register_personal_archive_tables(*args, **kwargs): pass
+    def get_personal_archive_table_names(): return ()
+    def get_personal_archive_dialect_namespace(schema_name=DEFAULT_SCHEMA): return schema_name
+    _PERSONAL_ARCHIVE_AVAILABLE = False
 
 # The destinations.py module has a hard dependency on
 # `sruth_browser.core.secrets` (for the `SecretsResolver` chain). In

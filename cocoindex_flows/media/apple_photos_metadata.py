@@ -107,10 +107,8 @@ class ApplePhotoMetadataRecord:
 
 if COCOINDEX_AVAILABLE:
 
-    @coco.App(shared_lifespan)  # type: ignore[misc]
-    def apple_photos_metadata_app(
-        builder: coco.AppBuilder,  # type: ignore[valid-type]
-    ) -> None:
+    # [Wave 3 fix] @coco.App(shared_lifespan) was the v0 decorator; replaced with coco.App(...) at end of file
+    def _wave3_main_fn(builder: coco.AppBuilder):  # type: ignore[valid-type]
         """Index the apple_photos DuckLake table into apple_photos_metadata."""
         builder.set_source(  # type: ignore[attr-defined]
             "photos",
@@ -122,7 +120,7 @@ if COCOINDEX_AVAILABLE:
 
         id_gen = IdGenerator()  # type: ignore[call-arg]
 
-        @coco.function(  # type: ignore[misc]
+        @coco.fn(  # type: ignore[misc]
             executor=coco.FunctionExecutor(parallelism=8),  # type: ignore[attr-defined]
         )
         async def index_photo(row: dict) -> ApplePhotoMetadataRecord:  # type: ignore[no-untyped-def,unused-ignore]

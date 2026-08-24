@@ -109,7 +109,6 @@ async def app_main() -> None:
 european_nations_education_embedding = coco.App(
     coco.AppConfig(
         name="european_nations_education_embedding",
-        description=TABLE_DESCRIPTION,
     ),
     app_main,
 )

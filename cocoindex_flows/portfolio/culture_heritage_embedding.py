@@ -54,7 +54,7 @@ try:
         lancedb,  # type: ignore[import-not-found]
         localfs,  # type: ignore[import-not-found]
     )
-    from cocoindex.llm import (  # type: ignore[import-not-found]
+    from cocoindex.resources.id import (  # type: ignore[import-not-found]
         IdGenerator,
     )
     from cocoindex.resources.file import (  # type: ignore[import-not-found]
@@ -66,7 +66,7 @@ except ImportError:  # pragma: no cover
     coco = None  # type: ignore[assignment]
     lancedb = None  # type: ignore[assignment]
     localfs = None  # type: ignore[assignment]
-    FileLike = None  # type: ignore[valid-type]
+    FileLike = None  # type: ignore[assignment]
     PatternFilePathMatcher = None  # type: ignore[assignment]
     IdGenerator = None  # type: ignore[assignment]
     COCOINDEX_AVAILABLE = False
@@ -255,7 +255,7 @@ def _make_app() -> Any:
 
     return coco.App(  # type: ignore[union-attr]
         coco.AppConfig(name="culture_heritage_embedding"),  # type: ignore[union-attr]
-        app_main=culture_heritage_embedding_app_main,
+        culture_heritage_embedding_app_main,
         lifespan=culture_heritage_lifespan,
     )
 

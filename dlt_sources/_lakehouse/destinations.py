@@ -28,10 +28,17 @@ from pathlib import Path
 from typing import Any
 
 import structlog
-from sruth_browser.core.secrets import (
-    SecretsResolver,
-    get_default_secrets_resolver,
-)
+
+try:
+    from sruth_browser.core.secrets import (
+        SecretsResolver,
+        get_default_secrets_resolver,
+    )
+    _SRUTH_BROWSER_AVAILABLE = True
+except ImportError:
+    SecretsResolver = None  # type: ignore[assignment,misc]
+    get_default_secrets_resolver = None  # type: ignore[assignment,misc]
+    _SRUTH_BROWSER_AVAILABLE = False
 
 logger = structlog.get_logger(__name__)
 
@@ -275,3 +282,28 @@ __all__ = [
     "MotherDuckLakeDestination",
     "get_destination",
 ]
+
+
+# === Wave 4 (2026-08-24-wave-4-ducklake-v1-hardening-v1) re-export ===
+# This file is now BOTH the legacy destination implementation AND a
+# re-export shim. The canonical home is
+# `dlt_sources.common.destinations.ducklake` (and the layer-grouped
+# `named_destinations()` factory in
+# `dlt_sources.common.destinations`). New code SHOULD import from the
+# canonical home.
+from dlt_sources.common.destinations import (  # noqa: E402,F401
+    named_destinations,
+    DESTINATIONS,
+)
+from dlt_sources.common.destinations.ducklake import (  # noqa: E402,F401
+    get_ducklake_destination,
+    ducklake_cianfhoghlaim_at_timestamp,
+    ducklake_cianfhoghlaim_at_version,
+    ducklake_cianfhoghlaim_table_changes,
+    apply_sort_to_table,
+    apply_bucket_partitioning_to_table,
+    apply_data_inlining_to_table,
+    DEFAULT_POSTGRES_CATALOG,
+    DEFAULT_GARAGE_S3_STORAGE,
+    DUCKLAKE_NAME,
+)

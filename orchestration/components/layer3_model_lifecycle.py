@@ -484,11 +484,36 @@ class CelticModelLifecycleComponent(Component, Resolvable):
             )
 
     def _find_app(self, mod: Any, app_name: str) -> Any:
-        """Find the App instance in the module by AppConfig.name."""
+        """Find the App instance in the module by AppConfig.name.
+
+        Per the CocoIndex v1 API (post-1.0.20), the App instance stores
+        its name in the PRIVATE `_name` attribute (e.g.
+        `gaeilge_embedding.app.__dict__["_name"]` → "GaeilgeEmbedding").
+        The `obj.config.name` and `obj.name` attributes do NOT exist
+        on the v1 App class — only the `_name` private attribute does.
+
+        This v1-aware lookup checks `_name` first, then falls back to
+        `obj.config.name` (legacy) and `obj.name` (very legacy).
+        """
         for name, obj in vars(mod).items():
             if name.startswith("_"):
                 continue
-            if hasattr(obj, "name") and getattr(obj, "name", None) == app_name:
+            # v1 API: App._name (private attribute)
+            obj_dict = getattr(obj, "__dict__", {})
+            private_name = obj_dict.get("_name")
+            if private_name == app_name:
+                return obj
+            # Fallback: legacy `obj.config.name`
+            config = getattr(obj, "config", None)
+            if config is not None and getattr(config, "name", None) == app_name:
+                return obj
+            # Fallback: very legacy `obj.name`
+            if getattr(obj, "name", None) == app_name:
+                return obj
+            # v1 API: App is sometimes named at module level — match by
+            # the local Python variable name too (convention used by
+            # many CocoIndex v1 examples)
+            if name == app_name and hasattr(obj, "update"):
                 return obj
         return None
 

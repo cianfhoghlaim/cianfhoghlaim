@@ -6,7 +6,9 @@
   "main": "./src/index.ts",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "lint": "echo ok"
+    "lint": "echo ok",
+    "convex:dev": "convex dev",
+    "convex:deploy": "convex deploy"
   },
   "dependencies": {
     "convex": "^1.19.0"
