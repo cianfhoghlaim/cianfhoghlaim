@@ -19,7 +19,7 @@ body that publishes official supporting-document sets. The UoG
 Students' Union mirrors that pattern at the student-affairs level.
 NUI is the umbrella at the federation level.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Stage-0 audit via Firecrawl `/agent`
 

@@ -19,7 +19,7 @@ Dagster orchestration layer. After this spec is implemented:
 
 This spec captures Wave 2 of the 2026-08-24 master refactor plan.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: PipelineFactoryComponent
 
@@ -113,9 +113,7 @@ orchestration/pipelines/
   `PipelineFactoryComponent` with the matching `pipeline_kind`
 
 ### Requirement: Backwards compatibility
-
-The pre-Wave-2 horizontal layers (`orchestration/defs/{1_ingestion,2_materials,3_model_lifecycle,4_asset_generation,5_agent_ops}/`)
-SHALL continue to work via the existing `dg.load_defs()` mechanism.
+The system SHALL continue to work via the existing `dg.load_defs()` mechanism..
 Wave 2 ADDS the vertical `orchestration/pipelines/` namespace without
 removing the horizontal one.
 

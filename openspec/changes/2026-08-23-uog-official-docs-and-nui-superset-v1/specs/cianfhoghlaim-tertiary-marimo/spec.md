@@ -8,7 +8,7 @@ Each notebook has 8 tabs (Health / Filters / Materials / URL
 Health / Heatmap / Recent / Lance Search / SQL Console) and uses
 `mo.sql(engine=md:cianfhoghlaim)` primary + local DuckDB fallback.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: 3 sibling notebooks, 8 tabs each
 
@@ -28,9 +28,7 @@ The system SHALL provide:
   paginated marimo `mo.ui.table` widget
 
 ### Requirement: ibis-first entrypoint (per BIEP)
-
-Per the `cianfhoghlaim-biep-notebooks-wire-to-local-lakehouse`
-rule, every notebook SHALL use `import ibis` + `ibis.duckdb.connect(uri)`
+The system SHALL use `import ibis` + `ibis.duckdb.connect(uri)`.
 instead of raw `duckdb.connect()`.
 
 #### Scenario: Zero raw `duckdb.connect()` calls
@@ -41,9 +39,7 @@ instead of raw `duckdb.connect()`.
 - **AND** every data cell resolves through an ibis DataFrame
 
 ### Requirement: PEP 723 inline dependency blocks
-
-Per the `cianfhoghlaim-marimo-dashboards` spec, every notebook
-SHALL ship with a PEP 723 `# /// script … # ///` header so
+The system SHALL ship with a PEP 723 `# /// script … # ///` header so.
 `uv run notebook.py` works without `pyproject.toml`.
 
 #### Scenario: A reviewer runs `uv run notebooks/13_nui_federation.py`

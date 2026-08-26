@@ -10,7 +10,7 @@
 - The master plan reflects the 8-wave (not 7-wave) status
 - A cumulative audit summary is captured in the Wave 8 openspec
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: 8-wave master plan
 

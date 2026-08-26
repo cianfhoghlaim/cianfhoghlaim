@@ -3,136 +3,47 @@
 ## Purpose
 
 `web-consolidation` is a capability of the Cianfhoghlaim platform
-that codifies the canonical web apps layout. After this spec is
-implemented:
-
-- 5 consolidated apps (`cianfhoghlaim`, `oideachais`, `croilar`,
-  `tuatha`, `game_showcase`) — was 12 (plus 2 demo apps)
-- 3 shared packages (auth, db, ui-kit) at root `web/packages/`
-- Single `hono-api/` gateway (consolidates 3 gateways)
-- Single Better Auth + Convex deployment
-- Legacy `_oideachais_apps/` archived to `web/_archive/`
+that codifies the Wave 5 web consolidation: the 12 legacy web apps
+are consolidated to 4 cianfhoghlaim surfaces (one per sister repo), all
+running on TanStack Start.
 
 This spec captures Wave 5 of the 2026-08-24 master refactor plan.
 
-## Requirements
+## ADDED Requirements
 
-### Requirement: Legacy archive
+### Requirement: 4 cianfhoghlaim web surfaces
 
-`web/apps/_oideachais_apps/` SHALL be moved to `web/_archive/_oideachais_apps/`.
+The 4 cianfhoghlaim web surfaces SHALL be: `tuatha-ui`
+(`tuatha.cianfhoghlaim.ie`), `ciandlithe-web` (`ciandlithe.cianfhoghlaim.ie`),
+`cianchosaint-web` (`cianchosaint.cianfhoghlaim.ie`), and `croilar-portal`
+(`croilar.cianfhoghlaim.ie`). All 4 SHALL use TanStack Start.
 
-#### Scenario: _oideachais_apps is archived
+#### Scenario: All 4 surfaces serve on the canonical 4 URLs
 
-- **WHEN** `ls web/apps/_oideachais_apps` runs
-- **THEN** the result is "No such file or directory"
-- **AND** `ls web/_archive/_oideachais_apps/` succeeds
+- **WHEN** `curl -sI https://tuatha.cianfhoghlaim.ie/ -o /dev/null -w "%{http_code}"` runs
+- **THEN** the output SHALL be `200`
+- **AND** the same for `ciandlithe.cianfhoghlaim.ie`, `cianchosaint.cianfhoghlaim.ie`, `croilar.cianfhoghlaim.ie`
 
-### Requirement: tuatha-ui renamed to tuatha
+### Requirement: Per-sister web app + sister dlt + sister cocoindex cascade
 
-`web/apps/tuatha-ui/` SHALL be renamed to `web/apps/tuatha/`.
+Each per-sister web app SHALL consume its own sister dlt + sister
+cocoindex flows via the per-PR reciprocal mirror + the per-quadrant
+DuckLake `metadata_schema`.
 
-#### Scenario: tuatha-ui is gone
+#### Scenario: Per-sister cascade works
 
-- **WHEN** `ls web/apps/tuatha-ui` runs
-- **THEN** the result is "No such file or directory"
-- **AND** `ls web/apps/tuatha/` shows the React + TanStack Start files
+- **WHEN** the operator opens `https://ciandlithe-web.cianfhoghlaim.ie/`
+- **THEN** the page loads sister dlt data from `oideachais.legal_ireland` schema
+- **AND** the page loads sister cocoindex embeddings from the legal sister repo
+- **AND** the page uses the `ciandlithe` metadata_schema
 
-### Requirement: Canonical app layout
+### Requirement: 12 → 4 web app consolidation
 
-After all Wave 5 follow-up PRs land, the web/apps/ directory SHALL
-contain exactly 7 directories:
+The 12 legacy web apps SHALL be archived + the 4 cianfhoghlaim
+surfaces SHALL be the canonical entry points.
 
-| Path | Purpose |
-|:--|:--|
-| `web/apps/cianfhoghlaim/` | Central homepage (merged from `cianfhoghlaim-web/` + `cianfhoghlaim-mmo/` + `cianfhoghlaim/`) |
-| `web/apps/oideachais/` | Content app (merged from `cianfhoghlaim-leaving-cert/` + `oideachais/` + `oideachais-dashboard/`) |
-| `web/apps/croilar/` | Portfolio app (merged from `croilar-portal/` + `croilar-web/`) |
-| `web/apps/tuatha/` | Celtic MMO (was `tuatha-ui/`, renamed in Wave 5) |
-| `web/apps/game_showcase/` | Game showcase (kept as-is) |
-| `web/apps/cianfhoghlaim-mmo/` | Standalone Babylon.js + SpacetimeDB client (kept until Wave 5 follow-up PR) |
-| `web/apps/tuatha-demo/` | Python Túatha demo (separate concern, kept as-is) |
+#### Scenario: No 12 legacy web apps remain in active deployment
 
-#### Scenario: 5 + 2 canonical apps
-
-- **WHEN** Wave 5 is complete (all follow-up PRs landed)
-- **THEN** `ls web/apps/` shows exactly 7 directories
-- **AND** each canonical app has a `package.json` + `src/` + `tsconfig.json`
-
-### Requirement: Single shared packages
-
-The 3 shared packages (auth, db, ui-kit) SHALL live at
-`web/packages/{auth,db,ui-kit}/`. Each sub-monorepo's `packages/{auth,db,convex,...}/`
-SHALL be lifted into the root `web/packages/`.
-
-#### Scenario: 3 shared packages at root
-
-- **WHEN** `ls web/packages/` runs
-- **THEN** the result includes `auth/`, `db/`, `ui-kit/`
-- **AND** the Wave 6 follow-up adds `api-client/` + `contracts/`
-
-### Requirement: Single hono-api gateway
-
-The 3 sub-monorepos (cianfhoghlaim-web, cianfhoghlaim-leaving-cert, croilar-portal)
-each carry their own `apps/api/` directory. Wave 5 follow-up PRs
-SHALL consolidate all per-app `apps/api/` directories into the
-single root `web/hono-api/`.
-
-#### Scenario: 1 hono-api at root
-
-- **WHEN** `find web -maxdepth 5 -name "apps" -type d` runs
-- **THEN** exactly 1 directory named `apps` exists (or 0 if apps are flattened)
-
-### Requirement: Single Better Auth install
-
-The 3 sub-monorepos each install better-auth independently. Wave 5
-follow-up PRs SHALL consolidate to 1 install at `web/packages/auth/`.
-
-#### Scenario: 1 Better Auth install
-
-- **WHEN** `grep -r '"better-auth":' web/apps web/packages 2>/dev/null | wc -l` runs
-- **THEN** the count is 1 (after Wave 5 follow-up PRs)
-
-### Requirement: Single Convex deployment
-
-The 3 sub-monorepos each have their own `convex/` directory. Wave 5
-follow-up PRs SHALL consolidate to 1 deployment at
-`web/packages/db/convex/`.
-
-#### Scenario: 1 Convex deployment
-
-- **WHEN** `find web -maxdepth 5 -name "convex.json" | wc -l` runs (after Wave 5 follow-up PRs)
-- **THEN** the count is 1
-
-### Requirement: Documentation
-
-The `web/AGENTS.md` SHALL be updated to document:
-- The 5 consolidated apps (canonical targets)
-- The 3 shared packages at root `web/packages/`
-- The single `hono-api/` gateway
-- The archived `_oideachais_apps/` at `web/_archive/`
-
-#### Scenario: AGENTS.md reflects new layout
-
-- **WHEN** `grep -E "apps/(oideachais|croilar|cianfhoghlaim|tuatha|game_showcase)" web/AGENTS.md` runs
-- **THEN** the canonical 5 apps are mentioned
-
-### Requirement: Migration tooling
-
-The Wave 5 PR SHALL include `scripts/wave_5_consolidate_web.py`
-that automates the per-app merges. The script is run manually
-per merge (NOT in this PR — too large for one PR).
-
-### Requirement: Migration verification
-
-For each per-app merge (Wave 5 follow-up PRs), the migration SHALL
-verify:
-- All imports still resolve
-- `bun install` succeeds
-- `bun run typecheck` succeeds (no type errors)
-- `bun run build` succeeds
-- The shared `web/packages/*` are reachable from the merged app
-
-## References
-
-- Master plan: `openspec/plans/2026-08-24-master-refactor-plan.md`
-- Existing consolidation spec (pre-Wave 5): `openspec/specs/web-monorepo-consolidation/spec.md`
+- **WHEN** `find web -name "package.json" -not -path "*node_modules*" -not -path "*archive*" 2>/dev/null` runs
+- **THEN** the result SHALL contain exactly 4 entries (the 4 canonical surfaces)
+- **AND** the other 8 legacy apps SHALL be in `web/_archive/`

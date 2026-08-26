@@ -13,7 +13,7 @@ After this spec is implemented, the 7 deferred items in Wave 8 are
 reduced to 4: per-app migrations, Lakekeeper deployment, DuckLake data
 migration, Cloudflare Pages deployment.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: 7-table Convex schema
 

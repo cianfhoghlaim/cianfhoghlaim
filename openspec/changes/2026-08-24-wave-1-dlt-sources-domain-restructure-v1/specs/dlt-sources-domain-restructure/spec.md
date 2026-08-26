@@ -20,7 +20,7 @@ platform that codifies the canonical domain-first namespace for
 
 This spec captures Wave 1 of the 2026-08-24 master refactor plan.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Domain-first law/ split
 
@@ -34,10 +34,14 @@ be relocated to `dlt_sources/law/<jurisdiction>/<geography>/`.
 - **AND** the count SHALL equal 59
 
 ### Requirement: Domain-first medicine/ split
-
-Same as the law/ requirement, applied to all `medicine/` directories.
-The 61 medicine/ directories SHALL be relocated to
+The system SHALL be relocated to dlt_sources/medicine/<jurisdiction>/<geography>/.
 `dlt_sources/medicine/<jurisdiction>/<geography>/`.
+
+#### Scenario: The requirement is implemented
+
+- **WHEN** the operator validates the spec
+- **THEN** the requirement SHALL be met
+- **AND** all related downstream workflows SHALL pass
 
 ### Requirement: Domain-first education/ split
 
@@ -55,7 +59,6 @@ The 61 K-12 / secondary `education/` directories SHALL be relocated to
   `official_docs/`, `students_union/` subdirs
 
 ### Requirement: Themed package restructure
-
 The themed packages SHALL be reorganised as follows:
 
 | Old location | New location |
@@ -76,6 +79,12 @@ The themed packages SHALL be reorganised as follows:
 | `dlt_sources/filesystem/` | `dlt_sources/raw_files/` |
 | `dlt_sources/portfolio/{cv,artwork,labels}/` | `dlt_sources/{cv,artwork,labels}/` (split) |
 | `dlt_sources/jobs/` | `dlt_sources/_jobs/` (rename — CLI dispatcher) |
+
+#### Scenario: The requirement is implemented
+
+- **WHEN** the operator validates the spec
+- **THEN** the requirement SHALL be met
+- **AND** all related downstream workflows SHALL pass
 
 ### Requirement: Layer-grouped destinations
 
@@ -101,9 +110,7 @@ The legacy files at `dlt_sources/_lakehouse/destinations.py`,
 - **AND** `d.destination_name` SHALL equal `'ducklake'`
 
 ### Requirement: Geographic de-sprawl
-
-The geographic packages (american_nations, british_isles, european_nations,
-european_union, commonwealth, celtic) SHALL KEEP their English names per
+The system SHALL KEEP their English names per.
 the user's preference. After Wave 1:
 
 - `law/`, `medicine/`, `education/` subdirs SHALL be removed (migrated up)
@@ -153,7 +160,6 @@ The following files SHALL be updated to reflect the new namespace:
 - **AND** `dlt_sources/AGENTS.md` SHALL claim this count
 
 ### Requirement: Migration tooling
-
 The Wave 1 migration SHALL be performed by
 `scripts/wave_1_dlt_sources_restructure.py` which:
 
@@ -164,3 +170,12 @@ The Wave 1 migration SHALL be performed by
 - Executes `git mv` for each move (preserves file history)
 - Generates `__init__.py` re-export shims for legacy paths
 - Has `--dry-run` flag for verification
+
+#### Scenario: Migration tool runs end-to-end
+
+- **WHEN** `python3 scripts/wave_1_dlt_sources_restructure.py --dry-run` runs
+- **THEN** the output SHALL list all moves with source + destination paths
+- **AND** no files SHALL be moved (dry-run mode)
+- **AND** when run without `--dry-run`, every file SHALL be in its new location
+- **AND** `git log --follow <file>` SHALL show the rename history
+
