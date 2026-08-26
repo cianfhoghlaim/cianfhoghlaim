@@ -422,15 +422,16 @@ depends = ["core:sync", "core:lint", "core:test", "core:format"]
 run = "echo 'core omnibus complete (DAG executed all gates).'"
 
 [tasks."core:ci"]
-description = "CORE CI gate — the canonical CI pipeline (lint + test + openspec:validate-all + devops:validate-stacks + audit-env-vars)"
+description = "CORE CI gate — the canonical CI pipeline (lint + test + openspec:validate-all + devops:validate-stacks + audit-env-vars + schema:validate)"
 depends = [
   "core:lint",
   "core:test",
   "openspec:validate-all",
   "devops:validate-stacks",
   "core:audit-env-vars",
+  "data:schema:validate",
 ]
-run = "echo 'core:ci pipeline complete (all 5 gates passed).'"
+run = "echo 'core:ci pipeline complete (all 6 gates passed).'"
 
 
 # =============================================================================
