@@ -18,7 +18,7 @@ and find this one too. The 5 resources are:
 
 The destination is one of `LocalDuckLakeDestination`,
 `MotherDuckLakeDestination`, `BonneagarLakehouseDestination`
-(see `dlt_sources/_lakehouse/destinations.py`).
+(see `dlt_sources/lakehouse/destinations.py`).
 """
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ from typing import Any
 import dlt
 import structlog
 
-from dlt_sources._lakehouse.destinations import DESTINATION_CHOICES, get_destination
+from dlt_sources.lakehouse.destinations import DESTINATION_CHOICES, get_destination
 
 logger = structlog.get_logger(__name__)
 

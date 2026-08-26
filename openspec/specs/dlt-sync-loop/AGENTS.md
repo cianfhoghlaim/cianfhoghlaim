@@ -1,6 +1,6 @@
 # `dlt-sync-loop` — Agent Routing
 
-> TBD - created by archiving change 2026-08-15-dlt-sync-loop-v1. Update Purpose after archive.
+> The DLT sync loop surface orchestrates the 5-layer sync contract across the Cianfhoghlaim monorepo. It defines 8 invariants: Layer 1 (sync:dlt-drift) detects drift between pinned DLT sources and the r...
 
 ## Routing
 
@@ -35,4 +35,4 @@ lint:drift-docs              # Validate every AGENTS.md number claim
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-30; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

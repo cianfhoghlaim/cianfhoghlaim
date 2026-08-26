@@ -32,7 +32,7 @@ from typing import Any
 
 import dlt_sources
 import httpx
-from pipelines.labels.base import (
+from .labels_base import (
     LabelName,
     LabelProfile,
     LabelRelease,

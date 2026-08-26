@@ -1,92 +1,27 @@
-"""DLT source for the British Columbia Legislation.
+"""DEPRECATED — moved to ciandlíthe in 2026-08-25-ciandlithe-context-carveout-v1.
 
-Per the
-[`2026-07-12-canada-provinces-quebec-montreal-pipeline-v1`](../../../openspec/changes/2026-07-12-canada-provinces-quebec-montreal-pipeline-v1/)
-change.
-
-Honours ``USE_LOCAL_SCRAPES=true`` by reading from
-``stedding/ingest_queue/commonwealth/can/bc/law/<lang>/``.
+Canonical: ciandlíthe/dlt_sources/law/_context/commonwealth/canada/british_columbia/law/legislation.py
+Per openspec/changes/2026-08-24-dlt-sources-to-multi-repo-scaffold-v1 Phase 3.3.
 """
+
 from __future__ import annotations
-import dlt
 
+import warnings
 
-from collections.abc import Iterator
-from typing import Any
-
-import dlt_sources
-import structlog
-
-logger = structlog.get_logger(__name__)
-
-
-PROVINCE = "bc"
-DOMAIN = "law"
-SLUG = "legislation"
-CANONICAL_URL = "https://www.bclaws.gov.bc.ca"
-DEFAULT_LANGUAGE = "en"
-
-
-@dlt.resource(
-    name="bc_legislation",
-    write_disposition="merge",
-    primary_key=["url", "language"],
-    columns={
-        "province": {"data_type": "text"},
-        "domain": {"data_type": "text"},
-        "language": {"data_type": "text"},
-        "url": {"data_type": "text"},
-        "title": {"data_type": "text"},
-        "content_hash": {"data_type": "text"},
-        "source": {"data_type": "text"},
-        "extracted_at": {"data_type": "timestamp"},
-    },
+warnings.warn(
+    "dlt_sources.commonwealth.canada.provinces.british_columbia.law.legislation moved to ciandlíthe; "
+    "update to ciandlithe.dlt_sources.law._context.commonwealth.canada.british_columbia.law.legislation",
+    DeprecationWarning,
+    stacklevel=2,
 )
-def bc_legislation(language=None):
-    """Yield British Columbia Legislation rows from the canonical cache."""
-    import hashlib
-    import json
-    from datetime import UTC, datetime
-    from pathlib import Path
 
-    cache_dir = Path("stedding/ingest_queue/commonwealth/can/bc/law")
-    languages = (language,) if language else ('en',)
-    for lang in languages:
-        lang_dir = cache_dir / lang
-        if not lang_dir.exists():
-            continue
-        for json_path in sorted(lang_dir.glob("*.json")):
-            try:
-                payload = json.loads(json_path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError) as exc:
-                logger.warning("bc_legislation_cache_parse_failed", path=str(json_path), error=str(exc))
-                continue
-            metadata = payload.get("metadata", {}) if isinstance(payload, dict) else {}
-            markdown = payload.get("markdown", "") if isinstance(payload, dict) else ""
-            yield {
-                "province": PROVINCE,
-                "domain": DOMAIN,
-                "language": lang,
-                "url": metadata.get("sourceURL") or metadata.get("url") or "",
-                "title": (payload.get("title") or metadata.get("title", "") if isinstance(payload, dict) else ""),
-                "content_hash": f"sha256:{hashlib.sha256(markdown.encode()).hexdigest()[:16]}" if markdown else "",
-                "source": SLUG,
-                "extracted_at": datetime.now(UTC).isoformat(),
-            }
+try:
+    from ciandlithe.dlt_sources.law._context.commonwealth.canada.british_columbia.law import legislation as _impl  # type: ignore[import-not-found]
+except ImportError:
+    _impl = None
 
-
-@dlt.source(name="bc_legislation")
-def bc_legislation_source(language=None):
-    """DLT source for the British Columbia Legislation ingestion."""
-    return bc_legislation(language=language)
-
-
-__all__ = [
-    "CANONICAL_URL",
-    "DEFAULT_LANGUAGE",
-    "DOMAIN",
-    "PROVINCE",
-    "SLUG",
-    "bc_legislation",
-    "bc_legislation_source",
-]
+if _impl is not None:
+    legislation_source = _impl.legislation_source
+    __all__ = ["legislation_source"]
+else:
+    __all__: list[str] = []

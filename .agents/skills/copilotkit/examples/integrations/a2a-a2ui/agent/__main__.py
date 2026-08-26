@@ -80,9 +80,7 @@ def main(host, port):
             agent_executor=agent_executor,
             task_store=InMemoryTaskStore(),
         )
-        server = A2AStarletteApplication(
-            agent_card=agent_card, http_handler=request_handler
-        )
+        server = A2AStarletteApplication(agent_card=agent_card, http_handler=request_handler)
         import uvicorn
 
         app = server.build()

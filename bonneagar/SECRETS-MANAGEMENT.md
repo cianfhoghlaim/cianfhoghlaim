@@ -233,6 +233,51 @@ source .env
 | Shell profile sourcing | Always available | Security risk, slow startup |
 | Manual .env | Simple | Manual updates, insecure |
 
+## Provider parity: Infisical, 1Password, or plain .env
+
+Infisical is the default here, but it is not load-bearing. **Every stack reads
+the same variable names regardless of where the values come from**, so the
+provider is a swappable implementation detail. Anyone reproducing this
+infrastructure can pick whichever they already run.
+
+| | **Infisical** (default) | **1Password** | **Plain `.env`** |
+|---|---|---|---|
+| Container injection | Locket sidecar resolves `secrets.env` into a tmpfs volume | `op run --env-file` wrapping the entrypoint, or `op inject` at deploy | `env_file:` directly |
+| Shell/dev injection | mise hook → `.env` (see above) | `op signin` + `op inject -i .env.tpl -o .env` | `.env` on disk |
+| Auth | Machine identity (client id + secret) | Service account token (`OP_SERVICE_ACCOUNT_TOKEN`) | none |
+| Template syntax | `{{ infisical "/path" "KEY" }}` | `op://vault/item/field` | literal values |
+| Rotation | Central, immediate | Central, immediate | Manual, per host |
+| Audit trail | Yes | Yes | No |
+| Works offline | No | No | Yes |
+| Extra infrastructure | Infisical server | None (SaaS) | None |
+| Good for | Self-hosted, multi-host | Teams already on 1Password | Evaluation, single host, bootstrap |
+
+The contract is the variable names. A stack's `secrets.env` template and its
+`.env.example` list exactly what it needs; satisfying that list is all any
+provider has to do. To switch providers you replace the hydration mechanism,
+not the stacks.
+
+`check_op_token.ts` is the minimal 1Password readiness probe (verifies
+`OP_SERVICE_ACCOUNT_TOKEN` is present before a deploy attempts injection).
+
+### Do not put bootstrap credentials behind a secrets manager
+
+One deliberate exception runs through this infrastructure: **credentials needed
+to establish connectivity are stored as plain files**, not fetched from a vault.
+
+`~/.config/pangolin-newt/newt.env` (mode `600`) holds the Pangolin site
+credentials literally, and does so on purpose. Two failure modes justify it:
+
+1. A tunnel agent that cannot start until a remote vault answers has coupled
+   your connectivity to that vault's availability.
+2. If the vault is itself reachable *through* the tunnel — as Infisical is
+   here — then fetching tunnel credentials from it is a deadlock on any cold
+   start.
+
+The same reasoning applies to any bootstrap credential: SSH host keys, the
+Pangolin `SERVER_SECRET`, the secrets manager's own machine identity. Chase the
+dependency chain and make sure it terminates on disk.
+
 ## Related Systems
 
 - **Locket**: Container-based secret injection for Docker services

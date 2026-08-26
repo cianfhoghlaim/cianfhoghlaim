@@ -102,7 +102,7 @@ canonical Test blocks per the v1 spec.
 ## Layer 6: CocoIndex v1 (the per-model indexing)
 
 The canonical CocoIndex v1 Apps are at
-`cocoindex/biep_parity/meaisin/`. Each model has a canonical
+`cocoindex_flows/biep_parity/meaisin/`. Each model has a canonical
 chunk + embed + index pipeline.
 
 ## See also

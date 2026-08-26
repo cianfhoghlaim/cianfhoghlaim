@@ -8,6 +8,7 @@ and evaluates them against the live DuckLake registry + the Lakekeeper
 REST catalog. Each sensor takes a `SensorEvaluationContext` parameter,
 so we instantiate one with a minimal mock instance.
 """
+
 from __future__ import annotations
 
 import json
@@ -88,7 +89,7 @@ def main() -> int:
             duration = time.time() - t0
             loaded.append((name, sensor_obj, row_count, skip_reason, duration))
             marker = "✓" if row_count > 0 else "~"
-            print(f"  [{marker}] {name:<32} {row_count:>3} run requests  {duration*1000:>5.1f}ms")
+            print(f"  [{marker}] {name:<32} {row_count:>3} run requests  {duration * 1000:>5.1f}ms")
             if skip_reason and not row_count:
                 print(f"        → {skip_reason}")
         except Exception as e:
@@ -105,7 +106,7 @@ def main() -> int:
     print("Per-sensor summary:")
     print(f"  {'sensor':<32} {'run_requests':>14} {'duration_ms':>12}")
     for name, _, rr, _, dur in loaded:
-        print(f"  {name:<32} {rr:>14} {dur*1000:>12.1f}")
+        print(f"  {name:<32} {rr:>14} {dur * 1000:>12.1f}")
 
     return 0 if not failed else 1
 

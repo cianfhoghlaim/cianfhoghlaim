@@ -9,6 +9,7 @@ at `meaisinfhoghlaim.document_factory`.
 Usage:
     uv run python scripts/meaisin_ocr_htr_tests/converter_curriculum_document_extract.py
 """
+
 from __future__ import annotations
 
 import logging
@@ -24,6 +25,7 @@ def _run_converter() -> bool:
     logger.info("Running curriculum_document converter on sample PDF...")
     try:
         from meaisinfhoghlaim.document_factory import CONVERTERS
+
         converter = CONVERTERS.get("curriculum_document")
         if converter is None:
             logger.warning("curriculum_document not available; skipping")
@@ -42,7 +44,9 @@ def _run_ocr_evaluation() -> bool:
     try:
         result = subprocess.run(
             ["mise", "run", "cic:ocr:test"],
-            capture_output=True, text=True, timeout=120,
+            capture_output=True,
+            text=True,
+            timeout=120,
         )
         if result.returncode != 0:
             logger.error("OCR evaluation failed: %s", result.stderr[-1000:])
@@ -59,7 +63,9 @@ def _run_model_registry_audit() -> bool:
     try:
         result = subprocess.run(
             ["mise", "run", "cic:meaisin:registry-audit"],
-            capture_output=True, text=True, timeout=60,
+            capture_output=True,
+            text=True,
+            timeout=60,
         )
         if result.returncode != 0:
             logger.error("Registry audit failed: %s", result.stderr[-1000:])

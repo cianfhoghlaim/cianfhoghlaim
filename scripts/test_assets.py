@@ -18,6 +18,7 @@ Usage:
     # Wait for completion
     python scripts/test_assets.py --wait ireland education seed_data
 """
+
 import argparse
 import json
 import os
@@ -128,7 +129,9 @@ class DagsterClient:
         """
         return self._query(query, {"backfillId": backfill_id})["partitionBackfillOrError"]
 
-    def wait_for_completion(self, backfill_id: str, timeout: int = 300, poll_interval: int = 2) -> dict:
+    def wait_for_completion(
+        self, backfill_id: str, timeout: int = 300, poll_interval: int = 2
+    ) -> dict:
         """Wait for backfill to complete."""
         start = time.time()
         while time.time() - start < timeout:
@@ -161,34 +164,22 @@ def main():
         description="Test Dagster asset materialization via GraphQL API"
     )
     parser.add_argument(
-        "asset_path",
-        nargs="*",
-        help="Asset path components (e.g., ireland education seed_data)"
+        "asset_path", nargs="*", help="Asset path components (e.g., ireland education seed_data)"
+    )
+    parser.add_argument("--list", "-l", action="store_true", help="List all available assets")
+    parser.add_argument("--status", "-s", metavar="BACKFILL_ID", help="Check status of a backfill")
+    parser.add_argument(
+        "--wait", "-w", action="store_true", help="Wait for materialization to complete"
     )
     parser.add_argument(
-        "--list", "-l",
-        action="store_true",
-        help="List all available assets"
-    )
-    parser.add_argument(
-        "--status", "-s",
-        metavar="BACKFILL_ID",
-        help="Check status of a backfill"
-    )
-    parser.add_argument(
-        "--wait", "-w",
-        action="store_true",
-        help="Wait for materialization to complete"
-    )
-    parser.add_argument(
-        "--timeout", "-t",
+        "--timeout",
+        "-t",
         type=int,
         default=300,
-        help="Timeout in seconds when waiting (default: 300)"
+        help="Timeout in seconds when waiting (default: 300)",
     )
     parser.add_argument(
-        "--url", "-u",
-        help="Dagster GraphQL URL (default: http://localhost:64583/graphql)"
+        "--url", "-u", help="Dagster GraphQL URL (default: http://localhost:64583/graphql)"
     )
 
     args = parser.parse_args()
@@ -239,7 +230,13 @@ def main():
             for s in asset_statuses:
                 if "materialized" in s:
                     path = "/".join(s["assetKey"]["path"])
-                    state = "materialized" if s["materialized"] else "failed" if s["failed"] else "in_progress"
+                    state = (
+                        "materialized"
+                        if s["materialized"]
+                        else "failed"
+                        if s["failed"]
+                        else "in_progress"
+                    )
                     print(f"  {path}: {state}")
 
     except Exception as e:

@@ -705,8 +705,74 @@ description = "Layer 2: refresh CCC index + append the canonical concept guides"
 run = "bash scripts/sync/ccc.sh"
 
 [tasks."sync:cognee"]
-description = "Layer 3: ingest openspec + skills docs into Cognee"
+# Per the 2026-08-24-dlt-sources-to-multi-repo-scaffold-v1 change Phase 0.8:
+# Layer 3 + 6 + 7 + 8 + 9 + 10 + 11 orchestrator -- ingests the 8
+# cianfhoghlaim-scope Cognee clusters (openspec_changes + baml_schemas +
+# dagster_assets + agents + dlt_sources + notebooks + stacks +
+# firecrawl_concepts) + the 12 sister-scope twin clusters (per Phase 2.4:
+# ciandlithe_* + cianchosaint_* x 6 surfaces) + the legacy
+# docs/openspec/skills clusters.
+description = "Layer 3: ingest 8 cianfhoghlaim-scope Cognee clusters + 12 sister-scope twins + docs/openspec/skills/baml/stacks/agents/notebooks/dlt/dagster/firecrawl_clusters"
+depends = [
+  "sync:cognee:openspec_changes",
+  "sync:cognee:baml_schemas",
+  "sync:cognee:dagster_assets",
+  "sync:cognee:agents",
+  "sync:cognee:dlt_sources",
+  "sync:cognee:notebooks",
+  "sync:cognee:stacks",
+  "sync:cognee:firecrawl_concepts",
+  "sync:cognee:sister_twins",
+]
 run = "bash scripts/sync/cognee.sh"
+
+# Per the 2026-08-24-dlt-sources-to-multi-repo-scaffold-v1 change Phase 2.4:
+# Sister-scope Cognee twin clusters — diff-sync the 12 sister-scope
+# clusters (ciandlithe_* + cianchosaint_* x 6 surfaces) against their
+# cianfhoghlaim-scope masters. The CREATE-ON-DEPLOY intent list is at
+# orchestration/sister_repo_cognee_intent.py (12 clusters total).
+[tasks."sync:cognee:sister_twins"]
+description = "Sister-scope twin clusters (per Phase 2.4): diff-sync the 12 ciandlithe_* + cianchosaint_* Cognee clusters against their cianfhoghlaim-scope masters"
+run = "python3 orchestration/sister_repo_cognee_intent.py 2>&1 | tail -20 || python3 -c 'import sys; sys.path.insert(0, \"orchestration\"); from sister_repo_cognee_intent import SISTER_TWIN_CLUSTERS, cluster_pairs; print(f\"{len(SISTER_TWIN_CLUSTERS)} twin clusters\"); [print(f\"  {m} -> {t}\") for m, t in cluster_pairs()]'"
+
+# Per the 2026-08-24-dlt-sources-to-multi-repo-scaffold-v1 change Phase 0.8:
+# 8 per-cluster sub-tasks (the canonical 8 cianfhoghlaim-scope clusters).
+# Each sub-task delegates to scripts/cognee_ingest_<cluster>.py (or
+# scripts/sync_dagster_assets_to_cognee.py for the dagster_assets cluster).
+# cognee is loaded via `uv run --with cognee` since the project pyproject.toml
+# does not (yet) declare cognee as a direct dep; the canonical ingestion
+# path is the standalone cognee 1.5.3 CLI / Python API.
+[tasks."sync:cognee:openspec_changes"]
+description = "Cluster 1/8: ingest 78 cianfhoghlaim + 4 cwd openspec/changes/*/proposal.md into the openspec_changes Cognee cluster"
+run = "uv run --with cognee python scripts/cognee_ingest_openspec.py"
+
+[tasks."sync:cognee:baml_schemas"]
+description = "Cluster 2/8: ingest 334 baml_src/**/*.baml into the baml_schemas Cognee cluster"
+run = "uv run --with cognee python scripts/cognee_ingest_baml_schemas.py"
+
+[tasks."sync:cognee:dagster_assets"]
+description = "Cluster 3/8: ingest 89 orchestration/defs/**/*.py (the 5-layer defs/ tree) into the dagster_assets Cognee cluster"
+run = "uv run --with cognee python scripts/sync_dagster_assets_to_cognee.py"
+
+[tasks."sync:cognee:agents"]
+description = "Cluster 4/8: ingest 168 agents/**/*.py (the 12-agent fleet + per-agent sub-modules) into the agents Cognee cluster"
+run = "uv run --with cognee python scripts/cognee_ingest_agent_definitions.py"
+
+[tasks."sync:cognee:dlt_sources"]
+description = "Cluster 5/8: ingest 2173 dlt_sources/**/*.py (the per-nation @dlt.source + @dlt.resource) into the dlt_sources Cognee cluster"
+run = "uv run --with cognee python scripts/cognee_ingest_dlt_sources.py"
+
+[tasks."sync:cognee:notebooks"]
+description = "Cluster 6/8: ingest 245 notebooks/**/*.{py,ipynb,md} into the notebooks Cognee cluster"
+run = "uv run --with cognee python scripts/cognee_ingest_notebooks.py"
+
+[tasks."sync:cognee:stacks"]
+description = "Cluster 7/8: ingest 109 bonneagar/stacks/**/compose.yaml + the 6-file GOLD_STANDARD pattern components into the stacks Cognee cluster"
+run = "uv run --with cognee python scripts/cognee_ingest_stacks_catalog.py"
+
+[tasks."sync:cognee:firecrawl_concepts"]
+description = "Cluster 8/8: ingest the 35 concept guides from .cocoindex_code/guides.yml into the firecrawl_concepts Cognee cluster"
+run = "uv run --with cognee --with pyyaml python scripts/cognee_ingest_firecrawl_concepts.py"
 
 [tasks."sync:skills"]
 description = "Layer 4: validate 65 agent skills (frontmatter + path references)"
@@ -1140,6 +1206,34 @@ usage = 'args "<pipeline> <destination>" help="The pipeline + destination (githu
 alias = ["dlt:hub:deploy"]
 run = "uv run dlt deploy ${1:-ireland_jurisdiction_pipeline} ${2:-github_actions} 2>&1 | tail -20"
 
+# Per the 2026-08-24-dlt-sources-to-multi-repo-scaffold-v1 change (Phase 0.1):
+# 2 new tasks wrapping the `tests/dlt/test_imports.py` smoke test that walks
+# every top-level sub-tree of `dlt_sources/` and records the import result.
+# The smoke test is READ-ONLY on `dlt_sources/` — it does not fix anything;
+# it surfaces the per-subtree ImportError list to the multi-repo scaffold plan.
+[tasks."dlt:smoke-all"]
+description = "DLT smoke-all — walk every top-level sub-tree of `dlt_sources/` via `importlib.import_module`, record ImportError vs success, and persist a JSON summary to `stedding/sync-reports/dlt-smoke-run-<timestamp>.json`. Per the 2026-08-24-dlt-sources-to-multi-repo-scaffold-v1 change (Phase 0.1 + Phase 2.5 — also wires the nightly 02:30 UTC mirror-merge gate)."
+alias = ["dlt:smoke"]
+depends = ["core:sync", "dlt:mirror-merge:nightly"]
+run = "uv run pytest tests/dlt/test_imports.py -q"
+
+# Per the 2026-08-24-dlt-sources-to-multi-repo-scaffold-v1 change Phase 2.5:
+# The nightly mirror-merge gate — invoked at 02:30 UTC nightly via the
+# Dagster sensor `dlt_nightly_mirror_merge_sensor` (at
+# orchestration/defs/2_materials/dlt_nightly_mirror_merge.py). This mise
+# task is the operator-facing CLI wrapper that POSTs the sensor tick
+# (the actual canonical execution is via Dagster).
+[tasks."dlt:mirror-merge:nightly"]
+description = "Nightly mirror-merge tick — invokes the `dlt_nightly_mirror_merge_sensor` against the accumulated `dlt_sources/_sister_refs/<repo>/...` diff. Per Phase 2.5 (cron 02:30 UTC)."
+alias = ["dlt:mirror-merge"]
+run = "python3 -c 'import ast; ast.parse(open(\"orchestration/defs/2_materials/dlt_nightly_mirror_merge.py\").read()); print(\"OK: dlt_nightly_mirror_merge.py parses\")' && echo 'Cron: 30 2 * * * UTC (per tasks.md §17.3); canonical execution via Dagster sensor (sensor name: dlt_nightly_mirror_merge_sensor, default_status=STOPPED).'"
+
+[tasks."dlt:smoke-all-dev"]
+description = "DLT smoke-all-dev — same as `dlt:smoke-all` but with `-v --no-header` for human inspection (shows per-test status + the inline [dlt:smoke-all] summary line). Per the 2026-08-24-dlt-sources-to-multi-repo-scaffold-v1 change (Phase 0.1)."
+alias = ["dlt:smoke:dev"]
+depends = ["core:sync"]
+run = "uv run pytest tests/dlt/test_imports.py -v --no-header"
+
 [tasks."data:schema:validate"]
 description = "CI drift gate for the generated Zod schemas (regenerate in-memory + byte-diff against committed bi-ep.gen.ts)"
 alias = ["schema:validate", "baml:test"]
@@ -1418,3 +1512,178 @@ depends = ["sync"]
 run = '''
 uv run python "scripts/meaisin_ocr_htr_tests/agent_{{arg(agent)}}_extract.py" "$@"
 '''
+
+
+# =============================================================================
+# tuatha-media-intel — capture → VLM → ANAM pipeline
+# =============================================================================
+
+[tasks."tuatha-media-intel:baml:codegen"]
+description = "Generate BAML clients (Python + TS) from baml_src/tuatha_media_intel.baml"
+run = '''
+uv run baml-cli generate
+'''
+
+[tasks."tuatha-media-intel:baml:test"]
+description = "Run the BAML tests for the tuatha_media_intel.baml schema"
+depends = ["tuatha-media-intel:baml:codegen"]
+run = '''
+uv run baml-cli test baml_src/tuatha_media_intel.baml
+'''
+
+[tasks."tuatha-media-intel:cocoindex:update:hades"]
+description = "Run the tuatha_hades_boons CocoIndex v1 App (Lance fat table ciánfhoghlaim.tuatha.hades.boons)"
+depends = ["tuatha-media-intel:baml:codegen"]
+run = '''
+cd cocoindex_flows/tuatha_media_intel/ingestors && uv run python hades_boons.py
+'''
+
+[tasks."tuatha-media-intel:cocoindex:update:comic"]
+description = "Run the tuatha_comic_particles CocoIndex v1 App"
+depends = ["tuatha-media-intel:baml:codegen"]
+run = '''
+cd cocoindex_flows/tuatha_media_intel/ingestors && uv run python comic_particles.py
+'''
+
+[tasks."tuatha-media-intel:cocoindex:update:gba"]
+description = "Run the tuatha_gba_magic CocoIndex v1 App"
+depends = ["tuatha-media-intel:baml:codegen"]
+run = '''
+cd cocoindex_flows/tuatha_media_intel/ingestors && uv run python gba_magic.py
+'''
+
+[tasks."tuatha-media-intel:cocoindex:update:anam"]
+description = "Run the tuatha_anam_particles CocoIndex v1 App (the cross-source join)"
+depends = [
+  "tuatha-media-intel:cocoindex:update:hades",
+  "tuatha-media-intel:cocoindex:update:comic",
+  "tuatha-media-intel:cocoindex:update:gba",
+]
+run = '''
+cd cocoindex_flows/tuatha_media_intel/ingestors && uv run python anam_particles.py
+'''
+
+[tasks."tuatha-media-intel:capture:doctor"]
+description = "Run the Swift capture daemon doctor (verify Screen Recording + HEVC encoder + write a test frame)"
+run = '''
+cd tuatha_media_intel/capture/tuatha-capture && swift build -c release && ./.build/release/tuatha-capture doctor
+'''
+
+[tasks."tuatha-media-intel:capture:build"]
+description = "Build the Swift capture daemon to ~/.tuatha/bin/tuatha-capture"
+run = '''
+cd tuatha_media_intel/capture/tuatha-capture
+swift build -c release
+mkdir -p $HOME/.tuatha/bin
+cp .build/release/tuatha-capture $HOME/.tuatha/bin/
+'''
+
+[tasks."tuatha-media-intel:capture:install-agent"]
+description = "Install the tuatha-capture LaunchAgent and load it via launchctl"
+depends = ["tuatha-media-intel:capture:build"]
+run = '''
+cp tuatha_media_intel/capture/LaunchAgent/com.ci.tuatha.capture.plist $HOME/Library/LaunchAgents/
+launchctl load -w $HOME/Library/LaunchAgents/com.ci.tuatha.capture.plist
+launchctl start com.ci.tuatha.capture
+'''
+
+[tasks."tuatha-media-intel:capture:install-shims"]
+description = "Install the Python capture shims (tuatha-capture-python) for GBA + Comic flows"
+run = '''
+cd tuatha_media_intel/capture/python
+uv pip install -e ".[gba,comic-ml]"
+'''
+
+[tasks."tuatha-media-intel:stack:up"]
+description = "Bring up the tuatha-media-intel Docker Compose stack"
+run = '''
+cd bonneagar/stacks/tuatha-media-intel
+docker compose --env-file .env up -d
+'''
+
+[tasks."tuatha-media-intel:stack:logs"]
+description = "Tail the logs for the tuatha-media-intel stack"
+run = '''
+cd bonneagar/stacks/tuatha-media-intel
+docker compose logs -f
+'''
+
+[tasks."tuatha-media-intel:stack:down"]
+description = "Tear down the tuatha-media-intel stack"
+run = '''
+cd bonneagar/stacks/tuatha-media-intel
+docker compose down -v
+'''
+
+[tasks."tuatha-media-intel:smoke"]
+description = "End-to-end smoke test: BAML codegen + CocoIndex flows + RAGAS asset_check"
+depends = [
+  "tuatha-media-intel:baml:codegen",
+  "tuatha-media-intel:baml:test",
+  "tuatha-media-intel:cocoindex:update:hades",
+  "tuatha-media-intel:cocoindex:update:comic",
+  "tuatha-media-intel:cocoindex:update:gba",
+  "tuatha-media-intel:cocoindex:update:anam",
+]
+run = '''
+mise run lint:registry --strict
+mise run dagster:check ragas_anam_color_anchor
+'''
+
+[tasks."tuatha-media-intel:notebook"]
+description = "Open the Tuatha ANAM Dashboard marimo notebook (4-tab design surface)"
+run = '''
+marimo edit notebooks/tuatha_anam_dashboard.py
+'''
+
+# =============================================================================
+# 2026-08-21-meaisinfhoghlaim-unsloth-agents-integration-v1
+# Per the umbrella openspec change. The 5-tutorial walkthrough + 7-step verify.
+# =============================================================================
+
+[tasks."tutorial:01-env"]
+description = "Validate the dev environment for the 4-stack + Unsloth Studio (3 min)"
+run = "uv run notebooks/31_onboarding_01_env_check.py"
+
+[tasks."tutorial:02-first-chat"]
+description = "Send the first chat completion to Unsloth Studio via litellm (5 min)"
+run = "uv run notebooks/32_onboarding_02_first_unsloth_chat.py"
+
+[tasks."tutorial:03-walkthrough"]
+description = "Walk through Hermes + OpenClaw + OpenChamber + Unsloth Studio (10 min)"
+run = "uv run notebooks/33_onboarding_03_4_stack_walkthrough.py"
+
+[tasks."tutorial:04-biep-ocr"]
+description = "Run the 4-path OCR ensemble on a sample LC Gaeilge paper (15 min)"
+run = "uv run notebooks/34_onboarding_04_biep_ocr_eval.py"
+
+[tasks."tutorial:05-duchas-htr"]
+description = "Fine-tune Gemma 4 4B on Dúchas.ie transcriptions (20 min)"
+run = "uv run notebooks/35_onboarding_05_duchas_htr.py"
+
+[tasks."tutorial:all"]
+description = "Run all 5 tutorials in order (~50 min total walkthrough)"
+run = '''
+mise run tutorial:01-env && \
+mise run tutorial:02-first-chat && \
+mise run tutorial:03-walkthrough && \
+mise run tutorial:04-biep-ocr && \
+mise run tutorial:05-duchas-htr
+'''
+
+[tasks."tutorial:verify"]
+description = "Run the 7-step verification protocol for the Unsloth Studio integration"
+run = "mise run sync:all && bash scripts/verify-unsloth-serve.sh"
+
+# Tools + agents (per the 2026-08-21 umbrella change)
+[tasks."fleet:tools:list"]
+description = "List the 8 tools in the fleet tool registry"
+run = "uv run --package fleet python -c \"from cianfhoghlaim.fleet.tools import TOOL_REGISTRY; print('\\n'.join(f'{k}: {v[\\\"backend\\\"]}' for k,v in TOOL_REGISTRY.items()))\""
+
+[tasks."fleet:agents:list"]
+description = "List the 5 educational agents"
+run = "uv run --package fleet python -c \"from cianfhoghlaim.fleet.educational import AGENT_REGISTRY; print('\\n'.join(AGENT_REGISTRY.keys()))\""
+
+[tasks."fleet:ocr:eval"]
+description = "Run OCR-Router on a sample LC Gaeilge paper"
+run = "uv run --package fleet python -c \"from cianfhoghlaim.fleet.educational import run_ocr_router; import asyncio; print(asyncio.run(run_ocr_router('/path/to/paper.pdf')))\""

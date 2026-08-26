@@ -3,6 +3,7 @@
 
 Usage: python scripts/sweep_baml_refs.py
 """
+
 from __future__ import annotations
 import re
 from pathlib import Path

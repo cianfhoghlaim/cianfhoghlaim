@@ -1,9 +1,18 @@
-"""dlt_sources/commonwealth/india/law — DLT sources (empty).
+"""DEPRECATED — moved to ciandlíthe in 2026-08-25-ciandlithe-context-carveout-v1.
 
-Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
-change, this package was migrated from its legacy jurisdiction-first
-location.
+Canonical: ciandlíthe/dlt_sources/law/_context/commonwealth/india/law/
+Per openspec/changes/2026-08-24-dlt-sources-to-multi-repo-scaffold-v1 Phase 3.3.
 """
+
 from __future__ import annotations
 
-__all__ = []
+import warnings
+
+warnings.warn(
+    "dlt_sources.commonwealth.india.law moved to ciandlíthe; "
+    "update to ciandlithe.dlt_sources.law._context.commonwealth.india.law",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+__all__: list[str] = []

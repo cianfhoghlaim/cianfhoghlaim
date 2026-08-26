@@ -178,7 +178,7 @@ The 3 BIEP v3 canonical BAML clients are:
 
 ## Layer 7: CocoIndex v1 (file → chunk → embed → LanceDB)
 
-The canonical CocoIndex v1 Apps are at `cocoindex/biep_parity/`. The 372+
+The canonical CocoIndex v1 Apps are at `cocoindex_flows/biep_parity/`. The 372+
 Apps are:
 
 - 8 BIEP v3 Ireland apps (6 LC × 2 langs + 1 Gaeilge + 1 parity)

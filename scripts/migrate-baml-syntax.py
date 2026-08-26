@@ -57,9 +57,9 @@ DEFAULT_TARGETS = [
 # Files explicitly OUT OF SCOPE for this openspec change.
 OUT_OF_SCOPE_GLOBS = [
     "education/lc_extraction/*.baml",  # BIEP v1 canonical contract
-    "clients.baml",                     # T4 already rewrote to generator {} blocks
+    "clients.baml",  # T4 already rewrote to generator {} blocks
     "clients_llama_swap.baml",
-    "**/*.bak",                         # backup files (deleted in step 4)
+    "**/*.bak",  # backup files (deleted in step 4)
 ]
 
 
@@ -77,34 +77,34 @@ OUT_OF_SCOPE_GLOBS = [
 #   indent + name + ': ' + type + rest  →  indent + name + ' ' + type + rest
 
 _TYPE_ALTERNATIVES = (
-    r"string(?:\[\])?(?:\?)?"   # primitives (with optional [] and ?)
+    r"string(?:\[\])?(?:\?)?"  # primitives (with optional [] and ?)
     r"|int(?:\[\])?(?:\?)?"
     r"|float(?:\[\])?(?:\?)?"
     r"|bool(?:\[\])?(?:\?)?"
-    r"|image(?:\[\])?(?:\?)?"   # alias used in image_generation.baml
-    r"|[A-Z][a-zA-Z0-9_]*(?:\[\])?(?:\?)?"   # custom class with optional array/optional
+    r"|image(?:\[\])?(?:\?)?"  # alias used in image_generation.baml
+    r"|[A-Z][a-zA-Z0-9_]*(?:\[\])?(?:\?)?"  # custom class with optional array/optional
     r"|list<[^>]+>(?:\?)?"  # list<T> (rare)
-    r"|map<[^,]+,\s*[^>]+>(?:\?)?"           # map<K,V> (rare)
+    r"|map<[^,]+,\s*[^>]+>(?:\?)?"  # map<K,V> (rare)
     r"|class\s+[a-zA-Z0-9_]+"
     r"|enum\s+[a-zA-Z0-9_]+"
     r"|optional\s+[a-zA-Z<>,\s\[\]]+"
 )
 
 ATTR_LINE_RE = re.compile(
-    r"^(\s+)"                                # group 1: leading indent
-    r"([a-z_][a-zA-Z0-9_]*)"                # group 2: field name
-    r"\s*:\s+"                               # the Pydantic colon + spaces
-    r"(" + _TYPE_ALTERNATIVES + r")"        # group 3: type
-    r"(?![\w])"                              # type boundary (no word char after)
-    r"(.*)$"                                 # group 4: rest of line
+    r"^(\s+)"  # group 1: leading indent
+    r"([a-z_][a-zA-Z0-9_]*)"  # group 2: field name
+    r"\s*:\s+"  # the Pydantic colon + spaces
+    r"(" + _TYPE_ALTERNATIVES + r")"  # group 3: type
+    r"(?![\w])"  # type boundary (no word char after)
+    r"(.*)$"  # group 4: rest of line
 )
 
 
 # Heuristic regexes for lines we must NOT rewrite (even if they look like
 # attribute lines).
 JINJA_TOKEN_RE = re.compile(r"\{\{|\}\}")
-BAML_RAW_STRING_OPENER_RE = re.compile(r'#"')      # opens a BAML #"..."# block
-BAML_RAW_STRING_CLOSER_RE = re.compile(r'"#')      # closes a BAML #"..."# block
+BAML_RAW_STRING_OPENER_RE = re.compile(r'#"')  # opens a BAML #"..."# block
+BAML_RAW_STRING_CLOSER_RE = re.compile(r'"#')  # closes a BAML #"..."# block
 TRIPLE_HASH_RE = re.compile(r'"""')
 
 
@@ -320,9 +320,7 @@ def cmd_dry_run(targets: list[Path]) -> int:
             print(f"  [skip] L{idx}: {line.strip()!r}  ({reason})")
         grand_changes += result.num_changed
         grand_skipped += result.num_skipped
-    print(
-        f"\n[SUMMARY] {grand_changes} changes pending, {grand_skipped} lines skipped"
-    )
+    print(f"\n[SUMMARY] {grand_changes} changes pending, {grand_skipped} lines skipped")
     return 0
 
 
@@ -338,15 +336,10 @@ def cmd_apply(targets: list[Path]) -> int:
         if result.num_changed == 0:
             print(f"[OK] {path.relative_to(REPO_ROOT)}")
             continue
-        print(
-            f"[APPLIED] {path.relative_to(REPO_ROOT)} — "
-            f"{result.num_changed} lines rewritten"
-        )
+        print(f"[APPLIED] {path.relative_to(REPO_ROOT)} — {result.num_changed} lines rewritten")
         grand_changes += result.num_changed
         grand_skipped += result.num_skipped
-    print(
-        f"\n[SUMMARY] {grand_changes} lines rewritten, {grand_skipped} skipped"
-    )
+    print(f"\n[SUMMARY] {grand_changes} lines rewritten, {grand_skipped} skipped")
     return 0
 
 
@@ -396,7 +389,9 @@ def main() -> int:
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--dry-run", action="store_true", help="Print diffs without modifying")
     mode.add_argument("--apply", action="store_true", help="Rewrite files in place")
-    mode.add_argument("--verify", action="store_true", help="Exit 1 if any Pydantic-style lines remain")
+    mode.add_argument(
+        "--verify", action="store_true", help="Exit 1 if any Pydantic-style lines remain"
+    )
     parser.add_argument(
         "--diff",
         action="store_true",

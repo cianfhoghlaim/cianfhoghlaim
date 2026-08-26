@@ -1,6 +1,6 @@
 # `european-union-official-language-pipeline` — Agent Routing
 
-> TBD - created by archiving change 2026-07-11-european-union-official-language-pipeline-v1. Update Purpose after archive.
+> The European Union official-language pipeline surface covers the 24 EU official languages (BG, CS, DA, DE, EL, EN, ES, ET, FI, FR, GA, HR, HU, IT, LT, LV, MT, NL, PL, PT, RO, SK, SL, SV) across the Ci...
 
 ## Routing
 
@@ -35,4 +35,4 @@ lint:drift-docs              # Validate every AGENTS.md number claim
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-29; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

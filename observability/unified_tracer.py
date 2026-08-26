@@ -270,6 +270,141 @@ class LogfireBackend(TracingBackend):
         logger.debug(f"Logfire event: {event_name} in {span_id}")
 
 
+# ─── OpenTelemetry semantic-convention helpers (Wave 7) ──────────────────────
+
+def apply_otel_semantic_conventions(
+    span: "TraceSpan",
+    kind: str,
+) -> None:
+    """Tag a `TraceSpan` with the canonical OpenTelemetry semantic
+    conventions per `https://opentelemetry.io/docs/specs/semconv/`.
+
+    Per Wave 7 of the 2026-08-24 master refactor plan. Three families
+    are applied based on the `kind` of span:
+
+    - `db.system: duckdb`            — for spans that touch the
+      dlt + Convex + DuckLake stack (any database operation)
+    - `gen_ai.system: baml`           — for spans that invoke the BAML
+      extraction runtime
+    - `object_store.system: s3`       — for spans that read/write
+      Garage S3 or MinIO S3-compatible storage
+
+    Args:
+        span: The `TraceSpan` to tag (mutated in place).
+        kind: The span kind — one of `db`, `gen_ai`, `object_store`.
+    """
+    if kind == "db":
+        span.metadata["db.system"] = "duckdb"
+    elif kind == "gen_ai":
+        span.metadata["gen_ai.system"] = "baml"
+    elif kind == "object_store":
+        span.metadata["object_store.system"] = "s3"
+    else:
+        # Unknown kind — don't tag (per OTel spec, only valid values
+        # should be used)
+        logger.debug(f"apply_otel_semantic_conventions: unknown kind={kind!r}")
+
+
+class MlflowBackend(TracingBackend):
+    """MLflow integration for local tracing (the Wave 7 v0 straggler).
+
+    Per the `docs/lakehouse-otel-fanout.md` stack spec, MLflow v3.15.1
+    is the canonical local-tracing sink. MLflow supports OpenTelemetry
+    natively via `mlflow.tracing`.
+
+    Args:
+        tracking_uri: MLflow tracking URI (e.g. `http://mlflow:5000`
+            or `sqlite:///stedding/mlflow.db` for local dev).
+        experiment_name: MLflow experiment name. Default: `cianfhoghlaim`.
+    """
+
+    def __init__(
+        self,
+        tracking_uri: str | None = None,
+        experiment_name: str = "cianfhoghlaim",
+    ):
+        self.tracking_uri = tracking_uri or os.environ.get(
+            "MLFLOW_TRACKING_URI", "sqlite:///stedding/mlflow.db",
+        )
+        self.experiment_name = experiment_name
+        self.enabled = bool(self.tracking_uri)
+        self._client = None
+
+        if self.enabled:
+            try:
+                import mlflow
+
+                mlflow.set_tracking_uri(self.tracking_uri)
+                mlflow.set_experiment(self.experiment_name)
+                self._client = mlflow
+                logger.info(
+                    f"Mlflow enabled: tracking_uri={self.tracking_uri} "
+                    f"experiment={self.experiment_name}",
+                )
+            except ImportError:
+                logger.warning("mlflow not installed, Mlflow tracing disabled")
+                self.enabled = False
+
+    def start_span(
+        self,
+        name: str,
+        span_type: str,
+        metadata: dict[str, Any] | None = None,
+        parent_id: str | None = None,
+    ) -> str:
+        if not self.enabled or not self._client:
+            return ""
+
+        try:
+            span = self._client.start_span(name=name)
+            span.set_tag("span_type", span_type)
+            if metadata:
+                for k, v in metadata.items():
+                    span.set_tag(k, str(v))
+            span_id = f"mlf_{name}_{span.span_id}"
+            logger.debug(f"Mlflow span started: {span_id}")
+            return span_id
+        except Exception as exc:
+            logger.warning(f"Mlflow start_span failed: {exc}")
+            return ""
+
+    def end_span(
+        self,
+        span_id: str,
+        status: str = "completed",
+        metadata: dict[str, Any] | None = None,
+        error: str | None = None,
+    ) -> None:
+        if not self.enabled or not self._client:
+            return
+
+        try:
+            # Mlflow tracks the active span internally; end it via the
+            # mlflow.tracing context manager (per the mlflow 3.x API).
+            self._client.end_span(status=status)
+        except Exception as exc:
+            logger.warning(f"Mlflow end_span failed: {exc}")
+
+    def log_event(
+        self,
+        span_id: str,
+        event_name: str,
+        data: dict[str, Any] | None = None,
+    ) -> None:
+        if not self.enabled:
+            return
+
+        try:
+            self._client.log_metric(
+                run_id=span_id,
+                key=f"event.{event_name}",
+                value=1.0,
+            )
+            logger.debug(f"Mlflow event: {event_name} in {span_id}")
+        except Exception as exc:
+            logger.warning(f"Mlflow log_event failed: {exc}")
+
+
 class UnifiedTracer:
     """
     Unified tracer for sruth agents and workflows.
@@ -296,8 +431,16 @@ class UnifiedTracer:
         datadog_enabled: bool = False,
         langfuse_enabled: bool = True,
         logfire_enabled: bool = True,
+        mlflow_enabled: bool = True,
     ):
-        """Initialize with selected backends."""
+        """Initialize with selected backends.
+
+        Args:
+            datadog_enabled: Enable Datadog LLMObs backend (Wave 0).
+            langfuse_enabled: Enable Langfuse backend (Wave 0).
+            logfire_enabled: Enable Logfire backend (Wave 0).
+            mlflow_enabled: Enable MLflow backend (Wave 7 — NEW).
+        """
         self.backends: list[TracingBackend] = []
 
         if datadog_enabled:
@@ -306,6 +449,8 @@ class UnifiedTracer:
             self.backends.append(LangfuseBackend())
         if logfire_enabled:
             self.backends.append(LogfireBackend())
+        if mlflow_enabled:
+            self.backends.append(MlflowBackend())
 
         self._active_spans: dict[str, list[str]] = {}
 
@@ -330,12 +475,24 @@ class UnifiedTracer:
         Yields:
             TraceSpan object for adding metadata during execution
         """
+        # Wave 7: apply OpenTelemetry semantic conventions based on
+        # the span_type (db → db.system:duckdb; llm → gen_ai.system:baml;
+        # tool/workflow that touches s3 → object_store.system:s3).
+        otel_kind_map = {
+            "db": "db",
+            "llm": "gen_ai",
+            "tool": "object_store",  # tools often touch S3 for documents
+        }
+        otel_kind = otel_kind_map.get(span_type)
+
         span = TraceSpan(name=name, span_type=span_type, metadata=metadata or {})
+        if otel_kind is not None:
+            apply_otel_semantic_conventions(span, otel_kind)
         span_ids = []
 
         try:
             for backend in self.backends:
-                span_id = backend.start_span(name, span_type, metadata)
+                span_id = backend.start_span(name, span_type, span.metadata)
                 if span_id:
                     span_ids.append((backend, span_id))
 

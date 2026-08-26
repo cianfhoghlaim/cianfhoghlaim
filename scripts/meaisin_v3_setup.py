@@ -13,6 +13,7 @@ Steps:
 6. Validate the 4 active meaisinfhoghlaim openspec changes
 7. Run `mise run lint:skills` for skill metadata validation
 """
+
 from __future__ import annotations
 
 import logging
@@ -49,7 +50,9 @@ def _step_cuda_check() -> bool:
     try:
         result = subprocess.run(
             ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
-            capture_output=True, text=True, timeout=10
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
         if result.returncode == 0:
             logger.info("CUDA GPU available: %s", result.stdout.strip())
@@ -70,7 +73,9 @@ def _step_registry_audit() -> bool:
     try:
         result = subprocess.run(
             ["mise", "run", "cic:meaisin:registry-audit"],
-            capture_output=True, text=True, timeout=60,
+            capture_output=True,
+            text=True,
+            timeout=60,
         )
         if result.returncode != 0:
             logger.error("Registry audit failed: %s", result.stderr[-1000:])
@@ -88,10 +93,14 @@ def _step_hf_watchdog() -> bool:
     try:
         result = subprocess.run(
             ["mise", "run", "cic:meaisin:hf-watchdog"],
-            capture_output=True, text=True, timeout=60,
+            capture_output=True,
+            text=True,
+            timeout=60,
         )
         if result.returncode != 0:
-            logger.warning("HF watchdog failed: %s — model proxy may not be available", result.stderr[-1000:])
+            logger.warning(
+                "HF watchdog failed: %s — model proxy may not be available", result.stderr[-1000:]
+            )
             logger.warning("Continuing anyway — meaisinfhoghlaim can run with local models")
             return True
         logger.info("HF watchdog succeeded.")
@@ -107,7 +116,9 @@ def _step_ocr_test() -> bool:
     try:
         result = subprocess.run(
             ["mise", "run", "cic:ocr:test"],
-            capture_output=True, text=True, timeout=120,
+            capture_output=True,
+            text=True,
+            timeout=120,
         )
         if result.returncode != 0:
             logger.error("OCR evaluation harness failed: %s", result.stderr[-1000:])
@@ -132,7 +143,9 @@ def _step_validate_openspec() -> bool:
         try:
             result = subprocess.run(
                 ["openspec", "validate", change, "--strict"],
-                capture_output=True, text=True, timeout=60,
+                capture_output=True,
+                text=True,
+                timeout=60,
             )
             if result.returncode != 0:
                 logger.error("openspec validate %s failed: %s", change, result.stderr[-500:])
@@ -150,7 +163,9 @@ def _step_lint_skills() -> bool:
     try:
         result = subprocess.run(
             ["mise", "run", "lint:skills"],
-            capture_output=True, text=True, timeout=60,
+            capture_output=True,
+            text=True,
+            timeout=60,
         )
         if result.returncode != 0:
             logger.error("lint:skills failed: %s", result.stderr[-1000:])
@@ -191,7 +206,9 @@ def main() -> int:
     logger.info("  - Run `mise run cic:ocr:test` to verify the OCR evaluation harness")
     logger.info("  - Run `mise run cic:meaisin:registry-audit` to verify the 24-model registry")
     logger.info("  - Run `mise run cic:meaisin:hf-watchdog` to verify the HF watchdog")
-    logger.info("  - Browse the 24 OCR/VLM models in the MotherDuck Dive `meaisin_ocr_registry_dive`")
+    logger.info(
+        "  - Browse the 24 OCR/VLM models in the MotherDuck Dive `meaisin_ocr_registry_dive`"
+    )
     logger.info("=" * 60)
     return 0
 

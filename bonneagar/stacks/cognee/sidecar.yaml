@@ -3,8 +3,6 @@
 services:
   locket:
     image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
-    environment:
-      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
     restart: unless-stopped
     container_name: cianfhoghlaim-cognee-locket
     user: "65532"
@@ -28,6 +26,7 @@ services:
         tmpfs:
           mode: 0700
     environment:
+      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
       INFISICAL_URL: ${INFISICAL_URL:-https://infisical.cianfhoghlaim.ie}
       INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
       INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}

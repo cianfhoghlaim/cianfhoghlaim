@@ -121,14 +121,8 @@ Return ONLY valid JSON, no markdown code blocks, no other text.
             user_id=self._user_id, session_id=session.id, new_message=content
         ):
             if event.is_final_response():
-                if (
-                    event.content
-                    and event.content.parts
-                    and event.content.parts[0].text
-                ):
-                    response_text = "\n".join(
-                        [p.text for p in event.content.parts if p.text]
-                    )
+                if event.content and event.content.parts and event.content.parts[0].text:
+                    response_text = "\n".join([p.text for p in event.content.parts if p.text])
                 break
 
         content_str = response_text.strip()

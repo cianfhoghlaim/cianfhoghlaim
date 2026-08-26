@@ -9,6 +9,7 @@ at `agents/meaisinfhoghlaim/registry.py`.
 Usage:
     uv run python scripts/meaisin_ocr_htr_tests/agent_translation_extract.py
 """
+
 from __future__ import annotations
 
 import logging
@@ -24,6 +25,7 @@ def _run_agent() -> bool:
     logger.info("Running translation agent...")
     try:
         from agents.meaisinfhoghlaim.registry import AGENTS
+
         agent = AGENTS.get("translation")
         if agent is None:
             logger.warning("translation not available; skipping")
@@ -41,9 +43,16 @@ def _run_orchestrator() -> bool:
     logger.info("Running orchestrator agent...")
     try:
         result = subprocess.run(
-            ["uv", "run", "python", "-c",
-             "from agents.meaisinfhoghlaim.registry import AGENTS; print(len(AGENTS))"],
-            capture_output=True, text=True, timeout=30,
+            [
+                "uv",
+                "run",
+                "python",
+                "-c",
+                "from agents.meaisinfhoghlaim.registry import AGENTS; print(len(AGENTS))",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
         )
         if result.returncode != 0:
             logger.warning("Orchestrator check failed: %s", result.stderr[-1000:])
@@ -59,7 +68,9 @@ def _run_evaluation() -> bool:
     try:
         result = subprocess.run(
             ["mise", "run", "cic:ocr:eval"],
-            capture_output=True, text=True, timeout=120,
+            capture_output=True,
+            text=True,
+            timeout=120,
         )
         if result.returncode != 0:
             logger.warning("RAGAS evaluation failed: %s", result.stderr[-1000:])

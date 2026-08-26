@@ -53,45 +53,45 @@ recommendations.**
 
 | File path | App name | Embedder model | Target table |
 |:--|:--|:--|:--|
-| `cocoindex/british_isles/england/ocr_education_embedding.py` | `england_ocr_education_embedding` | inherits from `cocoindex._shared._lifespan.EMBEDDER` (= `BAAI/bge-m3`) | `lancedb.mount_table_target(LANCE_DB, "cianfhoghlaim.england.ocr.{subject}.{qualification_level}")` (L49) |
-| `cocoindex/biep_parity/england_gcse_apps.py` (factory for 129 Apps = 43 GCSE subjects × 3 boards AQA/OCR/Edexcel) | `england_gcse_<board>_<subject>` × 129 | shared (`EMBEDDER` from `_lifespan`) = BAAI/bge-m3 | `lancedb.mount_table_target(LANCE_DB, "cianhoghlaim.england.gcse.<board>.<subject>_gcse_chunks")` (per docstring L13-L19) |
-| `cocoindex/biep_parity/england_a_level_apps.py` (factory for 147 Apps = 49 A-Level × 3 boards) | `england_a_level_<board>_<subject>` × 147 | shared BAAI/bge-m3 | `lancedb.mount_table_target(LANCE_DB, "cianhoghlaim.england.a_level.<board>.<subject>_a_level_chunks")` |
-| `cocoindex/biep_parity/ireland_jc_apps.py` | (Ireland JC factory) | shared BAAI/bge-m3 | `lancedb.mount_table_target(LANCE_DB, "cianhoghlaim.ireland.jc.<subject>_jc_chunks")` (per L141-L145) |
-| `cocoindex/biep_parity/ireland_lc_*` (4 files: gaeilge / mathematics / computer_science + `_education_embedding.py`) | Ireland LC | shared BAAI/bge-m3 | `cianhoghlaim.ireland.lc.<subject>` |
-| `cocoindex/biep_parity/{en,wls,sct,ni,je,gg,im}_education_embedding.py` (7 jurisdictions) | per-jurisdiction App | shared BAAI/bge-m3 | `cianhoghlaim.<jurisdiction>.education_chunks` |
-| `cocoindex/media/ocr_aware_flow.py` | `ireland_syllabus_chunks` (legacy v0-style + references `OCR_VISION_REGISTRY` + `CLASSICAL_OCR_REGISTRY`) | documented BGE-M3 | `ireland_syllabus_chunks` (L31) |
-| `cocoindex/knowledge_graph/youtube_kg_embedding.py` | `youtube_kg_embedding_app` | `Annotated[list[float], "BAAI/bge-m3"]` (L101, L118, L134) — **hardcoded** | `cianfhoghlaim.youtube.youtube_videos` (L79) |
-| `cocoindex/_shared/repo_embedding.py:124-125, 244` | `repo_embedding` | `SentenceTransformerEmbed(model="BAAI/bge-m3")` — **hardcoded** | (canonical cross-cutting infrastructure index) |
-| `cocoindex/corpus/unified_embedding.py:103` | `unified_embedding_app` | `os.getenv("UNIFIED_EMBED_MODEL", "BAAI/bge-m3")` — non-canonical env var | per-corpus |
-| `cocoindex/infrastructure/api_indexing.py:79` | `api_indexing_app` | `os.getenv("API_EMBED_MODEL", "BAAI/bge-m3")` — non-canonical | per-stack |
-| `cocoindex/infrastructure/filesystem_indexing.py:72` | `filesystem_indexing_app` | `os.getenv("FS_EMBED_MODEL", "BAAI/bge-m3")` — non-canonical | per-stack |
-| `cocoindex/infrastructure/codebase_indexing.py:93` | `codebase_app` | `os.getenv("CODEBASE_EMBED_MODEL", "BAAI/bge-m3")` — non-canonical | code |
-| `cocoindex/infrastructure/docs_skills_consolidation.py:84` | `docs_skills_app` | `os.getenv("DOCS_SKILLS_EMBED_MODEL", "BAAI/bge-m3")` — non-canonical | docs |
-| `cocoindex/infrastructure/storage_indexing.py:97, 17` | `storage_indexing_app` | `os.getenv("STORAGE_EMBED_MODEL", "BAAI/bge-m3")` — **non-canonical**; also refs `ATTACH 'md:oideachais'` (deprecated) | per-lake |
-| `cocoindex/infrastructure/config_indexing.py:88` | `config_indexing_app` | `os.getenv("CONFIG_EMBED_MODEL", "BAAI/bge-m3")` — non-canonical | config |
+| `cocoindex_flows/british_isles/england/ocr_education_embedding.py` | `england_ocr_education_embedding` | inherits from `cocoindex_flows._shared._lifespan.EMBEDDER` (= `BAAI/bge-m3`) | `lancedb.mount_table_target(LANCE_DB, "cianfhoghlaim.england.ocr.{subject}.{qualification_level}")` (L49) |
+| `cocoindex_flows/biep_parity/england_gcse_apps.py` (factory for 129 Apps = 43 GCSE subjects × 3 boards AQA/OCR/Edexcel) | `england_gcse_<board>_<subject>` × 129 | shared (`EMBEDDER` from `_lifespan`) = BAAI/bge-m3 | `lancedb.mount_table_target(LANCE_DB, "cianhoghlaim.england.gcse.<board>.<subject>_gcse_chunks")` (per docstring L13-L19) |
+| `cocoindex_flows/biep_parity/england_a_level_apps.py` (factory for 147 Apps = 49 A-Level × 3 boards) | `england_a_level_<board>_<subject>` × 147 | shared BAAI/bge-m3 | `lancedb.mount_table_target(LANCE_DB, "cianhoghlaim.england.a_level.<board>.<subject>_a_level_chunks")` |
+| `cocoindex_flows/biep_parity/ireland_jc_apps.py` | (Ireland JC factory) | shared BAAI/bge-m3 | `lancedb.mount_table_target(LANCE_DB, "cianhoghlaim.ireland.jc.<subject>_jc_chunks")` (per L141-L145) |
+| `cocoindex_flows/biep_parity/ireland_lc_*` (4 files: gaeilge / mathematics / computer_science + `_education_embedding.py`) | Ireland LC | shared BAAI/bge-m3 | `cianhoghlaim.ireland.lc.<subject>` |
+| `cocoindex_flows/biep_parity/{en,wls,sct,ni,je,gg,im}_education_embedding.py` (7 jurisdictions) | per-jurisdiction App | shared BAAI/bge-m3 | `cianhoghlaim.<jurisdiction>.education_chunks` |
+| `cocoindex_flows/media/ocr_aware_flow.py` | `ireland_syllabus_chunks` (legacy v0-style + references `OCR_VISION_REGISTRY` + `CLASSICAL_OCR_REGISTRY`) | documented BGE-M3 | `ireland_syllabus_chunks` (L31) |
+| `cocoindex_flows/knowledge_graph/youtube_kg_embedding.py` | `youtube_kg_embedding_app` | `Annotated[list[float], "BAAI/bge-m3"]` (L101, L118, L134) — **hardcoded** | `cianfhoghlaim.youtube.youtube_videos` (L79) |
+| `cocoindex_flows/_shared/repo_embedding.py:124-125, 244` | `repo_embedding` | `SentenceTransformerEmbed(model="BAAI/bge-m3")` — **hardcoded** | (canonical cross-cutting infrastructure index) |
+| `cocoindex_flows/corpus/unified_embedding.py:103` | `unified_embedding_app` | `os.getenv("UNIFIED_EMBED_MODEL", "BAAI/bge-m3")` — non-canonical env var | per-corpus |
+| `cocoindex_flows/infrastructure/api_indexing.py:79` | `api_indexing_app` | `os.getenv("API_EMBED_MODEL", "BAAI/bge-m3")` — non-canonical | per-stack |
+| `cocoindex_flows/infrastructure/filesystem_indexing.py:72` | `filesystem_indexing_app` | `os.getenv("FS_EMBED_MODEL", "BAAI/bge-m3")` — non-canonical | per-stack |
+| `cocoindex_flows/infrastructure/codebase_indexing.py:93` | `codebase_app` | `os.getenv("CODEBASE_EMBED_MODEL", "BAAI/bge-m3")` — non-canonical | code |
+| `cocoindex_flows/infrastructure/docs_skills_consolidation.py:84` | `docs_skills_app` | `os.getenv("DOCS_SKILLS_EMBED_MODEL", "BAAI/bge-m3")` — non-canonical | docs |
+| `cocoindex_flows/infrastructure/storage_indexing.py:97, 17` | `storage_indexing_app` | `os.getenv("STORAGE_EMBED_MODEL", "BAAI/bge-m3")` — **non-canonical**; also refs `ATTACH 'md:oideachais'` (deprecated) | per-lake |
+| `cocoindex_flows/infrastructure/config_indexing.py:88` | `config_indexing_app` | `os.getenv("CONFIG_EMBED_MODEL", "BAAI/bge-m3")` — non-canonical | config |
 
 ### 2.2 The shared `_lifespan.py` embedder
 
-`cocoindex/_shared/_lifespan.py:107` reads `os.getenv("CIANFHOGHLAIM_EMBED_MODEL", "BAAI/bge-m3")` — canonical. But **7+ CocoIndex Apps bypass the shared lifespan and hardcode their own embedder env knob** (see 2.1 table column 3 rows marked *non-canonical*).
+`cocoindex_flows/_shared/_lifespan.py:107` reads `os.getenv("CIANFHOGHLAIM_EMBED_MODEL", "BAAI/bge-m3")` — canonical. But **7+ CocoIndex Apps bypass the shared lifespan and hardcode their own embedder env knob** (see 2.1 table column 3 rows marked *non-canonical*).
 
 ### 2.3 Direct hardcoded `BAAI/bge-m3` strings (not reading env)
 
-- `cocoindex/british_isles/england/aqa_education_embedding.py:15` (docstring)
-- `cocoindex/british_isles/england/edexcel_education_embedding.py` (docstring)
-- `cocoindex/british_isles/ireland/ie_law_{court_rules,courts,judgements,legal_aid,piab}.py` (5 files, docstrings)
-- `cocoindex/british_isles/ireland/canuint_embedding.py`
-- `cocoindex/british_isles/ireland/ireland_legal_embedding.py:137` (runtime call to `SentenceTransformerEmbedder(EMBED_MODEL)` where `EMBED_MODEL` resolves from the shared `_lifespan`)
-- `cocoindex/celtic/{gaeilge_embedding,mythology_embedding}.py` — `cocoindex.functions.SentenceTransformerEmbed(model="BAAI/bge-m3")` (L37 of mythology)
-- `cocoindex/knowledge_graph/youtube_kg_embedding.py:101, 118, 134` (3x) — `Annotated[list[float], "BAAI/bge-m3"]`
-- `cocoindex/corpus/{government_circulars_embedding,university_embedding,leabharlann_flow,duchas_embedding,local_documents_embedding}.py` (docstrings)
-- `cocoindex/subjects/{junior_cycle_embedding,lc_subject_embedding}.py` (docstrings)
-- `cocoindex/american_nations/united_states/california_education_embedding.py:7`
-- `cocoindex/commonwealth/canada/provinces/quebec/montreal_education_embedding.py:6`
-- `cocoindex/commonwealth/nigeria/education_embedding.py:5`
-- `cocoindex/commonwealth_cross/education_embedding.py:7`
-- `cocoindex/european_nations_cross/{law_embedding,education_embedding,medicine_embedding}.py`
+- `cocoindex_flows/british_isles/england/aqa_education_embedding.py:15` (docstring)
+- `cocoindex_flows/british_isles/england/edexcel_education_embedding.py` (docstring)
+- `cocoindex_flows/british_isles/ireland/ie_law_{court_rules,courts,judgements,legal_aid,piab}.py` (5 files, docstrings)
+- `cocoindex_flows/british_isles/ireland/canuint_embedding.py`
+- `cocoindex_flows/british_isles/ireland/ireland_legal_embedding.py:137` (runtime call to `SentenceTransformerEmbedder(EMBED_MODEL)` where `EMBED_MODEL` resolves from the shared `_lifespan`)
+- `cocoindex_flows/celtic/{gaeilge_embedding,mythology_embedding}.py` — `cocoindex.functions.SentenceTransformerEmbed(model="BAAI/bge-m3")` (L37 of mythology)
+- `cocoindex_flows/knowledge_graph/youtube_kg_embedding.py:101, 118, 134` (3x) — `Annotated[list[float], "BAAI/bge-m3"]`
+- `cocoindex_flows/corpus/{government_circulars_embedding,university_embedding,leabharlann_flow,duchas_embedding,local_documents_embedding}.py` (docstrings)
+- `cocoindex_flows/subjects/{junior_cycle_embedding,lc_subject_embedding}.py` (docstrings)
+- `cocoindex_flows/american_nations/united_states/california_education_embedding.py:7`
+- `cocoindex_flows/commonwealth/canada/provinces/quebec/montreal_education_embedding.py:6`
+- `cocoindex_flows/commonwealth/nigeria/education_embedding.py:5`
+- `cocoindex_flows/commonwealth_cross/education_embedding.py:7`
+- `cocoindex_flows/european_nations_cross/{law_embedding,education_embedding,medicine_embedding}.py`
 
-`cocoindex/knowledge_graph/youtube_kg_embedding.py:393` does `from cianfhoghlaim.meaisinfhoghlaim.ocr.models.registry import ...` — uses the **legacy** (deprecated) `meaisinfhoghlaim.ocr.models.registry` shim, not `meaisinfhoghlaim.models.registry`.
+`cocoindex_flows/knowledge_graph/youtube_kg_embedding.py:393` does `from cianfhoghlaim.meaisinfhoghlaim.ocr.models.registry import ...` — uses the **legacy** (deprecated) `meaisinfhoghlaim.ocr.models.registry` shim, not `meaisinfhoghlaim.models.registry`.
 
 ---
 
@@ -294,14 +294,14 @@ All are in the canonical registry.
 |:--|:--|:--|:--|:--|
 | `deepseek-ocr-2` | `dlt_sources/filesystem/leaving_cert_source.py` docstring L25-31 (select_ocr_backend reference); `dlt_sources/filesystem/leaving_cert_source.py:62` regex map default fallback | `baml_src/clients_llama_swap.baml` docstring L51 (transformers-only, no llama-swap) | n/a | `ocr_model_deepseek_ocr_2_*` (3 assets + 3 checks) |
 | `docling-serve` | `dlt_sources/filesystem/leaving_cert_source.py:64` (not in `LC_PDF_KIND_REGISTRY`; routed via fallback) | `baml_src/clients_ocr_ensemble.baml:22` named `Docling` client (Path 1 ensemble) | n/a | `ocr_model_docling_serve_*` |
-| `dots-ocr` | `dlt_sources/filesystem/leaving_cert_source.py:75` (not directly, but via CLASSICAL_OCR stack `dots-ocr`) | n/a (no BAML function) | `cocoindex/corpus/duchas_embedding.py:19` (referenced in docstring) | `ocr_model_dots_ocr_*` |
+| `dots-ocr` | `dlt_sources/filesystem/leaving_cert_source.py:75` (not directly, but via CLASSICAL_OCR stack `dots-ocr`) | n/a (no BAML function) | `cocoindex_flows/corpus/duchas_embedding.py:19` (referenced in docstring) | `ocr_model_dots_ocr_*` |
 | `gemma-3-4b` | `dlt_sources/filesystem/leaving_cert_source.py` not in L62-L83 map; routed via `select_ocr_backend()` | `baml_src/clients_ocr_ensemble.baml` docstring + Path 4 spec | `orchestration/defs/3_model_lifecycle/federated_ocr/defs.yaml` uses `model_name: gemma-3-4b` (L11) | `ocr_model_gemma_3_4b_*` |
 | `glm-4.6v-flash` | `dlt_sources/filesystem/leaving_cert_source.py:83` (`GAEILGE_MODEL_KEY`) | n/a | n/a | `ocr_model_glm_4_6v_flash_*` |
 | `internvl3-8b` | `dlt_sources/filesystem/leaving_cert_source.py` not in L62-L83 map | n/a | n/a | `ocr_model_internvl3_8b_*` |
 | `llama-3.2-vision-11b` | `dlt_sources/filesystem/leaving_cert_source.py` not in L62-L83 map | n/a | n/a | `ocr_model_llama_3_2_vision_11b_*` |
 | `molmo2-4b` | `dlt_sources/filesystem/leaving_cert_source.py` not in L62-L83 map | n/a | n/a | `ocr_model_molmo2_4b_*` |
-| `molmo2-8b` | `dlt_sources/filesystem/leaving_cert_source.py:75` (marking-scheme regex) | n/a (transformers-only per `clients_llama_swap.baml` docstring L48) | `cocoindex/knowledge_graph/youtube_kg_embedding.py:201, 388, 406` (per-frame diagram pointing) | `ocr_model_molmo2_8b_*` |
-| `olmocr-2-7b-1025` | `dlt_sources/filesystem/leaving_cert_source.py` not in L62-L83 map | n/a | n/a (referenced in `cocoindex/media/ocr_aware_flow.py:11` docstring) | `ocr_model_olmocr_2_7b_1025_*` |
+| `molmo2-8b` | `dlt_sources/filesystem/leaving_cert_source.py:75` (marking-scheme regex) | n/a (transformers-only per `clients_llama_swap.baml` docstring L48) | `cocoindex_flows/knowledge_graph/youtube_kg_embedding.py:201, 388, 406` (per-frame diagram pointing) | `ocr_model_molmo2_8b_*` |
+| `olmocr-2-7b-1025` | `dlt_sources/filesystem/leaving_cert_source.py` not in L62-L83 map | n/a | n/a (referenced in `cocoindex_flows/media/ocr_aware_flow.py:11` docstring) | `ocr_model_olmocr_2_7b_1025_*` |
 | `paddleocr-vl-1.6` | `dlt_sources/filesystem/leaving_cert_source.py` not in L62-L83 map | n/a | n/a | `ocr_model_paddleocr_vl_1_6_*` |
 | `qwen3-vl-30b-a3b` | `dlt_sources/filesystem/leaving_cert_source.py` not in L62-L83 map | n/a | n/a | `ocr_model_qwen3_vl_30b_a3b_*` |
 | `qwen3-vl-4b` | `dlt_sources/filesystem/leaving_cert_source.py` not in L62-L83 map | n/a | n/a | `ocr_model_qwen3_vl_4b_*` |

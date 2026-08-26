@@ -31,38 +31,70 @@ def main() -> int:
     """Run the 5-phase M9 pipeline. Exit 0 iff all 3 asset checks pass."""
     # Phase A: Ingestion
     logger.info("=== M9 Phase A: Ingestion (120 Guernsey cohorts) ===")
-    if not run([
-        "uv", "run", "dagster", "asset", "materialize",
-        "--select", "guernsey_documents_ingested",
-        "-m", "orchestration.definitions",
-    ]):
+    if not run(
+        [
+            "uv",
+            "run",
+            "dagster",
+            "asset",
+            "materialize",
+            "--select",
+            "guernsey_documents_ingested",
+            "-m",
+            "orchestration.definitions",
+        ]
+    ):
         return 1
 
     # Phase B: Extraction
     logger.info("=== M9 Phase B: Extraction (4-path OCR + RAGAS) ===")
-    if not run([
-        "uv", "run", "dagster", "asset", "materialize",
-        "--select", "guernsey_extractions",
-        "-m", "orchestration.definitions",
-    ]):
+    if not run(
+        [
+            "uv",
+            "run",
+            "dagster",
+            "asset",
+            "materialize",
+            "--select",
+            "guernsey_extractions",
+            "-m",
+            "orchestration.definitions",
+        ]
+    ):
         return 1
 
     # Phase C: Embedding
     logger.info("=== M9 Phase C: Embedding (CocoIndex v1 Apps) ===")
-    if not run([
-        "uv", "run", "dagster", "asset", "materialize",
-        "--select", "guernsey_embeddings",
-        "-m", "orchestration.definitions",
-    ]):
+    if not run(
+        [
+            "uv",
+            "run",
+            "dagster",
+            "asset",
+            "materialize",
+            "--select",
+            "guernsey_embeddings",
+            "-m",
+            "orchestration.definitions",
+        ]
+    ):
         return 1
 
     # Asset checks
     logger.info("=== M9 Asset Checks ===")
-    if not run([
-        "uv", "run", "dagster", "asset", "check",
-        "--select", "guernsey_documents_ingested_check,guernsey_extractions_ragas_check,guernsey_lance_chunks_check",
-        "-m", "orchestration.definitions",
-    ]):
+    if not run(
+        [
+            "uv",
+            "run",
+            "dagster",
+            "asset",
+            "check",
+            "--select",
+            "guernsey_documents_ingested_check,guernsey_extractions_ragas_check,guernsey_lance_chunks_check",
+            "-m",
+            "orchestration.definitions",
+        ]
+    ):
         return 1
 
     logger.info("M9 complete. All 3 asset checks pass; 120 Guernsey cohorts materialised.")

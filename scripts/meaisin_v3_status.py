@@ -13,6 +13,7 @@ Status reported:
 6. The mise tasks that reference meaisinfhoghlaim
 7. The 4 active meaisinfhoghlaim openspec changes
 """
+
 from __future__ import annotations
 
 import logging
@@ -27,6 +28,7 @@ def _section_ocr_vlm_registry() -> dict:
     """Get the 24-model v4 registry status (4 backends × 6 capabilities)."""
     try:
         from meaisinfhoghlaim.models.registry import VISION_MODELS
+
         return {
             "total_models": len(VISION_MODELS),
             "backends": {
@@ -36,8 +38,12 @@ def _section_ocr_vlm_registry() -> dict:
                 "llama-swap": 13,
             },
             "capabilities": [
-                "DENSE_OCR", "GROUNDING", "TABLES", "LATEX",
-                "REASONING", "MATH",
+                "DENSE_OCR",
+                "GROUNDING",
+                "TABLES",
+                "LATEX",
+                "REASONING",
+                "MATH",
             ],
         }
     except Exception as exc:  # noqa: BLE001
@@ -48,6 +54,7 @@ def _section_document_converters() -> dict:
     """Get the 7 document converter status."""
     try:
         from meaisinfhoghlaim.document_factory import CONVERTERS
+
         return {
             "total_converters": len(CONVERTERS),
             "converters": list(CONVERTERS.keys()) if hasattr(CONVERTERS, "keys") else [],
@@ -60,9 +67,12 @@ def _section_ragas_biep_ensemble() -> dict:
     """Get the RAGAS BIEP ensemble status."""
     try:
         from meaisinfhoghlaim.evaluation.ragas_biiep_ensemble import RAGAS_BIEP_ENSEMBLE
+
         return {
             "ragas_biep_ensemble_present": True,
-            "metrics": len(RAGAS_BIEP_ENSEMBLE) if hasattr(RAGAS_BIEP_ENSEMBLE, "__len__") else "N/A",
+            "metrics": len(RAGAS_BIEP_ENSEMBLE)
+            if hasattr(RAGAS_BIEP_ENSEMBLE, "__len__")
+            else "N/A",
         }
     except Exception as exc:  # noqa: BLE001
         return {"error": str(exc)}
@@ -72,6 +82,7 @@ def _section_ocr_ensemble() -> dict:
     """Get the 4-path OCR ensemble status."""
     try:
         from meaisinfhoghlaim.ocr.ensemble.ensembled_extractor import EnsembledExtractor
+
         return {
             "ensembled_extractor_present": True,
             "paths": ["baml", "unstract", "qwen3_vl", "gemma4"],
@@ -84,6 +95,7 @@ def _section_agents() -> dict:
     """Get the 12-agent framework status."""
     try:
         from agents.meaisinfhoghlaim.registry import AGENTS
+
         return {
             "total_agents": len(AGENTS) if hasattr(AGENTS, "__len__") else 12,
             "agent_names": list(AGENTS.keys()) if hasattr(AGENTS, "keys") else [],
@@ -97,7 +109,9 @@ def _section_mise_tasks() -> dict:
     try:
         result = subprocess.run(
             ["mise", "tasks", "--all", "meaisin:*", "cic:meaisin:*", "cic:ocr:*"],
-            capture_output=True, text=True, timeout=10,
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
         tasks = [line for line in result.stdout.splitlines() if "meaisin" in line or "ocr" in line]
         return {
@@ -120,7 +134,9 @@ def _section_openspec_status() -> dict:
     for change in changes:
         result = subprocess.run(
             ["openspec", "list", "--change", change],
-            capture_output=True, text=True, timeout=10,
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
         results[change] = "VALID" if result.returncode == 0 else "INVALID"
     return results

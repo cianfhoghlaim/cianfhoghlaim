@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Sweep ie -> ireland within the dlt/ tree itself (for files that import from the old ie/ path)."""
+
 from __future__ import annotations
 import re
 from pathlib import Path

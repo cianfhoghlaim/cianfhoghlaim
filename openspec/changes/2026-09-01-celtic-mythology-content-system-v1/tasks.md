@@ -14,8 +14,8 @@
 - [ ] T1.5 — Verify `mise run lint:registry` passes
 
 ## Stage 2 — CocoIndex v1 embedding App
-- [ ] T2.1 — Create `cocoindex/biep_parity/mythology_embedding.py` (R1-R4)
-- [ ] T2.2 — Create `cocoindex/biep_parity/irish_history_embedding.py` (R1-R4)
+- [ ] T2.1 — Create `cocoindex_flows/biep_parity/mythology_embedding.py` (R1-R4)
+- [ ] T2.2 — Create `cocoindex_flows/biep_parity/irish_history_embedding.py` (R1-R4)
 - [ ] T2.3 — Run `mise run biep:v3:cocoindex-build`
 
 ## Stage 3 — Dagster asset layer

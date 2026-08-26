@@ -28,7 +28,14 @@ async def main_async() -> int:
 
     agent_files = sorted(agents_dir.rglob("*.py"))
     total = len(agent_files)
-    logger.info(f"Ingesting {total} agent files -> dataset 'agent_definitions'")
+    # Per the 2026-08-24-dlt-sources-to-multi-repo-scaffold-v1 change Phase 0.8:
+    # the canonical cluster name is `agents` (per the v2 plan §C.8). We also
+    # write to the legacy `agent_definitions` cluster for backward compat
+    # with the 2026-08-15-agent-definitions-sync-loop-v1 sync chain.
+    datasets = ("agents", "agent_definitions")
+    logger.info(
+        f"Ingesting {total} agent files -> datasets {list(datasets)}"
+    )
     ingested = 0
     for i, agent_py in enumerate(agent_files, 1):
         try:
@@ -39,7 +46,8 @@ async def main_async() -> int:
             logger.warning(f"  SKIP {agent_py.name}: {e}")
             continue
         try:
-            await cognee.add(content, dataset_name="agent_definitions")
+            for ds in datasets:
+                await cognee.add(content, dataset_name=ds)
             ingested += 1
         except Exception as e:
             logger.warning(f"  COGNIFY-FAIL {agent_py.name}: {e}")

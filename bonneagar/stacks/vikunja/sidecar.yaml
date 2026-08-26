@@ -1,8 +1,6 @@
 services:
   locket:
     image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
-    environment:
-      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
     container_name: vikunja-locket
     restart: unless-stopped
     user: "65532:65532"
@@ -11,6 +9,7 @@ services:
     cap_drop:
       - ALL
     environment:
+      - LOCKET_FALLBACK_FILE=/run/secrets/locket/env-fallback.env
       - INFISICAL_CLIENT_ID=${INFISICAL_CLIENT_ID}
       - INFISICAL_PROJECT_ID=${INFISICAL_PROJECT_ID:-f3cff583-b74b-4804-b9d3-db8b68885236}
     command:

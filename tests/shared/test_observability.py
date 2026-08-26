@@ -7,8 +7,9 @@ Tests:
 - Backend initialization
 """
 
+from unittest.mock import patch
+
 import pytest
-from unittest.mock import MagicMock, patch
 
 
 class TestTraceSpan:
@@ -37,8 +38,9 @@ class TestTraceSpan:
 
     def test_trace_span_duration(self):
         """Test TraceSpan duration_ms property."""
-        from sruth.shared.observability import TraceSpan
         from datetime import datetime, timedelta
+
+        from sruth.shared.observability import TraceSpan
 
         span = TraceSpan(name="test", span_type="workflow")
         span.start_time = datetime.now() - timedelta(milliseconds=100)

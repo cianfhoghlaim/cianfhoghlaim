@@ -42,9 +42,24 @@ from dlt_sources.common.destinations import motherduck as _motherduck_mod
 # (ducklake_oideachais, ducklake_educational, ducklake_crypteolas,
 # ducklake_tertiary, ducklake_uog, ducklake_cie) are aliased to
 # `ducklake_cianfhoghlaim` for backwards compatibility (Phase 5).
+#
+# Per the **2026-08-24-dlt-sources-to-multi-repo-scaffold-v1** §7.1
+# change, the 5 per-quadrant registries
+# (`ducklake_oideachais`, `ducklake_tuatha`, `ducklake_croilar`,
+# `ducklake_agents`, `ducklake_media`) are exposed as well — they
+# all wire through the canonical consolidated DuckLake namespace
+# but with per-quadrant `metadata_schema` so each quadrant owns
+# its own Postgres metadata schema inside the shared
+# `md:cianfhoghlaim` catalog.
 DESTINATIONS: dict[str, Any] = {
     # The canonical consolidated DuckLake namespace
     "ducklake_cianfhoghlaim": _ducklake_mod.get_ducklake_destination,
+    # Per-quadrant registries (§7.1)
+    "ducklake_oideachais_quadrant": _ducklake_mod.get_ducklake_destination_for_quadrant_oideachais,
+    "ducklake_tuatha_quadrant": _ducklake_mod.get_ducklake_destination_for_quadrant_tuatha,
+    "ducklake_croilar_quadrant": _ducklake_mod.get_ducklake_destination_for_quadrant_croilar,
+    "ducklake_agents_quadrant": _ducklake_mod.get_ducklake_destination_for_quadrant_agents,
+    "ducklake_media_quadrant": _ducklake_mod.get_ducklake_destination_for_quadrant_media,
     # Legacy aliases — all route to the consolidated namespace
     "ducklake_oideachais": _ducklake_mod.get_ducklake_destination,
     "ducklake_educational": _ducklake_mod.get_ducklake_destination,

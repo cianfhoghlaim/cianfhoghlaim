@@ -17,7 +17,7 @@ from dagster import (
     asset,
 )
 
-from dlt_sources.common.destinations_tuatha import create_pipeline
+from dlt_sources.common.destinations import named_destinations
 
 # Partitions for mythology traditions/cycles
 tradition_partitions = StaticPartitionsDefinition([
@@ -85,9 +85,9 @@ def celtic_characters(context: AssetExecutionContext) -> dict:
     tradition = context.partition_key
     config = load_mythology_config(tradition)
 
-    pipeline = create_pipeline(
-        project="tuath",
+    pipeline = dlt.pipeline(
         pipeline_name=f"mythology_{tradition}",
+        destination=named_destinations("ducklake_cianfhoghlaim"),
         dataset_name="mythology",
     )
 
@@ -140,9 +140,9 @@ def celtic_stories(context: AssetExecutionContext) -> dict:
     tradition = context.partition_key
     config = load_mythology_config(tradition)
 
-    pipeline = create_pipeline(
-        project="tuath",
+    pipeline = dlt.pipeline(
         pipeline_name=f"stories_{tradition}",
+        destination=named_destinations("ducklake_cianfhoghlaim"),
         dataset_name="mythology",
     )
 
@@ -188,9 +188,9 @@ def celtic_locations(context: AssetExecutionContext) -> dict:
     """Fetch mythological location data for game world."""
     tradition = context.partition_key
 
-    pipeline = create_pipeline(
-        project="tuath",
+    pipeline = dlt.pipeline(
         pipeline_name=f"locations_{tradition}",
+        destination=named_destinations("ducklake_cianfhoghlaim"),
         dataset_name="mythology",
     )
 

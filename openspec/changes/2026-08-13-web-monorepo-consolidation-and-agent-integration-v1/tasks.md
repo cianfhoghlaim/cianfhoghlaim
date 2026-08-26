@@ -96,7 +96,7 @@
 - [ ] L.2 NEW `agents/adk/image_generation_handlers.py`
 - [ ] L.3 NEW `agents/adk/image_generation_tools.py`
 - [ ] L.4 NEW `baml_src/clients_image_gen.baml`
-- [ ] L.5 NEW `cocoindex/media/image_generation_flow.py`
+- [ ] L.5 NEW `cocoindex_flows/media/image_generation_flow.py`
 - [ ] L.6 MODIFY `agents/agent_registry.py:AGENT_REGISTRY`
 - [ ] L.7 EXTEND `centralized-registry/SKILL.md §11`
 

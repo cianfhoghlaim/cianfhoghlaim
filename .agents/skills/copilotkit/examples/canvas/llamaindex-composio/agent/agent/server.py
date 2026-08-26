@@ -127,15 +127,11 @@ async def sync_canvas_to_sheets(request: CanvasToSheetSyncRequest):
         Sync result status
     """
     try:
-        sheet_name_info = (
-            f" (sheet: {request.sheet_name})" if request.sheet_name else ""
-        )
+        sheet_name_info = f" (sheet: {request.sheet_name})" if request.sheet_name else ""
         print(f"[SYNC] Syncing canvas to sheet: {request.sheet_id}{sheet_name_info}")
 
         # Call the sync function with sheet name
-        result = sync_canvas_to_sheet(
-            request.sheet_id, request.canvas_state, request.sheet_name
-        )
+        result = sync_canvas_to_sheet(request.sheet_id, request.canvas_state, request.sheet_name)
 
         if result.get("success"):
             return JSONResponse(

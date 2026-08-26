@@ -20,6 +20,7 @@ After running this, set:
     export BIEP_REGISTRY_SCHEMA="education"
     mise run biep:v3:registry:seed
 """
+
 from __future__ import annotations
 
 import os
@@ -51,10 +52,7 @@ def main() -> int:
         )
         return 1
 
-    pg_uri = (
-        f"dbname={PG_DB} host={PG_HOST} port={PG_PORT} "
-        f"user={PG_USER} password={PG_PASSWORD}"
-    )
+    pg_uri = f"dbname={PG_DB} host={PG_HOST} port={PG_PORT} user={PG_USER} password={PG_PASSWORD}"
     ducklake_uri = f"ducklake:postgres:{pg_uri}"
 
     # DuckLake's CREATE SECRET requires the ENDPOINT without `http://` prefix
@@ -106,9 +104,7 @@ def main() -> int:
     # Attach DuckLake (the existing catalog might have a different DATA_PATH,
     # so we set OVERRIDE_DATA_PATH=true to re-align it).
     try:
-        con.execute(
-            f"ATTACH '{ducklake_uri}' AS lakehouse (DATA_PATH 's3://{S3_BUCKET}/')"
-        )
+        con.execute(f"ATTACH '{ducklake_uri}' AS lakehouse (DATA_PATH 's3://{S3_BUCKET}/')")
     except duckdb.Error:
         con.execute(
             f"ATTACH '{ducklake_uri}' AS lakehouse (DATA_PATH 's3://{S3_BUCKET}/', OVERRIDE_DATA_PATH true)"

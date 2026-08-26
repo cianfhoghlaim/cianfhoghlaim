@@ -13,6 +13,7 @@ Usage:
     uv run python scripts/sync/spec_agents.py --dry-run    # print what would be emitted, no writes
     uv run python scripts/sync/spec_agents.py --force      # emit even if AGENTS.md is newer
 """
+
 from __future__ import annotations
 
 import argparse
@@ -85,20 +86,70 @@ def infer_mise_tasks(spec_name: str) -> tuple[str, str, str, str]:
     """
     # Canonical mapping (the 80% case)
     canonical = {
-        "agent-memory-systems": ("agents:smoke", "Run the 3 agent-fleet smoke tests", "lint:registry", "Audit MODEL_REGISTRY hardcoded strings"),
-        "agent-observability": ("lint:registry", "Audit MODEL_REGISTRY", "agents:smoke", "Run smoke tests"),
-        "british-isles-education-pipeline-v3": ("sync:paths", "Layer 1: pre-v7 path drift", "biep:v3:gate", "BIEP v3 milestone gate"),
-        "centralized-model-registry": ("lint:registry", "Audit MODEL_REGISTRY", "models:list", "List all 52 MODEL_REGISTRY entries"),
-        "centralized-schema-registry": ("schema:generate", "Regenerate Zod + TanStack DB schemas", "schema:validate", "CI drift gate for generated Zod schemas"),
-        "deployment-control-panel": ("notebook:control-panel", "Open the 5-tab deployment control panel", "models:list", "List all MODEL_REGISTRY entries"),
-        "indexing-and-cognition": ("ccc:index", "Rebuild the CC semantic index", "ccc:v1:search", "Search the codebase_chunks LanceDB table"),
-        "knowledge-sync-loop": ("sync:all", "Run all 7 sync layers", "lint:drift-docs", "Validate every AGENTS.md number claim"),
-        "infrastructure-stacks": ("cic:stack-doctor", "Validate all 89 stacks against the 6-file GOLD_STANDARD", "stack-doctor:strict", "CI gate + grammar check"),
+        "agent-memory-systems": (
+            "agents:smoke",
+            "Run the 3 agent-fleet smoke tests",
+            "lint:registry",
+            "Audit MODEL_REGISTRY hardcoded strings",
+        ),
+        "agent-observability": (
+            "lint:registry",
+            "Audit MODEL_REGISTRY",
+            "agents:smoke",
+            "Run smoke tests",
+        ),
+        "british-isles-education-pipeline-v3": (
+            "sync:paths",
+            "Layer 1: pre-v7 path drift",
+            "biep:v3:gate",
+            "BIEP v3 milestone gate",
+        ),
+        "centralized-model-registry": (
+            "lint:registry",
+            "Audit MODEL_REGISTRY",
+            "models:list",
+            "List all 52 MODEL_REGISTRY entries",
+        ),
+        "centralized-schema-registry": (
+            "schema:generate",
+            "Regenerate Zod + TanStack DB schemas",
+            "schema:validate",
+            "CI drift gate for generated Zod schemas",
+        ),
+        "deployment-control-panel": (
+            "notebook:control-panel",
+            "Open the 5-tab deployment control panel",
+            "models:list",
+            "List all MODEL_REGISTRY entries",
+        ),
+        "indexing-and-cognition": (
+            "ccc:index",
+            "Rebuild the CC semantic index",
+            "ccc:v1:search",
+            "Search the codebase_chunks LanceDB table",
+        ),
+        "knowledge-sync-loop": (
+            "sync:all",
+            "Run all 7 sync layers",
+            "lint:drift-docs",
+            "Validate every AGENTS.md number claim",
+        ),
+        "infrastructure-stacks": (
+            "cic:stack-doctor",
+            "Validate all 89 stacks against the 6-file GOLD_STANDARD",
+            "stack-doctor:strict",
+            "CI gate + grammar check",
+        ),
     }
     if spec_name in canonical:
         return canonical[spec_name]
     # Fallback: the 2 most universal sync tasks
-    return ("sync:all", "Run all 7 sync layers", "lint:drift-docs", "Validate every AGENTS.md number claim")
+    return (
+        "sync:all",
+        "Run all 7 sync layers",
+        "lint:drift-docs",
+        "Validate every AGENTS.md number claim",
+    )
 
 
 def render_template(spec_name: str, purpose: str) -> str:
@@ -107,8 +158,7 @@ def render_template(spec_name: str, purpose: str) -> str:
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     template = TEMPLATE.read_text()
     return (
-        template
-        .replace("{{ spec_name }}", spec_name)
+        template.replace("{{ spec_name }}", spec_name)
         .replace("{{ purpose_line }}", purpose)
         .replace("{{ mise_task_1 }}", task_1)
         .replace("{{ mise_task_1_desc }}", desc_1)
@@ -140,7 +190,9 @@ def should_emit(spec_md: Path, agents_md: Path, force: bool) -> bool:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate per-spec AGENTS.md files.")
-    parser.add_argument("--dry-run", action="store_true", help="Print what would be emitted, no writes")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Print what would be emitted, no writes"
+    )
     parser.add_argument("--force", action="store_true", help="Emit even if AGENTS.md is newer")
     args = parser.parse_args()
 

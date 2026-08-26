@@ -34,9 +34,45 @@
                             │
                             ▼
                   ┌──────────────────┐
-                  │  PostgreSQL DB   │
+                  │  SQLite DB       │  ← config/db/db.sqlite, NOT the
+                  │  (see note)      │    postgres:17 container alongside it
                   └──────────────────┘
 ```
+
+> **Database:** the stack declares a `postgres:17` service, but Pangolin runs
+> on SQLite — `POSTGRES_CONNECTION_STRING` is never injected, so it falls back
+> and the Postgres database stays empty. This determines which image family you
+> must use (`ee-*` = SQLite, `ee-postgresql-*` = Postgres); getting it wrong on
+> an upgrade points Pangolin at the empty database. Details in
+> [`stacks/pangolin/compose.yaml`](stacks/pangolin/compose.yaml).
+
+**The diagram above is only the public path.** Pangolin serves two kinds of
+resource over entirely separate routes:
+
+```
+PUBLIC (proxy resources)              PRIVATE (client resources)
+Internet → Gerbil :443                Olm client on an enrolled device
+        → Traefik (terminates TLS)            │ WireGuard
+        → TinyAuth / Pocket ID                ▼
+        → target                       Gerbil :51820/udp
+                                              │
+                                              ▼
+                                       Newt on the workload host
+                                       (terminates TLS itself)
+                                              │
+                                              ▼
+                                           target
+```
+
+A private resource still has a public DNS record, and visiting it without the
+client connected correctly returns Pangolin's "connect via the client" page.
+That is the public path declining to serve it — not a fault.
+
+Private resources are declared declaratively in
+[`pangolin/private-resources.blueprint.yaml`](pangolin/private-resources.blueprint.yaml)
+and applied with `pangolin/apply-blueprint.sh`. Full treatment:
+[`docs/private-resources-architecture.md`](docs/private-resources-architecture.md)
+and [`docs/deploy-private-resource-from-scratch.md`](docs/deploy-private-resource-from-scratch.md).
 
 The OLM TCP tunnel client (stack: `stacks/olm-arm1-oci/`)
 provides SSH + database access through the Pangolin mesh.

@@ -21,7 +21,7 @@
 - [ ] T3.4 — Run `mise run convex:dev`
 
 ## Stage 4 — CocoIndex v1 embedding App
-- [ ] T4.1 — Create `cocoindex/biep_parity/ogham_stones_embedding.py`
+- [ ] T4.1 — Create `cocoindex_flows/biep_parity/ogham_stones_embedding.py`
 - [ ] T4.2 — Run `mise run biep:v3:cocoindex-build`
 
 ## Stage 5 — Dagster asset layer

@@ -31,38 +31,70 @@ def main() -> int:
     """Run the 5-phase M8 pipeline. Exit 0 iff all 3 asset checks pass."""
     # Phase A: Ingestion
     logger.info("=== M8 Phase A: Ingestion (120 Jersey cohorts) ===")
-    if not run([
-        "uv", "run", "dagster", "asset", "materialize",
-        "--select", "jersey_documents_ingested",
-        "-m", "orchestration.definitions",
-    ]):
+    if not run(
+        [
+            "uv",
+            "run",
+            "dagster",
+            "asset",
+            "materialize",
+            "--select",
+            "jersey_documents_ingested",
+            "-m",
+            "orchestration.definitions",
+        ]
+    ):
         return 1
 
     # Phase B: Extraction
     logger.info("=== M8 Phase B: Extraction (4-path OCR + RAGAS) ===")
-    if not run([
-        "uv", "run", "dagster", "asset", "materialize",
-        "--select", "jersey_extractions",
-        "-m", "orchestration.definitions",
-    ]):
+    if not run(
+        [
+            "uv",
+            "run",
+            "dagster",
+            "asset",
+            "materialize",
+            "--select",
+            "jersey_extractions",
+            "-m",
+            "orchestration.definitions",
+        ]
+    ):
         return 1
 
     # Phase C: Embedding
     logger.info("=== M8 Phase C: Embedding (CocoIndex v1 Apps) ===")
-    if not run([
-        "uv", "run", "dagster", "asset", "materialize",
-        "--select", "jersey_embeddings",
-        "-m", "orchestration.definitions",
-    ]):
+    if not run(
+        [
+            "uv",
+            "run",
+            "dagster",
+            "asset",
+            "materialize",
+            "--select",
+            "jersey_embeddings",
+            "-m",
+            "orchestration.definitions",
+        ]
+    ):
         return 1
 
     # Asset checks
     logger.info("=== M8 Asset Checks ===")
-    if not run([
-        "uv", "run", "dagster", "asset", "check",
-        "--select", "jersey_documents_ingested_check,jersey_extractions_ragas_check,jersey_lance_chunks_check",
-        "-m", "orchestration.definitions",
-    ]):
+    if not run(
+        [
+            "uv",
+            "run",
+            "dagster",
+            "asset",
+            "check",
+            "--select",
+            "jersey_documents_ingested_check,jersey_extractions_ragas_check,jersey_lance_chunks_check",
+            "-m",
+            "orchestration.definitions",
+        ]
+    ):
         return 1
 
     logger.info("M8 complete. All 3 asset checks pass; 120 Jersey cohorts materialised.")

@@ -21,6 +21,21 @@ The per-stack deployment runbooks themselves live in
 | `bunchloch` | Primary Workloads | MacBook M4 Max, ~14 cores, 48 GB RAM, NVMe | 35 containers: lakehouse (Garage + Postgres + Lakekeeper + Lance NS), Langfuse, LiteLLM, llama-swap, Convex, browser stack, oideachais frontend + API + Dagster, komodo-core + komodo-periphery, Cognee, LanceDB, newt (Pangolin client) |
 | `arm1-oci` | Control Plane | Oracle Cloud London, 4 ARM OCPUs, 24 GB RAM, 200 GB | ~10 containers: Pangolin + Gerbil + Traefik + Pocket ID + TinyAuth + Middleware Manager + CrowdSec, Komodo Core, Infisical, Garage, Beszel, Dozzle, Qdrant, cal-diy (3 containers) |
 
+> **Host names are not Pangolin site names.** The machine called `bunchloch`
+> above is registered in Pangolin as the site named **`macbook`** (siteId 6).
+> There is *also* a site named `bunchloch` (siteId 8) — a dead registration
+> whose newt credentials exist only in Infisical and which has been offline
+> since 2026-07-27. Automation addresses sites by `niceId`, not by either name:
+>
+> ```bash
+> sqlite3 /opt/pangolin/config/db/db.sqlite \
+>   'select siteId, name, niceId, online from sites;'
+> ```
+>
+> Binding a resource to the plausible-but-dead site is silent — the resource
+> looks correct everywhere and simply never loads. See
+> [docs/private-resources-architecture.md](docs/private-resources-architecture.md).
+
 `arm1-oci` is the orchestrator (the operator runs the Komodo
 web UI at `komodo.cianfhoghlaim.ie` from the MacBook; the
 Oracle box's periphery agents connect outbound to the Core).

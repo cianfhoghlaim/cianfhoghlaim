@@ -7,8 +7,8 @@ Tests:
 - GraphClient interface compliance
 """
 
+
 import pytest
-from unittest.mock import MagicMock, patch
 
 
 class TestGraphDataclasses:
@@ -58,7 +58,7 @@ class TestGraphDataclasses:
 
     def test_graph_query_result(self):
         """Test GraphQueryResult creation."""
-        from sruth.shared.graph import GraphNode, GraphEdge, GraphQueryResult
+        from sruth.shared.graph import GraphEdge, GraphNode, GraphQueryResult
 
         node = GraphNode(id="1", labels=["Test"], properties={})
         edge = GraphEdge(id="e1", type="REL", source_id="1", target_id="2", properties={})
@@ -80,7 +80,7 @@ class TestGraphClientInterface:
 
     def test_memgraph_client_interface(self):
         """Test MemgraphClient implements GraphClient interface."""
-        from sruth.shared.graph import GraphClient, MemgraphClient
+        from sruth.shared.graph import MemgraphClient
 
         client = MemgraphClient()
 
@@ -97,7 +97,7 @@ class TestGraphClientInterface:
 
     def test_falkordb_client_interface(self):
         """Test FalkorDBClient implements GraphClient interface."""
-        from sruth.shared.graph import GraphClient, FalkorDBClient
+        from sruth.shared.graph import FalkorDBClient
 
         client = FalkorDBClient()
 
@@ -114,7 +114,7 @@ class TestGraphClientInterface:
 
     def test_neo4j_client_interface(self):
         """Test Neo4jClient implements GraphClient interface."""
-        from sruth.shared.graph import GraphClient, Neo4jClient
+        from sruth.shared.graph import Neo4jClient
 
         client = Neo4jClient()
 

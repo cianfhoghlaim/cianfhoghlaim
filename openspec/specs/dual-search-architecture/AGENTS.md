@@ -1,44 +1,38 @@
 # `dual-search-architecture` — Agent Routing
 
-> TBD - created by `2026-08-17-hygiene-drift-cleanup-v1` P4.3 (regenerate via `mise run sync:all`).
+> The dual-search workflow surface covers the CCC + Cognee + Firecrawl search orchestration across the Cianfhoghlaim monorepo. It defines 5 invariants: the CCC semantic code search, the Cognee knowledge...
 
 ## Routing
 
-Load this AGENTS.md when you need to work with the
-`dual-search-architecture` capability (the ccc + cognee + firecrawl_mcp
-triple-search workflow).
-
-For platform-wide context, load [`../../../AGENTS.md`](../../../AGENTS.md).
+Load this AGENTS.md when the parent spec (`./spec.md`) is in scope.
+Use it to find the most relevant mise tasks + skills + adjacent files
+without re-reading the full spec.
 
 ## Quick start
 
 ```bash
-bun run ccc:init     # first time only (creates .cocoindex_code/target_sqlite.db)
-bun run ccc:index    # rebuild the index after any major file move
-bun run ccc:search "Dagster asset partition definition"   # semantic search
-python -c "from agents.meaisinfhoghlaim.firecrawl_mcp import FirecrawlMCPClient; c = FirecrawlMCPClient(); print(c.search('Dagster 1.13 release notes', categories=['developer'], limit=3))"
+sync:all              # Run all 7 sync layers
+lint:drift-docs              # Validate every AGENTS.md number claim
 ```
 
 ## Key sources
 
 - `openspec/specs/dual-search-architecture/spec.md` — the canonical spec
-- `openspec/specs/indexing-and-cognition/spec.md` — the parent spec
+- `openspec/specs/repo-hygiene-agent-routing/spec.md` — the per-spec AGENTS.md convention
 
 ## Adjacent specs
 
-- `indexing-and-cognition` — the ccc + cognee + OpenCode agent/MCP registry
-- `centralized-registry` — the MODEL_REGISTRY + schema.py + deployment-choice.yaml triplet
+- `openspec/specs/repo-hygiene-agent-routing/spec.md` — the per-spec AGENTS.md convention
 
 ## DO NOT
 
-- TBD
+- Hand-edit this file (the generator will overwrite it). To customise,
+  edit `openspec/specs/dual-search-architecture/spec.md` and re-run
+  `uv run python scripts/sync/spec_agents.py`.
 
 ## Skill pointers
 
-| Skill | When to load |
-|:--|:--|
-| [`indexing-and-cognition`](../../../.agents/skills/INDEXING_AND_COGNITION.md) | ccc + cognee + OpenCode registry |
-| [`firecrawl`](../../../.agents/skills/firecrawl/SKILL.md) | Live web search via firecrawl_mcp |
-| [`ccc`](../../../.agents/skills/ccc/SKILL.md) | Semantic code search |
+- `ccc` — for semantic code search across the spec's implementation
+- `openspec` — for the spec change workflow
 
-<!-- generated: 2026-08-17 by 2026-08-17-hygiene-drift-cleanup-v1 P4.3 -->
+<!-- generated: 2026-08-25; do not hand-edit -->

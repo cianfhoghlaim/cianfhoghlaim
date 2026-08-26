@@ -1,0 +1,67 @@
+# source.yaml — Golden Sun / Golden Sun: The Lost Age (GBA) capture source.
+#
+# Per the tuatha skill: shippable=false invariant.
+# Frames come from the user's own save states + ROM. Color + sprite
+# description only — bias mode is "color_heavy" because the visual
+# identity of Golden Sun is its elemental palette (the four element
+# colors map directly to the Tuatha 4-element binding).
+
+source:
+  id: gba_golden_sun
+  kind: emulator
+  display_name: "Golden Sun / The Lost Age (Game Boy Advance, Camelot)"
+  upstream_owner: Camelot Software Planning / Nintendo
+  rights_holder: Nintendo
+
+shippable: false    # per the tuatha skill: never commit game frames
+
+legal_notes: |
+  Golden Sun is a copyrighted work owned by Nintendo (developed by
+  Camelot). This source extracts typed descriptions (Djinn name,
+  Psynergy name, element, color, sprite description) from frames
+  produced by the user's own ROM + save states via headless mGBA. The
+  raw frames never enter the repository; only ≤480px thumbs and the
+  BAML-extracted description survive. The player must own a copy of
+  the game; the source does not bundle any ROM.
+
+ingest:
+  raw_bucket: s3://cianfhoghlaim-tuatha-raw/gba
+  reader: tuatha_media_intel.capture.python.tuatha_capture.gba.gba_capture
+  cadence: on_demand
+  emulator: mgba               # requires mgba-py (Python bindings)
+  fallback: mgba-cli           # requires the mgba CLI in $PATH
+
+extraction:
+  flow: tuatha_gba_magic
+  baml_function: ExtractGbaMagic
+  vision_model: ${VISION_MODEL_GBA}    # routed via MODEL_REGISTRY ocr_vision:tier3_light
+  thumbnail_max_px: 480
+  bias_mode: color_heavy
+  fts_columns: [sprite_description]
+  vector_columns: [embedding]
+
+observability:
+  langfuse: true
+  mlflow_experiment: tuatha-media-intel
+  ragas_metrics: [anam_color_anchor]
+  asset_check: ragas_anam_color_anchor
+
+outputs:
+  lance_table: cianfhoghlaim.tuatha.gba.magic
+  columns:
+    - psynergy_name      # PK
+    - game
+    - room_id
+    - djinn_name
+    - element
+    - effect_text
+    - color_hex
+    - sprite_description # FTS
+    - {run_id, frame_index, captured_at}
+    - embedding          # 1024-d bge-m3
+    - thumb_blob         # ≤480px PNG
+
+related_specs:
+  - openspec/specs/cianfhoghlaim-educational-mmo/spec.md
+  - openspec/specs/british-isles-formative-assessment/spec.md
+  - openspec/specs/centralized-model-registry/spec.md

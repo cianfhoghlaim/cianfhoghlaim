@@ -4,6 +4,7 @@ Usage:
     uv run python scripts/run_biiep_ocr_ensemble.py --pdf <path> [--baml-function ExtractAistearFramework]
     uv run python scripts/run_biiep_ocr_ensemble.py --batch <dir>
 """
+
 from __future__ import annotations
 
 import argparse

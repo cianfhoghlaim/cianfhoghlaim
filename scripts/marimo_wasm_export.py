@@ -12,6 +12,7 @@ Usage:
     uv run python scripts/marimo_wasm_export.py
     uv run python scripts/marimo_wasm_export.py --notebooks-root notebooks/leaving_cert/03_leaving_cert
 """
+
 from __future__ import annotations
 
 import argparse
@@ -81,9 +82,9 @@ def export_notebook_to_wasm(notebook_path: Path, output_root: Path) -> dict[str,
     if shutil.which("marimo"):
         # Run marimo export wasm (marimo 0.13+)
         result = subprocess.run(
-            ["marimo", "export", "wasm", str(notebook_path),
-             "--output", str(output_dir / "wasm")],
-            capture_output=True, text=True,
+            ["marimo", "export", "wasm", str(notebook_path), "--output", str(output_dir / "wasm")],
+            capture_output=True,
+            text=True,
         )
         if result.returncode != 0:
             print(f"WARN: marimo export failed for {notebook_path.name}: {result.stderr[:200]}")
@@ -165,7 +166,9 @@ def main(argv: list[str] | None = None) -> int:
     }
     (out_root / "manifest.json").write_text(json.dumps(master_manifest, indent=2))
     print(f"\nExported {len(results)} notebooks to {out_root}")
-    print(f"  real={master_manifest['real_export_count']}  placeholder={master_manifest['placeholder_count']}")
+    print(
+        f"  real={master_manifest['real_export_count']}  placeholder={master_manifest['placeholder_count']}"
+    )
     return 0
 
 

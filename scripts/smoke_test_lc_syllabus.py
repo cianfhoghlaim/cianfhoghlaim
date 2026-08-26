@@ -11,6 +11,7 @@ import-time dependencies in the `ie/education/__init__.py` re-export shim.
 
 Run:  uv run python -m scripts.smoke_test_lc_syllabus
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -33,13 +34,22 @@ def _stub_dlt_sources() -> None:
 
     # Provide all the names that `__init__.py` imports
     for name in [
-        "ALL_JC_SUBJECTS", "ALL_LC_SUBJECTS", "ALL_LCA_SUBJECTS",
-        "junior_cycle_exams_source", "leaving_certificate_source",
-        "mathematics_exams_source", "science_subjects_exams_source",
-        "agentic_discovery_source", "deep_research_source",
-        "exam_pdf_download_source", "examinations_source",
-        "oide_source", "oide_all_subjects_source", "oide_gaeilge_source",
-        "oide_subject_source", "pdf_download_source",
+        "ALL_JC_SUBJECTS",
+        "ALL_LC_SUBJECTS",
+        "ALL_LCA_SUBJECTS",
+        "junior_cycle_exams_source",
+        "leaving_certificate_source",
+        "mathematics_exams_source",
+        "science_subjects_exams_source",
+        "agentic_discovery_source",
+        "deep_research_source",
+        "exam_pdf_download_source",
+        "examinations_source",
+        "oide_source",
+        "oide_all_subjects_source",
+        "oide_gaeilge_source",
+        "oide_subject_source",
+        "pdf_download_source",
         "sec_examinations_browser_source",
     ]:
         setattr(stub_ie_edu, name, (lambda *a, **kw: None) if name.endswith("source") else [])
@@ -60,9 +70,7 @@ _MODULE_PATH = (
     Path(__file__).parent.parent
     / "cianfhoghlaim/pipelines/ingest/ie/education/curriculumonline_syllabi.py"
 )
-spec = importlib.util.spec_from_file_location(
-    "curriculumonline_syllabi_smoke", _MODULE_PATH
-)
+spec = importlib.util.spec_from_file_location("curriculumonline_syllabi_smoke", _MODULE_PATH)
 mod = importlib.util.module_from_spec(spec)
 # Register in sys.modules so dataclass can find __dataclass_fields__
 sys.modules["curriculumonline_syllabi_smoke"] = mod
@@ -122,10 +130,13 @@ def _check_download() -> bool:
     target = Path("/tmp/lc_syllabus_smoke_test.pdf")
 
     import requests
+
     resp = requests.get(
         expected_url,
         timeout=30,
-        headers={"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"},
+        headers={
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+        },
     )
     resp.raise_for_status()
     pdf_bytes = resp.content

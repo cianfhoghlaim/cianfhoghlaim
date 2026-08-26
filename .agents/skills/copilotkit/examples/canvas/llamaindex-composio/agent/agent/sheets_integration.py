@@ -49,9 +49,7 @@ def get_composio_client():
         return None, None
 
 
-def get_sheet_data(
-    sheet_id: str, sheet_name: Optional[str] = None
-) -> Optional[Dict[str, Any]]:
+def get_sheet_data(sheet_id: str, sheet_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
     """
     Fetch sheet data using Composio's GOOGLESHEETS tools.
 
@@ -79,12 +77,8 @@ def get_sheet_data(
             return None
 
         sheet_info = result.get("data", {}).get("response_data", {})
-        print(
-            f"Got sheet info: {sheet_info.get('properties', {}).get('title', 'Unknown')}"
-        )
-        print(
-            f"Sheet info keys: {list(sheet_info.keys())}"
-        )  # Debug what fields are available
+        print(f"Got sheet info: {sheet_info.get('properties', {}).get('title', 'Unknown')}")
+        print(f"Sheet info keys: {list(sheet_info.keys())}")  # Debug what fields are available
 
         # Get available sheets
         sheets = sheet_info.get("sheets", [])
@@ -96,28 +90,18 @@ def get_sheet_data(
         if sheet_name:
             # Use specified sheet name
             selected_sheet = next(
-                (
-                    s
-                    for s in sheets
-                    if s.get("properties", {}).get("title") == sheet_name
-                ),
+                (s for s in sheets if s.get("properties", {}).get("title") == sheet_name),
                 None,
             )
             if not selected_sheet:
-                available_names = [
-                    s.get("properties", {}).get("title", "Untitled") for s in sheets
-                ]
-                print(
-                    f"Sheet '{sheet_name}' not found. Available sheets: {available_names}"
-                )
+                available_names = [s.get("properties", {}).get("title", "Untitled") for s in sheets]
+                print(f"Sheet '{sheet_name}' not found. Available sheets: {available_names}")
                 return None
             target_sheet_name = sheet_name
         else:
             # Default to first sheet if no specific sheet requested
             selected_sheet = sheets[0]
-            target_sheet_name = selected_sheet.get("properties", {}).get(
-                "title", "Sheet1"
-            )
+            target_sheet_name = selected_sheet.get("properties", {}).get("title", "Sheet1")
 
         # Get all data from selected sheet
         values_result = composio.tools.execute(
@@ -147,9 +131,7 @@ def get_sheet_data(
             "sheet_name": target_sheet_name,
             "rows": rows,
             "title": sheet_info.get("properties", {}).get("title", "Untitled"),
-            "available_sheets": [
-                s.get("properties", {}).get("title", "Untitled") for s in sheets
-            ],
+            "available_sheets": [s.get("properties", {}).get("title", "Untitled") for s in sheets],
         }
 
     except Exception as e:
@@ -188,9 +170,7 @@ def convert_sheet_to_canvas_items(
     items = []
 
     # Skip empty rows
-    valid_rows = [
-        row for row in rows if row and any(cell.strip() for cell in row if cell)
-    ]
+    valid_rows = [row for row in rows if row and any(cell.strip() for cell in row if cell)]
 
     if not valid_rows:
         return {
@@ -205,8 +185,7 @@ def convert_sheet_to_canvas_items(
     # Determine if first row is headers
     first_row = valid_rows[0]
     has_headers = len(first_row) > 1 and all(
-        isinstance(cell, str)
-        and not cell.strip().replace(".", "").replace("-", "").isdigit()
+        isinstance(cell, str) and not cell.strip().replace(".", "").replace("-", "").isdigit()
         for cell in first_row[:3]
         if cell
     )
@@ -325,9 +304,7 @@ def determine_item_type(row: List[str], headers: List[str]) -> str:
     return "entity"
 
 
-def create_item_data(
-    item_type: str, row: List[str], headers: List[str]
-) -> Dict[str, Any]:
+def create_item_data(item_type: str, row: List[str], headers: List[str]) -> Dict[str, Any]:
     """
     Create item data structure based on type and row content.
 
@@ -372,11 +349,7 @@ def create_item_data(
                 content_parts.append(f"{header}: {cell}" if header else cell)
 
         return {
-            "field1": "\n".join(content_parts)
-            if content_parts
-            else row[1]
-            if len(row) > 1
-            else "",
+            "field1": "\n".join(content_parts) if content_parts else row[1] if len(row) > 1 else "",
         }
 
     elif item_type == "chart":
@@ -385,9 +358,7 @@ def create_item_data(
 
         # Create metrics from numeric data
         for i, (header, cell) in enumerate(zip(headers, row)):
-            if cell and (
-                cell.replace(".", "").replace("-", "").isdigit() or is_percentage(cell)
-            ):
+            if cell and (cell.replace(".", "").replace("-", "").isdigit() or is_percentage(cell)):
                 value = parse_numeric_value(cell)
                 if value is not None:
                     metrics.append(
@@ -563,15 +534,11 @@ def sync_canvas_to_sheet(
             internal_sheet_id = 0  # Default fallback
             if sheet_info_result and sheet_info_result.get("successful"):
                 sheets = (
-                    sheet_info_result.get("data", {})
-                    .get("response_data", {})
-                    .get("sheets", [])
+                    sheet_info_result.get("data", {}).get("response_data", {}).get("sheets", [])
                 )
                 for sheet in sheets:
                     if sheet.get("properties", {}).get("title") == target_sheet_name:
-                        internal_sheet_id = sheet.get("properties", {}).get(
-                            "sheetId", 0
-                        )
+                        internal_sheet_id = sheet.get("properties", {}).get("sheetId", 0)
                         break
 
             print(f"Using internal sheet ID: {internal_sheet_id} for deletion")
@@ -623,9 +590,7 @@ def sync_canvas_to_sheet(
                 "rows_deleted": max(0, current_row_count - new_row_count),
             }
         else:
-            error_msg = (
-                result.get("error", "Unknown error") if result else "No response"
-            )
+            error_msg = result.get("error", "Unknown error") if result else "No response"
             return {
                 "success": False,
                 "error": f"Failed to sync to Google Sheets: {error_msg}",
@@ -660,19 +625,13 @@ def create_new_sheet(title: str = "Canvas Data") -> Dict[str, Any]:
 
         if result and result.get("successful"):
             sheet_data = result.get("data", {}).get("response_data", {})
-            sheet_id = sheet_data.get(
-                "spreadsheet_id", ""
-            )  # Changed from "spreadsheetId"
+            sheet_id = sheet_data.get("spreadsheet_id", "")  # Changed from "spreadsheetId"
             # Construct the sheet URL from the ID since it's not provided directly
             sheet_url = (
-                f"https://docs.google.com/spreadsheets/d/{sheet_id}/edit"
-                if sheet_id
-                else ""
+                f"https://docs.google.com/spreadsheets/d/{sheet_id}/edit" if sheet_id else ""
             )
 
-            print(
-                f"Successfully extracted sheet_id: {sheet_id}, sheet_url: {sheet_url}"
-            )
+            print(f"Successfully extracted sheet_id: {sheet_id}, sheet_url: {sheet_url}")
 
             return {
                 "success": True,
@@ -681,9 +640,7 @@ def create_new_sheet(title: str = "Canvas Data") -> Dict[str, Any]:
                 "title": title,
             }
         else:
-            error_msg = (
-                result.get("error", "Unknown error") if result else "No response"
-            )
+            error_msg = result.get("error", "Unknown error") if result else "No response"
             print(f"Sheet creation failed with result: {result}")
             return {"success": False, "error": f"Failed to create sheet: {error_msg}"}
 

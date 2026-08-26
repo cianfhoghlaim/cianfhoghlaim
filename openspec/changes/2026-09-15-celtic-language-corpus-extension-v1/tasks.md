@@ -26,7 +26,7 @@
 - [ ] T4.2 — Run `baml-cli generate`
 
 ## Stage 5 — CEFR CocoIndex + Dagster
-- [ ] T5.1 — Create `cocoindex/biep_parity/cefr_embedding.py`
+- [ ] T5.1 — Create `cocoindex_flows/biep_parity/cefr_embedding.py`
 - [ ] T5.2 — Create `orchestration/defs/2_materials/cefr_assets.py`
 - [ ] T5.3 — Run `mise run biep:v3:cefr`
 

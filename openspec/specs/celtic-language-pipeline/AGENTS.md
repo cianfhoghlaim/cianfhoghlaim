@@ -1,6 +1,6 @@
 # `celtic-language-pipeline` — Agent Routing
 
-> TBD - created by archiving change 2026-07-17-gaois-celtic-language-pipeline-v1. Update Purpose after archive.
+> The Celtic-language pipeline surface covers Irish + Welsh + Scottish + Manx + Cornish + Breton across the Cianfhoghlaim monorepo. It defines 9 invariants: the canonical Gaois + Celtic language source ...
 
 ## Routing
 
@@ -35,4 +35,4 @@ lint:drift-docs              # Validate every AGENTS.md number claim
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-29; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

@@ -7,8 +7,9 @@ Tests:
 - Performance constants
 """
 
+from unittest.mock import MagicMock
+
 import pytest
-from unittest.mock import MagicMock, patch
 
 
 class TestEmbeddingBatcher:
@@ -16,7 +17,7 @@ class TestEmbeddingBatcher:
 
     def test_batch_size_constants(self):
         """Test batch size constants are correct."""
-        from sruth.shared.embeddings import MIN_BATCH_SIZE, DEFAULT_BATCH_SIZE
+        from sruth.shared.embeddings import DEFAULT_BATCH_SIZE, MIN_BATCH_SIZE
 
         assert MIN_BATCH_SIZE == 100
         assert DEFAULT_BATCH_SIZE == 256
@@ -114,7 +115,7 @@ class TestEmbeddingService:
 
     def test_embedding_service_dimensions(self):
         """Test EmbeddingService reports correct dimensions."""
-        from sruth.shared.embeddings import EmbeddingService, EmbeddingModel, EmbeddingProvider
+        from sruth.shared.embeddings import EmbeddingService
 
         # Mock backend
         class MockBackend:
@@ -150,7 +151,7 @@ class TestEmbeddingService:
 
     def test_get_embedding_service_factory(self):
         """Test get_embedding_service factory function."""
-        from sruth.shared.embeddings import get_embedding_service, EmbeddingService
+        from sruth.shared.embeddings import EmbeddingService, get_embedding_service
 
         service = get_embedding_service(model="BAAI/bge-m3")
         assert isinstance(service, EmbeddingService)

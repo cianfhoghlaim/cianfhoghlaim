@@ -8,9 +8,9 @@ Tests:
 - InMemoryApprovalStore
 """
 
-import pytest
-import asyncio
 from datetime import datetime, timedelta
+
+import pytest
 
 
 class TestApprovalModels:
@@ -95,7 +95,7 @@ class TestApprovalModels:
 
     def test_approval_request_serialization(self):
         """Test request serialization to dict."""
-        from sruth.shared.hitl import ApprovalRequest, ApprovalContext
+        from sruth.shared.hitl import ApprovalContext, ApprovalRequest
 
         context = ApprovalContext(action="test", description="Test action")
         request = ApprovalRequest(context=context)
@@ -166,8 +166,8 @@ class TestInMemoryApprovalStore:
     def test_priority_ordering(self):
         """Test pending requests are ordered by priority."""
         from sruth.shared.hitl import (
-            ApprovalRequest,
             ApprovalPriority,
+            ApprovalRequest,
             InMemoryApprovalStore,
         )
 
@@ -242,7 +242,7 @@ class TestHITLWorkflow:
     @pytest.mark.asyncio
     async def test_get_pending(self):
         """Test getting pending requests from workflow."""
-        from sruth.shared.hitl import HITLWorkflow, ApprovalRequest
+        from sruth.shared.hitl import ApprovalRequest, HITLWorkflow
 
         workflow = HITLWorkflow()
 
@@ -259,10 +259,10 @@ class TestHITLWorkflow:
     async def test_respond_approve(self):
         """Test responding to approve a request."""
         from sruth.shared.hitl import (
-            HITLWorkflow,
             ApprovalRequest,
             ApprovalResponse,
             ApprovalStatus,
+            HITLWorkflow,
         )
 
         workflow = HITLWorkflow()
@@ -287,10 +287,10 @@ class TestHITLWorkflow:
     async def test_respond_reject(self):
         """Test responding to reject a request."""
         from sruth.shared.hitl import (
-            HITLWorkflow,
             ApprovalRequest,
             ApprovalResponse,
             ApprovalStatus,
+            HITLWorkflow,
         )
 
         workflow = HITLWorkflow()
@@ -313,7 +313,7 @@ class TestHITLWorkflow:
     @pytest.mark.asyncio
     async def test_cancel_request(self):
         """Test cancelling a request."""
-        from sruth.shared.hitl import HITLWorkflow, ApprovalRequest, ApprovalStatus
+        from sruth.shared.hitl import ApprovalRequest, ApprovalStatus, HITLWorkflow
 
         workflow = HITLWorkflow()
 
@@ -328,9 +328,9 @@ class TestHITLWorkflow:
     async def test_audit_trail_created(self):
         """Test audit trail is created during workflow."""
         from sruth.shared.hitl import (
-            HITLWorkflow,
             ApprovalRequest,
             ApprovalResponse,
+            HITLWorkflow,
         )
 
         workflow = HITLWorkflow()
@@ -367,7 +367,7 @@ class TestApprovalResult:
 
     def test_approval_result_approved(self):
         """Test ApprovalResult for approved request."""
-        from sruth.shared.hitl import ApprovalRequest, ApprovalStatus
+        from sruth.shared.hitl import ApprovalRequest
         from sruth.shared.hitl.workflow import ApprovalResult
 
         request = ApprovalRequest()

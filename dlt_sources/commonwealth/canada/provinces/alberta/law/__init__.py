@@ -1,13 +1,18 @@
-"""dlt_sources/commonwealth/canada/provinces/alberta/law — DLT sources.
+"""DEPRECATED — moved to ciandlíthe in 2026-08-25-ciandlithe-context-carveout-v1.
 
-Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
-change, this package was migrated from its legacy jurisdiction-first
-location. The `__init__.py` re-exports the local source modules.
-
-Legacy import paths still work via re-export shims at the old locations.
+Canonical: ciandlíthe/dlt_sources/law/_context/commonwealth/canada/alberta/law/
+Per openspec/changes/2026-08-24-dlt-sources-to-multi-repo-scaffold-v1 Phase 3.3.
 """
+
 from __future__ import annotations
 
-from . import legislation  # noqa: F401
+import warnings
 
-__all__ = ['legislation']
+warnings.warn(
+    "dlt_sources.commonwealth.canada.provinces.alberta.law moved to ciandlíthe; "
+    "update to ciandlithe.dlt_sources.law._context.commonwealth.canada.alberta.law",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+__all__: list[str] = []

@@ -1,0 +1,33 @@
+sidecar:
+  name: locket-tuatha-media-intel
+  image: docker.io/cianhoghlaim/locket-sidecar:0.7.0
+  runtime: runc
+  restart: unless-stopped
+  environment:
+    LOCKET_INFISICAL_TOKEN: ${LOCKET_INFISICAL_TOKEN}
+    LOCKET_PROJECT_ID: ${LOCKET_PROJECT_ID}
+    LOCKET_SECRET_PATHS: |
+      tuatha-media-intel/*:/run/secrets/tuatha-media-intel/*
+  secrets:
+    - llamaswap_url
+    - llamaswap_api_key
+    - litellm_url
+    - litellm_api_key
+    - mlflow_tracking_uri
+    - mlflow_tracking_token
+    - langfuse_secret_key
+    - langfuse_public_key
+    - langfuse_host
+    - baml_license_key
+    - tuatha_raw_hades_bucket
+    - tuatha_raw_comic_bucket
+    - tuatha_raw_gba_bucket
+    - vision_model_hades
+    - vision_model_comic
+    - vision_model_gba
+    - text_model_default
+  mounts:
+    - /var/run/locket/secrets:/run/secrets/locket:ro
+  command: >
+    locket watch --env-file /run/secrets/tuatha-media-intel/.env
+    --stdout-format json

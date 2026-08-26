@@ -1,6 +1,6 @@
 # `deployment-control-panel` — Agent Routing
 
-> TBD - created by archiving change 2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1. Update Purpose after archive.
+> The deployment control panel surface covers the 5-tab marimo notebook + web UI + CLI for picking models/pipelines/datasets/stacks across the Cianfhoghlaim monorepo. It defines 7 invariants: the canoni...
 
 ## Routing
 
@@ -35,4 +35,4 @@ models:list              # List all MODEL_REGISTRY entries
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-29; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

@@ -1,0 +1,50 @@
+pangolin:
+  resources:
+    - name: tuatha-media-intel-cocoindex
+      kind: Service
+      labels:
+        - tuatha-media-intel
+        - cocoindex-runner
+      visibility: internal
+      owner: tuatha
+      criticality: medium
+
+    - name: tuatha-media-intel-baml-codegen
+      kind: Service
+      labels:
+        - tuatha-media-intel
+        - baml-codegen
+      visibility: internal
+      owner: tuatha
+      criticality: low
+
+    - name: tuatha-media-intel-ragas
+      kind: Service
+      labels:
+        - tuatha-media-intel
+        - ragas-evaluator
+      visibility: internal
+      owner: tuatha
+      criticality: low
+
+    - name: tuatha-media-intel-mlflow
+      kind: Service
+      labels:
+        - tuatha-media-intel
+        - mlflow-sidecar
+      visibility: internal
+      owner: tuatha
+      criticality: low
+
+  # The raw bucket (Pangolin-private) — where the Swift daemon + the
+  # Python shims upload full-resolution game / comic / GBA frames.
+  raw_buckets:
+    - name: cianfhoghlaim-tuatha-raw
+      kind: R2
+      visibility: private
+      owner: tuatha
+      paths:
+        - hades/
+        - comic/
+        - gba/
+      ttl_days: 7  # hot-folder TTL; description rows in Lance survive

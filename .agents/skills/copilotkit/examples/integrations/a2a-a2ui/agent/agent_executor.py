@@ -56,22 +56,16 @@ class RestaurantAgentExecutor(AgentExecutor):
         ui_event_part = None
         action = None
 
-        logger.info(
-            f"--- Client requested extensions: {context.requested_extensions} ---"
-        )
+        logger.info(f"--- Client requested extensions: {context.requested_extensions} ---")
         use_ui = try_activate_a2ui_extension(context)
 
         # Determine which agent to use based on whether the a2ui extension is active.
         if use_ui:
             agent = self.ui_agent
-            logger.info(
-                "--- AGENT_EXECUTOR: A2UI extension is active. Using UI agent. ---"
-            )
+            logger.info("--- AGENT_EXECUTOR: A2UI extension is active. Using UI agent. ---")
         else:
             agent = self.text_agent
-            logger.info(
-                "--- AGENT_EXECUTOR: A2UI extension is not active. Using text agent. ---"
-            )
+            logger.info("--- AGENT_EXECUTOR: A2UI extension is not active. Using text agent. ---")
 
         if context.message and context.message.parts:
             logger.info(
@@ -133,9 +127,7 @@ class RestaurantAgentExecutor(AgentExecutor):
                 continue
 
             final_state = (
-                TaskState.completed
-                if action == "submit_booking"
-                else TaskState.input_required
+                TaskState.completed if action == "submit_booking" else TaskState.input_required
             )
 
             content = item["content"]
@@ -164,9 +156,7 @@ class RestaurantAgentExecutor(AgentExecutor):
                                 final_parts.append(create_a2ui_part(message))
                         else:
                             # Handle the case where a single JSON object is returned
-                            logger.info(
-                                "Received a single JSON object. Creating a DataPart."
-                            )
+                            logger.info("Received a single JSON object. Creating a DataPart.")
                             final_parts.append(create_a2ui_part(json_data))
 
                     except json.JSONDecodeError as e:
@@ -191,7 +181,5 @@ class RestaurantAgentExecutor(AgentExecutor):
             )
             break
 
-    async def cancel(
-        self, request: RequestContext, event_queue: EventQueue
-    ) -> Task | None:
+    async def cancel(self, request: RequestContext, event_queue: EventQueue) -> Task | None:
         raise ServerError(error=UnsupportedOperationError())

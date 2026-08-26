@@ -35,4 +35,4 @@ biep:v3:gate              # BIEP v3 milestone gate
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-30; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

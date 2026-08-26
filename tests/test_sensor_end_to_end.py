@@ -27,7 +27,6 @@ import importlib
 
 import pytest
 
-
 # ─── 1 — imports ─────────────────────────────────────────────────────────────
 
 
@@ -35,7 +34,7 @@ def test_sensor_imports_cleanly() -> None:
     """The 3 canonical symbols + the constant + the 2 helpers all
     import cleanly from ``orchestration.defs.sync_assets``.
     """
-    from orchestration.defs.sync_assets import (  # noqa: WPS433
+    from orchestration.defs.sync_assets import (
         REGISTRY_DRIFT_ALERT_ASSET_KEY,
         _get_registry_drift_count,
         _get_registry_drift_files,
@@ -59,7 +58,7 @@ def test_sensor_has_correct_metadata() -> None:
     """The sensor's ``description`` mentions the canonical spec delta;
     the job's ``description`` mentions ``scripts/registry_audit.py``.
     """
-    from orchestration.defs.sync_assets import (  # noqa: WPS433
+    from orchestration.defs.sync_assets import (
         materialize_registry_drift_alert_job,
         registry_drift_alert_sensor,
     )
@@ -90,7 +89,7 @@ def test_helper_get_drift_count_returns_int() -> None:
     ``>= 0``. The helper shells out to ``scripts/registry_audit.py``
     and falls back to 0 on any subprocess failure.
     """
-    from orchestration.defs.sync_assets import (  # noqa: WPS433
+    from orchestration.defs.sync_assets import (
         _get_registry_drift_count,
     )
 
@@ -111,7 +110,7 @@ def test_helper_get_drift_files_returns_list() -> None:
     element is a path-string (the helper is best-effort and falls back
     to an empty list on subprocess failure).
     """
-    from orchestration.defs.sync_assets import (  # noqa: WPS433
+    from orchestration.defs.sync_assets import (
         _get_registry_drift_files,
     )
 
@@ -135,15 +134,15 @@ def test_asset_key_matches_documented_constant() -> None:
     ``("registry", "drift_alert")`` — matching the documented
     ``REGISTRY_DRIFT_ALERT_ASSET_KEY`` constant.
     """
-    from dagster import AssetKey  # noqa: WPS433
+    from dagster import AssetKey
 
-    from orchestration.defs.sync_assets import (  # noqa: WPS433
+    from orchestration.defs.sync_assets import (
         REGISTRY_DRIFT_ALERT_ASSET_KEY,
         registry_drift_alert,
     )
 
     expected = AssetKey(["registry", "drift_alert"])
-    assert REGISTRY_DRIFT_ALERT_ASSET_KEY == expected, (
+    assert expected == REGISTRY_DRIFT_ALERT_ASSET_KEY, (
         f"REGISTRY_DRIFT_ALERT_ASSET_KEY drifted: "
         f"expected {expected!r}, got {REGISTRY_DRIFT_ALERT_ASSET_KEY!r}"
     )

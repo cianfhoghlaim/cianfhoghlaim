@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Update the lakehouse-garage access keys in Infisical with the real
 Garage-generated values."""
+
 import json
 import os
 import sys
@@ -16,19 +17,26 @@ GARAGE_SECRET_ACCESS_KEY = "6fd34220da97ec87dcc8707e0b930f6d7a431df9742ccf556cc8
 
 def upsert(path, key, value):
     url = f"{API_URL}/v3/secrets/raw/{key}"
-    body = json.dumps({
-        "environment": "dev",
-        "workspaceId": PROJECT_ID,
-        "secretPath": f"/{path}",
-        "secretValue": value,
-        "type": "shared",
-    }).encode()
+    body = json.dumps(
+        {
+            "environment": "dev",
+            "workspaceId": PROJECT_ID,
+            "secretPath": f"/{path}",
+            "secretValue": value,
+            "type": "shared",
+        }
+    ).encode()
     # Try PATCH first (update); fall back to POST (create)
     for method in ("PATCH", "POST"):
-        req = urllib.request.Request(url, data=body, method=method, headers={
-            "Authorization": f"Bearer {TOKEN}",
-            "Content-Type": "application/json",
-        })
+        req = urllib.request.Request(
+            url,
+            data=body,
+            method=method,
+            headers={
+                "Authorization": f"Bearer {TOKEN}",
+                "Content-Type": "application/json",
+            },
+        )
         try:
             with urllib.request.urlopen(req) as resp:
                 d = json.loads(resp.read())
@@ -38,7 +46,10 @@ def upsert(path, key, value):
                 print(f"  [FAIL] {path}/{key} -> {d}")
                 return
         except urllib.error.HTTPError as e:
-            if e.code == 400 and "already exists" in e.read().decode("utf-8", errors="replace").lower():
+            if (
+                e.code == 400
+                and "already exists" in e.read().decode("utf-8", errors="replace").lower()
+            ):
                 continue  # try POST
             body = e.read().decode("utf-8", errors="replace")[:200]
             print(f"  [FAIL] {path}/{key} -> HTTP {e.code}: {body}")

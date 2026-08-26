@@ -13,8 +13,6 @@ services:
     # locket v0.18+ ships with the fix in source (already in the
     # upstream repo at stedding/locket v0.18.0-rc.1).
     image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
-    environment:
-      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
     container_name: openclaw-locket
     restart: unless-stopped
     user: "65532:65532"
@@ -28,7 +26,15 @@ services:
     # INFISICAL_DEFAULT_PATH) are passed via `environment:` below so the
     # shim picks them up from the container env. The client_secret is
     # mounted via Docker's `secrets:` directive.
+    #
+    # NOTE 2026-08-23: this block previously appeared TWICE (LOCKET_FALLBACK_FILE
+    # was declared in a separate earlier `environment:` key). Duplicate mapping
+    # keys are a YAML parse error, so `docker compose -f compose.yaml -f
+    # sidecar.yaml` failed outright — which meant the stack was only ever
+    # brought up from compose.yaml alone, without the stack-secrets mount, and
+    # openclaw crash-looped on "no token is configured". Keep this as ONE block.
     environment:
+      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
       INFISICAL_URL: ${INFISICAL_URL}
       INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
       INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}
@@ -83,7 +89,7 @@ services:
         set -a
         . /run/secrets/locket/secrets.env
         set +a
-        exec node openclaw.mjs gateway --allow-unconfigured
+        exec node openclaw.mjs gateway --bind lan --allow-unconfigured
 
 secrets:
   infisical_secret:

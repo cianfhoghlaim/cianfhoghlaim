@@ -399,7 +399,7 @@ the `web_integration` field on every agent in `agents/agent_registry.py:AGENT_RE
 The 5 tools are at `agents/adk/tools/image_generation.py` and are
 auto-registered in the agent's `tools=` list. The BAML client is at
 `baml_src/clients_image_gen.baml` (5 client<llm> blocks). The
-CocoIndex flow is at `cocoindex/media/image_generation_flow.py` (R1–R4
+CocoIndex flow is at `cocoindex_flows/media/image_generation_flow.py` (R1–R4
 conformance + the canonical `bge-m3` embedder).
 
 **DO NOT** for the web integration surface:

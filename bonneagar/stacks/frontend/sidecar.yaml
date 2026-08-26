@@ -8,14 +8,13 @@
 services:
   infisical-init:
     image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
-    environment:
-      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
     container_name: frontend-infisical-init
     restart: "no"
     command: ["locket", "exec", "--", "echo", "secrets hydrated"]
     env_file:
       - secrets.env
     environment:
+      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
       INFISICAL_PROJECT_ID: ${INFISICAL_PROJECT_ID}
       INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
       INFISICAL_CLIENT_SECRET: ${INFISICAL_CLIENT_SECRET}

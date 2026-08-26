@@ -82,7 +82,7 @@ class TestDatadogIntegration:
     def test_datadog_tracer_init(self):
         """Test Datadog tracer initialization."""
         try:
-            from ddtrace import tracer, patch_all
+            from ddtrace import patch_all, tracer
 
             # Check if tracer is enabled
             if not tracer.enabled:

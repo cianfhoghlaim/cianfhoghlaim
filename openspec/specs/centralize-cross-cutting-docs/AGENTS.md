@@ -1,6 +1,6 @@
 # `centralize-cross-cutting-docs` — Agent Routing
 
-> TBD - created by archiving change 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1. Update Purpose after archive.
+> The cross-cutting docs centralization surface covers the per-area AGENTS.md + per-spec AGENTS.md convention across the Cianfhoghlaim monorepo. It defines 3 invariants: every quadrant has an AGENTS.md ...
 
 ## Routing
 
@@ -35,4 +35,4 @@ lint:drift-docs              # Validate every AGENTS.md number claim
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-29; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

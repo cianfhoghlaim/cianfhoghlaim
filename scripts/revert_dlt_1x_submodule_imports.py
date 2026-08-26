@@ -28,6 +28,7 @@ Usage:
     python3 scripts/revert_dlt_1x_submodule_imports.py --dry-run
     python3 scripts/revert_dlt_1x_submodule_imports.py
 """
+
 from __future__ import annotations
 
 import argparse
@@ -70,7 +71,9 @@ def fix_one(path: Path, *, dry_run: bool) -> int:
         path.write_text(new)
 
     if count > 0:
-        print(f"  [{'DRY' if dry_run else 'ok'} ] {path.relative_to(REPO_ROOT)}: {count} replacement(s)")
+        print(
+            f"  [{'DRY' if dry_run else 'ok'} ] {path.relative_to(REPO_ROOT)}: {count} replacement(s)"
+        )
     return count
 
 

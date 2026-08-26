@@ -43,31 +43,47 @@ def main() -> None:
                 "lc": len(list(Path("web/apps/oideachais-dashboard/convex/lc").glob("*.ts"))),
                 "jc": len(list(Path("web/apps/oideachais-dashboard/convex/jc").glob("*.ts"))),
                 "gcse": len(list(Path("web/apps/oideachais-dashboard/convex/gcse").glob("*.ts"))),
-                "a_level": len(list(Path("web/apps/oideachais-dashboard/convex/a-level").glob("*.ts"))),
+                "a_level": len(
+                    list(Path("web/apps/oideachais-dashboard/convex/a-level").glob("*.ts"))
+                ),
             },
             "hono_copilotkit_actions": {
                 "lc": len(list(Path("web/hono-api/src/routes/copilotkit/lc").glob("*.ts"))),
                 "jc": len(list(Path("web/hono-api/src/routes/copilotkit/jc").glob("*.ts"))),
                 "gcse": len(list(Path("web/hono-api/src/routes/copilotkit/gcse").glob("*.ts"))),
-                "a_level": len(list(Path("web/hono-api/src/routes/copilotkit/a-level").glob("*.ts"))),
+                "a_level": len(
+                    list(Path("web/hono-api/src/routes/copilotkit/a-level").glob("*.ts"))
+                ),
             },
             "frontend_copilotkit_actions": {
                 "lc": len(list(Path("web/apps/oideachais/src/lib/copilotkit/lc").glob("*.ts"))),
                 "jc": len(list(Path("web/apps/oideachais/src/lib/copilotkit/jc").glob("*.ts"))),
                 "gcse": len(list(Path("web/apps/oideachais/src/lib/copilotkit/gcse").glob("*.ts"))),
-                "a_level": len(list(Path("web/apps/oideachais/src/lib/copilotkit/a-level").glob("*.ts"))),
+                "a_level": len(
+                    list(Path("web/apps/oideachais/src/lib/copilotkit/a-level").glob("*.ts"))
+                ),
             },
             "ag_ui_types": {
                 "lc": len(list(Path("web/apps/oideachais/src/lib/ag-ui/lc").glob("*.ts"))),
                 "jc": len(list(Path("web/apps/oideachais/src/lib/ag-ui/jc").glob("*.ts"))),
                 "gcse": len(list(Path("web/apps/oideachais/src/lib/ag-ui/gcse").glob("*.ts"))),
-                "a_level": len(list(Path("web/apps/oideachais/src/lib/ag-ui/a-level").glob("*.ts"))),
+                "a_level": len(
+                    list(Path("web/apps/oideachais/src/lib/ag-ui/a-level").glob("*.ts"))
+                ),
             },
             "tanstack_routes": {
-                "lc": len([p for p in Path("web/apps/oideachais/routes/lc").iterdir() if p.is_dir()]),
-                "jc": len([p for p in Path("web/apps/oideachais/routes/jc").iterdir() if p.is_dir()]),
-                "gcse": len([p for p in Path("web/apps/oideachais/routes/gcse").iterdir() if p.is_dir()]),
-                "a_level": len([p for p in Path("web/apps/oideachais/routes/a-level").iterdir() if p.is_dir()]),
+                "lc": len(
+                    [p for p in Path("web/apps/oideachais/routes/lc").iterdir() if p.is_dir()]
+                ),
+                "jc": len(
+                    [p for p in Path("web/apps/oideachais/routes/jc").iterdir() if p.is_dir()]
+                ),
+                "gcse": len(
+                    [p for p in Path("web/apps/oideachais/routes/gcse").iterdir() if p.is_dir()]
+                ),
+                "a_level": len(
+                    [p for p in Path("web/apps/oideachais/routes/a-level").iterdir() if p.is_dir()]
+                ),
             },
         },
     }

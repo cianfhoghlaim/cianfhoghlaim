@@ -301,7 +301,7 @@ def uog_personal_archive_duckdb_sink(
     context: AssetExecutionContext,
 ) -> MaterializeResult:
     try:
-        from dlt_sources._lakehouse.destinations import get_destination
+        from dlt_sources.lakehouse.destinations import get_destination
     except ImportError as exc:
         return MaterializeResult(
             metadata={"status": "skipped_destination_module_missing", "error": str(exc)}

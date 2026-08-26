@@ -254,9 +254,7 @@ def invoke_agent(
     headers["Content-Type"] = "application/json"
 
     try:
-        response = requests.post(
-            url, headers=headers, json=payload, stream=True, timeout=60
-        )
+        response = requests.post(url, headers=headers, json=payload, stream=True, timeout=60)
 
         if response.status_code != 200:
             print(f"Error: HTTP {response.status_code}: {response.text}")
@@ -271,9 +269,7 @@ def invoke_agent(
                 chunk = json.loads(line[6:])
 
                 # LangGraph: AIMessageChunk with content array
-                if chunk.get("type") == "AIMessageChunk" and isinstance(
-                    chunk.get("content"), list
-                ):
+                if chunk.get("type") == "AIMessageChunk" and isinstance(chunk.get("content"), list):
                     for block in chunk["content"]:
                         if block.get("type") == "text" and block.get("text"):
                             print(block["text"], end="", flush=True)
@@ -299,9 +295,9 @@ def invoke_agent(
                     print(chunk["data"], end="", flush=True)
 
                 # Strands: tool use
-                elif chunk.get("current_tool_use") and chunk.get(
-                    "current_tool_use", {}
-                ).get("name"):
+                elif chunk.get("current_tool_use") and chunk.get("current_tool_use", {}).get(
+                    "name"
+                ):
                     tool = chunk["current_tool_use"]
                     if chunk.get("delta", {}).get("toolUse", {}).get("input") == "":
                         print(
@@ -345,12 +341,8 @@ def run_chat(local_mode: bool, config: Dict[str, str]) -> None:
 
     print_section("Interactive Agent Chat")
     print(f"Session ID: {session_id}")
-    print(
-        f"Mode: {'Local (localhost:8080)' if local_mode else 'Remote (deployed agent)'}"
-    )
-    print(
-        f"\n{Fore.YELLOW}💡 Type 'exit' or 'quit' to end, or press Ctrl+C{Style.RESET_ALL}\n"
-    )
+    print(f"Mode: {'Local (localhost:8080)' if local_mode else 'Remote (deployed agent)'}")
+    print(f"\n{Fore.YELLOW}💡 Type 'exit' or 'quit' to end, or press Ctrl+C{Style.RESET_ALL}\n")
 
     while True:
         try:
@@ -464,9 +456,7 @@ def main():
     if args.local:
         # Determine pattern: CLI arg > config.yaml > default (only needed for local mode)
         pattern = (
-            args.pattern
-            if args.pattern
-            else stack_cfg.get("pattern", "langgraph-single-agent")
+            args.pattern if args.pattern else stack_cfg.get("pattern", "langgraph-single-agent")
         )
         print(f"Using pattern: {pattern}\n")
         print_section("LOCAL MODE - Auto-starting agent")

@@ -239,9 +239,7 @@ def upload_to_s3(local_path: str, bucket: str, key: str) -> None:
         bucket: S3 bucket name
         key: S3 object key
     """
-    run_command(
-        ["aws", "s3", "cp", local_path, f"s3://{bucket}/{key}", "--no-progress"]
-    )
+    run_command(["aws", "s3", "cp", local_path, f"s3://{bucket}/{key}", "--no-progress"])
 
 
 def start_amplify_deployment(app_id: str, branch: str, source_url: str) -> Dict:
@@ -397,9 +395,7 @@ def create_deployment_zip(build_dir: Path, output_path: Path) -> None:
         output_path: Path for the output zip file (without .zip extension)
     """
     # shutil.make_archive adds .zip automatically
-    shutil.make_archive(
-        str(output_path.with_suffix("")), "zip", root_dir=str(build_dir)
-    )
+    shutil.make_archive(str(output_path.with_suffix("")), "zip", root_dir=str(build_dir))
 
 
 def main() -> int:
@@ -437,9 +433,7 @@ def main() -> int:
     except subprocess.CalledProcessError:
         log_error("AWS credentials not configured or invalid")
         log_info("Run 'aws configure' to set up your AWS credentials")
-        log_info(
-            "Or set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables"
-        )
+        log_info("Or set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables")
         return 1
 
     # Get stack name
@@ -503,10 +497,7 @@ def main() -> int:
     node_modules = frontend_dir / "node_modules"
     package_json = frontend_dir / "package.json"
 
-    if (
-        not node_modules.exists()
-        or package_json.stat().st_mtime > node_modules.stat().st_mtime
-    ):
+    if not node_modules.exists() or package_json.stat().st_mtime > node_modules.stat().st_mtime:
         log_info("Installing dependencies...")
         try:
             run_command(["npm", "install"], capture_output=False)

@@ -23,7 +23,6 @@ from pathlib import Path
 
 import pytest
 
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -70,7 +69,7 @@ def test_4_stage_extractors() -> None:
     assert "gcse" in extraction.STAGE_EXTRACTORS
     assert len(extraction.STAGE_EXTRACTORS) == 4
     # All extractors should be callable coroutines
-    for stage, fn in extraction.STAGE_EXTRACTORS.items():
+    for _stage, fn in extraction.STAGE_EXTRACTORS.items():
         assert callable(fn)
     # extract_chunk is the dispatch function
     assert callable(extraction.extract_chunk)
@@ -465,7 +464,7 @@ async def test_4_stage_plane_end_to_end() -> None:
         # The 4 stage agents must be in the registry
         for stage_name in ("lc_subject_agent", "jc_subject_agent", "alevel_subject_agent", "gcse_subject_agent"):
             assert stage_name in AGENT_REGISTRY
-    except ImportError as e:
+    except ImportError:
         # If ADK import fails, just verify the file source has the 4 stages
         registry_src = (REPO_ROOT / "agents" / "adk" / "agent_registry.py").read_text()
         for stage_name in ("lc_subject_agent", "jc_subject_agent", "alevel_subject_agent", "gcse_subject_agent"):

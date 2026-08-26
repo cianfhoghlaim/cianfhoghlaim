@@ -1,0 +1,9 @@
+2026-08-22 10:56:56 +0100 - dagster - DEBUG - __ASSET_JOB - 4fcf8d86-f7cc-4e3a-80d5-db0e92c17243 - 13209 - LOGS_CAPTURED - Capturing logs for process (pid: 13209).
+2026-08-22 10:56:56 +0100 - dagster - DEBUG - __ASSET_JOB - 4fcf8d86-f7cc-4e3a-80d5-db0e92c17243 - 13209 - lc5_english_marking_extracted - STEP_START - Started execution of step "lc5_english_marking_extracted".
+2026-08-22 10:56:56 +0100 - dagster - DEBUG - __ASSET_JOB - 4fcf8d86-f7cc-4e3a-80d5-db0e92c17243 - 13209 - lc5_english_marking_extracted - STEP_OUTPUT - Yielded output "result" of type "Dict[String,Any]". (Type check passed).
+2026-08-22 10:56:56 +0100 - dagster - DEBUG - __ASSET_JOB - 4fcf8d86-f7cc-4e3a-80d5-db0e92c17243 - lc5_english_marking_extracted - Writing file at: /Users/cianmacandeisigh/dev/kings_college_galway/.tmp_dagster_home_nzku7pdc/storage/lc5_english_marking_extracted using PickledObjectFilesystemIOManager...
+INFO:alembic.runtime.migration:Context impl SQLiteImpl.
+INFO:alembic.runtime.migration:Will assume non-transactional DDL.
+2026-08-22 10:56:56 +0100 - dagster - DEBUG - __ASSET_JOB - 4fcf8d86-f7cc-4e3a-80d5-db0e92c17243 - 13209 - lc5_english_marking_extracted - ASSET_MATERIALIZATION - Materialized value lc5_english_marking_extracted.
+2026-08-22 10:56:56 +0100 - dagster - DEBUG - __ASSET_JOB - 4fcf8d86-f7cc-4e3a-80d5-db0e92c17243 - 13209 - lc5_english_marking_extracted - HANDLED_OUTPUT - Handled output "result" using IO manager "io_manager"
+2026-08-22 10:56:56 +0100 - dagster - DEBUG - __ASSET_JOB - 4fcf8d86-f7cc-4e3a-80d5-db0e92c17243 - 13209 - lc5_english_marking_extracted - STEP_SUCCESS - Finished execution of step "lc5_english_marking_extracted" in 168ms.

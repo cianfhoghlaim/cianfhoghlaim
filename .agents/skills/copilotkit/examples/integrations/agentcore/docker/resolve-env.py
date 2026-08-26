@@ -16,13 +16,9 @@ agent = os.environ.get("AGENT", "langgraph")
 suffix = "lg" if agent == "langgraph" else "st"
 stack_name = f"{base}-{suffix}"
 
-cf = boto3.client(
-    "cloudformation", region_name=os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
-)
+cf = boto3.client("cloudformation", region_name=os.environ.get("AWS_DEFAULT_REGION", "us-east-1"))
 stacks = cf.describe_stacks(StackName=stack_name)["Stacks"]
-outputs = {
-    o["OutputKey"]: o["OutputValue"] for s in stacks for o in s.get("Outputs", [])
-}
+outputs = {o["OutputKey"]: o["OutputValue"] for s in stacks for o in s.get("Outputs", [])}
 
 memory_arn = outputs.get("MemoryArn", "")
 memory_id = memory_arn.split("/")[-1] if "/" in memory_arn else memory_arn

@@ -4,6 +4,7 @@
 Per the 2026-08-15-knowledge-sync-loop-v1 change (Layer 2).
 This is idempotent — running multiple times is safe.
 """
+
 from __future__ import annotations
 
 import sys

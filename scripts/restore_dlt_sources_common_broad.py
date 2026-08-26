@@ -13,6 +13,7 @@ Usage:
     python3 scripts/restore_dlt_sources_common_broad.py --dry-run
     python3 scripts/restore_dlt_sources_common_broad.py
 """
+
 from __future__ import annotations
 
 import argparse
@@ -36,9 +37,7 @@ def main() -> int:
         print(f"ERROR: {common_dir} not found", file=sys.stderr)
         return 1
 
-    local_modules = sorted(
-        [p.stem for p in common_dir.glob("*.py") if p.stem != "__init__"]
-    )
+    local_modules = sorted([p.stem for p in common_dir.glob("*.py") if p.stem != "__init__"])
     print(f"Found {len(local_modules)} local common modules: {local_modules[:5]}...")
     print()
 

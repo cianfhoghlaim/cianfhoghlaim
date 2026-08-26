@@ -1,4 +1,18 @@
 # =============================================================================
+# SUPERSEDED — NOT THE CURRENT DEPLOYMENT. See README.md §5.
+# =============================================================================
+# OpenChamber now runs as the native macOS app on the workload host
+# (127.0.0.1:57123) and is exposed as a Pangolin PRIVATE resource declared in
+# bonneagar/pangolin/private-resources.blueprint.yaml — not via this stack.
+#
+# WILL NOT WORK AS WRITTEN: the image digest below is a MOCK generated with
+# MOCK_MODE=1 when GHCR was unreachable (see the comment above `image:`). It
+# does not exist and cannot be pulled. Re-resolve a real digest first.
+#
+# Still a valid starting point for a LINUX workload host. If you use it,
+# delete pangolin.yaml (that publishes the service publicly via Traefik, which
+# is the opposite of a private resource) and add a blueprint entry instead.
+# =============================================================================
 # OPENCHAMBER — OpenCode Web/Desktop UI (arm1-oci)
 # =============================================================================
 # Single-service stack running the upstream openchamber/openchamber image

@@ -27,6 +27,20 @@
 -- `cognee-postgres` container in the (now-deprecated) cognee/ stack is
 -- GONE — replaced by the shared lakehouse-postgres.
 --
+-- ADDED 2026-08-22: `olake_source` for Olake CDC jobs (was the placeholder
+-- `staging_pg` which never existed in the lakehouse-postgres).
+--
+-- ADDED 2026-08-23: dedicated `cognee` user (security best-practice per
+-- Lakekeeper docs) — cognee no longer uses the shared `lakekeeper` superuser.
+--
+-- ADDED 2026-08-24 (lakehouse-stack-doctor-and-env-var-cleanup-v1):
+-- The canonical list of 14 databases lives at `db_manifest.yaml` in this
+-- directory. Any drift between this SQL file and the manifest is caught
+-- by `scripts/lakehouse-stack-doctor.sh`. When adding/renaming a database:
+--   1. Update `db_manifest.yaml` FIRST
+--   2. Update this SQL (CREATE DATABASE + GRANT statements)
+--   3. Update `secrets.env` if adding a per-service DB user
+--
 -- Run automatically by PostgreSQL on first container start.
 -- =============================================================================
 

@@ -209,9 +209,7 @@ FIELD_SCHEMA = (
 )
 
 SYSTEM_PROMPT = (
-    "You are a helpful AG-UI assistant.\n\n"
-    + FIELD_SCHEMA
-    + "\nMUTATION/TOOL POLICY:\n"
+    "You are a helpful AG-UI assistant.\n\n" + FIELD_SCHEMA + "\nMUTATION/TOOL POLICY:\n"
     "- When you claim to create/update/delete, you MUST call the corresponding tool(s) (frontend or backend).\n"
     "- To create new cards, call the frontend tool `createItem` with `type` in {project, entity, note, chart} and optional `name`.\n"
     "- After tools run, rely on the latest shared state (ground truth) when replying.\n"

@@ -205,9 +205,7 @@ def upload_to_s3(local_path: str, bucket: str, key: str) -> None:
         bucket: S3 bucket name
         key: S3 object key
     """
-    run_command(
-        ["aws", "s3", "cp", local_path, f"s3://{bucket}/{key}", "--no-progress"]
-    )
+    run_command(["aws", "s3", "cp", local_path, f"s3://{bucket}/{key}", "--no-progress"])
 
 
 def start_amplify_deployment(app_id: str, branch: str, source_url: str) -> Dict:
@@ -302,9 +300,7 @@ def get_amplify_app_domain(app_id: str) -> str:
 # --- Main deployment logic ---
 
 
-def generate_aws_exports(
-    outputs: Dict[str, str], pattern: str, frontend_dir: Path
-) -> None:
+def generate_aws_exports(outputs: Dict[str, str], pattern: str, frontend_dir: Path) -> None:
     """
     Generate aws-exports.json configuration file.
 
@@ -329,9 +325,7 @@ def generate_aws_exports(
 
     # Get region from deployment_summary or default
     region = "us-east-1"
-    if "deployment_summary" in outputs and isinstance(
-        outputs["deployment_summary"], dict
-    ):
+    if "deployment_summary" in outputs and isinstance(outputs["deployment_summary"], dict):
         region = outputs["deployment_summary"].get("region", region)
 
     aws_exports = {
@@ -367,9 +361,7 @@ def create_deployment_zip(build_dir: Path, output_path: Path) -> None:
         output_path: Path for the output zip file (without .zip extension)
     """
     # shutil.make_archive adds .zip automatically
-    shutil.make_archive(
-        str(output_path.with_suffix("")), "zip", root_dir=str(build_dir)
-    )
+    shutil.make_archive(str(output_path.with_suffix("")), "zip", root_dir=str(build_dir))
 
 
 def parse_args() -> argparse.Namespace:
@@ -460,9 +452,7 @@ def main() -> int:
     deployment_bucket = outputs.get("amplify_staging_bucket")
     region = "us-east-1"
 
-    if "deployment_summary" in outputs and isinstance(
-        outputs["deployment_summary"], dict
-    ):
+    if "deployment_summary" in outputs and isinstance(outputs["deployment_summary"], dict):
         region = outputs["deployment_summary"].get("region", region)
 
     if not app_id:

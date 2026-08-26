@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Verify the DuckLake population by reading Parquet files directly."""
+
 import os
 import sys
 

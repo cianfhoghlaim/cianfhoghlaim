@@ -232,9 +232,5 @@ def create_mock_jwt(user_id: str) -> str:
         .rstrip(b"=")
         .decode()
     )
-    payload = (
-        base64.urlsafe_b64encode(json.dumps({"sub": user_id}).encode())
-        .rstrip(b"=")
-        .decode()
-    )
+    payload = base64.urlsafe_b64encode(json.dumps({"sub": user_id}).encode()).rstrip(b"=").decode()
     return f"{header}.{payload}."

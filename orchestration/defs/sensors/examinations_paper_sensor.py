@@ -109,11 +109,33 @@ def _get_manifest() -> set[tuple[str, int, str]]:
         return set()
 
 
-@sensor(
-    job_name="examinations_paper_job",
-    description="Poll-on-demand sensor for examinations.ie exam papers (daily)",
-    minimum_interval_seconds=86_400,  # 24h
-)
+# ============================================================================
+# NOT REGISTERED 2026-08-14 — the `@sensor(...)` decorator is commented out
+# below because BOTH of its targets are missing, and a sensor pointing at a
+# nonexistent job makes `Definitions.validate_loadable()` raise, which takes
+# the ENTIRE code location down to zero assets:
+#
+#   * job   `examinations_paper_job`  — defined nowhere in the repo
+#   * asset `examinations_papers`     — defined nowhere (the RunRequests below
+#                                       select it via `asset_selection`)
+#
+# To register it, define the `examinations_papers` asset, then restore the
+# decorator. Because the RunRequests carry `asset_selection`, prefer the
+# asset-targeting form over `job_name`:
+#
+#     @sensor(
+#         target=dg.AssetSelection.assets("examinations_papers"),
+#         description="Poll-on-demand sensor for examinations.ie exam papers (daily)",
+#         minimum_interval_seconds=86_400,
+#     )
+#
+# The sensor body itself is left intact and is correct.
+# ============================================================================
+# @sensor(
+#     job_name="examinations_paper_job",
+#     description="Poll-on-demand sensor for examinations.ie exam papers (daily)",
+#     minimum_interval_seconds=86_400,  # 24h
+# )
 def examinations_paper_sensor(context: SensorEvaluationContext) -> Any:
     """The daily poll-on-demand sensor for examinations.ie."""
     new_papers_en = _scrape_examinations_ie_search(lang="en")

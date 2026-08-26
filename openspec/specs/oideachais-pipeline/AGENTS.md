@@ -1,6 +1,6 @@
 # `oideachais-pipeline` — Agent Routing
 
-> TBD - created by archiving change 2026-07-10-wire-english-lc5-and-resolve-ie-duplicates-v1. Update Purpose after archive.
+> The oideachais pipeline surface covers the Celtic education curriculum pipeline (Dagster + DLT + DuckLake + LanceDB + BAML) across the Cianfhoghlaim monorepo. It defines 16 invariants: the 5-layer KCG...
 
 ## Routing
 
@@ -35,4 +35,4 @@ lint:drift-docs              # Validate every AGENTS.md number claim
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-29; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

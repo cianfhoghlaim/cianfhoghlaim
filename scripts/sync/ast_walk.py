@@ -12,6 +12,7 @@ Usage:
     python3 ast_walk.py
     python3 ast_walk.py --json
 """
+
 from __future__ import annotations
 
 import argparse
@@ -45,11 +46,7 @@ def walk() -> dict:
     group_names: Counter = Counter()
     per_layer: dict[str, Counter] = {}
 
-    layer_dirs = (
-        sorted(DEFS_ROOT.iterdir())
-        if DEFS_ROOT.is_dir()
-        else []
-    )
+    layer_dirs = sorted(DEFS_ROOT.iterdir()) if DEFS_ROOT.is_dir() else []
 
     for layer_dir in layer_dirs:
         if not layer_dir.is_dir():

@@ -63,7 +63,7 @@ Index, Acquisition Velocity) for the `fact_Token` table.
   - `notebooks/_shared/cefr_scoring.py` (NEW)
   - `notebooks/_shared/cognate.py` (NEW)
   - `baml/celtic/corpus.baml` (NEW)
-  - `cocoindex/biep_parity/cefr_embedding.py` (NEW)
+  - `cocoindex_flows/biep_parity/cefr_embedding.py` (NEW)
   - `orchestration/defs/2_materials/cefr_assets.py` (NEW)
   - `notebooks/35_celtic_corpus_dashboard.py` (NEW)
   - `notebooks/36_cefr_readiness_dashboard.py` (NEW)

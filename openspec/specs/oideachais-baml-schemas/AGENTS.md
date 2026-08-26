@@ -1,6 +1,6 @@
 # `oideachais-baml-schemas` — Agent Routing
 
-> TBD - created by archiving change 2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1. Update Purpose after archive.
+> The oideachais BAML schemas surface covers the 9 BAML extraction templates for the 6 Irish Leaving Certificate priority subjects (Mathematics / Chemistry / Geography / Gaeilge / English / Computer Sci...
 
 ## Routing
 
@@ -35,4 +35,4 @@ lint:drift-docs              # Validate every AGENTS.md number claim
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-29; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

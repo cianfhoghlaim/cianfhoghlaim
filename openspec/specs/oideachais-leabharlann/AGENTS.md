@@ -1,6 +1,6 @@
 # `oideachais-leabharlann` — Agent Routing
 
-> TBD - created by archiving change 2026-07-15-oideachais-leabharlann-v1. Update Purpose after archive.
+> The oideachais leabharlann surface covers the 4 dlt sources + 3 v1 CocoIndex Apps for the leabharlann/ corpus (the 4th leabharlann sub-corpus). It defines 3 invariants: the canonical leabharlann/ dire...
 
 ## Routing
 
@@ -35,4 +35,4 @@ lint:drift-docs              # Validate every AGENTS.md number claim
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-29; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

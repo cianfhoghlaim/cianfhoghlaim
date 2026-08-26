@@ -1,0 +1,93 @@
+{
+  "$schema": "https://raw.githubusercontent.com/openclaw/openclaw/main/schema/openclaw.config.schema.json",
+  "version": "1.0",
+  "gateway": {
+    "mode": "local",
+    "port": 18789,
+    "bridge_port": 18790,
+    "log_level": "info",
+    "dm_policy": "pairing",
+    "allow_from": [],
+    "state_dir": "/home/node/.openclaw/state"
+  },
+  "provider": {
+    "name": "litellm",
+    "base_url": "http://litellm:4000/v1",
+    "model": "minimax-m3",
+    "api_key_env": "OPENAI_API_KEY"
+  },
+  "fallback_chain": [
+    {
+      "name": "unsloth",
+      "base_url": "http://host.docker.internal:8888",
+      "api": "anthropic-messages",
+      "auth_header": true,
+      "models": [
+        { "id": "unsloth/Qwen3.8-27B-GGUF", "name": "Local Qwen3.8" },
+        { "id": "unsloth/DeepSeek-V4-Pro-0813-GGUF", "name": "Local DeepSeek-V4" },
+        { "id": "unsloth/Kimi-K2.7-Code-GGUF", "name": "Local Kimi-K2.7-Code" }
+      ],
+      "trigger_on": "rate_limit",
+      "notes": "Per the 2026-08-21-unsloth-v5-architecture-refinement-v1 change. Unsloth Studio runs on bunchloch host; Docker containers reach it via host.docker.internal:8888. Public exposure via https://unsloth.cianfhoghlaim.ie (Pangolin private resource). Single shared UNSLOTH_API_KEY (same as hermes + openchamber)."
+    }
+  ],
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "token_env": "TELEGRAM_BOT_TOKEN",
+      "allow_from": []
+    },
+    "slack": {
+      "enabled": true,
+      "token_env": "SLACK_BOT_TOKEN",
+      "allow_from": []
+    },
+    "discord": {
+      "enabled": true,
+      "token_env": "DISCORD_BOT_TOKEN",
+      "allow_from": []
+    },
+    "whatsapp": {
+      "enabled": true,
+      "token_env": "WHATSAPP_ACCESS_TOKEN",
+      "allow_from": []
+    },
+    "webchat": {
+      "enabled": true,
+      "bind": "0.0.0.0:18789",
+      "allow_from": []
+    },
+    "teams": {
+      "enabled": true,
+      "bind": "127.0.0.1:3978",
+      "allow_from": []
+    },
+    "signal": {
+      "enabled": false,
+      "reason": "requires signal-cli (not provisioned in v1)"
+    },
+    "imessage": {
+      "enabled": false,
+      "reason": "requires BlueBubbles on macOS (not provisioned in v1)"
+    },
+    "matrix": {
+      "enabled": false,
+      "reason": "requires Matrix homeserver (not provisioned in v1)"
+    }
+  },
+  "routing": {
+    "default_agent": "celtic-tutor",
+    "channel_overrides": {
+      "discord": "mythology-narrator",
+      "teams": "research-assistant"
+    }
+  },
+  "otel": {
+    "service_name": "openclaw-gateway",
+    "endpoint_env": "OTEL_EXPORTER_OTLP_ENDPOINT",
+    "protocol": "http/protobuf"
+  },
+  "workspace": {
+    "skills_dir": "/home/node/.openclaw/workspace/skills"
+  }
+}

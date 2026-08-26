@@ -1,6 +1,6 @@
 # `planetscale-postgres-data-strategy` — Agent Routing
 
-> TBD - created by archiving change 2026-07-19-planetscale-postgres-landscape-v1. Update Purpose after archive.
+> The PlanetScale Postgres data strategy surface covers the 9-step strategy for migrating from the current lakehouse (DuckLake + MotherDuck) to a PlanetScale Postgres backend. It defines 9 invariants: t...
 
 ## Routing
 
@@ -35,4 +35,4 @@ lint:drift-docs              # Validate every AGENTS.md number claim
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-29; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

@@ -16,9 +16,18 @@ Infisical (dev-baile vault)  ──►  the secrets source of truth
 Komodo Core  ◄──── GitOps pull every 60s ────  komodo/ (TOML resource definitions)
         │  deploys via Komodo Periphery on each host
         ▼
-93 Docker Compose stacks  ──►  fronted by Pangolin (reverse proxy + WireGuard)
-                                gated by Tinyauth (ForwardAuth) + Pocket ID (OIDC)
+the stack catalogue  ──►  fronted by Pangolin, in one of two ways:
+                          • PUBLIC  proxy resources — Traefik + Tinyauth
+                            (ForwardAuth) + Pocket ID (OIDC)
+                          • PRIVATE client resources — WireGuard to an
+                            enrolled device; never publicly served
 ```
+
+The two Pangolin paths are genuinely different mechanisms that happen to share
+a dashboard and a domain — see
+[docs/private-resources-architecture.md](docs/private-resources-architecture.md).
+For the authoritative stack count, `ls -d stacks/*/ | wc -l` (hard-coded counts
+in this file and in `mise.toml` have drifted apart and should not be trusted).
 
 `bonneagar/iac/` is the TypeScript control plane that wires all of the
 above together (`bun run iac:*`); it does not run continuously — it's

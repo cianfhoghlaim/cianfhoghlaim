@@ -26,7 +26,7 @@ thesis figures).
 | DLT source | `dlt_sources/filesystem/uog_personal_archive.py` |
 | HTR ensemble | `dlt_sources/filesystem/_htr_ensemble.py` |
 | Generic factory | `dlt_sources/british_isles/ireland/education/university/personal_archive/uog_personal_archive_source.py` |
-| DuckLake tables | `dlt_sources/_lakehouse/personal_archive_destinations.py` |
+| DuckLake tables | `dlt_sources/lakehouse/personal_archive_destinations.py` |
 | CocoIndex Apps | `cocoindex_flows/british_isles/ireland/education/university/personal_archive_embedding.py` |
 | Cognee edges | `scripts/graph_storage/cognify/rules/personal_archive_typed_edges.py` |
 | Marimo notebook | `notebooks/15_personal_archive.py` |
@@ -49,7 +49,7 @@ uv run pytest tests/personal_archive/ -v
 uv run openspec validate 2026-08-23-uog-personal-archive-tertiary-modules-v1 --strict
 
 # Materialise the DuckLake tables (smoke test)
-uv run python -c "import duckdb; from dlt_sources._lakehouse import register_personal_archive_tables; con = duckdb.connect(':memory:'); register_personal_archive_tables(con); print('OK')"
+uv run python -c "import duckdb; from dlt_sources.lakehouse import register_personal_archive_tables; con = duckdb.connect(':memory:'); register_personal_archive_tables(con); print('OK')"
 
 # Auto-classify a sample file
 uv run python -c "from pathlib import Path; from dlt_sources.filesystem.uog_personal_archive import _classify_file; print(_classify_file(Path('leabharlann/ollscoil_na_gaillimhe/mata/networks/CS4423 - Networks/cian_mac_liathain_assignment_3.pdf')))"
@@ -111,13 +111,13 @@ the task for the domain you're working on today:
 # Daily "I'm working on X" commands (omnibus tasks per domain)
 mise run core                     # dev env (sync + install + lint + test + format)
 mise run core:ci                  # the canonical CI gate (lint + test + openspec:validate-all + devops:validate-stacks)
-mise run devops                   # IaC + 99 stacks + Komodo/Pangolin/Locket/Infisical
+mise run devops                   # IaC + 100 stacks + Komodo/Pangolin/Locket/Infisical
 mise run data                     # lakehouse + BIEP + Dagster + baml_src + CocoIndex + motherduck + notebooks
 mise run ml                       # meaisinfhoghlaim (OCR/HTR/Alignment/Celtic) + 12-agent fleet + MODEL_REGISTRY
 mise run web                      # web/apps + web/packages + web/hono-api + Turborepo
 
 # Surgical subcommands (when you know exactly what you want)
-mise run lint:skills              # validate .agents/skills/ metadata (65 skills pass)
+mise run lint:skills              # validate .agents/skills/ metadata (166 skills pass)
 mise run lint:drift-docs          # validate every AGENTS.md number claim against ground truth
 mise run openspec:validate-all    # CI gate for every openspec change + spec (146 items pass)
 mise run devops:validate-stacks   # validate all 94 Docker Compose stacks against the 6-file GOLD_STANDARD
@@ -174,7 +174,7 @@ mise run openspec:validate         # run `openspec validate --strict` against th
 | `langfuse` | 3000 | `langfuse.cianfhoghlaim.ie` (LLM observability) |
 | `lakehouse` | 3900-3904, 5433, 8181-8182 | internal (Garage S3 + Postgres + Lakekeeper) |
 
-The full inventory of 99 stacks is at
+The full inventory of 100 stacks is at
 [`bonneagar/AGENTS.md`](bonneagar/AGENTS.md) (the IaC subdirectory
 owns the stack catalogue; see the `## Repo Boundary` section below).
 

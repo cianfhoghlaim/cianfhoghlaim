@@ -142,7 +142,9 @@ def main() -> int:
         # Edge case: undated year
         sample_cohort.year = "undated"
         undated_filename = build_pdf_filename(sample_cohort, "9f8e7d6c")
-        assert validate_pdf_filename(undated_filename), f"undated filename invalid: {undated_filename}"
+        assert validate_pdf_filename(undated_filename), (
+            f"undated filename invalid: {undated_filename}"
+        )
         logger.info(f"Undated filename OK: {undated_filename}")
     except Exception as exc:  # noqa: BLE001
         logger.error(f"Snake_case contract smoke test failed: {exc}")
@@ -159,7 +161,9 @@ def main() -> int:
         logger.info(f"All files in {local_path} match the canonical snake_case pattern.")
     else:
         logger.info(f"Local path {local_path} does not exist; skipping file validation.")
-        logger.info(f"  (To validate real files, first run the BIEP v3 ingestion to populate s3://garage/cianfhoghlaim/)")
+        logger.info(
+            f"  (To validate real files, first run the BIEP v3 ingestion to populate s3://garage/cianfhoghlaim/)"
+        )
 
     logger.info("All validations pass.")
     return 0
