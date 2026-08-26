@@ -7,8 +7,9 @@ Tests:
 - Circuit breaker integration
 """
 
+from unittest.mock import patch
+
 import pytest
-from unittest.mock import MagicMock, patch
 
 
 class TestAuthStrategies:
@@ -51,8 +52,9 @@ class TestAuthStrategies:
 
     def test_basic_auth(self):
         """Test BasicAuth encodes credentials."""
-        from sruth.shared.http import BasicAuth
         import base64
+
+        from sruth.shared.http import BasicAuth
 
         auth = BasicAuth(username="user", password="pass")
         headers = {}
@@ -78,7 +80,7 @@ class TestHttpClientFactory:
 
     def test_factory_with_auth(self):
         """Test factory with authentication."""
-        from sruth.shared.http import HttpClientFactory, BearerTokenAuth
+        from sruth.shared.http import BearerTokenAuth, HttpClientFactory
 
         auth = BearerTokenAuth(token="secret")
         factory = HttpClientFactory(
@@ -115,7 +117,7 @@ class TestHttpClientFactory:
 
     def test_factory_builds_headers(self):
         """Test factory builds headers with auth."""
-        from sruth.shared.http import HttpClientFactory, BearerTokenAuth
+        from sruth.shared.http import BearerTokenAuth, HttpClientFactory
 
         auth = BearerTokenAuth(token="my-token")
         factory = HttpClientFactory(
@@ -157,7 +159,7 @@ class TestCreateClientFunction:
 
     def test_create_client_with_auth(self):
         """Test create_client with auth strategy."""
-        from sruth.shared.http import create_client, BearerTokenAuth
+        from sruth.shared.http import BearerTokenAuth, create_client
 
         auth = BearerTokenAuth(token="my-token")
         factory = create_client(
@@ -212,7 +214,6 @@ class TestPreConfiguredClients:
     def test_github_client(self):
         """Test GitHub client configuration."""
         from sruth.shared.http.client_factory import github_client
-        from unittest.mock import patch
 
         with patch.dict("os.environ", {"GITHUB_TOKEN": "test-token"}):
             factory = github_client()

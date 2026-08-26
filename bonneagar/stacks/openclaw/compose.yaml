@@ -33,6 +33,15 @@ services:
     # Update on the monthly renovate cycle (re-run the fetch script).
     image: ghcr.io/openclaw/openclaw:2026.2.6@sha256:4efc318a6570e4aac66d8ce0ab94c9a577c2f5d4afe914aa73e9678f82799e26
     container_name: openclaw
+    # NOTE: the gateway MUST be started with `--bind lan`. The default binds
+    # container loopback, which Docker cannot port-forward to: the port appears
+    # published on the host while every connection is refused, and the Pangolin
+    # private resource 502s. The host-side publish below is still 127.0.0.1
+    # only, so `lan` does not expose anything on the local network.
+    #
+    # The effective command lives in sidecar.yaml (it wraps this to source the
+    # Locket secrets first) and that overlay WINS. Change it there, not here.
+    command: ["node", "openclaw.mjs", "gateway", "--bind", "lan", "--allow-unconfigured"]
     restart: unless-stopped
     user: "1000:1000"
     security_opt:

@@ -1,6 +1,6 @@
 # `oideachais-cognify-knowledge-graph` — Agent Routing
 
-> TBD - created by archiving change 2026-07-14-oideachais-cognify-knowledge-graph-v1. Update Purpose after archive.
+> The oideachais cognify knowledge-graph surface covers the 5-stage cross-stage cognify (extraction → cognify → embedding → cross-cite → LanceDB vector + Cognee cluster) across the Cianfhoghlaim monorep...
 
 ## Routing
 
@@ -35,4 +35,4 @@ lint:drift-docs              # Validate every AGENTS.md number claim
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-29; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

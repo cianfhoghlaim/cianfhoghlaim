@@ -1,0 +1,68 @@
+# source.yaml — Hades (Supergiant Games) capture source.
+#
+# Per the tuatha skill: shippable=false invariant.
+# The full-resolution screenshots + HEVC bursts are extracted into the
+# private Pangolin volume (s3://cianfhoghlaim-tuatha-raw/hades/). No raw
+# game pixels ever enter the repo. The Lance fat table carries only the
+# BAML-extracted description + a ≤1024px JPEG thumb.
+
+source:
+  id: hades
+  kind: game_native
+  display_name: "Hades (Steam, Supergiant Games)"
+  upstream_owner: Supergiant Games
+  rights_holder: Supergiant Games
+
+shippable: false    # per the tuatha skill: never commit raw frames
+
+legal_notes: |
+  Hades is a copyrighted work owned by Supergiant Games. This source
+  extracts typed BAML descriptions (god, tier, slot, effect, color, motion)
+  from captured frames; the pixels never enter the repository. The full
+  capture stays in a Pangolin-private volume. Use of the descriptions in
+  the British Isles Formative Assessment MMO is transformation + fair-use
+  research; no game text or art is copied verbatim into any shippable asset.
+
+ingest:
+  raw_bucket: s3://cianfhoghlaim-tuatha-raw/hades
+  reader: tuatha_media_intel.capture.python.tuatha_capture.gba.gba_doctor
+  cadence: event_driven      # Phase 1: manual capture via Swift daemon
+  capture_daemon: /Library/LaunchAgents/com.ci.tuatha.capture.plist
+
+extraction:
+  flow: tuatha_hades_boons
+  baml_function: ExtractHadesBoon
+  vision_model: ${VISION_MODEL_HADES}        # routed via MODEL_REGISTRY ocr_vision:tier2_medium
+  thumbnail_max_px: 1024
+  fts_columns: [effect_text]
+  vector_columns: [embedding]
+
+observability:
+  langfuse: true
+  mlflow_experiment: tuatha-media-intel
+  ragas_metrics: [anam_color_anchor]
+  asset_check: ragas_anam_color_anchor
+
+outputs:
+  lance_table: cianfhoghlaim.tuatha.hades.boons
+  columns:
+    - boon_id        # PK
+    - god
+    - tier
+    - slot
+    - effect_text    # FTS
+    - color_hex
+    - particle_motion
+    - {x_min,y_min,x_max,y_max}  # bounding box
+    - {run_id, frame_index, captured_at}
+    - embedding      # 1024-d bge-m3
+    - thumb_blob     # ≤1024px JPEG
+
+phases:
+  phase_1: manual_capture        # Swift daemon + you play Hades
+  phase_2: hermes_controlled    # Hermes Agent computer-use drives the play
+
+related_specs:
+  - openspec/specs/cianfhoghlaim-educational-mmo/spec.md
+  - openspec/specs/centralized-model-registry/spec.md
+  - openspec/specs/dual-search-architecture/spec.md

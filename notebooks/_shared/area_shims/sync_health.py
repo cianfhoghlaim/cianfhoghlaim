@@ -57,10 +57,22 @@ def cognee_sync_overview() -> str:
     return """
     ## 🧠 Cognee Sync (Knowledge Graph)
 
-    The 11-cluster Cognee knowledge graph — verifies every cluster has
-    the expected entity count.
+    The 8 cianfhoghlaim-scope Cognee knowledge graph clusters (per the
+    `2026-08-24-dlt-sources-to-multi-repo-scaffold-v1` change Phase 0.8):
 
-    Run `mise run sync:cognee` to refresh the cognee clusters.
+    1. `openspec_changes` — 78 cianfhoghlaim + 4 cwd openspec/changes/*/proposal.md
+    2. `baml_schemas` — 334 baml_src/**/*.baml
+    3. `dagster_assets` — 89 orchestration/defs/**/*.py
+    4. `agents` — 168 agents/**/*.py
+    5. `dlt_sources` — 2173 dlt_sources/**/*.py
+    6. `notebooks` — 245 notebooks/**/*.{py,ipynb,md}
+    7. `stacks` — 109 bonneagar/stacks/**/compose.yaml
+    8. `firecrawl_concepts` — 35 .cocoindex_code/guides.yml concept guides
+
+    Run `mise run sync:cognee` to refresh the cognee clusters (orchestrator).
+    Run `mise run sync:cognee:<cluster>` to refresh a single cluster.
+
+    Per the `cognee-cluster-population` capability in the parent change.
     """
 
 

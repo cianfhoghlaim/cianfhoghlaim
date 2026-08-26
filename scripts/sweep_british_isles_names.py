@@ -3,6 +3,7 @@
 
 Usage: python scripts/sweep_british_isles_names.py
 """
+
 from __future__ import annotations
 import re
 from pathlib import Path

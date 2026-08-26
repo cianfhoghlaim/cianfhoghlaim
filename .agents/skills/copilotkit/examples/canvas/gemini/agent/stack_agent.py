@@ -109,9 +109,7 @@ def return_stack_analysis_tool(**kwargs) -> Dict[str, Any]:
 # Parse a GitHub URL and return (owner, repo) when present
 def _parse_github_url(url: str) -> Optional[Tuple[str, str]]:
     """Extract owner and repo from a GitHub URL, even if surrounded by other text."""
-    pattern = (
-        r"https?://github\.com/(?P<owner>[A-Za-z0-9_.-]+)/(?P<repo>[A-Za-z0-9_.-]+)"
-    )
+    pattern = r"https?://github\.com/(?P<owner>[A-Za-z0-9_.-]+)/(?P<repo>[A-Za-z0-9_.-]+)"
     match = re.search(pattern, url)
     if not match:
         return None
@@ -414,9 +412,9 @@ async def analyze_with_gemini_node(state: StackAgentState, config: RunnableConfi
                         state["show_cards"] = True
                         await copilotkit_emit_state(config, state)
                         try:
-                            structured_payload = StructuredStackAnalysis(
-                                **args
-                            ).model_dump(exclude_none=True)
+                            structured_payload = StructuredStackAnalysis(**args).model_dump(
+                                exclude_none=True
+                            )
                         except Exception:
                             structured_payload = dict(args)
                         break
@@ -445,9 +443,7 @@ async def analyze_with_gemini_node(state: StackAgentState, config: RunnableConfi
     await copilotkit_emit_state(config, state)
     messages[-1].content = state["last_user_content"]
     if tool_calls and tool_msg:
-        messages.append(
-            AIMessage(tool_calls=tool_calls, id=tool_msg.id, type="ai", content="")
-        )
+        messages.append(AIMessage(tool_calls=tool_calls, id=tool_msg.id, type="ai", content=""))
         messages.append(
             ToolMessage(
                 content="The GitHub Repository has been analyzed",

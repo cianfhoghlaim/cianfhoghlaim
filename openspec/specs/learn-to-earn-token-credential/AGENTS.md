@@ -1,36 +1,38 @@
 # `learn-to-earn-token-credential` — Agent Routing
 
-> TBD - created by `2026-08-17-hygiene-drift-cleanup-v1` P4.3 (regenerate via `mise run sync:all`).
+> The Learn-to-Earn token + credential surface covers the x402 payment protocol + the credential issuance flow (token + on-chain credential + revocation list) across the Cianfhoghlaim monorepo. It defin...
 
 ## Routing
 
-Load this AGENTS.md when you need to work with the
-`learn-to-earn-token-credential` capability.
-
-For platform-wide context, load [`../../../AGENTS.md`](../../../AGENTS.md).
+Load this AGENTS.md when the parent spec (`./spec.md`) is in scope.
+Use it to find the most relevant mise tasks + skills + adjacent files
+without re-reading the full spec.
 
 ## Quick start
 
 ```bash
-# TBD - consult the spec.md and corresponding skill
+sync:all              # Run all 7 sync layers
+lint:drift-docs              # Validate every AGENTS.md number claim
 ```
 
 ## Key sources
 
 - `openspec/specs/learn-to-earn-token-credential/spec.md` — the canonical spec
+- `openspec/specs/repo-hygiene-agent-routing/spec.md` — the per-spec AGENTS.md convention
 
 ## Adjacent specs
 
-- TBD
+- `openspec/specs/repo-hygiene-agent-routing/spec.md` — the per-spec AGENTS.md convention
 
 ## DO NOT
 
-- TBD
+- Hand-edit this file (the generator will overwrite it). To customise,
+  edit `openspec/specs/learn-to-earn-token-credential/spec.md` and re-run
+  `uv run python scripts/sync/spec_agents.py`.
 
 ## Skill pointers
 
-| Skill | When to load |
-|:--|:--|
-| TBD | TBD |
+- `ccc` — for semantic code search across the spec's implementation
+- `openspec` — for the spec change workflow
 
-<!-- generated: 2026-08-17 by 2026-08-17-hygiene-drift-cleanup-v1 P4.3 -->
+<!-- generated: 2026-08-25; do not hand-edit -->

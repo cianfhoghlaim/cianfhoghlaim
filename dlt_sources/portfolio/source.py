@@ -47,7 +47,7 @@ from pathlib import Path
 from typing import Any
 
 import dlt_sources
-from _shared.config.paths import get_author_dir, resolve_path
+from dlt_sources.common.paths import get_author_dir, resolve_path
 
 CHUNK_SIZE = 1 << 16  # 64 KiB
 

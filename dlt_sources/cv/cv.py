@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Any
 
 import dlt_sources
-from _shared.config import get_author_dir, get_repo_root
+from dlt_sources.common.paths import get_author_dir, get_repo_root
 
 REPO_ROOT = get_repo_root()
 AUTHOR_DIR = get_author_dir()

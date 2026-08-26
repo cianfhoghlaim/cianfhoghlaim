@@ -4,7 +4,7 @@ Wave 1 stale __init__.py fixer.
 
 After the migration, some `__init__.py` files in the new domain-first
 locations still contain imports referencing the old jurisdiction-first
-paths (e.g. `from dlt_sources.commonwealth.nga.law import nass` when the
+paths (e.g. `from dlt_sources.commonwealth.nigeria.law import nass` when the
 actual location is now `dlt_sources.law.nigeria.commonwealth.nass`).
 
 This script identifies and fixes these stale imports by:

@@ -30,13 +30,12 @@ services:
     # `locket` repo at https://github.com/cianfhoghlaim/locket
     # (private). Update this tag when a new release is published.
     image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
-    environment:
-      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
     container_name: cianfhoghlaim-cianfhoghlaim-locket
     restart: unless-stopped
     env_file:
       - ./secrets.env
     environment:
+      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
       INFISICAL_PROJECT_ID: ${INFISICAL_PROJECT_ID:-dev-baile}
       TEMPLATE_PATH: /etc/locket/secrets.env
       OUTPUT_PATH: /run/secrets/locket/secrets.env

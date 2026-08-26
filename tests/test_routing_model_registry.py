@@ -24,28 +24,27 @@ from meaisinfhoghlaim.models.routing import (
     route_language,
 )
 
-
 # ─── Migrated module-level constants resolve via model_for(...) ──────────────
 
 
 def test_default_text_model_resolves_to_registry() -> None:
     """The DEFAULT_TEXT_MODEL constant must match what model_for('text_llm', 'default') returns."""
-    assert DEFAULT_TEXT_MODEL == model_for("text_llm", "default")
+    assert model_for("text_llm", "default") == DEFAULT_TEXT_MODEL
 
 
 def test_irish_text_model_resolves_to_registry_with_language() -> None:
     """The IRISH_TEXT_MODEL constant must match model_for('text_llm', 'irish', language='ga')."""
-    assert IRISH_TEXT_MODEL == model_for("text_llm", "irish", language="ga")
+    assert model_for("text_llm", "irish", language="ga") == IRISH_TEXT_MODEL
 
 
 def test_diagram_ocr_model_resolves_to_registry() -> None:
     """The DIAGRAM_OCR_MODEL constant must match model_for('ocr_vision', 'specialist')."""
-    assert DIAGRAM_OCR_MODEL == model_for("ocr_vision", "specialist")
+    assert model_for("ocr_vision", "specialist") == DIAGRAM_OCR_MODEL
 
 
 def test_default_ocr_model_resolves_to_registry() -> None:
     """The DEFAULT_OCR_MODEL constant must match model_for('ocr_vision', 'default')."""
-    assert DEFAULT_OCR_MODEL == model_for("ocr_vision", "default")
+    assert model_for("ocr_vision", "default") == DEFAULT_OCR_MODEL
 
 
 # ─── Routing table references the 4 canonical constants (not raw strings) ──

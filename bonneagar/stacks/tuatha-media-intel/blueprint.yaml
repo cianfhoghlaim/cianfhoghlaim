@@ -1,0 +1,26 @@
+komodo:
+  blueprint_name: tuatha-media-intel
+  description: |
+    CocoIndex + BAML + RAGAS pipeline for the British Isles Formative
+    Assessment MMO. Drives the 4 v1 CocoIndex flows (hades_boons,
+    comic_particles, gba_magic, anam_particles) and runs nightly RAGAS
+    quality gates on the anam_particles_v1 asset.
+
+    See tuatha_media_intel.py in orchestration/defs/2_materials/.
+  owner: tuatha
+  criticality: medium
+  rollout:
+    strategy: blue-green
+    healthcheck:
+      container: cocoindex-runner
+      command: bash -c "cocoindex status tuatha_hades_boons"
+      interval_seconds: 60
+      timeout_seconds: 10
+      retries: 3
+  rollback:
+    on_healthcheck_failure: true
+    on_baml_codegen_failure: false  # tolerated — codegen is non-critical
+  resources:
+    cpu: 2
+    memory_mb: 8192
+    gpu: none  # the VLM is on llama-swap; the embed is on MPS (host) or CPU (container)

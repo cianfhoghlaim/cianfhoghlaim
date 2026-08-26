@@ -18,9 +18,7 @@ from datetime import datetime
 import json
 
 a2ui_prompts_folder = Path(__file__).resolve().parent / "a2ui_prompts"
-A2UI_JSON_SCHEMA = (a2ui_prompts_folder / "a2ui_schema.json").read_text(
-    encoding="utf-8"
-)
+A2UI_JSON_SCHEMA = (a2ui_prompts_folder / "a2ui_schema.json").read_text(encoding="utf-8")
 A2UI_PROMPT = (a2ui_prompts_folder / "a2ui_prompt.txt").read_text(encoding="utf-8")
 
 A2UI_JSON_SCHEMA_PROMPT = f"""
@@ -578,9 +576,7 @@ def send_email_tool_fn(*args, **kwargs):
 
 
 def get_daily_brief_fn(*args, **kwargs):
-    meetings = [
-        e for e in demo_schedule if not e["isAvailable"] and e["title"] != "Lunch Break"
-    ]
+    meetings = [e for e in demo_schedule if not e["isAvailable"] and e["title"] != "Lunch Break"]
     available_slots = [e for e in demo_schedule if e["isAvailable"]]
     unread_emails = [e for e in demo_inbox if not e["isRead"]]
 
@@ -606,9 +602,7 @@ def get_daily_brief_fn(*args, **kwargs):
                 "endTime": e["endTime"],
                 "guestCount": len(e.get("guests", [])),
                 "guestNames": ", ".join(
-                    " ".join(
-                        p.capitalize() for p in g["email"].split("@")[0].split(".")
-                    )
+                    " ".join(p.capitalize() for p in g["email"].split("@")[0].split("."))
                     for g in e.get("guests", [])
                 ),
             }

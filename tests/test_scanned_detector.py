@@ -21,14 +21,13 @@ from unittest.mock import MagicMock
 # Make meaisinfhoghlaim importable when running from the repo root
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from meaisinfhoghlaim.backends.scanned_detector import (  # noqa: E402
+from meaisinfhoghlaim.backends.scanned_detector import (
     BLANK_PAGE_RATIO_THRESHOLD,
     IMAGE_HEAVY_THRESHOLD,
     TEXT_DENSITY_THRESHOLD,
     ScannedPDFReport,
     is_scanned_pdf,
 )
-
 
 # ─── Mocked-pymupdf tests (no real PDF needed) ───────────────────────────────
 
@@ -37,7 +36,7 @@ def _make_mock_pdf(page_texts: list[str], images_per_page: list[int]) -> MagicMo
     """Build a mock pymupdf document where each page has the given text and image counts."""
     doc = MagicMock()
     pages = []
-    for text, n_images in zip(page_texts, images_per_page):
+    for text, n_images in zip(page_texts, images_per_page, strict=False):
         page = MagicMock()
         page.get_text.return_value = text
         page.get_images.return_value = list(range(n_images))

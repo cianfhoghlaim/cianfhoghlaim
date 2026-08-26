@@ -1,0 +1,9 @@
+2026-08-22 10:54:40 +0100 - dagster - DEBUG - __ASSET_JOB - bc9bbea2-e371-4cfb-8914-f57bd08372a9 - 10749 - LOGS_CAPTURED - Capturing logs for process (pid: 10749).
+2026-08-22 10:54:40 +0100 - dagster - DEBUG - __ASSET_JOB - bc9bbea2-e371-4cfb-8914-f57bd08372a9 - 10749 - lc5_geography_syllabus_extracted - STEP_START - Started execution of step "lc5_geography_syllabus_extracted".
+2026-08-22 10:54:40 +0100 - dagster - DEBUG - __ASSET_JOB - bc9bbea2-e371-4cfb-8914-f57bd08372a9 - 10749 - lc5_geography_syllabus_extracted - STEP_OUTPUT - Yielded output "result" of type "Dict[String,Any]". (Type check passed).
+2026-08-22 10:54:40 +0100 - dagster - DEBUG - __ASSET_JOB - bc9bbea2-e371-4cfb-8914-f57bd08372a9 - lc5_geography_syllabus_extracted - Writing file at: /Users/cianmacandeisigh/dev/kings_college_galway/.tmp_dagster_home_nzku7pdc/storage/lc5_geography_syllabus_extracted using PickledObjectFilesystemIOManager...
+INFO:alembic.runtime.migration:Context impl SQLiteImpl.
+INFO:alembic.runtime.migration:Will assume non-transactional DDL.
+2026-08-22 10:54:40 +0100 - dagster - DEBUG - __ASSET_JOB - bc9bbea2-e371-4cfb-8914-f57bd08372a9 - 10749 - lc5_geography_syllabus_extracted - ASSET_MATERIALIZATION - Materialized value lc5_geography_syllabus_extracted.
+2026-08-22 10:54:40 +0100 - dagster - DEBUG - __ASSET_JOB - bc9bbea2-e371-4cfb-8914-f57bd08372a9 - 10749 - lc5_geography_syllabus_extracted - HANDLED_OUTPUT - Handled output "result" using IO manager "io_manager"
+2026-08-22 10:54:40 +0100 - dagster - DEBUG - __ASSET_JOB - bc9bbea2-e371-4cfb-8914-f57bd08372a9 - 10749 - lc5_geography_syllabus_extracted - STEP_SUCCESS - Finished execution of step "lc5_geography_syllabus_extracted" in 252ms.

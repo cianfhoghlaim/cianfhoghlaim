@@ -188,9 +188,7 @@ async def invocations(payload: dict, context: RequestContext):
     except ValueError:
         # Fall back to forwarded props if JWT extraction fails (e.g. local dev).
         forwarded = (
-            input_data.forwarded_props
-            if isinstance(input_data.forwarded_props, dict)
-            else {}
+            input_data.forwarded_props if isinstance(input_data.forwarded_props, dict) else {}
         )
         actor_id = next(
             (forwarded[k] for k in ACTOR_ID_KEYS if k in forwarded and forwarded[k]),

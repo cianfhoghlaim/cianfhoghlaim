@@ -1,0 +1,66 @@
+# source.yaml — Absolute Superman (DC Comics) capture source.
+#
+# Per the tuatha skill: shippable=false invariant.
+# Description-only extraction. The bias is "description_heavy" (the
+# color + motion are derived, not asserted) because Absolute Superman's
+# red dust is the canonical visual signal — DC may have a higher
+# copyright interest in color/motion specificity.
+
+source:
+  id: comic_absolute_superman
+  kind: comic_book
+  display_name: "Absolute Superman (DC Comics, Jason Aaron, 2024-)"
+  upstream_owner: DC Comics
+  rights_holder: DC Comics
+
+shippable: false    # per the tuatha skill: never commit comic pages
+
+legal_notes: |
+  Absolute Superman © DC Comics. This source extracts typed descriptions
+  (panel coordinate, particle_form, color_hex, motion, character
+  attribution) from comic book pages via BAML. The page pixels never
+  enter the repository. The Lance fat table carries only ≤768px thumbs
+  and the BAML-extracted description text. Bias mode is
+  `description_heavy` — color + motion are described in qualitative,
+  not quantitative, terms to reduce the risk of reproducing the
+  distinctive red-dust motif verbatim.
+
+ingest:
+  raw_bucket: s3://cianfhoghlaim-tuatha-raw/comic
+  reader: tuatha_media_intel.capture.python.tuatha_capture.comic.comic_ingest
+  cadence: weekly              # comic drops at low cadence
+  panel_detector: deeppanel   # optional; falls back to whole-page
+
+extraction:
+  flow: tuatha_comic_particles
+  baml_function: ExtractComicParticle
+  vision_model: ${VISION_MODEL_COMIC}
+  thumbnail_max_px: 768
+  bias_mode: description_heavy
+  fts_columns: [motion_description]
+  vector_columns: [embedding]
+
+observability:
+  langfuse: true
+  mlflow_experiment: tuatha-media-intel
+  ragas_metrics: [anam_color_anchor]
+  asset_check: ragas_anam_color_anchor
+
+outputs:
+  lance_table: cianfhoghlaim.tuatha.comic.particles
+  columns:
+    - panel_id       # PK
+    - issue_id
+    - page_number
+    - particle_form
+    - color_hex
+    - motion_description  # FTS
+    - character_attribution
+    - source_page_url     # optional, traceability only
+    - {run_id, frame_index, captured_at}
+    - embedding           # 1024-d bge-m3
+    - thumb_blob          # ≤768px JPEG
+
+related_specs:
+  - openspec/specs/cianfhoghlaim-educational-mmo/spec.md
+  - openspec/specs/dual-search-architecture/spec.md

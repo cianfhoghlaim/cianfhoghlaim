@@ -1,9 +1,4 @@
-"""dlt_sources/european_nations/ukraine — DLT sources (empty).
+"""european_nations/ukraine — factory-backed shim (Phase 1.1/1.2)."""
+from dlt_sources.european_nations._factory import ukraine_source  # noqa: F401
 
-Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
-change, this package was migrated from its legacy jurisdiction-first
-location.
-"""
-from __future__ import annotations
-
-__all__ = []
+__all__ = ["ukraine_source"]

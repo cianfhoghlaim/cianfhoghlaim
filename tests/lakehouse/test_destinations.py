@@ -25,7 +25,7 @@ def test_local_destination_default_path(monkeypatch):
     """GIVEN no `OOG_LOCAL_DUCKDB_PATH` is set (CI default)
     WHEN LocalDuckLakeDestination is constructed
     THEN the path is `/tmp/cianfhoghlaim.duckdb`."""
-    from dlt_sources._lakehouse.destinations import LocalDuckLakeDestination
+    from dlt_sources.lakehouse.destinations import LocalDuckLakeDestination
 
     monkeypatch.delenv("OOG_LOCAL_DUCKDB_PATH", raising=False)
     dest = LocalDuckLakeDestination()
@@ -36,7 +36,7 @@ def test_local_destination_override(monkeypatch):
     """GIVEN `OOG_LOCAL_DUCKDB_PATH=/tmp/alt.duckdb`
     WHEN LocalDuckLakeDestination is constructed
     THEN the path reflects the override."""
-    from dlt_sources._lakehouse.destinations import LocalDuckLakeDestination
+    from dlt_sources.lakehouse.destinations import LocalDuckLakeDestination
 
     monkeypatch.setenv("OOG_LOCAL_DUCKDB_PATH", "/tmp/alt.duckdb")
     dest = LocalDuckLakeDestination()
@@ -47,7 +47,7 @@ def test_motherduck_destination_raises_on_placeholder(monkeypatch):
     """GIVEN a placeholder `MOTHERDUCK_TOKEN`
     WHEN MotherDuckLakeDestination.dlt_target() is invoked
     THEN LakehouseConnectionError is raised."""
-    from dlt_sources._lakehouse.destinations import (
+    from dlt_sources.lakehouse.destinations import (
         LakehouseConnectionError,
         MotherDuckLakeDestination,
     )
@@ -60,7 +60,7 @@ def test_motherduck_destination_raises_on_placeholder(monkeypatch):
 
 
 def test_motherduck_destination_raises_on_missing(monkeypatch):
-    from dlt_sources._lakehouse.destinations import (
+    from dlt_sources.lakehouse.destinations import (
         LakehouseConnectionError,
         MotherDuckLakeDestination,
     )
@@ -72,7 +72,7 @@ def test_motherduck_destination_raises_on_missing(monkeypatch):
 
 
 def test_bonneagar_destination_raises_on_placeholder(monkeypatch):
-    from dlt_sources._lakehouse.destinations import (
+    from dlt_sources.lakehouse.destinations import (
         BonneagarLakehouseDestination,
         LakehouseConnectionError,
     )
@@ -85,7 +85,7 @@ def test_bonneagar_destination_raises_on_placeholder(monkeypatch):
 
 
 def test_get_destination_rejects_unknown():
-    from dlt_sources._lakehouse.destinations import get_destination
+    from dlt_sources.lakehouse.destinations import get_destination
 
     with pytest.raises(ValueError):
         get_destination("not-a-destination")
@@ -95,7 +95,7 @@ def test_get_destination_local_returns_dlt_target(monkeypatch):
     """GIVEN destination='local'
     WHEN get_destination('local') is called
     THEN a dlt Destination is returned (we just check it doesn't raise)."""
-    from dlt_sources._lakehouse.destinations import (
+    from dlt_sources.lakehouse.destinations import (
         DESTINATION_CHOICES,
         get_destination,
     )
@@ -108,7 +108,7 @@ def test_get_destination_local_returns_dlt_target(monkeypatch):
 
 
 def test_local_destination_dlt_target_returns_duckdb(monkeypatch, tmp_path):
-    from dlt_sources._lakehouse.destinations import LocalDuckLakeDestination
+    from dlt_sources.lakehouse.destinations import LocalDuckLakeDestination
 
     monkeypatch.setenv("OOG_LOCAL_DUCKDB_PATH", str(tmp_path / "test.duckdb"))
     dest = LocalDuckLakeDestination()

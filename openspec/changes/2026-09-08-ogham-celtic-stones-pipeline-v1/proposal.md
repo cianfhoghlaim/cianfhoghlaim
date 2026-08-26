@@ -82,7 +82,7 @@ agent surface for both datasets.
   - `dlt/language/cisp/` (NEW; 3 files)
   - `dlt/language/megalithic_portal/` (NEW; 3 files)
   - `baml/celtic/mythology.baml` (extended from change 1)
-  - `cocoindex/biep_parity/ogham_stones_embedding.py` (NEW)
+  - `cocoindex_flows/biep_parity/ogham_stones_embedding.py` (NEW)
   - `orchestration/defs/2_materials/ogham_stones_assets.py` (NEW)
   - `notebooks/34_ogham_stones_dashboard.py` (NEW)
   - `notebooks/_shared/spatial_grid.py` (NEW)

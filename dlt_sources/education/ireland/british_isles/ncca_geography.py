@@ -8,7 +8,7 @@ NCCA syllabus crawl source. This file is the Geography variant.
 
 The canonical BIEP v1 pattern (per `9e97ca0ca`):
 - `@dlt.resource(name="geography_syllabus", write_disposition="merge", primary_key=["url"])`
-- Uses the `named_destinations` factory (the `warehouse` named
+- Uses the `named_destinations` factory (the `ducklake_cianfhoghlaim` named
   destination)
 - Honours `USE_LOCAL_SCRAPES=true` to read from
   `stedding/ingest_queue/ncca/geography/`
@@ -36,7 +36,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from dlt_sources.common.named_destinations import named_destination
+from dlt_sources.common.destinations import named_destinations
 
 import dlt_sources
 
@@ -212,13 +212,13 @@ def create_ncca_geography_pipeline(
     """Return a configured dlt pipeline for the BIEP v1 geography NCCA crawl.
 
     Honours `USE_LOCAL_SCRAPES=true` and the canonical
-    `warehouse` named destination via the named_destinations factory.
+    `ducklake_cianfhoghlaim` named destination via the named_destinations factory.
     """
     import dlt_sources as _dlt
 
     return _dlt.pipeline(
         pipeline_name=pipeline_name,
-        destination=named_destination("warehouse"),
+        destination=named_destinations("ducklake_cianfhoghlaim"),
         dataset_name=dataset_name,
     )
 

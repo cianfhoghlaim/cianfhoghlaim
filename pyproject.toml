@@ -70,6 +70,7 @@ dependencies = [
     "structlog>=25",
     "tenacity>=8.2,<9.0",
     "uvicorn>=0.32.0",
+    "dagster-dg-cli>=1.13.19",
 ]
 
 [build-system]
@@ -202,6 +203,7 @@ addopts = "-ra -q"
 # returns 0 (was the failure mode for the entire 5-layer DAG system).
 # The canonical home is orchestration.components.* (post-v7 flattened).
 [tool.dg]
+directory_type = "project"
 registry_modules = ["orchestration.components"]
 
 [tool.dlt]

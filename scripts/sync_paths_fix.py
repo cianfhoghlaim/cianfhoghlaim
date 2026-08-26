@@ -24,6 +24,7 @@ Usage:
   --dry-run    : show what would be fixed without applying
   --pattern X  : fix only one pattern (sruth|stacks|komodo)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -74,10 +75,7 @@ def find_latest_report() -> Path | None:
     if not REPORTS_DIR.is_dir():
         return None
     reports = sorted(
-        (
-            p for p in REPORTS_DIR.glob("paths-*.md")
-            if not p.name.startswith("paths-fix-")
-        ),
+        (p for p in REPORTS_DIR.glob("paths-*.md") if not p.name.startswith("paths-fix-")),
         reverse=True,
     )
     return reports[0] if reports else None
@@ -97,23 +95,39 @@ def parse_report(report: Path) -> dict[str, int]:
 def find_files_with_pattern(pattern: str, exclude_self_refs: bool = True) -> list[Path]:
     """Find tracked files containing the pattern (excluding the pattern-defining files)."""
     cmd = [
-        "grep", "-rln", "-E", pattern,
-        "--include=*.py", "--include=*.ts", "--include=*.toml",
-        "--include=*.yaml", "--include=*.baml", "--include=*.tsx",
+        "grep",
+        "-rln",
+        "-E",
+        pattern,
+        "--include=*.py",
+        "--include=*.ts",
+        "--include=*.toml",
+        "--include=*.yaml",
+        "--include=*.baml",
+        "--include=*.tsx",
         "--include=*.json",
-        "bonneagar/", "dlt_sources/", "orchestration/", "baml_src/",
-        "cocoindex/", "motherduck/", "meaisinfhoghlaim/", "agents/",
+        "bonneagar/",
+        "dlt_sources/",
+        "orchestration/",
+        "baml_src/",
+        "cocoindex/",
+        "motherduck/",
+        "meaisinfhoghlaim/",
+        "agents/",
         "observability/",
-        "pyproject.toml", "mise.toml", "turbo.json", "package.json",
+        "pyproject.toml",
+        "mise.toml",
+        "turbo.json",
+        "package.json",
         "tsconfig.json",
     ]
-    result = subprocess.run(
-        cmd, capture_output=True, text=True, cwd=".", timeout=60
-    )
+    result = subprocess.run(cmd, capture_output=True, text=True, cwd=".", timeout=60)
     files: list[Path] = []
     for line in result.stdout.strip().splitlines():
         path = Path(line)
-        if exclude_self_refs and (path.name in PATTERN_DEFINING_FILES or str(path) in PATTERN_DEFINING_FILES):
+        if exclude_self_refs and (
+            path.name in PATTERN_DEFINING_FILES or str(path) in PATTERN_DEFINING_FILES
+        ):
             continue
         if not path.exists():
             continue
@@ -178,7 +192,9 @@ def apply_rename(path: Path, old: str, new: str) -> bool:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--dry-run", action="store_true", help="show what would be fixed without applying")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="show what would be fixed without applying"
+    )
     parser.add_argument(
         "--pattern",
         choices=["sruth", "stacks", "komodo"],
@@ -238,15 +254,17 @@ def main() -> int:
                     skipped_count += 1
                     print(f"    FAILED {path}")
 
-        fix_results.append({
-            "pattern": old,
-            "replacement": new,
-            "description": description,
-            "occurrences_reported": count,
-            "files_inspected": len(files),
-            "files_fixed": fixed_count,
-            "files_skipped": skipped_count,
-        })
+        fix_results.append(
+            {
+                "pattern": old,
+                "replacement": new,
+                "description": description,
+                "occurrences_reported": count,
+                "files_inspected": len(files),
+                "files_fixed": fixed_count,
+                "files_skipped": skipped_count,
+            }
+        )
         print()
 
     # Write the fix-applied report
@@ -254,7 +272,9 @@ def main() -> int:
     fix_report = FIX_REPORT_DIR / f"paths-fix-{today}.md"
     if not args.dry_run:
         with open(fix_report, "w") as f:
-            f.write(f"# Pre-v7 Path Drift Fix-Applied Report — {datetime.now(tz=timezone.utc).isoformat()}\n\n")
+            f.write(
+                f"# Pre-v7 Path Drift Fix-Applied Report — {datetime.now(tz=timezone.utc).isoformat()}\n\n"
+            )
             f.write(f"Auto-fix mode: **{'DRY RUN' if args.dry_run else 'APPLIED'}**\n\n")
             f.write("## Per-Pattern Results\n\n")
             for r in fix_results:

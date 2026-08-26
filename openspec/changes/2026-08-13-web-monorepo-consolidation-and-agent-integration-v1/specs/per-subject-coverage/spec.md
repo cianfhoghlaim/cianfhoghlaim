@@ -48,7 +48,7 @@ The 60 subjects are:
 - **AND** the DLT source MUST be added at
   `dlt_sources/british_isles/ireland/education/lc_music.py`
 - **AND** the CocoIndex flow MUST be added at
-  `cocoindex/biep_parity/ireland_lc_music_embedding.py`
+  `cocoindex_flows/biep_parity/ireland_lc_music_embedding.py`
 - **AND** the Convex schema MUST be added at
   `web/apps/oideachais-dashboard/convex/lc/music.ts`
 - **AND** the CopilotKit actions MUST be added at

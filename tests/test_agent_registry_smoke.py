@@ -25,11 +25,6 @@ post-v4 contract. This module is updated as part of the
 """
 from __future__ import annotations
 
-import re
-
-import pytest
-
-
 # The post-v4 canonical registry path (per the 2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4 change)
 REGISTRY_PATH = "agents.adk.agent_registry"
 
@@ -51,7 +46,9 @@ def _load_registry() -> dict:
 
         return AGENT_REGISTRY
     except ImportError:
-        from cianfhoghlaim.agents.agent_registry import AGENT_REGISTRY  # type: ignore[import-not-found]
+        from cianfhoghlaim.agents.agent_registry import (
+            AGENT_REGISTRY,  # type: ignore[import-not-found]
+        )
 
         return AGENT_REGISTRY
 

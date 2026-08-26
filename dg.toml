@@ -1,24 +1,20 @@
-# Dagster dg workspace configuration
-# Single consolidated code-location — see
-# openspec/changes/2026-06-28-consolidate-sruth-into-cianfhoghlaim-v4
-# All 5 former code-locations (oideachais, meaisinfhoghlaim, tuatha, croilar,
-# crypteolas + browser) are now assets in assets/ and registered
-# via assets/definitions.py. Post-v7 (2026-07-17), the package is the
-# repo itself, so the location is at the repo root.
+# Dagster dg project configuration
+#
+# Per the 2026-08-24 master refactor (Wave 0 + Wave 2 follow-up): the prior
+# workspace shape pointed at a single project at "." and the pyproject.toml
+# carried the [tool.dg] block as the project config. The dg 1.13.x discovery
+# rule "presence of dg.toml causes pyproject.toml to be ignored for dg config"
+# meant the [tool.dg] block in pyproject.toml was never actually read — the
+# only file DG consulted was this one. We have therefore flattened the shape
+# to a project-mode dg.toml; the per-pipeline Components from
+# orchestration.components.* land in Wave 2 of the master refactor plan.
+#
+# Module path: orchestration.definitions (the canonical code location, per
+# the 2026-07-14 foundation refactor — supersedes assets.definitions and
+# the blocked cianfhoghlaim.assets/cianfhoghlaim.dagster aliases).
 
-directory_type = "workspace"
+directory_type = "project"
 
-[workspace]
-
-# Single consolidated code-location: the entire cianfhoghlaim package.
-# Per the 2026-07-14 foundation refactor
-# (openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1),
-# the canonical module path is `orchestration.definitions` (the file
-# `orchestration/definitions.py` at repo root). The historical paths
-# `assets.definitions` (which never existed on disk) and
-# `cianfhoghlaim.assets.definitions` and `cianfhoghlaim.dagster.definitions`
-# (both blocked by the missing cianfhoghlaim/ Python package) are superseded.
-[[workspace.locations]]
-path = "."
-code_location_name = "cianfhoghlaim"
-module_name = "orchestration.definitions"
+[project]
+root_module = "cianfhoghlaim"
+code_location_target_module = "orchestration.definitions"

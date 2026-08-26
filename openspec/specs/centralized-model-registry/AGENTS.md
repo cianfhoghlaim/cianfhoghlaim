@@ -1,6 +1,6 @@
 # `centralized-model-registry` — Agent Routing
 
-> TBD - created by archiving change 2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1. Update Purpose after archive.
+> The canonical model registry surface covers the 76 entries / 7 model families (ocr_vision / text_llm / embedder / rerank / image_gen / voice / translation) across the Cianfhoghlaim monorepo. It define...
 
 ## Routing
 
@@ -35,4 +35,4 @@ models:list              # List all 52 MODEL_REGISTRY entries
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-30; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

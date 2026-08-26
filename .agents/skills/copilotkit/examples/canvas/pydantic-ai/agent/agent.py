@@ -30,9 +30,7 @@ class EntityData(BaseModel):
     field1: str = ""
     field2: str = ""
     field3: list[str] = Field(default_factory=list)
-    field3_options: list[str] = Field(
-        default_factory=lambda: ["Tag 1", "Tag 2", "Tag 3"]
-    )
+    field3_options: list[str] = Field(default_factory=lambda: ["Tag 1", "Tag 2", "Tag 3"])
 
 
 class NoteData(BaseModel):
@@ -82,9 +80,7 @@ async def set_plan(ctx: RunContext[deps], steps: list[str]) -> StateSnapshotEven
     ctx.deps.state.planSteps = [{"title": s, "status": "pending"} for s in steps]
     ctx.deps.state.currentStepIndex = 0 if steps else -1
     ctx.deps.state.planStatus = "in_progress" if steps else ""
-    return StateSnapshotEvent(
-        type=EventType.STATE_SNAPSHOT, snapshot=ctx.deps.state.model_dump()
-    )
+    return StateSnapshotEvent(type=EventType.STATE_SNAPSHOT, snapshot=ctx.deps.state.model_dump())
 
 
 @agent.tool
@@ -110,9 +106,7 @@ async def update_plan_progress(
             ctx.deps.state.planStatus = "in_progress"
         elif steps and all(s == "completed" for s in statuses):
             ctx.deps.state.planStatus = "completed"
-    return StateSnapshotEvent(
-        type=EventType.STATE_SNAPSHOT, snapshot=ctx.deps.state.model_dump()
-    )
+    return StateSnapshotEvent(type=EventType.STATE_SNAPSHOT, snapshot=ctx.deps.state.model_dump())
 
 
 @agent.tool
@@ -121,9 +115,7 @@ async def complete_plan(ctx: RunContext[deps]) -> StateSnapshotEvent:
         if s.get("status") != "completed":
             s["status"] = "completed"
     ctx.deps.state.planStatus = "completed"
-    return StateSnapshotEvent(
-        type=EventType.STATE_SNAPSHOT, snapshot=ctx.deps.state.model_dump()
-    )
+    return StateSnapshotEvent(type=EventType.STATE_SNAPSHOT, snapshot=ctx.deps.state.model_dump())
 
 
 def summarize_items(state: CanvasState) -> str:
@@ -140,7 +132,9 @@ def summarize_items(state: CanvasState) -> str:
             f2 = data.get("field2", "")
             f3 = data.get("field3", "")
             cl = ", ".join([c.get("text", "") for c in data.get("field4", [])])
-            summary = f"subtitle={subtitle} · field1={f1} · field2={f2} · field3={f3} · field4=[{cl}]"
+            summary = (
+                f"subtitle={subtitle} · field1={f1} · field2={f2} · field3={f3} · field4=[{cl}]"
+            )
         elif itype == "entity":
             f1 = data.get("field1", "")
             f2 = data.get("field2", "")
@@ -152,10 +146,7 @@ def summarize_items(state: CanvasState) -> str:
             summary = f'subtitle={subtitle} · noteContent="{content}"'
         elif itype == "chart":
             metrics = ", ".join(
-                [
-                    f"{m.get('label', '')}:{m.get('value', 0)}%"
-                    for m in data.get("field1", []) or []
-                ]
+                [f"{m.get('label', '')}:{m.get('value', 0)}%" for m in data.get("field1", []) or []]
             )
             summary = f"subtitle={subtitle} · field1(metrics)=[{metrics}]"
         lines.append(f"id={pid} · name={name} · type={itype} · {summary}")

@@ -1,11 +1,39 @@
 # =============================================================================
-# PANGOLIN ENTERPRISE EDITION — PostgreSQL-backed fresh deploy on arm1-oci
+# PANGOLIN ENTERPRISE EDITION — arm1-oci
 # =============================================================================
 # Official manual docker-compose layout per docs.pangolin.net, plus PocketID
 # + TinyAuth for OIDC SSO, plus Locket sidecar for Infisical secret injection.
 #
-# Database: PostgreSQL 17 (per docs.pangolin.net/self-host/advanced/database-options)
-# Image:    fosrl/pangolin:ee-latest (per docs.pangolin.net/self-host/enterprise-edition)
+# Image:    fosrl/pangolin:ee-1.21.1  (SQLite family — see below)
+#
+# -----------------------------------------------------------------------------
+# DATABASE: SQLite, despite the postgres service below
+# -----------------------------------------------------------------------------
+# This stack DECLARES a postgres:17 service, but Pangolin does not use it.
+# Locket resolves SERVER_SECRET, POCKETID_ENCRYPTION_KEY and POSTGRES_PASSWORD
+# but NOT POSTGRES_CONNECTION_STRING, so Pangolin falls back to SQLite at
+# /app/config/db/db.sqlite. The postgres container runs healthy and empty.
+#
+# This matters because the EE image ships in two NON-INTERCHANGEABLE families:
+#     fosrl/pangolin:ee-<ver>              → SQLite      ← what we run
+#     fosrl/pangolin:ee-postgresql-<ver>   → PostgreSQL
+# Switching family (or "fixing" the connection-string injection) points
+# Pangolin at the empty database and looks exactly like total data loss.
+#
+# Confirm which is live before ANY upgrade:
+#   docker exec pangolin sh -c 'tr "\0" "\n" < /proc/1/environ' | grep -i postgres
+#   ls -la /opt/pangolin/config/db/db.sqlite
+#
+# Migrating to Postgres properly is a deliberate, separate exercise: dump the
+# SQLite data, switch to the ee-postgresql image AND inject the connection
+# string in the same change. Do not do it incidentally.
+#
+# -----------------------------------------------------------------------------
+# PIN THE TAG
+# -----------------------------------------------------------------------------
+# Tracking `ee-latest` is how this install sat on 1.18.4 (built 2026-05-13)
+# until 2026-08-23 while 1.21.1 was current. Bump deliberately, and back up
+# `config/db/db.sqlite` first — migrations run on boot and are one-way.
 # =============================================================================
 
 name: pangolin
@@ -36,7 +64,7 @@ services:
   # PANGOLIN EE — Identity-aware tunneled reverse proxy
   # ---------------------------------------------------------------------------
   pangolin:
-    image: fosrl/pangolin:ee-latest
+    image: fosrl/pangolin:ee-1.21.1
     container_name: pangolin
     restart: unless-stopped
     depends_on:
@@ -56,7 +84,7 @@ services:
   # GERBIL — WireGuard tunnel controller
   # ---------------------------------------------------------------------------
   gerbil:
-    image: fosrl/gerbil:latest
+    image: fosrl/gerbil:1.5.0
     container_name: gerbil
     restart: unless-stopped
     depends_on:

@@ -10,6 +10,7 @@ Usage:
 
 Exit code 0 = all green; non-zero = first failure.
 """
+
 import json
 import os
 import subprocess
@@ -27,12 +28,18 @@ PROJECT_ID = os.environ.get("INFISICAL_PROJECT_ID", "")
 if not UA_TOKEN:
     result = subprocess.run(
         [
-            "curl", "-s", "-X", "POST",
+            "curl",
+            "-s",
+            "-X",
+            "POST",
             "http://localhost:8081/api/v1/auth/universal-auth/login",
-            "-H", "Content-Type: application/json",
-            "-d", '{"clientId":"036d848b-b406-4756-83e3-e16e469533d4","clientSecret":"4e5f8681f1f195748a5e4770e4c1b9bac0843869df13155fbc4f446b40f5587a"}',
+            "-H",
+            "Content-Type: application/json",
+            "-d",
+            '{"clientId":"036d848b-b406-4756-83e3-e16e469533d4","clientSecret":"4e5f8681f1f195748a5e4770e4c1b9bac0843869df13155fbc4f446b40f5587a"}',
         ],
-        capture_output=True, text=True,
+        capture_output=True,
+        text=True,
     )
     UA_TOKEN = json.loads(result.stdout)["accessToken"]
 
@@ -63,7 +70,9 @@ def docker_check(name, container):
     try:
         result = subprocess.run(
             ["docker", "ps", "--filter", f"name={container}", "--format", "{{.Status}}"],
-            capture_output=True, text=True, timeout=5,
+            capture_output=True,
+            text=True,
+            timeout=5,
         )
         status = result.stdout.strip()
         if "healthy" in status:
@@ -96,9 +105,16 @@ def main():
     # Vault has 7 paths with 30+ secrets
     try:
         result = subprocess.run(
-            ["curl", "-s", "-H", f"Authorization: Bearer {UA_TOKEN}",
-             f"http://localhost:8081/api/v3/secrets/raw?workspaceId={PROJECT_ID}&environment=dev"],
-            capture_output=True, text=True, timeout=10,
+            [
+                "curl",
+                "-s",
+                "-H",
+                f"Authorization: Bearer {UA_TOKEN}",
+                f"http://localhost:8081/api/v3/secrets/raw?workspaceId={PROJECT_ID}&environment=dev",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
         secrets = json.loads(result.stdout).get("secrets", [])
         print(f"  [OK]   vault has {len(secrets)} secret(s) accessible via UA")
@@ -115,8 +131,18 @@ def main():
         ("lakehouse-postgres (12 DBs)", "lakehouse-postgres", None, "healthy"),
         ("lakehouse-redis (queue)", "lakehouse-redis", None, "healthy"),
         ("lakehouse-clickhouse", "lakehouse-clickhouse", None, "healthy"),
-        ("lakehouse-lakekeeper (REST)", "lakehouse-lakekeeper", "http://localhost:8181/health", None),
-        ("lakehouse-lance-namespace (REST)", "lakehouse-lance-namespace", "http://localhost:8182/health", None),
+        (
+            "lakehouse-lakekeeper (REST)",
+            "lakehouse-lakekeeper",
+            "http://localhost:8181/health",
+            None,
+        ),
+        (
+            "lakehouse-lance-namespace (REST)",
+            "lakehouse-lance-namespace",
+            "http://localhost:8182/health",
+            None,
+        ),
         # lancedb-viewer: the root returns the UI HTML; no /health endpoint
         ("lakehouse-lancedb-viewer", "lakehouse-lancedb-viewer", "http://localhost:8088/", None),
         ("lakehouse-locket-dev (no-op)", "lakehouse-locket-dev", None, "healthy"),
@@ -133,13 +159,28 @@ def main():
     try:
         garage_token = get_secret("lakehouse", "admin_token")
         result = subprocess.run(
-            ["curl", "-s", "-H", f"Authorization: Bearer {garage_token}",
-             "http://localhost:3904/v2/ListBuckets"],
-            capture_output=True, text=True, timeout=5,
+            [
+                "curl",
+                "-s",
+                "-H",
+                f"Authorization: Bearer {garage_token}",
+                "http://localhost:3904/v2/ListBuckets",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=5,
         )
         buckets = json.loads(result.stdout)
         bucket_names = [b.get("globalAliases", ["?"])[0] for b in buckets]
-        expected = ["iceberg", "lance", "ducklake", "langfuse-events", "langfuse-media", "langfuse-exports", "mlflow-artifacts"]
+        expected = [
+            "iceberg",
+            "lance",
+            "ducklake",
+            "langfuse-events",
+            "langfuse-media",
+            "langfuse-exports",
+            "mlflow-artifacts",
+        ]
         missing = [b for b in expected if b not in bucket_names]
         if missing:
             print(f"  [FAIL] missing buckets: {missing}")
@@ -213,7 +254,9 @@ def main():
         try:
             result = subprocess.run(
                 ["marimo", "run", path],
-                capture_output=True, text=True, timeout=10,
+                capture_output=True,
+                text=True,
+                timeout=10,
             )
             # marimo run starts a server; we just check the boot output
             if "Running" in result.stdout and "marimo" in result.stdout.lower():
@@ -226,7 +269,9 @@ def main():
                 print(f"  [WARN] {os.path.basename(nb)}: boot uncertain ({result.stdout[:100]!r})")
         except subprocess.TimeoutExpired:
             # Good — the server is running, we just timed out
-            print(f"  [OK]   {os.path.basename(nb)}: server started (timed out after 10s as expected)")
+            print(
+                f"  [OK]   {os.path.basename(nb)}: server started (timed out after 10s as expected)"
+            )
         except Exception as e:
             print(f"  [FAIL] {os.path.basename(nb)}: {e}")
             failures += 1

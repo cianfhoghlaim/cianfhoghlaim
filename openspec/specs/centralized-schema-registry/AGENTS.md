@@ -1,6 +1,6 @@
 # `centralized-schema-registry` — Agent Routing
 
-> TBD - created by archiving change 2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1. Update Purpose after archive.
+> The centralized schema registry surface codifies BAML as the source of truth for schemas across the Cianfhoghlaim monorepo. It defines 5 invariants: the BAML .baml files (baml_src/) are the canonical ...
 
 ## Routing
 
@@ -35,4 +35,4 @@ schema:validate              # CI drift gate for generated Zod schemas
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-29; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

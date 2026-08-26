@@ -128,7 +128,7 @@ Langfuse / MLflow / Logfire wiring.
 
 | Variable | Type | Required? | Resolved from | Description |
 |:--|:--|:--|:--|:--|
-| `CIANFHOGHLAIM_EMBED_MODEL` | string | yes | `infisical://dev-baile/embed/model` | Canonical: `BAAI/bge-m3`. Read by `cocoindex/_shared/_lifespan.py:103`. |
+| `CIANFHOGHLAIM_EMBED_MODEL` | string | yes | `infisical://dev-baile/embed/model` | Canonical: `BAAI/bge-m3`. Read by `cocoindex_flows/_shared/_lifespan.py:103`. |
 | `CIANFHOGHLAIM_EMBED_DIM` | int | yes | `infisical://dev-baile/embed/dim` | Canonical: `1024`. |
 | `MLFLOW_EXPERIMENT_NAME` | string | no (default `dlt-pipelines`) | env block only | Default MLflow experiment for `dlt` pipelines. |
 | `MLFLOW_S3_ENDPOINT_URL` | URL | yes (prod) | `infisical://dev-baile/lakehouse/s3_endpoint` | MLflow's S3 endpoint. Canonical: `http://lakehouse-garage:3900`. |

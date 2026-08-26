@@ -15,6 +15,7 @@ We write BOTH a canonical-name file AND a date-suffixed companion
 
 Run:  uv run python -m scripts.materialise_lc_syllabus --pairs mathematics,en mathematics,ga gaeilge,ga english,en
 """
+
 from __future__ import annotations
 
 import argparse
@@ -34,13 +35,22 @@ def _stub_dlt_sources() -> None:
     stub_ie = types.ModuleType("dlt_sources.ie")
     stub_ie_edu = types.ModuleType("dlt_sources.ie.education")
     for name in [
-        "ALL_JC_SUBJECTS", "ALL_LC_SUBJECTS", "ALL_LCA_SUBJECTS",
-        "junior_cycle_exams_source", "leaving_certificate_source",
-        "mathematics_exams_source", "science_subjects_exams_source",
-        "agentic_discovery_source", "deep_research_source",
-        "exam_pdf_download_source", "examinations_source",
-        "oide_source", "oide_all_subjects_source", "oide_gaeilge_source",
-        "oide_subject_source", "pdf_download_source",
+        "ALL_JC_SUBJECTS",
+        "ALL_LC_SUBJECTS",
+        "ALL_LCA_SUBJECTS",
+        "junior_cycle_exams_source",
+        "leaving_certificate_source",
+        "mathematics_exams_source",
+        "science_subjects_exams_source",
+        "agentic_discovery_source",
+        "deep_research_source",
+        "exam_pdf_download_source",
+        "examinations_source",
+        "oide_source",
+        "oide_all_subjects_source",
+        "oide_gaeilge_source",
+        "oide_subject_source",
+        "pdf_download_source",
         "sec_examinations_browser_source",
     ]:
         setattr(stub_ie_edu, name, (lambda *a, **kw: None) if name.endswith("source") else [])
@@ -78,7 +88,9 @@ USER_AGENT = (
 )
 
 
-def _download(url: str, target: Path, label: str, dated_target: Path | None = None) -> tuple[bool, int, str | None]:
+def _download(
+    url: str, target: Path, label: str, dated_target: Path | None = None
+) -> tuple[bool, int, str | None]:
     """Download one PDF to its target path. Returns (downloaded?, http_status, error).
 
     If `dated_target` is provided, also write a date-suffixed companion file
@@ -86,7 +98,9 @@ def _download(url: str, target: Path, label: str, dated_target: Path | None = No
     `**/*-{today_str}*.pdf`.
     """
     try:
-        resp = requests.get(url, timeout=60, headers={"User-Agent": USER_AGENT}, allow_redirects=True)
+        resp = requests.get(
+            url, timeout=60, headers={"User-Agent": USER_AGENT}, allow_redirects=True
+        )
         resp.raise_for_status()
         pdf_bytes = resp.content
     except Exception as exc:
@@ -108,7 +122,10 @@ def _download(url: str, target: Path, label: str, dated_target: Path | None = No
     # pdf_processing_syllabus asset to find via `**/*-{today_str}*.pdf` glob).
     if dated_target is not None:
         dated_target.parent.mkdir(parents=True, exist_ok=True)
-        if not dated_target.exists() or hashlib.sha256(dated_target.read_bytes()).hexdigest() != sha:
+        if (
+            not dated_target.exists()
+            or hashlib.sha256(dated_target.read_bytes()).hexdigest() != sha
+        ):
             dated_target.write_bytes(pdf_bytes)
     action = "skip" if skipped_canonical else "ok  "
     print(f"  [{action}] {label}: {target.name} ({len(pdf_bytes):,} bytes, sha={sha[:12]})")
@@ -144,16 +161,18 @@ def materialise_one(subject: str, language: str) -> dict:
         ok, status, err = _download(
             url, target, f"{subject}/{language}/{d.document_type}", dated_target
         )
-        results.append({
-            "url": url,
-            "filename": filename,
-            "document_type": d.document_type,
-            "target": str(target),
-            "dated_target": str(dated_target),
-            "ok": ok,
-            "status": status,
-            "error": err,
-        })
+        results.append(
+            {
+                "url": url,
+                "filename": filename,
+                "document_type": d.document_type,
+                "target": str(target),
+                "dated_target": str(dated_target),
+                "ok": ok,
+                "status": status,
+                "error": err,
+            }
+        )
     return {"subject": subject, "language": language, "files": results}
 
 
@@ -186,7 +205,11 @@ def main() -> int:
         for f in result["files"]:
             grand_total += 1
             if f["ok"]:
-                if f.get("status") == 200 and f.get("error") is None and "(sha256 matches)" in str(f):
+                if (
+                    f.get("status") == 200
+                    and f.get("error") is None
+                    and "(sha256 matches)" in str(f)
+                ):
                     grand_skipped += 1
                 else:
                     pass

@@ -95,8 +95,13 @@ async def main_async() -> int:
 
     stack_dirs = sorted(p for p in stacks_root.iterdir() if p.is_dir())
     total = len(stack_dirs)
+    # Per the 2026-08-24-dlt-sources-to-multi-repo-scaffold-v1 change Phase 0.8:
+    # the canonical cluster name is `stacks` (per the v2 plan §C.8). We also
+    # write to the legacy `stacks_catalog` cluster for backward compat with
+    # the 2026-08-15-stacks-sync-loop-v1 sync chain.
+    datasets = ("stacks", "stacks_catalog")
     logger.info(
-        f"Ingesting {total} stack catalogs -> dataset 'stacks_catalog'"
+        f"Ingesting {total} stack catalogs -> datasets {list(datasets)}"
     )
 
     ingested = 0
@@ -112,7 +117,8 @@ async def main_async() -> int:
             skipped += 1
             continue
         try:
-            await cognee.add(entry, dataset_name="stacks_catalog")
+            for ds in datasets:
+                await cognee.add(entry, dataset_name=ds)
             ingested += 1
         except Exception as exc:
             logger.warning(f"  COGNIFY-FAIL {stack_dir.name}: {exc}")

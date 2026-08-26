@@ -123,7 +123,7 @@ surface for all of it.
   - `agents/meaisinfhoghlaim/educational/celtic_mythology_agent.py` (NEW)
   - `agents/meaisinfhoghlaim/educational/irish_history_agent.py` (NEW)
   - `agents/meaisinfhoghlaim/educational/educational_geography_agent.py` (NEW)
-  - `cocoindex/biep_parity/mythology_embedding.py` (NEW; R1-R4)
+  - `cocoindex_flows/biep_parity/mythology_embedding.py` (NEW; R1-R4)
   - `orchestration/defs/2_materials/mythology_assets.py` (NEW)
   - `notebooks/30_mythology_dashboard.py` (NEW)
   - `notebooks/31_irish_history_timeline.py` (NEW)

@@ -423,7 +423,7 @@ uv run pytest tests/personal_archive/ -v
 # Materialise the DuckLake tables
 uv run python -c "
 import duckdb
-from dlt_sources._lakehouse import register_personal_archive_tables
+from dlt_sources.lakehouse import register_personal_archive_tables
 con = duckdb.connect(':memory:')
 register_personal_archive_tables(con)
 print(sorted(t[0] for t in con.execute('SHOW TABLES').fetchall()))

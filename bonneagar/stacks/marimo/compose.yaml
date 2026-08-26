@@ -46,9 +46,16 @@ services:
       - ../../../notebooks:/notebooks:ro
       - marimo_data:/home/marimo
     healthcheck:
-      # The new FastAPI server exposes /health (per the marimo canonical
-      # pattern; the previous /api/health endpoint is deprecated)
-      test: ["CMD-SHELL", "curl -sf http://localhost:2718/health || exit 1"]
+      # The FastAPI server exposes /health (per the marimo canonical pattern;
+      # the previous /api/health endpoint is deprecated).
+      #
+      # Uses python, NOT curl: curl is not installed in the miniconda base
+      # image, so the previous curl-based check failed with
+      # "/bin/sh: 1: curl: not found" and reported the container permanently
+      # unhealthy while it was serving normally.
+      test:
+        - CMD-SHELL
+        - python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:2718/health', timeout=4).status==200 else 1)"
       interval: 30s
       timeout: 10s
       retries: 3

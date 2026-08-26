@@ -1,6 +1,6 @@
 # `european-nations-ukraine-pipeline` — Agent Routing
 
-> TBD - created by archiving change 2026-07-15-eu-pilot-upgrade-v1. Update Purpose after archive.
+> The Ukraine pipeline surface provides British-Isles parity per-subject depth for the Cianfhoghlaim monorepo. It defines 12 invariants: the canonical european_nations/ukraine/ directory path, the ZNO (...
 
 ## Routing
 
@@ -35,4 +35,4 @@ lint:drift-docs              # Validate every AGENTS.md number claim
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-29; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

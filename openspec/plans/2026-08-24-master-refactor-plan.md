@@ -794,14 +794,17 @@ Per the 12 building blocks of AG-UI (per `https://ag-ui.com/`), the canonical 20
 
 **Goal: unblock the CocoIndex pipeline + repair the module path shadowing.**
 
+> **⚠️ 2026-08-25 audit correction (Wave 0 audit subagent).** Five of the six original Wave 0 tasks were based on a stale report (orchestration report §B from 2026-08-23) that described the desired state, not the actual on-disk state. The actual root cause of the Wave 0 blocker was a misconfigured `.pth` file — NOT the 88-path rewrite or the missing `cocoindex` install. Task 0.7 below is the new entry that fixes the actual root cause.
+
 | # | Task | Files touched | Tests | Verification |
 |--:|:--|:--|:--|:--|
-| **0.1** | Bulk-rewrite the 88 L3 `defs.yaml` files to use `cocoindex_flows.<subpkg>.<app>` instead of `cianfhoghlaim.cocoindex.<app>`. Use a Python script that parses the existing YAML, computes the canonical module path from the file location, and emits the corrected YAML. The script cross-checks each rewritten path against `cocoindex_flows/<subpkg>/__init__.py` exports before committing. | `orchestration/defs/3_model_lifecycle/cocoindex_v1/<app>/defs.yaml` (×88) | `dg check yaml` per file | `dg list components 2>&1 \| grep -c "Module: cocoindex_flows"` returns ≥88 |
-| **0.2** | Install the PyPI `cocoindex` package. | `pyproject.toml` | `uv pip show cocoindex` returns `1.0.x` (not yanked) | `_lifespan.py:59` flips `COCOINDEX_AVAILABLE = True` automatically |
-| **0.3** | Add the `[tool.dg] registry_modules = ["orchestration.components"]` entry to `pyproject.toml` (if not present). | `pyproject.toml` | `dg list components` shows the 11 KCG Components | Output lists all 11 |
-| **0.4** | Run `dg check yaml` on the L3 layer and fix any apps that emit `dg.Failure`. | `orchestration/defs/3_model_lifecycle/cocoindex_v1/<app>/defs.yaml` (any remaining) | `dg check yaml` | Exit 0 |
-| **0.5** | Delete the 619 empty placeholder YAMLs under `orchestration/defs/1_ingestion/{american_nations,commonwealth,european_nations,...}/` (issue #146 close). | `orchestration/defs/1_ingestion/**/defs.yaml` (619 files) | `find orchestration/defs/1_ingestion -name "defs.yaml" -empty \| wc -l` returns 0 | `mise run dagster:dev` loads |
+| **0.1** | ✅ **ALREADY DONE — No rewrite needed.** All 96 L3 `defs.yaml` files already use the canonical `cianfhoghlaim.cocoindex_flows.<subpkg>.<app>` module path. The "88 of 96 broken / use pre-v7 `cianfhoghlaim.cocoindex.<app>` path" claim was based on a stale report. Evidence: `grep -rh "^  module:" orchestration/defs/3_model_lifecycle/cocoindex_v1/ \| sort -u` returns 0 entries using the pre-v7 `cianfhoghlaim.cocoindex.<app>` path; all 96 use `cianfhoghlaim.cocoindex_flows.<subpkg>.<app>`. The actual root cause was the misconfigured `.pth` file (fixed by Task 0.7). | (none — already correct on disk) | `grep -rh "^  module:" orchestration/defs/3_model_lifecycle/cocoindex_v1/ \| grep -c "^  module: cianfhoghlaim.cocoindex"` returns 0 | `grep -rh "^  module:" orchestration/defs/3_model_lifecycle/cocoindex_v1/ \| sort -u` shows only `cianfhoghlaim.cocoindex_flows.<subpkg>.<app>` paths |
+| **0.2** | ✅ **ALREADY DONE — `cocoindex==1.0.20` is already installed.** Evidence: `uv pip show cocoindex` returns `Name: cocoindex, Version: 1.0.20, Location: .../site-packages`. The `_lifespan.py:59` `COCOINDEX_AVAILABLE = True` flip is already in effect. | (none — already installed) | `uv pip show cocoindex` | Returns `Version: 1.0.20` |
+| **0.3** | ✅ **ALREADY DONE — `[tool.dg] registry_modules = ["orchestration.components"]` is already in `pyproject.toml`.** Evidence: `grep -A 3 "tool.dg" pyproject.toml`. | (none — already present) | `grep "registry_modules" pyproject.toml` | Returns the line |
+| **0.4** | Install the **`dagster-dg-cli`** PyPI package (the canonical 1.13+ Components CLI; `dagster-components` was merged into `dagster` core in v1.10 and the standalone `dagster-components==0.2.2` is an incompatible legacy stub that emits `ModuleNotFoundError: No module named 'dagster._utils.source_position'` against `dagster==1.13.x`). | `pyproject.toml` | `.venv/bin/dg --version` | Returns `dg, version 1.13.19`. `.venv/bin/dg list components` lists the 9 standard components (`dagster.DefinitionsComponent`, `dagster.DefsFolderComponent`, `dagster.FunctionComponent`, `dagster.PythonScriptComponent`, `dagster.TemplatedSqlComponent`, `dagster.UvRunComponent`, `dagster_dbt.DbtCloudComponent`, `dagster_dbt.DbtProjectComponent`, `dagster_dlt.DltLoadCollectionComponent`). |
+| **0.5** | ✅ **ALREADY DONE — No deletion needed.** `find orchestration/defs/1_ingestion -name "defs.yaml" -empty \| wc -l` returns **0** (vs. the claimed 619). Evidence: only 17 non-empty `defs.yaml` files exist under `orchestration/defs/1_ingestion/`. The 619 placeholder claim was based on a stale `dlt_sources/AGENTS.md` (§"Routing table"); issue #146 has no remaining work. | (none — 0 empty files) | `find orchestration/defs/1_ingestion -name "defs.yaml" -empty \| wc -l` | Returns `0` |
 | **0.6** | Validate the openspec change: `openspec validate 2026-08-24-master-refactor-v1 --strict` (must pass before commit). | `openspec/changes/2026-08-24-master-refactor-v1/` | `mise run openspec:validate` | Exit 0 |
+| **0.7** | Fix the **`_editable_impl_cianfhoghlaim.pth` misconfiguration** (the actual Wave 0 root cause). The auto-generated .pth only puts `/Users/cianmacandeisigh/dev/cianfhoghlaim` (the package root) on `sys.path` — this makes `import cocoindex_flows` work but `import cianfhoghlaim` fails with `ModuleNotFoundError`. Add a sibling `_path_cianfhoghlaim_root.pth` shim that puts `/Users/cianmacandeisigh/dev` (the parent) on `sys.path`. The shim is robust against `uv add` / `uv remove` regenerating the editable .pth. | `.venv/lib/python3.13/site-packages/_path_cianfhoghlaim_root.pth` (NEW shim) | `.venv/bin/python -c "import cianfhoghlaim; import cocoindex_flows; from cianfhoghlaim.cocoindex_flows.infrastructure.academic_history_flow import *"` | All 3 imports resolve; no `ModuleNotFoundError` |
 
 **Effort:** 1 person × 3 days (the 88-path rewrite is the longest; ~3 min per file if scripted, ~4.5 hours total; plus testing + rollback safety net).
 
@@ -967,16 +970,17 @@ print(c.search('StateBackedComponent defs_state site:docs.dagster.io', categorie
 
 This section consolidates Section 4 into a single per-wave matrix.
 
-### Wave 0 — 6 tasks, ~6 file groups, ~93 tests
+### Wave 0 — 7 tasks, ~6 file groups, ~93 tests (5 of 7 ALREADY DONE per 2026-08-25 audit)
 
 | # | Files (count) | Tests | Verification |
 |--:|--:|--:|:--|
-| 0.1 | 88 | 88 | `dg check yaml` per file |
-| 0.2 | 1 | 1 | `uv pip show cocoindex` |
-| 0.3 | 1 | 1 | `dg list components` |
-| 0.4 | (any remaining) | 1 | `dg check yaml` |
-| 0.5 | 619 | 1 | `find ... -empty \| wc -l` |
+| 0.1 | 0 (ALREADY DONE — no rewrite needed; 96 files already use canonical path) | 1 | `grep -rh "^  module:" orchestration/defs/3_model_lifecycle/cocoindex_v1/ \| sort -u` |
+| 0.2 | 0 (ALREADY DONE — `cocoindex==1.0.20` already installed) | 1 | `uv pip show cocoindex` |
+| 0.3 | 0 (ALREADY DONE — `[tool.dg]` already in `pyproject.toml`) | 1 | `grep "registry_modules" pyproject.toml` |
+| 0.4 | 1 (REPLACED: install `dagster-dg-cli`, NOT run `dg check yaml`) | 1 | `.venv/bin/dg --version` → `dg, version 1.13.19` |
+| 0.5 | 0 (ALREADY DONE — 0 empty YAMLs found) | 1 | `find orchestration/defs/1_ingestion -name "defs.yaml" -empty \| wc -l` |
 | 0.6 | 0 | 1 | `openspec validate --strict` |
+| 0.7 | 1 NEW (the actual root-cause fix — `_path_cianfhoghlaim_root.pth` shim) | 1 | `import cianfhoghlaim; import cocoindex_flows; from cianfhoghlaim.cocoindex_flows.X import *` |
 
 ### Wave 1 — 11 tasks, ~30 file groups, ~25 tests
 

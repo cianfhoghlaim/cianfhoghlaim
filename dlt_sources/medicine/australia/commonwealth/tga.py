@@ -26,8 +26,8 @@ from typing import Any
 import dlt_sources
 import structlog
 
-from dlt_sources.european_nations._shared.nation_source import (
-    NationSource,
+from dlt_sources.british_isles._cross.jurisdiction_pipeline_base import (
+    JurisdictionPipelineBase,
     row_from_cache,
     use_local_scrapes,
 )
@@ -35,7 +35,7 @@ from dlt_sources.european_nations._shared.nation_source import (
 logger = structlog.get_logger(__name__)
 
 
-class AustraliaMedicineSource(NationSource):
+class AustraliaMedicineSource(JurisdictionPipelineBase):
     """Therapeutic Goods Administration DLT source."""
 
     def __init__(self) -> None:

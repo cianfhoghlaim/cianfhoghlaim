@@ -24,7 +24,7 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 
 def _import_registry():
     """Lazy import of the unified MODEL_REGISTRY surface."""
-    from meaisinfhoghlaim.models.model_registry import (  # noqa: WPS433
+    from meaisinfhoghlaim.models.model_registry import (
         MODEL_REGISTRY,
         model_for,
     )
@@ -33,7 +33,7 @@ def _import_registry():
 
 def _import_schema_helpers():
     """Lazy import of the 5 canonical schema-introspection helpers."""
-    from notebooks._shared import (  # noqa: WPS433
+    from notebooks._shared import (
         schema as _schema_module,
     )
     return _schema_module

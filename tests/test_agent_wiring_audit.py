@@ -19,7 +19,6 @@ from pathlib import Path
 
 import pytest
 
-
 # The canonical 6 client symbols that MUST NOT appear in any
 # agent module.
 FORBIDDEN_CLIENT_SYMBOLS = (

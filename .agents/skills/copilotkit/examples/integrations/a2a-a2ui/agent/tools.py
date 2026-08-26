@@ -21,9 +21,7 @@ from google.adk.tools.tool_context import ToolContext
 logger = logging.getLogger(__name__)
 
 
-def get_restaurants(
-    cuisine: str, location: str, tool_context: ToolContext, count: int = 5
-) -> str:
+def get_restaurants(cuisine: str, location: str, tool_context: ToolContext, count: int = 5) -> str:
     """Call this tool to get a list of restaurants based on a cuisine and location.
     'count' is the number of restaurants to return.
     """
@@ -47,9 +45,7 @@ def get_restaurants(
 
             # Slice the list to return only the requested number of items
             items = all_items[:count]
-            logger.info(
-                f"  - Success: Found {len(all_items)} restaurants, returning {len(items)}."
-            )
+            logger.info(f"  - Success: Found {len(all_items)} restaurants, returning {len(items)}.")
 
         except FileNotFoundError:
             logger.error(f"  - Error: restaurant_data.json not found at {file_path}")

@@ -23,7 +23,11 @@ from pathlib import Path
 from typing import Any
 
 import dlt_sources
-from pipelines.cv.source import AUTHOR_DIR, REPO_ROOT, cv_pdf_text_resource
+from dlt_sources.common.paths import get_author_dir
+from dlt_sources.cv.cv import cv_pdf_text_resource
+
+AUTHOR_DIR = get_author_dir()
+REPO_ROOT = AUTHOR_DIR.parent
 
 
 def run_teaching_pipeline(

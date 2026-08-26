@@ -11,6 +11,7 @@ For each of the 8 jurisdictions, this script:
 Writes to `s3://ducklake-cianfhoghlaim/{namespace}/{dataset}/...`
 via local Postgres-backed DuckLake + Garage S3.
 """
+
 from __future__ import annotations
 
 import json
@@ -86,7 +87,9 @@ def main() -> int:
 
     print()
     print("=" * 60)
-    print(f"Total: {sum(r['rows'] for r in results)} rows across {len(results)} jurisdictions in {time.time()-t_total:.1f}s")
+    print(
+        f"Total: {sum(r['rows'] for r in results)} rows across {len(results)} jurisdictions in {time.time() - t_total:.1f}s"
+    )
     print("=" * 60)
     print(json.dumps(results, indent=2))
     return 0

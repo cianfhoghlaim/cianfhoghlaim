@@ -80,9 +80,7 @@ class RestaurantAgent:
             # The prompt instructs the LLM to return a *list* of messages.
             # Therefore, our validation schema must be an *array* of the single message schema.
             self.a2ui_schema_object = {"type": "array", "items": single_message_schema}
-            logger.info(
-                "A2UI_SCHEMA successfully loaded and wrapped in an array validator."
-            )
+            logger.info("A2UI_SCHEMA successfully loaded and wrapped in an array validator.")
         except json.JSONDecodeError as e:
             logger.error(f"CRITICAL: Failed to parse A2UI_SCHEMA: {e}")
             self.a2ui_schema_object = None
@@ -97,9 +95,7 @@ class RestaurantAgent:
 
         if use_ui:
             # Construct the full prompt with UI instructions, examples, and schema
-            instruction = AGENT_INSTRUCTION + get_ui_prompt(
-                self.base_url, RESTAURANT_UI_EXAMPLES
-            )
+            instruction = AGENT_INSTRUCTION + get_ui_prompt(self.base_url, RESTAURANT_UI_EXAMPLES)
         else:
             instruction = get_text_prompt()
 
@@ -168,11 +164,7 @@ class RestaurantAgent:
             ):
                 logger.info(f"Event from runner: {event}")
                 if event.is_final_response():
-                    if (
-                        event.content
-                        and event.content.parts
-                        and event.content.parts[0].text
-                    ):
+                    if event.content and event.content.parts and event.content.parts[0].text:
                         final_response_content = "\n".join(
                             [p.text for p in event.content.parts if p.text]
                         )
@@ -198,7 +190,9 @@ class RestaurantAgent:
                     continue  # Go to next retry
                 else:
                     # Retries exhausted on no-response
-                    final_response_content = "I'm sorry, I encountered an error and couldn't process your request."
+                    final_response_content = (
+                        "I'm sorry, I encountered an error and couldn't process your request."
+                    )
                     # Fall through to send this as a text-only error
 
             is_valid = False
@@ -212,9 +206,7 @@ class RestaurantAgent:
                     if "---a2ui_JSON---" not in final_response_content:
                         raise ValueError("Delimiter '---a2ui_JSON---' not found.")
 
-                    text_part, json_string = final_response_content.split(
-                        "---a2ui_JSON---", 1
-                    )
+                    text_part, json_string = final_response_content.split("---a2ui_JSON---", 1)
 
                     if not json_string.strip():
                         raise ValueError("JSON part is empty.")
@@ -232,12 +224,8 @@ class RestaurantAgent:
 
                     # 2. Check if it validates against the A2UI_SCHEMA
                     # This will raise jsonschema.exceptions.ValidationError if it fails
-                    logger.info(
-                        "--- RestaurantAgent.stream: Validating against A2UI_SCHEMA... ---"
-                    )
-                    jsonschema.validate(
-                        instance=parsed_json_data, schema=self.a2ui_schema_object
-                    )
+                    logger.info("--- RestaurantAgent.stream: Validating against A2UI_SCHEMA... ---")
+                    jsonschema.validate(instance=parsed_json_data, schema=self.a2ui_schema_object)
                     # --- End New Validation Steps ---
 
                     logger.info(

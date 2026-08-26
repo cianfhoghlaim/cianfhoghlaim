@@ -13,9 +13,9 @@ from __future__ import annotations
 import asyncio
 import os
 import tempfile
+from collections.abc import Generator
 from pathlib import Path
-from typing import Any, AsyncGenerator, Generator
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
@@ -30,7 +30,7 @@ os.environ.setdefault("DUCKDB_SINGLE_THREAD", "1")
 
 
 @pytest.fixture(scope="session")
-def event_loop() -> Generator[asyncio.AbstractEventLoop, None, None]:
+def event_loop() -> Generator[asyncio.AbstractEventLoop]:
     """Create event loop for async tests."""
     loop = asyncio.new_event_loop()
     yield loop
@@ -43,7 +43,7 @@ def event_loop() -> Generator[asyncio.AbstractEventLoop, None, None]:
 
 
 @pytest.fixture
-def temp_dir() -> Generator[Path, None, None]:
+def temp_dir() -> Generator[Path]:
     """Provide a temporary directory for test files."""
     with tempfile.TemporaryDirectory() as tmpdir:
         yield Path(tmpdir)
@@ -336,7 +336,7 @@ def embedding_batch_validator():
             warnings.warn(
                 f"Embedding batch size {len(texts)} is below minimum {min_batch_size}. "
                 "This will cause 100x performance degradation.",
-                UserWarning,
+                UserWarning, stacklevel=2,
             )
         return len(texts) >= min_batch_size
 

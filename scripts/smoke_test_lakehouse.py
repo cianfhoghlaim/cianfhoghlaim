@@ -20,6 +20,7 @@ Usage:
     python scripts/smoke_test_lakehouse.py
     python scripts/smoke_test_lakehouse.py --verbose
 """
+
 from __future__ import annotations
 
 import argparse

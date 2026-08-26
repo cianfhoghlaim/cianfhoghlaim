@@ -2,6 +2,7 @@ import os
 import shutil
 import filecmp
 
+
 def merge_directories(src_dir, dest_dir):
     for item in os.listdir(src_dir):
         src_path = os.path.join(src_dir, item)
@@ -30,6 +31,7 @@ def merge_directories(src_dir, dest_dir):
                     new_dest_path = os.path.join(dest_dir, f"{base}_from_education{ext}")
                     print(f"Moving conflicting file {src_path} -> {new_dest_path}")
                     shutil.move(src_path, new_dest_path)
+
 
 if __name__ == "__main__":
     src_dir = "education"

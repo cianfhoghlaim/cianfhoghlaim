@@ -1,6 +1,6 @@
 # `motherduck-connections` — Agent Routing
 
-> TBD - created by archiving change 2026-08-15-cascading-registry-integration-v1. Update Purpose after archive.
+> The MotherDuck connection surface registers the 5th web application surface (the analytics consumer) across the Cianfhoghlaim monorepo. It defines 1 invariant: the canonical MotherDuck connection regi...
 
 ## Routing
 
@@ -35,4 +35,4 @@ lint:drift-docs              # Validate every AGENTS.md number claim
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-30; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

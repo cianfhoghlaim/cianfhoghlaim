@@ -30,7 +30,13 @@ from dlt_sources.common.destinations_cianfhoghlaim import create_pipeline, obser
 PIPELINE_NAME = "dlt_observability_smoke"
 DATASET_NAME = "dlt_observability_smoke"
 TABLE_NAME = "smoke_events"
-ROWS = [{"event_id": "smoke-1", "message": "lakehouse smoke", "created_at": datetime.now(UTC).isoformat()}]
+ROWS = [
+    {
+        "event_id": "smoke-1",
+        "message": "lakehouse smoke",
+        "created_at": datetime.now(UTC).isoformat(),
+    }
+]
 
 
 @dlt.resource(name=TABLE_NAME, primary_key="event_id", write_disposition="merge")
@@ -64,7 +70,9 @@ def _verify_lakehouse() -> bool:
     connection = duckdb.connect()
     try:
         endpoint = os.environ["AWS_ENDPOINT_URL"].replace("http://", "").replace("https://", "")
-        connection.execute("INSTALL httpfs; LOAD httpfs; INSTALL postgres; LOAD postgres; INSTALL ducklake; LOAD ducklake")
+        connection.execute(
+            "INSTALL httpfs; LOAD httpfs; INSTALL postgres; LOAD postgres; INSTALL ducklake; LOAD ducklake"
+        )
         connection.execute(f"SET s3_endpoint='{endpoint}'")
         connection.execute("SET s3_use_ssl=false; SET s3_url_style='path'; SET s3_region='garage'")
         connection.execute(f"SET s3_access_key_id='{os.environ['AWS_ACCESS_KEY_ID']}'")

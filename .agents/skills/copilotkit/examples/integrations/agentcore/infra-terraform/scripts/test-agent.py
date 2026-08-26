@@ -78,12 +78,8 @@ def get_terraform_outputs() -> Dict[str, str]:
 
         return {
             "runtime_arn": outputs.get("runtime_arn", {}).get("value", ""),
-            "cognito_user_pool_id": outputs.get("cognito_user_pool_id", {}).get(
-                "value", ""
-            ),
-            "cognito_web_client_id": outputs.get("cognito_web_client_id", {}).get(
-                "value", ""
-            ),
+            "cognito_user_pool_id": outputs.get("cognito_user_pool_id", {}).get("value", ""),
+            "cognito_web_client_id": outputs.get("cognito_web_client_id", {}).get("value", ""),
             "region": outputs.get("deployment_summary", {})
             .get("value", {})
             .get("region", "us-east-1"),
@@ -233,9 +229,7 @@ def invoke_agent(
 
     try:
         # Stream the response
-        response = requests.post(
-            url, headers=headers, json=payload, stream=True, timeout=120
-        )
+        response = requests.post(url, headers=headers, json=payload, stream=True, timeout=120)
 
         if response.status_code != 200:
             log_error(f"HTTP {response.status_code}: {response.text}")
@@ -254,10 +248,7 @@ def invoke_agent(
                             # Extract text from contentBlockDelta events
                             if "event" in parsed:
                                 event = parsed["event"]
-                                if (
-                                    isinstance(event, dict)
-                                    and "contentBlockDelta" in event
-                                ):
+                                if isinstance(event, dict) and "contentBlockDelta" in event:
                                     delta = event["contentBlockDelta"].get("delta", {})
                                     if isinstance(delta, dict):
                                         text = delta.get("text", "")
@@ -270,10 +261,7 @@ def invoke_agent(
                                     content = message.get("content", [])
                                     if isinstance(content, list):
                                         for block in content:
-                                            if (
-                                                isinstance(block, dict)
-                                                and "text" in block
-                                            ):
+                                            if isinstance(block, dict) and "text" in block:
                                                 # Don't print final message - we already streamed it
                                                 pass
                     except json.JSONDecodeError:

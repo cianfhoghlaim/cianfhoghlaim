@@ -1,5 +1,73 @@
 # Hermes — Autonomous Agent Runtime
 
+> **STATUS 2026-08-23: NOT SERVING.** The container starts its supervisor tree
+> and then exits with `Failed to initialize agent: No LLM provider configured`.
+> It is deliberately **not** declared as a Pangolin private resource — pointing
+> a resource at a dead destination produces exactly the silent failure that
+> `pangolin-doctor` exists to catch. See [§ Current state](#current-state-2026-08-23).
+
+## Current state (2026-08-23)
+
+Four real defects were found and fixed; one remains.
+
+**Fixed**
+
+1. **Secrets were never injected.** The stack was being started from
+   `compose.yaml` alone. `sidecar.yaml` is what mounts the Locket volume at
+   `/run/secrets/locket`, so hermes came up with no configuration at all —
+   which is why nothing listened and the logs were completely empty.
+2. **`sidecar.yaml` could not be parsed.** It declared `environment:` twice in
+   the `locket` service. Duplicate mapping keys are a YAML error, so
+   `docker compose -f compose.yaml -f sidecar.yaml` failed outright — the
+   overlay could never have been used. (17 files in this repo had this; all
+   fixed.)
+3. **Port collision.** The SMS webhook mapped host `8080`, which llama-swap
+   already owns, so the container failed to start with "port is already
+   allocated". Host side moved to `8647`.
+4. **Placeholder credentials.** Infisical held the literal
+   `sk-placeholder-replace-me` at `/hermes/openai_api_key`, and
+   `/hermes/openai_base_url` pointed at `http://litellm:4000` (a network hermes
+   is not on). Both replaced with the real LiteLLM master key and the
+   `host.docker.internal` route.
+
+With those fixed, hermes now *starts* its s6 services (`main-hermes`,
+`dashboard`, `gateway-default`) — previously they never ran.
+
+**Outstanding**
+
+`config/config.yaml` was rewritten to the current schema and verified to load
+correctly *standalone*:
+
+```
+model: 'custom:litellm:default'
+custom view: [{'name': 'litellm', 'base_url': 'http://host.docker.internal:4000/v1',
+               'key_env': 'OPENAI_API_KEY', 'model': 'default'}]
+```
+
+but the s6-supervised process inside the container still reports
+`No LLM provider configured`. HERMES_HOME, the config path, the API key and the
+base URL were all confirmed correct in the container. The remaining difference
+is the environment of the s6 service itself.
+
+**Next step:** run `hermes setup` interactively inside the container and diff
+the config it writes against `config/config.yaml`. That is the fastest way to
+settle the last gap; the schema is large (`_config_version: 32`) and guessing
+at it is not economical.
+
+### Notes on the config schema
+
+Three things the old `config/hermes.yaml` got wrong, worth knowing before
+editing:
+
+- `_config_version` must be present and current, or the file parses as v0 and
+  is rejected wholesale.
+- `model` is a **string** (`"provider:model"`), not a mapping.
+- `openai:` means OpenAI *the vendor*. An OpenAI-**compatible** endpoint such
+  as LiteLLM is a `custom:` provider declared under `custom_providers:`. Using
+  a bare `openai:` falls through to the OpenRouter default URL with no key,
+  which surfaces as the misleading "No LLM provider configured".
+- There is no `HERMES_CONFIG` env var. Hermes reads `$HERMES_HOME/config.yaml`.
+
 ## Overview
 
 Hermes is a long-running autonomous agent runtime that

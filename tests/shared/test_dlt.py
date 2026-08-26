@@ -8,9 +8,10 @@ Tests:
 - Caching
 """
 
-import pytest
-from unittest.mock import MagicMock, patch
 import time
+from unittest.mock import patch
+
+import pytest
 
 
 class TestPaginatedSourceMixin:
@@ -106,9 +107,10 @@ class TestCachedSourceMixin:
 
     def test_cache_stores_value(self):
         """Test cache stores and retrieves value."""
-        from sruth.shared.dlt import CachedSourceMixin
         import tempfile
         from pathlib import Path
+
+        from sruth.shared.dlt import CachedSourceMixin
 
         class TestSource(CachedSourceMixin):
             pass
@@ -140,10 +142,11 @@ class TestCachedSourceMixin:
 
     def test_cache_expiration(self):
         """Test cache expires after TTL."""
-        from sruth.shared.dlt import CachedSourceMixin
+        import os
         import tempfile
         from pathlib import Path
-        import os
+
+        from sruth.shared.dlt import CachedSourceMixin
 
         class TestSource(CachedSourceMixin):
             cache_ttl_seconds = 1  # Very short TTL for testing
@@ -218,9 +221,10 @@ class TestIncrementalSourceMixin:
 
     def test_load_save_state(self):
         """Test state persistence."""
-        from sruth.shared.dlt import IncrementalSourceMixin
         import tempfile
         from pathlib import Path
+
+        from sruth.shared.dlt import IncrementalSourceMixin
 
         class TestSource(IncrementalSourceMixin):
             pass
@@ -241,9 +245,10 @@ class TestIncrementalSourceMixin:
 
     def test_incremental_param_timestamp(self):
         """Test incremental param for timestamp type."""
-        from sruth.shared.dlt import IncrementalSourceMixin
         import tempfile
         from pathlib import Path
+
+        from sruth.shared.dlt import IncrementalSourceMixin
 
         class TestSource(IncrementalSourceMixin):
             incremental_key = "updated_at"

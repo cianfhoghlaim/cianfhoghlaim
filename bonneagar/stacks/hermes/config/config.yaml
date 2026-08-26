@@ -1,0 +1,60 @@
+# =============================================================================
+# HERMES — config.yaml
+# =============================================================================
+# Replaces the legacy `hermes.yaml` in this directory, which used a `provider:`
+# mapping that current Hermes does not understand. Symptom of the old file:
+# Hermes starts its s6 services, then exits with
+#
+#   Failed to initialize agent: No LLM provider configured.
+#
+# Hermes reads $HERMES_HOME/config.yaml. There is NO HERMES_CONFIG variable —
+# see hermes-agent.nousresearch.com/docs/reference/environment-variables.
+#
+# -----------------------------------------------------------------------------
+# THREE THINGS THE OLD CONFIG GOT WRONG
+# -----------------------------------------------------------------------------
+# 1. `_config_version` must be present and current (32 for v2026.7.1).
+#    Without it the file parses as v0 and is rejected wholesale
+#    ("Config version outdated (v0 -> v32)").
+#
+# 2. `model` is a STRING, not a mapping — "<provider>:<model>".
+#
+# 3. `openai:` means OpenAI THE VENDOR (api.openai.com with an OpenAI key).
+#    An OpenAI-*compatible* endpoint such as LiteLLM is a CUSTOM provider and
+#    must be declared under `custom_providers:` and referenced as
+#    `custom:<name>`. Using a bare `openai:` or `custom:` provider falls
+#    through to the OpenRouter default URL with no API key, which surfaces to
+#    the user as — confusingly — "No LLM provider configured".
+#    (See hermes_cli/runtime_provider.py: canonical_custom_identity.)
+#
+# -----------------------------------------------------------------------------
+# MODEL ROUTING
+# -----------------------------------------------------------------------------
+# Hermes points at ONE endpoint: the LiteLLM gateway. The fallback ordering —
+# Unsloth Studio -> llama-swap -> MiniMax — lives in LiteLLM's router, NOT
+# here, because the gateway is the abstraction. Encoding the chain in every
+# client would mean editing N clients whenever a tier moves.
+# See bonneagar/docs/ai-provider-tiers.md.
+#
+# "default" is a LiteLLM alias (see the litellm stack config for the list).
+# host.docker.internal, not the container name: hermes is on the
+# `cianfhoghlaim` network and litellm is not necessarily on it.
+#
+# OPENAI_API_KEY is injected by Locket and resolves to LITELLM_MASTER_KEY.
+# NB: Infisical previously held the literal string "sk-placeholder-replace-me"
+# at /hermes/openai_api_key — a placeholder that authenticates against nothing.
+# =============================================================================
+
+_config_version: 32
+
+model: "custom:litellm:default"
+
+custom_providers:
+  - name: litellm
+    base_url: http://host.docker.internal:4000/v1
+    model: default
+    api_key_env: OPENAI_API_KEY
+
+gateway:
+  host: 0.0.0.0                 # container-internal; host publish is 127.0.0.1
+  port: 9119

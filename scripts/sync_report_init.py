@@ -4,6 +4,7 @@
 Per the 2026-08-15-knowledge-sync-loop-v1 change.
 Run on first sync to bootstrap the stedding/sync-reports/ directory.
 """
+
 from __future__ import annotations
 
 import sys

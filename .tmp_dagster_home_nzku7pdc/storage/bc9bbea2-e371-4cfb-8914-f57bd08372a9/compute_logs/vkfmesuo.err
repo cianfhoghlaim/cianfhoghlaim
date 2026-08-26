@@ -1,0 +1,9 @@
+2026-08-22 10:54:46 +0100 - dagster - DEBUG - __ASSET_JOB - bc9bbea2-e371-4cfb-8914-f57bd08372a9 - 11004 - LOGS_CAPTURED - Capturing logs for process (pid: 11004).
+2026-08-22 10:54:46 +0100 - dagster - DEBUG - __ASSET_JOB - bc9bbea2-e371-4cfb-8914-f57bd08372a9 - 11004 - lc5_mathematics_ingested - STEP_START - Started execution of step "lc5_mathematics_ingested".
+2026-08-22 10:54:46 +0100 - dagster - DEBUG - __ASSET_JOB - bc9bbea2-e371-4cfb-8914-f57bd08372a9 - 11004 - lc5_mathematics_ingested - STEP_OUTPUT - Yielded output "result" of type "Dict[String,Any]". (Type check passed).
+2026-08-22 10:54:46 +0100 - dagster - DEBUG - __ASSET_JOB - bc9bbea2-e371-4cfb-8914-f57bd08372a9 - lc5_mathematics_ingested - Writing file at: /Users/cianmacandeisigh/dev/kings_college_galway/.tmp_dagster_home_nzku7pdc/storage/lc5_mathematics_ingested using PickledObjectFilesystemIOManager...
+INFO:alembic.runtime.migration:Context impl SQLiteImpl.
+INFO:alembic.runtime.migration:Will assume non-transactional DDL.
+2026-08-22 10:54:46 +0100 - dagster - DEBUG - __ASSET_JOB - bc9bbea2-e371-4cfb-8914-f57bd08372a9 - 11004 - lc5_mathematics_ingested - ASSET_MATERIALIZATION - Materialized value lc5_mathematics_ingested.
+2026-08-22 10:54:46 +0100 - dagster - DEBUG - __ASSET_JOB - bc9bbea2-e371-4cfb-8914-f57bd08372a9 - 11004 - lc5_mathematics_ingested - HANDLED_OUTPUT - Handled output "result" using IO manager "io_manager"
+2026-08-22 10:54:46 +0100 - dagster - DEBUG - __ASSET_JOB - bc9bbea2-e371-4cfb-8914-f57bd08372a9 - 11004 - lc5_mathematics_ingested - STEP_SUCCESS - Finished execution of step "lc5_mathematics_ingested" in 44ms.

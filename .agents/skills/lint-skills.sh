@@ -67,7 +67,7 @@ if declared_name != skill_name:
 # Match either `description: <text>` (possibly multi-line indented) or
 # `description: |` (literal block scalar)
 m_desc = re.search(
-    r"^description:\s*(?:\|\s*\n((?:[ \t]+.*\n)+)|(.*?))(?=\n[a-zA-Z_-]|\n---|\Z)",
+    r"^description:\s*(?:\|\s*\n((?:[ \t]+[^\n]*\n)+)|(.*?))(?=\n[a-zA-Z_-]|\n---|\Z)",
     fm,
     re.MULTILINE | re.DOTALL,
 )

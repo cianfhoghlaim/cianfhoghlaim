@@ -10,7 +10,7 @@ compatibility AND for new code that uses the domain-first path.
 """
 from __future__ import annotations
 
-# The pre-Wave-1 `from dlt_sources.commonwealth.nga.law import nass` import
+# The pre-Wave-1 `from dlt_sources.commonwealth.nigeria.law import nass` import
 # was broken — the actual `nass` module lives in this very directory.
 from . import nass  # noqa: F401
 

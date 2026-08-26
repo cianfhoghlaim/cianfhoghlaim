@@ -18,7 +18,7 @@
 - [ ] T2.3 — Add unit tests for both utilities
 
 ## Stage 3 — CocoIndex v1 embedding App
-- [ ] T3.1 — Create `cocoindex/biep_parity/geospatial_embedding.py`
+- [ ] T3.1 — Create `cocoindex_flows/biep_parity/geospatial_embedding.py`
 - [ ] T3.2 — Run `mise run biep:v3:cocoindex-build`
 
 ## Stage 4 — Dagster asset layer

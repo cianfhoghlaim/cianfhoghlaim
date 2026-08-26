@@ -53,11 +53,7 @@ def extract_user_id_from_context(context: RequestContext) -> str:
         )
 
     # Remove "Bearer " prefix to get the raw JWT token
-    token = (
-        auth_header.replace("Bearer ", "")
-        if auth_header.startswith("Bearer ")
-        else auth_header
-    )
+    token = auth_header.replace("Bearer ", "") if auth_header.startswith("Bearer ") else auth_header
 
     # Decode without signature verification — AgentCore Runtime already validated the token.
     # We use options to skip all verification since this is a trusted, pre-validated token.

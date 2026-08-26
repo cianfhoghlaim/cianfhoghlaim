@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-#MISE description="Validate every openspec change + spec in strict mode (the CI gate)"
-set -euo pipefail
-
-openspec validate --all --strict --no-interactive "$@"

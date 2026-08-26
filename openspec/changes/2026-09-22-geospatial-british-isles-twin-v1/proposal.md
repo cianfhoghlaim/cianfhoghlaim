@@ -64,7 +64,7 @@ of BIEP v3.
   - `dlt/infrastructure/crown_dependencies.py` (NEW)
   - `notebooks/_shared/geo.py` (NEW)
   - `notebooks/_shared/spatial_grid.py` (NEW)
-  - `cocoindex/biep_parity/geospatial_embedding.py` (NEW)
+  - `cocoindex_flows/biep_parity/geospatial_embedding.py` (NEW)
   - `orchestration/defs/2_materials/infrastructure/geospatial_assets.py` (NEW)
   - `notebooks/37_geospatial_explorer.py` (NEW)
   - `motherduck/dives/british_isles_geospatial_twin.py` (NEW)

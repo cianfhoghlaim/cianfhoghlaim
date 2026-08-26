@@ -17,6 +17,7 @@ Usage:
 
 Reference: openspec/changes/2026-07-22-biep-v2-ocr-vlm-pipeline-convergence-v1/
 """
+
 from __future__ import annotations
 
 import logging
@@ -67,7 +68,9 @@ def _run_ocr_evaluation() -> bool:
     try:
         result = subprocess.run(
             ["mise", "run", "cic:ocr:test"],
-            capture_output=True, text=True, timeout=120,
+            capture_output=True,
+            text=True,
+            timeout=120,
         )
         if result.returncode != 0:
             logger.error("OCR evaluation failed: %s", result.stderr[-1000:])
@@ -84,7 +87,9 @@ def _run_model_registry_audit() -> bool:
     try:
         result = subprocess.run(
             ["mise", "run", "cic:meaisin:registry-audit"],
-            capture_output=True, text=True, timeout=60,
+            capture_output=True,
+            text=True,
+            timeout=60,
         )
         if result.returncode != 0:
             logger.error("Registry audit failed: %s", result.stderr[-1000:])

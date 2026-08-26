@@ -68,7 +68,7 @@ neighborhood query.
 
 ### Requirement: CocoIndex v1 Embedding for Ogham Stones
 
-The system SHALL provide `cocoindex/biep_parity/ogham_stones_embedding.py`
+The system SHALL provide `cocoindex_flows/biep_parity/ogham_stones_embedding.py`
 as a CocoIndex v1 App conforming to R1-R4.
 
 #### Scenario: 1,200+ Ogham stones embedded

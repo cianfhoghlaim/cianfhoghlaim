@@ -2,9 +2,17 @@
 
 > **The agent-driven web surface of the Cianfhoghlaim stack —
 > TanStack Start + CopilotKit + AG-UI + Hono + Convex + oRPC +
-> Cloudflare.** Houses 4 app subdirs (oideachais + croilar +
-> oideachais-dashboard + cianfhoghlaim) + the Hono API gateway
-> + 3 shared packages.
+> Cloudflare.** Per the **2026-08-24-wave-5-web-consolidation-v1**
+> openspec change, houses 5 consolidated app subdirs (cianfhoghlaim +
+> oideachais + croilar + tuatha + game_showcase) + 2 demo apps
+> (cianfhoghlaim-mmo + tuatha-demo) + the Hono API gateway + 3 shared
+> packages. The legacy `_oideachais_apps/` (sruth-era dead weight) has
+> been archived to `web/_archive/`.
+
+> **Wave 5 in progress**: the canonical merge targets (oideachais,
+> croilar, tuatha) have placeholders for the 2.4 GB +
+> `cianfhoghlaim-leaving-cert/` → `oideachais/` migration that lands
+> in follow-up PRs.
 
 ## Routing
 
@@ -31,14 +39,19 @@ bun run lint                      # Lint across the monorepo
 bun run build                     # Build everything
 ```
 
-## Key sources (post-consolidation, 2026-08-13)
+## Key sources (post-Wave 5, 2026-08-24)
 
 | Path | Why it matters |
 |:--|:--|
-| `web/apps/oideachais/` | The CONTENT app (LC + JC + GCSE + A-Level per-subject pages) |
-| `web/apps/croilar/` | The PORTFOLIO app (multi-persona + dashboard + games) |
-| `web/apps/oideachais-dashboard/` | The OPERATOR dashboard (health + dagster + kg + deployment + memory) |
-| `web/apps/cianfhoghlaim/` | The CENTRAL Cianfhoghlaim homepage (with agentic chat) |
+| `web/apps/cianfhoghlaim/` | The CENTRAL Cianfhoghlaim homepage (with agentic chat) — Wave 5 target for merging `cianfhoghlaim-web/` + `cianfhoghlaim-mmo/` |
+| `web/apps/oideachais/` | The CONTENT app (LC + JC + GCSE + A-Level per-subject pages) — Wave 5 target for merging `cianfhoghlaim-leaving-cert/` + `oideachais-dashboard/` |
+| `web/apps/croilar/` | The PORTFOLIO app (multi-persona + dashboard + games) — Wave 5 target for merging `croilar-portal/` + `croilar-web/` |
+| `web/apps/tuatha/` | The TÚATHA Celtic MMO front-end (TanStack Start + React + Babylon.js) — was `tuatha-ui/`, renamed in Wave 5 |
+| `web/apps/game_showcase/` | Game showcase (kept as-is) |
+| `web/apps/cianfhoghlaim-mmo/` | Babylon.js + SpacetimeDB MMO client (pending Wave 5 merge into `cianfhoghlaim/`) |
+| `web/apps/oideachais-dashboard/` | OPERATOR dashboard (pending Wave 5 merge into `oideachais/`) |
+| `web/apps/tuatha-demo/` | Python Túatha demo (separate concern, kept as-is) |
+| `web/_archive/_oideachais_apps/` | **ARCHIVED** (Wave 5): legacy sruth-era workspace |
 | `web/hono-api/` | The SINGLE canonical Hono API gateway (per-app CopilotKit actions live here) |
 | `web/packages/ui-kit/` | The consolidated UI surface (analytics + i18n + components + config + hooks) |
 | `web/packages/auth/` | better-auth + Pocket ID OIDC |

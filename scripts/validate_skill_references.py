@@ -9,6 +9,7 @@ This catches the common drift pattern where a skill's body
 references a file that was renamed/archived in a subsequent
 openspec change (e.g. the `sruth/...` → `...` rename).
 """
+
 from __future__ import annotations
 
 import re
@@ -72,9 +73,7 @@ def main() -> int:
             # Also check the basename only (some skills reference files
             # by basename when the dir is implicit)
             basename = Path(token).name
-            if any(
-                candidate.parent.glob(f"**/{basename}") if candidate.parent.exists() else []
-            ):
+            if any(candidate.parent.glob(f"**/{basename}") if candidate.parent.exists() else []):
                 total_ok += 1
                 continue
             print(f"  FAIL {skill_name}: {token}")

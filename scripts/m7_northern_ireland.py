@@ -32,38 +32,70 @@ def main() -> int:
     """Run the 5-phase M7 pipeline. Exit 0 iff all 3 asset checks pass."""
     # Phase A: Ingestion
     logger.info("=== M7 Phase A: Ingestion (70 Northern Ireland cohorts) ===")
-    if not run([
-        "uv", "run", "dagster", "asset", "materialize",
-        "--select", "northern_ireland_documents_ingested",
-        "-m", "orchestration.definitions",
-    ]):
+    if not run(
+        [
+            "uv",
+            "run",
+            "dagster",
+            "asset",
+            "materialize",
+            "--select",
+            "northern_ireland_documents_ingested",
+            "-m",
+            "orchestration.definitions",
+        ]
+    ):
         return 1
 
     # Phase B: Extraction
     logger.info("=== M7 Phase B: Extraction (4-path OCR + RAGAS) ===")
-    if not run([
-        "uv", "run", "dagster", "asset", "materialize",
-        "--select", "northern_ireland_extractions",
-        "-m", "orchestration.definitions",
-    ]):
+    if not run(
+        [
+            "uv",
+            "run",
+            "dagster",
+            "asset",
+            "materialize",
+            "--select",
+            "northern_ireland_extractions",
+            "-m",
+            "orchestration.definitions",
+        ]
+    ):
         return 1
 
     # Phase C: Embedding
     logger.info("=== M7 Phase C: Embedding (CocoIndex v1 Apps) ===")
-    if not run([
-        "uv", "run", "dagster", "asset", "materialize",
-        "--select", "northern_ireland_embeddings",
-        "-m", "orchestration.definitions",
-    ]):
+    if not run(
+        [
+            "uv",
+            "run",
+            "dagster",
+            "asset",
+            "materialize",
+            "--select",
+            "northern_ireland_embeddings",
+            "-m",
+            "orchestration.definitions",
+        ]
+    ):
         return 1
 
     # Asset checks
     logger.info("=== M7 Asset Checks ===")
-    if not run([
-        "uv", "run", "dagster", "asset", "check",
-        "--select", "northern_ireland_documents_ingested_check,northern_ireland_extractions_ragas_check,northern_ireland_lance_chunks_check",
-        "-m", "orchestration.definitions",
-    ]):
+    if not run(
+        [
+            "uv",
+            "run",
+            "dagster",
+            "asset",
+            "check",
+            "--select",
+            "northern_ireland_documents_ingested_check,northern_ireland_extractions_ragas_check,northern_ireland_lance_chunks_check",
+            "-m",
+            "orchestration.definitions",
+        ]
+    ):
         return 1
 
     logger.info("M7 complete. All 3 asset checks pass; 70 Northern Ireland cohorts materialised.")

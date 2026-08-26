@@ -18,11 +18,8 @@ These tests verify that pipelines can share data through:
 
 from __future__ import annotations
 
-import asyncio
-import json
 from pathlib import Path
-from typing import Any
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
@@ -185,7 +182,7 @@ class TestTuathOideachaisIntegration:
         Scenario: Game about Irish mythology syncs learning outcomes
         with curriculum database.
         """
-        lancedb_conn, table = lancedb_with_table
+        _lancedb_conn, _table = lancedb_with_table
 
         # Mock SpacetimeDB sync event
         game_content = {

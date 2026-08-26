@@ -157,7 +157,7 @@ def uog_official_docs_embed_lance(context: AssetExecutionContext) -> Materialize
     ],
 )
 def uog_official_docs_duckdb_sink(context: AssetExecutionContext) -> MaterializeResult:
-    from dlt_sources._lakehouse.destinations import get_destination
+    from dlt_sources.lakehouse.destinations import get_destination
 
     target = get_destination(_DEFAULT_DESTINATION)
     return MaterializeResult(

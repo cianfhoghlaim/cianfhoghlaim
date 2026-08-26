@@ -47,7 +47,9 @@ async def chat_node(state: AgentState, config: RunnableConfig):
         messages = [*state["messages"]]
         messages[
             -1
-        ].content = "The posts had been generated successfully. Just generate a summary of the posts."
+        ].content = (
+            "The posts had been generated successfully. Just generate a summary of the posts."
+        )
         resp = await client.ainvoke(
             [*state["messages"]],
             config,
@@ -64,9 +66,7 @@ async def chat_node(state: AgentState, config: RunnableConfig):
     if config is None:
         config = RunnableConfig(recursion_limit=25)
     else:
-        config = copilotkit_customize_config(
-            config, emit_messages=True, emit_tool_calls=True
-        )
+        config = copilotkit_customize_config(config, emit_messages=True, emit_tool_calls=True)
     # 4. Generating the response using the model. This returns the response along with the web search queries.
     response = await model.aio.models.generate_content(
         model="gemini-2.5-pro",
@@ -76,9 +76,7 @@ async def chat_node(state: AgentState, config: RunnableConfig):
                 role="model",
                 parts=[types.Part(text=system_prompt_4)],
             ),
-            types.Content(
-                role="user", parts=[types.Part(text=state["messages"][-1].content)]
-            ),
+            types.Content(role="user", parts=[types.Part(text=state["messages"][-1].content)]),
         ],
         config=model_config,
     )
@@ -89,13 +87,9 @@ async def chat_node(state: AgentState, config: RunnableConfig):
 
     # 6. Orchestrating the web search queries and updating the tool logs
     grounding = (
-        getattr(response.candidates[0], "grounding_metadata", None)
-        if response.candidates
-        else None
+        getattr(response.candidates[0], "grounding_metadata", None) if response.candidates else None
     )
-    search_queries = (
-        getattr(grounding, "web_search_queries", None) if grounding else None
-    )
+    search_queries = getattr(grounding, "web_search_queries", None) if grounding else None
     for query in search_queries or []:
         state["tool_logs"].append(
             {

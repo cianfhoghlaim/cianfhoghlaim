@@ -1,6 +1,6 @@
 # `oideachais-university-deep-extraction` — Agent Routing
 
-> TBD - created by archiving change 2026-07-15-oideachais-university-deep-extraction-v1. Update Purpose after archive.
+> The oideachais university deep-extraction surface covers the per-university website deep extraction (BAML + DLT + Dagster + CocoIndex v1 + marimo + Cognee cross-archive) — the reusable template for an...
 
 ## Routing
 
@@ -35,4 +35,4 @@ lint:drift-docs              # Validate every AGENTS.md number claim
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-29; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

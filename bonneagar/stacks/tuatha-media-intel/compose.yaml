@@ -1,0 +1,103 @@
+name: tuatha-media-intel
+
+services:
+  # The CocoIndex runner — runs the 4 v1 flows (hades/comic/gba/anam)
+  # on a schedule (event-driven for hades, weekly for comic, on-demand gba).
+  cocoindex-runner:
+    image: docker.io/cianhoghlaim/cocoindex-runner:1.0.14
+    restart: unless-stopped
+    volumes:
+      - ${TUATHA_MONOREPO_ROOT}:/monorepo:ro
+      - cocoindex_state:/root/.cocoindex_state
+      - tuatha_lance_data:/root/.lance
+    environment:
+      TUATHA_MONOREPO_ROOT: /monorepo
+      TUATHA_LANCE_URI: ${TUATHA_LANCE_URI:-file:///root/.lance}
+      TUATHA_RAW_HADES_BUCKET: ${TUATHA_RAW_HADES_BUCKET}
+      TUATHA_RAW_COMIC_BUCKET: ${TUATHA_RAW_COMIC_BUCKET}
+      TUATHA_RAW_GBA_BUCKET: ${TUATHA_RAW_GBA_BUCKET}
+      LLAMASWAP_URL: ${LLAMASWAP_URL}
+      LLAMASWAP_API_KEY: ${LLAMASWAP_API_KEY}
+      LITELLM_URL: ${LITELLM_URL}
+      LITELLM_API_KEY: ${LITELLM_API_KEY}
+      VISION_MODEL_HADES: ${VISION_MODEL_HADES}
+      VISION_MODEL_COMIC: ${VISION_MODEL_COMIC}
+      VISION_MODEL_GBA: ${VISION_MODEL_GBA}
+      TEXT_MODEL_DEFAULT: ${TEXT_MODEL_DEFAULT}
+      TUATHA_EMBED_DEVICE: ${TUATHA_EMBED_DEVICE:-cpu}
+    labels:
+      pangolin.cianfhoghlaim.ie/stack: tuatha-media-intel
+      pangolin.cianfhoghlaim.ie/component: cocoindex-runner
+      pangolin.cianfhoghlaim.ie/visibility: internal
+      pangolin.cianfhoghlaim.ie/criticality: medium
+      pangolin.cianfhoghlaim.ie/owner: tuatha
+      pangolin.cianfhoghlaim.ie/version: v1
+    command: >
+      bash -c "
+        cocoindex update -L tuatha_hades_boons &
+        cocoindex update tuatha_comic_particles &
+        cocoindex update tuatha_gba_magic &
+        cocoindex update tuatha_anam_particles &
+        wait
+      "
+
+  # The BAML codegen sidecar — regenerates baml_client/ from .baml sources.
+  baml-codegen:
+    image: docker.io/cianhoghlaim/baml-codegen:0.200.0
+    restart: on-failure
+    volumes:
+      - ${TUATHA_MONOREPO_ROOT}:/monorepo:ro
+      - baml_generated:/monorepo/baml_client
+    environment:
+      TUATHA_MONOREPO_ROOT: /monorepo
+      BAML_LICENSE_KEY: ${BAML_LICENSE_KEY}
+    labels:
+      pangolin.cianfhoghlaim.ie/stack: tuatha-media-intel
+      pangolin.cianfhoghlaim.ie/component: baml-codegen
+      pangolin.cianfhoghlaim.ie/visibility: internal
+      pangolin.cianfhoghlaim.ie/criticality: low
+      pangolin.cianfhoghlaim.ie/owner: tuatha
+      pangolin.cianfhoghlaim.ie/version: v1
+    command: bash -c "while true; do baml-cli generate; sleep 300; done"
+
+  # The RAGAS evaluator — runs nightly quality checks + logs to MLflow.
+  ragas-evaluator:
+    image: docker.io/cianhoghlaim/ragas-evaluator:0.2.10
+    restart: on-failure
+    volumes:
+      - tuatha_lance_data:/root/.lance:ro
+    environment:
+      MLFLOW_TRACKING_URI: ${MLFLOW_TRACKING_URI}
+      MLFLOW_TRACKING_TOKEN: ${MLFLOW_TRACKING_TOKEN}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
+      LANGFUSE_HOST: ${LANGFUSE_HOST}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
+      TUATHA_LANCE_URI: ${TUATHA_LANCE_URI:-file:///root/.lance}
+    labels:
+      pangolin.cianfhoghlaim.ie/stack: tuatha-media-intel
+      pangolin.cianfhoghlaim.ie/component: ragas-evaluator
+      pangolin.cianfhoghlaim.ie/visibility: internal
+      pangolin.cianfhoghlaim.ie/criticality: low
+      pangolin.cianfhoghlaim.ie/owner: tuatha
+      pangolin.cianfhoghlaim.ie/version: v1
+    command: bash -c "while true; do python -m tuatha_media_intel.ragas --run; sleep 3600; done"
+
+  # The MLflow sidecar — proxies metrics to the central MLflow.
+  mlflow-sidecar:
+    image: docker.io/cianhoghlaim/locket-sidecar:0.7.0
+    restart: unless-stopped
+    environment:
+      MLFLOW_TRACKING_URI: ${MLFLOW_TRACKING_URI}
+      LOCKET_INFISICAL_TOKEN: ${LOCKET_INFISICAL_TOKEN}
+    labels:
+      pangolin.cianfhoghlaim.ie/stack: tuatha-media-intel
+      pangolin.cianfhoghlaim.ie/component: mlflow-sidecar
+      pangolin.cianfhoghlaim.ie/visibility: internal
+      pangolin.cianfhoghlaim.ie/criticality: low
+      pangolin.cianfhoghlaim.ie/owner: tuatha
+      pangolin.cianfhoghlaim.ie/version: v1
+
+volumes:
+  cocoindex_state:
+  tuatha_lance_data:
+  baml_generated:

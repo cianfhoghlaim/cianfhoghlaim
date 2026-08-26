@@ -1,6 +1,6 @@
 # `americas-california-pipeline` — Agent Routing
 
-> TBD - created by archiving change 2026-07-11-americas-california-pipeline-v1. Update Purpose after archive.
+> The Americas pipeline surface covers Brazil + Mexico + US California across the Cianfhoghlaim monorepo. It defines 6 invariants: the canonical americas/ directory path, the per-jurisdiction sub-state ...
 
 ## Routing
 
@@ -35,4 +35,4 @@ lint:drift-docs              # Validate every AGENTS.md number claim
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-29; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

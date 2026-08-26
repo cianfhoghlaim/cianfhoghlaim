@@ -1,184 +1,79 @@
-"""Shared helpers + registries for the EU nations + Ukraine pipeline.
+"""DEPRECATED — backwards-compatibility shim for the legacy
+``NationSource`` API (per the
+2026-08-24-dlt-sources-to-multi-repo-scaffold-v1 §11 change).
 
-Defines the canonical per-nation source contract — every per-nation
-source subclasses ``NationSource`` and emits rows tagged with
-``country_code``, ``language``, ``domain``, and the canonical DuckLake
-namespace.
+The legacy ``NationSource`` dataclass has been **merged** into
+``JurisdictionPipelineBase`` at
+``dlt_sources.british_isles._cross.jurisdiction_pipeline_base``. The
+merged class supports the legacy NationSource construction pattern
+via the ``country_code=...`` / ``domain=...`` / ``source_slug=...``
+/ ``supported_languages=...`` / ``document_type=...`` /
+``extra_metadata=...`` keyword-only path (see the §11 docstring on
+``JurisdictionPipelineBase.__init__``).
 
-Honours ``USE_LOCAL_SCRAPES=true`` by reading from
-``stedding/ingest_queue/european_nations/<country_code>/<domain>/<lang>/``
-(matching the AGENTS.md "Respect the Ingestion Cache" rule).
+This module re-exports the merged symbols under their legacy names
+so the 51 per-nation source files that still
+``from dlt_sources.european_nations._shared.nation_source import
+NationSource, row_from_cache, use_local_scrapes`` continue to
+function unchanged for one release before the bulk-rewrite sweep.
+
+Migration path::
+
+    # BEFORE
+    from dlt_sources.european_nations._shared.nation_source import (
+        NationSource, row_from_cache, use_local_scrapes,
+    )
+    class AustraliaGovernmentSource(JurisdictionPipelineBase):
+        def __init__(self) -> None:
+            super().__init__(
+                country_code="aus",
+                domain="government",
+                source_slug="gov_au",
+                ...
+            )
+
+    # AFTER (canonical, no deprecation warning)
+    from dlt_sources.british_isles._cross.jurisdiction_pipeline_base import (
+        JurisdictionPipelineBase, row_from_cache, use_local_scrapes,
+    )
+    class AustraliaGovernmentSource(JurisdictionPipelineBase):
+        def __init__(self) -> None:
+            super().__init__(
+                country_code="aus",
+                domain="government",
+                source_slug="gov_au",
+                ...
+            )
+
+``NationSource`` is exposed here as an alias of
+``JurisdictionPipelineBase`` so the only difference in the rewritten
+importer is the import path + the base-class name. The constructor
+signature is unchanged.
 """
 from __future__ import annotations
 
-import os
-from collections.abc import Iterator
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any
+import warnings
 
-
-EU_NATIONS_CACHE_ROOT: Path = Path(
-    os.environ.get(
-        "EU_NATIONS_SCRAPE_CACHE_ROOT",
-        str(
-            Path(__file__).resolve().parents[3]
-            / "stedding"
-            / "ingest_queue"
-            / "european_nations"
-        ),
-    )
+# Emit a DeprecationWarning every time the legacy path is imported.
+# stacklevel=2 so the warning points at the importer (the canonical
+# Python convention — see PEP 562 + warnings.warn docs).
+warnings.warn(
+    "dlt_sources.european_nations._shared.nation_source is deprecated; "
+    "use dlt_sources.british_isles._cross.jurisdiction_pipeline_base "
+    "(JurisdictionPipelineBase in NationSource mode via "
+    "country_code=... / domain=... / source_slug=... kwargs) instead. "
+    "See the §11 change in "
+    "openspec/changes/2026-08-24-dlt-sources-to-multi-repo-scaffold-v1/.",
+    DeprecationWarning,
+    stacklevel=2,
 )
-"""Canonical local scrape cache root for the EU nations pipeline."""
 
-
-@dataclass
-class NationSource:
-    """Canonical base class for a per-nation DLT source.
-
-    Every per-nation source MUST subclass this contract. The
-    ``supported_languages`` list is the set of official language(s)
-    the jurisdiction publishes in.
-    """
-
-    country_code: str
-    """ISO 3166-1 alpha-3 code in lowercase (e.g. ``"ukr"``, ``"fra"``,
-    ``"deu"``, ``"pol"``, ``"esp"``, ``"ita"``)."""
-
-    domain: str
-    """One of ``education | law | medicine | statistics | government``."""
-
-    source_slug: str
-    """Snake_case slug of the source (e.g. ``"legifrance"``)."""
-
-    supported_languages: tuple[str, ...] = ("en",)
-    """Official language(s) the jurisdiction publishes in.
-
-    For example, ``"ukr"`` uses ``("uk",)``, ``"fra"`` uses
-    ``("fr",)``, ``"deu"`` uses ``("de",)``, ``"pol"`` uses
-    ``("pl",)``, ``"esp"`` uses ``("es", "ca", "gl", "eu", "va")``
-    (Castilian + Catalan + Galician + Basque + Aranese), ``"ita"``
-    uses ``("it",)``.
-    """
-
-    default_language: str | None = None
-    """Canonical first-edition language, e.g. ``"uk"`` for Ukraine."""
-
-    document_type: str = "official_document"
-    """``document_type`` tag every emitted row carries."""
-
-    extra_metadata: dict[str, Any] = field(default_factory=dict)
-    """Per-source metadata surfaced on the ``Metadata`` column."""
-
-    def __post_init__(self) -> None:
-        if not self.default_language:
-            self.default_language = self.supported_languages[0]
-
-    @property
-    def source_id(self) -> str:
-        """Canonical ``source_id`` for the per-nation source."""
-        return (
-            f"european_nations.{self.country_code}.{self.domain}"
-            f".{self.source_slug}"
-        )
-
-    @property
-    def ducklake_table(self) -> str:
-        """Canonical DuckLake namespace for the per-nation source."""
-        return (
-            f"oideachais.{self.domain}.european_nations"
-            f".{self.country_code}"
-        )
-
-    def cache_path(self, language: str | None = None) -> Path:
-        """Return the canonical cache directory."""
-        lang = language or self.default_language
-        return (
-            EU_NATIONS_CACHE_ROOT
-            / self.country_code
-            / self.domain
-            / lang
-        )
-
-    def iter_local_cache(
-        self,
-        language: str | None = None,
-    ) -> Iterator[Path]:
-        """Yield every cached JSON snapshot under the canonical cache."""
-        lang = language or self.default_language
-        lang_dir = self.cache_path(lang)
-        if not lang_dir.exists():
-            return
-        for json_path in sorted(lang_dir.glob("*.json")):
-            yield json_path
-
-
-def use_local_scrapes() -> bool:
-    """True when the AGENTS.md cache rule is active for the EU nations pipeline."""
-    return os.environ.get("USE_LOCAL_SCRAPES", "").lower().strip() in {
-        "1",
-        "true",
-        "yes",
-        "on",
-    }
-
-
-def row_from_cache(
-    cache_path: Path,
-    nation: NationSource,
-    *,
-    document_id_key: str = "document_id",
-    default_status: str = "in_force",
-) -> dict[str, Any]:
-    """Parse a per-nation cache JSON snapshot into a DLT row.
-
-    The canonical schema is the Firecrawl shape (``markdown`` +
-    ``metadata`` + ``sourceURL``) with a per-domain ``document_id``
-    field.
-    """
-    import json
-    from datetime import UTC, datetime
-
-    try:
-        payload = json.loads(cache_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return {}
-
-    metadata = payload.get("metadata", {}) if isinstance(payload, dict) else {}
-    if not isinstance(metadata, dict):
-        metadata = {}
-
-    source_url = metadata.get("sourceURL") or metadata.get("url") or ""
-    title = payload.get("title") or metadata.get("title") or ""
-    markdown = payload.get("markdown") or ""
-
-    document_id = (
-        metadata.get(document_id_key)
-        or metadata.get("id")
-        or cache_path.stem
-    )
-    content_hash = (
-        f"sha256:{hash(markdown) & 0xFFFFFFFFFFFFFFFF:016x}"
-        if markdown
-        else ""
-    )
-
-    return {
-        "country_code": nation.country_code,
-        "language": cache_path.parent.name,
-        "domain": nation.domain,
-        document_id_key: document_id,
-        "title": title,
-        "source_url": source_url,
-        "content_hash": content_hash,
-        "document_type": nation.document_type,
-        "region": "european_nations",
-        "official_status": metadata.get("official_status", default_status),
-        "extracted_at": datetime.now(UTC).isoformat(),
-        "source": nation.source_slug,
-        "source_file": str(cache_path),
-    }
-
+from dlt_sources.british_isles._cross.jurisdiction_pipeline_base import (  # noqa: E402
+    EU_NATIONS_CACHE_ROOT,
+    JurisdictionPipelineBase as NationSource,
+    row_from_cache,
+    use_local_scrapes,
+)
 
 __all__ = [
     "EU_NATIONS_CACHE_ROOT",

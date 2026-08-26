@@ -1,6 +1,6 @@
 # `oideachais-cocoindex-v1-migration` — Agent Routing
 
-> TBD - created by archiving change 2026-07-13-cocoindex-v1-non-priority-flows-v1. Update Purpose after archive.
+> The oideachais CocoIndex v1 migration surface covers the 7 v1 CocoIndex Apps (6 LC subjects + government_circulars) across the Cianfhoghlaim monorepo. It defines 1 invariant: the canonical migration p...
 
 ## Routing
 
@@ -35,4 +35,4 @@ lint:drift-docs              # Validate every AGENTS.md number claim
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-29; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

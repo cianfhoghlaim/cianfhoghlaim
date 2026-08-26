@@ -157,8 +157,8 @@ CfE + WJEC) + GeoAI ops + map rendering.
 ### Requirement: CocoIndex v1 embedding for mythology + Irish history
 
 The system SHALL provide 2 CocoIndex v1 Apps
-(`cocoindex/biep_parity/mythology_embedding.py`,
-`cocoindex/biep_parity/irish_history_embedding.py`) conforming to R1-R4.
+(`cocoindex_flows/biep_parity/mythology_embedding.py`,
+`cocoindex_flows/biep_parity/irish_history_embedding.py`) conforming to R1-R4.
 
 #### Scenario: Both Apps materialise via mise run biep:v3:mythology
 - **WHEN** the user invokes `mise run biep:v3:mythology`

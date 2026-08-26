@@ -79,10 +79,7 @@ def before_model_modifier(
     agent_name = callback_context.agent_name
     if agent_name == "ProverbsAgent":
         proverbs_json = "No proverbs yet"
-        if (
-            "proverbs" in callback_context.state
-            and callback_context.state["proverbs"] is not None
-        ):
+        if "proverbs" in callback_context.state and callback_context.state["proverbs"] is not None:
             try:
                 proverbs_json = json.dumps(callback_context.state["proverbs"], indent=2)
             except Exception as e:
@@ -123,10 +120,7 @@ def simple_after_model_modifier(
     if agent_name == "ProverbsAgent":
         if llm_response.content and llm_response.content.parts:
             # Assuming simple text response for this example
-            if (
-                llm_response.content.role == "model"
-                and llm_response.content.parts[0].text
-            ):
+            if llm_response.content.role == "model" and llm_response.content.parts[0].text:
                 callback_context._invocation_context.end_invocation = True
 
         elif llm_response.error_message:

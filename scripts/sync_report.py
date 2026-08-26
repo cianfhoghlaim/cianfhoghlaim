@@ -13,6 +13,7 @@ Usage:
   uv run python scripts/sync_report.py --layers paths,skills  # subset
   uv run python scripts/sync_report.py --dry-run    # show plan, don't run
 """
+
 from __future__ import annotations
 
 import argparse

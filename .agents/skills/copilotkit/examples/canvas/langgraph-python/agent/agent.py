@@ -216,11 +216,7 @@ async def chat_node(
         try:
             # OpenAI tool spec dict: { "type": "function", "function": { "name": "..." } }
             if isinstance(tool, dict):
-                fn = (
-                    tool.get("function", {})
-                    if isinstance(tool.get("function", {}), dict)
-                    else {}
-                )
+                fn = tool.get("function", {}) if isinstance(tool.get("function", {}), dict) else {}
                 name = fn.get("name") or tool.get("name")
                 if isinstance(name, str) and name.strip():
                     return name
@@ -372,11 +368,7 @@ async def chat_node(
             "   Always use these (ground truth) values as the only source of truth when responding.\n"
             "9) Generally, do not ask the user for IDs for metrics or checklist items; these IDs are assigned automatically and are immutable.\n"
             "   You may ask/include item IDs and sub-item IDs (metrics/checklist) in responses when helpful for clarity if there is possible confusion about which item the user is referring to.\n"
-            + (
-                f"\nPOST-TOOL POLICY:\n{post_tool_guidance}\n"
-                if post_tool_guidance
-                else ""
-            )
+            + (f"\nPOST-TOOL POLICY:\n{post_tool_guidance}\n" if post_tool_guidance else "")
         )
     )
 
@@ -384,11 +376,7 @@ async def chat_node(
     # If the user asked to modify an item but did not specify which, interrupt to choose
     try:
         last_user = next(
-            (
-                m
-                for m in reversed(state["messages"])
-                if getattr(m, "type", "") == "human"
-            ),
+            (m for m in reversed(state["messages"]) if getattr(m, "type", "") == "human"),
             None,
         )
         if (
@@ -397,9 +385,7 @@ async def chat_node(
                 k in last_user.content.lower()
                 for k in ["item", "rename", "owner", "priority", "status"]
             )
-            and not any(
-                k in last_user.content.lower() for k in ["prj_", "item id", "id="]
-            )
+            and not any(k in last_user.content.lower() for k in ["prj_", "item id", "id="])
         ):
             choice = interrupt(
                 {
@@ -420,11 +406,7 @@ async def chat_node(
             if isinstance(last_msg, AIMessage):
                 pending_frontend_call = False
                 for tc in getattr(last_msg, "tool_calls", []) or []:
-                    name = (
-                        tc.get("name")
-                        if isinstance(tc, dict)
-                        else getattr(tc, "name", None)
-                    )
+                    name = tc.get("name") if isinstance(tc, dict) else getattr(tc, "name", None)
                     if name and name not in backend_tool_names:
                         pending_frontend_call = True
                         break
@@ -724,9 +706,7 @@ async def chat_node(
 
     # Only show chat messages when not actively in progress; always deliver frontend tool calls
     currently_in_progress = plan_updates.get("planStatus", plan_status) == "in_progress"
-    final_messages = (
-        [response] if (has_frontend_tool_calls or not currently_in_progress) else ([])
-    )
+    final_messages = [response] if (has_frontend_tool_calls or not currently_in_progress) else ([])
     return Command(
         goto=END,
         update={

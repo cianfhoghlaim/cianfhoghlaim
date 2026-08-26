@@ -1,6 +1,6 @@
 # `drift-remediation` — Agent Routing
 
-> TBD - created by archiving change 2026-07-30-drift-remediation-everything-bagel-v1. Update Purpose after archive.
+> The drift detection + auto-remediation surface covers the per-area drift monitoring (paths + CCC + Cognee + skills + MCP + Dagster + docs) across the Cianfhoghlaim monorepo. It defines 4 invariants: t...
 
 ## Routing
 
@@ -35,4 +35,4 @@ lint:drift-docs              # Validate every AGENTS.md number claim
 - `ccc` — for semantic code search across the spec's implementation
 - `openspec` — for the spec change workflow
 
-<!-- generated: 2026-07-30; do not hand-edit -->
+<!-- generated: 2026-08-25; do not hand-edit -->

@@ -7,9 +7,9 @@ Tests:
 - Settings caching
 """
 
-import pytest
-from unittest.mock import patch
 import os
+
+import pytest
 
 
 class TestFlowSettings:
@@ -28,8 +28,7 @@ class TestFlowSettings:
 
     def test_env_var_override(self):
         """Test settings can be overridden by environment variables."""
-        from sruth.shared.config import FlowSettings
-        from sruth.shared.config import base
+        from sruth.shared.config import FlowSettings, base
 
         # Clear cache to ensure fresh instance
         base._settings_cache.clear()
@@ -53,8 +52,8 @@ class TestFlowSettings:
 
     def test_get_duckdb_path(self):
         """Test get_duckdb_path method."""
+
         from sruth.shared.config import FlowSettings
-        from pathlib import Path
 
         settings = FlowSettings()
         path = settings.get_duckdb_path("test")
@@ -89,9 +88,9 @@ class TestFlowSettings:
 
     def test_subclass_settings(self):
         """Test settings can be subclassed."""
+        from pydantic import Field
         from sruth.shared.config import FlowSettings
         from sruth.shared.config.base import _PYDANTIC_V2
-        from pydantic import Field
 
         if _PYDANTIC_V2:
             from pydantic_settings import SettingsConfigDict
@@ -123,8 +122,7 @@ class TestGetFlowSettings:
 
     def test_returns_instance(self):
         """Test get_flow_settings returns settings instance."""
-        from sruth.shared.config import get_flow_settings, FlowSettings
-        from sruth.shared.config import base
+        from sruth.shared.config import FlowSettings, base, get_flow_settings
 
         base._settings_cache.clear()
 
@@ -133,8 +131,7 @@ class TestGetFlowSettings:
 
     def test_caches_instance(self):
         """Test get_flow_settings caches instance."""
-        from sruth.shared.config import get_flow_settings, FlowSettings
-        from sruth.shared.config import base
+        from sruth.shared.config import base, get_flow_settings
 
         # Clear cache first
         base._settings_cache.clear()
@@ -146,9 +143,8 @@ class TestGetFlowSettings:
 
     def test_different_classes_cached_separately(self):
         """Test different settings classes are cached separately."""
-        from sruth.shared.config import get_flow_settings, FlowSettings
-        from sruth.shared.config import base
         from pydantic import Field
+        from sruth.shared.config import FlowSettings, base, get_flow_settings
 
         # Clear cache
         base._settings_cache.clear()
@@ -169,8 +165,9 @@ class TestDatabaseSettings:
 
     def test_duckdb_path_default(self):
         """Test duckdb_path has sensible default."""
-        from sruth.shared.config import FlowSettings
         from pathlib import Path
+
+        from sruth.shared.config import FlowSettings
 
         settings = FlowSettings()
 
@@ -178,8 +175,9 @@ class TestDatabaseSettings:
 
     def test_lancedb_uri_default(self):
         """Test lancedb_uri has sensible default."""
-        from sruth.shared.config import FlowSettings
         from pathlib import Path
+
+        from sruth.shared.config import FlowSettings
 
         settings = FlowSettings()
 

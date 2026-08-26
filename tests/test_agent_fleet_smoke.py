@@ -11,10 +11,7 @@ gracefully degrades when dependencies are missing.
 """
 from __future__ import annotations
 
-import asyncio
-
 import pytest
-
 
 # ---------------------------------------------------------------------------
 # Test 1 — factory resolve
@@ -31,7 +28,6 @@ def test_get_default_memory_layer_returns_implementation():
     ``"in_memory_fallback"``.
     """
     from cianfhoghlaim.agents.memory_layer import (
-        MemoryLayer,
         get_default_memory_layer,
     )
 

@@ -20,6 +20,7 @@ change 2026-07-02-align-cianfhoghlaim-env-with-stacks. It is
 intentionally light: a `validate-env` that takes >5 seconds is a
 bug, not a feature.
 """
+
 from __future__ import annotations
 
 import importlib

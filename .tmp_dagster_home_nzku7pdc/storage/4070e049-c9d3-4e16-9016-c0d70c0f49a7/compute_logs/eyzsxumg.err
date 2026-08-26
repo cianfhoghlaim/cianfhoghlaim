@@ -1,0 +1,9 @@
+2026-08-22 10:50:57 +0100 - dagster - DEBUG - __ASSET_JOB - 4070e049-c9d3-4e16-9016-c0d70c0f49a7 - 6991 - LOGS_CAPTURED - Capturing logs for process (pid: 6991).
+2026-08-22 10:50:57 +0100 - dagster - DEBUG - __ASSET_JOB - 4070e049-c9d3-4e16-9016-c0d70c0f49a7 - 6991 - lc5_mathematics_syllabus_extracted - STEP_START - Started execution of step "lc5_mathematics_syllabus_extracted".
+2026-08-22 10:50:57 +0100 - dagster - DEBUG - __ASSET_JOB - 4070e049-c9d3-4e16-9016-c0d70c0f49a7 - 6991 - lc5_mathematics_syllabus_extracted - STEP_OUTPUT - Yielded output "result" of type "Dict[String,Any]". (Type check passed).
+2026-08-22 10:50:57 +0100 - dagster - DEBUG - __ASSET_JOB - 4070e049-c9d3-4e16-9016-c0d70c0f49a7 - lc5_mathematics_syllabus_extracted - Writing file at: /Users/cianmacandeisigh/dev/kings_college_galway/.tmp_dagster_home_nzku7pdc/storage/lc5_mathematics_syllabus_extracted using PickledObjectFilesystemIOManager...
+INFO:alembic.runtime.migration:Context impl SQLiteImpl.
+INFO:alembic.runtime.migration:Will assume non-transactional DDL.
+2026-08-22 10:50:57 +0100 - dagster - DEBUG - __ASSET_JOB - 4070e049-c9d3-4e16-9016-c0d70c0f49a7 - 6991 - lc5_mathematics_syllabus_extracted - ASSET_MATERIALIZATION - Materialized value lc5_mathematics_syllabus_extracted.
+2026-08-22 10:50:57 +0100 - dagster - DEBUG - __ASSET_JOB - 4070e049-c9d3-4e16-9016-c0d70c0f49a7 - 6991 - lc5_mathematics_syllabus_extracted - HANDLED_OUTPUT - Handled output "result" using IO manager "io_manager"
+2026-08-22 10:50:57 +0100 - dagster - DEBUG - __ASSET_JOB - 4070e049-c9d3-4e16-9016-c0d70c0f49a7 - 6991 - lc5_mathematics_syllabus_extracted - STEP_SUCCESS - Finished execution of step "lc5_mathematics_syllabus_extracted" in 26ms.

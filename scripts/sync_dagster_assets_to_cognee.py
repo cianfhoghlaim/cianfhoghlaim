@@ -13,6 +13,7 @@ per-layer summary into Cognee.
 Usage:
   uv run python scripts/sync_dagster_assets_to_cognee.py
 """
+
 from __future__ import annotations
 
 import ast
@@ -118,32 +119,34 @@ def render_per_layer_summary(summary: dict[str, dict[str, int]]) -> str:
         f"**{grand_total['asset_check']}** | **{grand_total['sensor']}** | "
         f"**{grand_total['files']}** |"
     )
-    lines.extend([
-        "",
-        "## Canonical 5-Layer Convention",
-        "",
-        "The 5 layers (per the dagster-5-layer-component-architecture spec) are:",
-        "1. `1_ingestion/` — DLT pipelines + Firecrawl monitors + Ireland/England BAML",
-        "2. `2_materials/` — Per-jurisdiction asset wrappers (Ireland, England, JC, etc.)",
-        "3. `3_model_lifecycle/` — Model registry + sync_health (this asset lives here)",
-        "4. `4_asset_generation/` — Education asset assets (curriculum, exams)",
-        "5. `5_agent_ops/` — Agent operations (heritage agents)",
-        "",
-        "## KCG Components",
-        "",
-        "The 5 canonical KCG Components live at `orchestration/components/`:",
-        "- `layer1_ingestion.py`",
-        "- `layer2_materials.py`",
-        "- `layer3_model_lifecycle.py`",
-        "- `layer4_asset_generation.py`",
-        "- `layer5_agent_ops.py`",
-        "",
-        "Plus 4 derived components:",
-        "- `biep_subject_component.py`",
-        "- `junior_cycle_subject_component.py`",
-        "- `england_board_subject_component.py`",
-        "- `england_cross_board_comparator_component.py`",
-    ])
+    lines.extend(
+        [
+            "",
+            "## Canonical 5-Layer Convention",
+            "",
+            "The 5 layers (per the dagster-5-layer-component-architecture spec) are:",
+            "1. `1_ingestion/` — DLT pipelines + Firecrawl monitors + Ireland/England BAML",
+            "2. `2_materials/` — Per-jurisdiction asset wrappers (Ireland, England, JC, etc.)",
+            "3. `3_model_lifecycle/` — Model registry + sync_health (this asset lives here)",
+            "4. `4_asset_generation/` — Education asset assets (curriculum, exams)",
+            "5. `5_agent_ops/` — Agent operations (heritage agents)",
+            "",
+            "## KCG Components",
+            "",
+            "The 5 canonical KCG Components live at `orchestration/components/`:",
+            "- `layer1_ingestion.py`",
+            "- `layer2_materials.py`",
+            "- `layer3_model_lifecycle.py`",
+            "- `layer4_asset_generation.py`",
+            "- `layer5_agent_ops.py`",
+            "",
+            "Plus 4 derived components:",
+            "- `biep_subject_component.py`",
+            "- `junior_cycle_subject_component.py`",
+            "- `england_board_subject_component.py`",
+            "- `england_cross_board_comparator_component.py`",
+        ]
+    )
     return "\n".join(lines)
 
 
@@ -167,9 +170,7 @@ async def main_async() -> int:
     logger.info(f"Walked {len(summary)} layers + rendered summary ({len(summary_text)} chars)")
 
     ingested = await ingest_to_cognee(summary_text)
-    logger.info(
-        f"Ingestion complete: {ingested} summary ingested into '{DATASET_NAME}' cluster"
-    )
+    logger.info(f"Ingestion complete: {ingested} summary ingested into '{DATASET_NAME}' cluster")
     return 0 if ingested > 0 else 1
 
 

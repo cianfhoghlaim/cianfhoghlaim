@@ -45,9 +45,9 @@ def test_subject_source(
     import dlt_sources
     from dlt_sources.british_isles.ireland.education.subjects.base import create_subject_source
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Testing: {subject} ({cycle}, {language})")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     if dry_run:
         print("DRY RUN: Skipping API calls")
@@ -92,18 +92,14 @@ def test_subject_source(
             with pipeline.sql_client() as client:
                 # Count pages
                 try:
-                    pages_count = client.execute_sql(
-                        f"SELECT COUNT(*) FROM {subject}_pages"
-                    )
+                    pages_count = client.execute_sql(f"SELECT COUNT(*) FROM {subject}_pages")
                     print(f"  - Pages loaded: {next(iter(pages_count))[0]}")
                 except Exception:
                     print("  - Pages loaded: 0 (table not created)")
 
                 # Count PDFs (may not exist if no PDFs found)
                 try:
-                    pdfs_count = client.execute_sql(
-                        f"SELECT COUNT(*) FROM {subject}_pdfs"
-                    )
+                    pdfs_count = client.execute_sql(f"SELECT COUNT(*) FROM {subject}_pdfs")
                     print(f"  - PDFs found: {next(iter(pdfs_count))[0]}")
                 except Exception:
                     print("  - PDFs found: 0 (no PDFs discovered)")
@@ -139,11 +135,13 @@ def test_examinations_source(
 ) -> dict:
     """Test SEC examinations source."""
     import dlt_sources
-    from dlt_sources.british_isles.ireland.education.sec_examinations_browser import sec_examinations_browser_source
+    from dlt_sources.british_isles.ireland.education.sec_examinations_browser import (
+        sec_examinations_browser_source,
+    )
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Testing SEC Examinations: {subject} ({year}, {level})")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     if dry_run:
         print("DRY RUN: Skipping browser automation")
@@ -207,6 +205,7 @@ def test_full_cycle_source(
             SENIOR_CYCLE_SUBJECTS,
             senior_cycle_source,
         )
+
         subjects = SENIOR_CYCLE_SUBJECTS
         source_fn = senior_cycle_source
     else:
@@ -214,15 +213,16 @@ def test_full_cycle_source(
             JUNIOR_CYCLE_SUBJECTS,
             junior_cycle_source,
         )
+
         subjects = JUNIOR_CYCLE_SUBJECTS
         source_fn = junior_cycle_source
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Testing Full {cycle.replace('_', ' ').title()} Source")
     print(f"Language: {language}")
     print(f"Total subjects: {len(subjects)}")
     print(f"Testing first {limit_subjects} subjects")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     if dry_run:
         print("\nDRY RUN: Creating source...")
@@ -241,9 +241,9 @@ def test_full_cycle_source(
         results.append(result)
 
     success_count = sum(1 for r in results if r["status"] == "success")
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Summary: {success_count}/{len(results)} subjects successful")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     return {
         "status": "completed",
@@ -309,9 +309,9 @@ def main():
 
     args = parser.parse_args()
 
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("Curriculum Pipeline Test")
-    print("="*60)
+    print("=" * 60)
     print(f"Mode: {args.mode}")
     print(f"Dry run: {args.dry_run}")
 
