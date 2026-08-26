@@ -10,12 +10,62 @@ description: The schema-driven codegen pipeline that takes BAML .baml files as t
 > [2026-08-13-web-monorepo-consolidation-and-agent-integration-v1](https://github.com/cianfhoghlaim/cianfhoghlaim)
 > change (Phase O).
 
+## Current status (verified 2026-08-26 — read this before running anything)
+
+The 5 sub-generator scripts genuinely exist (`scripts/schema-codegen/*.ts`,
+~1,855 lines) and are not stubs — steps 2-5 run and emit real files. But:
+
+1. **`mise run codegen:*` does not exist.** No task with that prefix is
+   registered in `mise.toml`. The only real invocation path today is
+   `bun run scripts/schema-codegen/index.ts [flags]` directly (see
+   Quick start below — corrected from the version that shipped with
+   this skill).
+
+2. **Step 1 (`baml-to-ts.ts`, the actual "BAML is the source of truth"
+   step) is broken.** It wraps `uv run baml-cli generate`, which fails
+   for the ENTIRE `baml_src/` tree — verified: 343 parse errors across
+   ~240 of the 334 `.baml` files (`error: Error validating: This line
+   is invalid. It does not start with any known Baml schema keyword.`
+   on malformed `function` declarations). This is not a schema-codegen
+   bug; it's a repo-wide BAML syntax break, almost certainly from a
+   `baml-cli` version bump (client is CLI version `0.226.1`) whose
+   syntax requirements changed without the `.baml` files being updated.
+   Consequently `baml_client/typescript/` has never been created, and
+   the Python `baml_client/` on disk is stale (last successfully
+   generated 2026-08-18 — 8 days before this check, before the Wave
+   0-8 restructure). `baml-to-ts.ts` silently catches the failure and
+   falls back to an "expected-file manifest only" stub rather than
+   failing loudly — so a pipeline run reports step 1 as a success with
+   1 file emitted, and steps 2-5 build on top of that stub, not real
+   BAML-derived types.
+
+3. **Running with `--subject <x>` clobbers `codegen-manifest.json`
+   instead of merging.** Verified by running
+   `bun run scripts/schema-codegen/index.ts --subject mathematics --stage lc`
+   (no `--dry-run`): the previously-committed manifest (~60 subjects)
+   was overwritten down to just the 1 requested subject. **Do not run
+   this pipeline for a single subject against the real repo tree
+   without diffing the manifest before committing** — it will silently
+   drop every other subject's entry.
+
+Fixing the underlying `.baml` parse breakage across ~240 files is a
+large, separate effort — not something to attempt inline while
+generating one subject's schema. Track it as its own openspec change
+before relying on this pipeline for anything beyond `--dry-run`
+inspection.
+
 ## What this pipeline does
 
 The pipeline takes the BAML `.baml` files at `baml_src/` as the
 **canonical source of truth** and emits 5 categories of artifacts:
 
-1. **TypeScript types + Zod schemas** (`baml_client/typescript/...`)
+1. **TypeScript types + Zod schemas** (`baml_client/typescript/...`) —
+   currently produces a fallback manifest, not real types; see Current
+   status above. For **DuckLake/DuckDB table schemas** (a working,
+   separate codegen path with a different source of truth), see
+   `scripts/schema-generate.ts` / the `data:schema:generate` mise task,
+   which emits into `web/packages/contracts/src/generated/` and is not
+   affected by the BAML breakage described here.
 2. **Convex table definitions** (`web/apps/oideachais-dashboard/convex/<stage>/<subject>.ts`)
 3. **CopilotKit v2 action registries** (`web/hono-api/src/routes/copilotkit/<stage>/<subject>.ts` + `web/apps/oideachais/src/lib/copilotkit/<stage>/<subject>.ts`)
 4. **AG-UI protocol event type wrappers** (`web/apps/oideachais/src/lib/ag-ui/<stage>/<subject>.ts`)
@@ -26,21 +76,27 @@ produces byte-identical output.
 
 ## Quick start
 
+There is no `mise run codegen:*` task (see Current status above).
+Invoke the script directly:
+
 ```bash
-# Run the full pipeline for all 60 subjects × 4 stages
-mise run codegen:all
+# ALWAYS dry-run first and inspect the output — see the manifest-clobber
+# warning above before running for real against a single subject.
+bun run scripts/schema-codegen/index.ts --dry-run
 
-# Dry-run (preview without writing files)
-mise run codegen:all:dry-run
+# Run for one subject (dry-run — safe)
+bun run scripts/schema-codegen/index.ts --dry-run --subject mathematics --stage lc
 
-# Run for one subject
-mise run codegen:subject mathematics
+# Run for one stage (dry-run — safe)
+bun run scripts/schema-codegen/index.ts --dry-run --stage lc
 
-# Run for one stage
-mise run codegen:stage lc
+# Run a single step (1-5), dry-run
+bun run scripts/schema-codegen/index.ts --dry-run --step 3
 
-# Run a single step (1-5)
-bun run scripts/schema-codegen/index.ts --step 3
+# Full pipeline, all subjects, for real — do this only after confirming
+# step 1's baml-to-ts fallback (see Current status) is acceptable for
+# your purpose, and diff codegen-manifest.json before committing.
+bun run scripts/schema-codegen/index.ts
 ```
 
 ## The 5 sub-generators
