@@ -1,5 +1,20 @@
 # Cianfhoghlaim Project Conventions
 
+> **STALE PATHS WARNING (added 2026-08-26):** the capability tables below
+> (Subproject + Capability Areas) were written against the pre-v7
+> directory layout (`core/`, `assets/`, `pipelines/`, `cognify/`,
+> `sources/nations/`) and have not been updated for the current flattened
+> layout. Verified current top-level locations: `dlt_sources/` (not
+> `pipelines/ingest/` or `sources/nations/`), `cocoindex_flows/` (not
+> `core/cocoindex/`), `orchestration/` (not `assets/definitions.py`),
+> `baml_src/` (not `core/baml/`), `.agents/skills/` (not a `cognify/`
+> tree). The spec COUNT below ("38 specs") is also stale — the live
+> count is 101 (`openspec list --specs`). The capability DESCRIPTIONS
+> (what each thing does) are likely still directionally accurate; the
+> PATHS inside them are not verified and should not be trusted without
+> checking. A full per-row path audit is tracked as follow-up work, not
+> done here — see the 2026-08-26 data-side-remediation session notes.
+
 ## Project Overview
 
 A bilingual (EN/GA) agentic educational platform covering 5 stages of the
@@ -47,12 +62,12 @@ culture, government, intelligence, statistics, geospatial).
 
 | Subproject | Path | Wheel / Workspace | Purpose | README | AGENTS.md |
 |:--|:--|:--|:--|:--|:--|
-| `cianfhoghlaim` | `cianfhoghlaim/` | `cianfhoghlaim` (uv) + `codeolas` (uv sub-package) | Consolidated Celtic education + multi-nation + multi-language data platform | [README](../README.md) | [AGENTS](../AGENTS.md) |
+| `cianfhoghlaim` | `.` (repo root — `pyproject.toml`'s `[tool.hatch.build.targets.wheel] packages = ["."]`, corrected 2026-08-26; the pre-v7 `cianfhoghlaim/cianfhoghlaim/` package dir no longer exists) | `cianfhoghlaim` (uv) | Consolidated Celtic education + multi-nation + multi-language data platform | [README](../README.md) | [AGENTS](../AGENTS.md) |
 
 > **NOTE:** Source schema layout is provisional — refactor after Plan 1 informs
 > best CocoIndex + DLT + DuckDB + DuckLake + Lance patterns.
 
-## Capability Areas (38 specs, 8 groups)
+## Capability Areas (101 specs live per `openspec list --specs`, 2026-08-26 — the "38 specs, 8 groups" grouping below is the original pre-v7 categorisation and has not been reconciled against the current 101; treat group membership as approximate)
 
 ### Cianfhoghlaim core (14 specs — Plan 1 active)
 
@@ -185,28 +200,18 @@ All specs MUST respect constraints from `docs/context/00-core/CONSTRAINTS.md`:
 
 ## Current In-Flight Changes
 
-(Refreshed 2026-07-06 by the `2026-07-06-drift-cleanup-and-v4-alignment` change.
-The 4 stale entries above plus another 11 are now archived; the table
-below reflects the current active set. Use `openspec list` for live state.)
+**Do not hardcode this list — it goes stale within days on this repo's
+change velocity.** The table that lived here (last refreshed
+2026-07-06, still showing `2026-07-02-*` entries as "in-flight" that
+were archived weeks ago) was removed 2026-08-26 for exactly that
+reason. Use one of these instead:
 
-| Change | Status |
-|:--|:--|
-| `2026-07-06-drift-cleanup-and-v4-alignment` | **this change** (skills + notebooks + 56 specs + 6 plans + 12 additional archives; multi-phase) |
-| `2026-07-06-british-isles-education-pipeline-v1` | The flagship BIEP v1 (6 subjects + gov.ie circulars) |
-| `2026-07-04-dev-env-setup-latest-packages-and-wire-25-notebooks` | in-flight (28/34 tasks) |
-| `2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams` | in-flight (10/25 tasks) |
-| `2026-07-03-infrastructure-foundation` | in-flight (14/36 tasks) |
-| `2026-07-02-public-about-route` | in-flight (0/13 tasks) |
-| `2026-07-02-bunchloch-stack-bootstrap` | in-flight (0/45 tasks) |
-| `2026-07-02-align-cianfhoghlaim-env-with-stacks` | in-flight (0/37 tasks) |
-| `2026-07-02-add-agent-surface-stacks` | in-flight (0/30 tasks) |
-| `2026-07-02-add-lancedb-and-logfire-stacks` | in-flight (0/20 tasks) |
-| `2026-07-02-add-marimo-stack` | in-flight (0/17 tasks) |
-| `2026-07-02-replace-private-images-and-bring-wave2` | in-flight (0/70 tasks) |
-| `2026-07-01-bonneagar-v5-drift-refactor-and-komodo-gitops` | in-flight (0/148 tasks) |
-| `monorepo-restructure-v2` | in-flight (19/20 tasks) |
-| `litellm-minimax-vendor-derisking` | in-flight (20/33 tasks) |
-| `ncca-leaving-cert-syllabi-corpus` | in-flight (9/36 tasks) |
-| `docs-restructuring` | in-flight (28/30 tasks) |
-| `croilar-portfolio` | in-flight (18/34 tasks) |
+```bash
+uv run openspec list           # active changes + task completion + age
+uv run openspec list --specs   # all specs + requirement counts
+```
+
+See also `openspec/ACTIVE_ROADMAP.md` for the curated summary (also
+subject to the same staleness risk — check its own "Status" line's
+date against today before trusting it).
 | `rewrite-cianfhoghlaim-leaving-cert-v2` | umbrella in-flight (55/206 tasks) |
