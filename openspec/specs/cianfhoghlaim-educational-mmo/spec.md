@@ -10,7 +10,8 @@ client) + `cianfhoghlaim/agents/meaisinfhoghlaim/educational/`
 (hybrid x402 educational credential) +
 `cianfhoghlaim/{baml,dlt,dagster,cocoindex,notebooks}/<subject>/`
 (per-subject end-to-end pipelines for the 8 NCCA Leaving Certificate
-subjects).
+subjects; the 6 NCCA-adjacent subjects are added by the
+`2026-08-26-extend-educational-mmo-to-14-subjects-v1` change).
 
 This is the canonical openspec spec for the educational MMO. It
 **supersedes** the deprecated `tuatha-platform` spec (the latter is
@@ -20,16 +21,23 @@ preserved as a deprecated alias for 1 release, then archived).
 
 Cianfhoghlaim is building a formative-assessment-driven educational
 MMO for the Republic of Ireland's **NCCA Junior Cycle + Leaving
-Certificate** curriculum. The 8 LC subjects are:
+Certificate** curriculum. The 14 subjects (8 NCCA + 6 NCCA-adjacent)
+are:
 
-- mathematics
-- applied_mathematics
-- chemistry
-- geography
-- history
-- english
-- gaeilge (taught in Irish; some content also in English)
-- computer_science
+- mathematics (NCCA)
+- applied_mathematics (NCCA)
+- chemistry (NCCA)
+- geography (NCCA)
+- history (NCCA)
+- english (NCCA)
+- gaeilge (NCCA — taught in Irish; some content also in English)
+- computer_science (NCCA)
+- accounting (NCCA-adjacent — added 2026-08-26)
+- biology (NCCA-adjacent — added 2026-08-26)
+- business (NCCA-adjacent — added 2026-08-26)
+- french (NCCA-adjacent — added 2026-08-26)
+- irish T2 (NCCA-adjacent — added 2026-08-26; non-Gaeltacht learner pathway)
+- physics (NCCA-adjacent — added 2026-08-26)
 
 The MMO is built on the existing Cianfhoghlaim pipeline stack:
 DLT (per-subject sources) + Dagster (per-subject asset groups) +
@@ -52,11 +60,15 @@ The hybrid x402 educational credential is verifiable by third parties
 with real money, and the educational credit tokens are issued by the
 platform itself as quest-completion rewards.
 ## Requirements
-### Requirement: 8 NCCA Subjects
+### Requirement: 14 NCCA + NCCA-adjacent subject coverage (was: 8 NCCA Subjects)
 
-The system SHALL provide end-to-end per-subject pipelines for the 8
-NCCA Leaving Certificate subjects: mathematics, applied_mathematics,
-chemistry, geography, history, english, gaeilge, computer_science.
+The system SHALL provide end-to-end per-subject pipelines for the
+8 NCCA Leaving Certificate subjects (mathematics, applied_mathematics,
+chemistry, geography, history, english, gaeilge, computer_science).
+The 6 NCCA-adjacent subjects (accounting + biology + business +
+french + irish T2 + physics) are an OPTIONAL extension that
+consumers can opt into via the `tuatha/` sub-project's
+`subapp_manifest.yaml`.
 Each subject SHALL have a `qpack_<subject>.baml` file,
 `dlt/subjects/<subject>/` source, `dagster/assets/<subject>_assets.py`,
 `cocoindex/<subject>_embedding.py`, `agents/tuatha/<subject>_agent.py`,
@@ -269,7 +281,7 @@ SpacetimeDB.**
 - **GIVEN** a student has badges in ≥2 subjects
 - **WHEN** the user navigates to `/student/<id>/mastery`
 - **THEN** the page displays a FalkorDB-backed visualisation of the
-  student's mastery across the 8 NCCA subjects
+  student's mastery across the 8 NCCA subjects (or 14 subjects for consumers that opted into the 6-subject extension)
 
 #### Scenario: Public anchor verification page renders
 
