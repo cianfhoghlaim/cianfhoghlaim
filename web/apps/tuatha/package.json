@@ -10,13 +10,13 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@ag-ui/client": "^0.1.0",
+    "@ag-ui/client": "^0.0.58",
     "@cianfhoghlaim/api-client": "workspace:*",
     "@cianfhoghlaim/auth": "workspace:*",
     "@cianfhoghlaim/contracts": "workspace:*",
     "@cianfhoghlaim/db": "workspace:*",
     "@cianfhoghlaim/ui-kit": "workspace:*",
-    "@copilotkit/react-core": "^2.0.0",
+    "@copilotkit/react-core": "^1.69.2",
     "@tanstack/ai": "^0.1.0",
     "@tanstack/db": "^0.1.0",
     "@tanstack/react-form": "^1.0.0",
