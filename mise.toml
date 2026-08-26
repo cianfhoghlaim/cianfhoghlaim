@@ -154,6 +154,11 @@ alias = ["validate-env"]
 depends = ["core:sync"]
 run = ".venv/bin/python3 scripts/validate_env.py"
 
+[tasks."core:audit-env-vars"]
+description = "CORE audit-env-vars — broad scan: every env var referenced in code vs documented in .env.example (CI gate mode with --fail-on-gap)"
+alias = ["audit-env-vars"]
+run = ".venv/bin/python3 scripts/audit_env_vars.py --fail-on-gap"
+
 [tasks."core:doctor"]
 description = "CORE doctor — tool versions + 6 domain counts (tasks + specs + stacks + agents + models + notebooks)"
 alias = ["doctor"]
@@ -417,14 +422,15 @@ depends = ["core:sync", "core:lint", "core:test", "core:format"]
 run = "echo 'core omnibus complete (DAG executed all gates).'"
 
 [tasks."core:ci"]
-description = "CORE CI gate — the canonical CI pipeline (lint + test + openspec:validate-all + devops:validate-stacks)"
+description = "CORE CI gate — the canonical CI pipeline (lint + test + openspec:validate-all + devops:validate-stacks + audit-env-vars)"
 depends = [
   "core:lint",
   "core:test",
   "openspec:validate-all",
   "devops:validate-stacks",
+  "core:audit-env-vars",
 ]
-run = "echo 'core:ci pipeline complete (all 4 gates passed).'"
+run = "echo 'core:ci pipeline complete (all 5 gates passed).'"
 
 
 # =============================================================================
