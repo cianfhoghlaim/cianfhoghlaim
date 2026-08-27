@@ -160,12 +160,12 @@
   "versionId": "1",
   "id": "upstream-blog-monitor",
   "meta": {
-    "instanceId": "kcg-n8n-prod",
+    "instanceId": "cianfhoghlaim-n8n-prod",
     "templateCredsSetupCompleted": false
   },
   "tags": [
     {
-      "name": "kcg-upstream-monitor"
+      "name": "cianfhoghlaim-upstream-monitor"
     },
     {
       "name": "openspec:upstream-package-monitoring"

@@ -72,7 +72,7 @@ execution = { type = "RunShellCommand", params = { server_id = "bunchloch", comm
 description = "Confirm the bunchloch-infra external network exists"
 
 [[procedure.config.stages.executions]]
-execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "lsof -nP -iTCP -sTCP:LISTEN 2>/dev/null | awk '{print $9}' | grep -oE ':[0-9]+$' | tr -d ':' | sort -u > /tmp/.kcg-ports-in-use && for p in 3900 3901 3904 4000 5433 6379 6380 8120 8181 8182 8086 9119 9120 3335; do if ! grep -qx \"$p\" /tmp/.kcg-ports-in-use; then echo \"PORT_FREE_$p\"; fi; done | wc -l | awk '{print \"AVAILABLE_PORTS=\" $1}'" } }
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "lsof -nP -iTCP -sTCP:LISTEN 2>/dev/null | awk '{print $9}' | grep -oE ':[0-9]+$' | tr -d ':' | sort -u > /tmp/.cianfhoghlaim-ports-in-use && for p in 3900 3901 3904 4000 5433 6379 6380 8120 8181 8182 8086 9119 9120 3335; do if ! grep -qx \"$p\" /tmp/.cianfhoghlaim-ports-in-use; then echo \"PORT_FREE_$p\"; fi; done | wc -l | awk '{print \"AVAILABLE_PORTS=\" $1}'" } }
 description = "Count free host ports for the 19-stack bind set (snapshot reference only — OrbStack VM may shadow some ports)"
 
 # =============================================================================

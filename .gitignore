@@ -1,7 +1,6 @@
 gaeilge/found_in_downloads/abhar_breise_don_cheardlann.7z
 oideachas/lesson_plans/teaching_practice_2/1_administration_management/school_policies/school_rules.pdf
 
-/Users/cianmacandeisigh/dev/kings_college_galway/storage
 # Phase 2B (2026-06-25): legacy top-level `storage/` dir is now removed (migrated
 # to `core/storage/`). The `storage/` pattern above is too broad — it also
 # matches the new canonical `core/storage/` and the `tests/storage/` test dir.
@@ -115,6 +114,11 @@ pipeline_data/
 # DAGSTER
 # -----------------------------------------------------------------------------
 .dagster/
+# Ephemeral dagster dev test homes (800+ .err log matches
+# regenerated every `dagster dev`; canonical Dagster lives
+# in the lakehouse-dagster Compose stack at bonneagar/stacks/).
+.tmp_dagster_home_*/
+.tmp_dagster_home_*
 
 # -----------------------------------------------------------------------------
 # DUCKLAKE
