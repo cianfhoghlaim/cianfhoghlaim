@@ -48,7 +48,7 @@ services:
   # mount from the sidecar (the no-op alpine locket doesn't create that
   # tmpfs) by NOT inheriting the sidecar's volumes.
   # In dev mode, also mount the cianfhoghlaim package source and run
-  # with `-m cianfhoghlaim.dagster.definitions` so the 5 KCG Components
+  # with `-m cianfhoghlaim.dagster.definitions` so the 5 Cianfhoghlaim Components
   # actually load. We OVERRIDE entrypoint: to `[""]` (a no-op entrypoint)
   # so the command runs as-is without the Dockerfile's
   # `dagster-webserver -h 0.0.0.0 -p 3000` prefix being prepended.

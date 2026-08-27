@@ -1,6 +1,6 @@
 # OpenTelemetry Collector configuration for the Logfire stack.
 # ----------------------------------------------------------------------------
-# Receives OTLP traces from any KCG service on :4317 (gRPC) / :4318 (HTTP),
+# Receives OTLP traces from any Cianfhoghlaim service on :4317 (gRPC) / :4318 (HTTP),
 # batches them, and forwards to BOTH backends via a fan-out exporter:
 #
 #   1. Logfire cloud   (SaaS — https://logfire.pydantic.dev)  via logfire exporter + LOGFIRE_TOKEN

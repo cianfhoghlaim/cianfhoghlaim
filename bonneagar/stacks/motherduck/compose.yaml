@@ -29,7 +29,7 @@
 #      duckdb.connect("md:cianfhoghlaim?motherduck_token=$MOTHERDUCK_TOKEN")
 #   4. Run a canonical BIEP Flight (see `flights/`).
 #
-# KCG integration surface:
+# Cianfhoghlaim integration surface:
 #   - BIEP Dives: 4 saved MotherDuck Dives under `dives/`
 #     (lc_syllabus_topics + lc_exam_difficulty + lc_marking_complexity +
 #     gov_circulars_archive) — the 4 BIEP MotherDuck Flights

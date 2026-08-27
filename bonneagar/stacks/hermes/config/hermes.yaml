@@ -94,7 +94,7 @@ channels:
     allow_from: []
 
 # ---------------------------------------------------------------------------
-# MCP servers — the canonical 10 KCG servers + hermes-mcp preview
+# MCP servers — the canonical 10 Cianfhoghlaim servers + hermes-mcp preview
 # ---------------------------------------------------------------------------
 mcp_servers:
   # Hermes-as-MCP-server preview (upstream issue #342)
@@ -106,7 +106,7 @@ mcp_servers:
     protocol: mcp
     auth: bearer  # clients pass Authorization: Bearer $HERMES_API_SERVER_KEY
 
-  # The canonical 10 KCG MCP servers
+  # The canonical 10 Cianfhoghlaim MCP servers
   cocoindex-code:
     enabled: true
     url: http://bunchloch:8765/mcp/cocoindex-code

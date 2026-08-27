@@ -104,7 +104,7 @@ pangolin partial); the rest are warm-restarts.
 
 This session is the dev-environment follow-up to Session 10. The
 goal: take the Session 9/10 features (LC5 + Gemini 6-corpus
-pipelines, 5 KCG Components, 4 openspec change files) and make
+pipelines, 5 Cianfhoghlaim Components, 4 openspec change files) and make
 them actually usable from the local dev `.venv` (no custom
 Docker images per user). Shipped in 5 phases over 2 days:
 
@@ -187,7 +187,7 @@ form; wire-up is mechanical and tracked as
    not from Session 9. Workaround: rebuild dagster image with
    matching protobuf versions. (NEW in Session 10; not blocking
    since definitions are reachable programmatically)
-2. The 5 KCG Components import correctly, but the new LC5 +
+2. The 5 Cianfhoghlaim Components import correctly, but the new LC5 +
    Gemini 6-corpus asset modules have a `from dagster import` that's
    shadowed by `cianfhoghlaim/dagster/`. Tracked as
    `2026-07-XX-rename-cianfhoghlaim-dagster-to-avoid-shadowing`.
@@ -672,7 +672,7 @@ report together.
 
 This session is the dev-environment follow-up to Session 10. The
 goal: take the Session 9/10 features (LC5 + Gemini 6-corpus
-pipelines, 5 KCG Components, 4 openspec change files) and make
+pipelines, 5 Cianfhoghlaim Components, 4 openspec change files) and make
 them actually usable from the local dev `.venv` (no custom
 Docker images per user). Shipped in 5 phases over 2 days.
 
@@ -708,7 +708,7 @@ report together.
 
 This session is the dev-environment follow-up to Session 10. The
 goal: take the Session 9/10 features (LC5 + Gemini 6-corpus
-pipelines, 5 KCG Components, 4 openspec change files) and make
+pipelines, 5 Cianfhoghlaim Components, 4 openspec change files) and make
 them actually usable from the local dev `.venv` (no custom
 Docker images per user). Shipped in 5 phases over 2 days.
 
@@ -811,7 +811,7 @@ Fixed all 8 Gemini notebooks.
 ### Phase 4 — Final 5-step smoke test
 
 ```
-STEP 1 PASS: 14 packages + 22 VISION_MODELS + 5 KCG Components
+STEP 1 PASS: 14 packages + 22 VISION_MODELS + 5 Cianfhoghlaim Components
               importable
 STEP 2 PASS: LC5=72 rows, Gemini=224 rows (DLT sources)
 STEP 3 PARTIAL: dagster definitions load (with pre-existing
@@ -846,7 +846,7 @@ Created `openspec/changes/2026-07-04-dev-env-setup-latest-packages-and-wire-25-n
    protobuf 6.33.5 (gencode) vs 5.29.6 (runtime) mismatch.
    Pre-existing; not from Session 9. Resolved in Session 10 by
    pinning grpcio<1.70. (NEW in Session 10)
-2. The 5 KCG Components import correctly, but the new LC5 +
+2. The 5 Cianfhoghlaim Components import correctly, but the new LC5 +
    Gemini 6-corpus asset modules have a `from dagster import` that's
    shadowed by `cianfhoghlaim/orchestration/`. Tracked as
    `2026-07-XX-rename-cianfhoghlaim-orchestration-to-avoid-shadowing`

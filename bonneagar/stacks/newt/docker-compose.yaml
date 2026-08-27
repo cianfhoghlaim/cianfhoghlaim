@@ -12,7 +12,7 @@
 # `komodo.skip=true` so Komodo doesn't try to manage the newt container
 # itself — it's a pre-existing operator-laptop service).
 #
-# KCG STACK-DOCTOR EXCEPTION — control-plane allowlist (per
+# CIANFHOGHLAIM STACK-DOCTOR EXCEPTION — control-plane allowlist (per
 # 2026-06-28-pangolin-newt-infisical-upgrade):
 # The Newt image below is intentionally unpinned (`:latest`).
 # Fossorial's `:latest` tag points at signed stable releases. The

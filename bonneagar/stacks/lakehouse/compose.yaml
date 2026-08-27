@@ -669,7 +669,7 @@ services:
   # ---------------------------------------------------------------------------
   # ADDED 2026-08-15 (lakehouse-unified-data-plane-v1). Uses the unified
   # falkordb container (port 6379) as its graph backend. The Neo4j
-  # backend was REMOVED (no Neo4j stack exists in KCG).
+  # backend was REMOVED (no Neo4j stack exists in Cianfhoghlaim).
   # ---------------------------------------------------------------------------
   graphiti:
     build:

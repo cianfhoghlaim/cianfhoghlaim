@@ -15,7 +15,7 @@
 # GRAPHITI - Temporal Knowledge Graph (FalkorDB backend)
 # =============================================================================
 # Updated for the `centralise-data-plane` rewrite (2026-07-30):
-# - The Neo4j backend profile was REMOVED. No Neo4j stack exists in KCG
+# - The Neo4j backend profile was REMOVED. no Neo4j stack exists in Cianfhoghlaim
 #   and the previous `graph` + `neo4j` service combo was broken (no
 #   container actually deployed Neo4j).
 # - Graphiti now uses the SHARED `falkordb` stack (which lives in its

@@ -2,7 +2,7 @@
 # UNSTRACT - Local OSS Fleet (Zipstack/unstract v0.177.7, 15 services)
 # =============================================================================
 # Vendored 2026-07-07 from https://github.com/Zipstack/unstract @ v0.177.7
-# Applied KCG conventions:
+# Applied Cianfhoghlaim conventions:
 #   - bare container names (no upstream `-1` suffix)
 #   - all images pinned to v0.177.7 (no `:latest` or `:${VERSION}`)
 #   - joins the `bunchloch-infra` external network for Locket-sidecar access

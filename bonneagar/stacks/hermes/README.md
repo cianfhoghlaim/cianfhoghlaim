@@ -83,7 +83,7 @@ don't have:
 - **Built-in learning loop** — Hermes gets more capable the
   longer it runs, with persistent memory + skills.
 - **MCP-native** — built-in MCP **client** (consumes the 10
-  canonical KCG MCP servers + the new `hermes-mcp` server
+  canonical Cianfhoghlaim MCP servers + the new `hermes-mcp` server
   that exposes Hermes-as-MCP-server, upstream issue #342).
 - **Autonomous cron / scheduling** — runs scheduled jobs
   without operator intervention.
@@ -132,7 +132,7 @@ loosen individual layers as trust grows.
 
 - **3 v1 channels** (Telegram, Discord, WebChat) — no overlap
   with OpenClaw's 6 channels
-- **MCP-native** — consumes the 10 KCG MCP servers + the
+- **MCP-native** — consumes the 10 Cianfhoghlaim MCP servers + the
   new `hermes-mcp` server
 - **LiteLLM chokepoint** — the M3 plan is reached
   exclusively through `http://litellm:4000/v1`
