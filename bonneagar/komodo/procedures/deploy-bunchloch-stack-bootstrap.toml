@@ -13,7 +13,7 @@
 #   Stage 4: surfaces (4) — openclaw + openchamber + hermes + letta
 #   Stage 5: data plane (3) — dagster + motherduck (SaaS) + garage
 #
-# KCG topology context:
+# Cianfhoghlaim topology context:
 #   - arm1-oci = control plane (Pangolin + Pocket ID + Komodo Core)
 #   - bunchloch (MacBook M4 / M4 Max) = workload host (this procedure's
 #     target). The "cold-boot" reality is ~14 of 19 stacks already
@@ -43,7 +43,7 @@ server_id = "bunchloch"
 # =============================================================================
 # STAGE 0: Pre-flight checks (host invariants)
 # =============================================================================
-# The 5 KCG pre-flight requirements for the bunchloch workload host:
+# The 5 Cianfhoghlaim pre-flight requirements for the bunchloch workload host:
 #   1. hostname matches `Cians-MacBook-Pro.local` (or the bunchloch alias)
 #   2. ≥ 20 GB RAM (the 19 stacks need ~36-42 GB concurrently; phased
 #      bring-up reduces per-wave peak pressure to ~10 GB)

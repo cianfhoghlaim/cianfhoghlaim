@@ -302,7 +302,7 @@ This session shipped 4 openspec changes totalling **17 commits**:
 ## Session 7 — 2026-07-02 (Change 8: code-side env alignment)
 
 This session's output is the openspec change
-[`2026-07-02-align-cianfhoghlaim-env-with-stacks`](/Users/cianmacandeisigh/dev/kings_college_galway/openspec/changes/2026-07-02-align-cianfhoghlaim-env-with-stacks/)
+[`2026-07-02-align-cianfhoghlaim-env-with-stacks`](${CIANFHOGHLAIM_ROOT:-~/dev/cianfhoghlaim}/openspec/changes/2026-07-02-align-cianfhoghlaim-env-with-stacks/)
 (commits 90b42307a in the main repo).
 
 The 7 cianfhoghlaim/ code edits that implement the spec
@@ -356,7 +356,7 @@ Container count: **27 running (no regression from Change 7)**.
 ## Session 6 — 2026-07-02 (Wave 1 + Wave 2 cold-boot, dev mode)
 
 This session's output is the openspec change
-[`2026-07-02-replace-private-images-and-bring-wave2`](/Users/cianmacandeisigh/dev/kings_college_galway/openspec/changes/2026-07-02-replace-private-images-and-bring-wave2/)
+[`2026-07-02-replace-private-images-and-bring-wave2`](${CIANFHOGHLAIM_ROOT:-~/dev/cianfhoghlaim}/openspec/changes/2026-07-02-replace-private-images-and-bring-wave2/)
 + the Change 1 (`bunchloch-stack-bootstrap`) implementation that
 preceded it.
 
@@ -452,7 +452,7 @@ Docker Hub mirror).
 ## Session 5 — 2026-07-02 (Wave 1 cold-boot, dev mode)
 
 This session's output is the openspec change sequence
-[`2026-07-02-bunchloch-stack-bootstrap`](/Users/cianmacandeisigh/dev/kings_college_galway/openspec/changes/2026-07-02-bunchloch-stack-bootstrap/)
+[`2026-07-02-bunchloch-stack-bootstrap`](${CIANFHOGHLAIM_ROOT:-~/dev/cianfhoghlaim}/openspec/changes/2026-07-02-bunchloch-stack-bootstrap/)
 + the 3 sibling changes
 (`2026-07-02-add-lancedb-and-logfire-stacks`,
 `2026-07-02-add-marimo-stack`,
@@ -494,7 +494,7 @@ files per stack.
 ### Wave 1 bring-up procedure
 
 ```bash
-cd /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar
+cd ${CIANFHOGHLAIM_ROOT:-~/dev/cianfhoghlaim}/bonneagar
 
 # Dragonfly + lancedb (no Locket needed)
 ./scripts/stack.sh dragonfly up -d

@@ -14,7 +14,7 @@ Load this AGENTS.md when:
 
 - You need to add / modify an operator dashboard route
 - You need to wire a new observability metric (Dagster health,
-  KCG coverage, model registry, stack health, etc.)
+  Cianfhoghlaim coverage, model registry, stack health, etc.)
 - You need to add / modify a Convex table that the dashboard
   consumes
 - You need to deploy the dashboard to Cloudflare Pages
@@ -46,7 +46,7 @@ bun run start                     # node .output/server/index.mjs
 
 - [`central-cianfhoghlaim-homepage`](../openspec/specs/central-cianfhoghlaim-homepage/spec.md) — the central homepage (consumer of this dashboard's data)
 - [`deployment-control-panel`](../openspec/specs/deployment-control-panel/spec.md) — the deployment-choice.yaml web UI
-- [`dagster-5-layer-component-architecture`](../openspec/specs/dagster-5-layer-component-architecture/spec.md) — the 5 KCG Components
+- [`dagster-5-layer-component-architecture`](../openspec/specs/dagster-5-layer-component-architecture/spec.md) — the 5 Cianfhoghlaim Components
 - [`web-monorepo-consolidation`](../openspec/specs/web-monorepo-consolidation/spec.md) — this app's location in the consolidated web/
 
 ## DO NOT

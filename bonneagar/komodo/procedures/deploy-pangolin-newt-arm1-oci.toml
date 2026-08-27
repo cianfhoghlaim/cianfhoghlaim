@@ -53,13 +53,13 @@ execution = { type = "RunShellCommand", params = { command = "curl -ksSf -o /dev
 name = "iac-provision"
 
 [[procedure.config.stages.executions]]
-execution = { type = "RunShellCommand", params = { command = "cd /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar && bun run iac:sync:sites 2>&1 | tail -20", timeout_s = 60, description = "Provision the arm1-oci-newt site via the Pangolin Integrations API + write credentials to .env", require_success = false } }
+execution = { type = "RunShellCommand", params = { command = "cd ${CIANFHOGHLAIM_ROOT:-/Users/cianmacandeisigh/dev/cianfhoghlaim}/bonneagar && bun run iac:sync:sites 2>&1 | tail -20", timeout_s = 60, description = "Provision the arm1-oci-newt site via the Pangolin Integrations API + write credentials to .env", require_success = false } }
 
 # =============================================================================
 # STAGE 2: StackUp (extend the pangolin compose with newt)
 # =============================================================================
 # Uses `docker compose -f pangolin.yaml -f newt.yaml up -d` (the
-# canonical merge pattern from the bons KCG docs).
+# canonical merge pattern from the Cianfhoghlaim IaC docs).
 # -----------------------------------------------------------------------------
 
 [[procedure.config.stages]]
