@@ -107,10 +107,12 @@ git remote add mirror "$MIRROR_URL"
 if [[ "$DO_BACKUP" == "1" ]]; then
   CURRENT="$(git ls-remote mirror "refs/heads/$MIRROR_BRANCH" | cut -f1)"
   if [[ -n "$CURRENT" ]]; then
-    BACKUP="backup/pre-monorepo-sync-$(date -u +%Y-%m-%d)"
+    # Timestamped, and pushed WITHOUT --force: two syncs on the same day must
+    # not let the second one clobber the first one's backup.
+    BACKUP="backup/pre-monorepo-sync-$(date -u +%Y-%m-%dT%H%M%SZ)"
     echo "→ backing up mirror tip ${CURRENT:0:9} -> $BACKUP"
     git fetch --quiet mirror "$MIRROR_BRANCH"
-    git push --quiet --force mirror "${CURRENT}:refs/heads/${BACKUP}" || {
+    git push --quiet mirror "${CURRENT}:refs/heads/${BACKUP}" || {
       echo "✗ could not write backup branch — refusing to force-push" >&2; exit 3; }
   fi
 fi
