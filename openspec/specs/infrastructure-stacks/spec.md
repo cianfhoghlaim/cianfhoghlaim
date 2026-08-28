@@ -870,10 +870,10 @@ The system SHALL NOT re-add any of the previously deleted stacks (`blinko`, `cro
 
 ### Requirement: Bonneagar is in-tree and canonical; the standalone repo is a mirror
 
-Superseded the 2026-06-29 worktree approach on 2026-07-17 (the v7 flatten),
-which re-imported the bonneagar history into this monorepo. The IaC history
-SHALL live in-tree at `bonneagar/`, and the cianfhoghlaim monorepo SHALL be
-the canonical source.
+The IaC history SHALL live in-tree at `bonneagar/`, and the cianfhoghlaim
+monorepo SHALL be the canonical source. This supersedes the 2026-06-29
+worktree approach, which the 2026-07-17 v7 flatten replaced by re-importing
+the bonneagar history into this monorepo.
 
 `https://github.com/cianfhoghlaim/bonneagar` SHALL be a one-way published
 mirror in root layout (`stacks/`, `komodo/`, `iac/` at the repo root),
