@@ -1,0 +1,125 @@
+# =============================================================================
+# qBittorrent + gluetun — VPN-egress torrent client for Mylar3 + Kapowarr
+# =============================================================================#
+# qBittorrent runs INSIDE the gluetun network namespace (network_mode:
+# service:gluetun), so all peer connections / DHT / tracker traffic exit
+# through the WireGuard VPN — never via the MacBook's real egress.
+#
+# USAGE:
+#   Development:  docker compose --env-file .env.local up -d
+#   Production:   docker compose -f compose.yaml -f sidecar.yaml up -d
+#
+# Network topology:
+#   mylar3:8090 ──> qbittorrent-gluetun:8080 (WebUI, Pangolin-routed)
+#                          │
+#                          └──> gluetun VPN (WireGuard) ──> Internet
+#
+# Why two stacks for VPN?
+#   The existing `stacks/gluetun/` stack is shared with crawl4ai (port
+#   11235). Running qBittorrent on a separate gluetun container isolates
+#   the torrent traffic plane from the scraping traffic plane and avoids
+#   cross-stack port collisions.
+#
+# Why expose only on 127.0.0.1?
+#   The WebUI should never be public — even on the Pangolin mesh it's
+#   gated by Pocket ID SSO at mylar3.cianfhoghlaim.ie. Direct port
+#   access stays loopback-only.
+# =============================================================================
+
+name: qbittorrent-gluetun
+
+services:
+  # ---------------------------------------------------------------------------
+  # gluetun — VPN client container (WireGuard)
+  # ---------------------------------------------------------------------------
+  # Private to this stack. Same WireGuard credentials as the main gluetun
+  # stack (resolved from Infisical). qBittorrent joins this container's
+  # network namespace via `network_mode: service:gluetun` below.
+  # ---------------------------------------------------------------------------
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: qbittorrent-gluetun
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    environment:
+      VPN_SERVICE_PROVIDER: custom
+      VPN_TYPE: wireguard
+      WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY}
+      WIREGUARD_ADDRESSES: ${WIREGUARD_ADDRESSES}
+      WIREGUARD_PUBKEY: ${WIREGUARD_PUBKEY}
+      WIREGUARD_PRESHARED_KEY: ${WIREGUARD_PRESHARED_KEY}
+      WIREGUARD_ENDPOINT: ${WIREGUARD_ENDPOINT}
+      DNS_OVER_TLS: "1"
+      DOT_PROVIDERS: "1.1.1.1, cloudflare"
+      # qBittorrent uses random ports for incoming peer connections;
+      # the provider must support port forwarding for optimal connectivity.
+      VPN_PORT_FORWARDING: ${VPN_PORT_FORWARDING:-off}
+      VPN_PORT_FORWARDING_PROVIDER: ${VPN_PORT_FORWARDING_PROVIDER:-}
+    ports:
+      # qBittorrent WebUI — exposed via gluetun's network namespace,
+      # so this is the only host-side publish needed.
+      - "127.0.0.1:${QBITTORRENT_WEBUI_PORT:-8080}:8080"
+    volumes:
+      - qbittorrent-gluetun-config:/gluetun
+    healthcheck:
+      test: ["CMD-SHELL", "/gluetun-entrypoint healthcheck --on-startup.HEALTH_VPN_DURATION_INITIAL=30s"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+      start_period: 60s
+    networks:
+      - cianfhoghlaim
+
+  # ---------------------------------------------------------------------------
+  # qBittorrent — torrent client running inside gluetun's network namespace
+  # ---------------------------------------------------------------------------
+  # Because of `network_mode: service:gluetun`, this container shares gluetun's
+  # network stack: same IP, same ports, same egress. ALL qBittorrent traffic
+  # (peer connections, tracker announces, DHT) exits through the VPN tunnel.
+  #
+  # IMPORTANT: when network_mode is set, the `ports:` section is ignored —
+  # qBittorrent's port 8080 (WebUI) is reached via gluetun's port mapping
+  # above. This is the canonical gluetun sidecar pattern.
+  # ---------------------------------------------------------------------------
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    restart: unless-stopped
+    network_mode: service:gluetun
+    depends_on:
+      gluetun:
+        condition: service_healthy
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-Europe/Dublin}
+      - UMASK=${UMASK:-022}
+      - WEBUI_PORT=8080
+    volumes:
+      - qbittorrent-config:/config
+      - ${DOWNLOADS_PATH:-./downloads}:/downloads
+      # Mylar3 watches /downloads/comics for completed files
+      - ${COMICS_STAGING_PATH:-./downloads/comics}:/downloads/comics
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/api/v2/app/version || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  qbittorrent-config:
+  qbittorrent-gluetun-config:
+
+networks:
+  cianfhoghlaim:
+    external: true
+    name: cianfhoghlaim

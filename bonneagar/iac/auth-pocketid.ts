@@ -29,7 +29,7 @@
 //
 // The 3 env vars required (POCKETID_PANGOLIN_CLIENT_ID + POCKETID_PANGOLIN_CLIENT_SECRET
 // + PANGOLIN_ORG_ID) are loaded from process.env. The POCKETID_PANGOLIN_*
-// credentials come from the .env at /Users/cianmacadeisigh/dev/kings_college_galway/.env
+// credentials come from the .env at ${CIANFHOGHLAIM_ROOT:-~/dev/cianfhoghlaim}/.env
 // (created by `bun run iac:bootstrap-pocketid-admin`).
 //
 // Spec: openspec/changes/2026-07-14-repair-bonneagar-iac-3-way-auth-v1

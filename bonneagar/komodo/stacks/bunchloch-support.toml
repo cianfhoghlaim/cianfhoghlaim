@@ -34,7 +34,7 @@ LITELLM_MASTER_KEY=sk-1234
 [stack.config.repo]
 server_id = "arm1-oci"
 git_account = "cianfhoghlaim"
-repo = "kings_college_galway"
+repo = "cianfhoghlaim"
 branch = "main"
 
 # -----------------------------------------------------------------------------
@@ -65,7 +65,7 @@ LANCEDB_PORT=8080
 [stack.config.repo]
 server_id = "arm1-oci"
 git_account = "cianfhoghlaim"
-repo = "kings_college_galway"
+repo = "cianfhoghlaim"
 branch = "main"
 
 # -----------------------------------------------------------------------------
@@ -96,5 +96,5 @@ LANGFUSE_PORT=3000
 [stack.config.repo]
 server_id = "arm1-oci"
 git_account = "cianfhoghlaim"
-repo = "kings_college_galway"
+repo = "cianfhoghlaim"
 branch = "main"

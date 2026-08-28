@@ -51,7 +51,7 @@ ls -la ~/.locket/infisical_secret
 ```bash
 # B1. Symlink the stack dir (this is the pattern that worked for openclaw + hermes)
 mkdir -p ~/.komodo-stacks/litellm
-for f in ~/dev/kings_college_galway/bonneagar/stacks/litellm/* ~/dev/kings_college_galway/bonneagar/stacks/litellm/.[!.]*; do
+for f in ${CIANFHOGHLAIM_ROOT:-$HOME/dev/cianfhoghlaim}/bonneagar/stacks/litellm/* ${CIANFHOGHLAIM_ROOT:-$HOME/dev/cianfhoghlaim}/bonneagar/stacks/litellm/.[!.]*; do
   [ -e "$f" ] && ln -sf "$f" ~/.komodo-stacks/litellm/
 done
 
@@ -105,7 +105,7 @@ curl -sS -o /dev/null -w "LiteLLM /health/liveliness: HTTP %{http_code}\n" http:
 ```bash
 # C1. Create the langfuse stack dir + .env + compose.local.yaml
 mkdir -p ~/.komodo-stacks/langfuse
-for f in ~/dev/kings_college_galway/bonneagar/stacks/langfuse/* ~/dev/kings_college_galway/bonneagar/stacks/langfuse/.[!.]*; do
+for f in ${CIANFHOGHLAIM_ROOT:-$HOME/dev/cianfhoghlaim}/bonneagar/stacks/langfuse/* ${CIANFHOGHLAIM_ROOT:-$HOME/dev/cianfhoghlaim}/bonneagar/stacks/langfuse/.[!.]*; do
   [ -e "$f" ] && ln -sf "$f" ~/.komodo-stacks/langfuse/
 done
 

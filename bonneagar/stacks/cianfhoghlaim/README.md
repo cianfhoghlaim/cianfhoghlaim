@@ -73,7 +73,7 @@ The 3 app services consume:
 
 ```bash
 # 1. Hydrate the local .env via mise
-cd /Users/cianmacandeisigh/dev/kings_college_galway
+cd /Users/cianmacandeisigh/dev/cianfhoghlaim
 mise trust  # accept mise.toml
 
 # 2. Start the stack
@@ -100,7 +100,7 @@ curl -X POST https://komodo.cianfhoghlaim.ie/api/procedure/run \
   -d '{"name": "deploy-cianfhoghlaim-bunchloch"}'
 ```
 
-## Port Allocation (per `kcg-convergence` skill)
+## Port Allocation (per `stacks-sync` skill)
 
 | Port | Range category | Reserved? |
 |---|---:|:--:|
@@ -109,7 +109,7 @@ curl -X POST https://komodo.cianfhoghlaim.ie/api/procedure/run \
 | 3335 | Dagster | NO — used by `dagster` |
 | 7777 | AI/ML | NO — used by `agent_os` (Agno AgentOS) |
 | 7778 | AI/ML | NO — used by `adk_agents` (Google ADK) |
-| 8000 | MMO | NO — used by `api` (drift; should be 3500 per kcg-convergence, but kept for backward compat) |
+| 8000 | MMO | NO — used by `api` (drift; should be 3500 per stacks-sync, but kept for backward compat) |
 
 ## Image Tags
 
@@ -149,5 +149,5 @@ docker exec cianfhoghlaim-cianfhoghlaim-locket \
 - [`../../../openspec/changes/cianfhoghlaim-stack-polish/`](../../../openspec/changes/cianfhoghlaim-stack-polish/) — this stack's polish change
 - [`../komodo/procedures/deploy-cianfhoghlaim-bunchloch.toml`](../../komodo/procedures/deploy-cianfhoghlaim-bunchloch.toml) — 5-stage deploy procedure
 - [`../pangolin.yaml`](../../pangolin.yaml) — Pangolin (Traefik) routing
-- [`.agents/skills/kcg-convergence/SKILL.md`](../../../.agents/skills/kcg-convergence/SKILL.md) — stack inventory + port allocation
+- [`.agents/skills/stacks-sync/SKILL.md`](../../../.agents/skills/stacks-sync/SKILL.md) — stack inventory + port allocation
 - [`../../../cianfhoghlaim/STATUS.md`](../../../cianfhoghlaim/STATUS.md) — pipeline state

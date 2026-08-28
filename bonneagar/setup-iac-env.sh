@@ -3,16 +3,16 @@
 # Source this to load all env vars the bons IaC needs to talk to arm1-oci.
 # Usage: source ./setup-iac-env.sh
 
-# The .env at /Users/cianmacandeisigh/dev/kings_college_galway/.env has the bulk
+# The .env at ${CIANFHOGHLAIM_ROOT:-/Users/cianmacandeisigh/dev/cianfhoghlaim}/.env has the bulk
 # of the credentials already. We just need to override the URLs to point to arm1-oci.
 
 # The cianfhoghlaim root .env (shared with all bons worktrees)
-if [ -f /Users/cianmacandeisigh/dev/kings_college_galway/.env ]; then
+if [ -f ${CIANFHOGHLAIM_ROOT:-/Users/cianmacandeisigh/dev/cianfhoghlaim}/.env ]; then
   set -a
-  source /Users/cianmacandeisigh/dev/kings_college_galway/.env
+  source ${CIANFHOGHLAIM_ROOT:-/Users/cianmacandeisigh/dev/cianfhoghlaim}/.env
   set +a
 else
-  echo "ERROR: /Users/cianmacandeisigh/dev/kings_college_galway/.env not found" >&2
+  echo "ERROR: ${CIANFHOGHLAIM_ROOT:-/Users/cianmacandeisigh/dev/cianfhoghlaim}/.env not found" >&2
   return 1 2>/dev/null || exit 1
 fi
 

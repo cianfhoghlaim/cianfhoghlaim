@@ -4,7 +4,7 @@
 # UI is SaaS (https://logfire.pydantic.dev). The local OTEL collector only
 # exposes internal OTLP gRPC (:4317) / OTLP HTTP (:4318) ports + health (:8888)
 # — none of which are routed through Pangolin. See:
-#   - `.agents/skills/kcg-pangolin-stack/SKILL.md` §"The 4 host tags" —
+#   - `.agents/skills/pangolin/SKILL.md` §"The 4 host tags" —
 #     logfire is classified as a "Reference stack (not deployed)" with no
 #     host tag.
 #   - `bonneagar/stacks/logfire/README.md` §"Why an OTEL Collector?" —

@@ -46,7 +46,7 @@ execution = { type = "RunShellCommand", params = { command = "command -v docker 
 name = "stackup"
 
 [[procedure.config.stages.executions]]
-execution = { type = "RunShellCommand", params = { command = "cd /Users/cianmacandeisigh/.local/newt && docker compose -f /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar/stacks/newt/docker-compose.yaml up -d", timeout_s = 120, description = "docker compose up -d for the 4 bunchloch-site services" } }
+execution = { type = "RunShellCommand", params = { command = "cd /Users/cianmacandeisigh/.local/newt && docker compose -f ${CIANFHOGHLAIM_ROOT:-/Users/cianmacandeisigh/dev/cianfhoghlaim}/bonneagar/stacks/newt/docker-compose.yaml up -d", timeout_s = 120, description = "docker compose up -d for the 4 bunchloch-site services" } }
 
 # =============================================================================
 # STAGE 2: WireGuard tunnel check

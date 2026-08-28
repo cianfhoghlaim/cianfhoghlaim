@@ -1,8 +1,19 @@
-# Pangolin auto-discovery labels for Mylar3
-services:
-  mylar3:
-    labels:
-      - "pangolin.resource.name=Mylar3"
-      - "pangolin.resource.domain=mylar3.cianfhoghlaim.ie"
-      - "pangolin.resource.target=http://mylar3:8090"
-      - "pangolin.resource.middlewares=tinyauth"
+# =============================================================================
+# mylar3 — Pangolin private-resource route
+# =============================================================================#
+# Routes mylar3.cianfhoghlaim.ie → mylar3 container at port 8090.
+# Member role required (Pocket ID passkey SSO via the Pangolin mesh).
+#
+# If you change the port, update .env.example (MYLAR_PORT) AND this file
+# to match compose.yaml.
+# =============================================================================
+
+pangolin:
+  private-resources:
+    mylar3:
+      name: Mylar3
+      mode: http
+      full-domain: mylar3.cianfhoghlaim.ie
+      destination-port: 8090
+      protocol: http
+      roles[0]: Member

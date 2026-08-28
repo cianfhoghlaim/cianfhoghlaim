@@ -10,7 +10,7 @@ name = "run-stack-doctor"
 type = "command"
 description = "Run stack-doctor.sh and write a JSON snapshot to /tmp"
 command = """
-cd /Users/cianmacoghlaim/dev/kings_college_galway || cd /etc/komodo/sruth
+cd ${CIANFHOGHLAIM_ROOT:-/Users/cianmacandeisigh/dev/cianfhoghlaim} || cd /etc/komodo/sruth
 TS=$(date -u +%Y%m%dT%H%M%SZ)
 bash scripts/stack-doctor.sh --json > /tmp/stack-doctor-${TS}.json
 echo "Snapshot written to /tmp/stack-doctor-${TS}.json"

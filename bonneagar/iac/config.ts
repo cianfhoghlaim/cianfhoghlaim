@@ -40,7 +40,7 @@ export const CONFIG = {
 
   // Git provider for resource-syncs
   gitProvider: envOr("GIT_PROVIDER", "forgejo.cianfhoghlaim.ie"),
-  gitRepo: envOr("GIT_REPO", "kings_college_galway"),
+  gitRepo: envOr("GIT_REPO", "cianfhoghlaim"),
   gitBranch: envOr("GIT_BRANCH", "main"),
 
   // Crossover flags

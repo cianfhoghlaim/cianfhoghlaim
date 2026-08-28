@@ -1,10 +1,22 @@
+# =============================================================================
+# mylar3 — Locket Infisical-injection sidecar (post-fix v0.2.1)
+# =============================================================================#
+# Mirrors the Kapowarr + langfuse + cognee pattern. The locket container
+# resolves {{ infisical://... }} templates from ./secrets.env against the
+# `dev-baile` Infisical vault at container start (and refreshes in watch
+# mode), then writes a flat key=value file at
+# /run/secrets/locket/secrets.env that mylar3 sources via env_file.
+#
+# In offline / dev mode, set INFISICAL_FALLBACK_FILE in your .env.local to a
+# static env file with the resolved key=value pairs.
+# =============================================================================
+
 services:
   locket:
     image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
     environment:
       LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
-
-    container_name: mealie-locket
+    container_name: mylar3-locket
     restart: unless-stopped
     user: "65532:65532"
     security_opt:
@@ -14,13 +26,14 @@ services:
     command:
       - "--provider=infisical"
       - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
-      - "--infisical-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
       - "--map=/templates:/run/secrets/locket"
       - "--mode=${LOCKET_MODE:-watch}"
     secrets:
       - infisical_secret
     volumes:
       - ./secrets.env:/templates/secrets.env:ro
+      - ${INFISICAL_FALLBACK_FILE}:/run/secrets/locket/env-fallback.env:ro
       - stack-secrets:/run/secrets/locket
     healthcheck:
       test: ["CMD", "/locket", "healthcheck"]
@@ -31,7 +44,8 @@ services:
     networks:
       - stack
 
-  mealie:
+  # Override mylar3 to source resolved secrets from the locket tmpfs.
+  mylar3:
     depends_on:
       locket:
         condition: service_healthy
@@ -40,14 +54,9 @@ services:
     env_file:
       - /run/secrets/locket/secrets.env
 
-# TODO[2026-08-22-lakehouse-config-and-env-var-hardening-v1]:
-# infisical_secret path now reads ${CIANFHOGHLAIM_INFISICAL_SECRET_PATH:-<fallback>}
-# (default fallback still pins /Users/cianmacandeisigh/dev/cianfhoghlaim).
-# Track the env-var rollout in the 2026-08-22 openspec change tasks.md before
-# dropping the hardcoded fallback.
 secrets:
   infisical_secret:
-    file: ${CIANFHOGHLAIM_INFISICAL_SECRET_PATH:-/Users/cianmacandeisigh/dev/cianfhoghlaim/bonneagar/stacks/infisical/infisical_secret}
+    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
 
 volumes:
   stack-secrets:

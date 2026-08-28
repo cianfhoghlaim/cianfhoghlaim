@@ -46,7 +46,7 @@ bons IaC secrets-injection method (see `iac/docs/locket.md`).
 ### Phase 1: bunchloch (local dev/canary)
 
 ```bash
-cd /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar
+cd /Users/cianmacandeisigh/dev/cianfhoghlaim/bonneagar
 bun run iac:bootstrap-control-plane-bunchloch
 ```
 
@@ -63,7 +63,7 @@ This runs all 8 phases in order:
 ### Phase 2: arm1-oci (production)
 
 ```bash
-cd /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar
+cd /Users/cianmacandeisigh/dev/cianfhoghlaim/bonneagar
 bun run iac:bootstrap-control-plane-arm1-oci
 ```
 
