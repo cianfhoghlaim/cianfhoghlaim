@@ -2,7 +2,9 @@
 
 > **The Docker Compose stack catalogue + the merged TypeScript IaC + Komodo GitOps + Pangolin reverse-proxy + Infisical secrets for the Cianfhoghlaim self-hosted platform.**
 >
-> Re-merged into the cianfhoghlaim monorepo on **2026-07-17** per the `2026-07-17-v7-flatten-cianfhoghlaim-merge-bonneagar-rewrite-readme-license-v1` openspec change. Previously a separate GitHub repo at `github.com/cianfhoghlaim/bonneagar` (now an archived read-only remote at `archive-bonneagar`).
+> Re-merged into the cianfhoghlaim monorepo on **2026-07-17** per the `2026-07-17-v7-flatten-cianfhoghlaim-merge-bonneagar-rewrite-readme-license-v1` openspec change.
+>
+> **This directory is authoritative.** `github.com/cianfhoghlaim/bonneagar` (the `archive-bonneagar` remote) is a one-way published mirror of it in root layout — force-updated from here by `mise run bonneagar:mirror`, so never commit to it directly. It was stale from 2026-07-12 to 2026-08-28 and resynced on 2026-08-28.
 
 ## Architecture
 

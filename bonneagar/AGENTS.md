@@ -2,7 +2,9 @@
 
 > **The unified TypeScript IaC + Docker Compose stack catalogue + Komodo GitOps fleet + Pangolin reverse-proxy + Infisical secrets + Locket sidecar injection for the Cianfhoghlaim self-hosted platform.**
 >
-> This subdirectory was re-merged into the cianfhoghlaim monorepo on **2026-07-17** (per the `2026-07-17-v7-flatten-cianfhoghlaim-merge-bonneagar-rewrite-readme-license-v1` openspec change). Previously it was a separate GitHub repo at `github.com/cianfhoghlaim/bonneagar` (now an archived read-only remote at `archive-bonneagar`).
+> This subdirectory was re-merged into the cianfhoghlaim monorepo on **2026-07-17** (per the `2026-07-17-v7-flatten-cianfhoghlaim-merge-bonneagar-rewrite-readme-license-v1` openspec change).
+>
+> **Edit here, not on the mirror.** `github.com/cianfhoghlaim/bonneagar` (the `archive-bonneagar` remote) is a one-way published mirror of this directory, in root layout. It is force-updated from here by `mise run bonneagar:mirror`; commits made directly on it are discarded at the next sync. It was frozen 2026-07-12 → 2026-08-28 (643 files of drift) and resynced on 2026-08-28.
 
 ## Priority quick reference
 

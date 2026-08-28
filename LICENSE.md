@@ -9,15 +9,15 @@ License text copyright (c) 2017 MariaDB Corporation Ab, All Rights Reserved.
 
 The companion repository [cianfhoghlaim/leabharlann](https://github.com/cianfhoghlaim/leabharlann) (digital library) is separately licensed under the same Business Source License 1.1 by the same Licensor.
 
-> **Note (post-v7, 2026-07-17):** The previous companion
+> **Note (post-v7, 2026-07-17; mirror resumed 2026-08-28):** The previous
+> companion
 > [cianfhoghlaim/bonneagar](https://github.com/cianfhoghlaim/bonneagar)
 > (GitOps infrastructure) has been merged back into this monorepo
-> as the `bonneagar/` subdirectory. Its history is preserved in the
-> in-tree `bonneagar/komodo/resource-syncs/{arm1-oci,bunchloch,...}.toml`
-> files and the standalone repo at
-> `github.com/cianfhoghlaim/bonneagar` is now archived as
-> `archive-bonneagar`. The IaC is governed by this same BUSL-1.1
-> license.
+> as the `bonneagar/` subdirectory, which is now the canonical source.
+> The standalone repo at `github.com/cianfhoghlaim/bonneagar` (the
+> `archive-bonneagar` remote) is a one-way published mirror of that
+> subdirectory in root layout, force-updated from this monorepo. The
+> IaC is governed by this same BUSL-1.1 license in both locations.
 
 **Additional Use Grant:**
 You may make production use of the Licensed Work strictly for non-commercial, non-profit, cultural preservation, and academic research purposes, provided such use occurs entirely within the legal jurisdictions of 
