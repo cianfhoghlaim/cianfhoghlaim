@@ -42,7 +42,7 @@ services:
       # Fixed volume path 2026-08-21 (was `../../notebooks` — that resolves
       # to `bonneagar/notebooks` which doesn't exist; the actual notebooks
       # are at the repo root. Per the v7-flatten layout, notebooks live
-      # directly at /Users/cianmacandeisigh/dev/kings_college_galway/notebooks/).
+      # directly at /Users/cianmacandeisigh/dev/cianfhoghlaim/notebooks/).
       - ../../../notebooks:/notebooks:ro
       - marimo_data:/home/marimo
     healthcheck:

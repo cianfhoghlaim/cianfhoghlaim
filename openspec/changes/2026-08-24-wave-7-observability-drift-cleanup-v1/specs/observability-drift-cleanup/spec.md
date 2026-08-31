@@ -13,7 +13,7 @@ After this spec is implemented:
 
 This spec captures Wave 7 of the 2026-08-24 master refactor plan.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: 4 TracingBackend concrete classes
 
@@ -70,9 +70,7 @@ all 15 audited AGENTS.md files are updated.
 - **THEN** a non-empty span_id is returned (or `""` if mlflow not installed)
 
 ### Requirement: MlflowBackend graceful fallback
-
-If `mlflow` is not installed OR `MLFLOW_TRACKING_URI` is not set,
-`MlflowBackend.enabled` SHALL be `False` and all 3 methods SHALL
+The system SHALL be `False` and all 3 methods SHALL.
 be silent no-ops.
 
 #### Scenario: mlflow not installed

@@ -42,8 +42,9 @@ Key design points:
   UCCIX-Mistral-24B + UCCIX-Llama-3.1-8B).
 
 All 22 unique model_ids were verified live on HuggingFace Hub via the
-HF MCP tools on 2026-06-29. See the full audit at
-`openspec/research/2026-06-29-ocr-vlm-registry-audit/kcg-ocr-vlm-registry.md`.
+HF MCP tools on 2026-06-29. See the full audit under
+`openspec/research/2026-06-29-ocr-vlm-registry-audit/` (the OCR/VLM
+registry audit note).
 
 Usage:
     from cianfhoghlaim.ocr.models.registry import (
@@ -845,8 +846,105 @@ VISION_MODELS: dict[str, OCRModel] = {
             "DocTags XML preserving tables / figures / equations."
         ),
     ),
+
+    # ─── v7 (Gemma 4 family) — added 2026-08-31 per the v5 model priority change ───
+    # Gemma 4 vision models served via the llama-swap OpenAI-compatible
+    # endpoint at :8080. Per the gemini_hackathon Gemma+Gemini refocus
+    # applied to cianfhoghlaim. These replace the qwen3-vl-8b /
+    # qwen3-vl-32b-instruct OCR workhorses.
+    "gemma-4-26b-a4b-vision": OCRModel(
+        key="gemma-4-26b-a4b-vision",
+        name="Gemma 4 26B-A4B Vision (llama-swap, OCR primary)",
+        unsloth_id=None,
+        mlx_id=None,
+        upstream_id="google/gemma-4-26B-A4B-it",
+        backend=ModelBackend.LLAMASWAP,
+        capabilities=[
+            ModelCapability.DENSE_OCR,
+            ModelCapability.GROUNDING,
+            ModelCapability.TABLES,
+            ModelCapability.REASONING,
+            ModelCapability.MULTILINGUAL,
+        ],
+        unsloth_features=[],
+        role="tier1_heavy",
+        m4_max_48gb_fit=True,
+        arm1_oci_required=False,
+        available=True,
+        max_resolution=(2048, 2048),
+        notes=(
+            "v7 NEW per 2026-08-31-cianfhoghlaim-v5-opencode-model-priority-v1. "
+            "Gemma 4 26B-A4B vision-language variant. OCR/VLM primary. "
+            "Replaces qwen3-vl-8b via llama-swap as the v7 default. "
+            "Served via the llama-swap OpenAI-compatible endpoint at :8080."
+        ),
+    ),
+    "gemma-4-12b-vision": OCRModel(
+        key="gemma-4-12b-vision",
+        name="Gemma 4 12B Vision (llama-swap, vision medium)",
+        unsloth_id=None,
+        mlx_id=None,
+        upstream_id="google/gemma-4-12B-it",
+        backend=ModelBackend.LLAMASWAP,
+        capabilities=[
+            ModelCapability.DENSE_OCR,
+            ModelCapability.GROUNDING,
+            ModelCapability.TABLES,
+        ],
+        unsloth_features=[],
+        role="tier2_medium",
+        m4_max_48gb_fit=True,
+        arm1_oci_required=False,
+        available=True,
+        max_resolution=(1536, 1536),
+        notes=(
+            "v7 NEW. Mid-tier Gemma 4 vision alternative; faster cold-start than the 26B."
+        ),
+    ),
+    "gemma-4-e4b-vision": OCRModel(
+        key="gemma-4-e4b-vision",
+        name="Gemma 4 E4B Vision (llama-swap, vision light)",
+        unsloth_id=None,
+        mlx_id=None,
+        upstream_id="google/gemma-4-E4B-it",
+        backend=ModelBackend.LLAMASWAP,
+        capabilities=[
+            ModelCapability.DENSE_OCR,
+            ModelCapability.MULTILINGUAL,
+        ],
+        unsloth_features=[],
+        role="tier3_light",
+        m4_max_48gb_fit=True,
+        arm1_oci_required=False,
+        available=True,
+        max_resolution=(1280, 1280),
+        notes=(
+            "v7 NEW. Lightweight Gemma 4 vision variant for low-latency reads."
+        ),
+    ),
+    "gemma-3-12b-vision": OCRModel(
+        key="gemma-3-12b-vision",
+        name="Gemma 3 12B Vision (llama-swap, dev benchmark)",
+        unsloth_id=None,
+        mlx_id=None,
+        upstream_id="google/gemma-3-12B-it",
+        backend=ModelBackend.LLAMASWAP,
+        capabilities=[
+            ModelCapability.DENSE_OCR,
+            ModelCapability.TABLES,
+        ],
+        unsloth_features=[],
+        role="specialist",
+        m4_max_48gb_fit=True,
+        arm1_oci_required=False,
+        available=True,
+        max_resolution=(1280, 1280),
+        notes=(
+            "v7 NEW. Dev-profile Gemma 3 prior-generation benchmark for the comparison harness."
+        ),
+    ),
 }
-# Total: 26 entries (24 v4 + 2 v5 BIEP v2 entrants)
+# Total: 30 entries (24 v4 + 2 v5 BIEP v2 + 4 v7 Gemma 4 vision)
 # Verified live on HF Hub 2026-06-29 for the original 24; the 2 v5
 # entries (unstract-api, docling-serve) are the Unstract + Docling HTTP
 # APIs from the bonneagar stacks (no HF model ID).

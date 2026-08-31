@@ -14,7 +14,7 @@ implemented:
 
 This spec captures Wave 6 of the 2026-08-24 master refactor plan.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: 5 web packages
 
@@ -82,9 +82,7 @@ define the 12 AG-UI event types:
 - **THEN** each parse succeeds
 
 ### Requirement: 8 pipeline kinds + 15 destinations
-
-The `SourceKindSchema` and `DestinationSchema` in
-`web/packages/contracts/src/index.ts` SHALL enumerate the 8 pipeline
+The system SHALL enumerate the 8 pipeline.
 kinds (from Wave 2) + the 15 destinations (from Wave 4).
 
 #### Scenario: All kinds + destinations validate
@@ -93,9 +91,7 @@ kinds (from Wave 2) + the 15 destinations (from Wave 4).
 - **THEN** both parse successfully
 
 ### Requirement: 5 web apps consume from the 5 packages
-
-The 5 consolidated web apps (`cianfhoghlaim`, `oideachais`, `croilar`,
-`tuatha`, `game_showcase`) SHALL consume from the 5 packages instead
+The system SHALL consume from the 5 packages instead.
 of installing their own copies of Better Auth, Convex, CopilotKit, AG-UI,
 Radix UI, Tailwind 4, etc.
 
@@ -103,3 +99,4 @@ Radix UI, Tailwind 4, etc.
 
 - **WHEN** `grep -c '"better-auth":' web/apps/*/package.json web/packages/auth/package.json` runs
 - **THEN** exactly 1 entry (the canonical `web/packages/auth/`)
+

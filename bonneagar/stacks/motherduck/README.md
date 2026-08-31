@@ -1,6 +1,6 @@
 # MotherDuck - Managed DuckLake Lakehouse (SaaS reference)
 
-MotherDuck (https://motherduck.com) is the KCG canonical cloud-managed
+MotherDuck (https://motherduck.com) is the Cianfhoghlaim canonical cloud-managed
 DuckLake lakehouse. It is a **SaaS**, not a Docker container; there is
 no local `docker compose up` to run.
 
@@ -19,7 +19,7 @@ print(con.sql('SELECT schema_name FROM information_schema.schemata').fetchdf())
 python ./flights/lc_syllabus_topics_flight.py
 ```
 
-## KCG integration surface
+## Cianfhoghlaim integration surface
 
 | Surface | Where | What |
 |:--|:--|:--|

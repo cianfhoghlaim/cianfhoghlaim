@@ -422,7 +422,7 @@
     - scripts/sync_dagster_assets_to_cognee.py
     - notebooks/sync_health.py
     - .agents/skills/dagster-asset-sync/SKILL.md
-  tags: [dagster, asset, sync, defs, 5-layer, kcg-component, layer6]
+  tags: [dagster, asset, sync, defs, 5-layer, cianfhoghlaim-component, layer6]
   domain: "06-pipelines"
 
 - title: "baml-function-search"
@@ -754,3 +754,104 @@
     - openspec/changes/2026-08-21-unsloth-v5-vision-llm-hermes-openclaw-opencode-marimo-integration-v1/
   tags: [unsloth, hermes, openclaw, opencode, qwen3.8, deepseek-v4, kimi-k2.7, vision-fine-tuning, dynamic-3.0, m3-fallback, marimo, 10-way-comparison]
   domain: "00-tooling"
+
+# ============================================================================
+# v5 model priority concept guides (2026-08-31)
+# ============================================================================
+
+- title: "v5 model priority chain (Gemma 4 + Gemini 3.5 + MiniMax M3)"
+  description: |
+    The v5 model priority chain applied to cianfhoghlaim (per the
+    2026-08-31-cianfhoghlaim-v5-opencode-model-priority-v1 change).
+    Tier 1 PRIMARY = MiniMax M3 (BIEP chokepoint).
+    Tier 1 ALT = Vertex AI Gemini 3.5 Flash + AI Studio Gemini 3.5 Flash.
+    Tier 2 FALLBACK = Unsloth Studio Gemma 4 26B-A4B.
+    Tier 2 LIGHT = Unsloth Studio Gemma 4 E4B.
+    qwen token-plan removed entirely. Qwen entries tombstoned.
+  files:
+    - opencode.json
+    - ~/.config/opencode/opencode.jsonc
+    - baml_src/clients.baml
+    - meaisinfhoghlaim/models/model_registry.py
+    - meaisinfhoghlaim/models/registry.py
+    - .agents/skills/opencode/SKILL.md
+    - .agents/skills/centralized-registry/SKILL.md
+    - openspec/changes/2026-08-31-cianfhoghlaim-v5-opencode-model-priority-v1/
+    - openspec/specs/centralized-model-registry/spec.md
+    - deployment-choice.yaml
+  tags: [v5, model-priority, gemma-4, gemini-3.5, minimax-m3, unsloth-studio, vertex-ai, ai-studio, profile-gate, qwen-tombstone, build-v2-key, plan-v2-key]
+  domain: "00-tooling"
+
+- title: "BAML Primary alias + per-function fallback chain"
+  description: |
+    The BAML switching strategy (per the 2026-08-31-baml-primary-alias-and-fallback-v1 change).
+    3 layers stacked: env-driven `Primary` alias + per-function `client "X"` override +
+    per-function `fallback` chain. Switching the primary model = changing
+    `MODEL_BASE_URL` + `MODEL_API_KEY` + `MODEL_PRIMARY` via
+    `mise run baml:switch-primary --model minimax-m3|gemma-4-26b-a4b|gemini-3.5-flash`.
+  files:
+    - baml_src/clients.baml
+    - scripts/baml_audit_fallbacks.py
+    - mise.toml
+    - openspec/changes/2026-08-31-baml-primary-alias-and-fallback-v1/
+  tags: [baml, primary-alias, fallback-chain, env-driven, model-switching, minimax, gemma, gemini]
+  domain: "00-tooling"
+
+- title: "GCP mirror stacks (opt-in)"
+  description: |
+    The 6 GCP mirror stacks at bonneagar/stacks/gcp-*/ per the
+    2026-08-31-gcp-mirror-stacks-v1 change. Each follows the 6-file
+    GOLD_STANDARD pattern (compose.yaml + sidecar.yaml + secrets.env
+    + pangolin.yaml + blueprint.yaml + .env.example). Opt-in via
+    `deployment-choice.yaml` `enabled_stacks` block (default false).
+    Mirrors the gemini_hackathon GCP-first IaC refactor pattern.
+    Opensource stacks (pangolin + komodo + bunchloch) stay canonical.
+  files:
+    - bonneagar/stacks/gcp-gemini-vertex/
+    - bonneagar/stacks/gcp-gemma-unsloth/
+    - bonneagar/stacks/gcp-bigquery-mirror/
+    - bonneagar/stacks/gcp-gcs-bucket/
+    - bonneagar/stacks/gcp-secret-manager/
+    - bonneagar/stacks/gcp-cloud-run/
+    - deployment-choice.yaml
+    - mise.toml
+    - openspec/changes/2026-08-31-gcp-mirror-stacks-v1/
+  tags: [gcp, cloud-run, vertex-ai, bigquery, cloud-storage, secret-manager, workloard-identity-federation, stackdriver-ai-agent-adk, otlp-exporter, opt-in, gcp-mirror]
+  domain: "00-tooling"
+
+- title: "Sister-repo gemini_hackathon lesson transfer"
+  description: |
+    The 5 sister-repo deep transfers per the
+    2026-08-31-sister-repo-gemini-lesson-transfer-v1 change:
+    bonneagar + tuatha + ciancheiltis + ciandlithe + cianchosaint
+    each get a per-sister-repo customisation of the gemini_hackathon
+    Gemma + Gemini + GCP + ADK 2 + AG-UI/A2UI/CopilotKit lessons.
+  files:
+    - openspec/changes/2026-08-31-sister-repo-gemini-lesson-transfer-v1/
+    - ~/dev/tuatha/tuatha/baml/
+    - ~/dev/ciancheiltis/
+    - ~/dev/ciandlithe/
+    - ~/dev/cianchosaint/
+    - ~/dev/bonneagar/
+  tags: [sister-repo, gemini_hackathon-lessons, gemma-priority, per-sister-customisation, tuatha, ciancheiltis, ciandlithe, cianchosaint, bonneagar, google-adk, ag-ui, copilotkit]
+  domain: "00-tooling"
+
+- title: "meaisinfhoghlaim Unsloth-priority refactor"
+  description: |
+    The meaisinfhoghlaim Unsloth-prioritised refactor per the
+    2026-08-31-meaisinfhoghlaim-unsloth-priority-v1 change. OCR ensemble
+    swaps qwen3-vl-8b to gemma-4-26b-a4b-vision. Training defaults to
+    irish-gemma-4 base. Alignment adds gemma4_opus_mt method.
+    Document factory adds Document AI primary + Docling-serve fallback.
+  files:
+    - meaisinfhoghlaim/ocr/ensemble/
+    - meaisinfhoghlaim/backends/scanned_detector.py
+    - meaisinfhoghlaim/datasets/irish_processing.py
+    - meaisinfhoghlaim/training/modal_finetune/finetune_unsloth_local.py
+    - meaisinfhoghlaim/alignment/
+    - meaisinfhoghlaim/federated/
+    - meaisinfhoghlaim/evaluation/
+    - meaisinfhoghlaim/document_factory/
+    - openspec/changes/2026-08-31-meaisinfhoghlaim-unsloth-priority-v1/
+  tags: [meaisinfhoghlaim, unsloth-priority, gemma-4-vision, irish-gemma-4, gemma4-opus-mt, document-ai, docling-serve, training-finetuning]
+  domain: "05-agent-platform"

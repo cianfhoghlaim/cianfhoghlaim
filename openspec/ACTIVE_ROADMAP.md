@@ -1,10 +1,31 @@
 # Active Openspec Roadmap
 
-**Status (2026-07-29):** 0 active openspec changes. All cleanup waves complete.
+**Status (2026-08-26, corrected — the previous "0 active changes /
+2026-07-29" claim below was 4 weeks stale and wrong by 60 changes):**
+**60 active openspec changes** per `uv run openspec list` (verified
+2026-08-26). 37 of those sit at 0/N tasks — created but not started,
+several superseded by later work. This file cannot be trusted as a
+point-in-time snapshot on this repo's change velocity; the numbers
+above will be stale again soon. Always cross-check with:
+
+```bash
+uv run openspec list           # live active-change list + task completion + age
+uv run openspec list --specs   # live spec list (101 specs as of 2026-08-26)
+```
+
+A full triage of the 60 active changes (archive the superseded 0/N
+ones, confirm the rest are genuinely in-flight) was identified as
+high-value follow-up work during the 2026-08-26 data-side-remediation
+session but deliberately NOT executed in that session — it requires
+judgment calls about which changes are superseded vs genuinely
+pending that shouldn't be made unilaterally by an agent without the
+owning developer's input, and several `openspec/changes/*` entries
+were being actively created/edited by a concurrent session at the
+time (dated as recently as today), making bulk archival risky.
 
 ## Active changes
 
-_None — the active list is empty. The 6 cleanup waves (Wave 1-6) archived all 13 originally-active changes._
+_See `uv run openspec list` for the live list — not reproduced here (see Status above for why)._
 
 ## Forward-looking openspec seeds (tracked by issues)
 
@@ -20,7 +41,7 @@ The following changes were archived with "Forward seed / Deferred" notes. Reopen
 | Tracked by | Change | Scope |
 |:--|:--|:--|
 | issue #141 | `2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1` (Phase 1.3-1.10 + 1.12-1.19) | Complete remaining MODEL_REGISTRY migrations |
-| issue #142 | same change (Phase 2.2-2.5) | Activate BAML TypeScript codegen |
+| issue #142 | same change (Phase 2.2-2.5) | Activate BAML TypeScript codegen — root cause diagnosed 2026-08-26: `baml-cli generate` fails for ~240 of 334 `.baml` files (syntax errors, likely a CLI version bump); see `.agents/skills/schema-codegen/SKILL.md` "Current status" |
 | issue #143 | same change (Phase 5) | Build web UI control panel |
 | issue #144 | same change (Phase 7-9) | Pydantic dedup rollout |
 | issue #145 | same change (Phase 7) | CocoIndex factory rollout (collapse Irish LC + BI parity Apps) |

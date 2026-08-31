@@ -62,7 +62,7 @@ execution = { type = "CheckEnvVar", params = { vars = ["PANGOLIN_API_KEY", "INFI
 name = "iac-provision"
 
 [[procedure.config.stages.executions]]
-execution = { type = "RunShellCommand", params = { command = "cd /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar && bun run iac:sync:sites 2>&1 | tail -20", timeout_s = 60, description = "Provision the bunchloch-newt site via the Pangolin Integrations API + write credentials to .env", require_success = false } }
+execution = { type = "RunShellCommand", params = { command = "cd ${CIANFHOGHLAIM_ROOT:-/Users/cianmacandeisigh/dev/cianfhoghlaim}/bonneagar && bun run iac:sync:sites 2>&1 | tail -20", timeout_s = 60, description = "Provision the bunchloch-newt site via the Pangolin Integrations API + write credentials to .env", require_success = false } }
 
 # =============================================================================
 # STAGE 2: StackUp (4 bunchloch-site services)
@@ -76,7 +76,7 @@ execution = { type = "RunShellCommand", params = { command = "cd /Users/cianmaca
 name = "stackup"
 
 [[procedure.config.stages.executions]]
-execution = { type = "RunShellCommand", params = { command = "mkdir -p /Users/cianmacandeisigh/.local/newt /Users/cianmacandeisigh/.local/komodo-periphery/keys /Users/cianmacandeisigh/.local/komodo-periphery/repos && cd /Users/cianmacandeisigh/.local/newt && docker compose -f /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar/stacks/newt/docker-compose.yaml up -d 2>&1 | tail -20", timeout_s = 120, description = "docker compose up -d for the 4 bunchloch-site services (locket, newt, periphery, beszel-agent)", require_success = true } }
+execution = { type = "RunShellCommand", params = { command = "mkdir -p /Users/cianmacandeisigh/.local/newt /Users/cianmacandeisigh/.local/komodo-periphery/keys /Users/cianmacandeisigh/.local/komodo-periphery/repos && cd /Users/cianmacandeisigh/.local/newt && docker compose -f ${CIANFHOGHLAIM_ROOT:-/Users/cianmacandeisigh/dev/cianfhoghlaim}/bonneagar/stacks/newt/docker-compose.yaml up -d 2>&1 | tail -20", timeout_s = 120, description = "docker compose up -d for the 4 bunchloch-site services (locket, newt, periphery, beszel-agent)", require_success = true } }
 
 # =============================================================================
 # STAGE 3: WireGuard tunnel check

@@ -61,7 +61,7 @@ ARG DAGSTER_VERSION=1.13.11
 # uses independent semver from `dagster` (0.27.x for dagster 1.11.x;
 # 0.28+ for dagster 1.12+). For dev mode, dagster's own run/event/schedule
 # storage falls back to SQLite (the default in `DAGSTER_HOME=./dagster_home`),
-# which is sufficient for the 5 KCG Components. Production deployments
+# which is sufficient for the 5 Cianfhoghlaim Components. Production deployments
 # would install `dagster-postgres` and use lakehouse-postgres for
 # run storage (handled in a separate ops change).
 RUN uv pip install --system \
@@ -84,7 +84,7 @@ RUN uv pip install --system \
 
 # Layer 2: Cianfhoghlaim deps (BAML + DuckDB + LanceDB + pyarrow +
 # LLM SDKs). These are the app-side deps that the dagster instance
-# needs to spin up the 5 KCG Components from
+# needs to spin up the 5 Cianfhoghlaim Components from
 # `cianfhoghlaim.dagster.definitions` and execute the 260+ assets.
 # NEW in 2026-07-03 (infrastructure-foundation change A): added 11
 # OCR/VLM/memory Python packages for the LC5 + Gemini 6-corpus pipelines.
@@ -148,7 +148,7 @@ COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/pytho
 COPY --from=builder /usr/local/bin /usr/local/bin
 
 # NEW 2026-07-03: install cianfhoghlaim as an editable package so the
-# 5 KCG Components + the LC5 + Gemini 6-corpus assets are importable
+# 5 Cianfhoghlaim Components + the LC5 + Gemini 6-corpus assets are importable
 # from the dagster container.
 #
 # CRITICAL: We do NOT use `uv pip install -e` for cianfhoghlaim because

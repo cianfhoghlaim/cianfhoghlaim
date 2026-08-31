@@ -50,7 +50,7 @@ export const TERTIARY_INSTITUTIONS = [
   "british_isles_tertiary",
 ] as const;
 
-export const TertiaryInstitutionSchema = z.enum(TERTIARY_INSTITUTIONS as [string, ...string[]]);
+export const TertiaryInstitutionSchema = z.enum([...TERTIARY_INSTITUTIONS] as [string, ...string[]]);
 
 // ─── Pipeline event payload (the AG-UI SSE payload shape) ─────────────────
 
@@ -73,7 +73,7 @@ export const PipelineEventSchema = z.object({
   run_id: z.string(),
   thread_id: z.string(),
   timestamp: z.string().datetime(),
-  payload: z.record(z.unknown()).optional(),
+  payload: z.record(z.string(), z.unknown()).optional(),
 });
 
 export type PipelineEvent = z.infer<typeof PipelineEventSchema>;
@@ -96,3 +96,14 @@ export const DestinationSchema = z.enum([
 
 export type SourceKind = z.infer<typeof SourceKindSchema>;
 export type DestinationName = z.infer<typeof DestinationSchema>;
+
+// ─── Generated schemas (DuckLake/DuckDB introspection) ────────────────────
+//
+// Per the 2026-08-26 schema-contract remediation: `scripts/schema-generate.ts`
+// introspects the live DuckLake/DuckDB schema (or the static BIEP v1 schema
+// in --offline mode) and writes here. This is the canonical location —
+// import table schemas from here, not from a per-app generated file.
+// Regenerate with `bun run schema:generate`; CI drift-checks with
+// `bun run schema:validate` (wired into mise run core:ci).
+
+export * from "./generated/bi-ep.gen";

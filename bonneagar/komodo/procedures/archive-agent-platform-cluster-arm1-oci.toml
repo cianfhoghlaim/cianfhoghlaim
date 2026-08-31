@@ -50,19 +50,19 @@ execution = { type = "RunShellCommand", params = { command = "curl -ksSf -o /dev
 name = "archive-changes"
 
 [[procedure.config.stages.executions]]
-execution = { type = "RunShellCommand", params = { command = "cd kings_college_galway && openspec archive 2026-07-13-backfill-server-id-on-12-procedures --yes 2>&1 | tail -3 || true", timeout_s = 60, description = "Archive 1/5: backfill server_id" } }
+execution = { type = "RunShellCommand", params = { command = "cd ${CIANFHOGHLAIM_ROOT:-/root/cianfhoghlaim} && openspec archive 2026-07-13-backfill-server-id-on-12-procedures --yes 2>&1 | tail -3 || true", timeout_s = 60, description = "Archive 1/5: backfill server_id" } }
 
 [[procedure.config.stages.executions]]
-execution = { type = "RunShellCommand", params = { command = "cd kings_college_galway && openspec archive 2026-07-13-arm-oci-deploy-preflight-hard-gate-v1 --yes 2>&1 | tail -3 || true", timeout_s = 60, description = "Archive 2/5: preflight hard-gate" } }
+execution = { type = "RunShellCommand", params = { command = "cd ${CIANFHOGHLAIM_ROOT:-/root/cianfhoghlaim} && openspec archive 2026-07-13-arm-oci-deploy-preflight-hard-gate-v1 --yes 2>&1 | tail -3 || true", timeout_s = 60, description = "Archive 2/5: preflight hard-gate" } }
 
 [[procedure.config.stages.executions]]
-execution = { type = "RunShellCommand", params = { command = "cd kings_college_galway && openspec archive 2026-07-13-agent-platform-cluster-arm1-oci-bootstrap-procedure-v1 --yes 2>&1 | tail -3 || true", timeout_s = 60, description = "Archive 3/5: bootstrap procedure" } }
+execution = { type = "RunShellCommand", params = { command = "cd ${CIANFHOGHLAIM_ROOT:-/root/cianfhoghlaim} && openspec archive 2026-07-13-agent-platform-cluster-arm1-oci-bootstrap-procedure-v1 --yes 2>&1 | tail -3 || true", timeout_s = 60, description = "Archive 3/5: bootstrap procedure" } }
 
 [[procedure.config.stages.executions]]
-execution = { type = "RunShellCommand", params = { command = "cd kings_college_galway && openspec archive 2026-07-13-archive-agent-platform-cluster-arm1-oci-automation-v1 --yes 2>&1 | tail -3 || true", timeout_s = 60, description = "Archive 4/5: self (this change)" } }
+execution = { type = "RunShellCommand", params = { command = "cd ${CIANFHOGHLAIM_ROOT:-/root/cianfhoghlaim} && openspec archive 2026-07-13-archive-agent-platform-cluster-arm1-oci-automation-v1 --yes 2>&1 | tail -3 || true", timeout_s = 60, description = "Archive 4/5: self (this change)" } }
 
 [[procedure.config.stages.executions]]
-execution = { type = "RunShellCommand", params = { command = "cd kings_college_galway && openspec archive 2026-07-13-deploy-agent-platform-cluster-arm1-oci-and-remote-dev-workflow --yes 2>&1 | tail -3 || true", timeout_s = 60, description = "Archive 5/5: parent deploy change" } }
+execution = { type = "RunShellCommand", params = { command = "cd ${CIANFHOGHLAIM_ROOT:-/root/cianfhoghlaim} && openspec archive 2026-07-13-deploy-agent-platform-cluster-arm1-oci-and-remote-dev-workflow --yes 2>&1 | tail -3 || true", timeout_s = 60, description = "Archive 5/5: parent deploy change" } }
 
 # =============================================================================
 # STAGE 3: Emit success artifact (JSON)

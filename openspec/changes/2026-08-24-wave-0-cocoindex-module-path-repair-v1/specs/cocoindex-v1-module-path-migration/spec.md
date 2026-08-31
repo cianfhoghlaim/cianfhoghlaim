@@ -20,12 +20,10 @@ After this spec is implemented:
 - `mise run sync:dagster` passes
 - `mise run lint:drift-docs` passes (the AGENTS.md drift cleanup is included)
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Module-path migration map
-
-The 85 broken `module:` paths in `orchestration/defs/3_model_lifecycle/cocoindex_v1/<app>/defs.yaml`
-SHALL be remapped per the following table:
+The system SHALL be remapped per the following table:.
 
 #### Bucket A — Per-nation education embeddings (55 files)
 
@@ -92,9 +90,7 @@ For each `orchestration/defs/3_model_lifecycle/cocoindex_v1/<app>/defs.yaml`:
   SHALL be removed or rewritten to reflect that the module-path issue is resolved
 
 ### Requirement: Partition-name typo fix
-
-The pre-existing `cianhoghlaim_scope` typo (missing 'f') in
-`orchestration/partitions_v2.py:311` SHALL be corrected.
+The system SHALL be corrected..
 
 - **WHEN** `grep -rn "cianhoghlaim_scope" orchestration` runs
 - **THEN** the result SHALL be empty (no occurrences)
@@ -130,20 +126,18 @@ of assets, jobs, schedules, sensors, and asset checks.
 - **AND** `orchestration/AGENTS.md` SHALL claim "~13 sensors"
 
 ### Requirement: CocoIndex pipeline executes end-to-end
+The system SHALL be `1.0.20`.
 
-After all the above migrations land:
+#### Scenario: Default scenario
 
 - **WHEN** `uv run python -c "import cocoindex; print(cocoindex.__version__)"` runs
-- **THEN** the output SHALL be `1.0.20`
 
 - **AND** `uv run python -c "from cocoindex_flows.celtic import gaeilge_embedding; print(gaeilge_embedding.GaeilgeEmbedding)"` succeeds
 
 - **AND** `mise run sync:dagster` passes without `cocoindex_v1_module_import_failed` errors
 
 ### Requirement: v0 CocoIndex stragglers (deferred to Wave 3)
-
-The 18 v0 CocoIndex files (excluding `__init__.py` markers) that have NOT yet
-been migrated to v1 API SHALL be inventoried here so Wave 3 can execute
+The system SHALL be inventoried here so Wave 3 can execute.
 the rewrite. The full list is in
 `openspec/changes/2026-08-24-wave-3-cocoindex-v0-stragglers-v1/spec.md`.
 
@@ -176,3 +170,4 @@ actually performs the migration. This spec only documents the inventory.
 - **WHEN** `find cocoindex_flows -name "*.py" -not -path "*__pycache__*" | xargs grep -L "import cocoindex as coco\|@coco\.fn\|coco\.App\|coco\.ContextKey" 2>/dev/null` runs
 - **THEN** the resulting file count SHALL equal the table above (or its
   post-Wave-0 update)
+

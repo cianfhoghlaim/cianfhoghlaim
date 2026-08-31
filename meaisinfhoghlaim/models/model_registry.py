@@ -69,6 +69,24 @@ ModelRole = str  # Free-form within each family (e.g. "default", "diagram",
                  # section below.
 
 
+# ─── Profile gate (per the gemini_hackathon refocus) ──────────────────────
+#
+# Per the 2026-08-31-cianfhoghlaim-v5-opencode-model-priority-v1 change.
+# `MODEL_PROFILE` (env var) gates the public_model_roster: hackathon
+# exposes the Gemma-4 + Gemini-3.5 chain; dev keeps the BIEP
+# MiniMax-M3 chokepoint. Lifted from gemini_hackathon/model_registry.py
+# so cianfhoghlaim and gemini_hackathon share the same convention.
+
+ModelProfile = Literal["hackathon", "dev", "both"]
+"""Which `MODEL_PROFILE` exposes an entry.
+
+- ``hackathon`` — exposed when ``MODEL_PROFILE=hackathon`` (the
+  Gemma-4 + Gemini-3.5 chain; mirrors gemini_hackathon profile).
+- ``dev``       — exposed only when ``MODEL_PROFILE=dev``. Never public.
+- ``both``      — exposed under either profile.
+"""
+
+
 # ─── The unified entry dataclass ───────────────────────────────────────────
 
 
@@ -78,7 +96,7 @@ class ModelRegistryEntry:
 
     Attributes:
         key: Canonical model identifier (e.g. ``"minimax-m3"``,
-            ``"BAAI/bge-m3"``, ``"qwen3-vl-8b"``). Unique within the
+            ``"BAAI/bge-m3"``, ``"gemma-4-26b-a4b"``). Unique within the
             registry.
         family: One of the 7 ``ModelFamily`` literals.
         role: Free-form string within the family
@@ -94,13 +112,16 @@ class ModelRegistryEntry:
             deployment. False for deprecated entries
             (e.g. ``uccix-llama2-13b``).
         litellm_alias: The LiteLLM alias for this model
-            (e.g. ``"minimax-m3"``, ``"local/vision/qwen3-vl-8b"``).
+            (e.g. ``"minimax-m3"``, ``"openai/unsloth/gemma-4-26b-a4b"``).
             None if not routed via LiteLLM.
         env_var: Environment variable name to override the model name
             at runtime (e.g. ``"OPENCODE_GO_MODEL"``).
         notes: Free-form documentation.
         languages: Languages this model is specialized for (None =
             language-agnostic).
+        profile: Profile gate — see :data:`ModelProfile`. Default
+            ``"both"`` for backward compatibility with the v4 registry.
+        capabilities: Free-form capability tags (``"chat"``, ``"ocr"``…).
     """
 
     key: str
@@ -116,6 +137,8 @@ class ModelRegistryEntry:
     env_var: str | None = None
     notes: str = ""
     languages: list[str] | None = None
+    profile: ModelProfile = "both"
+    capabilities: tuple[str, ...] = ()
 
 
 # ─── The 5 model families ──────────────────────────────────────────────────
@@ -181,7 +204,8 @@ def _text_llm_entries() -> dict[str, ModelRegistryEntry]:
             available=True,
             litellm_alias="kimi/k2",
             env_var="KIMI_K2_MODEL",
-            notes="M3 chokepoint: Kimi K2.6 via OpenCode Go API.",
+            profile="dev",
+            notes="M3 chokepoint: Kimi K2.6 via OpenCode Go API. Dev profile only per the 2026-08-31 v5 model priority change.",
         ),
         "glm-5.1": ModelRegistryEntry(
             key="glm-5.1",
@@ -195,7 +219,8 @@ def _text_llm_entries() -> dict[str, ModelRegistryEntry]:
             available=True,
             litellm_alias="glm/5.1",
             env_var="GLM_5_MODEL",
-            notes="M3 chokepoint: GLM 5.1 via OpenCode Go API.",
+            profile="dev",
+            notes="M3 chokepoint: GLM 5.1 via OpenCode Go API. Dev profile only.",
         ),
         "minimax-m2.5": ModelRegistryEntry(
             key="minimax-m2.5",
@@ -209,7 +234,8 @@ def _text_llm_entries() -> dict[str, ModelRegistryEntry]:
             available=True,
             litellm_alias="minimax/m2.5",
             env_var="MINIMAX_M2_MODEL",
-            notes="M3 chokepoint: minimax M2.5 via OpenCode Go API.",
+            profile="dev",
+            notes="M3 chokepoint: minimax M2.5 via OpenCode Go API. Dev profile only.",
         ),
         "mimo-v2.5": ModelRegistryEntry(
             key="mimo-v2.5",
@@ -223,7 +249,8 @@ def _text_llm_entries() -> dict[str, ModelRegistryEntry]:
             available=True,
             litellm_alias="mimo/2.5",
             env_var="MIMO_MODEL",
-            notes="M3 chokepoint: MiMo v2.5 via OpenCode Go API.",
+            profile="dev",
+            notes="M3 chokepoint: MiMo v2.5 via OpenCode Go API. Dev profile only.",
         ),
         "deepseek-v4-flash": ModelRegistryEntry(
             key="deepseek-v4-flash",
@@ -237,7 +264,8 @@ def _text_llm_entries() -> dict[str, ModelRegistryEntry]:
             available=True,
             litellm_alias="deepseek/flash",
             env_var="DEEPSEEK_MODEL",
-            notes="M3 chokepoint: DeepSeek V4 Flash via OpenCode Go API.",
+            profile="dev",
+            notes="M3 chokepoint: DeepSeek V4 Flash via OpenCode Go API. Dev profile only.",
         ),
         "minimax-m3": ModelRegistryEntry(
             key="minimax-m3",
@@ -251,11 +279,195 @@ def _text_llm_entries() -> dict[str, ModelRegistryEntry]:
             available=True,
             litellm_alias="minimax-m3",
             env_var="MINIMAX_BASE_URL",
+            profile="both",
             notes=(
                 "Canonical M3 plan alias used by openclaw/openchamber/hermes. "
                 "This is the default model for the 12-agent fleet (the "
                 "12 agents in agents/agent_registry.py)."
             ),
+        ),
+        # ── Tier 1 Google stack (per the 2026-08-31 gemini_hackathon refocus) ──
+        "gemini-3.5-flash": ModelRegistryEntry(
+            key="gemini-3.5-flash",
+            family="text_llm",
+            role="default_gemini",
+            display_name="Gemini 3.5 Flash (Vertex AI, Tier 1 Google primary)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="gemini-3.5-flash",
+            backend="vertex",
+            available=True,
+            litellm_alias="vertex_ai/gemini-3.5-flash",
+            env_var="GOOGLE_CLOUD_PROJECT",
+            profile="hackathon",
+            notes=(
+                "Tier 1 PRIMARY in the gemini_hackathon profile. Vertex AI "
+                "Express mode via GOOGLE_CLOUD_PROJECT + GOOGLE_CLOUD_LOCATION "
+                "+ Application Default Credentials (no API key). When Vertex "
+                "creds are missing but GEMINI_API_KEY is present, the call_llm "
+                "router auto-swaps to gemini-3.5-flash-aistudio."
+            ),
+            capabilities=("chat", "function_calling", "json_mode", "long_context"),
+        ),
+        "gemini-3.5-flash-aistudio": ModelRegistryEntry(
+            key="gemini-3.5-flash-aistudio",
+            family="text_llm",
+            role="aistudio",
+            display_name="Gemini 3.5 Flash (AI Studio)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="gemini-3.5-flash",
+            backend="aistudio",
+            available=True,
+            litellm_alias="gemini/gemini-3.5-flash",
+            env_var="GEMINI_API_KEY",
+            profile="hackathon",
+            notes=(
+                "Same weights as the Vertex entry, keyed by GEMINI_API_KEY. "
+                "Selected by GEMINI_BACKEND=aistudio, or automatically when "
+                "Vertex credentials are missing."
+            ),
+            capabilities=("chat", "function_calling", "json_mode"),
+        ),
+        "gemini-3.5-flash-lite": ModelRegistryEntry(
+            key="gemini-3.5-flash-lite",
+            family="text_llm",
+            role="lite",
+            display_name="Gemini 3.5 Flash Lite (AI Studio, Tier 1 Lite)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="gemini-3.5-flash-lite",
+            backend="aistudio",
+            available=True,
+            litellm_alias="gemini/gemini-3.5-flash-lite",
+            env_var="GEMINI_API_KEY",
+            profile="hackathon",
+            notes=(
+                "Tier 1 lite. Lower cost / higher throughput than flash; "
+                "preferred for the high-volume NCCE BAML extraction sweeps "
+                "when MODEL_PROFILE=hackathon."
+            ),
+            capabilities=("chat", "json_mode"),
+        ),
+        "gemini-2.5-flash": ModelRegistryEntry(
+            key="gemini-2.5-flash",
+            family="text_llm",
+            role="alt",
+            display_name="Gemini 2.5 Flash (Vertex AI, ADK-examples compat)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="gemini-2.5-flash",
+            backend="vertex",
+            available=True,
+            litellm_alias="vertex_ai/gemini-2.5-flash",
+            env_var="GOOGLE_CLOUD_PROJECT",
+            profile="both",
+            notes=(
+                "Compatibility tier for docs/ideas/Agent Development Kit "
+                "examples that use MODEL_GEMINI_FLASH=gemini-2.5-flash. "
+                "Same Vertex AI backend as gemini-3.5-flash; slightly older weights."
+            ),
+            capabilities=("chat", "function_calling", "json_mode"),
+        ),
+        "gemini-embedding-2-preview": ModelRegistryEntry(
+            key="gemini-embedding-2-preview",
+            family="text_llm",
+            role="embedder_gemini",
+            display_name="Gemini Embedding 2 Preview (AI Studio)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="gemini-embedding-2-preview",
+            backend="aistudio",
+            available=True,
+            litellm_alias="gemini/gemini-embedding-2-preview",
+            env_var="GEMINI_API_KEY",
+            profile="hackathon",
+            notes=(
+                "Tier 1 embeddings. Replaces the prior BGE-M3 default for "
+                "the BAML ExtractCrossLinguisticConcept text path when "
+                "MODEL_PROFILE=hackathon."
+            ),
+            capabilities=("embed",),
+        ),
+        # ── Tier 2 Gemma 4 (per the 2026-08-31 gemini_hackathon refocus) ──
+        "gemma-4-26b-a4b": ModelRegistryEntry(
+            key="gemma-4-26b-a4b",
+            family="text_llm",
+            role="fallback",
+            display_name="Gemma 4 26B-A4B (Unsloth Studio, Tier 2 primary)",
+            unsloth_id="unsloth/gemma-4-26B-A4B-it-GGUF",
+            mlx_id=None,
+            upstream_id="google/gemma-4-26B-A4B-it",
+            backend="unsloth_studio",
+            available=True,
+            litellm_alias="openai/unsloth/gemma-4-26b-a4b",
+            env_var="UNSLOTH_BASE_URL",
+            profile="hackathon",
+            notes=(
+                "Tier 2 of the gemini_hackathon profile. Unsloth Studio is a "
+                "HOST process on :8888 exposing an OpenAI-compatible /v1 "
+                "surface; it is not a container and it is not ollama. "
+                "Used by the opencode `notebooks` + `deep-cuts` agents."
+            ),
+            capabilities=("chat", "function_calling"),
+        ),
+        "gemma-4-e4b": ModelRegistryEntry(
+            key="gemma-4-e4b",
+            family="text_llm",
+            role="fallback_light",
+            display_name="Gemma 4 E4B (Unsloth Studio, Tier 2 light)",
+            unsloth_id="unsloth/gemma-4-E4B-it-GGUF",
+            mlx_id=None,
+            upstream_id="google/gemma-4-E4B-it",
+            backend="unsloth_studio",
+            available=True,
+            litellm_alias="openai/unsloth/gemma-4-e4b",
+            env_var="UNSLOTH_BASE_URL",
+            profile="hackathon",
+            notes=(
+                "Tier 2 light. ~3GB on disk; much faster cold-start than "
+                "the 26B-A4B. Used for low-latency Tier-2 reads."
+            ),
+            capabilities=("chat",),
+        ),
+        "gemma-3-27b-it": ModelRegistryEntry(
+            key="gemma-3-27b-it",
+            family="text_llm",
+            role="local_fallback",
+            display_name="Gemma 3 27B IT (Unsloth Studio, dev benchmark)",
+            unsloth_id="unsloth/gemma-3-27B-it-GGUF",
+            mlx_id=None,
+            upstream_id="google/gemma-3-27B-it",
+            backend="unsloth_studio",
+            available=True,
+            litellm_alias="openai/unsloth/gemma-3-27b-it",
+            env_var="UNSLOTH_BASE_URL",
+            profile="dev",
+            notes=(
+                "Dev-profile Gemma 3 prior-generation benchmark. Used in "
+                "the comparison harness to grade Gemma 4 improvements."
+            ),
+            capabilities=("chat",),
+        ),
+        "gemma-2-9b": ModelRegistryEntry(
+            key="gemma-2-9b",
+            family="text_llm",
+            role="local_fallback_old",
+            display_name="Gemma 2 9B (Unsloth Studio, dev baseline)",
+            unsloth_id="unsloth/gemma-2-9b",
+            mlx_id=None,
+            upstream_id="google/gemma-2-9b",
+            backend="unsloth_studio",
+            available=True,
+            litellm_alias="openai/unsloth/gemma-2-9b",
+            env_var="UNSLOTH_BASE_URL",
+            profile="dev",
+            notes=(
+                "Dev-profile Gemma 2 baseline for the comparison harness. "
+                "Smaller + cheaper than the Gemma 4 family; useful for fast "
+                "iteration on the dev harness."
+            ),
+            capabilities=("chat",),
         ),
         # ── Qwen token plan (Qwen Cloud, served via DashScope) ──
         # Per openspec/changes/2026-08-06-token-plan-apis-lc-doc-pipeline-
@@ -271,61 +483,60 @@ def _text_llm_entries() -> dict[str, ModelRegistryEntry]:
             key="qwen3.7-plus",
             family="text_llm",
             role="token_plan_primary",
-            display_name="Qwen 3.7 Plus (DashScope token plan, primary)",
+            display_name="Qwen 3.7 Plus (DashScope token plan, primary) [TOMBSTONED]",
             unsloth_id=None,
             mlx_id=None,
             upstream_id="qwen/qwen3.7-plus",
             backend="dashscope",
-            available=True,
+            available=False,
             litellm_alias="dashscope/qwen3.7-plus",
             env_var="DASHSCOPE_API_KEY",
+            profile="both",
             notes=(
-                "Qwen Cloud token-plan primary text model, served via "
-                "DashScope's OpenAI-compatible endpoint "
-                "({DASHSCOPE_BASE_URL}, currently "
-                "https://coding.dashscope.aliyuncs.com/v1). Used as the "
-                "secondary cross-check client (alongside minimax-m3) for "
-                "the lc6 BAML extraction functions "
-                "(ExtractCurriculumSyllabus, ExtractExamPaperLayout, "
-                "ExtractMarkingSchemeGuideline, ExtractCrossLinguisticConcept). "
-                "See baml_src/clients.baml `ExtractQwenCrossCheck`."
+                "TOMBSTONED 2026-08-31 per the "
+                "2026-08-31-cianfhoghlaim-v5-opencode-model-priority-v1 change. "
+                "Qwen Cloud token-plan deprioritised in favour of the "
+                "gemini_hackathon Gemma + Gemini refocus. "
+                "Redirect: gemma-4-26b-a4b (text_llm/fallback, unsloth_studio). "
+                "baml_src/clients.baml `ExtractQwenCrossCheck` block also removed. "
+                "The opencode `qwen` provider is gone from opencode.json."
             ),
         ),
         "qwen3-coder-next": ModelRegistryEntry(
             key="qwen3-coder-next",
             family="text_llm",
             role="token_plan_coding",
-            display_name="Qwen3 Coder Next (DashScope token plan, coding)",
+            display_name="Qwen3 Coder Next (DashScope token plan, coding) [TOMBSTONED]",
             unsloth_id=None,
             mlx_id=None,
             upstream_id="qwen/qwen3-coder-next",
             backend="dashscope",
-            available=True,
+            available=False,
             litellm_alias="dashscope/qwen3-coder-next",
             env_var="DASHSCOPE_API_KEY",
+            profile="both",
             notes=(
-                "Qwen Cloud token-plan coding model, served via DashScope's "
-                "OpenAI-compatible endpoint ({DASHSCOPE_BASE_URL}). Used by "
-                "the opencode `qwen` provider (opencode.json) for coding-"
-                "agent tasks; not currently wired into a BAML client."
+                "TOMBSTONED 2026-08-31. Redirect: gemma-4-e4b (text_llm/fallback_light). "
+                "Was used by the opencode `qwen` provider for coding-agent tasks; "
+                "now replaced by minimax-coding-plan/MiniMax-M3 (frontend-apps/baml/dagster)."
             ),
         ),
         "qwen3.6-27b-mtp": ModelRegistryEntry(
             key="qwen3.6-27b-mtp",
             family="text_llm",
             role="strong",
-            display_name="Qwen 3.6 27B MTP (local GGUF)",
+            display_name="Qwen 3.6 27B MTP (local GGUF) [TOMBSTONED]",
             unsloth_id="unsloth/Qwen3.6-27B-MTP-GGUF",
             mlx_id=None,
             upstream_id="Qwen/Qwen3.6-27B",
             backend="llama-swap",
-            available=True,
+            available=False,
             litellm_alias="local/vision/qwen3.6-27b-mtp",
             env_var=None,
+            profile="both",
             notes=(
-                "Local GGUF served via llama-swap. Used by LlamaSwapReasoningClient "
-                "(qwen3.6-27b-mtp) in baml_src/clients_llama_swap.baml. Also "
-                "doubles as the 'strong' text-only model on the agent fleet."
+                "TOMBSTONED 2026-08-31. Redirect: gemma-4-26b-a4b (text_llm/fallback). "
+                "Was used by LlamaSwapReasoningClient in baml_src/clients_llama_swap.baml."
             ),
         ),
         "uccix-mistral-24b": ModelRegistryEntry(
@@ -1265,14 +1476,23 @@ class _ModelRegistry:
         *,
         role: str | None = None,
         available: bool | None = None,
+        profile: ModelProfile | None = None,
     ) -> list[ModelRegistryEntry]:
-        """Filter entries by family + role + availability.
+        """Filter entries by family + role + availability + profile.
+
+        The ``profile`` filter gates entries by the
+        :data:`ModelProfile` enum (`hackathon` | `dev` | `both`).
+        Reads the active ``MODEL_PROFILE`` env var when ``profile``
+        is ``None`` (the canonical case for the BIEP chokepoint).
 
         Examples:
             MODEL_REGISTRY.filter(family="embedder")
             MODEL_REGISTRY.filter(family="text_llm", role="strong")
             MODEL_REGISTRY.filter(family="ocr_vision", available=True)
+            MODEL_REGISTRY.filter(profile="hackathon")
         """
+        if profile is None:
+            profile = os.environ.get("MODEL_PROFILE", "dev")
         results: list[ModelRegistryEntry] = []
         for entry in self._entries.values():
             if family is not None and entry.family != family:
@@ -1280,6 +1500,8 @@ class _ModelRegistry:
             if role is not None and entry.role != role:
                 continue
             if available is not None and entry.available != available:
+                continue
+            if entry.profile != "both" and entry.profile != profile:
                 continue
             results.append(entry)
         return sorted(results, key=lambda e: (e.family, e.role, e.key))

@@ -56,13 +56,13 @@ AWS_ENDPOINT_URL=http://lakehouse-garage:3900
 AWS_REGION=garage
 INFISICAL_PROJECT_ID=dev-baile
 LOCKET_MODE=watch
---mount type=bind,source=/Users/cianmacandeisigh/dev/kings_college_galway/stedding,target=/stedding,readonly
+--mount type=bind,source=${CIANFHOGHLAIM_STEDDING_PATH:-/Users/cianmacandeisigh/dev/cianfhoghlaim/stedding},target=/stedding,readonly
 """
 
 [stack.config.repo]
 server_id = "arm1-oci"
 git_account = "cianfhoghlaim"
-repo = "kings_college_galway"
+repo = "cianfhoghlaim"
 branch = "main"
 
 # -----------------------------------------------------------------------------

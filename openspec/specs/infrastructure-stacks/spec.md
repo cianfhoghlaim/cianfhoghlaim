@@ -39,7 +39,7 @@ or `oneshot` (CI/CD pipelines).
 
 The `pangolin.yaml` SHALL follow the 6-label shape (`name`,
 `mode`, `full-domain`, `destination-port`, `protocol`, `roles[0]`)
-documented in `.agents/skills/kcg-pangolin-stack/SKILL.md`.
+documented in `.agents/skills/cianfhoghlaim-pangolin-stack/SKILL.md`.
 
 #### Scenario: A new stack is added to `bonneagar/stacks/<name>/`
 
@@ -221,7 +221,7 @@ infrastructure concern, with canonical patterns documented in
 - **WHEN** the `embedding_pipeline_bootstrap` Dagster asset
   runs
 - **THEN** the `BatchedEmbeddingService` is invoked with
-  `MIN_EMBEDDING_BATCH_SIZE = 100` (the KCG production rule
+  `MIN_EMBEDDING_BATCH_SIZE = 100` (the Cianfhoghlaim production rule
   for 100× performance)
 - **AND** the embeddings are persisted to LanceDB via
   `lancedb.mount_table_target`
@@ -298,7 +298,7 @@ and not `bonneagar/stacks/<category>/<name>/`.
 
 ### Requirement: Three-Tier Host Convergence
 
-The system SHALL deploy the KCG platform across a
+The system SHALL deploy the Cianfhoghlaim platform across a
 **3-tier host convergence model** rather than a single host
 or a 2-tier model:
 
@@ -349,7 +349,7 @@ on disk).
 
 ### Requirement: Skill consolidation ratio
 
-KCG-authored umbrella skill trees (e.g. MotherDuck, browser, code search) MUST be reorganised so that no more than 5 task-specific sub-skills exist per tree, with a single routing skill that dispatches to the right one.
+Cianfhoghlaim-authored umbrella skill trees (e.g. MotherDuck, browser, code search) MUST be reorganised so that no more than 5 task-specific sub-skills exist per tree, with a single routing skill that dispatches to the right one.
 
 #### Scenario: MotherDuck skill tree is consolidated
 
@@ -364,7 +364,7 @@ KCG-authored umbrella skill trees (e.g. MotherDuck, browser, code search) MUST b
 
 ### Requirement: Browser tools consolidation
 
-KCG browser / scraping / agent-on-the-web skills MUST be consolidated to exactly 3 entry points: 1 routing skill (`browser-tools`) + the 2 Firecrawl variants (MCP + Bash CLI). All upstream-specific skills (browserbase-cli, stagehand, cookie-sync, safe-browser, firecrawl-crawl, firecrawl-scrape, etc.) MUST be deleted, with their content absorbed into the router or the 2 kept Firecrawl skills.
+Cianfhoghlaim browser / scraping / agent-on-the-web skills MUST be consolidated to exactly 3 entry points: 1 routing skill (`browser-tools`) + the 2 Firecrawl variants (MCP + Bash CLI). All upstream-specific skills (browserbase-cli, stagehand, cookie-sync, safe-browser, firecrawl-crawl, firecrawl-scrape, etc.) MUST be deleted, with their content absorbed into the router or the 2 kept Firecrawl skills.
 
 #### Scenario: Agent picks the right browser tool
 
@@ -375,7 +375,7 @@ KCG browser / scraping / agent-on-the-web skills MUST be consolidated to exactly
 #### Scenario: Router points to all 3 entry points
 
 - **WHEN** `browser-tools/SKILL.md` is read
-- **THEN** it contains a 6-tool table (Stagehand, Firecrawl MCP, Firecrawl CLI, crawl4ai, browser, safe-browser) + a decision tree + KCG safety rules
+- **THEN** it contains a 6-tool table (Stagehand, Firecrawl MCP, Firecrawl CLI, crawl4ai, browser, safe-browser) + a decision tree + Cianfhoghlaim safety rules
 
 ### Requirement: Single canonical code search skill
 
@@ -401,11 +401,11 @@ The infrastructure stacks capability MUST be discoverable via a single router sk
 
 - **WHEN** an agent searches for "add a stack", "fix stack", "stack-doctor", "GOLD_STANDARD", "compose.yaml", or "94 stacks"
 - **THEN** the loader matches `.agents/skills/infrastructure-stacks/SKILL.md`
-- **AND** the skill points at the underlying operational skills (kcg-convergence, stack-ops, kcg-bunchloch, pangolin, komodo, secrets-management)
+- **AND** the skill points at the underlying operational skills (cianfhoghlaim-convergence, stack-ops, cianfhoghlaim-bunchloch, pangolin, komodo, secrets-management)
 
 ### Requirement: Skills are refreshed to the current package state
 
-Every KCG-authoritative skill that documents a third-party package (CocoIndex, Dagster, Cognee, MotherDuck, Langfuse, etc.) MUST have a "2026-06 update" or equivalent date-stamped section that captures the latest package features. The section SHALL be appended at the end of the skill (after the "Pair this skill with" cross-references) and SHALL include a date stamp so agents can see the freshness of the content.
+Every Cianfhoghlaim-authoritative skill that documents a third-party package (CocoIndex, Dagster, Cognee, MotherDuck, Langfuse, etc.) MUST have a "2026-06 update" or equivalent date-stamped section that captures the latest package features. The section SHALL be appended at the end of the skill (after the "Pair this skill with" cross-references) and SHALL include a date stamp so agents can see the freshness of the content.
 
 #### Scenario: Agent sees the 2026-06 feature set
 
@@ -436,7 +436,7 @@ Every skill under `.agents/skills/` MUST have: (1) a YAML frontmatter block with
 
 ### Requirement: Skill consolidation conventions
 
-KCG skills MUST follow: (5) the canonical name prefixes (motherduck* / browser-tools / ccc / kcg-* / cianfhoghlaim-* / tuatha-* / croilar-* / meaisinfhoghlaim-*), (6) no vendoring of upstream Anthropic / vendor skills, (7) no skills that duplicate the root `AGENTS.md` "Critical Agent Protocols" content, (8) no embedded git sub-repositories.
+Package skills MUST follow: (5) the canonical name prefixes (motherduck* / browser-tools / ccc / cianfhoghlaim-* / tuatha-* / croilar-* / meaisinfhoghlaim-*), (6) no vendoring of upstream Anthropic / vendor skills, (7) no skills that duplicate the root `AGENTS.md` "Critical Agent Protocols" content, (8) no embedded git sub-repositories.
 
 #### Scenario: New skill follows the prefixes
 
@@ -447,7 +447,7 @@ KCG skills MUST follow: (5) the canonical name prefixes (motherduck* / browser-t
 #### Scenario: Upstream skill is referenced, not vendored
 
 - **WHEN** a third-party tool's docs are needed (e.g. Anthropic's design patterns)
-- **THEN** the content lives in a KCG-authored skill (e.g. `frontend-design`) with cross-links to the upstream source
+- **THEN** the content lives in a Cianfhoghlaim-authored skill (e.g. `frontend-design`) with cross-links to the upstream source
 - **AND** the upstream skill directory is NOT vendored into `.agents/skills/`
 
 ### Requirement: Skill + openspec alignment
@@ -477,7 +477,7 @@ The Cianfhoghlaim platform MUST maintain a formal feedback loop between projects
 #### Scenario: New DLT source updates the dlt skill
 
 - **WHEN** a new DLT source is added under `cianfhoghlaim/dlt_sources/`
-- **THEN** the `.agents/skills/dlt/SKILL.md` "KCG examples" appendix gets a 1-line addition naming the new source
+- **THEN** the `.agents/skills/dlt/SKILL.md` "Cianfhoghlaim examples" appendix gets a 1-line addition naming the new source
 
 ### Requirement: Quadrant-specific Related skills
 
@@ -532,7 +532,7 @@ GitHub Action. The 4 gates are:
    GOLD_STANDARD files
 2. **Container gate** (exit code 2) — every `container_name:` is
    in the live inventory OR explicitly documented as
-   `stacked-only: true` in a `kcg-meta.yaml` file
+   `stacked-only: true` in a `cianfhoghlaim-meta.yaml` file
 3. **Secret gate** (exit code 4) — every `secrets.env` URI
    resolves in the Infisical vault (via `bun run scripts/init-vault.ts`)
 4. **Pangolin gate** (exit code 8) — every `pangolin.yaml`
@@ -667,7 +667,7 @@ as **CRITICAL** (exit code 16).
 ### Requirement: Pangolin 6-Label Pattern
 
 The system SHALL enforce the 6-label pattern in every
-`pangolin.yaml` (per `.agents/skills/kcg-pangolin-stack/SKILL.md`):
+`pangolin.yaml` (per `.agents/skills/cianfhoghlaim-pangolin-stack/SKILL.md`):
 
 1. `pangolin.private-resources.<name>.name` — unique slug
 2. `pangolin.private-resources.<name>.mode` — `http` / `tcp` / `udp`
@@ -701,12 +701,12 @@ The Cianfhoghlaim HuggingFace Spaces (`an_scrudu`, `meaisin_cliste`, `cianfhoghl
 #### Scenario: Langfuse auto-traces every Space LLM call
 
 - **WHEN** the LiteLLM gateway is the tier that responds
-- **THEN** Langfuse records the call with cost + latency + model (because the gateway is the same proxy that every KCG agent uses)
+- **THEN** Langfuse records the call with cost + latency + model (because the gateway is the same proxy that every Cianfhoghlaim agent uses)
 - **AND** the HF Inference fallback is invisible to Langfuse (acceptable: it only fires when the gateway is down)
 
 ### Requirement: Anti-phish Space moved to private archive
 
-The `spaces/anti-phish/` directory MUST NOT be a public Cianfhoghlaim HuggingFace Space. The 6 Colab notebooks + the original README MUST live in `archive/anti-phish-2022-academic/` (private archive, not pushed to HF) until a new openspec change (`modernize-anti-phish-space`) rebuilds the directory with the KCG canonical stack.
+The `spaces/anti-phish/` directory MUST NOT be a public Cianfhoghlaim HuggingFace Space. The 6 Colab notebooks + the original README MUST live in `archive/anti-phish-2022-academic/` (private archive, not pushed to HF) until a new openspec change (`modernize-anti-phish-space`) rebuilds the directory with the Cianfhoghlaim canonical stack.
 
 #### Scenario: User finds the old anti-phish Space
 
@@ -717,7 +717,7 @@ The `spaces/anti-phish/` directory MUST NOT be a public Cianfhoghlaim HuggingFac
 #### Scenario: Re-publishing requires a new openspec change
 
 - **WHEN** the user wants to re-publish the anti-phish work as a public HF Space
-- **THEN** they MUST create a new `modernize-anti-phish-space` openspec change that uses the KCG canonical stack (LiteLLM gateway + BAML + ccc + Cognee) and does NOT include the personal reflection
+- **THEN** they MUST create a new `modernize-anti-phish-space` openspec change that uses the Cianfhoghlaim canonical stack (LiteLLM gateway + BAML + ccc + Cognee) and does NOT include the personal reflection
 
 ### Requirement: Priority quick reference section in every Spaces AGENTS.md
 
@@ -735,9 +735,9 @@ Every AGENTS.md file under the `spaces/` tree (`spaces/AGENTS.md`, `spaces/_comm
 - **THEN** it lists the 4 active Spaces + the 1 archived Space + the 5 priority skills + the 4 priority openspec specs
 - **AND** it links to each per-Space AGENTS.md for the developer-quick-reference routing table
 
-### Requirement: data-engineering Space must use the KCG canonical stack
+### Requirement: data-engineering Space must use the Cianfhoghlaim canonical stack
 
-The data-engineering Space MUST consume the KCG canonical stack: `stedding/ingest_queue/pypi/` as the source (not BigQuery), MotherDuck as the destination (not local DuckDB), dbt-duckdb as the adapter (not raw dbt), and Cognee + Graphiti for the knowledge graph.
+The data-engineering Space MUST consume the Cianfhoghlaim canonical stack: `stedding/ingest_queue/pypi/` as the source (not BigQuery), MotherDuck as the destination (not local DuckDB), dbt-duckdb as the adapter (not raw dbt), and Cognee + Graphiti for the knowledge graph.
 
 #### Scenario: Modernized data-engineering Space
 
@@ -868,16 +868,33 @@ The system SHALL NOT re-add any of the previously deleted stacks (`blinko`, `cro
 - **THEN** the 33 user-selected stacks validate
 - **AND** the 57 archived stacks at `bonneagar/stacks/` are skipped (marked `archived: true` in `STACKS_INDEX.md`)
 
-### Requirement: Bonneagar worktree for infrastructure history
+### Requirement: Bonneagar is in-tree and canonical; the standalone repo is a mirror
 
-The `infrastructure/` directory history SHALL live in the sibling `bonneagar` worktree (at `./bonneagar/`) per the worktree approach adopted 2026-06-29. The cianfhoghlaim monorepo SHALL NOT re-import the bonneagar history as a subtree because the 6.9 MB subtree size made every `git push` upload the full content. The cianfhoghlaim monorepo SHALL retain a thin `infrastructure/` reference (a README pointer) for navigation; the canonical `infrastructure/` lives in https://github.com/cianfhoghlaim/bonneagar.
+The IaC history SHALL live in-tree at `bonneagar/`, and the cianfhoghlaim
+monorepo SHALL be the canonical source. This supersedes the 2026-06-29
+worktree approach, which the 2026-07-17 v7 flatten replaced by re-importing
+the bonneagar history into this monorepo.
+
+`https://github.com/cianfhoghlaim/bonneagar` SHALL be a one-way published
+mirror in root layout (`stacks/`, `komodo/`, `iac/` at the repo root),
+produced by `git filter-repo --subdirectory-filter bonneagar` and
+force-updated from this monorepo. Direct commits to the mirror SHALL NOT be
+made; they are discarded at the next sync.
 
 #### Scenario: a developer looks for the canonical infrastructure history
 
-- **GIVEN** the developer wants to find the canonical 70+ Docker Compose stack history
-- **WHEN** the developer runs `cd ./bonneagar && git log --oneline`
+- **GIVEN** the developer wants to find the canonical 90+ Docker Compose stack history
+- **WHEN** the developer runs `git log --oneline -- bonneagar/` in the monorepo
 - **THEN** the developer sees the canonical history
-- **AND** the monorepo's `git log -- infrastructure/` shows only the 2026-06-29 reset marker
+- **AND** the mirror at `github.com/cianfhoghlaim/bonneagar` shows the same
+  content with the `bonneagar/` prefix stripped
+
+#### Scenario: the mirror has fallen behind
+
+- **GIVEN** the mirror's `main` is behind `bonneagar/` in the monorepo
+- **WHEN** the operator runs `mise run bonneagar:mirror`
+- **THEN** the mirror's `main` SHALL be force-updated to match `bonneagar/` exactly
+- **AND** the exported root tree SHA SHALL equal the monorepo's `HEAD:bonneagar` tree SHA
 
 ### Requirement: Consumer Stack Locket Pointing at Local Vault
 
@@ -1002,7 +1019,7 @@ docker-compose layout. The stack SHALL NOT pin to `unstract/unstract:latest`
   `:8002`)
 - **AND** the stack SHALL NOT declare `UNSTRACT_API_KEY` (OSS does not
   require it)
-- **AND** every container SHALL be named with the bare KCG pattern
+- **AND** every container SHALL be named with the bare Cianfhoghlaim pattern
   (`unstract-backend`, `unstract-celery-worker-general`, etc.) — NOT the
   upstream's `*-1` numeric suffixes
 
@@ -1011,7 +1028,7 @@ docker-compose layout. The stack SHALL NOT pin to `unstract/unstract:latest`
 The `bonneagar/stacks/unstract/` stack MUST match the upstream
 `Zipstack/unstract:v0.177.7` (released 2026-07-06) 15-service
 docker-compose layout, vendored as 731 lines + 6 unstract images +
-7 infrastructure images, with the KCG bare container-name
+7 infrastructure images, with the Cianfhoghlaim bare container-name
 convention applied.
 
 #### Scenario: Unstract compose is a true 15-service fleet
@@ -1031,7 +1048,7 @@ convention applied.
 - **AND** it SHALL declare the 7 infrastructure services
   (pgvector, redis, minio, qdrant, rabbitmq, flipt, traefik) with
   pinned semver tags
-- **AND** every container SHALL be named with the bare KCG pattern
+- **AND** every container SHALL be named with the bare Cianfhoghlaim pattern
   (`unstract-backend`, `unstract-worker-api-deployment`, etc.) — NOT
   the upstream's `*-1` numeric suffixes
 - **AND** the `db` image SHALL be `pgvector/pgvector:pg15` (matching
@@ -1598,8 +1615,8 @@ declared in the proposal.
 - **AND** a new row lands in
   `cianfhoghlaim.education.british_isles.england.changes` with
   `board='aqa'`, `subject='mathematics'`, `qualification_level='gcse'`
-- **AND** a Slack alert posts to `#kcg-biep-v2`
-- **AND** an email alert posts to `kcg-curriculum@cianfhoghlaim.ie`
+- **AND** a Slack alert posts to `#cianfhoghlaim-biep-v2`
+- **AND** an email alert posts to `cianfhoghlaim-curriculum@cianfhoghlaim.ie`
 - **AND** the re-extraction runs the full Change 3 ensemble (BAML +
   Unstract + qwen3-vl-8b + gemma-4-26B-A4B + RAGAS vote)
 
@@ -1746,7 +1763,7 @@ second bundled OpenCode server in the container.
 ### Requirement: Identical absolute repository mount
 
 The Bunchloch OpenChamber development stack SHALL mount the host repository
-`/Users/cianmacandeisigh/dev/kings_college_galway` at that identical absolute
+`/Users/cianmacandeisigh/dev/cianfhoghlaim` at that identical absolute
 path inside the container. The stack MUST preserve the path identity used by
 the host OpenCode server so session directory filters, worktrees, and git
 operations resolve to the same project.
@@ -1755,7 +1772,7 @@ operations resolve to the same project.
 
 - **WHEN** a user opens the canonical repository from OpenChamber
 - **THEN** the external OpenCode server receives
-  `/Users/cianmacandeisigh/dev/kings_college_galway` as the project path
+  `/Users/cianmacandeisigh/dev/cianfhoghlaim` as the project path
 - **AND** git status and file discovery operate on the host checkout rather
   than a container-only path
 
@@ -2061,7 +2078,7 @@ Every `bonneagar/stacks/<name>/secrets.env` file MUST use one of two
 Infisical URI forms, and MUST NOT mix both forms in the same file:
 
 1. **Bare form (canonical, post-v4)**: `KEY=infisical://dev-baile/<svc>/<key>`
-2. **Jinja-wrapped form (legacy, accepted by the bons-locket-shim v0.2.0)**:
+2. **Jinja-wrapped form (legacy, accepted by the cianfhoghlaim-locket-shim v0.2.0)**:
    `KEY={{ infisical:///KEY?path=/<svc> }}`
 
 The two forms parse through different code paths:
@@ -2467,7 +2484,7 @@ mesh on arm1-oci.
 - **WHEN** `bun run stack-doctor` runs against `bonneagar/stacks/newt-arm1-oci/`
 - **THEN** the gate SHALL pass with `newt-arm1-oci` declared as
   `host:arm1-oci`, `tier:control-plane`, `type:wireguard-tunnel`
-- **AND** the `sidecar.yaml` SHALL use the `bons-locker-shim:infisical-0.2.0`
+- **AND** the `sidecar.yaml` SHALL use the `cianfhoghlaim-locker-shim:infisical-0.2.0`
   image (per the `locket-shim` stack convention)
 - **AND** the `secrets.env` SHALL have 2
   `infisical://dev-baile/pangolin/clients/arm1-oci/...` URIs
@@ -2508,7 +2525,7 @@ matching the upstream releases verified 2026-08-15:
   live by the `cognee` SKILL.md)
 - `falkordb/falkordb:v4.18.11` (the latest upstream; closes the
   open "vector on relationships" gap from Wave 1)
-- `graphiti:local-<sha>` (the KCG-built image with the v0.29.2
+- `graphiti:local-<sha>` (the Cianfhoghlaim-built image with the v0.29.2
   Graphiti + FalkorDB driver)
 - `memgraph/memgraph:3.6.0` (the canonical Memgraph 3.x release line)
 - `lance-namespace:v0.9.0` (the Lance Namespace sidecar with the
@@ -2988,7 +3005,7 @@ bounded to ~15 min (the `secrets_env_refresh` schedule).
   `infisical export --in-file /Users/.../.infisical.env
   --out-file /Users/.../.env`
 - **AND** the `.env` file SHALL be atomically replaced
-  (write-temp + rename, per `bons-locket-shim.py:write_atomic`)
+  (write-temp + rename, per `cianfhoghlaim-locket-shim.py:write_atomic`)
 - **AND** the asset materialization SHALL record the new
   `.env` SHA in Dagster's asset catalog
 

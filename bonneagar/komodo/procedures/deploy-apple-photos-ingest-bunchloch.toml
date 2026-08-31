@@ -5,7 +5,7 @@
 [[stage.action]]
 type = "CheckFileExists"
 name = "check-leabharlann-photos-exists"
-path = "/Users/cian/Code/kings_college_galway/leabharlann/photos"
+path = "${CIANFHOGHLAIM_LEABHARLANN_PHOTOS_PATH:-/Users/cianmacandeisigh/dev/cianfhoghlaim/leabharlann/photos}"
 description = "Verify the osxphotos export directory exists"
 
 [[stage.action]]

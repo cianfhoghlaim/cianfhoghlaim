@@ -66,10 +66,22 @@ const DUCKDB_TO_ZOD: ReadonlyArray<{
   is_unknown: false;
 }> = [
   // JSON / struct / list
-  { pattern: /^JSON$/i, zod_source: "z.record(z.unknown())", is_unknown: false },
+  //
+  // NOTE (2026-08-26): `z.record(...)` takes the 2-arg form
+  // `z.record(keySchema, valueSchema)` here rather than the 1-arg
+  // `z.record(valueSchema)` shorthand. The 1-arg form is Zod v3-only;
+  // this workspace resolves Zod v4 in practice (contracts/package.json
+  // pins `^3.24.1` but `cianfhoghlaim-leaving-cert/package.json` pins
+  // `^4.0.0`, and bun's hoisting resolves to whichever wins — currently
+  // v4, which made the 1-arg form a hard `tsc` error). The 2-arg form is
+  // valid under both major versions, verified via `tsc --noEmit` against
+  // the generated output. This is a symptom of the wider un-unified
+  // workspace (multiple package.json files declaring different Zod
+  // majors) — see the package-topology remediation plan.
+  { pattern: /^JSON$/i, zod_source: "z.record(z.string(), z.unknown())", is_unknown: false },
   { pattern: /^LIST<.*>$/i, zod_source: "z.array(z.unknown())", is_unknown: false },
-  { pattern: /^STRUCT<.*>$/i, zod_source: "z.record(z.unknown())", is_unknown: false },
-  { pattern: /^MAP<.*>$/i, zod_source: "z.record(z.unknown())", is_unknown: false },
+  { pattern: /^STRUCT<.*>$/i, zod_source: "z.record(z.string(), z.unknown())", is_unknown: false },
+  { pattern: /^MAP<.*>$/i, zod_source: "z.record(z.string(), z.unknown())", is_unknown: false },
   // Booleans
   { pattern: /^BOOLEAN$/i, zod_source: "z.boolean()", is_unknown: false },
   // Integers
@@ -131,7 +143,7 @@ export function duckdbColumnTypeToZod(
  *   topic_id: z.string(),
  *   weight: z.number(),
  *   confidence: z.number().nullable().optional(),
- *   lineage: z.record(z.unknown()).nullable().optional(),
+ *   lineage: z.record(z.string(), z.unknown()).nullable().optional(),
  */
 export function emitZodField(column: DuckDBColumn): ZodFieldEmit {
   const { zod_source, is_unknown } = duckdbColumnTypeToZod(column.column_type);

@@ -17,7 +17,7 @@ that an LO is in fact assessed.
 This is **not** a generic multi-university scraper. It is a single-tenant,
 Infisical-credentialed, opt-in pipeline that can be enabled or disabled per run.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Three-tier secret resolution
 

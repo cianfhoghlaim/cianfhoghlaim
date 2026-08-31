@@ -1,8 +1,25 @@
 # =============================================================================
-# Mylar3 - Comic Book Downloader
-# =============================================================================
-# Automated comic book downloader for usenet and torrents.
+# Mylar3 — Comic Book Download Manager (local-first)
+# =============================================================================# Automated comic book downloader for usenet and torrents.
 # https://github.com/mylar3/mylar3
+#
+# Co-exists with Kapowarr (`stacks/Kapowarr/`) per the 2026-08-27
+# "Mylar3 + Kapowarr side-by-side comparison" decision.
+#
+# USAGE:
+#   Development:  docker compose --env-file .env.local up -d
+#   Production:   docker compose -f compose.yaml -f sidecar.yaml up -d
+#
+# Network:
+#   - Joins the canonical `cianfhoghlaim` external bridge network so it can
+#     reach qbittorrent-gluetun, kapowarr, komga, and other platform services.
+#   - Exposed on 127.0.0.1:8090 only; reaches the world via Pangolin private
+#     resource `mylar3.cianfhoghlaim.ie` (pangolin.yaml).
+#
+# Storage:
+#   - `mylar3-config` — persistent config + SQLite (in /config)
+#   - `${COMICS_PATH:-./comics}` — final library (consumed by Komga)
+#   - `${DOWNLOADS_PATH:-./downloads}` — staging area for in-flight downloads
 # =============================================================================
 
 name: mylar3
@@ -17,7 +34,8 @@ services:
       - no-new-privileges:true
 
     ports:
-      - "${MYLAR_PORT:-8090}:8090"
+      # 127.0.0.1 only — public access goes through Pangolin/Traefik
+      - "127.0.0.1:${MYLAR_PORT:-8090}:8090"
 
     volumes:
       - mylar3-config:/config
@@ -27,7 +45,9 @@ services:
     environment:
       - PUID=${PUID:-1000}
       - PGID=${PGID:-1000}
-      - TZ=${TZ:-UTC}
+      - TZ=${TZ:-Europe/Dublin}
+      # UMASK relaxes default file creation mode for downstream consumption
+      - UMASK=${UMASK:-022}
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8090"]
@@ -43,11 +63,12 @@ services:
         max-file: "3"
 
     networks:
-      - tools
+      - cianfhoghlaim
 
 volumes:
   mylar3-config:
 
 networks:
-  tools:
+  cianfhoghlaim:
     external: true
+    name: cianfhoghlaim

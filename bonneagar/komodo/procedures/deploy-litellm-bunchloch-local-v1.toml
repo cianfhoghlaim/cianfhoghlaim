@@ -51,7 +51,7 @@ name = "prerequisites"
 execution = { type = "RunShellCommand", params = { command = "test -f ~/.locket/infisical_secret && test $(stat -f %a ~/.locket/infisical_secret) = '600' && echo 'OK: bons-iac credential present and mode 0600'", timeout_s = 10, name = "bons-iac-credential", description = "Verify the bons-iac Universal Auth credential file exists and is mode 0600" } }
 
 [[procedure.config.stages.executions]]
-execution = { type = "RunShellCommand", params = { command = "mkdir -p ~/.komodo-stacks/litellm && for f in ~/dev/kings_college_galway/bonneagar/stacks/litellm/* ~/dev/kings_college_galway/bonneagar/stacks/litellm/.[!.]*; do [ -e \"$f\" ] && ln -sf \"$f\" ~/.komodo-stacks/litellm/; done && ls ~/.komodo-stacks/litellm/ | wc -l", timeout_s = 10, name = "litellm-symlinks", description = "Symlink the litellm stack files into ~/.komodo-stacks/litellm/" } }
+execution = { type = "RunShellCommand", params = { command = "mkdir -p ~/.komodo-stacks/litellm && for f in ${CIANFHOGHLAIM_ROOT:-$HOME/dev/cianfhoghlaim}/bonneagar/stacks/litellm/* ${CIANFHOGHLAIM_ROOT:-$HOME/dev/cianfhoghlaim}/bonneagar/stacks/litellm/.[!.]*; do [ -e \"$f\" ] && ln -sf \"$f\" ~/.komodo-stacks/litellm/; done && ls ~/.komodo-stacks/litellm/ | wc -l", timeout_s = 10, name = "litellm-symlinks", description = "Symlink the litellm stack files into ~/.komodo-stacks/litellm/" } }
 
 # =============================================================================
 # STAGE 2: LiteLLM up

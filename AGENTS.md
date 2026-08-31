@@ -117,7 +117,7 @@ mise run ml                       # meaisinfhoghlaim (OCR/HTR/Alignment/Celtic) 
 mise run web                      # web/apps + web/packages + web/hono-api + Turborepo
 
 # Surgical subcommands (when you know exactly what you want)
-mise run lint:skills              # validate .agents/skills/ metadata (166 skills pass)
+mise run lint:skills              # validate .agents/skills/ metadata (167 skills pass)
 mise run lint:drift-docs          # validate every AGENTS.md number claim against ground truth
 mise run openspec:validate-all    # CI gate for every openspec change + spec (146 items pass)
 mise run devops:validate-stacks   # validate all 94 Docker Compose stacks against the 6-file GOLD_STANDARD
@@ -213,6 +213,39 @@ names appear in the Langfuse trace.
 The `FirecrawlMCPClient` wrapper at
 `agents/meaisinfhoghlaim/firecrawl_mcp/client.py` exposes the MCP
 tools with Pydantic validation + Langfuse `@observe`.
+
+### MCP Tool Routing (the 12 enabled surfaces)
+
+Every MCP listed in `opencode.json` with `enabled: true` exposes tools
+that appear in the agent's system prompt. OpenCode auto-prefixes
+`mcp__<server>__` so the model only sees the short name. Call the MCP
+tool directly when you need the live result — `mise run <task>` is
+for build pipelines and shell scripts.
+
+| Intent | MCP tool | Server | When to use |
+|:--|:--|:--|:--|
+| Find code in this repo | `cocoindex-code_search` | cocoindex-code | Always before `grep`/`find` |
+| Find docs about our architecture | `cognee_search` | cognee | "What's the 12-agent dispatch matrix?" |
+| Find a page on a known URL | `firecrawl_scrape` | firecrawl | Replaces `webfetch` for fresh content |
+| Search the live web | `firecrawl_search` | firecrawl | `categories:["developer"]` for code Q's |
+| Cite a paper (43M-paper index) | `firecrawl_research_search_papers` | firecrawl | biomedical + arXiv |
+| Read passages from a paper | `firecrawl_research_read_paper` | firecrawl | Once you have an arXiv/PMID/DOI |
+| Verify a deployed site renders | `chrome_navigate_page` + `chrome_take_snapshot` | chrome | "Is the hero image loading?" |
+| Screenshot a page | `chrome_take_screenshot` | chrome | full-page or element-scoped |
+| Profile Core Web Vitals | `chrome_performance_start_trace` | chrome | LCP/INP/CLS audit |
+| Query MotherDuck (SQL) | `motherduck_execute_query` | motherduck | one-shot SQL over the lakehouse |
+| List models on HuggingFace | `huggingface_hub_repo_search` | huggingface | "What's the best OCR-VLM for Irish?" |
+| Run a HuggingFace Space | `huggingface_dynamic_space` | huggingface | Invoke an HF Space tool |
+| Mutate a runtime secret | (via infisical — see skill) | infisical | "Rotate the firecrawl key" |
+| Recall a Langfuse trace | (via langfuse — see skill) | langfuse | Debug a past agent run |
+| Watch a page for upstream changes | `firecrawl_monitor_create` | firecrawl | openspec-change-detection surface |
+| Operate a logged-in page | `firecrawl_interact` | firecrawl | profile-aware Playwright-style |
+| Bulk-extract many URLs | `crawl4ai_*` (md/html/screenshot/pdf) | crawl4ai | Self-hosted alternative to Firecrawl |
+| Add DLT workspace docs | (via dlt-workspace-mcp) | dlt-workspace-mcp | "How does the personal-archive pipeline work?" |
+
+The `lint:mcp-runtime` CI gate at `mise run lint:mcp-runtime`
+fails if any enabled MCP has no `mcp:smoke:<name>` task; run
+`mise run mcp:smoke` to round-trip all 12.
 
 ### Developer onboarding (one command)
 
@@ -453,7 +486,7 @@ the 15 agents under `.opencode/agents/*.md` are organized into 3 tiers:
 - **Prefer a domain subagent** when the task is specifically about authoring (e.g., "write a new Dagster asset" → `dagster` subagent).
 - **Never dispatch `research` for tasks that require making changes** — the `research` subagent is read-only.
 
-The full agent list + their `skill_filter` arrays live in `opencode.json` under the `agent` key. The 15 agent `.md` files under `.opencode/agents/` are the per-agent prompts (split out from the inline `prompt` field per the dev-tooling refactor).
+The full agent list + their `skill_filter` arrays live in the YAML frontmatter of `.opencode/agents/*.md` (NOT in `opencode.json`). The `mcp:` allowlist block in each agent's frontmatter enables the MCP servers the agent can call. All 12 enabled MCPs (`dlt-workspace-mcp`, `firecrawl`, `crawl4ai`, `infisical`, `motherduck`, `chrome`, `cocoindex-code`, `cognee`, `graphiti`, `langfuse`, `huggingface`, `design-system`) are visible to every agent by default. The 15 agent `.md` files under `.opencode/agents/` are the per-agent prompts (split out from the inline `prompt` field per the dev-tooling refactor).
 
 ## Domain-to-Skill Mapping
 
@@ -473,7 +506,7 @@ To ensure you use the appropriate skills for the different aspects of the projec
 - **Workflow authoring / debugging**: n8n visual pipeline editor at `n8n.cianfhoghlaim.ie` (private). The 6 seeded workflows live in `bonneagar/stacks/n8n/workflows/team-*.json` and are imported by the `n8n-init` one-shot container.
 - **Task management + Gantt + team sharing**: Vikunja REST API at `vikunja.cianfhoghlaim.ie/api/v1/`. Kanban + Gantt + list views; team group shared across `client-work`, `internal`, `support` projects.
 - **Scheduling**: cal-diy (cal.com community build) at `calcom.cianfhoghlaim.ie`. Team booking page at `/team`, per-member pages at `/<member-slug>`. Outbound webhooks → n8n.
-- **LLM backbone**: All workflow LLM steps use the OpenCode Go API (`$OPENAI_BASE_URL/chat/completions`) as a unified OpenAI-compatible endpoint. Models: `kimi-k2.6`, `glm-5.1`, `minimax-m2.5`, `mimo-v2.5`, `deepseek-v4-flash`.
+- **LLM backbone**: All workflow LLM steps use the OpenCode Go API (`$OPENAI_BASE_URL/chat/completions`) as a unified OpenAI-compatible endpoint. Per the 2026-08-31 v5 model priority change, the canonical chain is now `minimax-m3` (primary, BIEP chokepoint) → `gemma-4-26b-a4b` (Tier 2 fallback via Unsloth Studio) → `gemini-3.5-flash` (Tier 1 Google fallback via Vertex AI / AI Studio). The `kimi-k2.6`, `glm-5.1`, `minimax-m2.5`, `mimo-v2.5`, `deepseek-v4-flash` models are now dev-profile only (per `MODEL_PROFILE=dev`).
 
 ### Analytics & Notebooks (`notebooks/`)
 - **Data Exploration**: Load [`explore-data`](.claude/skills/explore-data/SKILL.md) to query endpoints or databases and generate an `analysis_plan.md` artifact.

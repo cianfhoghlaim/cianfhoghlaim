@@ -20,7 +20,8 @@
 // =============================================================================
 
 import { execSync } from "node:child_process";
-import { hostname } from "node:os";
+import { hostname, homedir } from "node:os";
+import { join } from "node:path";
 import { log, logStep, logOk, logError, logWarn } from "../cli.ts";
 import { bootstrapLocketBinary } from "./bootstrap-locket-binary.ts";
 import { bootstrapInfisical } from "./bootstrap-infisical.ts";
@@ -84,7 +85,7 @@ export async function bootstrapControlPlane(opts?: BootstrapControlPlaneOpts): P
       // Fall back to the individual stack deploys
       for (const stack of ["infisical", "pangolin", "pocket-id", "tinyauth", "komodo"]) {
         try {
-          execSync(`cd /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar/stacks/${stack} && docker compose up -d 2>&1 | tail -5`, { stdio: "inherit" });
+          execSync(`cd ${process.env.CIANFHOGHLAIM_ROOT ?? join(homedir(), "dev", "cianfhoghlaim")}/bonneagar/stacks/${stack} && docker compose up -d 2>&1 | tail -5`, { stdio: "inherit" });
         } catch {
           // ignore individual stack failures
         }
@@ -136,7 +137,7 @@ export async function bootstrapControlPlane(opts?: BootstrapControlPlaneOpts): P
   // Phase 8: health verify
   log("Phase 8: health verify (7-way)");
   try {
-    execSync("cd /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar && bun run iac:health 2>&1 | tail -20", { stdio: "inherit" });
+    execSync(`cd ${process.env.CIANFHOGHLAIM_ROOT ?? join(homedir(), "dev", "cianfhoghlaim")}/bonneagar && bun run iac:health 2>&1 | tail -20`, { stdio: "inherit" });
     logOk("Phase 8 complete: health check ran");
   } catch (e) {
     logWarn(`Phase 8 had issues: ${(e as Error).message}`);

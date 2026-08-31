@@ -43,7 +43,7 @@ def _():
 
     The full local data plane, end-to-end, with **ibis** as the
     canonical entrypoint (per the
-    [ibis skill](.agents/skills/ibis/SKILL.md) — *the KCG-preferred
+    [ibis skill](.agents/skills/ibis/SKILL.md) — *the Cianfhoghlaim-preferred
     analytics layer*).
 
     The notebook executes in three steps:
@@ -76,7 +76,7 @@ def _(environment, os):
     # ibis-first connection strings
     if environment.value == "local":
         CONFIG = {
-            # ibis.duckdb.connect() — the canonical KCG entrypoint
+            # ibis.duckdb.connect() — the canonical Cianfhoghlaim entrypoint
             # (per .agents/skills/ibis/SKILL.md)
             "duckdb_conn": (
                 "ducklake:postgres:"
@@ -181,7 +181,7 @@ def _(mo):
 
     ```
     ┌──────────────────────────────────────────────────────────────┐
-    │                  **ibis** — the KCG entrypoint                │
+    │                  **ibis** — the Cianfhoghlaim entrypoint                │
     │  ibis.duckdb.connect("ducklake:...")  +  ibis.lancedb.connect  │
     └────────────────┬──────────────────────┬─────────────────────┘
                      │                      │

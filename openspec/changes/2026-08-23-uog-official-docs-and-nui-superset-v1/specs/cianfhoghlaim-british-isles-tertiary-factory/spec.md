@@ -11,7 +11,7 @@ Each constituent is addressable through a single
 DLT source (extends the existing 5 resources with `sso_required`)
 plus a sister CocoIndex `bitertiary_universities_app_factory()`.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: `BITertiaryDeepExtractionConfig` schema
 

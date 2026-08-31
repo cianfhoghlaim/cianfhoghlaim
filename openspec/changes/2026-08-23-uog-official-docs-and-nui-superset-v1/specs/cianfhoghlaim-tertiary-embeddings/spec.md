@@ -12,7 +12,7 @@ Plus a `bitertiary_universities_app_factory(config)` that emits
 **one** v1 App per `BITertiaryDeepExtractionConfig`. Off by
 default — the block must be added to `pyproject.toml`.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: 3 new v1 Apps (one per DLT source)
 

@@ -1,8 +1,21 @@
 ---
-description: Primary build agent — full read/write/exec, all 65 top-level skills available. Default agent when the user opens a coding task. Uses the M3 direct coding-plan slot (no LiteLLM, no OpenCode Go).
+description: Primary build agent — full read/write/exec, all 65 top-level skills available. Default agent when the user opens a coding task. Uses the M3 v2 direct coding-plan slot (MINIMAX_API_KEY_V2, no LiteLLM, no OpenCode Go).
 mode: primary
-model: minimax-coding-plan/MiniMax-M3
+model: minimax-coding-plan-v2/MiniMax-M3
 color: primary
+mcp:
+  dlt-workspace-mcp: true
+  firecrawl: true
+  crawl4ai: true
+  infisical: true
+  motherduck: true
+  chrome: true
+  cocoindex-code: true
+  cognee: true
+  graphiti: true
+  langfuse: true
+  huggingface: true
+  design-system: true
 permission:
   edit: allow
   bash: allow

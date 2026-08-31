@@ -3,7 +3,7 @@
 # Pydantic Logfire is SaaS-only at https://logfire.pydantic.dev (no
 # self-hostable Logfire-server image is published as of 2026-06-26).
 # This stack therefore deploys an OpenTelemetry Collector that:
-#   1. Receives OTLP traces from any KCG service on :4317 (gRPC) / :4318 (HTTP)
+#   1. Receives OTLP traces from any Cianfhoghlaim service on :4317 (gRPC) / :4318 (HTTP)
 #   2. Forwards them to Logfire cloud using the logfire exporter + LOGFIRE_TOKEN
 #   3. Fans out to Langfuse via OTLP/HTTP at langfuse-web:3000/api/public/otel
 #   4. Optionally buffers to disk for resilience

@@ -1,13 +1,13 @@
 # Logfire Stack (Pydantic Observability Platform)
 
 This stack deploys an **OpenTelemetry Collector** that forwards OTLP traces
-from any KCG service to **Logfire cloud** (`logfire.pydantic.dev`).
+from any Cianfhoghlaim service to **Logfire cloud** (`logfire.pydantic.dev`).
 
 ## Why an OTEL Collector?
 
 Pydantic does not publish a self-hostable Logfire-server Docker image as of
 2026-06-26. The Logfire SaaS endpoint at `logfire.pydantic.dev` is the only
-ingestion target. Deploying a local OpenTelemetry Collector gives KCG:
+ingestion target. Deploying a local OpenTelemetry Collector gives Cianfhoghlaim:
 
 1. A **real, deployable local service** (satisfies the 6-file GOLD_STANDARD
    pattern; the Komodo stack definition points at this directory).

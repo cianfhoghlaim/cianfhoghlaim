@@ -1,0 +1,16 @@
+# =============================================================================
+# qbittorrent-gluetun — Pangolin private-resource route
+# =============================================================================#
+# Routes qbittorrent.cianfhoghlaim.ie → gluetun:8080 → qBittorrent WebUI.
+# Member role required.
+# =============================================================================
+
+pangolin:
+  private-resources:
+    qbittorrent-gluetun:
+      name: qBittorrent (VPN)
+      mode: http
+      full-domain: qbittorrent.cianfhoghlaim.ie
+      destination-port: 8080
+      protocol: http
+      roles[0]: Member

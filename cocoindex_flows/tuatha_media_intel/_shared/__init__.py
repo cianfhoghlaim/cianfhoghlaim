@@ -17,7 +17,7 @@ from cocoindex.ops.sentence_transformers import SentenceTransformerEmbedder
 from lancedb import Connection as LanceConnection
 from numpy.typing import NDArray
 
-# Canonical KCG embedder: BAAI/bge-m3 (1024-d, multilingual, 100+ languages).
+# Canonical Cianfhoghlaim embedder: BAAI/bge-m3 (1024-d, multilingual, 100+ languages).
 # Same constant used by the BIEP v3 7 Apps (per the centralized-registry skill).
 EMBED_MODEL = "BAAI/bge-m3"
 

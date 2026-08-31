@@ -16,7 +16,7 @@ capabilities, and the deferred `dagger-blockchain` followup.
 
 ```bash
 # 0. One-time: install the toolchain (per the monorepo root mise.toml)
-cd /Users/cianmacandeisigh/dev/kings_college_galway
+cd ${CIANFHOGHLAIM_ROOT:-/Users/cianmacandeisigh/dev/cianfhoghlaim}
 mise install    # installs Python 3.12, uv, bun, dagger, pulumi
 
 # 1. Sync the workspace (resolves the 8 dagger deps + the prior ts_submodules deps)

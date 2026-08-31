@@ -533,12 +533,23 @@ The **3-stream synthesis** is the 4-line modern incarnation: **Cian Mac an Déis
 | Repo | Path | URL | Purpose |
 |:--|:--|:--|:--|
 | cianfhoghlaim (this) | `.` (root) | [`github.com/cianfhoghlaim/cianfhoghlaim`](https://github.com/cianfhoghlaim/cianfhoghlaim) | The Python package IS the repo |
-| bonneagar (in-tree) | `bonneagar/` | (was `github.com/cianfhoghlaim/bonneagar`; now archived) | The 93-stack GitOps fleet + Komodo + Pangolin + Infisical |
+| bonneagar (in-tree + mirrored) | `bonneagar/` | [`github.com/cianfhoghlaim/bonneagar`](https://github.com/cianfhoghlaim/bonneagar) | The 93-stack GitOps fleet + Komodo + Pangolin + Infisical |
 | leabharlann (separate) | `leabharlann/` symlink / 3.4 GB checkout | [`github.com/cianfhoghlaim/leabharlann`](https://github.com/cianfhoghlaim/leabharlann) | The digital library corpus that grounds every BAML schema + CocoIndex flow |
 
-The `archive-bonneagar` remote at
-`github.com/cianfhoghlaim/bonneagar.git` is frozen — no further
-commits will be pushed; its history is preserved in-tree.
+`bonneagar/` is **in-tree and authoritative here**; the standalone repo
+at `github.com/cianfhoghlaim/bonneagar` is a **one-way published
+mirror** of it, in root layout (`stacks/`, `komodo/`, `iac/` at the
+repo root rather than under `bonneagar/`).
+
+The mirror was frozen between 2026-07-12 and 2026-08-28, during which
+it fell 643 files behind. It was resynced on 2026-08-28 by exporting
+`bonneagar/` with `git filter-repo --subdirectory-filter`, which
+force-updated the mirror's `main`. The pre-sync tip is preserved on the
+mirror as `backup/pre-monorepo-sync-2026-08-28`.
+
+**Never commit to the mirror directly** — it is force-updated from this
+monorepo and any direct commit will be discarded on the next sync.
+Refresh it with `mise run bonneagar:mirror`.
 
 ## Cross-cutting concerns
 

@@ -4,7 +4,7 @@ Smoke-test the 7-row CIANFHOGHLAIM_* env-var matrix.
 Validates that every code-side caller (Dagster resources, BAML
 clients, DLT destinations, CocoIndex flows, Langfuse / Logfire /
 MLflow clients, Cognee memory) reads from the canonical env-var
-matrix in cianfhoghlaim/observability/env_config.py.
+matrix in observability/env_config.py.
 
 Run via:  mise run validate-env
 
@@ -63,17 +63,28 @@ EXPECTED_VARS: dict[str, dict[str, Any]] = {
 # Code-side modules that MUST import without error (a baseline that
 # catches missing `from .env_config import ...` statements or syntax
 # errors in the env-config module).
+#
+# NOTE (2026-08-26): rewritten for the v7 flattened layout — the repo
+# root IS the package root (no `cianfhoghlaim.` prefix; see
+# pyproject.toml `[tool.hatch.build.targets.wheel] packages = ["."]`).
+# The pre-flatten paths below silently 100%-failed every run (module
+# not found) since the flatten; fixed as part of the
+# data-side-remediation pass. Real paths verified against the working
+# tree, not assumed:
+#   cianfhoghlaim.cocoindex._lifespan            -> cocoindex_flows._shared._lifespan
+#   cianfhoghlaim.dlt.common.destinations_oideachais -> dlt_sources.common.destinations_cianfhoghlaim
+#   cianfhoghlaim.cocoindex.file_graph           -> cocoindex_flows.knowledge_graph.file_graph
 MODULES_TO_VERIFY: list[str] = [
-    "cianfhoghlaim.observability.env_config",
-    "cianfhoghlaim.observability.langfuse_config",
-    "cianfhoghlaim.observability.logfire_config",
-    "cianfhoghlaim.observability.mlflow_config",
-    "cianfhoghlaim.orchestration.resources",
-    "cianfhoghlaim.cocoindex._lifespan",
-    "cianfhoghlaim.dlt.common.destinations_oideachais",
-    "cianfhoghlaim.meaisinfhoghlaim.config.base",
-    "cianfhoghlaim.cocoindex.file_graph",
-    # NOTE: cianfhoghlaim.storage.lightrag_curriculum is intentionally
+    "observability.env_config",
+    "observability.langfuse_config",
+    "observability.logfire_config",
+    "observability.mlflow_config",
+    "orchestration.resources",
+    "cocoindex_flows._shared._lifespan",
+    "dlt_sources.common.destinations_cianfhoghlaim",
+    "meaisinfhoghlaim.config.base",
+    "cocoindex_flows.knowledge_graph.file_graph",
+    # NOTE: storage.lightrag_curriculum is intentionally
     # omitted — it has a pre-existing missing-import bug
     # (`from .config import X`) that is out-of-scope for the pick-7
     # env-alignment change. Tracked separately.
@@ -85,20 +96,19 @@ def main() -> int:
     warnings: list[str] = []
     info: list[str] = []
 
-    # Add the repo root to sys.path so the importlib lookups find
-    # `cianfhoghlaim/` when run from a fresh checkout.
+    # Add the repo root to sys.path so the importlib lookups resolve
+    # the flattened top-level packages (observability/, orchestration/,
+    # cocoindex_flows/, dlt_sources/, meaisinfhoghlaim/, ...) when run
+    # from a fresh checkout.
     repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     if repo_root not in sys.path:
         sys.path.insert(0, repo_root)
-    cianfhoghlaim_root = os.path.join(repo_root, "cianfhoghlaim")
-    if cianfhoghlaim_root not in sys.path:
-        sys.path.insert(0, cianfhoghlaim_root)
 
     # ------------------------------------------------------------------
     # Step 1: import the canonical env_config module + read the matrix
     # ------------------------------------------------------------------
     try:
-        env_config = importlib.import_module("cianfhoghlaim.observability.env_config")
+        env_config = importlib.import_module("observability.env_config")
     except Exception as exc:  # pragma: no cover - import error path
         print(f"FAIL  cannot import env_config: {exc}")
         return 3

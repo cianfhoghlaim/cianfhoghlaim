@@ -33,7 +33,7 @@
 
 [project]
 name = "cianfhoghlaim-baml"
-version = "0.223.0"
+version = "0.226.1"
 description = "BAML extraction schemas for the Cianfhoghlaim platform (post-v7 jurisdiction-clustered: british_isles/, european_nations/, european_union/, commonwealth/, american_nations/, celtic/, processing/)"
 
 [generators]
@@ -42,12 +42,12 @@ description = "BAML extraction schemas for the Cianfhoghlaim platform (post-v7 j
 [generators.lang_py]
 output_type = "python/pydantic"
 output_dir = "../baml_client"
-version = "0.223.0"
+version = "0.226.1"
 default_client_mode = "async"
 
 # TypeScript client (Zod-compatible — consumed by TanStack AI + oRPC + croilar-portal UI)
 [generators.lang_ts]
 output_type = "typescript"
 output_dir = "../baml_client_ts"
-version = "0.223.0"
+version = "0.226.1"
 default_client_mode = "async"

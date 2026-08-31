@@ -45,7 +45,7 @@ execution = { type = "HttpCheck", params = { url = "https://pangolin.cianfhoghla
 name = "stack-deploy"
 
 [[procedure.config.stages.executions]]
-execution = { type = "RunShellCommand", params = { command = "mkdir -p /etc/komodo/infisical && cd /etc/komodo/infisical && ln -sf /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar/stacks/infisical/* . && ls -la /etc/komodo/infisical/", timeout_s = 10, name = "link-bons-stack", description = "Symlink the bons IaC's stacks/infisical/ into /etc/komodo/infisical (so Komodo's stack runner can find it)" } }
+execution = { type = "RunShellCommand", params = { command = "mkdir -p /etc/komodo/infisical && cd /etc/komodo/infisical && ln -sf ${CIANFHOGHLAIM_ROOT:-/Users/cianmacandeisigh/dev/cianfhoghlaim}/bonneagar/stacks/infisical/* . && ls -la /etc/komodo/infisical/", timeout_s = 10, name = "link-bons-stack", description = "Symlink the bons IaC's stacks/infisical/ into /etc/komodo/infisical (so Komodo's stack runner can find it)" } }
 
 [[procedure.config.stages.executions]]
 execution = { type = "RunShellCommand", params = { command = "cd /etc/komodo/infisical && docker compose pull 2>&1 | tail -10", timeout_s = 180, name = "pull-images", description = "Pull the latest Infisical + Postgres + Redis + Locket images" } }
@@ -77,7 +77,7 @@ execution = { type = "RunShellCommand", params = { command = "curl -ksS https://
 name = "bootstrap"
 
 [[procedure.config.stages.executions]]
-execution = { type = "RunShellCommand", params = { command = "cd /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar && export INFISICAL_URL=https://infisical.cianfhoghlaim.ie && bun run iac:bootstrap-infisical --use-existing-creds 2>&1 | tail -40", timeout_s = 180, name = "bootstrap-infisical", description = "Invoke iac:bootstrap-infisical (creates the first admin via Chrome MCP if needed + seeds all 8 machine identities + writes bons-iac creds to .env)", require_success = false } }
+execution = { type = "RunShellCommand", params = { command = "cd ${CIANFHOGHLAIM_ROOT:-/Users/cianmacandeisigh/dev/cianfhoghlaim}/bonneagar && export INFISICAL_URL=https://infisical.cianfhoghlaim.ie && bun run iac:bootstrap-infisical --use-existing-creds 2>&1 | tail -40", timeout_s = 180, name = "bootstrap-infisical", description = "Invoke iac:bootstrap-infisical (creates the first admin via Chrome MCP if needed + seeds all 8 machine identities + writes bons-iac creds to .env)", require_success = false } }
 
 [[procedure.config.stages.executions]]
 execution = { type = "RunShellCommand", params = { command = "for name in bons-iac pocket-id komodo pangolin tinyauth openclaw openchamber hermes; do ID=$(curl -ksS -H \"X-API-Key: ${INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET:-$(grep INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET ~/.env | cut -d= -f2 | tr -d '\"')}\" \"https://infisical.cianfhoghlaim.ie/api/v3/projects/${INFISICAL_PROJECT_ID:-f3cff583-b74b-4804-b9d3-db8b68885236}/identity-machine-identities\" 2>/dev/null | python3 -c \"import json,sys; d=json.load(sys.stdin); print(any(i['name']=='$name' for i in d.get('identities', [])))\" 2>/dev/null); echo \"  $name: present=$ID\"; done", timeout_s = 30, name = "verify-identities", description = "Verify all 8 required machine identities are seeded in the dev-baile project" } }

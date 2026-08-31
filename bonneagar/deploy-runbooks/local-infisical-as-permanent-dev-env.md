@@ -58,7 +58,7 @@ lancedb/    1
 
 ### Start
 ```bash
-cd ~/.komodo-stacks/infisical  # or /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar/stacks/infisical
+cd ~/.komodo-stacks/infisical  # or ${CIANFHOGHLAIM_ROOT:-/Users/cianmacandeisigh/dev/cianfhoghlaim}/bonneagar/stacks/infisical
 docker compose -f compose.yaml up -d
 # Wait for /api/status to return 200
 for i in {1..24}; do

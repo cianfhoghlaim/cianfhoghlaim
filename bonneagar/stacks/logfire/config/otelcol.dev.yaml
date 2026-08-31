@@ -1,6 +1,6 @@
 # OpenTelemetry Collector config for dev mode (no Logfire SaaS).
 # ----------------------------------------------------------------------------
-# Receives OTLP traces from any KCG service on :4317 (gRPC) / :4318 (HTTP),
+# Receives OTLP traces from any Cianfhoghlaim service on :4317 (gRPC) / :4318 (HTTP),
 # batches them, and forwards them via the OTLP exporter to... nothing
 # (we don't have a Logfire SaaS token in dev mode). The traces are
 # batched and dropped (visible via the debug exporter + zpages).

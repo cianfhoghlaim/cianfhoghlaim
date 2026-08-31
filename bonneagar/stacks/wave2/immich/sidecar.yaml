@@ -40,9 +40,14 @@ services:
     env_file:
       - /run/secrets/locket/secrets.env
 
+# TODO[2026-08-22-lakehouse-config-and-env-var-hardening-v1]:
+# infisical_secret path now reads ${CIANFHOGHLAIM_INFISICAL_SECRET_PATH:-<fallback>}
+# (default fallback still pins /Users/cianmacandeisigh/dev/cianfhoghlaim).
+# Track the env-var rollout in the 2026-08-22 openspec change tasks.md before
+# dropping the hardcoded fallback.
 secrets:
   infisical_secret:
-    file: /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar/stacks/infisical/infisical_secret
+    file: ${CIANFHOGHLAIM_INFISICAL_SECRET_PATH:-/Users/cianmacandeisigh/dev/cianfhoghlaim/bonneagar/stacks/infisical/infisical_secret}
 
 volumes:
   stack-secrets:

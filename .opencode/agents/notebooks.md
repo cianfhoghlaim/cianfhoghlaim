@@ -1,9 +1,22 @@
 ---
-description: Marimo notebook authoring + debugging for the 109 BIEP lakehouse dashboards. Owns the dual-mode pattern (CLI + reactive), ibis-first SQL, marimo WASM export, the notebooks/_shared/ helpers, and the oideachais-marimo-dashboards spec.
+description: Marimo notebook authoring + debugging for the 109 BIEP lakehouse dashboards. Owns the dual-mode pattern (CLI + reactive), ibis-first SQL, marimo WASM export, the notebooks/_shared/ helpers, and the oideachais-marimo-dashboards spec. Uses Gemma 4 26B-A4B via Unsloth Studio (Tier 2 primary, per the gemini_hackathon alignment).
 mode: subagent
-model: qwen/qwen3.7-plus
+model: unsloth-studio/gemma-4-26b-a4b
 temperature: 0.1
 color: "#3a5a8f"
+mcp:
+  dlt-workspace-mcp: true
+  firecrawl: true
+  crawl4ai: true
+  infisical: true
+  motherduck: true
+  chrome: true
+  cocoindex-code: true
+  cognee: true
+  graphiti: true
+  langfuse: true
+  huggingface: true
+  design-system: true
 permission:
   edit: allow
   bash:

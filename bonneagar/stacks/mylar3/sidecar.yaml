@@ -1,0 +1,71 @@
+# =============================================================================
+# mylar3 — Locket Infisical-injection sidecar (post-fix v0.2.1)
+# =============================================================================#
+# Mirrors the Kapowarr + langfuse + cognee pattern. The locket container
+# resolves {{ infisical://... }} templates from ./secrets.env against the
+# `dev-baile` Infisical vault at container start (and refreshes in watch
+# mode), then writes a flat key=value file at
+# /run/secrets/locket/secrets.env that mylar3 sources via env_file.
+#
+# In offline / dev mode, set INFISICAL_FALLBACK_FILE in your .env.local to a
+# static env file with the resolved key=value pairs.
+# =============================================================================
+
+services:
+  locket:
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.1
+    environment:
+      LOCKET_FALLBACK_FILE: /run/secrets/locket/env-fallback.env
+    container_name: mylar3-locket
+    restart: unless-stopped
+    user: "65532:65532"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    command:
+      - "--provider=infisical"
+      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--map=/templates:/run/secrets/locket"
+      - "--mode=${LOCKET_MODE:-watch}"
+    secrets:
+      - infisical_secret
+    volumes:
+      - ./secrets.env:/templates/secrets.env:ro
+      - ${INFISICAL_FALLBACK_FILE}:/run/secrets/locket/env-fallback.env:ro
+      - stack-secrets:/run/secrets/locket
+    healthcheck:
+      test: ["CMD", "/locket", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - stack
+
+  # Override mylar3 to source resolved secrets from the locket tmpfs.
+  mylar3:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - stack-secrets:/run/secrets/locket:ro
+    env_file:
+      - /run/secrets/locket/secrets.env
+
+secrets:
+  infisical_secret:
+    file: $${INFISICAL_SECRET_FILE:-../../infisical_secret}
+
+volumes:
+  stack-secrets:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=700
+
+networks:
+  stack:
+    driver: bridge

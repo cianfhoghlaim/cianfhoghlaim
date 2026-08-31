@@ -74,7 +74,7 @@ LOCKET_MODE=watch
 [stack.config.repo]
 server_id = "arm1-oci"
 git_account = "cianfhoghlaim"
-repo = "kings_college_galway"
+repo = "cianfhoghlaim"
 branch = "main"
 
 # -----------------------------------------------------------------------------

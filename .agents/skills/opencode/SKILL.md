@@ -60,14 +60,45 @@ via programmatic invocation.
     ".cocoindex_code/guides.yml"
   ],
   "provider": {
-    "qwen": {
-      "name": "Qwen Token Plan",
+    "minimax-coding-plan": {
+      "name": "MiniMax M3 (existing key #1 — research/orchestrator/agent-platform)",
       "api": "openai",
       "options": {
-        "apiKey": "{env:DASHSCOPE_API_KEY}",
-        "baseURL": "{env:DASHSCOPE_BASE_URL}"
+        "apiKey": "{env:MINIMAX_API_KEY}",
+        "baseURL": "{env:MINIMAX_BASE_URL}"
       },
-      "models": { ... }
+      "models": { "MiniMax-M3": { ... } }
+    },
+    "minimax-coding-plan-v2": {
+      "name": "MiniMax M3 v2 (new key #2 — build/plan v2)",
+      "api": "openai",
+      "options": {
+        "apiKey": "{env:MINIMAX_API_KEY_V2}",
+        "baseURL": "{env:MINIMAX_BASE_URL}"
+      },
+      "models": { "MiniMax-M3": { ... } }
+    },
+    "unsloth-studio": {
+      "name": "Unsloth Studio (host.docker.internal:8888 — Gemma 4)",
+      "api": "openai",
+      "options": {
+        "apiKey": "{env:UNSLOTH_API_KEY}",
+        "baseURL": "http://host.docker.internal:8888/v1/"
+      },
+      "models": {
+        "gemma-4-26b-a4b": { ... },
+        "gemma-4-e4b": { ... },
+        "gemma-3-27b-it": { ... }
+      }
+    },
+    "google-aistudio": {
+      "name": "Google AI Studio (Gemini 3.5 Flash + Flash-Lite)",
+      "api": "openai",
+      "options": {
+        "apiKey": "{env:GEMINI_API_KEY}",
+        "baseURL": "https://generativelanguage.googleapis.com/v1beta/openai"
+      },
+      "models": { "gemini-3.5-flash": { ... } }
     }
   },
   "mcp": {
@@ -81,11 +112,27 @@ via programmatic invocation.
   "agent": {
     "build": {
       "prompt": "{file:./.opencode/agents/build.md}",
-      "model": "minimax-coding-plan/MiniMax-M3"
+      "model": "minimax-coding-plan-v2/MiniMax-M3"
+    },
+    "plan": {
+      "prompt": "{file:./.opencode/agents/plan.md}",
+      "model": "minimax-coding-plan-v2/MiniMax-M3"
+    },
+    "notebooks": {
+      "prompt": "{file:./.opencode/agents/notebooks.md}",
+      "model": "unsloth-studio/gemma-4-26b-a4b"
     }
   }
 }
 ```
+
+> **2026-08-31:** The `qwen` + `litellm_local` providers were removed per
+> the `2026-08-31-cianfhoghlaim-v5-opencode-model-priority-v1` change.
+> The new 5-provider set is `minimax-coding-plan` (existing key #1) +
+> `minimax-coding-plan-v2` (new key #2 for build/plan) +
+> `unsloth-studio` (Gemma 4 family) + `google-aistudio` (Gemini 3.5) +
+> `google-vertex` (Vertex AI Gemini). Build + plan route to the v2 key;
+> everything else routes to the existing key.
 
 ## Precedence order (highest wins)
 
@@ -242,12 +289,15 @@ The frontmatter fields: `description` (required), `mode`, `model`,
       "models": { ... }
     }
   },
-  "disabled_providers": ["gemini"],
-  "enabled_providers": ["anthropic", "openai"]
+  "disabled_providers": [],
+  "enabled_providers": ["anthropic", "openai", "minimax-coding-plan", "minimax-coding-plan-v2", "unsloth-studio", "google-aistudio", "google-vertex"]
 }
 ```
 
-If a provider appears in both lists, `disabled_providers` wins.
+If a provider appears in both lists, `disabled_providers` wins. The
+`gemini` provider is no longer disabled — per the v5 model priority
+change, the Google Gemini 3.5 Flash family is now active via the
+`google-vertex` + `google-aistudio` providers.
 
 ## MCP servers
 

@@ -11,7 +11,7 @@ The default destination is **local DuckDB** so CI + local dev
 need zero external services. MotherDuck + Bonneagar are opt-in
 via `SecretsResolver` for thesis-reviewer scenarios.
 
-## Requirements
+## ADDED Requirements
 
 ### Requirement: 3 Destination classes
 

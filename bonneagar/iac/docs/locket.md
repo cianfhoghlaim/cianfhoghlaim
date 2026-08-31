@@ -164,7 +164,7 @@ A stack that diverges fails the build.
 
 ```bash
 # 1. Download locket binary locally (1-time, for IaC use)
-cd /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar
+cd ${CIANFHOGHLAIM_ROOT:-/Users/cianmacandeisigh/dev/cianfhoghlaim}/bonneagar
 bun run iac:bootstrap-locket-binary
 
 # 2. Verify
