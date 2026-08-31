@@ -1,0 +1,33 @@
+services:
+  vertex-gemini-client:
+    image: ghcr.io/cianfhoghlaim/gcp-gemini-vertex-client:v1
+    container_name: ${COMPOSE_PROJECT_NAME:-gcp-gemini-vertex}-client
+    restart: unless-stopped
+    user: "65532:65532"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    environment:
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-3.5-flash}
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT:-}
+      - GOOGLE_CLOUD_LOCATION=${GOOGLE_CLOUD_LOCATION:-us-central1}
+      - OTEL_SERVICE_NAME=gcp-gemini-vertex-client
+      - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
+      - OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental
+      - OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=EVENT_ONLY
+      - ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false
+      - GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY=true
+    networks:
+      - stack
+    healthcheck:
+      test: ["CMD", "/healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+networks:
+  stack:
+    driver: bridge
+    name: ${COMPOSE_PROJECT_NAME:-gcp-gemini-vertex}_stack

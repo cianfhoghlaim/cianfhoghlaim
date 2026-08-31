@@ -1,9 +1,22 @@
 ---
 description: Functional subagent for the web/agentic app surfaces (TanStack Start + Convex + Hono + CopilotKit + AG-UI + marimo + Babylon.js). Routes to web/apps/*/ (5 canonical surfaces: cianfhoghlaim-web, croilar-web, croilar-portal, tuatha-ui, tuatha-demo).
 mode: subagent
-model: qwen/qwen3-coder-next
+model: minimax-coding-plan/MiniMax-M3
 temperature: 0.1
 color: "#5f5f8a"
+mcp:
+  dlt-workspace-mcp: true
+  firecrawl: true
+  crawl4ai: true
+  infisical: true
+  motherduck: true
+  chrome: true
+  cocoindex-code: true
+  cognee: true
+  graphiti: true
+  langfuse: true
+  huggingface: true
+  design-system: true
 permission:
   edit: allow
   bash:

@@ -1,8 +1,21 @@
 ---
-description: Primary plan agent — read-only, no edits, no destructive exec. Use for spec/proposal/architectural-design tasks. Switch back to build for implementation.
+description: Primary plan agent — read-only, no edits, no destructive exec. Use for spec/proposal/architectural-design tasks. Switch back to build for implementation. Uses the M3 v2 slot (MINIMAX_API_KEY_V2).
 mode: primary
-model: minimax-coding-plan/MiniMax-M3
+model: minimax-coding-plan-v2/MiniMax-M3
 color: secondary
+mcp:
+  dlt-workspace-mcp: true
+  firecrawl: true
+  crawl4ai: true
+  infisical: true
+  motherduck: true
+  chrome: true
+  cocoindex-code: true
+  cognee: true
+  graphiti: true
+  langfuse: true
+  huggingface: true
+  design-system: true
 permission:
   edit: deny
   bash:

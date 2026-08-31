@@ -1,0 +1,11 @@
+private-resources:
+  gcp-gemini-vertex:
+    name: "GCP Gemini Vertex Client"
+    full-domain: "gcp-gemini-vertex.cianfhoghlaim.ie"
+    mode: http
+    destination-port: 8080
+    protocol: http
+    sites:
+      - arm1-oci
+    roles:
+      - Member

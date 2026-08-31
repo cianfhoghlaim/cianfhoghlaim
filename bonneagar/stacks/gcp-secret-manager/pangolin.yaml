@@ -1,0 +1,9 @@
+services:
+  vertex-gemini-client:
+    labels:
+      - "pangolin.private-resources.gcp-gemini-vertex.name=GCP Gemini Vertex Client"
+      - "pangolin.private-resources.gcp-gemini-vertex.mode=http"
+      - "pangolin.private-resources.gcp-gemini-vertex.full-domain=gcp-gemini-vertex.cianfhoghlaim.ie"
+      - "pangolin.private-resources.gcp-gemini-vertex.destination-port=8080"
+      - "pangolin.private-resources.gcp-gemini-vertex.protocol=http"
+      - "pangolin.private-resources.gcp-gemini-vertex.roles[0]=Member"

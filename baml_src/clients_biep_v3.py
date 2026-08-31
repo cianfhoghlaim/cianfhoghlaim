@@ -14,8 +14,10 @@ Per the centralized-model-registry openspec change, the 3 model
 strings below are resolved from MODEL_REGISTRY at import time:
 
   BIEPV3Extract        → text_llm/default               → "minimax-m3"
-  BIEPV3ExtractStrong  → text_llm/default               → "minimax-m3"
-  BIEPV3Vision         → ocr_vision/qwen3_vl_default    → "qwen3-vl-8b"
+  BIEPV3ExtractStrong  → text_llm/default               → "minimax-m3"  (MINIMAX_API_KEY_V2)
+  BIEPV3Vision         → ocr_vision/gemma4_vision       → "gemma-4-26B-A4B-vision"
+                                                                (was qwen3-vl-8b before
+                                                                2026-08-31 v5 model priority change)
 
 The historical hardcoded fallbacks are preserved for minimal
 container builds where MODEL_REGISTRY (meaisinfhoghlaim) is
@@ -34,7 +36,9 @@ from __future__ import annotations
 # canonical source of truth is `meaisinfhoghlaim.models.MODEL_REGISTRY`.
 _BIEPV3_EXTRACT_FALLBACK = "minimax-m3"
 _BIEPV3_EXTRACT_STRONG_FALLBACK = "minimax-m3"
-_BIEPV3_VISION_FALLBACK = "local/vision/qwen3-vl-8b"
+# 2026-08-31: Qwen3-VL-8B replaced with Gemma 4 26B-A4B-vision per the
+# 2026-08-31-cianfhoghlaim-v5-opencode-model-priority-v1 change.
+_BIEPV3_VISION_FALLBACK = "local/vision/gemma-4-26B-A4B-vision"
 
 
 def _resolve_text_llm_default() -> str:

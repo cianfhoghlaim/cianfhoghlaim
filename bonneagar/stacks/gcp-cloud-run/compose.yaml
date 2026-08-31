@@ -1,0 +1,27 @@
+services:
+  gcp-cloud-run-service:
+    image: ghcr.io/cianfhoghlaim/gcp-cloud-run-service:v1
+    container_name: ${COMPOSE_PROJECT_NAME:-gcp-cloud-run}-service
+    restart: unless-stopped
+    user: "65532:65532"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    environment:
+      - OTEL_SERVICE_NAME=gcp-cloud-run-service
+      - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
+      - GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY=true
+    networks:
+      - stack
+    healthcheck:
+      test: ["CMD", "/healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+networks:
+  stack:
+    driver: bridge
+    name: ${COMPOSE_PROJECT_NAME:-gcp-cloud-run}_stack

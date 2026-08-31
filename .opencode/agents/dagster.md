@@ -1,9 +1,22 @@
 ---
 description: Dagster asset + component + job authoring for the 5-layer KCG architecture. Owns orchestration/components/layer{1..5}_*.py, the 199+ assets, the MultiPartitionsDefinition patterns, and the R1-R4 conformance at scaffold time.
 mode: subagent
-model: qwen/qwen3-coder-next
+model: minimax-coding-plan/MiniMax-M3
 temperature: 0.1
 color: "#5a3a5a"
+mcp:
+  dlt-workspace-mcp: true
+  firecrawl: true
+  crawl4ai: true
+  infisical: true
+  motherduck: true
+  chrome: true
+  cocoindex-code: true
+  cognee: true
+  graphiti: true
+  langfuse: true
+  huggingface: true
+  design-system: true
 permission:
   edit: allow
   bash:

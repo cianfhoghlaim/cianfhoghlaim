@@ -15,7 +15,7 @@ first**; the rest of the file is the full 97-spec catalogue.
 | [`deployment-control-panel`](specs/deployment-control-panel/spec.md) | shared | **NEW 2026-08-15**: The 5-tab marimo control panel + web UI + CLI for picking models/pipelines/datasets/stacks; writes to `deployment-choice.yaml` |
 | [`british-isles-education-pipeline`](specs/british-isles-education-pipeline/spec.md) | cianfhoghlaim | The flagship — 6 Irish LC priority subjects (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) + gov.ie circulars — NCCA + SEC + DLT + BAML + 7 v1 CocoIndex flows + 42 Dagster assets + 6 marimo notebooks + 4 MotherDuck Dives + daily Flight |
 | [`cianfhoghlaim-educational-mmo`](specs/cianfhoghlaim-educational-mmo/spec.md) | cianfhoghlaim | 8 NCCA LC subjects × per-subject quest packs × 8 ADK agents × hybrid x402 credential × TanStack Start 2D client |
-| [`dagster-5-layer-component-architecture`](specs/dagster-5-layer-component-architecture/spec.md) | shared | 5 KCG Components (Ingestion / Materials / Model Lifecycle / Asset Generation / Agent Operations) + Dagster 1.13+ Declarative Automation + Virtual Assets + State-Backed Components + R1–R4 conformance at scaffold time |
+| [`dagster-5-layer-component-architecture`](specs/dagster-5-layer-component-architecture/spec.md) | shared | 5 Cianfhoghlaim Components (Ingestion / Materials / Model Lifecycle / Asset Generation / Agent Operations) + Dagster 1.13+ Declarative Automation + Virtual Assets + State-Backed Components + R1–R4 conformance at scaffold time |
 | [`oideachais-pipeline`](specs/oideachais-pipeline/spec.md) | oideachais | Celtic education curriculum pipeline (Dagster + DLT + DuckLake + LanceDB + BAML) |
 | [`oideachais-university-deep-extraction`](specs/oideachais-university-deep-extraction/spec.md) | oideachais | Per-university website deep extraction (BAML + DLT + Dagster + CocoIndex v1 + marimo + Cognee cross-archive) — the reusable template for any British Isles university |
 | [`cianfhoghlaim-personal-archive-typed-modules`](specs/cianfhoghlaim-personal-archive-typed-modules/spec.md) | cianfhoghlaim | **NEW 2026-08-23**: F-granularity (per-question) typed pipeline that lifts `leabharlann/<university>/` to leaving-cycle feature parity — transferable to any user |
@@ -26,6 +26,11 @@ first**; the rest of the file is the full 97-spec catalogue.
 | [`retrospective-cleanup`](specs/retrospective-cleanup/spec.md) | shared | **NEW 2026-08-15**: Retroactive cleanup of the 1959 pre-v7 path drift occurrences (47 auto-fixable + 1912 manual) + the Layer 6 sync:dagster + the safe --fix mode |
 | [`dagger-pipelines`](specs/dagger-pipelines/spec.md) | shared | Polyglot CI/CD via Dagger (Python + TS) — 8-step GitOps |
 | [`dev-tooling-surfaces`](specs/dev-tooling-surfaces/spec.md) | shared | **NEW 2026-08-19**: The canonical 3-tool developer surface — opencode (4 primary + 9 domain agents) + mise (9 task namespaces + task_templates + file tasks) + openspec (8 subcommands + spec-driven schema). Drives .agents/skills/{opencode,mise,openspec}/, .cocoindex_code/guides.yml, and the openspec/AGENTS.md routing table. |
+| [`v5-model-priority`](openspec/changes/2026-08-31-cianfhoghlaim-v5-opencode-model-priority-v1/) | shared | **NEW 2026-08-31**: The v5 model priority refactor — qwen removed + MiniMax v2 key for build/plan + Gemma 4 + Gemini 3.5 Flash chain via the `Primary` BAML alias + 6 GCP mirror stacks |
+| [`baml-primary-alias-fallback`](openspec/changes/2026-08-31-baml-primary-alias-and-fallback-v1/) | shared | **NEW 2026-08-31**: BAML switching strategy — 3-layer stack (env-driven Primary + per-function override + per-function fallback chain) + `baml:switch-primary` + `baml:list-models` mise tasks |
+| [`gcp-mirror-stacks`](openspec/changes/2026-08-31-gcp-mirror-stacks-v1/) | shared | **NEW 2026-08-31**: 6 new `bonneagar/stacks/gcp-*/` mirror stacks (opt-in via `deployment-choice.yaml`) — Vertex AI + Unsloth Studio + BigQuery + Cloud Storage + Secret Manager + Cloud Run |
+| [`sister-repo-gemini-lesson-transfer`](openspec/changes/2026-08-31-sister-repo-gemini-lesson-transfer-v1/) | shared | **NEW 2026-08-31**: Deep per-sister-repo transfer of the gemini_hackathon Gemma + Gemini + GCP + ADK 2 + AG-UI/A2UI/CopilotKit lessons to bonneagar + tuatha + ciancheiltis + ciandlithe + cianchosaint |
+| [`meaisinfhoghlaim-unsloth-priority`](openspec/changes/2026-08-31-meaisinfhoghlaim-unsloth-priority-v1/) | shared | **NEW 2026-08-31**: meaisinfhoghlaim Unsloth-prioritised refactor — Gemma 4 26B-A4B-vision for OCR ensemble + gemma-4-e4b-vision for Irish-language datasets + irish-gemma-4 base for training + Gemma 4 alignment methods + Document AI + Docling-serve fallback |
 
 > **Note:** `tuatha-platform` has been **retired** (2026-07-06 by the
 > `2026-07-06-drift-cleanup-and-v4-alignment` change). Its content has
@@ -54,7 +59,7 @@ openspec validate --all --strict   # NEW: CI gate (equivalent to mise run opensp
 openspec archive <change-id> --yes        # after deploy
 ```
 
-### Priority skills (6 of 166)
+### Priority skills (7 of 167)
 
 | Skill | When to load |
 |:--|:--|
@@ -80,7 +85,7 @@ mise run openspec:validate <id>   # validate one change with --strict (MUST pass
 mise run openspec:archive <id>    # archive a deployed change (merges deltas into canonical specs)
 mise run openspec:view            # interactive dashboard of all specs + changes (1.4+)
 mise run openspec:list-specs       # list all 97 capability specs
-mise run lint:skills               # validate .agents/skills/ metadata (166 skills pass)
+mise run lint:skills               # validate .agents/skills/ metadata (167 skills pass)
 mise run lint:drift-docs           # validate every AGENTS.md number claim against ground truth
 mise run sync:all                  # run all 14 sync layers (paths + ccc + cognee + skills + mcp + dagster + drift-docs + spec-agents + baml + stacks + dlt + agents + notebooks + firecrawl)
 ```
@@ -220,7 +225,7 @@ The Cianfhoghlaim platform has **48 capability specs** organised into
 | `british-isles-education-pipeline` | cianfhoghlaim | 6 Irish LC priority subjects (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) + gov.ie circulars — NCCA + SEC + gov.ie DLT + BAML + 7 v1 CocoIndex flows + 42 Dagster assets + 6 marimo notebooks + 4 MotherDuck Dives + daily Flight |
 | `agent-platform-cluster` | shared | 8-stack cluster (lakehouse + litellm + langfuse + mlflow + logfire + cognee + graphiti + lancedb) + 3 agent surfaces (openclaw + openchamber + hermes); LiteLLM is the M3 chokepoint |
 | `apple-photos-ingestion` | cianfhoghlaim | 5th leabharlann corpus via osxphotos → 3 v1 CocoIndex Apps (metadata + chunks + geospatial) + 5 Dagster assets + 2 routing + 1 cross-frame velocity; privacy gate `LEABHARLANN_PHOTOS_INCLUDE_GPS` (default false) |
-| `dagster-5-layer-component-architecture` | shared | 5 KCG Components (Ingestion / Materials / Model Lifecycle / Asset Generation / Agent Operations) + Dagster 1.13+ Declarative Automation + Virtual Assets + State-Backed Components |
+| `dagster-5-layer-component-architecture` | shared | 5 Cianfhoghlaim Components (Ingestion / Materials / Model Lifecycle / Asset Generation / Agent Operations) + Dagster 1.13+ Declarative Automation + Virtual Assets + State-Backed Components |
 | `spaces-cicd-pipeline` | shared | Reusable GH Action at `infrastructure/ci/spaces-sync.yml` for publishing any `spaces/*/` dir to a HF Space (gradio / docker / static SDKs) |
 | `workflow-automation` | team | n8n + LLM pipelines (OpenCode Go API) |
 | `task-management` | team | Vikunja kanban + Gantt + list + team sharing |

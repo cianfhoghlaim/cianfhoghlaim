@@ -1,9 +1,22 @@
 ---
-description: Structural deep-cuts analyser for any cianfhoghlaim subdirectory. Given a path (e.g. 'dlt/', 'baml_src/', 'cocoindex/'), spawn parallel deep-cuts subagents to map files, schemas, patterns, design choices, and identified drift; then synthesise a unified report with 20 questions per subdirectory for human deep-dive. Hidden (programmatic-only invocation).
+description: Structural deep-cuts analyser for any cianfhoghlaim subdirectory. Given a path (e.g. 'dlt/', 'baml_src/', 'cocoindex/'), spawn parallel deep-cuts subagents to map files, schemas, patterns, design choices, and identified drift; then synthesise a unified report with 20 questions per subdirectory for human deep-dive. Hidden (programmatic-only invocation). Uses Gemma 4 26B-A4B via Unsloth Studio.
 mode: subagent
 hidden: true
-model: qwen/qwen3.7-plus
+model: unsloth-studio/gemma-4-26b-a4b
 color: "#5f8a5f"
+mcp:
+  dlt-workspace-mcp: true
+  firecrawl: true
+  crawl4ai: true
+  infisical: true
+  motherduck: true
+  chrome: true
+  cocoindex-code: true
+  cognee: true
+  graphiti: true
+  langfuse: true
+  huggingface: true
+  design-system: true
 permission:
   edit: deny
   bash: { "*": "ask", "rg *": "allow", "bun run ccc:*": "allow", "git log*": "allow" }

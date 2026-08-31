@@ -14,7 +14,7 @@
 #   openspec — change management (orthogonal to all 4 product domains)
 #   devops  — IaC + 89 Docker stacks + Komodo/Pangolin/Locket/Infisical + deploy
 #   data    — dlt_sources + orchestration (Dagster) + baml_src + CocoIndex + motherduck
-#             + notebooks + observability (the 5 KCG Component layers)
+#             + notebooks + observability (the 5 Cianfhoghlaim Component layers)
 #   ml      — meaisinfhoghlaim (OCR/HTR/Alignment/Celtic) + 12-agent fleet +
 #             MODEL_REGISTRY + HF watchdog
 #   web     — web/apps (12 apps) + web/packages (3 shared) + web/hono-api + Turborepo
@@ -22,6 +22,9 @@
 # See .agents/skills/mise/SKILL.md + openspec/specs/dev-tooling-surfaces/spec.md.
 
 [tools]
+# Per Wave 6 (2026-08-26): pin Node 22 to unblock `wrangler deploy --dry-run`
+# (wrangler requires Node 22+ for the Workers deployment preview).
+node = "22"
 # Core tools
 # Per the 2026-08-23-dev-tooling-version-pinning-v1 change: 7 pipeline-
 # critical tools are pinned to their EXACT latest stable version (verified
@@ -136,7 +139,7 @@ depends = ["core:sync"]
 # duplicate module issue (the docs-informed-credential-pipeline-redo worktree
 # under .claude/worktrees/ has a stale orchestration/defs/sync_assets.py that
 # conflicts with the live one when the repo-root __init__.py makes mypy treat
-# the whole repo as the `kings_college_galway` namespace package).
+# the whole repo as the `cianfhoghlaim` namespace package).
 # Per the 2026-08-22 fix: 23 pre-existing error codes are disabled in
 # pyproject.toml [tool.mypy] disable_error_code (no-any-return, attr-defined,
 # call-arg, var-annotated, assignment, misc, no-untyped-call, no-untyped-def,
@@ -534,6 +537,12 @@ description = "Audit agents/, baml_src/, notebooks/, web/, orchestration/, space
 depends = ["sync"]
 run = ".venv/bin/python3 scripts/registry_audit.py --strict"
 
+# Per the 2026-08-31-baml-primary-alias-and-fallback-v1 change.
+# Audits BAML functions for missing fallback chains (per the v5 BAML switching strategy).
+[tasks."lint:baml-fallbacks"]
+description = "Audit BAML functions for missing fallback chains (per the 2026-08-31-baml-primary-alias-and-fallback-v1 change). Wired to scripts/baml_audit_fallbacks.py."
+run = ".venv/bin/python3 scripts/baml_audit_fallbacks.py --strict"
+
 # Per the 2026-08-23-dev-tooling-tbd-purpose-refresh-batch-data-specs-v1 change:
 # fail CI if any spec under openspec/specs/*/spec.md still has a TBD Purpose field.
 [tasks."lint:spec:purpose"]
@@ -588,6 +597,11 @@ description = "Audit dlt_sources/**/*.py for nested_hints() calls containing __ 
 depends = ["sync"]
 run = ".venv/bin/python3 scripts/lint_dlt_nested_hints.py"
 
+[tasks."lint:dlt-paths"]
+description = "Fail CI if any source .py file exists in the deprecated dlt_sources/language/ grab-bag; validate canonical themed sub-trees + destinations package are present (Wave 1 — master plan §1.10)"
+depends = ["sync"]
+run = ".venv/bin/python3 scripts/lint_dlt_paths.py"
+
 [tasks."lint:litellm-router-fallbacks"]
 description = "Audit bonneagar/stacks/litellm/config/config.yaml for bare-list router_settings.fallbacks (ml domain)"
 depends = ["sync"]
@@ -619,7 +633,7 @@ run = "bash scripts/lint_mcp_runtime.sh"
 # =============================================================================
 
 [tasks."mcp:smoke"]
-description = "Run all mcp:smoke:* tasks in sequence (data domain)"
+description = "Run all 12 mcp:smoke:* tasks in sequence (data domain)"
 depends = [
   "mcp:smoke:dlt-workspace-mcp",
   "mcp:smoke:firecrawl",
@@ -627,6 +641,12 @@ depends = [
   "mcp:smoke:chrome",
   "mcp:smoke:cocoindex-code",
   "mcp:smoke:huggingface",
+  "mcp:smoke:crawl4ai",
+  "mcp:smoke:cognee",
+  "mcp:smoke:graphiti",
+  "mcp:smoke:design-system",
+  "mcp:smoke:langfuse",
+  "mcp:smoke:infisical",
 ]
 run = "echo OK"
 
@@ -691,6 +711,7 @@ depends = [
   "sync:cognee",
   "sync:skills",
   "sync:mcp",
+  "sync:mcp-config",
   "sync:dagster",
   "sync:drift-docs",
   "sync:spec-agents",
@@ -702,6 +723,10 @@ depends = [
   "sync:firecrawl",
 ]
 run = "bash scripts/sync/all.sh"
+
+[tasks."sync:mcp-config"]
+description = "Regenerate ~/.config/opencode/opencode.jsonc mcp block + .mcp.json from canonical repo opencode.json (Layer 13 of the knowledge-sync-loop)"
+run = "bun run scripts/sync_mcp_config.ts"
 
 [tasks."sync:paths"]
 description = "Layer 1: detect pre-v7 path drift in source files"
@@ -1040,6 +1065,40 @@ description = "DEVOPS teardown-stack (root alias) — per-host selective teardow
 alias = ["devops:teardown-stack", "iac:teardown-stack", "iac-teardown-stack"]
 run = "bun run --cwd bonneagar iac:teardown-stack ${@:-}"
 
+# 2026-08-31: 6 GCP mirror stacks per the v5 model priority change.
+# Opt-in via deployment-choice.yaml. These tasks deploy via Komodo
+# (the canonical orchestrator on bunchloch + arm1-oci). The opensource
+# stacks (pangolin + komodo + bunchloch) stay canonical for local dev.
+[tasks."stack:gcp-gemini-vertex"]
+description = "Deploy the GCP Gemini Vertex mirror stack (Vertex AI Express mode for Gemini 3.5 Flash)"
+depends = ["sync"]
+run = "komodo deploy --stack=gcp-gemini-vertex"
+
+[tasks."stack:gcp-gemma-unsloth"]
+description = "Deploy the GCP Gemma Unsloth mirror stack (Unsloth Studio on GCE)"
+depends = ["sync"]
+run = "komodo deploy --stack=gcp-gemma-unsloth"
+
+[tasks."stack:gcp-bigquery-mirror"]
+description = "Deploy the GCP BigQuery mirror stack (BigLake Iceberg REST)"
+depends = ["sync"]
+run = "komodo deploy --stack=gcp-bigquery-mirror"
+
+[tasks."stack:gcp-gcs-bucket"]
+description = "Deploy the GCP Cloud Storage bucket stack (BIEP raw + derived + assets)"
+depends = ["sync"]
+run = "komodo deploy --stack=gcp-gcs-bucket"
+
+[tasks."stack:gcp-secret-manager"]
+description = "Deploy the GCP Secret Manager stack (Workload Identity Federation)"
+depends = ["sync"]
+run = "komodo deploy --stack=gcp-secret-manager"
+
+[tasks."stack:gcp-cloud-run"]
+description = "Deploy the GCP Cloud Run service stack (stateless services)"
+depends = ["sync"]
+run = "komodo deploy --stack=gcp-cloud-run"
+
 [tasks."devops:secrets:env"]
 description = "Create the dev-baile environment in Infisical"
 alias = ["secrets:env"]
@@ -1149,6 +1208,15 @@ description = "Lint the unified lakehouse stack — 17 services + 14 DBs + 10 pr
 alias = ["lakehouse:stack-doctor"]
 run = "bash scripts/lakehouse-stack-doctor.sh"
 
+# Wave 4 §4.11 — the canonical 6-service lakehouse smoke-test.
+# Probes Lakekeeper + Postgres + Garage + LanceDB + DuckLake +
+# Iceberg REST and emits a JSON-ready status report. Used by the
+# `lakehouse:smoke-test` legacy alias for back-compat.
+[tasks."data:lakehouse-smoke-test"]
+description = "DATA lakehouse smoke-test — the 6-service health check (Lakekeeper + Postgres + Garage + LanceDB + DuckLake + Iceberg REST). Per Wave 4 §4.11 of the 2026-08-24 master refactor plan."
+alias = ["lakehouse:smoke-test"]
+run = "bash mise-tasks/data/lakehouse-smoke-test"
+
 [tasks."data:setup"]
 description = "BIEP v3 full setup — Docker + lakehouse + BAML codegen + registry seed + lance namespace + openspec + lint:skills"
 alias = ["biep:v3:setup"]
@@ -1160,6 +1228,60 @@ description = "BIEP v3 full status — lakehouse health + registry count + BAML 
 alias = ["biep:v3:status"]
 depends = ["sync"]
 run = ".venv/bin/python3 scripts/biiep_v3_status.py"
+
+# 2026-08-31: BAML switching strategy (per the v5 model priority change).
+# One-liner model switches via the `Primary` alias in baml_src/clients.baml.
+[tasks."baml:switch-primary"]
+description = "Switch BAML primary model — updates MODEL_BASE_URL + MODEL_API_KEY + MODEL_PRIMARY in .infisical.env via mise env set. Choices: minimax-m3 | gemma-4-26b-a4b | gemini-3.5-flash. Restart any running BAML daemons after."
+depends = ["sync"]
+run = """
+case "{{arg(name="model",choices="minimax-m3,gemma-4-26b-a4b,gemini-3.5-flash")}}" in
+  minimax-m3)
+    mise env set MODEL_BASE_URL https://api.minimax.io/v1
+    mise env set MODEL_API_KEY MINIMAX_API_KEY
+    mise env set MODEL_PRIMARY minimax-m3
+    ;;
+  gemma-4-26b-a4b)
+    mise env set MODEL_BASE_URL http://host.docker.internal:8888/v1/
+    mise env set MODEL_API_KEY UNSLOTH_API_KEY
+    mise env set MODEL_PRIMARY unsloth/gemma-4-26B-A4B-it-GGUF
+    ;;
+  gemini-3.5-flash)
+    mise env set MODEL_BASE_URL https://generativelanguage.googleapis.com/v1beta/openai
+    mise env set MODEL_API_KEY GEMINI_API_KEY
+    mise env set MODEL_PRIMARY gemini-3.5-flash
+    ;;
+esac
+echo "Switched BAML primary to {{arg(name="model")}}. Restart any running BAML daemons."
+"""
+
+[tasks."baml:list-models"]
+description = "List the 7 BAML concrete clients + their resolved base_url + model. Per the v5 BAML switching strategy."
+depends = ["sync"]
+run = '''
+.venv/bin/python3 -c "
+from baml_client import b
+clients = [
+    ('MiniMaxPrimary', 'minimax-m3', 'https://api.minimax.io/v1'),
+    ('MiniMaxPrimaryStrong', 'minimax-m3', 'https://api.minimax.io/v1'),
+    ('VertexGemini35Flash', 'gemini-3.5-flash', 'vertex-ai'),
+    ('AIStudioGemini35Flash', 'gemini-3.5-flash', 'https://generativelanguage.googleapis.com/v1beta/openai'),
+    ('UnslothGemma4', 'unsloth/gemma-4-26B-A4B-it-GGUF', 'http://host.docker.internal:8888/v1/'),
+    ('UnslothGemma4Light', 'unsloth/gemma-4-E4B-it-GGUF', 'http://host.docker.internal:8888/v1/'),
+    ('LlamaSwapGemma4Vision', 'local/ocr/gemma-4-26B-A4B-vision', 'http://litellm:4000/v1'),
+]
+print('BAML concrete clients (per the v5 model priority change):')
+print()
+print(f'  {\"name\":30s}  {\"model\":40s}  base_url')
+for name, model, base in clients:
+    print(f'  {name:30s}  {model:40s}  {base}')
+print()
+print('Primary (env-driven, default = MiniMax):')
+print(f'  {\"Primary\":30s}  {\"<MODEL_PRIMARY>\":40s}  <MODEL_BASE_URL>')
+print()
+print('Switch via: mise run baml:switch-primary --model minimax-m3|gemma-4-26b-a4b|gemini-3.5-flash')
+" 2>/dev/null || echo "baml_client not generated yet — run mise run baml:generate first"
+'''
 
 [tasks."data:dagster:up"]
 description = "Launch Dagster UI on :3335 (the consolidated cianfhoghlaim code-location)"
@@ -1183,7 +1305,7 @@ depends = ["sync"]
 run = "uv run dagster asset materialize --asset-key ${1:-lc5_mathematics_ingested} 2>&1 | tail -30"
 
 [tasks."data:dagster:cli-info"]
-description = "DATA dagster cli-info — emit the 5 KCG component paths (YAML output). Per the 2026-08-23-data-dagster-1-13-features-v1 change."
+description = "DATA dagster cli-info — emit the 5 Cianfhoghlaim component paths (YAML output). Per the 2026-08-23-data-dagster-1-13-features-v1 change."
 alias = ["dagster:cli-info"]
 depends = ["sync"]
 run = "bash -c 'cat <<EOF\nkcg-components:\n  L1_ingestion: orchestration/components/layer1_ingestion.py\n  L2_materials: orchestration/components/layer2_materials.py\n  L3_model_lifecycle: orchestration/components/layer3_model_lifecycle.py\n  L4_asset_generation: orchestration/components/layer4_asset_generation.py\n  L5_agent_ops: orchestration/components/layer5_agent_ops.py\nEOF'"
@@ -1490,6 +1612,21 @@ depends = ["web:install"]
 usage = 'arg "<app>" help="App name from web/apps/* (e.g. cianfhoghlaim-web, tuatha-ui, croilar-web)"'
 run = 'bunx turbo run dev --filter={{arg(app)}}'
 
+# Per the 2026-08-24-wave-6-frontend-tanstack-modernisation-v1 change (Wave 6.10):
+# Validates the canonical web stack shape — 5 apps + 5 packages + 1 hono-api
+# + no nested apps/api/ + no nested packages/ + canonical Convex location.
+[tasks."lint:web-stack"]
+description = "WEB stack lint — validate 5 apps + 5 packages + 1 hono-api, no nested apps/api/, no nested packages/, only the umbrella Convex at web/apps/oideachais-dashboard/convex/ (per 2026-08-24-wave-6-frontend-tanstack-modernisation-v1 + the 2026-08-24-wave-5-web-consolidation-v1 K.5 unification)."
+alias = ["web:stack:lint"]
+# Per Wave 5 K.5: the cianfhoghlaim/convex/ directory has been migrated to
+# the umbrella (see web/apps/oideachais-dashboard/convex/personalArchive.ts
+# + the 3 new archive_* tables in schema.ts). Drop the tolerance flag.
+run = "uv run python scripts/sync/lint_web_stack.py --strict"
+
+[tasks."lint:web-stack:drift"]
+description = "WEB stack lint drift — same as lint:web-stack but exits 0 (for --dry-run CI checks)."
+run = "uv run python scripts/sync/lint_web_stack.py --dry-run"
+
 
 # =============================================================================
 # [task_templates] — Repeating patterns (replacing 50+ per-instance wrappers)
@@ -1694,3 +1831,43 @@ run = "uv run --package fleet python -c \"from cianfhoghlaim.fleet.educational i
 [tasks."fleet:ocr:eval"]
 description = "Run OCR-Router on a sample LC Gaeilge paper"
 run = "uv run --package fleet python -c \"from cianfhoghlaim.fleet.educational import run_ocr_router; import asyncio; print(asyncio.run(run_ocr_router('/path/to/paper.pdf')))\""
+
+
+# =============================================================================
+# GCP NAMESPACE (5 tasks) — Phase 0 BIEP-on-GCP bootstrap
+# Per the openspec/changes/2026-08-30-cieanfhoghlaim-biep-on-gcp-v1/ umbrella.
+# See cloud/README.md for the user-side gcloud commands that precede
+# `mise run gcp:terraform-apply`.
+# =============================================================================
+
+[env.CIANFHOGHLAIM_DEPLOY_TARGET]
+description = "Where services run: oci | gcp | mix_and_match"
+value = "oci"
+
+[env.CIANFHOGHLAIM_GCP_PROJECT_ID]
+description = "The GCP project ID"
+value = "biiep-hackathon-2026-08"
+
+[env.CIANFHOGHLAIM_GCP_REGION]
+description = "The GCP region"
+value = "europe-west2"
+
+[tasks."gcp:bootstrap"]
+description = "Run the Phase 0 GCP bootstrap (after gcloud + terraform installed)"
+run = "echo 'Phase 0 bootstrap script goes here. See cloud/README.md for the user-side gcloud commands.'"
+
+[tasks."gcp:terraform-init"]
+description = "Initialize the Terraform backend (GCS bucket)"
+run = "cd cloud/terraform && terraform init -backend-config='bucket=biiep-tf-state'"
+
+[tasks."gcp:terraform-plan"]
+description = "Plan the Terraform changes"
+run = "cd cloud/terraform && terraform plan -var-file=environments/biiep-hackathon-2026-08.tfvars"
+
+[tasks."gcp:terraform-apply"]
+description = "Apply the Terraform changes"
+run = "cd cloud/terraform && terraform apply -var-file=environments/biiep-hackathon-2026-08.tfvars"
+
+[tasks."gcp:runtime-check"]
+description = "Verify gcloud + terraform + project setup"
+run = "bash cloud/runtime-env-check.sh"

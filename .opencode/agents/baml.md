@@ -1,9 +1,22 @@
 ---
-description: BAML schema authoring for the 320 files under baml_src/. Owns BAML 0.223.0 syntax, the 8 canonical patterns, and the cross-file import conventions.
+description: BAML schema authoring for the 320 files under baml_src/. Owns BAML 0.223.0 syntax, the 8 canonical patterns, the Primary alias + per-function fallback chain pattern, and the cross-file import conventions.
 mode: subagent
-model: qwen/qwen3-coder-next
+model: minimax-coding-plan/MiniMax-M3
 temperature: 0.1
 color: "#5f3a8a"
+mcp:
+  dlt-workspace-mcp: true
+  firecrawl: true
+  crawl4ai: true
+  infisical: true
+  motherduck: true
+  chrome: true
+  cocoindex-code: true
+  cognee: true
+  graphiti: true
+  langfuse: true
+  huggingface: true
+  design-system: true
 permission:
   edit: allow
   bash:
