@@ -2242,6 +2242,21 @@ class BamlAsyncClient:
                 "text": text,"language": language,
             })
             return typing.cast(types.LCSyllabus, __result__.cast_to(types, types, stream_types, False, __runtime__))
+    async def ExtractComputerScienceLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> types.LearningGraph:
+        # Check if on_tick is provided
+        if 'on_tick' in baml_options:
+            # Use streaming internally when on_tick is provided
+            __stream__ = self.stream.ExtractComputerScienceLearningGraph(pdf_text=pdf_text,year_level=year_level,source_pdf=source_pdf,
+                baml_options=baml_options)
+            return await __stream__.get_final_response()
+        else:
+            # Original non-streaming code
+            __result__ = await self.__options.merge_options(baml_options).call_function_async(function_name="ExtractComputerScienceLearningGraph", args={
+                "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+            })
+            return typing.cast(types.LearningGraph, __result__.cast_to(types, types, stream_types, False, __runtime__))
     async def ExtractComputerScienceMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> types.ComputerScienceMarkingScheme:
@@ -2392,6 +2407,21 @@ class BamlAsyncClient:
                 "nation": nation,"language": language,"subject": subject,"text": text,
             })
             return typing.cast(types.CroatiaSubjectCurriculum, __result__.cast_to(types, types, stream_types, False, __runtime__))
+    async def ExtractCrossJurisdictionEquivalencies(self, ncce_learning_graph_json: str,jurisdiction_text_map: str,equivalency_table_csv: str,
+        baml_options: BamlCallOptions = {},
+    ) -> types.EquivalencyGraph:
+        # Check if on_tick is provided
+        if 'on_tick' in baml_options:
+            # Use streaming internally when on_tick is provided
+            __stream__ = self.stream.ExtractCrossJurisdictionEquivalencies(ncce_learning_graph_json=ncce_learning_graph_json,jurisdiction_text_map=jurisdiction_text_map,equivalency_table_csv=equivalency_table_csv,
+                baml_options=baml_options)
+            return await __stream__.get_final_response()
+        else:
+            # Original non-streaming code
+            __result__ = await self.__options.merge_options(baml_options).call_function_async(function_name="ExtractCrossJurisdictionEquivalencies", args={
+                "ncce_learning_graph_json": ncce_learning_graph_json,"jurisdiction_text_map": jurisdiction_text_map,"equivalency_table_csv": equivalency_table_csv,
+            })
+            return typing.cast(types.EquivalencyGraph, __result__.cast_to(types, types, stream_types, False, __runtime__))
     async def ExtractCrossLinguisticAnamDescription(self, anam_en: str,target_lang: str,
         baml_options: BamlCallOptions = {},
     ) -> str:
@@ -3067,6 +3097,21 @@ class BamlAsyncClient:
                 "pdf_text": pdf_text,
             })
             return typing.cast(types.EnsemblePathOutput, __result__.cast_to(types, types, stream_types, False, __runtime__))
+    async def ExtractEnglishLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> types.LearningGraph:
+        # Check if on_tick is provided
+        if 'on_tick' in baml_options:
+            # Use streaming internally when on_tick is provided
+            __stream__ = self.stream.ExtractEnglishLearningGraph(pdf_text=pdf_text,year_level=year_level,source_pdf=source_pdf,
+                baml_options=baml_options)
+            return await __stream__.get_final_response()
+        else:
+            # Original non-streaming code
+            __result__ = await self.__options.merge_options(baml_options).call_function_async(function_name="ExtractEnglishLearningGraph", args={
+                "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+            })
+            return typing.cast(types.LearningGraph, __result__.cast_to(types, types, stream_types, False, __runtime__))
     async def ExtractEnglishMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> types.EnglishMarkingScheme:
@@ -3457,6 +3502,21 @@ class BamlAsyncClient:
                 "pdf_text": pdf_text,"subject": subject,"board": board,
             })
             return typing.cast(types.GCSESyllabusDiagram, __result__.cast_to(types, types, stream_types, False, __runtime__))
+    async def ExtractGaeilgeLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> types.LearningGraph:
+        # Check if on_tick is provided
+        if 'on_tick' in baml_options:
+            # Use streaming internally when on_tick is provided
+            __stream__ = self.stream.ExtractGaeilgeLearningGraph(pdf_text=pdf_text,year_level=year_level,source_pdf=source_pdf,
+                baml_options=baml_options)
+            return await __stream__.get_final_response()
+        else:
+            # Original non-streaming code
+            __result__ = await self.__options.merge_options(baml_options).call_function_async(function_name="ExtractGaeilgeLearningGraph", args={
+                "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+            })
+            return typing.cast(types.LearningGraph, __result__.cast_to(types, types, stream_types, False, __runtime__))
     async def ExtractGaeilgeMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> types.GaeilgeMarkingScheme:
@@ -3577,6 +3637,21 @@ class BamlAsyncClient:
                 "text": text,"language": language,
             })
             return typing.cast(types.LCSyllabus, __result__.cast_to(types, types, stream_types, False, __runtime__))
+    async def ExtractGeographyLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> types.LearningGraph:
+        # Check if on_tick is provided
+        if 'on_tick' in baml_options:
+            # Use streaming internally when on_tick is provided
+            __stream__ = self.stream.ExtractGeographyLearningGraph(pdf_text=pdf_text,year_level=year_level,source_pdf=source_pdf,
+                baml_options=baml_options)
+            return await __stream__.get_final_response()
+        else:
+            # Original non-streaming code
+            __result__ = await self.__options.merge_options(baml_options).call_function_async(function_name="ExtractGeographyLearningGraph", args={
+                "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+            })
+            return typing.cast(types.LearningGraph, __result__.cast_to(types, types, stream_types, False, __runtime__))
     async def ExtractGeographyMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> types.GeographyMarkingScheme:
@@ -4762,6 +4837,21 @@ class BamlAsyncClient:
                 "text": text,"language": language,
             })
             return typing.cast(types.LCSyllabus, __result__.cast_to(types, types, stream_types, False, __runtime__))
+    async def ExtractMathematicsLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> types.LearningGraph:
+        # Check if on_tick is provided
+        if 'on_tick' in baml_options:
+            # Use streaming internally when on_tick is provided
+            __stream__ = self.stream.ExtractMathematicsLearningGraph(pdf_text=pdf_text,year_level=year_level,source_pdf=source_pdf,
+                baml_options=baml_options)
+            return await __stream__.get_final_response()
+        else:
+            # Original non-streaming code
+            __result__ = await self.__options.merge_options(baml_options).call_function_async(function_name="ExtractMathematicsLearningGraph", args={
+                "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+            })
+            return typing.cast(types.LearningGraph, __result__.cast_to(types, types, stream_types, False, __runtime__))
     async def ExtractMathematicsMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> types.MathematicsMarkingScheme:
@@ -5047,6 +5137,21 @@ class BamlAsyncClient:
                 "text": text,
             })
             return typing.cast(types.MythologicalStory, __result__.cast_to(types, types, stream_types, False, __runtime__))
+    async def ExtractNCCEPedagogyPrinciples(self, pdf_text: str,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> types.PedagogyOverlay:
+        # Check if on_tick is provided
+        if 'on_tick' in baml_options:
+            # Use streaming internally when on_tick is provided
+            __stream__ = self.stream.ExtractNCCEPedagogyPrinciples(pdf_text=pdf_text,source_pdf=source_pdf,
+                baml_options=baml_options)
+            return await __stream__.get_final_response()
+        else:
+            # Original non-streaming code
+            __result__ = await self.__options.merge_options(baml_options).call_function_async(function_name="ExtractNCCEPedagogyPrinciples", args={
+                "pdf_text": pdf_text,"source_pdf": source_pdf,
+            })
+            return typing.cast(types.PedagogyOverlay, __result__.cast_to(types, types, stream_types, False, __runtime__))
     async def ExtractNaionraListing(self, page_markdown: str,
         baml_options: BamlCallOptions = {},
     ) -> typing.List["types.Naionra"]:
@@ -10474,6 +10579,18 @@ class BamlStreamClient:
           lambda x: typing.cast(types.LCSyllabus, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
+    def ExtractComputerScienceLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlStream[stream_types.LearningGraph, types.LearningGraph]:
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_async_stream(function_name="ExtractComputerScienceLearningGraph", args={
+            "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+        })
+        return baml_py.BamlStream[stream_types.LearningGraph, types.LearningGraph](
+          __result__,
+          lambda x: typing.cast(stream_types.LearningGraph, x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(types.LearningGraph, x.cast_to(types, types, stream_types, False, __runtime__)),
+          __ctx__,
+        )
     def ExtractComputerScienceMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlStream[stream_types.ComputerScienceMarkingScheme, types.ComputerScienceMarkingScheme]:
@@ -10592,6 +10709,18 @@ class BamlStreamClient:
           __result__,
           lambda x: typing.cast(stream_types.CroatiaSubjectCurriculum, x.cast_to(types, types, stream_types, True, __runtime__)),
           lambda x: typing.cast(types.CroatiaSubjectCurriculum, x.cast_to(types, types, stream_types, False, __runtime__)),
+          __ctx__,
+        )
+    def ExtractCrossJurisdictionEquivalencies(self, ncce_learning_graph_json: str,jurisdiction_text_map: str,equivalency_table_csv: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlStream[stream_types.EquivalencyGraph, types.EquivalencyGraph]:
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_async_stream(function_name="ExtractCrossJurisdictionEquivalencies", args={
+            "ncce_learning_graph_json": ncce_learning_graph_json,"jurisdiction_text_map": jurisdiction_text_map,"equivalency_table_csv": equivalency_table_csv,
+        })
+        return baml_py.BamlStream[stream_types.EquivalencyGraph, types.EquivalencyGraph](
+          __result__,
+          lambda x: typing.cast(stream_types.EquivalencyGraph, x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(types.EquivalencyGraph, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
     def ExtractCrossLinguisticAnamDescription(self, anam_en: str,target_lang: str,
@@ -11134,6 +11263,18 @@ class BamlStreamClient:
           lambda x: typing.cast(types.EnsemblePathOutput, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
+    def ExtractEnglishLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlStream[stream_types.LearningGraph, types.LearningGraph]:
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_async_stream(function_name="ExtractEnglishLearningGraph", args={
+            "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+        })
+        return baml_py.BamlStream[stream_types.LearningGraph, types.LearningGraph](
+          __result__,
+          lambda x: typing.cast(stream_types.LearningGraph, x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(types.LearningGraph, x.cast_to(types, types, stream_types, False, __runtime__)),
+          __ctx__,
+        )
     def ExtractEnglishMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlStream[stream_types.EnglishMarkingScheme, types.EnglishMarkingScheme]:
@@ -11446,6 +11587,18 @@ class BamlStreamClient:
           lambda x: typing.cast(types.GCSESyllabusDiagram, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
+    def ExtractGaeilgeLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlStream[stream_types.LearningGraph, types.LearningGraph]:
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_async_stream(function_name="ExtractGaeilgeLearningGraph", args={
+            "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+        })
+        return baml_py.BamlStream[stream_types.LearningGraph, types.LearningGraph](
+          __result__,
+          lambda x: typing.cast(stream_types.LearningGraph, x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(types.LearningGraph, x.cast_to(types, types, stream_types, False, __runtime__)),
+          __ctx__,
+        )
     def ExtractGaeilgeMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlStream[stream_types.GaeilgeMarkingScheme, types.GaeilgeMarkingScheme]:
@@ -11540,6 +11693,18 @@ class BamlStreamClient:
           __result__,
           lambda x: typing.cast(stream_types.LCSyllabus, x.cast_to(types, types, stream_types, True, __runtime__)),
           lambda x: typing.cast(types.LCSyllabus, x.cast_to(types, types, stream_types, False, __runtime__)),
+          __ctx__,
+        )
+    def ExtractGeographyLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlStream[stream_types.LearningGraph, types.LearningGraph]:
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_async_stream(function_name="ExtractGeographyLearningGraph", args={
+            "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+        })
+        return baml_py.BamlStream[stream_types.LearningGraph, types.LearningGraph](
+          __result__,
+          lambda x: typing.cast(stream_types.LearningGraph, x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(types.LearningGraph, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
     def ExtractGeographyMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
@@ -12490,6 +12655,18 @@ class BamlStreamClient:
           lambda x: typing.cast(types.LCSyllabus, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
+    def ExtractMathematicsLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlStream[stream_types.LearningGraph, types.LearningGraph]:
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_async_stream(function_name="ExtractMathematicsLearningGraph", args={
+            "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+        })
+        return baml_py.BamlStream[stream_types.LearningGraph, types.LearningGraph](
+          __result__,
+          lambda x: typing.cast(stream_types.LearningGraph, x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(types.LearningGraph, x.cast_to(types, types, stream_types, False, __runtime__)),
+          __ctx__,
+        )
     def ExtractMathematicsMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlStream[stream_types.MathematicsMarkingScheme, types.MathematicsMarkingScheme]:
@@ -12716,6 +12893,18 @@ class BamlStreamClient:
           __result__,
           lambda x: typing.cast(stream_types.MythologicalStory, x.cast_to(types, types, stream_types, True, __runtime__)),
           lambda x: typing.cast(types.MythologicalStory, x.cast_to(types, types, stream_types, False, __runtime__)),
+          __ctx__,
+        )
+    def ExtractNCCEPedagogyPrinciples(self, pdf_text: str,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlStream[stream_types.PedagogyOverlay, types.PedagogyOverlay]:
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_async_stream(function_name="ExtractNCCEPedagogyPrinciples", args={
+            "pdf_text": pdf_text,"source_pdf": source_pdf,
+        })
+        return baml_py.BamlStream[stream_types.PedagogyOverlay, types.PedagogyOverlay](
+          __result__,
+          lambda x: typing.cast(stream_types.PedagogyOverlay, x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(types.PedagogyOverlay, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
     def ExtractNaionraListing(self, page_markdown: str,
@@ -16686,6 +16875,13 @@ class BamlHttpRequestClient:
             "text": text,"language": language,
         }, mode="request")
         return __result__
+    async def ExtractComputerScienceLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractComputerScienceLearningGraph", args={
+            "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+        }, mode="request")
+        return __result__
     async def ExtractComputerScienceMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
@@ -16754,6 +16950,13 @@ class BamlHttpRequestClient:
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractCroatiaSubjectCurriculum", args={
             "nation": nation,"language": language,"subject": subject,"text": text,
+        }, mode="request")
+        return __result__
+    async def ExtractCrossJurisdictionEquivalencies(self, ncce_learning_graph_json: str,jurisdiction_text_map: str,equivalency_table_csv: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractCrossJurisdictionEquivalencies", args={
+            "ncce_learning_graph_json": ncce_learning_graph_json,"jurisdiction_text_map": jurisdiction_text_map,"equivalency_table_csv": equivalency_table_csv,
         }, mode="request")
         return __result__
     async def ExtractCrossLinguisticAnamDescription(self, anam_en: str,target_lang: str,
@@ -17071,6 +17274,13 @@ class BamlHttpRequestClient:
             "pdf_text": pdf_text,
         }, mode="request")
         return __result__
+    async def ExtractEnglishLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractEnglishLearningGraph", args={
+            "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+        }, mode="request")
+        return __result__
     async def ExtractEnglishMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
@@ -17253,6 +17463,13 @@ class BamlHttpRequestClient:
             "pdf_text": pdf_text,"subject": subject,"board": board,
         }, mode="request")
         return __result__
+    async def ExtractGaeilgeLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractGaeilgeLearningGraph", args={
+            "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+        }, mode="request")
+        return __result__
     async def ExtractGaeilgeMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
@@ -17307,6 +17524,13 @@ class BamlHttpRequestClient:
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractGeogSyllabus", args={
             "text": text,"language": language,
+        }, mode="request")
+        return __result__
+    async def ExtractGeographyLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractGeographyLearningGraph", args={
+            "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
         }, mode="request")
         return __result__
     async def ExtractGeographyMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
@@ -17862,6 +18086,13 @@ class BamlHttpRequestClient:
             "text": text,"language": language,
         }, mode="request")
         return __result__
+    async def ExtractMathematicsLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractMathematicsLearningGraph", args={
+            "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+        }, mode="request")
+        return __result__
     async def ExtractMathematicsMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
@@ -17993,6 +18224,13 @@ class BamlHttpRequestClient:
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractMythologicalStory", args={
             "text": text,
+        }, mode="request")
+        return __result__
+    async def ExtractNCCEPedagogyPrinciples(self, pdf_text: str,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractNCCEPedagogyPrinciples", args={
+            "pdf_text": pdf_text,"source_pdf": source_pdf,
         }, mode="request")
         return __result__
     async def ExtractNaionraListing(self, page_markdown: str,
@@ -20733,6 +20971,13 @@ class BamlHttpStreamRequestClient:
             "text": text,"language": language,
         }, mode="stream")
         return __result__
+    async def ExtractComputerScienceLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractComputerScienceLearningGraph", args={
+            "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+        }, mode="stream")
+        return __result__
     async def ExtractComputerScienceMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
@@ -20801,6 +21046,13 @@ class BamlHttpStreamRequestClient:
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractCroatiaSubjectCurriculum", args={
             "nation": nation,"language": language,"subject": subject,"text": text,
+        }, mode="stream")
+        return __result__
+    async def ExtractCrossJurisdictionEquivalencies(self, ncce_learning_graph_json: str,jurisdiction_text_map: str,equivalency_table_csv: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractCrossJurisdictionEquivalencies", args={
+            "ncce_learning_graph_json": ncce_learning_graph_json,"jurisdiction_text_map": jurisdiction_text_map,"equivalency_table_csv": equivalency_table_csv,
         }, mode="stream")
         return __result__
     async def ExtractCrossLinguisticAnamDescription(self, anam_en: str,target_lang: str,
@@ -21118,6 +21370,13 @@ class BamlHttpStreamRequestClient:
             "pdf_text": pdf_text,
         }, mode="stream")
         return __result__
+    async def ExtractEnglishLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractEnglishLearningGraph", args={
+            "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+        }, mode="stream")
+        return __result__
     async def ExtractEnglishMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
@@ -21300,6 +21559,13 @@ class BamlHttpStreamRequestClient:
             "pdf_text": pdf_text,"subject": subject,"board": board,
         }, mode="stream")
         return __result__
+    async def ExtractGaeilgeLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractGaeilgeLearningGraph", args={
+            "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+        }, mode="stream")
+        return __result__
     async def ExtractGaeilgeMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
@@ -21354,6 +21620,13 @@ class BamlHttpStreamRequestClient:
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractGeogSyllabus", args={
             "text": text,"language": language,
+        }, mode="stream")
+        return __result__
+    async def ExtractGeographyLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractGeographyLearningGraph", args={
+            "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
         }, mode="stream")
         return __result__
     async def ExtractGeographyMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
@@ -21909,6 +22182,13 @@ class BamlHttpStreamRequestClient:
             "text": text,"language": language,
         }, mode="stream")
         return __result__
+    async def ExtractMathematicsLearningGraph(self, pdf_text: str,year_level: types.UKNCCEYearLevel,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractMathematicsLearningGraph", args={
+            "pdf_text": pdf_text,"year_level": year_level,"source_pdf": source_pdf,
+        }, mode="stream")
+        return __result__
     async def ExtractMathematicsMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
@@ -22040,6 +22320,13 @@ class BamlHttpStreamRequestClient:
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractMythologicalStory", args={
             "text": text,
+        }, mode="stream")
+        return __result__
+    async def ExtractNCCEPedagogyPrinciples(self, pdf_text: str,source_pdf: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractNCCEPedagogyPrinciples", args={
+            "pdf_text": pdf_text,"source_pdf": source_pdf,
         }, mode="stream")
         return __result__
     async def ExtractNaionraListing(self, page_markdown: str,

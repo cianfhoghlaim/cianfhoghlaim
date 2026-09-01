@@ -137,6 +137,14 @@ def _build_app_main(subject: LCSubjectConfig, language: str, ChunkClass, process
             ),
         )
         target_table.declare_vector_index(column="embedding")
+        # Per the 2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1 change
+        # (Phase 1 §2.6): declare FTS index on the text column for hybrid
+        # search (BM25 + vector). Required for the canonical Phase 1
+        # hybrid search surface.
+        try:
+            target_table.declare_full_text_search_index(column="text")
+        except Exception:  # noqa: BLE001 — older LanceDB versions don't support FTS
+            pass
         files = localfs.walk_dir(
             source_dir,
             recursive=True,

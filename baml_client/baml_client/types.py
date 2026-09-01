@@ -37,7 +37,7 @@ def get_checks(checks: typing.Dict[CheckName, Check]) -> typing.List[Check]:
 def all_succeeded(checks: typing.Dict[CheckName, Check]) -> bool:
     return all(check.status == "succeeded" for check in get_checks(checks))
 # #########################################################################
-# Generated enums (280)
+# Generated enums (285)
 # #########################################################################
 
 class ALevelAQASubject(str, Enum):
@@ -1143,6 +1143,19 @@ class EquationConfidence(str, Enum):
     LOW = "LOW"
     UNREADABLE = "UNREADABLE"
 
+class EquivalencyJurisdiction(str, Enum):
+    UK_NCCE = "UK_NCCE"
+    IE_NCCA_LC = "IE_NCCA_LC"
+    IE_NCCA_JC = "IE_NCCA_JC"
+    EN_AQA_GCSE = "EN_AQA_GCSE"
+    EN_AQA_AL = "EN_AQA_AL"
+    SC_SQA_NQ = "SC_SQA_NQ"
+    WL_WJEC = "WL_WJEC"
+    NI_CCEA = "NI_CCEA"
+    JE_GSSE = "JE_GSSE"
+    GG_GSEG = "GG_GSEG"
+    IM_GSMI = "IM_GSMI"
+
 class EvidenceQuality(str, Enum):
     PRIMARY = "PRIMARY"
     SECONDARY = "SECONDARY"
@@ -2002,6 +2015,28 @@ class LeabharlannSubcorpus(str, Enum):
     ZOTERO = "ZOTERO"
     GEMINI_DEEP_RESEARCH = "GEMINI_DEEP_RESEARCH"
     UNKNOWN = "UNKNOWN"
+
+class LearningGraphPedagogyPrinciple(str, Enum):
+    ACTIVE_LEARNING = "ACTIVE_LEARNING"
+    SCAFFOLDING = "SCAFFOLDING"
+    DIFFERENTIATION = "DIFFERENTIATION"
+    FORMATIVE_ASSESSMENT = "FORMATIVE_ASSESSMENT"
+    METACOGNITION = "METACOGNITION"
+    SPACED_PRACTICE = "SPACED_PRACTICE"
+    INTERLEAVING = "INTERLEAVING"
+    DUAL_CODING = "DUAL_CODING"
+    RETRIEVAL_PRACTICE = "RETRIEVAL_PRACTICE"
+    ELABORATIVE_INTERROGATION = "ELABORATIVE_INTERROGATION"
+    CONCRETE_REPRESENTATIONAL = "CONCRETE_REPRESENTATIONAL"
+    WORKED_EXAMPLE_FADING = "WORKED_EXAMPLE_FADING"
+
+class LearningGraphSkillType(str, Enum):
+    KNOWLEDGE = "KNOWLEDGE"
+    SKILL = "SKILL"
+    APPLICATION = "APPLICATION"
+    REASONING = "REASONING"
+    CREATIVITY = "CREATIVITY"
+    META_COGNITION = "META_COGNITION"
 
 class LeavingCertSubject(str, Enum):
     LC_MATHS = "LC_MATHS"
@@ -3085,6 +3120,21 @@ class UIComponentKind(str, Enum):
     BILINGUAL_BLOCK = "BILINGUAL_BLOCK"
     CITATION_CHIP = "CITATION_CHIP"
 
+class UKNCCESubjectSlug(str, Enum):
+    COMPUTER_SCIENCE = "COMPUTER_SCIENCE"
+    MATHEMATICS = "MATHEMATICS"
+    ENGLISH = "ENGLISH"
+    GAEILGE = "GAEILGE"
+    GEOGRAPHY = "GEOGRAPHY"
+
+class UKNCCEYearLevel(str, Enum):
+    Y6 = "Y6"
+    Y7 = "Y7"
+    Y8 = "Y8"
+    Y9 = "Y9"
+    Y10 = "Y10"
+    Y11 = "Y11"
+
 class UKQuestionType(str, Enum):
     SHORT_ANSWER = "SHORT_ANSWER"
     EXTENDED_RESPONSE = "EXTENDED_RESPONSE"
@@ -3248,7 +3298,7 @@ class WJECSubject(str, Enum):
     OTHER = "OTHER"
 
 # #########################################################################
-# Generated classes (896)
+# Generated classes (906)
 # #########################################################################
 
 class ALevelAreaTopic(BaseModel):
@@ -4858,6 +4908,13 @@ class CrossJurisdictionBridge(BaseModel):
     display_name: str
     notes: typing.Optional[str] = None
 
+class CrossJurisdictionEquivalency(BaseModel):
+    source_cell: "EquivalencyCell"
+    target_cells: typing.List["EquivalencyCell"] = Field(description='All equivalent cells across other jurisdictions')
+    rationale: str = Field(description='Why these cells are equivalent')
+    confidence: float = Field(description='0.0-1.0')
+    bidirectional: bool = Field(description='True if the equivalency holds in both directions')
+
 class CrossNationComparison(BaseModel):
     comparison_id: str
     subject: str
@@ -5884,6 +5941,19 @@ class EnsemblePathOutput(BaseModel):
     ragas_faithfulness: typing.Optional[float] = None
     ragas_answer_relevance: typing.Optional[float] = None
     ragas_context_precision: typing.Optional[float] = None
+
+class EquivalencyCell(BaseModel):
+    source_jurisdiction: EquivalencyJurisdiction
+    source_lo_code: str = Field(description='The source cell\'s LO code (e.g. \'UK-NCCE-CS-Y8-3.2\')')
+    source_outcome_text: str = Field(description='The source cell\'s outcome text')
+    source_year_level: typing.Optional[str] = Field(default=None, description='e.g. \'Y8\', \'LC_OL\', \'GCSE\'')
+    source_subject: str = Field(description='e.g. \'computer_science\', \'mathematics\'')
+
+class EquivalencyGraph(BaseModel):
+    equivalencies: typing.List["CrossJurisdictionEquivalency"]
+    total_cells: int
+    total_jurisdictions: int
+    generated_at: str = Field(description='ISO-8601 timestamp')
 
 class EstoniaHealthGuidance(BaseModel):
     agency: str = Field(description='The publishing agency (e.g. NIPH, EODY, NIJZ)')
@@ -7932,6 +8002,43 @@ class LeabharlannDoc(BaseModel):
     references_uog_codes: typing.List[str] = Field(description='UoG course codes referenced by this document; empty if none detected')
     confidence: float = Field(description='Overall LLM self-rated confidence 0.0-1.0')
 
+class LearningGraph(BaseModel):
+    subject: UKNCCESubjectSlug
+    year_level: UKNCCEYearLevel
+    title: str = Field(description='The NCCE learning-graph title')
+    source_pdf: str = Field(description='Path to the canonical NCCE PDF')
+    rows: typing.List["LearningGraphRow"]
+    columns: typing.List["LearningGraphColumn"]
+    cells: typing.List["LearningGraphCell"]
+    prerequisites: typing.List["LearningGraphPrerequisite"]
+    total_lessons: int
+    total_skills: int
+
+class LearningGraphCell(BaseModel):
+    row_index: int = Field(description='1-indexed grid row (skill dimension)')
+    col_index: int = Field(description='1-indexed grid column (lesson dimension)')
+    skill_type: LearningGraphSkillType
+    outcome_text: str = Field(description='What the student knows/can do at this intersection')
+    pedagogy_principles: typing.List[LearningGraphPedagogyPrinciple] = Field(description='NCCE pedagogy principles applied at this cell')
+    lo_code: typing.Optional[str] = Field(default=None, description='Mapped to the cross-jurisdiction LO code where applicable')
+
+class LearningGraphColumn(BaseModel):
+    col_index: int
+    lesson_number: int = Field(description='Lesson number within the unit')
+    lesson_title: str
+    lesson_topic: str
+
+class LearningGraphPrerequisite(BaseModel):
+    from_lo_code: str
+    to_lo_code: str
+    rationale: str
+
+class LearningGraphRow(BaseModel):
+    row_index: int
+    skill_type: LearningGraphSkillType
+    skill_name: str
+    skill_description: str
+
 class LearningOutcome(BaseModel):
     model_config = ConfigDict(extra='allow')
     code: str = Field(description='Unique outcome identifier, e.g., \'LO-MATH-JC-2.1\'')
@@ -9418,6 +9525,17 @@ class PastPaperStorage(BaseModel):
     page_count: int
     topics: typing.List[str] = Field(description='List of NCCA LO codes covered')
     marking_scheme_key: typing.Optional[str] = Field(default=None, description='The R2 key for the marking scheme PDF')
+
+class PedagogyOverlay(BaseModel):
+    source_pdf: str
+    principles: typing.List["PedagogyPrincipleDetail"]
+    total_principles: int
+
+class PedagogyPrincipleDetail(BaseModel):
+    principle: LearningGraphPedagogyPrinciple
+    description: str = Field(description='2-3 sentence description')
+    justification: str = Field(description='Why this principle matters for computing/maths/English')
+    worked_examples: typing.List[str] = Field(description='2-3 worked examples from the source PDF')
 
 class PedagogySet(BaseModel):
     introduction: "BilingualTextRootPdf"
@@ -12014,7 +12132,7 @@ TopicExtraction: typing_extensions.TypeAlias = "LCTopicExtraction"
 
 
 # #########################################################################
-# Model rebuilds (890)
+# Model rebuilds (900)
 # #########################################################################
 # Resolve string forward references now that every model above is defined so
 # class declaration order never breaks Pydantic construction (issue #793).
@@ -12193,6 +12311,7 @@ CroatiaHealthGuidance.model_rebuild()
 CroatiaStatute.model_rebuild()
 CroatiaSubjectCurriculum.model_rebuild()
 CrossJurisdictionBridge.model_rebuild()
+CrossJurisdictionEquivalency.model_rebuild()
 CrossNationComparison.model_rebuild()
 CrossNationCurriculumSpec.model_rebuild()
 CrossNationLearningOutcome.model_rebuild()
@@ -12290,6 +12409,8 @@ EnglishWebStudyPlanResponse.model_rebuild()
 EnhancedLearningOutcome.model_rebuild()
 EnsembleConsensus.model_rebuild()
 EnsemblePathOutput.model_rebuild()
+EquivalencyCell.model_rebuild()
+EquivalencyGraph.model_rebuild()
 EstoniaHealthGuidance.model_rebuild()
 EstoniaStatute.model_rebuild()
 EstoniaSubjectCurriculum.model_rebuild()
@@ -12502,6 +12623,11 @@ LatviaStatute.model_rebuild()
 LatviaSubjectCurriculum.model_rebuild()
 LayoutFingerprint.model_rebuild()
 LeabharlannDoc.model_rebuild()
+LearningGraph.model_rebuild()
+LearningGraphCell.model_rebuild()
+LearningGraphColumn.model_rebuild()
+LearningGraphPrerequisite.model_rebuild()
+LearningGraphRow.model_rebuild()
 LearningOutcome.model_rebuild()
 LeavingCertSyllabus.model_rebuild()
 LecturerInfo.model_rebuild()
@@ -12654,6 +12780,8 @@ PastExamQuestion.model_rebuild()
 PastPaper.model_rebuild()
 PastPaperRef.model_rebuild()
 PastPaperStorage.model_rebuild()
+PedagogyOverlay.model_rebuild()
+PedagogyPrincipleDetail.model_rebuild()
 PedagogySet.model_rebuild()
 PersonEntity.model_rebuild()
 PhoneticFeature.model_rebuild()

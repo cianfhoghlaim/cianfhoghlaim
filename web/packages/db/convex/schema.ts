@@ -261,7 +261,35 @@ export const subject_caches = defineTable({
   .index("by_board_year", ["board", "year"])
   .index("by_language", ["language"]);
 
-// ─── The canonical Cianfhoghlaim schema ────────────────────────────────────
+// ─── 7. ncce_learning_graphs (the Phase 4 NCCE showcase) ──────────────────
+//
+// Per the 2026-09-01-cianfhoghlaim-nua-biep-ncce-showcase-v1 change
+// (Phase 4 of the cianfhoghlaim-nua v6 era plan). One row per
+// extracted NCCE learning graph (the 5 NCCE PDF artefacts lifted
+// from the gemini_hackathon sister repo + the 6 per-subject
+// extractors in baml_src/british_isles/uk_ncce/learning_graph.baml).
+
+export const ncce_learning_graphs = defineTable({
+  subject: v.string(),  // "computer_science", "mathematics", "english", "gaeilge", "geography"
+  year_level: v.string(),  // "Y6", "Y7", "Y8", "Y9", "Y10", "Y11"
+  title: v.string(),
+  source_pdf: v.string(),
+  rows_json: v.array(v.record(v.string(), v.any())),
+  columns_json: v.array(v.record(v.string(), v.any())),
+  cells_json: v.array(v.record(v.string(), v.any())),
+  prerequisites_json: v.array(v.record(v.string(), v.any())),
+  total_lessons: v.number(),
+  total_skills: v.number(),
+  pedagogy_principles_json: v.array(v.record(v.string(), v.any())),
+  // The pedagogy overlay (Phase 4 §B)
+  pedagogy_overlay_json: v.optional(v.record(v.string(), v.any())),
+  // The equivalency graph (Phase 4 §C)
+  equivalencies_json: v.optional(v.array(v.record(v.string(), v.any()))),
+  created_at: v.number(),
+})
+  .index("by_subject", ["subject"])
+  .index("by_year_level", ["year_level"])
+  .index("by_subject_year", ["subject", "year_level"]);
 
 // ─── 8. study_plans (chat-with-syllabus → study-plan surface) ─────────────
 //
@@ -424,6 +452,7 @@ export default defineSchema({
   messages,
   knowledge_graph_nodes,
   subject_caches,
+  ncce_learning_graphs,
   study_plans,
   quest_packs,
   oral_study_plans,

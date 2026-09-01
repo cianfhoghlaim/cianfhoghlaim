@@ -535,6 +535,9 @@ type_map = {
     "types.CrossJurisdictionBridge": types.CrossJurisdictionBridge,
     "stream_types.CrossJurisdictionBridge": stream_types.CrossJurisdictionBridge,
 
+    "types.CrossJurisdictionEquivalency": types.CrossJurisdictionEquivalency,
+    "stream_types.CrossJurisdictionEquivalency": stream_types.CrossJurisdictionEquivalency,
+
     "types.CrossNationComparison": types.CrossNationComparison,
     "stream_types.CrossNationComparison": stream_types.CrossNationComparison,
 
@@ -825,6 +828,12 @@ type_map = {
 
     "types.EnsemblePathOutput": types.EnsemblePathOutput,
     "stream_types.EnsemblePathOutput": stream_types.EnsemblePathOutput,
+
+    "types.EquivalencyCell": types.EquivalencyCell,
+    "stream_types.EquivalencyCell": stream_types.EquivalencyCell,
+
+    "types.EquivalencyGraph": types.EquivalencyGraph,
+    "stream_types.EquivalencyGraph": stream_types.EquivalencyGraph,
 
     "types.EstoniaHealthGuidance": types.EstoniaHealthGuidance,
     "stream_types.EstoniaHealthGuidance": stream_types.EstoniaHealthGuidance,
@@ -1477,6 +1486,21 @@ type_map = {
     "types.LeabharlannDoc": types.LeabharlannDoc,
     "stream_types.LeabharlannDoc": stream_types.LeabharlannDoc,
 
+    "types.LearningGraph": types.LearningGraph,
+    "stream_types.LearningGraph": stream_types.LearningGraph,
+
+    "types.LearningGraphCell": types.LearningGraphCell,
+    "stream_types.LearningGraphCell": stream_types.LearningGraphCell,
+
+    "types.LearningGraphColumn": types.LearningGraphColumn,
+    "stream_types.LearningGraphColumn": stream_types.LearningGraphColumn,
+
+    "types.LearningGraphPrerequisite": types.LearningGraphPrerequisite,
+    "stream_types.LearningGraphPrerequisite": stream_types.LearningGraphPrerequisite,
+
+    "types.LearningGraphRow": types.LearningGraphRow,
+    "stream_types.LearningGraphRow": stream_types.LearningGraphRow,
+
     "types.LearningOutcome": types.LearningOutcome,
     "stream_types.LearningOutcome": stream_types.LearningOutcome,
 
@@ -1932,6 +1956,12 @@ type_map = {
 
     "types.PastPaperStorage": types.PastPaperStorage,
     "stream_types.PastPaperStorage": stream_types.PastPaperStorage,
+
+    "types.PedagogyOverlay": types.PedagogyOverlay,
+    "stream_types.PedagogyOverlay": stream_types.PedagogyOverlay,
+
+    "types.PedagogyPrincipleDetail": types.PedagogyPrincipleDetail,
+    "stream_types.PedagogyPrincipleDetail": stream_types.PedagogyPrincipleDetail,
 
     "types.PedagogySet": types.PedagogySet,
     "stream_types.PedagogySet": stream_types.PedagogySet,
@@ -2899,6 +2929,8 @@ type_map = {
 
     "types.EquationConfidence": types.EquationConfidence,
 
+    "types.EquivalencyJurisdiction": types.EquivalencyJurisdiction,
+
     "types.EvidenceQuality": types.EvidenceQuality,
 
     "types.ExamBoard": types.ExamBoard,
@@ -3050,6 +3082,10 @@ type_map = {
     "types.LeabharlannLanguage": types.LeabharlannLanguage,
 
     "types.LeabharlannSubcorpus": types.LeabharlannSubcorpus,
+
+    "types.LearningGraphPedagogyPrinciple": types.LearningGraphPedagogyPrinciple,
+
+    "types.LearningGraphSkillType": types.LearningGraphSkillType,
 
     "types.LeavingCertSubject": types.LeavingCertSubject,
 
@@ -3230,6 +3266,10 @@ type_map = {
     "types.TranscriptionConfidence": types.TranscriptionConfidence,
 
     "types.UIComponentKind": types.UIComponentKind,
+
+    "types.UKNCCESubjectSlug": types.UKNCCESubjectSlug,
+
+    "types.UKNCCEYearLevel": types.UKNCCEYearLevel,
 
     "types.UKQuestionType": types.UKQuestionType,
 

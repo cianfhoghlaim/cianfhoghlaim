@@ -887,6 +887,12 @@ class LlmResponseParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractCompSyllabus", llm_response=llm_response, mode="request")
         return typing.cast(types.LCSyllabus, __result__)
 
+    def ExtractComputerScienceLearningGraph(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.LearningGraph:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractComputerScienceLearningGraph", llm_response=llm_response, mode="request")
+        return typing.cast(types.LearningGraph, __result__)
+
     def ExtractComputerScienceMarkingScheme(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> types.ComputerScienceMarkingScheme:
@@ -946,6 +952,12 @@ class LlmResponseParser:
     ) -> types.CroatiaSubjectCurriculum:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractCroatiaSubjectCurriculum", llm_response=llm_response, mode="request")
         return typing.cast(types.CroatiaSubjectCurriculum, __result__)
+
+    def ExtractCrossJurisdictionEquivalencies(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.EquivalencyGraph:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractCrossJurisdictionEquivalencies", llm_response=llm_response, mode="request")
+        return typing.cast(types.EquivalencyGraph, __result__)
 
     def ExtractCrossLinguisticAnamDescription(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -1217,6 +1229,12 @@ class LlmResponseParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractEnglandUnstractPath", llm_response=llm_response, mode="request")
         return typing.cast(types.EnsemblePathOutput, __result__)
 
+    def ExtractEnglishLearningGraph(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.LearningGraph:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractEnglishLearningGraph", llm_response=llm_response, mode="request")
+        return typing.cast(types.LearningGraph, __result__)
+
     def ExtractEnglishMarkingScheme(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> types.EnglishMarkingScheme:
@@ -1373,6 +1391,12 @@ class LlmResponseParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractGCSESyllabusDiagram", llm_response=llm_response, mode="request")
         return typing.cast(types.GCSESyllabusDiagram, __result__)
 
+    def ExtractGaeilgeLearningGraph(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.LearningGraph:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractGaeilgeLearningGraph", llm_response=llm_response, mode="request")
+        return typing.cast(types.LearningGraph, __result__)
+
     def ExtractGaeilgeMarkingScheme(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> types.GaeilgeMarkingScheme:
@@ -1420,6 +1444,12 @@ class LlmResponseParser:
     ) -> types.LCSyllabus:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractGeogSyllabus", llm_response=llm_response, mode="request")
         return typing.cast(types.LCSyllabus, __result__)
+
+    def ExtractGeographyLearningGraph(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.LearningGraph:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractGeographyLearningGraph", llm_response=llm_response, mode="request")
+        return typing.cast(types.LearningGraph, __result__)
 
     def ExtractGeographyMarkingScheme(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -1895,6 +1925,12 @@ class LlmResponseParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractMathSyllabus", llm_response=llm_response, mode="request")
         return typing.cast(types.LCSyllabus, __result__)
 
+    def ExtractMathematicsLearningGraph(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.LearningGraph:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractMathematicsLearningGraph", llm_response=llm_response, mode="request")
+        return typing.cast(types.LearningGraph, __result__)
+
     def ExtractMathematicsMarkingScheme(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> types.MathematicsMarkingScheme:
@@ -2008,6 +2044,12 @@ class LlmResponseParser:
     ) -> types.MythologicalStory:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractMythologicalStory", llm_response=llm_response, mode="request")
         return typing.cast(types.MythologicalStory, __result__)
+
+    def ExtractNCCEPedagogyPrinciples(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.PedagogyOverlay:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractNCCEPedagogyPrinciples", llm_response=llm_response, mode="request")
+        return typing.cast(types.PedagogyOverlay, __result__)
 
     def ExtractNaionraListing(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -4357,6 +4399,12 @@ class LlmStreamParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractCompSyllabus", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.LCSyllabus, __result__)
 
+    def ExtractComputerScienceLearningGraph(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.LearningGraph:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractComputerScienceLearningGraph", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.LearningGraph, __result__)
+
     def ExtractComputerScienceMarkingScheme(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> stream_types.ComputerScienceMarkingScheme:
@@ -4416,6 +4464,12 @@ class LlmStreamParser:
     ) -> stream_types.CroatiaSubjectCurriculum:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractCroatiaSubjectCurriculum", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.CroatiaSubjectCurriculum, __result__)
+
+    def ExtractCrossJurisdictionEquivalencies(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.EquivalencyGraph:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractCrossJurisdictionEquivalencies", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.EquivalencyGraph, __result__)
 
     def ExtractCrossLinguisticAnamDescription(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -4687,6 +4741,12 @@ class LlmStreamParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractEnglandUnstractPath", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.EnsemblePathOutput, __result__)
 
+    def ExtractEnglishLearningGraph(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.LearningGraph:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractEnglishLearningGraph", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.LearningGraph, __result__)
+
     def ExtractEnglishMarkingScheme(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> stream_types.EnglishMarkingScheme:
@@ -4843,6 +4903,12 @@ class LlmStreamParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractGCSESyllabusDiagram", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.GCSESyllabusDiagram, __result__)
 
+    def ExtractGaeilgeLearningGraph(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.LearningGraph:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractGaeilgeLearningGraph", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.LearningGraph, __result__)
+
     def ExtractGaeilgeMarkingScheme(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> stream_types.GaeilgeMarkingScheme:
@@ -4890,6 +4956,12 @@ class LlmStreamParser:
     ) -> stream_types.LCSyllabus:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractGeogSyllabus", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.LCSyllabus, __result__)
+
+    def ExtractGeographyLearningGraph(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.LearningGraph:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractGeographyLearningGraph", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.LearningGraph, __result__)
 
     def ExtractGeographyMarkingScheme(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -5365,6 +5437,12 @@ class LlmStreamParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractMathSyllabus", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.LCSyllabus, __result__)
 
+    def ExtractMathematicsLearningGraph(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.LearningGraph:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractMathematicsLearningGraph", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.LearningGraph, __result__)
+
     def ExtractMathematicsMarkingScheme(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> stream_types.MathematicsMarkingScheme:
@@ -5478,6 +5556,12 @@ class LlmStreamParser:
     ) -> stream_types.MythologicalStory:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractMythologicalStory", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.MythologicalStory, __result__)
+
+    def ExtractNCCEPedagogyPrinciples(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.PedagogyOverlay:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractNCCEPedagogyPrinciples", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.PedagogyOverlay, __result__)
 
     def ExtractNaionraListing(
         self, llm_response: str, baml_options: BamlCallOptions = {},

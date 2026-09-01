@@ -23,7 +23,7 @@ class StreamState(BaseModel, typing.Generic[StreamStateValueT]):
     value: StreamStateValueT
     state: typing_extensions.Literal["Pending", "Incomplete", "Complete"]
 # #########################################################################
-# Generated classes (896)
+# Generated classes (906)
 # #########################################################################
 
 class ALevelAreaTopic(BaseModel):
@@ -1633,6 +1633,13 @@ class CrossJurisdictionBridge(BaseModel):
     display_name: typing.Optional[str] = None
     notes: typing.Optional[str] = None
 
+class CrossJurisdictionEquivalency(BaseModel):
+    source_cell: typing.Optional["EquivalencyCell"] = None
+    target_cells: typing.List["EquivalencyCell"] = Field(description='All equivalent cells across other jurisdictions')
+    rationale: typing.Optional[str] = Field(default=None, description='Why these cells are equivalent')
+    confidence: typing.Optional[float] = Field(default=None, description='0.0-1.0')
+    bidirectional: typing.Optional[bool] = Field(default=None, description='True if the equivalency holds in both directions')
+
 class CrossNationComparison(BaseModel):
     comparison_id: typing.Optional[str] = None
     subject: typing.Optional[str] = None
@@ -2659,6 +2666,19 @@ class EnsemblePathOutput(BaseModel):
     ragas_faithfulness: typing.Optional[float] = None
     ragas_answer_relevance: typing.Optional[float] = None
     ragas_context_precision: typing.Optional[float] = None
+
+class EquivalencyCell(BaseModel):
+    source_jurisdiction: typing.Optional[types.EquivalencyJurisdiction] = None
+    source_lo_code: typing.Optional[str] = Field(default=None, description='The source cell\'s LO code (e.g. \'UK-NCCE-CS-Y8-3.2\')')
+    source_outcome_text: typing.Optional[str] = Field(default=None, description='The source cell\'s outcome text')
+    source_year_level: typing.Optional[str] = Field(default=None, description='e.g. \'Y8\', \'LC_OL\', \'GCSE\'')
+    source_subject: typing.Optional[str] = Field(default=None, description='e.g. \'computer_science\', \'mathematics\'')
+
+class EquivalencyGraph(BaseModel):
+    equivalencies: typing.List["CrossJurisdictionEquivalency"]
+    total_cells: typing.Optional[int] = None
+    total_jurisdictions: typing.Optional[int] = None
+    generated_at: typing.Optional[str] = Field(default=None, description='ISO-8601 timestamp')
 
 class EstoniaHealthGuidance(BaseModel):
     agency: typing.Optional[str] = Field(default=None, description='The publishing agency (e.g. NIPH, EODY, NIJZ)')
@@ -4707,6 +4727,43 @@ class LeabharlannDoc(BaseModel):
     references_uog_codes: typing.List[str] = Field(description='UoG course codes referenced by this document; empty if none detected')
     confidence: typing.Optional[float] = Field(default=None, description='Overall LLM self-rated confidence 0.0-1.0')
 
+class LearningGraph(BaseModel):
+    subject: typing.Optional[types.UKNCCESubjectSlug] = None
+    year_level: typing.Optional[types.UKNCCEYearLevel] = None
+    title: typing.Optional[str] = Field(default=None, description='The NCCE learning-graph title')
+    source_pdf: typing.Optional[str] = Field(default=None, description='Path to the canonical NCCE PDF')
+    rows: typing.List["LearningGraphRow"]
+    columns: typing.List["LearningGraphColumn"]
+    cells: typing.List["LearningGraphCell"]
+    prerequisites: typing.List["LearningGraphPrerequisite"]
+    total_lessons: typing.Optional[int] = None
+    total_skills: typing.Optional[int] = None
+
+class LearningGraphCell(BaseModel):
+    row_index: typing.Optional[int] = Field(default=None, description='1-indexed grid row (skill dimension)')
+    col_index: typing.Optional[int] = Field(default=None, description='1-indexed grid column (lesson dimension)')
+    skill_type: typing.Optional[types.LearningGraphSkillType] = None
+    outcome_text: typing.Optional[str] = Field(default=None, description='What the student knows/can do at this intersection')
+    pedagogy_principles: typing.List[types.LearningGraphPedagogyPrinciple] = Field(description='NCCE pedagogy principles applied at this cell')
+    lo_code: typing.Optional[str] = Field(default=None, description='Mapped to the cross-jurisdiction LO code where applicable')
+
+class LearningGraphColumn(BaseModel):
+    col_index: typing.Optional[int] = None
+    lesson_number: typing.Optional[int] = Field(default=None, description='Lesson number within the unit')
+    lesson_title: typing.Optional[str] = None
+    lesson_topic: typing.Optional[str] = None
+
+class LearningGraphPrerequisite(BaseModel):
+    from_lo_code: typing.Optional[str] = None
+    to_lo_code: typing.Optional[str] = None
+    rationale: typing.Optional[str] = None
+
+class LearningGraphRow(BaseModel):
+    row_index: typing.Optional[int] = None
+    skill_type: typing.Optional[types.LearningGraphSkillType] = None
+    skill_name: typing.Optional[str] = None
+    skill_description: typing.Optional[str] = None
+
 class LearningOutcome(BaseModel):
     model_config = ConfigDict(extra='allow')
     code: typing.Optional[str] = Field(default=None, description='Unique outcome identifier, e.g., \'LO-MATH-JC-2.1\'')
@@ -6193,6 +6250,17 @@ class PastPaperStorage(BaseModel):
     page_count: typing.Optional[int] = None
     topics: typing.List[str] = Field(description='List of NCCA LO codes covered')
     marking_scheme_key: typing.Optional[str] = Field(default=None, description='The R2 key for the marking scheme PDF')
+
+class PedagogyOverlay(BaseModel):
+    source_pdf: typing.Optional[str] = None
+    principles: typing.List["PedagogyPrincipleDetail"]
+    total_principles: typing.Optional[int] = None
+
+class PedagogyPrincipleDetail(BaseModel):
+    principle: typing.Optional[types.LearningGraphPedagogyPrinciple] = None
+    description: typing.Optional[str] = Field(default=None, description='2-3 sentence description')
+    justification: typing.Optional[str] = Field(default=None, description='Why this principle matters for computing/maths/English')
+    worked_examples: typing.List[str] = Field(description='2-3 worked examples from the source PDF')
 
 class PedagogySet(BaseModel):
     introduction: typing.Optional["BilingualTextRootPdf"] = None
@@ -8789,7 +8857,7 @@ TopicExtraction: typing_extensions.TypeAlias = typing.Optional["LCTopicExtractio
 
 
 # #########################################################################
-# Model rebuilds (890)
+# Model rebuilds (900)
 # #########################################################################
 # Resolve string forward references now that every model above is defined so
 # class declaration order never breaks Pydantic construction (issue #793).
@@ -8968,6 +9036,7 @@ CroatiaHealthGuidance.model_rebuild()
 CroatiaStatute.model_rebuild()
 CroatiaSubjectCurriculum.model_rebuild()
 CrossJurisdictionBridge.model_rebuild()
+CrossJurisdictionEquivalency.model_rebuild()
 CrossNationComparison.model_rebuild()
 CrossNationCurriculumSpec.model_rebuild()
 CrossNationLearningOutcome.model_rebuild()
@@ -9065,6 +9134,8 @@ EnglishWebStudyPlanResponse.model_rebuild()
 EnhancedLearningOutcome.model_rebuild()
 EnsembleConsensus.model_rebuild()
 EnsemblePathOutput.model_rebuild()
+EquivalencyCell.model_rebuild()
+EquivalencyGraph.model_rebuild()
 EstoniaHealthGuidance.model_rebuild()
 EstoniaStatute.model_rebuild()
 EstoniaSubjectCurriculum.model_rebuild()
@@ -9277,6 +9348,11 @@ LatviaStatute.model_rebuild()
 LatviaSubjectCurriculum.model_rebuild()
 LayoutFingerprint.model_rebuild()
 LeabharlannDoc.model_rebuild()
+LearningGraph.model_rebuild()
+LearningGraphCell.model_rebuild()
+LearningGraphColumn.model_rebuild()
+LearningGraphPrerequisite.model_rebuild()
+LearningGraphRow.model_rebuild()
 LearningOutcome.model_rebuild()
 LeavingCertSyllabus.model_rebuild()
 LecturerInfo.model_rebuild()
@@ -9429,6 +9505,8 @@ PastExamQuestion.model_rebuild()
 PastPaper.model_rebuild()
 PastPaperRef.model_rebuild()
 PastPaperStorage.model_rebuild()
+PedagogyOverlay.model_rebuild()
+PedagogyPrincipleDetail.model_rebuild()
 PedagogySet.model_rebuild()
 PersonEntity.model_rebuild()
 PhoneticFeature.model_rebuild()
