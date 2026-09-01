@@ -1,0 +1,34 @@
+{
+  "name": "@cianfhoghlaim/cianfhoghlaim-nua",
+  "version": "2026-09-01.v1",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "vite dev --port 3087",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo ok"
+  },
+  "dependencies": {
+    "@cianfhoghlaim/a2ui": "workspace:*",
+    "@cianfhoghlaim/contracts": "workspace:*",
+    "@cianfhoghlaim/i18n": "workspace:*",
+    "@cianfhoghlaim/ui-kit": "workspace:*",
+    "@copilotkit/react-core": "^1.69.3",
+    "@copilotkit/react-ui": "^1.69.3",
+    "@copilotkit/a2ui-renderer": "^1.69.3",
+    "@tanstack/react-router": "^1.95.0",
+    "@tanstack/react-start": "^1.95.0",
+    "convex": "^1.17.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.7.0",
+    "vite": "^7.0.0"
+  }
+}
