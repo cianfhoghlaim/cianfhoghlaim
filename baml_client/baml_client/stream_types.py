@@ -23,7 +23,7 @@ class StreamState(BaseModel, typing.Generic[StreamStateValueT]):
     value: StreamStateValueT
     state: typing_extensions.Literal["Pending", "Incomplete", "Complete"]
 # #########################################################################
-# Generated classes (908)
+# Generated classes (924)
 # #########################################################################
 
 class ALevelAreaTopic(BaseModel):
@@ -239,6 +239,24 @@ class AcademicModuleDescriptor(BaseModel):
     ects: typing.Optional[int] = Field(default=None, description='ECTS credit value')
     source_url: typing.Optional[str] = Field(default=None, description='URL the descriptor was extracted from')
     confidence: typing.Optional[float] = Field(default=None, description='Overall extraction confidence 0.0-1.0')
+
+class AccountingMarkingScheme(BaseModel):
+    subject: typing.Optional[str] = Field(default=None, description='Always \'accounting\'')
+    scheme_code: typing.Optional[str] = None
+    language: typing.Optional[str] = Field(default=None, description='EN (taught in English)')
+    level: typing.Optional[str] = Field(default=None, description='HL / OL')
+    year: typing.Optional[int] = None
+    source_pdf: typing.Optional[str] = None
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: typing.Optional["AccountingSubjectDiscriminator"] = None
+    total_marks: typing.Optional[int] = None
+    total_questions: typing.Optional[int] = None
+
+class AccountingSubjectDiscriminator(BaseModel):
+    primary_topic: typing.Optional[str] = Field(default=None, description='Main  topic tested')
+    dominant_question_types: typing.List[types.AccountingQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: typing.Optional[types.AccountingCommonMistake] = None
 
 class AdaptiveAssessment(BaseModel):
     assessment_id: typing.Optional[str] = None
@@ -470,6 +488,24 @@ class ApplicationTimeline(BaseModel):
     offer_round_2: typing.Optional[str] = None
     registration_open: typing.Optional[str] = None
 
+class AppliedMathsMarkingScheme(BaseModel):
+    subject: typing.Optional[str] = Field(default=None, description='Always \'applied_mathematics\'')
+    scheme_code: typing.Optional[str] = None
+    language: typing.Optional[str] = Field(default=None, description='EN (taught in English)')
+    level: typing.Optional[str] = Field(default=None, description='HL / OL')
+    year: typing.Optional[int] = None
+    source_pdf: typing.Optional[str] = None
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: typing.Optional["AppliedMathsSubjectDiscriminator"] = None
+    total_marks: typing.Optional[int] = None
+    total_questions: typing.Optional[int] = None
+
+class AppliedMathsSubjectDiscriminator(BaseModel):
+    primary_topic: typing.Optional[str] = Field(default=None, description='Main  topic tested')
+    dominant_question_types: typing.List[types.AppliedMathsQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: typing.Optional[types.AppliedMathsCommonMistake] = None
+
 class Apprenticeship(BaseModel):
     programme_code: typing.Optional[str] = None
     title_en: typing.Optional[str] = None
@@ -501,6 +537,24 @@ class ArmourOfClochur(BaseModel):
     rationale_en: typing.Optional[str] = Field(default=None, description='Why this treasure maps to History')
     rationale_ga: typing.Optional[str] = Field(default=None, description='Irish-language rationale; null if unattested')
     mmo_signal: typing.Optional[str] = Field(default=None, description='How the Cianfhoghlaim Educational MMO lights this up')
+
+class ArtMarkingScheme(BaseModel):
+    subject: typing.Optional[str] = Field(default=None, description='Always \'art\'')
+    scheme_code: typing.Optional[str] = None
+    language: typing.Optional[str] = Field(default=None, description='EN (taught in English)')
+    level: typing.Optional[str] = Field(default=None, description='HL / OL')
+    year: typing.Optional[int] = None
+    source_pdf: typing.Optional[str] = None
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: typing.Optional["ArtSubjectDiscriminator"] = None
+    total_marks: typing.Optional[int] = None
+    total_questions: typing.Optional[int] = None
+
+class ArtSubjectDiscriminator(BaseModel):
+    primary_topic: typing.Optional[str] = Field(default=None, description='Main  topic tested')
+    dominant_question_types: typing.List[types.ArtQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: typing.Optional[types.ArtCommonMistake] = None
 
 class ArtworkAnalysis(BaseModel):
     description: typing.Optional[str] = Field(default=None, description='2-3 sentence description of the artwork')
@@ -880,6 +934,24 @@ class BulgariaSubjectCurriculum(BaseModel):
     exam_board: typing.Optional[str] = Field(default=None, description='Awarding body / ministry (e.g. MŠMT, MŠMTŠ, OH, NÚCEM)')
     source_url: typing.Optional[str] = None
     content_hash: typing.Optional[str] = None
+
+class BusinessMarkingScheme(BaseModel):
+    subject: typing.Optional[str] = Field(default=None, description='Always \'business\'')
+    scheme_code: typing.Optional[str] = None
+    language: typing.Optional[str] = Field(default=None, description='EN (taught in English)')
+    level: typing.Optional[str] = Field(default=None, description='HL / OL')
+    year: typing.Optional[int] = None
+    source_pdf: typing.Optional[str] = None
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: typing.Optional["BusinessSubjectDiscriminator"] = None
+    total_marks: typing.Optional[int] = None
+    total_questions: typing.Optional[int] = None
+
+class BusinessSubjectDiscriminator(BaseModel):
+    primary_topic: typing.Optional[str] = Field(default=None, description='Main  topic tested')
+    dominant_question_types: typing.List[types.BusinessQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: typing.Optional[types.BusinessCommonMistake] = None
 
 class CBATask(BaseModel):
     name_en: typing.Optional[str] = None
@@ -3057,6 +3129,24 @@ class FranceMedicineDocument(BaseModel):
     source_url: typing.Optional[str] = None
     content_hash: typing.Optional[str] = None
 
+class FrenchMarkingScheme(BaseModel):
+    subject: typing.Optional[str] = Field(default=None, description='Always \'french\'')
+    scheme_code: typing.Optional[str] = None
+    language: typing.Optional[str] = Field(default=None, description='EN (taught in English)')
+    level: typing.Optional[str] = Field(default=None, description='HL / OL')
+    year: typing.Optional[int] = None
+    source_pdf: typing.Optional[str] = None
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: typing.Optional["FrenchSubjectDiscriminator"] = None
+    total_marks: typing.Optional[int] = None
+    total_questions: typing.Optional[int] = None
+
+class FrenchSubjectDiscriminator(BaseModel):
+    primary_topic: typing.Optional[str] = Field(default=None, description='Main  topic tested')
+    dominant_question_types: typing.List[types.FrenchQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: typing.Optional[types.FrenchCommonMistake] = None
+
 class GCSEAreaTopic(BaseModel):
     topic_id: typing.Optional[str] = Field(default=None, description='Awarding-body topic code (e.g. \'GCSE-MATH-TOPIC-001\')')
     topic_name: typing.Optional[str] = None
@@ -3911,6 +4001,24 @@ class HiddenHeritagesTale(BaseModel):
     topics: typing.List[types.FolkloreTopic] = Field(description='Thematic topic tags')
     related_tales: typing.Optional[typing.List[str]] = Field(default=None, description='IDs of related tales')
     same_informant_tales: typing.Optional[typing.List[str]] = Field(default=None, description='Other tales from same informant')
+
+class HistoryMarkingScheme(BaseModel):
+    subject: typing.Optional[str] = Field(default=None, description='Always \'history\'')
+    scheme_code: typing.Optional[str] = None
+    language: typing.Optional[str] = Field(default=None, description='EN (taught in English)')
+    level: typing.Optional[str] = Field(default=None, description='HL / OL')
+    year: typing.Optional[int] = None
+    source_pdf: typing.Optional[str] = None
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: typing.Optional["HistorySubjectDiscriminator"] = None
+    total_marks: typing.Optional[int] = None
+    total_questions: typing.Optional[int] = None
+
+class HistorySubjectDiscriminator(BaseModel):
+    primary_topic: typing.Optional[str] = Field(default=None, description='Main  topic tested')
+    dominant_question_types: typing.List[types.HistoryQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: typing.Optional[types.HistoryCommonMistake] = None
 
 class HungaryHealthGuidance(BaseModel):
     agency: typing.Optional[str] = Field(default=None, description='The publishing agency (e.g. NIPH, EODY, NIJZ)')
@@ -5522,6 +5630,19 @@ class MotifOccurrence(BaseModel):
     occurrence_count: typing.Optional[int] = Field(default=None, description='How many tales contain it')
     occurrence_rate: typing.Optional[float] = Field(default=None, description='Percentage of tales')
 
+class MusicMarkingScheme(BaseModel):
+    subject: typing.Optional[str] = Field(default=None, description='Always \'music\'')
+    scheme_code: typing.Optional[str] = None
+    language: typing.Optional[str] = Field(default=None, description='EN (taught in English)')
+    level: typing.Optional[str] = Field(default=None, description='HL / OL')
+    year: typing.Optional[int] = None
+    source_pdf: typing.Optional[str] = None
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: typing.Optional["MusicSubjectDiscriminator"] = None
+    total_marks: typing.Optional[int] = None
+    total_questions: typing.Optional[int] = None
+
 class MusicProducerProfile(BaseModel):
     name: typing.Optional[str] = Field(default=None, description='Real name')
     stageName: typing.Optional[str] = Field(default=None, description='Stage/artist name')
@@ -5554,6 +5675,11 @@ class MusicRelease(BaseModel):
     artwork: typing.Optional[str] = Field(default=None, description='Cover artwork URL')
     label: typing.Optional[str] = Field(default=None, description='Record label if any')
     type: typing.Optional[str] = Field(default=None, description='Album, EP, Single, etc.')
+
+class MusicSubjectDiscriminator(BaseModel):
+    primary_topic: typing.Optional[str] = Field(default=None, description='Main  topic tested')
+    dominant_question_types: typing.List[types.MusicQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: typing.Optional[types.MusicCommonMistake] = None
 
 class MusicTrack(BaseModel):
     title: typing.Optional[str] = Field(default=None, description='Track title')
@@ -6298,6 +6424,24 @@ class PhoneticFeature(BaseModel):
     description: typing.Optional[str] = Field(default=None, description='Description of the phonetic trait')
     examples: typing.List[str] = Field(description='Examples from the recording')
     typical_of: typing.List[types.IrishDialect] = Field(description='Which dialects show this feature')
+
+class PhysicsMarkingScheme(BaseModel):
+    subject: typing.Optional[str] = Field(default=None, description='Always \'physics\'')
+    scheme_code: typing.Optional[str] = None
+    language: typing.Optional[str] = Field(default=None, description='EN (taught in English)')
+    level: typing.Optional[str] = Field(default=None, description='HL / OL')
+    year: typing.Optional[int] = None
+    source_pdf: typing.Optional[str] = None
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: typing.Optional["PhysicsSubjectDiscriminator"] = None
+    total_marks: typing.Optional[int] = None
+    total_questions: typing.Optional[int] = None
+
+class PhysicsSubjectDiscriminator(BaseModel):
+    primary_topic: typing.Optional[str] = Field(default=None, description='Main  topic tested')
+    dominant_question_types: typing.List[types.PhysicsQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: typing.Optional[types.PhysicsCommonMistake] = None
 
 class PigSkinBagOfHealingWell(BaseModel):
     treasure_id: typing.Optional[str] = Field(default=None, description='Canonical ID, e.g. \'eiraic_11_pigskin_bag_healing\'')
@@ -8871,7 +9015,7 @@ TopicExtraction: typing_extensions.TypeAlias = typing.Optional["LCTopicExtractio
 
 
 # #########################################################################
-# Model rebuilds (902)
+# Model rebuilds (918)
 # #########################################################################
 # Resolve string forward references now that every model above is defined so
 # class declaration order never breaks Pydantic construction (issue #793).
@@ -8896,6 +9040,8 @@ AQAMarkingScheme.model_rebuild()
 AQAQualSpec.model_rebuild()
 AcademicHistorySnapshot.model_rebuild()
 AcademicModuleDescriptor.model_rebuild()
+AccountingMarkingScheme.model_rebuild()
+AccountingSubjectDiscriminator.model_rebuild()
 AdaptiveAssessment.model_rebuild()
 AdaptiveQuestion.model_rebuild()
 AdjectiveComparison.model_rebuild()
@@ -8921,9 +9067,13 @@ AnimationVfxVocabulary.model_rebuild()
 AnimationVisualGrammar.model_rebuild()
 ApiChange.model_rebuild()
 ApplicationTimeline.model_rebuild()
+AppliedMathsMarkingScheme.model_rebuild()
+AppliedMathsSubjectDiscriminator.model_rebuild()
 Apprenticeship.model_rebuild()
 AreaRanking.model_rebuild()
 ArmourOfClochur.model_rebuild()
+ArtMarkingScheme.model_rebuild()
+ArtSubjectDiscriminator.model_rebuild()
 ArtworkAnalysis.model_rebuild()
 AssessmentBreakdown.model_rebuild()
 AssessmentComponent.model_rebuild()
@@ -8967,6 +9117,8 @@ BridgeEdge.model_rebuild()
 BulgariaHealthGuidance.model_rebuild()
 BulgariaStatute.model_rebuild()
 BulgariaSubjectCurriculum.model_rebuild()
+BusinessMarkingScheme.model_rebuild()
+BusinessSubjectDiscriminator.model_rebuild()
 CBATask.model_rebuild()
 CaliforniaOChoice.model_rebuild()
 CaliforniaOCourse.model_rebuild()
@@ -9184,6 +9336,8 @@ Foundation.model_rebuild()
 FranceEducationDocument.model_rebuild()
 FranceLawDocument.model_rebuild()
 FranceMedicineDocument.model_rebuild()
+FrenchMarkingScheme.model_rebuild()
+FrenchSubjectDiscriminator.model_rebuild()
 GCSEAreaTopic.model_rebuild()
 GCSEAssessmentObjective.model_rebuild()
 GCSEBilingualText.model_rebuild()
@@ -9277,6 +9431,8 @@ HandwrittenEquation.model_rebuild()
 HeaderElement.model_rebuild()
 HeiferSkinOfDobar.model_rebuild()
 HiddenHeritagesTale.model_rebuild()
+HistoryMarkingScheme.model_rebuild()
+HistorySubjectDiscriminator.model_rebuild()
 HungaryHealthGuidance.model_rebuild()
 HungaryStatute.model_rebuild()
 HungarySubjectCurriculum.model_rebuild()
@@ -9447,9 +9603,11 @@ MorphologicalFeature.model_rebuild()
 MorphologicalFeatures.model_rebuild()
 MotifAnalysis.model_rebuild()
 MotifOccurrence.model_rebuild()
+MusicMarkingScheme.model_rebuild()
 MusicProducerProfile.model_rebuild()
 MusicProfile.model_rebuild()
 MusicRelease.model_rebuild()
+MusicSubjectDiscriminator.model_rebuild()
 MusicTrack.model_rebuild()
 MutationTriggerPattern.model_rebuild()
 MythologicalCharacter.model_rebuild()
@@ -9526,6 +9684,8 @@ PedagogyPrincipleDetail.model_rebuild()
 PedagogySet.model_rebuild()
 PersonEntity.model_rebuild()
 PhoneticFeature.model_rebuild()
+PhysicsMarkingScheme.model_rebuild()
+PhysicsSubjectDiscriminator.model_rebuild()
 PigSkinBagOfHealingWell.model_rebuild()
 PigSkinOfDobar.model_rebuild()
 PlaceEntity.model_rebuild()

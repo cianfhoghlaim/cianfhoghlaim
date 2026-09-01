@@ -37,7 +37,7 @@ def get_checks(checks: typing.Dict[CheckName, Check]) -> typing.List[Check]:
 def all_succeeded(checks: typing.Dict[CheckName, Check]) -> bool:
     return all(check.status == "succeeded" for check in get_checks(checks))
 # #########################################################################
-# Generated enums (288)
+# Generated enums (304)
 # #########################################################################
 
 class ALevelAQASubject(str, Enum):
@@ -235,6 +235,19 @@ class ALevelSubjectSlug(str, Enum):
     POLITICS = "POLITICS"
     SOCIOLOGY = "SOCIOLOGY"
 
+class AccountingCommonMistake(str, Enum):
+    TOPIC_MISUNDERSTANDING = "TOPIC_MISUNDERSTANDING"
+    CALCULATION_ERROR = "CALCULATION_ERROR"
+    METHOD_INCOMPLETE = "METHOD_INCOMPLETE"
+
+class AccountingQuestionType(str, Enum):
+    SHORT_ANSWER = "SHORT_ANSWER"
+    EXTENDED_RESPONSE = "EXTENDED_RESPONSE"
+    CALCULATION = "CALCULATION"
+    DATA_ANALYSIS = "DATA_ANALYSIS"
+    ESSAY = "ESSAY"
+    DIAGRAM_BASED = "DIAGRAM_BASED"
+
 class AchievementLevel(str, Enum):
     Exceptional = "Exceptional"
     AboveExpectations = "AboveExpectations"
@@ -307,6 +320,35 @@ class AnamSource(str, Enum):
     Comic = "Comic"
     Gba = "Gba"
     Manual = "Manual"
+
+class AppliedMathsCommonMistake(str, Enum):
+    ALGEBRAIC_ERROR = "ALGEBRAIC_ERROR"
+    UNIT_MISMATCH = "UNIT_MISMATCH"
+    ASSUMPTION_UNSTATED = "ASSUMPTION_UNSTATED"
+    METHOD_INCOMPLETE = "METHOD_INCOMPLETE"
+    ROUNDING_ERROR = "ROUNDING_ERROR"
+    CONCEPT_CONFUSION = "CONCEPT_CONFUSION"
+
+class AppliedMathsQuestionType(str, Enum):
+    SHORT_ANSWER = "SHORT_ANSWER"
+    EXTENDED_RESPONSE = "EXTENDED_RESPONSE"
+    CALCULATION = "CALCULATION"
+    PROOF = "PROOF"
+    APPLIED = "APPLIED"
+    DIAGRAM_BASED = "DIAGRAM_BASED"
+
+class ArtCommonMistake(str, Enum):
+    TOPIC_MISUNDERSTANDING = "TOPIC_MISUNDERSTANDING"
+    CALCULATION_ERROR = "CALCULATION_ERROR"
+    METHOD_INCOMPLETE = "METHOD_INCOMPLETE"
+
+class ArtQuestionType(str, Enum):
+    SHORT_ANSWER = "SHORT_ANSWER"
+    EXTENDED_RESPONSE = "EXTENDED_RESPONSE"
+    CALCULATION = "CALCULATION"
+    DATA_ANALYSIS = "DATA_ANALYSIS"
+    ESSAY = "ESSAY"
+    DIAGRAM_BASED = "DIAGRAM_BASED"
 
 class ArtStyle(str, Enum):
     ABSTRACT = "ABSTRACT"
@@ -458,6 +500,19 @@ class BoonTier(str, Enum):
     Heroic = "Heroic"
     Legendary = "Legendary"
     Duo = "Duo"
+
+class BusinessCommonMistake(str, Enum):
+    TOPIC_MISUNDERSTANDING = "TOPIC_MISUNDERSTANDING"
+    CALCULATION_ERROR = "CALCULATION_ERROR"
+    METHOD_INCOMPLETE = "METHOD_INCOMPLETE"
+
+class BusinessQuestionType(str, Enum):
+    SHORT_ANSWER = "SHORT_ANSWER"
+    EXTENDED_RESPONSE = "EXTENDED_RESPONSE"
+    CALCULATION = "CALCULATION"
+    DATA_ANALYSIS = "DATA_ANALYSIS"
+    ESSAY = "ESSAY"
+    DIAGRAM_BASED = "DIAGRAM_BASED"
 
 class CAOField(str, Enum):
     ARTS_HUMANITIES = "ARTS_HUMANITIES"
@@ -1208,6 +1263,19 @@ class FolkloreTopic(str, Enum):
     DEATH_BURIAL = "DEATH_BURIAL"
     SUPERNATURAL = "SUPERNATURAL"
 
+class FrenchCommonMistake(str, Enum):
+    TOPIC_MISUNDERSTANDING = "TOPIC_MISUNDERSTANDING"
+    CALCULATION_ERROR = "CALCULATION_ERROR"
+    METHOD_INCOMPLETE = "METHOD_INCOMPLETE"
+
+class FrenchQuestionType(str, Enum):
+    SHORT_ANSWER = "SHORT_ANSWER"
+    EXTENDED_RESPONSE = "EXTENDED_RESPONSE"
+    CALCULATION = "CALCULATION"
+    DATA_ANALYSIS = "DATA_ANALYSIS"
+    ESSAY = "ESSAY"
+    DIAGRAM_BASED = "DIAGRAM_BASED"
+
 class GCSEAOLevel(str, Enum):
     AO1 = "AO1"
     AO2 = "AO2"
@@ -1614,6 +1682,19 @@ class HandbookTopicCode(str, Enum):
     L = "L"
     M = "M"
     N = "N"
+
+class HistoryCommonMistake(str, Enum):
+    TOPIC_MISUNDERSTANDING = "TOPIC_MISUNDERSTANDING"
+    CALCULATION_ERROR = "CALCULATION_ERROR"
+    METHOD_INCOMPLETE = "METHOD_INCOMPLETE"
+
+class HistoryQuestionType(str, Enum):
+    SHORT_ANSWER = "SHORT_ANSWER"
+    EXTENDED_RESPONSE = "EXTENDED_RESPONSE"
+    CALCULATION = "CALCULATION"
+    DATA_ANALYSIS = "DATA_ANALYSIS"
+    ESSAY = "ESSAY"
+    DIAGRAM_BASED = "DIAGRAM_BASED"
 
 class ImagePurpose(str, Enum):
     STUDY_CARD = "STUDY_CARD"
@@ -2242,6 +2323,11 @@ class MoodCategory(str, Enum):
     NOSTALGIC = "NOSTALGIC"
     ETHEREAL = "ETHEREAL"
 
+class MusicCommonMistake(str, Enum):
+    TOPIC_MISUNDERSTANDING = "TOPIC_MISUNDERSTANDING"
+    CALCULATION_ERROR = "CALCULATION_ERROR"
+    METHOD_INCOMPLETE = "METHOD_INCOMPLETE"
+
 class MusicGenre(str, Enum):
     ELECTRONIC = "ELECTRONIC"
     AMBIENT = "AMBIENT"
@@ -2284,6 +2370,14 @@ class MusicGenrePortfolio(str, Enum):
     SOUNDTRACK = "SOUNDTRACK"
     CELTIC = "CELTIC"
     OTHER = "OTHER"
+
+class MusicQuestionType(str, Enum):
+    SHORT_ANSWER = "SHORT_ANSWER"
+    EXTENDED_RESPONSE = "EXTENDED_RESPONSE"
+    CALCULATION = "CALCULATION"
+    DATA_ANALYSIS = "DATA_ANALYSIS"
+    ESSAY = "ESSAY"
+    DIAGRAM_BASED = "DIAGRAM_BASED"
 
 class MutationType(str, Enum):
     LEN = "LEN"
@@ -2545,6 +2639,22 @@ class PartOfSpeechArchive(str, Enum):
     PUNCT = "PUNCT"
     SYM = "SYM"
     X = "X"
+
+class PhysicsCommonMistake(str, Enum):
+    ALGEBRAIC_ERROR = "ALGEBRAIC_ERROR"
+    UNIT_MISMATCH = "UNIT_MISMATCH"
+    ASSUMPTION_UNSTATED = "ASSUMPTION_UNSTATED"
+    METHOD_INCOMPLETE = "METHOD_INCOMPLETE"
+    ROUNDING_ERROR = "ROUNDING_ERROR"
+    CONCEPT_CONFUSION = "CONCEPT_CONFUSION"
+
+class PhysicsQuestionType(str, Enum):
+    SHORT_ANSWER = "SHORT_ANSWER"
+    EXTENDED_RESPONSE = "EXTENDED_RESPONSE"
+    CALCULATION = "CALCULATION"
+    PROOF = "PROOF"
+    APPLIED = "APPLIED"
+    DIAGRAM_BASED = "DIAGRAM_BASED"
 
 class PlatformType(str, Enum):
     GITHUB = "GITHUB"
@@ -3320,7 +3430,7 @@ class WJECSubject(str, Enum):
     OTHER = "OTHER"
 
 # #########################################################################
-# Generated classes (908)
+# Generated classes (924)
 # #########################################################################
 
 class ALevelAreaTopic(BaseModel):
@@ -3536,6 +3646,24 @@ class AcademicModuleDescriptor(BaseModel):
     ects: typing.Optional[int] = Field(default=None, description='ECTS credit value')
     source_url: typing.Optional[str] = Field(default=None, description='URL the descriptor was extracted from')
     confidence: float = Field(description='Overall extraction confidence 0.0-1.0')
+
+class AccountingMarkingScheme(BaseModel):
+    subject: str = Field(description='Always \'accounting\'')
+    scheme_code: str
+    language: str = Field(description='EN (taught in English)')
+    level: str = Field(description='HL / OL')
+    year: int
+    source_pdf: str
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: "AccountingSubjectDiscriminator"
+    total_marks: int
+    total_questions: int
+
+class AccountingSubjectDiscriminator(BaseModel):
+    primary_topic: str = Field(description='Main  topic tested')
+    dominant_question_types: typing.List[AccountingQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: AccountingCommonMistake
 
 class AdaptiveAssessment(BaseModel):
     assessment_id: str
@@ -3767,6 +3895,24 @@ class ApplicationTimeline(BaseModel):
     offer_round_2: typing.Optional[str] = None
     registration_open: str
 
+class AppliedMathsMarkingScheme(BaseModel):
+    subject: str = Field(description='Always \'applied_mathematics\'')
+    scheme_code: str
+    language: str = Field(description='EN (taught in English)')
+    level: str = Field(description='HL / OL')
+    year: int
+    source_pdf: str
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: "AppliedMathsSubjectDiscriminator"
+    total_marks: int
+    total_questions: int
+
+class AppliedMathsSubjectDiscriminator(BaseModel):
+    primary_topic: str = Field(description='Main  topic tested')
+    dominant_question_types: typing.List[AppliedMathsQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: AppliedMathsCommonMistake
+
 class Apprenticeship(BaseModel):
     programme_code: str
     title_en: str
@@ -3798,6 +3944,24 @@ class ArmourOfClochur(BaseModel):
     rationale_en: str = Field(description='Why this treasure maps to History')
     rationale_ga: typing.Optional[str] = Field(default=None, description='Irish-language rationale; null if unattested')
     mmo_signal: str = Field(description='How the Cianfhoghlaim Educational MMO lights this up')
+
+class ArtMarkingScheme(BaseModel):
+    subject: str = Field(description='Always \'art\'')
+    scheme_code: str
+    language: str = Field(description='EN (taught in English)')
+    level: str = Field(description='HL / OL')
+    year: int
+    source_pdf: str
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: "ArtSubjectDiscriminator"
+    total_marks: int
+    total_questions: int
+
+class ArtSubjectDiscriminator(BaseModel):
+    primary_topic: str = Field(description='Main  topic tested')
+    dominant_question_types: typing.List[ArtQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: ArtCommonMistake
 
 class ArtworkAnalysis(BaseModel):
     description: str = Field(description='2-3 sentence description of the artwork')
@@ -4177,6 +4341,24 @@ class BulgariaSubjectCurriculum(BaseModel):
     exam_board: typing.Optional[str] = Field(default=None, description='Awarding body / ministry (e.g. MŠMT, MŠMTŠ, OH, NÚCEM)')
     source_url: str
     content_hash: typing.Optional[str] = None
+
+class BusinessMarkingScheme(BaseModel):
+    subject: str = Field(description='Always \'business\'')
+    scheme_code: str
+    language: str = Field(description='EN (taught in English)')
+    level: str = Field(description='HL / OL')
+    year: int
+    source_pdf: str
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: "BusinessSubjectDiscriminator"
+    total_marks: int
+    total_questions: int
+
+class BusinessSubjectDiscriminator(BaseModel):
+    primary_topic: str = Field(description='Main  topic tested')
+    dominant_question_types: typing.List[BusinessQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: BusinessCommonMistake
 
 class CBATask(BaseModel):
     name_en: str
@@ -6354,6 +6536,24 @@ class FranceMedicineDocument(BaseModel):
     source_url: str
     content_hash: typing.Optional[str] = None
 
+class FrenchMarkingScheme(BaseModel):
+    subject: str = Field(description='Always \'french\'')
+    scheme_code: str
+    language: str = Field(description='EN (taught in English)')
+    level: str = Field(description='HL / OL')
+    year: int
+    source_pdf: str
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: "FrenchSubjectDiscriminator"
+    total_marks: int
+    total_questions: int
+
+class FrenchSubjectDiscriminator(BaseModel):
+    primary_topic: str = Field(description='Main  topic tested')
+    dominant_question_types: typing.List[FrenchQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: FrenchCommonMistake
+
 class GCSEAreaTopic(BaseModel):
     topic_id: str = Field(description='Awarding-body topic code (e.g. \'GCSE-MATH-TOPIC-001\')')
     topic_name: str
@@ -7208,6 +7408,24 @@ class HiddenHeritagesTale(BaseModel):
     topics: typing.List[FolkloreTopic] = Field(description='Thematic topic tags')
     related_tales: typing.Optional[typing.List[str]] = Field(default=None, description='IDs of related tales')
     same_informant_tales: typing.Optional[typing.List[str]] = Field(default=None, description='Other tales from same informant')
+
+class HistoryMarkingScheme(BaseModel):
+    subject: str = Field(description='Always \'history\'')
+    scheme_code: str
+    language: str = Field(description='EN (taught in English)')
+    level: str = Field(description='HL / OL')
+    year: int
+    source_pdf: str
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: "HistorySubjectDiscriminator"
+    total_marks: int
+    total_questions: int
+
+class HistorySubjectDiscriminator(BaseModel):
+    primary_topic: str = Field(description='Main  topic tested')
+    dominant_question_types: typing.List[HistoryQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: HistoryCommonMistake
 
 class HungaryHealthGuidance(BaseModel):
     agency: str = Field(description='The publishing agency (e.g. NIPH, EODY, NIJZ)')
@@ -8819,6 +9037,19 @@ class MotifOccurrence(BaseModel):
     occurrence_count: int = Field(description='How many tales contain it')
     occurrence_rate: float = Field(description='Percentage of tales')
 
+class MusicMarkingScheme(BaseModel):
+    subject: str = Field(description='Always \'music\'')
+    scheme_code: str
+    language: str = Field(description='EN (taught in English)')
+    level: str = Field(description='HL / OL')
+    year: int
+    source_pdf: str
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: "MusicSubjectDiscriminator"
+    total_marks: int
+    total_questions: int
+
 class MusicProducerProfile(BaseModel):
     name: str = Field(description='Real name')
     stageName: str = Field(description='Stage/artist name')
@@ -8851,6 +9082,11 @@ class MusicRelease(BaseModel):
     artwork: typing.Optional[str] = Field(default=None, description='Cover artwork URL')
     label: typing.Optional[str] = Field(default=None, description='Record label if any')
     type: str = Field(description='Album, EP, Single, etc.')
+
+class MusicSubjectDiscriminator(BaseModel):
+    primary_topic: str = Field(description='Main  topic tested')
+    dominant_question_types: typing.List[MusicQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: MusicCommonMistake
 
 class MusicTrack(BaseModel):
     title: str = Field(description='Track title')
@@ -9595,6 +9831,24 @@ class PhoneticFeature(BaseModel):
     description: str = Field(description='Description of the phonetic trait')
     examples: typing.List[str] = Field(description='Examples from the recording')
     typical_of: typing.List[IrishDialect] = Field(description='Which dialects show this feature')
+
+class PhysicsMarkingScheme(BaseModel):
+    subject: str = Field(description='Always \'physics\'')
+    scheme_code: str
+    language: str = Field(description='EN (taught in English)')
+    level: str = Field(description='HL / OL')
+    year: int
+    source_pdf: str
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: "PhysicsSubjectDiscriminator"
+    total_marks: int
+    total_questions: int
+
+class PhysicsSubjectDiscriminator(BaseModel):
+    primary_topic: str = Field(description='Main  topic tested')
+    dominant_question_types: typing.List[PhysicsQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: PhysicsCommonMistake
 
 class PigSkinBagOfHealingWell(BaseModel):
     treasure_id: str = Field(description='Canonical ID, e.g. \'eiraic_11_pigskin_bag_healing\'')
@@ -12168,7 +12422,7 @@ TopicExtraction: typing_extensions.TypeAlias = "LCTopicExtraction"
 
 
 # #########################################################################
-# Model rebuilds (902)
+# Model rebuilds (918)
 # #########################################################################
 # Resolve string forward references now that every model above is defined so
 # class declaration order never breaks Pydantic construction (issue #793).
@@ -12193,6 +12447,8 @@ AQAMarkingScheme.model_rebuild()
 AQAQualSpec.model_rebuild()
 AcademicHistorySnapshot.model_rebuild()
 AcademicModuleDescriptor.model_rebuild()
+AccountingMarkingScheme.model_rebuild()
+AccountingSubjectDiscriminator.model_rebuild()
 AdaptiveAssessment.model_rebuild()
 AdaptiveQuestion.model_rebuild()
 AdjectiveComparison.model_rebuild()
@@ -12218,9 +12474,13 @@ AnimationVfxVocabulary.model_rebuild()
 AnimationVisualGrammar.model_rebuild()
 ApiChange.model_rebuild()
 ApplicationTimeline.model_rebuild()
+AppliedMathsMarkingScheme.model_rebuild()
+AppliedMathsSubjectDiscriminator.model_rebuild()
 Apprenticeship.model_rebuild()
 AreaRanking.model_rebuild()
 ArmourOfClochur.model_rebuild()
+ArtMarkingScheme.model_rebuild()
+ArtSubjectDiscriminator.model_rebuild()
 ArtworkAnalysis.model_rebuild()
 AssessmentBreakdown.model_rebuild()
 AssessmentComponent.model_rebuild()
@@ -12264,6 +12524,8 @@ BridgeEdge.model_rebuild()
 BulgariaHealthGuidance.model_rebuild()
 BulgariaStatute.model_rebuild()
 BulgariaSubjectCurriculum.model_rebuild()
+BusinessMarkingScheme.model_rebuild()
+BusinessSubjectDiscriminator.model_rebuild()
 CBATask.model_rebuild()
 CaliforniaOChoice.model_rebuild()
 CaliforniaOCourse.model_rebuild()
@@ -12481,6 +12743,8 @@ Foundation.model_rebuild()
 FranceEducationDocument.model_rebuild()
 FranceLawDocument.model_rebuild()
 FranceMedicineDocument.model_rebuild()
+FrenchMarkingScheme.model_rebuild()
+FrenchSubjectDiscriminator.model_rebuild()
 GCSEAreaTopic.model_rebuild()
 GCSEAssessmentObjective.model_rebuild()
 GCSEBilingualText.model_rebuild()
@@ -12574,6 +12838,8 @@ HandwrittenEquation.model_rebuild()
 HeaderElement.model_rebuild()
 HeiferSkinOfDobar.model_rebuild()
 HiddenHeritagesTale.model_rebuild()
+HistoryMarkingScheme.model_rebuild()
+HistorySubjectDiscriminator.model_rebuild()
 HungaryHealthGuidance.model_rebuild()
 HungaryStatute.model_rebuild()
 HungarySubjectCurriculum.model_rebuild()
@@ -12744,9 +13010,11 @@ MorphologicalFeature.model_rebuild()
 MorphologicalFeatures.model_rebuild()
 MotifAnalysis.model_rebuild()
 MotifOccurrence.model_rebuild()
+MusicMarkingScheme.model_rebuild()
 MusicProducerProfile.model_rebuild()
 MusicProfile.model_rebuild()
 MusicRelease.model_rebuild()
+MusicSubjectDiscriminator.model_rebuild()
 MusicTrack.model_rebuild()
 MutationTriggerPattern.model_rebuild()
 MythologicalCharacter.model_rebuild()
@@ -12823,6 +13091,8 @@ PedagogyPrincipleDetail.model_rebuild()
 PedagogySet.model_rebuild()
 PersonEntity.model_rebuild()
 PhoneticFeature.model_rebuild()
+PhysicsMarkingScheme.model_rebuild()
+PhysicsSubjectDiscriminator.model_rebuild()
 PigSkinBagOfHealingWell.model_rebuild()
 PigSkinOfDobar.model_rebuild()
 PlaceEntity.model_rebuild()

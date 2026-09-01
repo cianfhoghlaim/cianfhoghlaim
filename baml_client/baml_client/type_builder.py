@@ -20,13 +20,13 @@ from .globals import DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_RUNTIM
 class TypeBuilder(type_builder.TypeBuilder):
     def __init__(self):
         super().__init__(classes=set(
-          ["ALevelAreaTopic","ALevelBilingualText","ALevelCrossSubjectTopics","ALevelExamPaper","ALevelGradeDescriptor","ALevelLearningOutcome","ALevelMarkAllocation","ALevelMarkingScheme","ALevelModule","ALevelQuestion","ALevelQuestionSection","ALevelSubjectPDFLink","ALevelSyllabusDiagram","ALevelSyllabusSpec","AQAExamPaper","AQAMarkingScheme","AQAQualSpec","AcademicHistorySnapshot","AcademicModuleDescriptor","AdaptiveAssessment","AdaptiveQuestion","AdjectiveComparison","AimsExpectations","AistearDocument","AistearFramework","AistearLearningGoal","AistearLearningGoalSimple","AistearPrinciple","AistearPrincipleSimple","AlbaniaHealthGuidance","AlbaniaStatute","AlbaniaSubjectCurriculum","AmericasJurisdictionMetadata","AnamParticle","AnimationMediaDescriptor","AnimationNarrativeBeat","AnimationPalette","AnimationPowerEvent","AnimationProvenance","AnimationTransferability","AnimationVfxVocabulary","AnimationVisualGrammar","ApiChange","ApplicationTimeline","Apprenticeship","AreaRanking","ArmourOfClochur","ArtworkAnalysis","AssessmentBreakdown","AssessmentComponent","AssessmentComponentStrand","AssessmentCriteria","AssessmentInfo","AssessmentObjective","AssessmentQuestion","AssessmentStructure","AssignmentBrief","AustraliaEducationDocument","AustraliaLawDocument","AustraliaMedicineDocument","AustriaHealthGuidance","AustriaStatute","AustriaSubjectCurriculum","Author","AuthorArchiveBoundingBox","AvatarElement","Award","BelgiumHealthGuidance","BelgiumStatute","BelgiumSubjectCurriculum","BendingSubdiscipline","BilingualPlaceTerm","BilingualText","BilingualTextEnGa","BilingualTextIsles","BilingualTextQuebec","BilingualTextRootPdf","BlogPostMetadata","BosniaAndHerzegovinaHealthGuidance","BosniaAndHerzegovinaStatute","BosniaAndHerzegovinaSubjectCurriculum","BoundingBox","BrazilEducationDocument","BrazilLawDocument","BrazilMedicineDocument","Breakdown","BridgeEdge","BulgariaHealthGuidance","BulgariaStatute","BulgariaSubjectCurriculum","CBATask","CaliforniaOChoice","CaliforniaOCourse","CaliforniaOGradeProfile","CanadaEducationDocument","CanadaLawDocument","CanadaMedicineDocument","CanadianProvinceDocument","CandidatePDF","CanuintLocation","CanuintRecording","CanuintSpeaker","CanuintTranscription","CelticContent","CelticCurriculumComparison","CelticCurriculumSpec","CelticExample","CelticForm","CelticGrammarPattern","CelticLearningOutcome","CelticMorphologySpec","CelticNamedEntity","CelticTerm","CelticWord","CertGuidance","CertificationCitation","CharacterRelationship","ChariotOfSidrach","ChemSubjectDiscriminator","ChemistryGrade","ChemistryKCWeight","ChemistryMarkingQuestion","ChemistryMarkingRationale","ChemistryMarkingScheme","ChemistryMarkingSection","ChemistryMarksBreakdown","ChemistryStepMark","ChemistryStudyMilestone","ChemistryStudyWeek","ChemistryWebExamPaperDiscussionResponse","ChemistryWebMarkingSchemeExplanationResponse","ChemistryWebStudyPlanResponse","CircularExtraction","CircularReference","CitedUrl","ClassifiedFolkloreRecord","Coefficient","CognatePair","CognateSet","ColorInfo","ComicParticleFrame","CommonIrishError","CommonwealthJurisdictionMetadata","CommonwealthMemberState","CompetencyLink","ComputerScienceGrade","ComputerScienceKCWeight","ComputerScienceMarkingQuestion","ComputerScienceMarkingRationale","ComputerScienceMarkingScheme","ComputerScienceMarkingSection","ComputerScienceMarksBreakdown","ComputerScienceStepMark","ComputerScienceStudyMilestone","ComputerScienceStudyWeek","ComputerScienceWebExamPaperDiscussionResponse","ComputerScienceWebMarkingSchemeExplanationResponse","ComputerScienceWebStudyPlanResponse","ConceptChain","CondensedPage","ContactInfo","CookingSpitOfInnisCera","CourseDescriptor","CoursePointsPrediction","CourseworkArtifactExtraction","CourtFee","CourtForm","CourtRule","CoverageCell","CoverageMatrix","CroatiaHealthGuidance","CroatiaStatute","CroatiaSubjectCurriculum","CrossJurisdictionBridge","CrossJurisdictionEquivalency","CrossNationComparison","CrossNationCurriculumSpec","CrossNationLearningOutcome","CrossNationLearningOutcomeIsles","CsSubjectDiscriminator","CultureHeritageClaim","CultureTopicProfile","CurriculumComparison","CurriculumDesigned","CurriculumExtraction","CurriculumMapping","CurriculumSection","CurriculumSpecIsles","CurriculumSpecStrand","CurriculumStrand","CurriculumTopic","CurriculumUnit","CyprusHealthGuidance","CyprusStatute","CyprusSubjectCurriculum","CzechiaHealthGuidance","CzechiaStatute","CzechiaSubjectCurriculum","DenmarkHealthGuidance","DenmarkStatute","DenmarkSubjectCurriculum","Density","DerivationClass","DeveloperProfile","DiagramCoordinate","DiagramEdge","DiagramNode","DiagramPayload","DialectAnalysis","DialectIndicator","DialectSimilarity","DialogueLine","DisagreementVariant","DocSkillTag","DocumentMetadata","DocumentStructure","DuchasBoundingBox","DuchasFolkloreReference","DuchasLocation","DuchasManuscriptItem","DuchasManuscriptRecord","DuchasManuscriptVolume","DuchasPerson","DuchasPersonName","DuchasPersonNameExtraction","DuchasPhotograph","DuchasSchool","DuchasSchoolsItem","DuchasSchoolsPart","DuchasSchoolsTopic","DuchasSchoolsVolume","DuchasTranscription","DuchasTranscriptionLine","DuchasXMLRecord","ECDCSurveillance","EMAMedicine","EUDocument","EUExtractableBilingualDocument","EUMultilingualText","EURLexDecision","EURLexDirective","EURLexRegulation","EURLexTreaty","EdexcelQualSpec","Education","EducationEntry","EducationalTerm","EiraicTitle","EiraicTreasures","Element","EmailClassificationResult","EmailThread","EngSubjectDiscriminator","EnglandEducationDocument","EnglandLawDocument","EnglandMedicineDocument","EnglishGrade","EnglishKCWeight","EnglishMarkingQuestion","EnglishMarkingRationale","EnglishMarkingScheme","EnglishMarkingSection","EnglishMarksBreakdown","EnglishStepMark","EnglishStudyMilestone","EnglishStudyWeek","EnglishWebExamPaperDiscussionResponse","EnglishWebMarkingSchemeExplanationResponse","EnglishWebStudyPlanResponse","EnhancedLearningOutcome","EnsembleConsensus","EnsemblePathOutput","EquivalencyCell","EquivalencyGraph","EstoniaHealthGuidance","EstoniaStatute","EstoniaSubjectCurriculum","EurostatDatasetMetadata","EurydiceNationalEducationStructure","EvidenceLink","ExamAssessmentComponent","ExamPaperIsles","ExamPaperStrand","ExamQuestion","ExamQuestionIsles","ExamQuestionStrand","ExamSectionIsles","ExamSectionStrand","ExamStatistics","ExaminerCommentary","ExaminerReport","ExitCardQuestion","ExitCardSet","Experience","ExtractedCurriculumDocument","ExtractedEntity","ExtractedRelationship","ExtractionBudget","FIBOConfig","FadaError","FalseFriend","FeatherOfBirdOfCrannog","FestivalEntity","FinlandHealthGuidance","FinlandStatute","FinlandSubjectCurriculum","FolkloreElement","FormulaRecord","Foundation","FranceEducationDocument","FranceLawDocument","FranceMedicineDocument","GCSEAreaTopic","GCSEAssessmentObjective","GCSEBilingualText","GCSECrossSubjectTopics","GCSEExamPaper","GCSEMarkingScheme","GCSEPerQuestionScheme","GCSEQuestion","GCSEQuestionSection","GCSESubjectPDFLink","GCSESyllabusDiagram","GCSESyllabusSpec","GaeilgeGrade","GaeilgeKCWeight","GaeilgeMarkingQuestion","GaeilgeMarkingRationale","GaeilgeMarkingScheme","GaeilgeMarkingSection","GaeilgeMarksBreakdown","GaeilgeStepMark","GaeilgeStudyMilestone","GaeilgeStudyWeek","GaeilgeWebExamPaperDiscussionResponse","GaeilgeWebMarkingSchemeExplanationResponse","GaeilgeWebStudyPlanResponse","GaelSubjectDiscriminator","GameGenre","GameItem","GameLocation","GameProject","GameTechnology","GameplayMediaDescriptor","GameplayNarrativeBeat","GameplayPalette","GameplayPowerEvent","GameplayProvenance","GameplayTransferability","GameplayVfxVocabulary","GameplayVisualGrammar","GardaVetting","GbaMagicSystem","GeminiDeepResearchReport","GenerationSpec","GeoDistribution","GeoLocation","GeoPoint","GeoSubjectDiscriminator","GeographicUnit","GeographyGrade","GeographyKCWeight","GeographyMarkingQuestion","GeographyMarkingRationale","GeographyMarkingScheme","GeographyMarkingSection","GeographyMarksBreakdown","GeographyStepMark","GeographyStudyMilestone","GeographyStudyWeek","GeographyWebExamPaperDiscussionResponse","GeographyWebMarkingSchemeExplanationResponse","GeographyWebStudyPlanResponse","GeorgiaHealthGuidance","GeorgiaStatute","GeorgiaSubjectCurriculum","GermanyEducationDocument","GermanyLawDocument","GermanyMedicineDocument","GlossaryEntry","GlossaryReference","GradeBoundary","GradeLevel","GradingScale","GrammarError","GrammarPattern","GrammarProgress","GrammarTopic","GreeceHealthGuidance","GreeceStatute","GreeceSubjectCurriculum","GroundedElement","GuernseyAssessmentObjective","GuernseyEducationDocument","GuernseyLawDocument","GuernseySyllabusSpec","GuernseyTopic","HHTLocation","HHTTranscription","HadesBoon","HandwritingExtraction","HandwrittenEquation","HeaderElement","HeiferSkinOfDobar","HiddenHeritagesTale","HungaryHealthGuidance","HungaryStatute","HungarySubjectCurriculum","HybridProfile","ITTerm","IcelandHealthGuidance","IcelandStatute","IcelandSubjectCurriculum","IdentityDocument","ImageAssetMetadata","ImagePromptSpec","IndiaEducationDocument","IndiaLawDocument","IndiaMedicineDocument","InformantDetails","InitialMutation","IrishAdjectiveGrammar","IrishContentQuality","IrishCopulaPattern","IrishGrammar","IrishNounGrammar","IrishVerbGrammar","IsleOfManAssessmentObjective","IsleOfManEducationDocument","IsleOfManLawDocument","IsleOfManSyllabusSpec","IsleOfManTopic","ItalyEducationDocument","ItalyLawDocument","ItalyMedicineDocument","IterationStep","JCBilingualText","JCCBADescriptor","JCStrandRecord","JCSubjectPDFLink","JCSubjectSpecification","JcCurriculumStrand","JcLearningOutcome","JcRubricDescriptor","JerseyAssessmentObjective","JerseyEducationDocument","JerseyLawDocument","JerseySyllabusSpec","JerseyTopic","JsonSchema","Judgement","JuniorCycleExamPaper","JuniorCycleLearningOutcome","JuniorCycleQuestion","JuniorCycleQuestionSection","JuniorCycleShortCourse","JuniorCycleSubjectSpec","JuniorCycleWellbeingStatement","JurisdictionOverride","KnowledgeTriple","KosovoHealthGuidance","KosovoStatute","KosovoSubjectCurriculum","L2LPOutcome","LCBilingualText","LCCircularDepartment","LCCircularToSyllabusLink","LCCrossLinguisticConcept","LCDiagramRegion","LCEducationCircular","LCEnglishEquivalent","LCExamPaper","LCGaelicTopic","LCGradeDescriptor","LCLearningOutcome","LCMarkAllocation","LCMarkingScheme","LCModule","LCModuleTopic","LCQuestion","LCQuestionSection","LCSubjectPDFLink","LCSyllabus","LCSyllabusDiagram","LCSyllabusDocument","LCTopicExtraction","LatviaHealthGuidance","LatviaStatute","LatviaSubjectCurriculum","LayoutFingerprint","LeabharlannDoc","LearningGraph","LearningGraphCell","LearningGraphColumn","LearningGraphPrerequisite","LearningGraphRow","LearningOutcome","LeavingCertSyllabus","LecturerInfo","LegalAidForm","LegalAidPage","LegalCaseProfile","LegalTerm","LiechtensteinHealthGuidance","LiechtensteinStatute","LiechtensteinSubjectCurriculum","LineageTrace","LinguisticToken","LinkedInEducation","LinkedInExperience","LinkedInProfile","LithuaniaHealthGuidance","LithuaniaStatute","LithuaniaSubjectCurriculum","LocationFeature","LogainmCoordinates","LogainmDuchasLink","LogainmPlace","LogainmSearchResult","LowConfidenceSection","LuxembourgHealthGuidance","LuxembourgStatute","LuxembourgSubjectCurriculum","MaltaHealthGuidance","MaltaStatute","MaltaSubjectCurriculum","MarkingAnnotation","MarkingBandDescriptor","MarkingCriteria","MarkingCriterion","MarkingLevel","MarkingPointSec","MarkingPointStrand","MarkingSchemeDiff","MarkingSchemeSec","MarkingSchemeShared","MarkingSchemeStrand","MarkingSchemeSummary","MarkingSection","MathSubjectDiscriminator","MathematicsGrade","MathematicsKCWeight","MathematicsMarkingQuestion","MathematicsMarkingRationale","MathematicsMarkingScheme","MathematicsMarkingSection","MathematicsMarksBreakdown","MathematicsStepMark","MathematicsStudyMilestone","MathematicsStudyWeek","MathematicsWebExamPaperDiscussionResponse","MathematicsWebMarkingSchemeExplanationResponse","MathematicsWebStudyPlanResponse","MatriculationAudit","MatriculationRequirement","MediaDescriptor","MedicalCaseProfile","Metric","MexicoEducationDocument","MexicoLawDocument","MexicoMedicineDocument","ModelComparisonResult","ModelResult","ModuleDescriptor","MoldovaHealthGuidance","MoldovaStatute","MoldovaSubjectCurriculum","MontenegroHealthGuidance","MontenegroStatute","MontenegroSubjectCurriculum","MontrealSchoolBoardRecord","MorphologicalFeature","MorphologicalFeatures","MotifAnalysis","MotifOccurrence","MusicProducerProfile","MusicProfile","MusicRelease","MusicTrack","MutationTriggerPattern","MythologicalCharacter","MythologicalLocation","MythologicalStory","NCCAKeyCompetencyRootPdf","NCCAPolicyCriteria","NPC","NPCDialogue","NPCGreeting","Naionra","NameVariant","NarrativeBeat","NationComparison","NationJurisdictionMetadata","NetherlandsHealthGuidance","NetherlandsStatute","NetherlandsSubjectCurriculum","NewZealandEducationDocument","NewZealandLawDocument","NewZealandMedicineDocument","NigeriaState","NigerianFederalCurriculumSpec","NigerianStateCurriculumSpec","NonlinearSystemRecord","NorthMacedoniaHealthGuidance","NorthMacedoniaStatute","NorthMacedoniaSubjectCurriculum","NorthernIrelandEducationDocument","NorthernIrelandExamPaper","NorthernIrelandLawDocument","NorthernIrelandMedicineDocument","NorthernIrelandQuestion","NorthernIrelandSection","NorwayHealthGuidance","NorwayStatute","NorwaySubjectCurriculum","Notebook","NounDeclension","NpcDialogue","NpcDialogueExchange","NumericalMethodRecord","OCRBackendV4","OCRModelV4","OCRQualSpec","OCRValidationResult","OfficialDocumentMediaDescriptor","OfficialDocumentType","OfficialMediaCategory","OfficialNarrativeBeat","OfficialPalette","OfficialPowerEvent","OfficialProvenance","OfficialTransferability","OfficialVfxVocabulary","OfficialVisualGrammar","OralStudyPlan","OralStudySegment","OutcomeAlignment","OutcomeAssessment","OutcomeQuestionMapping","PIABPage","PackageRelease","PageDescription","Palette","ParentPlace","ParticleClass","PastExamQuestion","PastPaper","PastPaperRef","PastPaperStorage","PedagogyOverlay","PedagogyPrincipleDetail","PedagogySet","PersonEntity","PhoneticFeature","PigSkinBagOfHealingWell","PigSkinOfDobar","PlaceEntity","Placement","PlacementResponse","PlacementResult","PlacenameText","PlayerLanguageProfile","PolandEducationDocument","PolandLawDocument","PolandMedicineDocument","PoliticalTopicProfile","PortfolioSkill","PortugalHealthGuidance","PortugalStatute","PortugalSubjectCurriculum","PossessionPattern","PowerEvent","PracticeItem","PrepositionalPronoun","PrimaryAreaSpecStage","PrimaryCurriculumArea","PrimaryLearningOutcome","PrimaryLearningOutcomeStage","PrimaryStrand","PrimaryStrandStage","ProfessionalExperience","ProfessionalRegistration","Programme","ProgrammeDescriptor","ProgressReport","ProgressStatistics","Project","ProsePalette","Provenance","Publication","QQIAward","QqiFetAward","QuebecEducationBilingualRecord","QueryResult","Quest","QuestHint","QuestObjective","QuestPackBilingualText","QuestPackEvidenceLink","QuestPackFormativeItem","QuestPackScore","QuestReward","QuestionAnalysis","QuickAnalysis","ReadingListItem","Reference","RegionalMotif","RegressionDiagnostics","RelationshipExtractionResult","ResearchGateProfile","ResearchGatePublication","ResearchLink","ResearchSiteMap","ResourceSharingRecommendation","ResponseAnalysis","RomaniaHealthGuidance","RomaniaStatute","RomaniaSubjectCurriculum","RubricDescriptor","RubricScore","SOLASCourse","SamildanachOfLugh","ScaleTier","ScotlandAssessmentObjective","ScotlandEducationDocument","ScotlandLawDocument","ScotlandMedicineDocument","ScotlandSyllabusSpec","ScotlandTopic","ScrapingSession","ScriptStep","SearchFilter","SearchResult","SearchTelemetry","SerbiaHealthGuidance","SerbiaStatute","SerbiaSubjectCurriculum","SevenPigsOfEasmal","SiteAnalysis","Skill","SkillAssessment","SkillCategoryCv","SkillExtractionResult","SlovakiaHealthGuidance","SlovakiaStatute","SlovakiaSubjectCurriculum","SloveniaHealthGuidance","SloveniaStatute","SloveniaSubjectCurriculum","SocialLink","SoftwareFingerprint","SolutionStep","SoundChange","SouthAfricaEducationDocument","SouthAfricaLawDocument","SouthAfricaMedicineDocument","SpainEducationDocument","SpainLawDocument","SpainMedicineDocument","Speaker","SpeakerLineup","SpeakerTurn","SpearOfAssal","SpecialismRubric","SpellingError","StatisticMetadata","StatisticRecord","StatisticalProcedureRecord","StatisticsQuery","StatuteReference","StoryEvent","StoryExtraction","StudentAnswerScript","StudentFeedback","StudentTranscriptRow","StudyPlan","StudyPlanBilingual","StudyPlanKeyCompetencyWeight","StudyPlanMilestone","StudyPlanWeek","StyleAnalysis","StyleBlend","StyleComparison","StyleEmbedding","StyleFeatures","StyleMatchVariant","StyleMatchVariants","StyleTransferSpec","Subject","SubjectIsles","SubjectMasteryRow","SubjectQuestPack","SubjectRegistryRow","SubjectRubric","SubjectSlug","SupernaturalEntity","SwedenHealthGuidance","SwedenStatute","SwedenSubjectCurriculum","SwitzerlandHealthGuidance","SwitzerlandStatute","SwitzerlandSubjectCurriculum","SwordOfCaladbolg","SyllabusLevel","SyllabusStructure","SyllabusTopic","TU","TableElement","TaleSummary","TaleType","TaleVariant","TaleVariantAnalysis","TalesListingPage","TeachingQualification","TeachingResource","TearmaDomainTerms","TearmaFolkloreLink","TearmaSearchResult","TearmaTerm","TechTopicProfile","TermDefinition","TermEntry","TermRelation","TermText","TertiaryExamPaper","TextConsensus","TextDisagreement","Tg4EpisodeClassification","TheoremRecord","ThreeApplesOfHesperides","TimelineEvent","TopicDistribution","TranscriptQualityAudit","TranscriptionSegment","Transferability","TranslationRequest","TranslationResult","TrendAnalysis","TrendPoint","Triple","TriplesResult","TurkeyHealthGuidance","TurkeyStatute","TurkeySubjectCurriculum","UIComponentSuggestion","UKExamSection","UKQualificationSpec","UKQuestion","US_US_CAEducationDocument","US_US_CALawDocument","US_US_CAMedicineDocument","UiIndicator","UkraineEducationDocument","UkraineLawDocument","UkraineMedicineDocument","UnifiedSourceRecord","University","UniversityOfGalwayArtifact","UoGArtefactProvenanceMeta","UoGAssignment","UoGCaMark","UoGCodeCell","UoGExamPaper","UoGExamQuestionBloomTag","UoGLearningOutcome","UoGModuleCatalogueRow","UoGModuleSummary","UoGPersonalArchiveArtefact","UoGQuestion","UoGReadingItem","UoGSyllabusDescriptor","UoGTopic","UsageExample","VSOPattern","ValidationFinding","VenezuelaEducationDocument","VenezuelaLawDocument","VenezuelaMedicineDocument","VerbConjugation","VerbForm","VerificationSummary","VfxVocabulary","VisualGrammar","VisualScene","VisualSequence","VocabularyNote","VocabularyNotePlayer","VocabularyProgress","VocabularySet","VolumeSummary","WalesAssessmentObjective","WalesEducationDocument","WalesLawDocument","WalesMedicineDocument","WalesSyllabusSpec","WalesTopic","WheelOfTimeMediaDescriptor","WheelOfTimeNarrativeBeat","WheelOfTimePowerEvent","WheelOfTimeProvenance","WheelOfTimeTransferability","WheelOfTimeVfxVocabulary","WheelOfTimeVisualGrammar","WhelpOfIoruaidh","WorkedSolution","WorksheetAnswers","WorksheetQuestion","ZoteroPaper",]
+          ["ALevelAreaTopic","ALevelBilingualText","ALevelCrossSubjectTopics","ALevelExamPaper","ALevelGradeDescriptor","ALevelLearningOutcome","ALevelMarkAllocation","ALevelMarkingScheme","ALevelModule","ALevelQuestion","ALevelQuestionSection","ALevelSubjectPDFLink","ALevelSyllabusDiagram","ALevelSyllabusSpec","AQAExamPaper","AQAMarkingScheme","AQAQualSpec","AcademicHistorySnapshot","AcademicModuleDescriptor","AccountingMarkingScheme","AccountingSubjectDiscriminator","AdaptiveAssessment","AdaptiveQuestion","AdjectiveComparison","AimsExpectations","AistearDocument","AistearFramework","AistearLearningGoal","AistearLearningGoalSimple","AistearPrinciple","AistearPrincipleSimple","AlbaniaHealthGuidance","AlbaniaStatute","AlbaniaSubjectCurriculum","AmericasJurisdictionMetadata","AnamParticle","AnimationMediaDescriptor","AnimationNarrativeBeat","AnimationPalette","AnimationPowerEvent","AnimationProvenance","AnimationTransferability","AnimationVfxVocabulary","AnimationVisualGrammar","ApiChange","ApplicationTimeline","AppliedMathsMarkingScheme","AppliedMathsSubjectDiscriminator","Apprenticeship","AreaRanking","ArmourOfClochur","ArtMarkingScheme","ArtSubjectDiscriminator","ArtworkAnalysis","AssessmentBreakdown","AssessmentComponent","AssessmentComponentStrand","AssessmentCriteria","AssessmentInfo","AssessmentObjective","AssessmentQuestion","AssessmentStructure","AssignmentBrief","AustraliaEducationDocument","AustraliaLawDocument","AustraliaMedicineDocument","AustriaHealthGuidance","AustriaStatute","AustriaSubjectCurriculum","Author","AuthorArchiveBoundingBox","AvatarElement","Award","BelgiumHealthGuidance","BelgiumStatute","BelgiumSubjectCurriculum","BendingSubdiscipline","BilingualPlaceTerm","BilingualText","BilingualTextEnGa","BilingualTextIsles","BilingualTextQuebec","BilingualTextRootPdf","BlogPostMetadata","BosniaAndHerzegovinaHealthGuidance","BosniaAndHerzegovinaStatute","BosniaAndHerzegovinaSubjectCurriculum","BoundingBox","BrazilEducationDocument","BrazilLawDocument","BrazilMedicineDocument","Breakdown","BridgeEdge","BulgariaHealthGuidance","BulgariaStatute","BulgariaSubjectCurriculum","BusinessMarkingScheme","BusinessSubjectDiscriminator","CBATask","CaliforniaOChoice","CaliforniaOCourse","CaliforniaOGradeProfile","CanadaEducationDocument","CanadaLawDocument","CanadaMedicineDocument","CanadianProvinceDocument","CandidatePDF","CanuintLocation","CanuintRecording","CanuintSpeaker","CanuintTranscription","CelticContent","CelticCurriculumComparison","CelticCurriculumSpec","CelticExample","CelticForm","CelticGrammarPattern","CelticLearningOutcome","CelticMorphologySpec","CelticNamedEntity","CelticTerm","CelticWord","CertGuidance","CertificationCitation","CharacterRelationship","ChariotOfSidrach","ChemSubjectDiscriminator","ChemistryGrade","ChemistryKCWeight","ChemistryMarkingQuestion","ChemistryMarkingRationale","ChemistryMarkingScheme","ChemistryMarkingSection","ChemistryMarksBreakdown","ChemistryStepMark","ChemistryStudyMilestone","ChemistryStudyWeek","ChemistryWebExamPaperDiscussionResponse","ChemistryWebMarkingSchemeExplanationResponse","ChemistryWebStudyPlanResponse","CircularExtraction","CircularReference","CitedUrl","ClassifiedFolkloreRecord","Coefficient","CognatePair","CognateSet","ColorInfo","ComicParticleFrame","CommonIrishError","CommonwealthJurisdictionMetadata","CommonwealthMemberState","CompetencyLink","ComputerScienceGrade","ComputerScienceKCWeight","ComputerScienceMarkingQuestion","ComputerScienceMarkingRationale","ComputerScienceMarkingScheme","ComputerScienceMarkingSection","ComputerScienceMarksBreakdown","ComputerScienceStepMark","ComputerScienceStudyMilestone","ComputerScienceStudyWeek","ComputerScienceWebExamPaperDiscussionResponse","ComputerScienceWebMarkingSchemeExplanationResponse","ComputerScienceWebStudyPlanResponse","ConceptChain","CondensedPage","ContactInfo","CookingSpitOfInnisCera","CourseDescriptor","CoursePointsPrediction","CourseworkArtifactExtraction","CourtFee","CourtForm","CourtRule","CoverageCell","CoverageMatrix","CroatiaHealthGuidance","CroatiaStatute","CroatiaSubjectCurriculum","CrossJurisdictionBridge","CrossJurisdictionEquivalency","CrossNationComparison","CrossNationCurriculumSpec","CrossNationLearningOutcome","CrossNationLearningOutcomeIsles","CsSubjectDiscriminator","CultureHeritageClaim","CultureTopicProfile","CurriculumComparison","CurriculumDesigned","CurriculumExtraction","CurriculumMapping","CurriculumSection","CurriculumSpecIsles","CurriculumSpecStrand","CurriculumStrand","CurriculumTopic","CurriculumUnit","CyprusHealthGuidance","CyprusStatute","CyprusSubjectCurriculum","CzechiaHealthGuidance","CzechiaStatute","CzechiaSubjectCurriculum","DenmarkHealthGuidance","DenmarkStatute","DenmarkSubjectCurriculum","Density","DerivationClass","DeveloperProfile","DiagramCoordinate","DiagramEdge","DiagramNode","DiagramPayload","DialectAnalysis","DialectIndicator","DialectSimilarity","DialogueLine","DisagreementVariant","DocSkillTag","DocumentMetadata","DocumentStructure","DuchasBoundingBox","DuchasFolkloreReference","DuchasLocation","DuchasManuscriptItem","DuchasManuscriptRecord","DuchasManuscriptVolume","DuchasPerson","DuchasPersonName","DuchasPersonNameExtraction","DuchasPhotograph","DuchasSchool","DuchasSchoolsItem","DuchasSchoolsPart","DuchasSchoolsTopic","DuchasSchoolsVolume","DuchasTranscription","DuchasTranscriptionLine","DuchasXMLRecord","ECDCSurveillance","EMAMedicine","EUDocument","EUExtractableBilingualDocument","EUMultilingualText","EURLexDecision","EURLexDirective","EURLexRegulation","EURLexTreaty","EdexcelQualSpec","Education","EducationEntry","EducationalTerm","EiraicTitle","EiraicTreasures","Element","EmailClassificationResult","EmailThread","EngSubjectDiscriminator","EnglandEducationDocument","EnglandLawDocument","EnglandMedicineDocument","EnglishGrade","EnglishKCWeight","EnglishMarkingQuestion","EnglishMarkingRationale","EnglishMarkingScheme","EnglishMarkingSection","EnglishMarksBreakdown","EnglishStepMark","EnglishStudyMilestone","EnglishStudyWeek","EnglishWebExamPaperDiscussionResponse","EnglishWebMarkingSchemeExplanationResponse","EnglishWebStudyPlanResponse","EnhancedLearningOutcome","EnsembleConsensus","EnsemblePathOutput","EquivalencyCell","EquivalencyGraph","EstoniaHealthGuidance","EstoniaStatute","EstoniaSubjectCurriculum","EurostatDatasetMetadata","EurydiceNationalEducationStructure","EvidenceLink","ExamAssessmentComponent","ExamPaperIsles","ExamPaperStrand","ExamQuestion","ExamQuestionIsles","ExamQuestionStrand","ExamSectionIsles","ExamSectionStrand","ExamStatistics","ExaminerCommentary","ExaminerReport","ExitCardQuestion","ExitCardSet","Experience","ExtractedCurriculumDocument","ExtractedEntity","ExtractedRelationship","ExtractionBudget","FIBOConfig","FadaError","FalseFriend","FeatherOfBirdOfCrannog","FestivalEntity","FinlandHealthGuidance","FinlandStatute","FinlandSubjectCurriculum","FolkloreElement","FormulaRecord","Foundation","FranceEducationDocument","FranceLawDocument","FranceMedicineDocument","FrenchMarkingScheme","FrenchSubjectDiscriminator","GCSEAreaTopic","GCSEAssessmentObjective","GCSEBilingualText","GCSECrossSubjectTopics","GCSEExamPaper","GCSEMarkingScheme","GCSEPerQuestionScheme","GCSEQuestion","GCSEQuestionSection","GCSESubjectPDFLink","GCSESyllabusDiagram","GCSESyllabusSpec","GaeilgeGrade","GaeilgeKCWeight","GaeilgeMarkingQuestion","GaeilgeMarkingRationale","GaeilgeMarkingScheme","GaeilgeMarkingSection","GaeilgeMarksBreakdown","GaeilgeStepMark","GaeilgeStudyMilestone","GaeilgeStudyWeek","GaeilgeWebExamPaperDiscussionResponse","GaeilgeWebMarkingSchemeExplanationResponse","GaeilgeWebStudyPlanResponse","GaelSubjectDiscriminator","GameGenre","GameItem","GameLocation","GameProject","GameTechnology","GameplayMediaDescriptor","GameplayNarrativeBeat","GameplayPalette","GameplayPowerEvent","GameplayProvenance","GameplayTransferability","GameplayVfxVocabulary","GameplayVisualGrammar","GardaVetting","GbaMagicSystem","GeminiDeepResearchReport","GenerationSpec","GeoDistribution","GeoLocation","GeoPoint","GeoSubjectDiscriminator","GeographicUnit","GeographyGrade","GeographyKCWeight","GeographyMarkingQuestion","GeographyMarkingRationale","GeographyMarkingScheme","GeographyMarkingSection","GeographyMarksBreakdown","GeographyStepMark","GeographyStudyMilestone","GeographyStudyWeek","GeographyWebExamPaperDiscussionResponse","GeographyWebMarkingSchemeExplanationResponse","GeographyWebStudyPlanResponse","GeorgiaHealthGuidance","GeorgiaStatute","GeorgiaSubjectCurriculum","GermanyEducationDocument","GermanyLawDocument","GermanyMedicineDocument","GlossaryEntry","GlossaryReference","GradeBoundary","GradeLevel","GradingScale","GrammarError","GrammarPattern","GrammarProgress","GrammarTopic","GreeceHealthGuidance","GreeceStatute","GreeceSubjectCurriculum","GroundedElement","GuernseyAssessmentObjective","GuernseyEducationDocument","GuernseyLawDocument","GuernseySyllabusSpec","GuernseyTopic","HHTLocation","HHTTranscription","HadesBoon","HandwritingExtraction","HandwrittenEquation","HeaderElement","HeiferSkinOfDobar","HiddenHeritagesTale","HistoryMarkingScheme","HistorySubjectDiscriminator","HungaryHealthGuidance","HungaryStatute","HungarySubjectCurriculum","HybridProfile","ITTerm","IcelandHealthGuidance","IcelandStatute","IcelandSubjectCurriculum","IdentityDocument","ImageAssetMetadata","ImagePromptSpec","IndiaEducationDocument","IndiaLawDocument","IndiaMedicineDocument","InformantDetails","InitialMutation","IrishAdjectiveGrammar","IrishContentQuality","IrishCopulaPattern","IrishGrammar","IrishNounGrammar","IrishVerbGrammar","IsleOfManAssessmentObjective","IsleOfManEducationDocument","IsleOfManLawDocument","IsleOfManSyllabusSpec","IsleOfManTopic","ItalyEducationDocument","ItalyLawDocument","ItalyMedicineDocument","IterationStep","JCBilingualText","JCCBADescriptor","JCStrandRecord","JCSubjectPDFLink","JCSubjectSpecification","JcCurriculumStrand","JcLearningOutcome","JcRubricDescriptor","JerseyAssessmentObjective","JerseyEducationDocument","JerseyLawDocument","JerseySyllabusSpec","JerseyTopic","JsonSchema","Judgement","JuniorCycleExamPaper","JuniorCycleLearningOutcome","JuniorCycleQuestion","JuniorCycleQuestionSection","JuniorCycleShortCourse","JuniorCycleSubjectSpec","JuniorCycleWellbeingStatement","JurisdictionOverride","KnowledgeTriple","KosovoHealthGuidance","KosovoStatute","KosovoSubjectCurriculum","L2LPOutcome","LCBilingualText","LCCircularDepartment","LCCircularToSyllabusLink","LCCrossLinguisticConcept","LCDiagramRegion","LCEducationCircular","LCEnglishEquivalent","LCExamPaper","LCGaelicTopic","LCGradeDescriptor","LCLearningOutcome","LCMarkAllocation","LCMarkingScheme","LCModule","LCModuleTopic","LCQuestion","LCQuestionSection","LCSubjectPDFLink","LCSyllabus","LCSyllabusDiagram","LCSyllabusDocument","LCTopicExtraction","LatviaHealthGuidance","LatviaStatute","LatviaSubjectCurriculum","LayoutFingerprint","LeabharlannDoc","LearningGraph","LearningGraphCell","LearningGraphColumn","LearningGraphPrerequisite","LearningGraphRow","LearningOutcome","LeavingCertSyllabus","LecturerInfo","LegalAidForm","LegalAidPage","LegalCaseProfile","LegalTerm","LiechtensteinHealthGuidance","LiechtensteinStatute","LiechtensteinSubjectCurriculum","LineageTrace","LinguisticToken","LinkedInEducation","LinkedInExperience","LinkedInProfile","LithuaniaHealthGuidance","LithuaniaStatute","LithuaniaSubjectCurriculum","LocationFeature","LogainmCoordinates","LogainmDuchasLink","LogainmPlace","LogainmSearchResult","LowConfidenceSection","LuxembourgHealthGuidance","LuxembourgStatute","LuxembourgSubjectCurriculum","MaltaHealthGuidance","MaltaStatute","MaltaSubjectCurriculum","MarkingAnnotation","MarkingBandDescriptor","MarkingCriteria","MarkingCriterion","MarkingLevel","MarkingPointSec","MarkingPointStrand","MarkingSchemeDiff","MarkingSchemeSec","MarkingSchemeShared","MarkingSchemeStrand","MarkingSchemeSummary","MarkingSection","MathSubjectDiscriminator","MathematicsGrade","MathematicsKCWeight","MathematicsMarkingQuestion","MathematicsMarkingRationale","MathematicsMarkingScheme","MathematicsMarkingSection","MathematicsMarksBreakdown","MathematicsStepMark","MathematicsStudyMilestone","MathematicsStudyWeek","MathematicsWebExamPaperDiscussionResponse","MathematicsWebMarkingSchemeExplanationResponse","MathematicsWebStudyPlanResponse","MatriculationAudit","MatriculationRequirement","MediaDescriptor","MedicalCaseProfile","Metric","MexicoEducationDocument","MexicoLawDocument","MexicoMedicineDocument","ModelComparisonResult","ModelResult","ModuleDescriptor","MoldovaHealthGuidance","MoldovaStatute","MoldovaSubjectCurriculum","MontenegroHealthGuidance","MontenegroStatute","MontenegroSubjectCurriculum","MontrealSchoolBoardRecord","MorphologicalFeature","MorphologicalFeatures","MotifAnalysis","MotifOccurrence","MusicMarkingScheme","MusicProducerProfile","MusicProfile","MusicRelease","MusicSubjectDiscriminator","MusicTrack","MutationTriggerPattern","MythologicalCharacter","MythologicalLocation","MythologicalStory","NCCAKeyCompetencyRootPdf","NCCAPolicyCriteria","NPC","NPCDialogue","NPCGreeting","Naionra","NameVariant","NarrativeBeat","NationComparison","NationJurisdictionMetadata","NetherlandsHealthGuidance","NetherlandsStatute","NetherlandsSubjectCurriculum","NewZealandEducationDocument","NewZealandLawDocument","NewZealandMedicineDocument","NigeriaState","NigerianFederalCurriculumSpec","NigerianStateCurriculumSpec","NonlinearSystemRecord","NorthMacedoniaHealthGuidance","NorthMacedoniaStatute","NorthMacedoniaSubjectCurriculum","NorthernIrelandEducationDocument","NorthernIrelandExamPaper","NorthernIrelandLawDocument","NorthernIrelandMedicineDocument","NorthernIrelandQuestion","NorthernIrelandSection","NorwayHealthGuidance","NorwayStatute","NorwaySubjectCurriculum","Notebook","NounDeclension","NpcDialogue","NpcDialogueExchange","NumericalMethodRecord","OCRBackendV4","OCRModelV4","OCRQualSpec","OCRValidationResult","OfficialDocumentMediaDescriptor","OfficialDocumentType","OfficialMediaCategory","OfficialNarrativeBeat","OfficialPalette","OfficialPowerEvent","OfficialProvenance","OfficialTransferability","OfficialVfxVocabulary","OfficialVisualGrammar","OralStudyPlan","OralStudySegment","OutcomeAlignment","OutcomeAssessment","OutcomeQuestionMapping","PIABPage","PackageRelease","PageDescription","Palette","ParentPlace","ParticleClass","PastExamQuestion","PastPaper","PastPaperRef","PastPaperStorage","PedagogyOverlay","PedagogyPrincipleDetail","PedagogySet","PersonEntity","PhoneticFeature","PhysicsMarkingScheme","PhysicsSubjectDiscriminator","PigSkinBagOfHealingWell","PigSkinOfDobar","PlaceEntity","Placement","PlacementResponse","PlacementResult","PlacenameText","PlayerLanguageProfile","PolandEducationDocument","PolandLawDocument","PolandMedicineDocument","PoliticalTopicProfile","PortfolioSkill","PortugalHealthGuidance","PortugalStatute","PortugalSubjectCurriculum","PossessionPattern","PowerEvent","PracticeItem","PrepositionalPronoun","PrimaryAreaSpecStage","PrimaryCurriculumArea","PrimaryLearningOutcome","PrimaryLearningOutcomeStage","PrimaryStrand","PrimaryStrandStage","ProfessionalExperience","ProfessionalRegistration","Programme","ProgrammeDescriptor","ProgressReport","ProgressStatistics","Project","ProsePalette","Provenance","Publication","QQIAward","QqiFetAward","QuebecEducationBilingualRecord","QueryResult","Quest","QuestHint","QuestObjective","QuestPackBilingualText","QuestPackEvidenceLink","QuestPackFormativeItem","QuestPackScore","QuestReward","QuestionAnalysis","QuickAnalysis","ReadingListItem","Reference","RegionalMotif","RegressionDiagnostics","RelationshipExtractionResult","ResearchGateProfile","ResearchGatePublication","ResearchLink","ResearchSiteMap","ResourceSharingRecommendation","ResponseAnalysis","RomaniaHealthGuidance","RomaniaStatute","RomaniaSubjectCurriculum","RubricDescriptor","RubricScore","SOLASCourse","SamildanachOfLugh","ScaleTier","ScotlandAssessmentObjective","ScotlandEducationDocument","ScotlandLawDocument","ScotlandMedicineDocument","ScotlandSyllabusSpec","ScotlandTopic","ScrapingSession","ScriptStep","SearchFilter","SearchResult","SearchTelemetry","SerbiaHealthGuidance","SerbiaStatute","SerbiaSubjectCurriculum","SevenPigsOfEasmal","SiteAnalysis","Skill","SkillAssessment","SkillCategoryCv","SkillExtractionResult","SlovakiaHealthGuidance","SlovakiaStatute","SlovakiaSubjectCurriculum","SloveniaHealthGuidance","SloveniaStatute","SloveniaSubjectCurriculum","SocialLink","SoftwareFingerprint","SolutionStep","SoundChange","SouthAfricaEducationDocument","SouthAfricaLawDocument","SouthAfricaMedicineDocument","SpainEducationDocument","SpainLawDocument","SpainMedicineDocument","Speaker","SpeakerLineup","SpeakerTurn","SpearOfAssal","SpecialismRubric","SpellingError","StatisticMetadata","StatisticRecord","StatisticalProcedureRecord","StatisticsQuery","StatuteReference","StoryEvent","StoryExtraction","StudentAnswerScript","StudentFeedback","StudentTranscriptRow","StudyPlan","StudyPlanBilingual","StudyPlanKeyCompetencyWeight","StudyPlanMilestone","StudyPlanWeek","StyleAnalysis","StyleBlend","StyleComparison","StyleEmbedding","StyleFeatures","StyleMatchVariant","StyleMatchVariants","StyleTransferSpec","Subject","SubjectIsles","SubjectMasteryRow","SubjectQuestPack","SubjectRegistryRow","SubjectRubric","SubjectSlug","SupernaturalEntity","SwedenHealthGuidance","SwedenStatute","SwedenSubjectCurriculum","SwitzerlandHealthGuidance","SwitzerlandStatute","SwitzerlandSubjectCurriculum","SwordOfCaladbolg","SyllabusLevel","SyllabusStructure","SyllabusTopic","TU","TableElement","TaleSummary","TaleType","TaleVariant","TaleVariantAnalysis","TalesListingPage","TeachingQualification","TeachingResource","TearmaDomainTerms","TearmaFolkloreLink","TearmaSearchResult","TearmaTerm","TechTopicProfile","TermDefinition","TermEntry","TermRelation","TermText","TertiaryExamPaper","TextConsensus","TextDisagreement","Tg4EpisodeClassification","TheoremRecord","ThreeApplesOfHesperides","TimelineEvent","TopicDistribution","TranscriptQualityAudit","TranscriptionSegment","Transferability","TranslationRequest","TranslationResult","TrendAnalysis","TrendPoint","Triple","TriplesResult","TurkeyHealthGuidance","TurkeyStatute","TurkeySubjectCurriculum","UIComponentSuggestion","UKExamSection","UKQualificationSpec","UKQuestion","US_US_CAEducationDocument","US_US_CALawDocument","US_US_CAMedicineDocument","UiIndicator","UkraineEducationDocument","UkraineLawDocument","UkraineMedicineDocument","UnifiedSourceRecord","University","UniversityOfGalwayArtifact","UoGArtefactProvenanceMeta","UoGAssignment","UoGCaMark","UoGCodeCell","UoGExamPaper","UoGExamQuestionBloomTag","UoGLearningOutcome","UoGModuleCatalogueRow","UoGModuleSummary","UoGPersonalArchiveArtefact","UoGQuestion","UoGReadingItem","UoGSyllabusDescriptor","UoGTopic","UsageExample","VSOPattern","ValidationFinding","VenezuelaEducationDocument","VenezuelaLawDocument","VenezuelaMedicineDocument","VerbConjugation","VerbForm","VerificationSummary","VfxVocabulary","VisualGrammar","VisualScene","VisualSequence","VocabularyNote","VocabularyNotePlayer","VocabularyProgress","VocabularySet","VolumeSummary","WalesAssessmentObjective","WalesEducationDocument","WalesLawDocument","WalesMedicineDocument","WalesSyllabusSpec","WalesTopic","WheelOfTimeMediaDescriptor","WheelOfTimeNarrativeBeat","WheelOfTimePowerEvent","WheelOfTimeProvenance","WheelOfTimeTransferability","WheelOfTimeVfxVocabulary","WheelOfTimeVisualGrammar","WhelpOfIoruaidh","WorkedSolution","WorksheetAnswers","WorksheetQuestion","ZoteroPaper",]
         ), enums=set(
-          ["ALevelAQASubject","ALevelEdexcelSubject","ALevelExamBoard","ALevelGrade","ALevelLanguage","ALevelOCRSubject","ALevelStage","ALevelSubjectSlug","AchievementLevel","AdminUnitCategory","AggregationLevel","AistearAgeBand","AistearDialect","AistearLanguageMedium","AistearTheme","AlignmentMethod","AlignmentType","AnamSource","ArtStyle","ArtefactKind","ArtefactProvenance","AssessmentComponentType","AssessmentType","AssignmentKind","AuthorArchiveCivicCategory","AwardingBody","BiasMode","BifurcationType","BlogPostType","BloomLevel","BloomsLevel","BoonSlot","BoonTier","CAOField","CCEALevel","CCEASubject","CameraAngle","CaseCategory","CelticBranch","CelticDeity","CelticEntityType","CelticLanguage","CelticLanguageArchive","CelticLanguageCurriculum","CelticSoundChange","CelticTradition","ChangeSeverity","CharacterType","ChemCommonMistake","ChemExperimentType","ChemQuestionType","ChemistryLanguage","ChemistryLevel","ColorScheme","ComicParticleForm","CompositionType","ComputerScienceLanguage","ComputerScienceLevel","ConvergenceRate","CourtLevel","CrossJurisdictionConcept","CsCommonMistake","CsNotationType","CsQuestionType","CultureTopic","CurriculumFramework","DataSource","DiagramMode","DifficultyLevel","DistributionFamily","DocCategory","DocumentCategory","DocumentKind","DocumentType","DocumentTypeIsles","DocumentTypeOcr","DuchasCollection","EQFLevel","EUInstitution","EULanguage","EditorialStatus","EducationLevel","EducationLevelCeltic","EducationLevelIsles","EducationalStage","EiraicCapability","EiraicProvenance","EiraicSubject","EmailClass","EngCommonMistake","EngGenreType","EngSkillType","EnglishLanguage","EnglishLevel","EntityConfidence","EntryPathway","EquationConfidence","EquivalencyJurisdiction","EvidenceQuality","ExamBoard","ExamLevel","FolkloreOccupation","FolkloreSource","FolkloreTopic","GCSEAOLevel","GCSEAQASubject","GCSEAssessmentType","GCSEDexcelSubject","GCSEExamBoard","GCSEGrade","GCSEOCRSubject","GCSEStage","GCSESubjectSlug","GaeilgeLanguage","GaeilgeLevel","GaelCommonMistake","GaelRegister","GaelSkillType","GameZoneType","GbaElement","GbaGame","GeminiDomain","GeoCommonMistake","GeoFeatureCategory","GeoRegionalFocus","GeoSkillType","GeographicGranularity","GeographyLanguage","GeographyLevel","GodName","GrammarPatternType","GrammaticalCase","GrammaticalGender","GrammaticalNumber","GuernseyLevel","GuernseySubject","HEIType","HTRBackend","HandbookTopicCode","ImagePurpose","InferenceProcedure","IrishCopulaType","IrishCountyCode","IrishDeclension","IrishDialect","IrishDialectArchive","IrishDialectOcr","IrishGender","IrishOCRErrorType","IrishSpellingStandard","IsleOfManLevel","IsleOfManSubject","JCEducationStage","JCLanguage","JCStrand","JCSubjectSlug","JCYearBand","JerseyLevel","JerseySubject","JuniorCycleSubject","Jurisdiction","KnowledgeTripleKind","LC6Language","LC6Subject","LCEducationStage","LCQuestionType","LCSubjectSlug","Language","LanguageCode","LanguageCodeIsles","LanguageCodeOcr","LeabharlannDocKind","LeabharlannLanguage","LeabharlannSubcorpus","LearningGraphPedagogyPrinciple","LearningGraphSkillType","LeavingCertSubject","LegalAidCategory","LegalAidEligibilityOutcome","LightingStyle","MarkingBand","MarkingType","MathCommonMistake","MathContentLanguage","MathMarkingBand","MathQuestionType","MathematicsLanguage","MathematicsLevel","MediaType","MetricCategory","Mood","MoodCategory","MusicGenre","MusicGenreArtwork","MusicGenrePortfolio","MutationType","MythologicalCycle","NCCAAwardDescriptor","NCCACertificationStage","NCCAKeyCompetency","NCCASubjectSlug","NFQLevel","Nation","NationEducationLevel","NfqLevel","NonlinearSystemKind","NounDeclensionClass","NumericalMethod","OCRQuality","OralStudyPlanPhase","OralStudyPlanTTSProvider","PIABPageKind","Package","PaperKind","PartOfSpeech","PartOfSpeechArchive","PlatformType","PoliticalTopic","PortfolioSkillCategory","PrimaryArea","PrimaryAreaCode","PrimaryMathsStrand","PrimaryStage","PrimaryYearLevel","ProficiencyLevel","ProfileType","ProgrammeStage","ProjectStatus","QQILevel","Quadrant","QualificationBoard","QualificationLevel","QuestDifficulty","QuestPackDifficulty","QuestPackFeedbackChannel","QuestPackItemType","QuestPackLanguage","QuestPackStage","QuestType","QuestionType","ReadingFormat","ReadingOrder","Region","RegistrySource","RegistryStatus","RegressionFamily","RelationshipType","RubricStyle","SCQFLevel","SCQFSubject","SOLASPath","Semester","SkillCategory","SkillDomain","Specialism","StatisticsAgency","StudyMode","StudyPlanAssessmentType","StudyPlanIrishDialect","StudyPlanKeyCompetency","SupernaturalType","TechTopic","TermStatus","TerminologyDomain","TerminologySource","TertiaryMathTopic","TimeGranularity","TranscriptionConfidence","UIComponentKind","UKNCCESubjectSlug","UKNCCEYearLevel","UKQuestionType","UiType","UniversityType","UoGArtifactKind","UoGBloomLevel","UoGLanguage","UoGPaperFormat","UoGProvenanceKind","UoGSitting","UoGStage","ValidationSeverity","VerbConjugationClass","VerbMood","VerbTense","VisualStyle","WJECLevel","WJECSubject",]
+          ["ALevelAQASubject","ALevelEdexcelSubject","ALevelExamBoard","ALevelGrade","ALevelLanguage","ALevelOCRSubject","ALevelStage","ALevelSubjectSlug","AccountingCommonMistake","AccountingQuestionType","AchievementLevel","AdminUnitCategory","AggregationLevel","AistearAgeBand","AistearDialect","AistearLanguageMedium","AistearTheme","AlignmentMethod","AlignmentType","AnamSource","AppliedMathsCommonMistake","AppliedMathsQuestionType","ArtCommonMistake","ArtQuestionType","ArtStyle","ArtefactKind","ArtefactProvenance","AssessmentComponentType","AssessmentType","AssignmentKind","AuthorArchiveCivicCategory","AwardingBody","BiasMode","BifurcationType","BlogPostType","BloomLevel","BloomsLevel","BoonSlot","BoonTier","BusinessCommonMistake","BusinessQuestionType","CAOField","CCEALevel","CCEASubject","CameraAngle","CaseCategory","CelticBranch","CelticDeity","CelticEntityType","CelticLanguage","CelticLanguageArchive","CelticLanguageCurriculum","CelticSoundChange","CelticTradition","ChangeSeverity","CharacterType","ChemCommonMistake","ChemExperimentType","ChemQuestionType","ChemistryLanguage","ChemistryLevel","ColorScheme","ComicParticleForm","CompositionType","ComputerScienceLanguage","ComputerScienceLevel","ConvergenceRate","CourtLevel","CrossJurisdictionConcept","CsCommonMistake","CsNotationType","CsQuestionType","CultureTopic","CurriculumFramework","DataSource","DiagramMode","DifficultyLevel","DistributionFamily","DocCategory","DocumentCategory","DocumentKind","DocumentType","DocumentTypeIsles","DocumentTypeOcr","DuchasCollection","EQFLevel","EUInstitution","EULanguage","EditorialStatus","EducationLevel","EducationLevelCeltic","EducationLevelIsles","EducationalStage","EiraicCapability","EiraicProvenance","EiraicSubject","EmailClass","EngCommonMistake","EngGenreType","EngSkillType","EnglishLanguage","EnglishLevel","EntityConfidence","EntryPathway","EquationConfidence","EquivalencyJurisdiction","EvidenceQuality","ExamBoard","ExamLevel","FolkloreOccupation","FolkloreSource","FolkloreTopic","FrenchCommonMistake","FrenchQuestionType","GCSEAOLevel","GCSEAQASubject","GCSEAssessmentType","GCSEDexcelSubject","GCSEExamBoard","GCSEGrade","GCSEOCRSubject","GCSEStage","GCSESubjectSlug","GaeilgeLanguage","GaeilgeLevel","GaelCommonMistake","GaelRegister","GaelSkillType","GameZoneType","GbaElement","GbaGame","GeminiDomain","GeoCommonMistake","GeoFeatureCategory","GeoRegionalFocus","GeoSkillType","GeographicGranularity","GeographyLanguage","GeographyLevel","GodName","GrammarPatternType","GrammaticalCase","GrammaticalGender","GrammaticalNumber","GuernseyLevel","GuernseySubject","HEIType","HTRBackend","HandbookTopicCode","HistoryCommonMistake","HistoryQuestionType","ImagePurpose","InferenceProcedure","IrishCopulaType","IrishCountyCode","IrishDeclension","IrishDialect","IrishDialectArchive","IrishDialectOcr","IrishGender","IrishOCRErrorType","IrishSpellingStandard","IsleOfManLevel","IsleOfManSubject","JCEducationStage","JCLanguage","JCStrand","JCSubjectSlug","JCYearBand","JerseyLevel","JerseySubject","JuniorCycleSubject","Jurisdiction","KnowledgeTripleKind","LC6Language","LC6Subject","LCEducationStage","LCQuestionType","LCSubjectSlug","Language","LanguageCode","LanguageCodeIsles","LanguageCodeOcr","LeabharlannDocKind","LeabharlannLanguage","LeabharlannSubcorpus","LearningGraphPedagogyPrinciple","LearningGraphSkillType","LeavingCertSubject","LegalAidCategory","LegalAidEligibilityOutcome","LightingStyle","MarkingBand","MarkingType","MathCommonMistake","MathContentLanguage","MathMarkingBand","MathQuestionType","MathematicsLanguage","MathematicsLevel","MediaType","MetricCategory","Mood","MoodCategory","MusicCommonMistake","MusicGenre","MusicGenreArtwork","MusicGenrePortfolio","MusicQuestionType","MutationType","MythologicalCycle","NCCAAwardDescriptor","NCCACertificationStage","NCCAKeyCompetency","NCCASubjectSlug","NFQLevel","Nation","NationEducationLevel","NfqLevel","NonlinearSystemKind","NounDeclensionClass","NumericalMethod","OCRQuality","OralStudyPlanPhase","OralStudyPlanTTSProvider","PIABPageKind","Package","PaperKind","PartOfSpeech","PartOfSpeechArchive","PhysicsCommonMistake","PhysicsQuestionType","PlatformType","PoliticalTopic","PortfolioSkillCategory","PrimaryArea","PrimaryAreaCode","PrimaryMathsStrand","PrimaryStage","PrimaryYearLevel","ProficiencyLevel","ProfileType","ProgrammeStage","ProjectStatus","QQILevel","Quadrant","QualificationBoard","QualificationLevel","QuestDifficulty","QuestPackDifficulty","QuestPackFeedbackChannel","QuestPackItemType","QuestPackLanguage","QuestPackStage","QuestType","QuestionType","ReadingFormat","ReadingOrder","Region","RegistrySource","RegistryStatus","RegressionFamily","RelationshipType","RubricStyle","SCQFLevel","SCQFSubject","SOLASPath","Semester","SkillCategory","SkillDomain","Specialism","StatisticsAgency","StudyMode","StudyPlanAssessmentType","StudyPlanIrishDialect","StudyPlanKeyCompetency","SupernaturalType","TechTopic","TermStatus","TerminologyDomain","TerminologySource","TertiaryMathTopic","TimeGranularity","TranscriptionConfidence","UIComponentKind","UKNCCESubjectSlug","UKNCCEYearLevel","UKQuestionType","UiType","UniversityType","UoGArtifactKind","UoGBloomLevel","UoGLanguage","UoGPaperFormat","UoGProvenanceKind","UoGSitting","UoGStage","ValidationSeverity","VerbConjugationClass","VerbMood","VerbTense","VisualStyle","WJECLevel","WJECSubject",]
         ), runtime=DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_RUNTIME)
 
     # #########################################################################
-    # Generated enums 288
+    # Generated enums 304
     # #########################################################################
 
     @property
@@ -60,6 +60,14 @@ class TypeBuilder(type_builder.TypeBuilder):
     @property
     def ALevelSubjectSlug(self) -> "ALevelSubjectSlugViewer":
         return ALevelSubjectSlugViewer(self)
+
+    @property
+    def AccountingCommonMistake(self) -> "AccountingCommonMistakeViewer":
+        return AccountingCommonMistakeViewer(self)
+
+    @property
+    def AccountingQuestionType(self) -> "AccountingQuestionTypeViewer":
+        return AccountingQuestionTypeViewer(self)
 
     @property
     def AchievementLevel(self) -> "AchievementLevelViewer":
@@ -100,6 +108,22 @@ class TypeBuilder(type_builder.TypeBuilder):
     @property
     def AnamSource(self) -> "AnamSourceViewer":
         return AnamSourceViewer(self)
+
+    @property
+    def AppliedMathsCommonMistake(self) -> "AppliedMathsCommonMistakeViewer":
+        return AppliedMathsCommonMistakeViewer(self)
+
+    @property
+    def AppliedMathsQuestionType(self) -> "AppliedMathsQuestionTypeViewer":
+        return AppliedMathsQuestionTypeViewer(self)
+
+    @property
+    def ArtCommonMistake(self) -> "ArtCommonMistakeViewer":
+        return ArtCommonMistakeViewer(self)
+
+    @property
+    def ArtQuestionType(self) -> "ArtQuestionTypeViewer":
+        return ArtQuestionTypeViewer(self)
 
     @property
     def ArtStyle(self) -> "ArtStyleViewer":
@@ -160,6 +184,14 @@ class TypeBuilder(type_builder.TypeBuilder):
     @property
     def BoonTier(self) -> "BoonTierViewer":
         return BoonTierViewer(self)
+
+    @property
+    def BusinessCommonMistake(self) -> "BusinessCommonMistakeViewer":
+        return BusinessCommonMistakeViewer(self)
+
+    @property
+    def BusinessQuestionType(self) -> "BusinessQuestionTypeViewer":
+        return BusinessQuestionTypeViewer(self)
 
     @property
     def CAOField(self) -> "CAOFieldViewer":
@@ -446,6 +478,14 @@ class TypeBuilder(type_builder.TypeBuilder):
         return FolkloreTopicViewer(self)
 
     @property
+    def FrenchCommonMistake(self) -> "FrenchCommonMistakeViewer":
+        return FrenchCommonMistakeViewer(self)
+
+    @property
+    def FrenchQuestionType(self) -> "FrenchQuestionTypeViewer":
+        return FrenchQuestionTypeViewer(self)
+
+    @property
     def GCSEAOLevel(self) -> "GCSEAOLevelViewer":
         return GCSEAOLevelViewer(self)
 
@@ -584,6 +624,14 @@ class TypeBuilder(type_builder.TypeBuilder):
     @property
     def HandbookTopicCode(self) -> "HandbookTopicCodeViewer":
         return HandbookTopicCodeViewer(self)
+
+    @property
+    def HistoryCommonMistake(self) -> "HistoryCommonMistakeViewer":
+        return HistoryCommonMistakeViewer(self)
+
+    @property
+    def HistoryQuestionType(self) -> "HistoryQuestionTypeViewer":
+        return HistoryQuestionTypeViewer(self)
 
     @property
     def ImagePurpose(self) -> "ImagePurposeViewer":
@@ -798,6 +846,10 @@ class TypeBuilder(type_builder.TypeBuilder):
         return MoodCategoryViewer(self)
 
     @property
+    def MusicCommonMistake(self) -> "MusicCommonMistakeViewer":
+        return MusicCommonMistakeViewer(self)
+
+    @property
     def MusicGenre(self) -> "MusicGenreViewer":
         return MusicGenreViewer(self)
 
@@ -808,6 +860,10 @@ class TypeBuilder(type_builder.TypeBuilder):
     @property
     def MusicGenrePortfolio(self) -> "MusicGenrePortfolioViewer":
         return MusicGenrePortfolioViewer(self)
+
+    @property
+    def MusicQuestionType(self) -> "MusicQuestionTypeViewer":
+        return MusicQuestionTypeViewer(self)
 
     @property
     def MutationType(self) -> "MutationTypeViewer":
@@ -892,6 +948,14 @@ class TypeBuilder(type_builder.TypeBuilder):
     @property
     def PartOfSpeechArchive(self) -> "PartOfSpeechArchiveViewer":
         return PartOfSpeechArchiveViewer(self)
+
+    @property
+    def PhysicsCommonMistake(self) -> "PhysicsCommonMistakeViewer":
+        return PhysicsCommonMistakeViewer(self)
+
+    @property
+    def PhysicsQuestionType(self) -> "PhysicsQuestionTypeViewer":
+        return PhysicsQuestionTypeViewer(self)
 
     @property
     def PlatformType(self) -> "PlatformTypeViewer":
@@ -1183,7 +1247,7 @@ class TypeBuilder(type_builder.TypeBuilder):
 
 
     # #########################################################################
-    # Generated classes 908
+    # Generated classes 924
     # #########################################################################
 
     @property
@@ -1261,6 +1325,14 @@ class TypeBuilder(type_builder.TypeBuilder):
     @property
     def AcademicModuleDescriptor(self) -> "AcademicModuleDescriptorViewer":
         return AcademicModuleDescriptorViewer(self)
+
+    @property
+    def AccountingMarkingScheme(self) -> "AccountingMarkingSchemeViewer":
+        return AccountingMarkingSchemeViewer(self)
+
+    @property
+    def AccountingSubjectDiscriminator(self) -> "AccountingSubjectDiscriminatorViewer":
+        return AccountingSubjectDiscriminatorViewer(self)
 
     @property
     def AdaptiveAssessment(self) -> "AdaptiveAssessmentViewer":
@@ -1363,6 +1435,14 @@ class TypeBuilder(type_builder.TypeBuilder):
         return ApplicationTimelineViewer(self)
 
     @property
+    def AppliedMathsMarkingScheme(self) -> "AppliedMathsMarkingSchemeViewer":
+        return AppliedMathsMarkingSchemeViewer(self)
+
+    @property
+    def AppliedMathsSubjectDiscriminator(self) -> "AppliedMathsSubjectDiscriminatorViewer":
+        return AppliedMathsSubjectDiscriminatorViewer(self)
+
+    @property
     def Apprenticeship(self) -> "ApprenticeshipViewer":
         return ApprenticeshipViewer(self)
 
@@ -1373,6 +1453,14 @@ class TypeBuilder(type_builder.TypeBuilder):
     @property
     def ArmourOfClochur(self) -> "ArmourOfClochurViewer":
         return ArmourOfClochurViewer(self)
+
+    @property
+    def ArtMarkingScheme(self) -> "ArtMarkingSchemeViewer":
+        return ArtMarkingSchemeViewer(self)
+
+    @property
+    def ArtSubjectDiscriminator(self) -> "ArtSubjectDiscriminatorViewer":
+        return ArtSubjectDiscriminatorViewer(self)
 
     @property
     def ArtworkAnalysis(self) -> "ArtworkAnalysisViewer":
@@ -1545,6 +1633,14 @@ class TypeBuilder(type_builder.TypeBuilder):
     @property
     def BulgariaSubjectCurriculum(self) -> "BulgariaSubjectCurriculumViewer":
         return BulgariaSubjectCurriculumViewer(self)
+
+    @property
+    def BusinessMarkingScheme(self) -> "BusinessMarkingSchemeViewer":
+        return BusinessMarkingSchemeViewer(self)
+
+    @property
+    def BusinessSubjectDiscriminator(self) -> "BusinessSubjectDiscriminatorViewer":
+        return BusinessSubjectDiscriminatorViewer(self)
 
     @property
     def CBATask(self) -> "CBATaskViewer":
@@ -2435,6 +2531,14 @@ class TypeBuilder(type_builder.TypeBuilder):
         return FranceMedicineDocumentViewer(self)
 
     @property
+    def FrenchMarkingScheme(self) -> "FrenchMarkingSchemeViewer":
+        return FrenchMarkingSchemeViewer(self)
+
+    @property
+    def FrenchSubjectDiscriminator(self) -> "FrenchSubjectDiscriminatorViewer":
+        return FrenchSubjectDiscriminatorViewer(self)
+
+    @property
     def GCSEAreaTopic(self) -> "GCSEAreaTopicViewer":
         return GCSEAreaTopicViewer(self)
 
@@ -2805,6 +2909,14 @@ class TypeBuilder(type_builder.TypeBuilder):
     @property
     def HiddenHeritagesTale(self) -> "HiddenHeritagesTaleViewer":
         return HiddenHeritagesTaleViewer(self)
+
+    @property
+    def HistoryMarkingScheme(self) -> "HistoryMarkingSchemeViewer":
+        return HistoryMarkingSchemeViewer(self)
+
+    @property
+    def HistorySubjectDiscriminator(self) -> "HistorySubjectDiscriminatorViewer":
+        return HistorySubjectDiscriminatorViewer(self)
 
     @property
     def HungaryHealthGuidance(self) -> "HungaryHealthGuidanceViewer":
@@ -3487,6 +3599,10 @@ class TypeBuilder(type_builder.TypeBuilder):
         return MotifOccurrenceViewer(self)
 
     @property
+    def MusicMarkingScheme(self) -> "MusicMarkingSchemeViewer":
+        return MusicMarkingSchemeViewer(self)
+
+    @property
     def MusicProducerProfile(self) -> "MusicProducerProfileViewer":
         return MusicProducerProfileViewer(self)
 
@@ -3497,6 +3613,10 @@ class TypeBuilder(type_builder.TypeBuilder):
     @property
     def MusicRelease(self) -> "MusicReleaseViewer":
         return MusicReleaseViewer(self)
+
+    @property
+    def MusicSubjectDiscriminator(self) -> "MusicSubjectDiscriminatorViewer":
+        return MusicSubjectDiscriminatorViewer(self)
 
     @property
     def MusicTrack(self) -> "MusicTrackViewer":
@@ -3801,6 +3921,14 @@ class TypeBuilder(type_builder.TypeBuilder):
     @property
     def PhoneticFeature(self) -> "PhoneticFeatureViewer":
         return PhoneticFeatureViewer(self)
+
+    @property
+    def PhysicsMarkingScheme(self) -> "PhysicsMarkingSchemeViewer":
+        return PhysicsMarkingSchemeViewer(self)
+
+    @property
+    def PhysicsSubjectDiscriminator(self) -> "PhysicsSubjectDiscriminatorViewer":
+        return PhysicsSubjectDiscriminatorViewer(self)
 
     @property
     def PigSkinBagOfHealingWell(self) -> "PigSkinBagOfHealingWellViewer":
@@ -4821,7 +4949,7 @@ class TypeBuilder(type_builder.TypeBuilder):
 
 
 # #########################################################################
-# Generated enums 288
+# Generated enums 304
 # #########################################################################
 
 class ALevelAQASubjectAst:
@@ -5812,6 +5940,110 @@ class ALevelSubjectSlugValues:
     
 
 
+class AccountingCommonMistakeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.enum("AccountingCommonMistake")
+        self._values: typing.Set[str] = set([  "TOPIC_MISUNDERSTANDING",  "CALCULATION_ERROR",  "METHOD_INCOMPLETE",  ])
+        self._vals = AccountingCommonMistakeValues(self._bldr, self._values)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def values(self) -> "AccountingCommonMistakeValues":
+        return self._vals
+
+
+class AccountingCommonMistakeViewer(AccountingCommonMistakeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
+        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
+    
+
+class AccountingCommonMistakeValues:
+    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
+        self.__bldr = enum_bldr
+        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def TOPIC_MISUNDERSTANDING(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("TOPIC_MISUNDERSTANDING"))
+    
+    @property
+    def CALCULATION_ERROR(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("CALCULATION_ERROR"))
+    
+    @property
+    def METHOD_INCOMPLETE(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("METHOD_INCOMPLETE"))
+    
+    
+
+
+class AccountingQuestionTypeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.enum("AccountingQuestionType")
+        self._values: typing.Set[str] = set([  "SHORT_ANSWER",  "EXTENDED_RESPONSE",  "CALCULATION",  "DATA_ANALYSIS",  "ESSAY",  "DIAGRAM_BASED",  ])
+        self._vals = AccountingQuestionTypeValues(self._bldr, self._values)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def values(self) -> "AccountingQuestionTypeValues":
+        return self._vals
+
+
+class AccountingQuestionTypeViewer(AccountingQuestionTypeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
+        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
+    
+
+class AccountingQuestionTypeValues:
+    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
+        self.__bldr = enum_bldr
+        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def SHORT_ANSWER(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("SHORT_ANSWER"))
+    
+    @property
+    def EXTENDED_RESPONSE(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("EXTENDED_RESPONSE"))
+    
+    @property
+    def CALCULATION(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("CALCULATION"))
+    
+    @property
+    def DATA_ANALYSIS(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("DATA_ANALYSIS"))
+    
+    @property
+    def ESSAY(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("ESSAY"))
+    
+    @property
+    def DIAGRAM_BASED(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("DIAGRAM_BASED"))
+    
+    
+
+
 class AchievementLevelAst:
     def __init__(self, tb: type_builder.TypeBuilder):
         _tb = tb._tb # type: ignore (we know how to use this private attribute)
@@ -6360,6 +6592,226 @@ class AnamSourceValues:
     @property
     def Manual(self) -> type_builder.EnumValueViewer:
         return type_builder.EnumValueViewer(self.__bldr.value("Manual"))
+    
+    
+
+
+class AppliedMathsCommonMistakeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.enum("AppliedMathsCommonMistake")
+        self._values: typing.Set[str] = set([  "ALGEBRAIC_ERROR",  "UNIT_MISMATCH",  "ASSUMPTION_UNSTATED",  "METHOD_INCOMPLETE",  "ROUNDING_ERROR",  "CONCEPT_CONFUSION",  ])
+        self._vals = AppliedMathsCommonMistakeValues(self._bldr, self._values)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def values(self) -> "AppliedMathsCommonMistakeValues":
+        return self._vals
+
+
+class AppliedMathsCommonMistakeViewer(AppliedMathsCommonMistakeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
+        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
+    
+
+class AppliedMathsCommonMistakeValues:
+    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
+        self.__bldr = enum_bldr
+        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def ALGEBRAIC_ERROR(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("ALGEBRAIC_ERROR"))
+    
+    @property
+    def UNIT_MISMATCH(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("UNIT_MISMATCH"))
+    
+    @property
+    def ASSUMPTION_UNSTATED(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("ASSUMPTION_UNSTATED"))
+    
+    @property
+    def METHOD_INCOMPLETE(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("METHOD_INCOMPLETE"))
+    
+    @property
+    def ROUNDING_ERROR(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("ROUNDING_ERROR"))
+    
+    @property
+    def CONCEPT_CONFUSION(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("CONCEPT_CONFUSION"))
+    
+    
+
+
+class AppliedMathsQuestionTypeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.enum("AppliedMathsQuestionType")
+        self._values: typing.Set[str] = set([  "SHORT_ANSWER",  "EXTENDED_RESPONSE",  "CALCULATION",  "PROOF",  "APPLIED",  "DIAGRAM_BASED",  ])
+        self._vals = AppliedMathsQuestionTypeValues(self._bldr, self._values)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def values(self) -> "AppliedMathsQuestionTypeValues":
+        return self._vals
+
+
+class AppliedMathsQuestionTypeViewer(AppliedMathsQuestionTypeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
+        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
+    
+
+class AppliedMathsQuestionTypeValues:
+    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
+        self.__bldr = enum_bldr
+        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def SHORT_ANSWER(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("SHORT_ANSWER"))
+    
+    @property
+    def EXTENDED_RESPONSE(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("EXTENDED_RESPONSE"))
+    
+    @property
+    def CALCULATION(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("CALCULATION"))
+    
+    @property
+    def PROOF(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("PROOF"))
+    
+    @property
+    def APPLIED(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("APPLIED"))
+    
+    @property
+    def DIAGRAM_BASED(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("DIAGRAM_BASED"))
+    
+    
+
+
+class ArtCommonMistakeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.enum("ArtCommonMistake")
+        self._values: typing.Set[str] = set([  "TOPIC_MISUNDERSTANDING",  "CALCULATION_ERROR",  "METHOD_INCOMPLETE",  ])
+        self._vals = ArtCommonMistakeValues(self._bldr, self._values)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def values(self) -> "ArtCommonMistakeValues":
+        return self._vals
+
+
+class ArtCommonMistakeViewer(ArtCommonMistakeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
+        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
+    
+
+class ArtCommonMistakeValues:
+    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
+        self.__bldr = enum_bldr
+        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def TOPIC_MISUNDERSTANDING(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("TOPIC_MISUNDERSTANDING"))
+    
+    @property
+    def CALCULATION_ERROR(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("CALCULATION_ERROR"))
+    
+    @property
+    def METHOD_INCOMPLETE(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("METHOD_INCOMPLETE"))
+    
+    
+
+
+class ArtQuestionTypeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.enum("ArtQuestionType")
+        self._values: typing.Set[str] = set([  "SHORT_ANSWER",  "EXTENDED_RESPONSE",  "CALCULATION",  "DATA_ANALYSIS",  "ESSAY",  "DIAGRAM_BASED",  ])
+        self._vals = ArtQuestionTypeValues(self._bldr, self._values)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def values(self) -> "ArtQuestionTypeValues":
+        return self._vals
+
+
+class ArtQuestionTypeViewer(ArtQuestionTypeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
+        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
+    
+
+class ArtQuestionTypeValues:
+    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
+        self.__bldr = enum_bldr
+        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def SHORT_ANSWER(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("SHORT_ANSWER"))
+    
+    @property
+    def EXTENDED_RESPONSE(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("EXTENDED_RESPONSE"))
+    
+    @property
+    def CALCULATION(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("CALCULATION"))
+    
+    @property
+    def DATA_ANALYSIS(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("DATA_ANALYSIS"))
+    
+    @property
+    def ESSAY(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("ESSAY"))
+    
+    @property
+    def DIAGRAM_BASED(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("DIAGRAM_BASED"))
     
     
 
@@ -7354,6 +7806,110 @@ class BoonTierValues:
     @property
     def Duo(self) -> type_builder.EnumValueViewer:
         return type_builder.EnumValueViewer(self.__bldr.value("Duo"))
+    
+    
+
+
+class BusinessCommonMistakeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.enum("BusinessCommonMistake")
+        self._values: typing.Set[str] = set([  "TOPIC_MISUNDERSTANDING",  "CALCULATION_ERROR",  "METHOD_INCOMPLETE",  ])
+        self._vals = BusinessCommonMistakeValues(self._bldr, self._values)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def values(self) -> "BusinessCommonMistakeValues":
+        return self._vals
+
+
+class BusinessCommonMistakeViewer(BusinessCommonMistakeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
+        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
+    
+
+class BusinessCommonMistakeValues:
+    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
+        self.__bldr = enum_bldr
+        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def TOPIC_MISUNDERSTANDING(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("TOPIC_MISUNDERSTANDING"))
+    
+    @property
+    def CALCULATION_ERROR(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("CALCULATION_ERROR"))
+    
+    @property
+    def METHOD_INCOMPLETE(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("METHOD_INCOMPLETE"))
+    
+    
+
+
+class BusinessQuestionTypeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.enum("BusinessQuestionType")
+        self._values: typing.Set[str] = set([  "SHORT_ANSWER",  "EXTENDED_RESPONSE",  "CALCULATION",  "DATA_ANALYSIS",  "ESSAY",  "DIAGRAM_BASED",  ])
+        self._vals = BusinessQuestionTypeValues(self._bldr, self._values)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def values(self) -> "BusinessQuestionTypeValues":
+        return self._vals
+
+
+class BusinessQuestionTypeViewer(BusinessQuestionTypeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
+        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
+    
+
+class BusinessQuestionTypeValues:
+    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
+        self.__bldr = enum_bldr
+        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def SHORT_ANSWER(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("SHORT_ANSWER"))
+    
+    @property
+    def EXTENDED_RESPONSE(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("EXTENDED_RESPONSE"))
+    
+    @property
+    def CALCULATION(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("CALCULATION"))
+    
+    @property
+    def DATA_ANALYSIS(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("DATA_ANALYSIS"))
+    
+    @property
+    def ESSAY(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("ESSAY"))
+    
+    @property
+    def DIAGRAM_BASED(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("DIAGRAM_BASED"))
     
     
 
@@ -12200,6 +12756,110 @@ class FolkloreTopicValues:
     
 
 
+class FrenchCommonMistakeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.enum("FrenchCommonMistake")
+        self._values: typing.Set[str] = set([  "TOPIC_MISUNDERSTANDING",  "CALCULATION_ERROR",  "METHOD_INCOMPLETE",  ])
+        self._vals = FrenchCommonMistakeValues(self._bldr, self._values)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def values(self) -> "FrenchCommonMistakeValues":
+        return self._vals
+
+
+class FrenchCommonMistakeViewer(FrenchCommonMistakeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
+        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
+    
+
+class FrenchCommonMistakeValues:
+    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
+        self.__bldr = enum_bldr
+        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def TOPIC_MISUNDERSTANDING(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("TOPIC_MISUNDERSTANDING"))
+    
+    @property
+    def CALCULATION_ERROR(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("CALCULATION_ERROR"))
+    
+    @property
+    def METHOD_INCOMPLETE(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("METHOD_INCOMPLETE"))
+    
+    
+
+
+class FrenchQuestionTypeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.enum("FrenchQuestionType")
+        self._values: typing.Set[str] = set([  "SHORT_ANSWER",  "EXTENDED_RESPONSE",  "CALCULATION",  "DATA_ANALYSIS",  "ESSAY",  "DIAGRAM_BASED",  ])
+        self._vals = FrenchQuestionTypeValues(self._bldr, self._values)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def values(self) -> "FrenchQuestionTypeValues":
+        return self._vals
+
+
+class FrenchQuestionTypeViewer(FrenchQuestionTypeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
+        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
+    
+
+class FrenchQuestionTypeValues:
+    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
+        self.__bldr = enum_bldr
+        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def SHORT_ANSWER(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("SHORT_ANSWER"))
+    
+    @property
+    def EXTENDED_RESPONSE(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("EXTENDED_RESPONSE"))
+    
+    @property
+    def CALCULATION(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("CALCULATION"))
+    
+    @property
+    def DATA_ANALYSIS(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("DATA_ANALYSIS"))
+    
+    @property
+    def ESSAY(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("ESSAY"))
+    
+    @property
+    def DIAGRAM_BASED(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("DIAGRAM_BASED"))
+    
+    
+
+
 class GCSEAOLevelAst:
     def __init__(self, tb: type_builder.TypeBuilder):
         _tb = tb._tb # type: ignore (we know how to use this private attribute)
@@ -14734,6 +15394,110 @@ class HandbookTopicCodeValues:
     @property
     def N(self) -> type_builder.EnumValueViewer:
         return type_builder.EnumValueViewer(self.__bldr.value("N"))
+    
+    
+
+
+class HistoryCommonMistakeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.enum("HistoryCommonMistake")
+        self._values: typing.Set[str] = set([  "TOPIC_MISUNDERSTANDING",  "CALCULATION_ERROR",  "METHOD_INCOMPLETE",  ])
+        self._vals = HistoryCommonMistakeValues(self._bldr, self._values)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def values(self) -> "HistoryCommonMistakeValues":
+        return self._vals
+
+
+class HistoryCommonMistakeViewer(HistoryCommonMistakeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
+        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
+    
+
+class HistoryCommonMistakeValues:
+    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
+        self.__bldr = enum_bldr
+        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def TOPIC_MISUNDERSTANDING(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("TOPIC_MISUNDERSTANDING"))
+    
+    @property
+    def CALCULATION_ERROR(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("CALCULATION_ERROR"))
+    
+    @property
+    def METHOD_INCOMPLETE(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("METHOD_INCOMPLETE"))
+    
+    
+
+
+class HistoryQuestionTypeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.enum("HistoryQuestionType")
+        self._values: typing.Set[str] = set([  "SHORT_ANSWER",  "EXTENDED_RESPONSE",  "CALCULATION",  "DATA_ANALYSIS",  "ESSAY",  "DIAGRAM_BASED",  ])
+        self._vals = HistoryQuestionTypeValues(self._bldr, self._values)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def values(self) -> "HistoryQuestionTypeValues":
+        return self._vals
+
+
+class HistoryQuestionTypeViewer(HistoryQuestionTypeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
+        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
+    
+
+class HistoryQuestionTypeValues:
+    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
+        self.__bldr = enum_bldr
+        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def SHORT_ANSWER(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("SHORT_ANSWER"))
+    
+    @property
+    def EXTENDED_RESPONSE(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("EXTENDED_RESPONSE"))
+    
+    @property
+    def CALCULATION(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("CALCULATION"))
+    
+    @property
+    def DATA_ANALYSIS(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("DATA_ANALYSIS"))
+    
+    @property
+    def ESSAY(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("ESSAY"))
+    
+    @property
+    def DIAGRAM_BASED(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("DIAGRAM_BASED"))
     
     
 
@@ -18624,6 +19388,52 @@ class MoodCategoryValues:
     
 
 
+class MusicCommonMistakeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.enum("MusicCommonMistake")
+        self._values: typing.Set[str] = set([  "TOPIC_MISUNDERSTANDING",  "CALCULATION_ERROR",  "METHOD_INCOMPLETE",  ])
+        self._vals = MusicCommonMistakeValues(self._bldr, self._values)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def values(self) -> "MusicCommonMistakeValues":
+        return self._vals
+
+
+class MusicCommonMistakeViewer(MusicCommonMistakeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
+        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
+    
+
+class MusicCommonMistakeValues:
+    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
+        self.__bldr = enum_bldr
+        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def TOPIC_MISUNDERSTANDING(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("TOPIC_MISUNDERSTANDING"))
+    
+    @property
+    def CALCULATION_ERROR(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("CALCULATION_ERROR"))
+    
+    @property
+    def METHOD_INCOMPLETE(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("METHOD_INCOMPLETE"))
+    
+    
+
+
 class MusicGenreAst:
     def __init__(self, tb: type_builder.TypeBuilder):
         _tb = tb._tb # type: ignore (we know how to use this private attribute)
@@ -18870,6 +19680,64 @@ class MusicGenrePortfolioValues:
     @property
     def OTHER(self) -> type_builder.EnumValueViewer:
         return type_builder.EnumValueViewer(self.__bldr.value("OTHER"))
+    
+    
+
+
+class MusicQuestionTypeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.enum("MusicQuestionType")
+        self._values: typing.Set[str] = set([  "SHORT_ANSWER",  "EXTENDED_RESPONSE",  "CALCULATION",  "DATA_ANALYSIS",  "ESSAY",  "DIAGRAM_BASED",  ])
+        self._vals = MusicQuestionTypeValues(self._bldr, self._values)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def values(self) -> "MusicQuestionTypeValues":
+        return self._vals
+
+
+class MusicQuestionTypeViewer(MusicQuestionTypeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
+        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
+    
+
+class MusicQuestionTypeValues:
+    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
+        self.__bldr = enum_bldr
+        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def SHORT_ANSWER(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("SHORT_ANSWER"))
+    
+    @property
+    def EXTENDED_RESPONSE(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("EXTENDED_RESPONSE"))
+    
+    @property
+    def CALCULATION(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("CALCULATION"))
+    
+    @property
+    def DATA_ANALYSIS(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("DATA_ANALYSIS"))
+    
+    @property
+    def ESSAY(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("ESSAY"))
+    
+    @property
+    def DIAGRAM_BASED(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("DIAGRAM_BASED"))
     
     
 
@@ -20460,6 +21328,122 @@ class PartOfSpeechArchiveValues:
     @property
     def X(self) -> type_builder.EnumValueViewer:
         return type_builder.EnumValueViewer(self.__bldr.value("X"))
+    
+    
+
+
+class PhysicsCommonMistakeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.enum("PhysicsCommonMistake")
+        self._values: typing.Set[str] = set([  "ALGEBRAIC_ERROR",  "UNIT_MISMATCH",  "ASSUMPTION_UNSTATED",  "METHOD_INCOMPLETE",  "ROUNDING_ERROR",  "CONCEPT_CONFUSION",  ])
+        self._vals = PhysicsCommonMistakeValues(self._bldr, self._values)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def values(self) -> "PhysicsCommonMistakeValues":
+        return self._vals
+
+
+class PhysicsCommonMistakeViewer(PhysicsCommonMistakeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
+        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
+    
+
+class PhysicsCommonMistakeValues:
+    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
+        self.__bldr = enum_bldr
+        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def ALGEBRAIC_ERROR(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("ALGEBRAIC_ERROR"))
+    
+    @property
+    def UNIT_MISMATCH(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("UNIT_MISMATCH"))
+    
+    @property
+    def ASSUMPTION_UNSTATED(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("ASSUMPTION_UNSTATED"))
+    
+    @property
+    def METHOD_INCOMPLETE(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("METHOD_INCOMPLETE"))
+    
+    @property
+    def ROUNDING_ERROR(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("ROUNDING_ERROR"))
+    
+    @property
+    def CONCEPT_CONFUSION(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("CONCEPT_CONFUSION"))
+    
+    
+
+
+class PhysicsQuestionTypeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.enum("PhysicsQuestionType")
+        self._values: typing.Set[str] = set([  "SHORT_ANSWER",  "EXTENDED_RESPONSE",  "CALCULATION",  "PROOF",  "APPLIED",  "DIAGRAM_BASED",  ])
+        self._vals = PhysicsQuestionTypeValues(self._bldr, self._values)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def values(self) -> "PhysicsQuestionTypeValues":
+        return self._vals
+
+
+class PhysicsQuestionTypeViewer(PhysicsQuestionTypeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
+        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
+    
+
+class PhysicsQuestionTypeValues:
+    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
+        self.__bldr = enum_bldr
+        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def SHORT_ANSWER(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("SHORT_ANSWER"))
+    
+    @property
+    def EXTENDED_RESPONSE(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("EXTENDED_RESPONSE"))
+    
+    @property
+    def CALCULATION(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("CALCULATION"))
+    
+    @property
+    def PROOF(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("PROOF"))
+    
+    @property
+    def APPLIED(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("APPLIED"))
+    
+    @property
+    def DIAGRAM_BASED(self) -> type_builder.EnumValueViewer:
+        return type_builder.EnumValueViewer(self.__bldr.value("DIAGRAM_BASED"))
     
     
 
@@ -25430,7 +26414,7 @@ class WJECSubjectValues:
 
 
 # #########################################################################
-# Generated classes 908
+# Generated classes 924
 # #########################################################################
 
 class ALevelAreaTopicAst:
@@ -26798,6 +27782,132 @@ class AcademicModuleDescriptorProperties:
     @property
     def confidence(self) -> type_builder.ClassPropertyViewer:
         return type_builder.ClassPropertyViewer(self.__bldr.property("confidence"))
+    
+    
+
+
+class AccountingMarkingSchemeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("AccountingMarkingScheme")
+        self._properties: typing.Set[str] = set([  "subject",  "scheme_code",  "language",  "level",  "year",  "source_pdf",  "grade_descriptors",  "mark_allocations",  "subject_specific",  "total_marks",  "total_questions",  ])
+        self._props = AccountingMarkingSchemeProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "AccountingMarkingSchemeProperties":
+        return self._props
+
+
+class AccountingMarkingSchemeViewer(AccountingMarkingSchemeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class AccountingMarkingSchemeProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def subject(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("subject"))
+    
+    @property
+    def scheme_code(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("scheme_code"))
+    
+    @property
+    def language(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("language"))
+    
+    @property
+    def level(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("level"))
+    
+    @property
+    def year(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("year"))
+    
+    @property
+    def source_pdf(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("source_pdf"))
+    
+    @property
+    def grade_descriptors(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("grade_descriptors"))
+    
+    @property
+    def mark_allocations(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("mark_allocations"))
+    
+    @property
+    def subject_specific(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("subject_specific"))
+    
+    @property
+    def total_marks(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("total_marks"))
+    
+    @property
+    def total_questions(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("total_questions"))
+    
+    
+
+
+class AccountingSubjectDiscriminatorAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("AccountingSubjectDiscriminator")
+        self._properties: typing.Set[str] = set([  "primary_topic",  "dominant_question_types",  "most_common_mistake",  ])
+        self._props = AccountingSubjectDiscriminatorProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "AccountingSubjectDiscriminatorProperties":
+        return self._props
+
+
+class AccountingSubjectDiscriminatorViewer(AccountingSubjectDiscriminatorAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class AccountingSubjectDiscriminatorProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def primary_topic(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("primary_topic"))
+    
+    @property
+    def dominant_question_types(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("dominant_question_types"))
+    
+    @property
+    def most_common_mistake(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("most_common_mistake"))
     
     
 
@@ -28397,6 +29507,132 @@ class ApplicationTimelineProperties:
     
 
 
+class AppliedMathsMarkingSchemeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("AppliedMathsMarkingScheme")
+        self._properties: typing.Set[str] = set([  "subject",  "scheme_code",  "language",  "level",  "year",  "source_pdf",  "grade_descriptors",  "mark_allocations",  "subject_specific",  "total_marks",  "total_questions",  ])
+        self._props = AppliedMathsMarkingSchemeProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "AppliedMathsMarkingSchemeProperties":
+        return self._props
+
+
+class AppliedMathsMarkingSchemeViewer(AppliedMathsMarkingSchemeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class AppliedMathsMarkingSchemeProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def subject(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("subject"))
+    
+    @property
+    def scheme_code(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("scheme_code"))
+    
+    @property
+    def language(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("language"))
+    
+    @property
+    def level(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("level"))
+    
+    @property
+    def year(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("year"))
+    
+    @property
+    def source_pdf(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("source_pdf"))
+    
+    @property
+    def grade_descriptors(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("grade_descriptors"))
+    
+    @property
+    def mark_allocations(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("mark_allocations"))
+    
+    @property
+    def subject_specific(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("subject_specific"))
+    
+    @property
+    def total_marks(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("total_marks"))
+    
+    @property
+    def total_questions(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("total_questions"))
+    
+    
+
+
+class AppliedMathsSubjectDiscriminatorAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("AppliedMathsSubjectDiscriminator")
+        self._properties: typing.Set[str] = set([  "primary_topic",  "dominant_question_types",  "most_common_mistake",  ])
+        self._props = AppliedMathsSubjectDiscriminatorProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "AppliedMathsSubjectDiscriminatorProperties":
+        return self._props
+
+
+class AppliedMathsSubjectDiscriminatorViewer(AppliedMathsSubjectDiscriminatorAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class AppliedMathsSubjectDiscriminatorProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def primary_topic(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("primary_topic"))
+    
+    @property
+    def dominant_question_types(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("dominant_question_types"))
+    
+    @property
+    def most_common_mistake(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("most_common_mistake"))
+    
+    
+
+
 class ApprenticeshipAst:
     def __init__(self, tb: type_builder.TypeBuilder):
         _tb = tb._tb # type: ignore (we know how to use this private attribute)
@@ -28602,6 +29838,132 @@ class ArmourOfClochurProperties:
     @property
     def mmo_signal(self) -> type_builder.ClassPropertyViewer:
         return type_builder.ClassPropertyViewer(self.__bldr.property("mmo_signal"))
+    
+    
+
+
+class ArtMarkingSchemeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("ArtMarkingScheme")
+        self._properties: typing.Set[str] = set([  "subject",  "scheme_code",  "language",  "level",  "year",  "source_pdf",  "grade_descriptors",  "mark_allocations",  "subject_specific",  "total_marks",  "total_questions",  ])
+        self._props = ArtMarkingSchemeProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "ArtMarkingSchemeProperties":
+        return self._props
+
+
+class ArtMarkingSchemeViewer(ArtMarkingSchemeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class ArtMarkingSchemeProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def subject(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("subject"))
+    
+    @property
+    def scheme_code(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("scheme_code"))
+    
+    @property
+    def language(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("language"))
+    
+    @property
+    def level(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("level"))
+    
+    @property
+    def year(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("year"))
+    
+    @property
+    def source_pdf(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("source_pdf"))
+    
+    @property
+    def grade_descriptors(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("grade_descriptors"))
+    
+    @property
+    def mark_allocations(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("mark_allocations"))
+    
+    @property
+    def subject_specific(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("subject_specific"))
+    
+    @property
+    def total_marks(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("total_marks"))
+    
+    @property
+    def total_questions(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("total_questions"))
+    
+    
+
+
+class ArtSubjectDiscriminatorAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("ArtSubjectDiscriminator")
+        self._properties: typing.Set[str] = set([  "primary_topic",  "dominant_question_types",  "most_common_mistake",  ])
+        self._props = ArtSubjectDiscriminatorProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "ArtSubjectDiscriminatorProperties":
+        return self._props
+
+
+class ArtSubjectDiscriminatorViewer(ArtSubjectDiscriminatorAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class ArtSubjectDiscriminatorProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def primary_topic(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("primary_topic"))
+    
+    @property
+    def dominant_question_types(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("dominant_question_types"))
+    
+    @property
+    def most_common_mistake(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("most_common_mistake"))
     
     
 
@@ -31292,6 +32654,132 @@ class BulgariaSubjectCurriculumProperties:
     @property
     def content_hash(self) -> type_builder.ClassPropertyViewer:
         return type_builder.ClassPropertyViewer(self.__bldr.property("content_hash"))
+    
+    
+
+
+class BusinessMarkingSchemeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("BusinessMarkingScheme")
+        self._properties: typing.Set[str] = set([  "subject",  "scheme_code",  "language",  "level",  "year",  "source_pdf",  "grade_descriptors",  "mark_allocations",  "subject_specific",  "total_marks",  "total_questions",  ])
+        self._props = BusinessMarkingSchemeProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "BusinessMarkingSchemeProperties":
+        return self._props
+
+
+class BusinessMarkingSchemeViewer(BusinessMarkingSchemeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class BusinessMarkingSchemeProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def subject(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("subject"))
+    
+    @property
+    def scheme_code(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("scheme_code"))
+    
+    @property
+    def language(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("language"))
+    
+    @property
+    def level(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("level"))
+    
+    @property
+    def year(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("year"))
+    
+    @property
+    def source_pdf(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("source_pdf"))
+    
+    @property
+    def grade_descriptors(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("grade_descriptors"))
+    
+    @property
+    def mark_allocations(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("mark_allocations"))
+    
+    @property
+    def subject_specific(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("subject_specific"))
+    
+    @property
+    def total_marks(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("total_marks"))
+    
+    @property
+    def total_questions(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("total_questions"))
+    
+    
+
+
+class BusinessSubjectDiscriminatorAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("BusinessSubjectDiscriminator")
+        self._properties: typing.Set[str] = set([  "primary_topic",  "dominant_question_types",  "most_common_mistake",  ])
+        self._props = BusinessSubjectDiscriminatorProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "BusinessSubjectDiscriminatorProperties":
+        return self._props
+
+
+class BusinessSubjectDiscriminatorViewer(BusinessSubjectDiscriminatorAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class BusinessSubjectDiscriminatorProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def primary_topic(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("primary_topic"))
+    
+    @property
+    def dominant_question_types(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("dominant_question_types"))
+    
+    @property
+    def most_common_mistake(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("most_common_mistake"))
     
     
 
@@ -46020,6 +47508,132 @@ class FranceMedicineDocumentProperties:
     
 
 
+class FrenchMarkingSchemeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("FrenchMarkingScheme")
+        self._properties: typing.Set[str] = set([  "subject",  "scheme_code",  "language",  "level",  "year",  "source_pdf",  "grade_descriptors",  "mark_allocations",  "subject_specific",  "total_marks",  "total_questions",  ])
+        self._props = FrenchMarkingSchemeProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "FrenchMarkingSchemeProperties":
+        return self._props
+
+
+class FrenchMarkingSchemeViewer(FrenchMarkingSchemeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class FrenchMarkingSchemeProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def subject(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("subject"))
+    
+    @property
+    def scheme_code(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("scheme_code"))
+    
+    @property
+    def language(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("language"))
+    
+    @property
+    def level(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("level"))
+    
+    @property
+    def year(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("year"))
+    
+    @property
+    def source_pdf(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("source_pdf"))
+    
+    @property
+    def grade_descriptors(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("grade_descriptors"))
+    
+    @property
+    def mark_allocations(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("mark_allocations"))
+    
+    @property
+    def subject_specific(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("subject_specific"))
+    
+    @property
+    def total_marks(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("total_marks"))
+    
+    @property
+    def total_questions(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("total_questions"))
+    
+    
+
+
+class FrenchSubjectDiscriminatorAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("FrenchSubjectDiscriminator")
+        self._properties: typing.Set[str] = set([  "primary_topic",  "dominant_question_types",  "most_common_mistake",  ])
+        self._props = FrenchSubjectDiscriminatorProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "FrenchSubjectDiscriminatorProperties":
+        return self._props
+
+
+class FrenchSubjectDiscriminatorViewer(FrenchSubjectDiscriminatorAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class FrenchSubjectDiscriminatorProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def primary_topic(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("primary_topic"))
+    
+    @property
+    def dominant_question_types(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("dominant_question_types"))
+    
+    @property
+    def most_common_mistake(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("most_common_mistake"))
+    
+    
+
+
 class GCSEAreaTopicAst:
     def __init__(self, tb: type_builder.TypeBuilder):
         _tb = tb._tb # type: ignore (we know how to use this private attribute)
@@ -51947,6 +53561,132 @@ class HiddenHeritagesTaleProperties:
     @property
     def same_informant_tales(self) -> type_builder.ClassPropertyViewer:
         return type_builder.ClassPropertyViewer(self.__bldr.property("same_informant_tales"))
+    
+    
+
+
+class HistoryMarkingSchemeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("HistoryMarkingScheme")
+        self._properties: typing.Set[str] = set([  "subject",  "scheme_code",  "language",  "level",  "year",  "source_pdf",  "grade_descriptors",  "mark_allocations",  "subject_specific",  "total_marks",  "total_questions",  ])
+        self._props = HistoryMarkingSchemeProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "HistoryMarkingSchemeProperties":
+        return self._props
+
+
+class HistoryMarkingSchemeViewer(HistoryMarkingSchemeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class HistoryMarkingSchemeProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def subject(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("subject"))
+    
+    @property
+    def scheme_code(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("scheme_code"))
+    
+    @property
+    def language(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("language"))
+    
+    @property
+    def level(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("level"))
+    
+    @property
+    def year(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("year"))
+    
+    @property
+    def source_pdf(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("source_pdf"))
+    
+    @property
+    def grade_descriptors(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("grade_descriptors"))
+    
+    @property
+    def mark_allocations(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("mark_allocations"))
+    
+    @property
+    def subject_specific(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("subject_specific"))
+    
+    @property
+    def total_marks(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("total_marks"))
+    
+    @property
+    def total_questions(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("total_questions"))
+    
+    
+
+
+class HistorySubjectDiscriminatorAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("HistorySubjectDiscriminator")
+        self._properties: typing.Set[str] = set([  "primary_topic",  "dominant_question_types",  "most_common_mistake",  ])
+        self._props = HistorySubjectDiscriminatorProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "HistorySubjectDiscriminatorProperties":
+        return self._props
+
+
+class HistorySubjectDiscriminatorViewer(HistorySubjectDiscriminatorAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class HistorySubjectDiscriminatorProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def primary_topic(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("primary_topic"))
+    
+    @property
+    def dominant_question_types(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("dominant_question_types"))
+    
+    @property
+    def most_common_mistake(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("most_common_mistake"))
     
     
 
@@ -62994,6 +64734,85 @@ class MotifOccurrenceProperties:
     
 
 
+class MusicMarkingSchemeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("MusicMarkingScheme")
+        self._properties: typing.Set[str] = set([  "subject",  "scheme_code",  "language",  "level",  "year",  "source_pdf",  "grade_descriptors",  "mark_allocations",  "subject_specific",  "total_marks",  "total_questions",  ])
+        self._props = MusicMarkingSchemeProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "MusicMarkingSchemeProperties":
+        return self._props
+
+
+class MusicMarkingSchemeViewer(MusicMarkingSchemeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class MusicMarkingSchemeProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def subject(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("subject"))
+    
+    @property
+    def scheme_code(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("scheme_code"))
+    
+    @property
+    def language(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("language"))
+    
+    @property
+    def level(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("level"))
+    
+    @property
+    def year(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("year"))
+    
+    @property
+    def source_pdf(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("source_pdf"))
+    
+    @property
+    def grade_descriptors(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("grade_descriptors"))
+    
+    @property
+    def mark_allocations(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("mark_allocations"))
+    
+    @property
+    def subject_specific(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("subject_specific"))
+    
+    @property
+    def total_marks(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("total_marks"))
+    
+    @property
+    def total_questions(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("total_questions"))
+    
+    
+
+
 class MusicProducerProfileAst:
     def __init__(self, tb: type_builder.TypeBuilder):
         _tb = tb._tb # type: ignore (we know how to use this private attribute)
@@ -63203,6 +65022,53 @@ class MusicReleaseProperties:
     @property
     def type(self) -> type_builder.ClassPropertyViewer:
         return type_builder.ClassPropertyViewer(self.__bldr.property("type"))
+    
+    
+
+
+class MusicSubjectDiscriminatorAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("MusicSubjectDiscriminator")
+        self._properties: typing.Set[str] = set([  "primary_topic",  "dominant_question_types",  "most_common_mistake",  ])
+        self._props = MusicSubjectDiscriminatorProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "MusicSubjectDiscriminatorProperties":
+        return self._props
+
+
+class MusicSubjectDiscriminatorViewer(MusicSubjectDiscriminatorAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class MusicSubjectDiscriminatorProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def primary_topic(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("primary_topic"))
+    
+    @property
+    def dominant_question_types(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("dominant_question_types"))
+    
+    @property
+    def most_common_mistake(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("most_common_mistake"))
     
     
 
@@ -68231,6 +70097,132 @@ class PhoneticFeatureProperties:
     @property
     def typical_of(self) -> type_builder.ClassPropertyViewer:
         return type_builder.ClassPropertyViewer(self.__bldr.property("typical_of"))
+    
+    
+
+
+class PhysicsMarkingSchemeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("PhysicsMarkingScheme")
+        self._properties: typing.Set[str] = set([  "subject",  "scheme_code",  "language",  "level",  "year",  "source_pdf",  "grade_descriptors",  "mark_allocations",  "subject_specific",  "total_marks",  "total_questions",  ])
+        self._props = PhysicsMarkingSchemeProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "PhysicsMarkingSchemeProperties":
+        return self._props
+
+
+class PhysicsMarkingSchemeViewer(PhysicsMarkingSchemeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class PhysicsMarkingSchemeProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def subject(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("subject"))
+    
+    @property
+    def scheme_code(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("scheme_code"))
+    
+    @property
+    def language(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("language"))
+    
+    @property
+    def level(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("level"))
+    
+    @property
+    def year(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("year"))
+    
+    @property
+    def source_pdf(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("source_pdf"))
+    
+    @property
+    def grade_descriptors(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("grade_descriptors"))
+    
+    @property
+    def mark_allocations(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("mark_allocations"))
+    
+    @property
+    def subject_specific(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("subject_specific"))
+    
+    @property
+    def total_marks(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("total_marks"))
+    
+    @property
+    def total_questions(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("total_questions"))
+    
+    
+
+
+class PhysicsSubjectDiscriminatorAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("PhysicsSubjectDiscriminator")
+        self._properties: typing.Set[str] = set([  "primary_topic",  "dominant_question_types",  "most_common_mistake",  ])
+        self._props = PhysicsSubjectDiscriminatorProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "PhysicsSubjectDiscriminatorProperties":
+        return self._props
+
+
+class PhysicsSubjectDiscriminatorViewer(PhysicsSubjectDiscriminatorAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class PhysicsSubjectDiscriminatorProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def primary_topic(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("primary_topic"))
+    
+    @property
+    def dominant_question_types(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("dominant_question_types"))
+    
+    @property
+    def most_common_mistake(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("most_common_mistake"))
     
     
 

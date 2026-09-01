@@ -527,6 +527,12 @@ class LlmResponseParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractAcademicModuleSyllabus", llm_response=llm_response, mode="request")
         return typing.cast(types.AcademicModuleDescriptor, __result__)
 
+    def ExtractAccountingMarkingScheme(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.LCMarkingScheme:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractAccountingMarkingScheme", llm_response=llm_response, mode="request")
+        return typing.cast(types.LCMarkingScheme, __result__)
+
     def ExtractAistearFramework(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> types.AistearDocument:
@@ -599,11 +605,23 @@ class LlmResponseParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractApplicationTimeline", llm_response=llm_response, mode="request")
         return typing.cast(types.ApplicationTimeline, __result__)
 
+    def ExtractAppliedMathsMarkingScheme(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.LCMarkingScheme:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractAppliedMathsMarkingScheme", llm_response=llm_response, mode="request")
+        return typing.cast(types.LCMarkingScheme, __result__)
+
     def ExtractApprenticeshipListings(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> types.Apprenticeship:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractApprenticeshipListings", llm_response=llm_response, mode="request")
         return typing.cast(types.Apprenticeship, __result__)
+
+    def ExtractArtMarkingScheme(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.LCMarkingScheme:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractArtMarkingScheme", llm_response=llm_response, mode="request")
+        return typing.cast(types.LCMarkingScheme, __result__)
 
     def ExtractAssignmentBrief(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -742,6 +760,12 @@ class LlmResponseParser:
     ) -> types.BulgariaSubjectCurriculum:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractBulgariaSubjectCurriculum", llm_response=llm_response, mode="request")
         return typing.cast(types.BulgariaSubjectCurriculum, __result__)
+
+    def ExtractBusinessMarkingScheme(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.LCMarkingScheme:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractBusinessMarkingScheme", llm_response=llm_response, mode="request")
+        return typing.cast(types.LCMarkingScheme, __result__)
 
     def ExtractCV(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -1355,6 +1379,12 @@ class LlmResponseParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractFranceMedicineDocument", llm_response=llm_response, mode="request")
         return typing.cast(types.FranceMedicineDocument, __result__)
 
+    def ExtractFrenchMarkingScheme(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.LCMarkingScheme:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractFrenchMarkingScheme", llm_response=llm_response, mode="request")
+        return typing.cast(types.LCMarkingScheme, __result__)
+
     def ExtractGCSECrossSubjectTopics(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> types.GCSECrossSubjectTopics:
@@ -1564,6 +1594,12 @@ class LlmResponseParser:
     ) -> types.HiddenHeritagesTale:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractHiddenHeritagesTale", llm_response=llm_response, mode="request")
         return typing.cast(types.HiddenHeritagesTale, __result__)
+
+    def ExtractHistoryMarkingScheme(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.LCMarkingScheme:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractHistoryMarkingScheme", llm_response=llm_response, mode="request")
+        return typing.cast(types.LCMarkingScheme, __result__)
 
     def ExtractHungaryHealthGuidance(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -2021,6 +2057,12 @@ class LlmResponseParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractMorphology", llm_response=llm_response, mode="request")
         return typing.cast(types.LinguisticToken, __result__)
 
+    def ExtractMusicMarkingScheme(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.LCMarkingScheme:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractMusicMarkingScheme", llm_response=llm_response, mode="request")
+        return typing.cast(types.LCMarkingScheme, __result__)
+
     def ExtractMusicProfile(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> types.MusicProfile:
@@ -2236,6 +2278,12 @@ class LlmResponseParser:
     ) -> typing.List["types.PersonEntity"]:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractPersonEntities", llm_response=llm_response, mode="request")
         return typing.cast(typing.List["types.PersonEntity"], __result__)
+
+    def ExtractPhysicsMarkingScheme(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.LCMarkingScheme:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractPhysicsMarkingScheme", llm_response=llm_response, mode="request")
+        return typing.cast(types.LCMarkingScheme, __result__)
 
     def ExtractPlaceEntities(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -4045,6 +4093,12 @@ class LlmStreamParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractAcademicModuleSyllabus", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.AcademicModuleDescriptor, __result__)
 
+    def ExtractAccountingMarkingScheme(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.LCMarkingScheme:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractAccountingMarkingScheme", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.LCMarkingScheme, __result__)
+
     def ExtractAistearFramework(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> stream_types.AistearDocument:
@@ -4117,11 +4171,23 @@ class LlmStreamParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractApplicationTimeline", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.ApplicationTimeline, __result__)
 
+    def ExtractAppliedMathsMarkingScheme(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.LCMarkingScheme:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractAppliedMathsMarkingScheme", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.LCMarkingScheme, __result__)
+
     def ExtractApprenticeshipListings(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> stream_types.Apprenticeship:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractApprenticeshipListings", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.Apprenticeship, __result__)
+
+    def ExtractArtMarkingScheme(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.LCMarkingScheme:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractArtMarkingScheme", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.LCMarkingScheme, __result__)
 
     def ExtractAssignmentBrief(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -4260,6 +4326,12 @@ class LlmStreamParser:
     ) -> stream_types.BulgariaSubjectCurriculum:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractBulgariaSubjectCurriculum", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.BulgariaSubjectCurriculum, __result__)
+
+    def ExtractBusinessMarkingScheme(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.LCMarkingScheme:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractBusinessMarkingScheme", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.LCMarkingScheme, __result__)
 
     def ExtractCV(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -4873,6 +4945,12 @@ class LlmStreamParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractFranceMedicineDocument", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.FranceMedicineDocument, __result__)
 
+    def ExtractFrenchMarkingScheme(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.LCMarkingScheme:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractFrenchMarkingScheme", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.LCMarkingScheme, __result__)
+
     def ExtractGCSECrossSubjectTopics(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> stream_types.GCSECrossSubjectTopics:
@@ -5082,6 +5160,12 @@ class LlmStreamParser:
     ) -> stream_types.HiddenHeritagesTale:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractHiddenHeritagesTale", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.HiddenHeritagesTale, __result__)
+
+    def ExtractHistoryMarkingScheme(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.LCMarkingScheme:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractHistoryMarkingScheme", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.LCMarkingScheme, __result__)
 
     def ExtractHungaryHealthGuidance(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -5539,6 +5623,12 @@ class LlmStreamParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractMorphology", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.LinguisticToken, __result__)
 
+    def ExtractMusicMarkingScheme(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.LCMarkingScheme:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractMusicMarkingScheme", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.LCMarkingScheme, __result__)
+
     def ExtractMusicProfile(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> stream_types.MusicProfile:
@@ -5754,6 +5844,12 @@ class LlmStreamParser:
     ) -> typing.List["stream_types.PersonEntity"]:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractPersonEntities", llm_response=llm_response, mode="stream")
         return typing.cast(typing.List["stream_types.PersonEntity"], __result__)
+
+    def ExtractPhysicsMarkingScheme(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.LCMarkingScheme:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractPhysicsMarkingScheme", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.LCMarkingScheme, __result__)
 
     def ExtractPlaceEntities(
         self, llm_response: str, baml_options: BamlCallOptions = {},

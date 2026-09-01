@@ -53,7 +53,15 @@ LC_SUBJECT_CONFIG: list[LCSubjectConfig] = [
     LCSubjectConfig("gaeilge",          "Gaeilge",           ("ga",)),
     LCSubjectConfig("english",          "English",           ("en", "ga")),
     LCSubjectConfig("geography",        "Geography",         ("en", "ga")),
-]
+    LCSubjectConfig("accounting",         "Accounting",         ("en", "ga")),
+    LCSubjectConfig("business",           "Business",           ("en", "ga")),
+    LCSubjectConfig("french",             "French",             ("fr", "ga")),
+    LCSubjectConfig("history",            "History",            ("en", "ga")),
+    LCSubjectConfig("art",                "Art",                ("en", "ga")),
+    LCSubjectConfig("music",              "Music",              ("en", "ga")),
+    LCSubjectConfig("applied_mathematics", "Applied Mathematics", ("en", "ga")),
+    LCSubjectConfig("physics",            "Physics",            ("en", "ga")),
+]]
 
 
 # ─── The factory ──────────────────────────────────────────────────────────

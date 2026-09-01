@@ -1342,6 +1342,21 @@ class BamlAsyncClient:
                 "pdf_text": pdf_text,"module_code": module_code,
             })
             return typing.cast(types.AcademicModuleDescriptor, __result__.cast_to(types, types, stream_types, False, __runtime__))
+    async def ExtractAccountingMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> types.LCMarkingScheme:
+        # Check if on_tick is provided
+        if 'on_tick' in baml_options:
+            # Use streaming internally when on_tick is provided
+            __stream__ = self.stream.ExtractAccountingMarkingScheme(pdf_text=pdf_text,year=year,level=level,
+                baml_options=baml_options)
+            return await __stream__.get_final_response()
+        else:
+            # Original non-streaming code
+            __result__ = await self.__options.merge_options(baml_options).call_function_async(function_name="ExtractAccountingMarkingScheme", args={
+                "pdf_text": pdf_text,"year": year,"level": level,
+            })
+            return typing.cast(types.LCMarkingScheme, __result__.cast_to(types, types, stream_types, False, __runtime__))
     async def ExtractAistearFramework(self, text: str,language: str,
         baml_options: BamlCallOptions = {},
     ) -> types.AistearDocument:
@@ -1522,6 +1537,21 @@ class BamlAsyncClient:
                 "page_markdown": page_markdown,"year": year,
             })
             return typing.cast(types.ApplicationTimeline, __result__.cast_to(types, types, stream_types, False, __runtime__))
+    async def ExtractAppliedMathsMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> types.LCMarkingScheme:
+        # Check if on_tick is provided
+        if 'on_tick' in baml_options:
+            # Use streaming internally when on_tick is provided
+            __stream__ = self.stream.ExtractAppliedMathsMarkingScheme(pdf_text=pdf_text,year=year,level=level,
+                baml_options=baml_options)
+            return await __stream__.get_final_response()
+        else:
+            # Original non-streaming code
+            __result__ = await self.__options.merge_options(baml_options).call_function_async(function_name="ExtractAppliedMathsMarkingScheme", args={
+                "pdf_text": pdf_text,"year": year,"level": level,
+            })
+            return typing.cast(types.LCMarkingScheme, __result__.cast_to(types, types, stream_types, False, __runtime__))
     async def ExtractApprenticeshipListings(self, page_markdown: str,
         baml_options: BamlCallOptions = {},
     ) -> types.Apprenticeship:
@@ -1537,6 +1567,21 @@ class BamlAsyncClient:
                 "page_markdown": page_markdown,
             })
             return typing.cast(types.Apprenticeship, __result__.cast_to(types, types, stream_types, False, __runtime__))
+    async def ExtractArtMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> types.LCMarkingScheme:
+        # Check if on_tick is provided
+        if 'on_tick' in baml_options:
+            # Use streaming internally when on_tick is provided
+            __stream__ = self.stream.ExtractArtMarkingScheme(pdf_text=pdf_text,year=year,level=level,
+                baml_options=baml_options)
+            return await __stream__.get_final_response()
+        else:
+            # Original non-streaming code
+            __result__ = await self.__options.merge_options(baml_options).call_function_async(function_name="ExtractArtMarkingScheme", args={
+                "pdf_text": pdf_text,"year": year,"level": level,
+            })
+            return typing.cast(types.LCMarkingScheme, __result__.cast_to(types, types, stream_types, False, __runtime__))
     async def ExtractAssignmentBrief(self, pdf_text: str,module_code: str,
         baml_options: BamlCallOptions = {},
     ) -> types.AssignmentBrief:
@@ -1882,6 +1927,21 @@ class BamlAsyncClient:
                 "nation": nation,"language": language,"subject": subject,"text": text,
             })
             return typing.cast(types.BulgariaSubjectCurriculum, __result__.cast_to(types, types, stream_types, False, __runtime__))
+    async def ExtractBusinessMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> types.LCMarkingScheme:
+        # Check if on_tick is provided
+        if 'on_tick' in baml_options:
+            # Use streaming internally when on_tick is provided
+            __stream__ = self.stream.ExtractBusinessMarkingScheme(pdf_text=pdf_text,year=year,level=level,
+                baml_options=baml_options)
+            return await __stream__.get_final_response()
+        else:
+            # Original non-streaming code
+            __result__ = await self.__options.merge_options(baml_options).call_function_async(function_name="ExtractBusinessMarkingScheme", args={
+                "pdf_text": pdf_text,"year": year,"level": level,
+            })
+            return typing.cast(types.LCMarkingScheme, __result__.cast_to(types, types, stream_types, False, __runtime__))
     async def ExtractCV(self, text: str,
         baml_options: BamlCallOptions = {},
     ) -> typing.List["types.EducationEntry"]:
@@ -3412,6 +3472,21 @@ class BamlAsyncClient:
                 "country_code": country_code,"language": language,"text": text,
             })
             return typing.cast(types.FranceMedicineDocument, __result__.cast_to(types, types, stream_types, False, __runtime__))
+    async def ExtractFrenchMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> types.LCMarkingScheme:
+        # Check if on_tick is provided
+        if 'on_tick' in baml_options:
+            # Use streaming internally when on_tick is provided
+            __stream__ = self.stream.ExtractFrenchMarkingScheme(pdf_text=pdf_text,year=year,level=level,
+                baml_options=baml_options)
+            return await __stream__.get_final_response()
+        else:
+            # Original non-streaming code
+            __result__ = await self.__options.merge_options(baml_options).call_function_async(function_name="ExtractFrenchMarkingScheme", args={
+                "pdf_text": pdf_text,"year": year,"level": level,
+            })
+            return typing.cast(types.LCMarkingScheme, __result__.cast_to(types, types, stream_types, False, __runtime__))
     async def ExtractGCSECrossSubjectTopics(self, pdf_text: str,subject: types.GCSESubjectSlug,
         baml_options: BamlCallOptions = {},
     ) -> types.GCSECrossSubjectTopics:
@@ -3937,6 +4012,21 @@ class BamlAsyncClient:
                 "page_content": page_content,"tale_id": tale_id,
             })
             return typing.cast(types.HiddenHeritagesTale, __result__.cast_to(types, types, stream_types, False, __runtime__))
+    async def ExtractHistoryMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> types.LCMarkingScheme:
+        # Check if on_tick is provided
+        if 'on_tick' in baml_options:
+            # Use streaming internally when on_tick is provided
+            __stream__ = self.stream.ExtractHistoryMarkingScheme(pdf_text=pdf_text,year=year,level=level,
+                baml_options=baml_options)
+            return await __stream__.get_final_response()
+        else:
+            # Original non-streaming code
+            __result__ = await self.__options.merge_options(baml_options).call_function_async(function_name="ExtractHistoryMarkingScheme", args={
+                "pdf_text": pdf_text,"year": year,"level": level,
+            })
+            return typing.cast(types.LCMarkingScheme, __result__.cast_to(types, types, stream_types, False, __runtime__))
     async def ExtractHungaryHealthGuidance(self, nation: str,language: str,text: str,
         baml_options: BamlCallOptions = {},
     ) -> types.HungaryHealthGuidance:
@@ -5077,6 +5167,21 @@ class BamlAsyncClient:
                 "word": word,"context": context,"language": language,
             })
             return typing.cast(types.LinguisticToken, __result__.cast_to(types, types, stream_types, False, __runtime__))
+    async def ExtractMusicMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> types.LCMarkingScheme:
+        # Check if on_tick is provided
+        if 'on_tick' in baml_options:
+            # Use streaming internally when on_tick is provided
+            __stream__ = self.stream.ExtractMusicMarkingScheme(pdf_text=pdf_text,year=year,level=level,
+                baml_options=baml_options)
+            return await __stream__.get_final_response()
+        else:
+            # Original non-streaming code
+            __result__ = await self.__options.merge_options(baml_options).call_function_async(function_name="ExtractMusicMarkingScheme", args={
+                "pdf_text": pdf_text,"year": year,"level": level,
+            })
+            return typing.cast(types.LCMarkingScheme, __result__.cast_to(types, types, stream_types, False, __runtime__))
     async def ExtractMusicProfile(self, platformData: str,platform: types.PlatformType,
         baml_options: BamlCallOptions = {},
     ) -> types.MusicProfile:
@@ -5617,6 +5722,21 @@ class BamlAsyncClient:
                 "text": text,
             })
             return typing.cast(typing.List["types.PersonEntity"], __result__.cast_to(types, types, stream_types, False, __runtime__))
+    async def ExtractPhysicsMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> types.LCMarkingScheme:
+        # Check if on_tick is provided
+        if 'on_tick' in baml_options:
+            # Use streaming internally when on_tick is provided
+            __stream__ = self.stream.ExtractPhysicsMarkingScheme(pdf_text=pdf_text,year=year,level=level,
+                baml_options=baml_options)
+            return await __stream__.get_final_response()
+        else:
+            # Original non-streaming code
+            __result__ = await self.__options.merge_options(baml_options).call_function_async(function_name="ExtractPhysicsMarkingScheme", args={
+                "pdf_text": pdf_text,"year": year,"level": level,
+            })
+            return typing.cast(types.LCMarkingScheme, __result__.cast_to(types, types, stream_types, False, __runtime__))
     async def ExtractPlaceEntities(self, text: str,
         baml_options: BamlCallOptions = {},
     ) -> typing.List["types.PlaceEntity"]:
@@ -9874,6 +9994,18 @@ class BamlStreamClient:
           lambda x: typing.cast(types.AcademicModuleDescriptor, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
+    def ExtractAccountingMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlStream[stream_types.LCMarkingScheme, types.LCMarkingScheme]:
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_async_stream(function_name="ExtractAccountingMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
+        })
+        return baml_py.BamlStream[stream_types.LCMarkingScheme, types.LCMarkingScheme](
+          __result__,
+          lambda x: typing.cast(stream_types.LCMarkingScheme, x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(types.LCMarkingScheme, x.cast_to(types, types, stream_types, False, __runtime__)),
+          __ctx__,
+        )
     def ExtractAistearFramework(self, text: str,language: str,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlStream[stream_types.AistearDocument, types.AistearDocument]:
@@ -10018,6 +10150,18 @@ class BamlStreamClient:
           lambda x: typing.cast(types.ApplicationTimeline, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
+    def ExtractAppliedMathsMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlStream[stream_types.LCMarkingScheme, types.LCMarkingScheme]:
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_async_stream(function_name="ExtractAppliedMathsMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
+        })
+        return baml_py.BamlStream[stream_types.LCMarkingScheme, types.LCMarkingScheme](
+          __result__,
+          lambda x: typing.cast(stream_types.LCMarkingScheme, x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(types.LCMarkingScheme, x.cast_to(types, types, stream_types, False, __runtime__)),
+          __ctx__,
+        )
     def ExtractApprenticeshipListings(self, page_markdown: str,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlStream[stream_types.Apprenticeship, types.Apprenticeship]:
@@ -10028,6 +10172,18 @@ class BamlStreamClient:
           __result__,
           lambda x: typing.cast(stream_types.Apprenticeship, x.cast_to(types, types, stream_types, True, __runtime__)),
           lambda x: typing.cast(types.Apprenticeship, x.cast_to(types, types, stream_types, False, __runtime__)),
+          __ctx__,
+        )
+    def ExtractArtMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlStream[stream_types.LCMarkingScheme, types.LCMarkingScheme]:
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_async_stream(function_name="ExtractArtMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
+        })
+        return baml_py.BamlStream[stream_types.LCMarkingScheme, types.LCMarkingScheme](
+          __result__,
+          lambda x: typing.cast(stream_types.LCMarkingScheme, x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(types.LCMarkingScheme, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
     def ExtractAssignmentBrief(self, pdf_text: str,module_code: str,
@@ -10304,6 +10460,18 @@ class BamlStreamClient:
           __result__,
           lambda x: typing.cast(stream_types.BulgariaSubjectCurriculum, x.cast_to(types, types, stream_types, True, __runtime__)),
           lambda x: typing.cast(types.BulgariaSubjectCurriculum, x.cast_to(types, types, stream_types, False, __runtime__)),
+          __ctx__,
+        )
+    def ExtractBusinessMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlStream[stream_types.LCMarkingScheme, types.LCMarkingScheme]:
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_async_stream(function_name="ExtractBusinessMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
+        })
+        return baml_py.BamlStream[stream_types.LCMarkingScheme, types.LCMarkingScheme](
+          __result__,
+          lambda x: typing.cast(stream_types.LCMarkingScheme, x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(types.LCMarkingScheme, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
     def ExtractCV(self, text: str,
@@ -11530,6 +11698,18 @@ class BamlStreamClient:
           lambda x: typing.cast(types.FranceMedicineDocument, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
+    def ExtractFrenchMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlStream[stream_types.LCMarkingScheme, types.LCMarkingScheme]:
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_async_stream(function_name="ExtractFrenchMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
+        })
+        return baml_py.BamlStream[stream_types.LCMarkingScheme, types.LCMarkingScheme](
+          __result__,
+          lambda x: typing.cast(stream_types.LCMarkingScheme, x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(types.LCMarkingScheme, x.cast_to(types, types, stream_types, False, __runtime__)),
+          __ctx__,
+        )
     def ExtractGCSECrossSubjectTopics(self, pdf_text: str,subject: types.GCSESubjectSlug,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlStream[stream_types.GCSECrossSubjectTopics, types.GCSECrossSubjectTopics]:
@@ -11948,6 +12128,18 @@ class BamlStreamClient:
           __result__,
           lambda x: typing.cast(stream_types.HiddenHeritagesTale, x.cast_to(types, types, stream_types, True, __runtime__)),
           lambda x: typing.cast(types.HiddenHeritagesTale, x.cast_to(types, types, stream_types, False, __runtime__)),
+          __ctx__,
+        )
+    def ExtractHistoryMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlStream[stream_types.LCMarkingScheme, types.LCMarkingScheme]:
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_async_stream(function_name="ExtractHistoryMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
+        })
+        return baml_py.BamlStream[stream_types.LCMarkingScheme, types.LCMarkingScheme](
+          __result__,
+          lambda x: typing.cast(stream_types.LCMarkingScheme, x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(types.LCMarkingScheme, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
     def ExtractHungaryHealthGuidance(self, nation: str,language: str,text: str,
@@ -12862,6 +13054,18 @@ class BamlStreamClient:
           lambda x: typing.cast(types.LinguisticToken, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
+    def ExtractMusicMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlStream[stream_types.LCMarkingScheme, types.LCMarkingScheme]:
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_async_stream(function_name="ExtractMusicMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
+        })
+        return baml_py.BamlStream[stream_types.LCMarkingScheme, types.LCMarkingScheme](
+          __result__,
+          lambda x: typing.cast(stream_types.LCMarkingScheme, x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(types.LCMarkingScheme, x.cast_to(types, types, stream_types, False, __runtime__)),
+          __ctx__,
+        )
     def ExtractMusicProfile(self, platformData: str,platform: types.PlatformType,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlStream[stream_types.MusicProfile, types.MusicProfile]:
@@ -13292,6 +13496,18 @@ class BamlStreamClient:
           __result__,
           lambda x: typing.cast(typing.List["stream_types.PersonEntity"], x.cast_to(types, types, stream_types, True, __runtime__)),
           lambda x: typing.cast(typing.List["types.PersonEntity"], x.cast_to(types, types, stream_types, False, __runtime__)),
+          __ctx__,
+        )
+    def ExtractPhysicsMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlStream[stream_types.LCMarkingScheme, types.LCMarkingScheme]:
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_async_stream(function_name="ExtractPhysicsMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
+        })
+        return baml_py.BamlStream[stream_types.LCMarkingScheme, types.LCMarkingScheme](
+          __result__,
+          lambda x: typing.cast(stream_types.LCMarkingScheme, x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(types.LCMarkingScheme, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
     def ExtractPlaceEntities(self, text: str,
@@ -16482,6 +16698,13 @@ class BamlHttpRequestClient:
             "pdf_text": pdf_text,"module_code": module_code,
         }, mode="request")
         return __result__
+    async def ExtractAccountingMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractAccountingMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
+        }, mode="request")
+        return __result__
     async def ExtractAistearFramework(self, text: str,language: str,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
@@ -16566,11 +16789,25 @@ class BamlHttpRequestClient:
             "page_markdown": page_markdown,"year": year,
         }, mode="request")
         return __result__
+    async def ExtractAppliedMathsMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractAppliedMathsMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
+        }, mode="request")
+        return __result__
     async def ExtractApprenticeshipListings(self, page_markdown: str,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractApprenticeshipListings", args={
             "page_markdown": page_markdown,
+        }, mode="request")
+        return __result__
+    async def ExtractArtMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractArtMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
         }, mode="request")
         return __result__
     async def ExtractAssignmentBrief(self, pdf_text: str,module_code: str,
@@ -16732,6 +16969,13 @@ class BamlHttpRequestClient:
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractBulgariaSubjectCurriculum", args={
             "nation": nation,"language": language,"subject": subject,"text": text,
+        }, mode="request")
+        return __result__
+    async def ExtractBusinessMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractBusinessMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
         }, mode="request")
         return __result__
     async def ExtractCV(self, text: str,
@@ -17448,6 +17692,13 @@ class BamlHttpRequestClient:
             "country_code": country_code,"language": language,"text": text,
         }, mode="request")
         return __result__
+    async def ExtractFrenchMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractFrenchMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
+        }, mode="request")
+        return __result__
     async def ExtractGCSECrossSubjectTopics(self, pdf_text: str,subject: types.GCSESubjectSlug,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
@@ -17691,6 +17942,13 @@ class BamlHttpRequestClient:
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractHiddenHeritagesTale", args={
             "page_content": page_content,"tale_id": tale_id,
+        }, mode="request")
+        return __result__
+    async def ExtractHistoryMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractHistoryMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
         }, mode="request")
         return __result__
     async def ExtractHungaryHealthGuidance(self, nation: str,language: str,text: str,
@@ -18225,6 +18483,13 @@ class BamlHttpRequestClient:
             "word": word,"context": context,"language": language,
         }, mode="request")
         return __result__
+    async def ExtractMusicMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractMusicMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
+        }, mode="request")
+        return __result__
     async def ExtractMusicProfile(self, platformData: str,platform: types.PlatformType,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
@@ -18475,6 +18740,13 @@ class BamlHttpRequestClient:
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractPersonEntities", args={
             "text": text,
+        }, mode="request")
+        return __result__
+    async def ExtractPhysicsMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractPhysicsMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
         }, mode="request")
         return __result__
     async def ExtractPlaceEntities(self, text: str,
@@ -20585,6 +20857,13 @@ class BamlHttpStreamRequestClient:
             "pdf_text": pdf_text,"module_code": module_code,
         }, mode="stream")
         return __result__
+    async def ExtractAccountingMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractAccountingMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
+        }, mode="stream")
+        return __result__
     async def ExtractAistearFramework(self, text: str,language: str,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
@@ -20669,11 +20948,25 @@ class BamlHttpStreamRequestClient:
             "page_markdown": page_markdown,"year": year,
         }, mode="stream")
         return __result__
+    async def ExtractAppliedMathsMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractAppliedMathsMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
+        }, mode="stream")
+        return __result__
     async def ExtractApprenticeshipListings(self, page_markdown: str,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractApprenticeshipListings", args={
             "page_markdown": page_markdown,
+        }, mode="stream")
+        return __result__
+    async def ExtractArtMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractArtMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
         }, mode="stream")
         return __result__
     async def ExtractAssignmentBrief(self, pdf_text: str,module_code: str,
@@ -20835,6 +21128,13 @@ class BamlHttpStreamRequestClient:
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractBulgariaSubjectCurriculum", args={
             "nation": nation,"language": language,"subject": subject,"text": text,
+        }, mode="stream")
+        return __result__
+    async def ExtractBusinessMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractBusinessMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
         }, mode="stream")
         return __result__
     async def ExtractCV(self, text: str,
@@ -21551,6 +21851,13 @@ class BamlHttpStreamRequestClient:
             "country_code": country_code,"language": language,"text": text,
         }, mode="stream")
         return __result__
+    async def ExtractFrenchMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractFrenchMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
+        }, mode="stream")
+        return __result__
     async def ExtractGCSECrossSubjectTopics(self, pdf_text: str,subject: types.GCSESubjectSlug,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
@@ -21794,6 +22101,13 @@ class BamlHttpStreamRequestClient:
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractHiddenHeritagesTale", args={
             "page_content": page_content,"tale_id": tale_id,
+        }, mode="stream")
+        return __result__
+    async def ExtractHistoryMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractHistoryMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
         }, mode="stream")
         return __result__
     async def ExtractHungaryHealthGuidance(self, nation: str,language: str,text: str,
@@ -22328,6 +22642,13 @@ class BamlHttpStreamRequestClient:
             "word": word,"context": context,"language": language,
         }, mode="stream")
         return __result__
+    async def ExtractMusicMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractMusicMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
+        }, mode="stream")
+        return __result__
     async def ExtractMusicProfile(self, platformData: str,platform: types.PlatformType,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
@@ -22578,6 +22899,13 @@ class BamlHttpStreamRequestClient:
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractPersonEntities", args={
             "text": text,
+        }, mode="stream")
+        return __result__
+    async def ExtractPhysicsMarkingScheme(self, pdf_text: str,year: typing.Optional[int] = None,level: typing.Optional[str] = None,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractPhysicsMarkingScheme", args={
+            "pdf_text": pdf_text,"year": year,"level": level,
         }, mode="stream")
         return __result__
     async def ExtractPlaceEntities(self, text: str,
