@@ -2,7 +2,7 @@
 
 The `@dlt_assets` decorator from `dagster-dlt` wraps a dlt source
 + pipeline as a set of Dagster assets. This is the canonical
-pattern for orchestrating dlt pipelines in Dagster (the KCG
+pattern for orchestrating dlt pipelines in Dagster (the Cianfhoghlaim
 orchestrator).
 
 ## Minimal pattern
@@ -104,7 +104,7 @@ def ireland_curriculum_job():
 
 The 5 parallel endpoints will run on 5 workers.
 
-## KCG usage
+## Cianfhoghlaim usage
 
 - `orchestration/defs/ireland/curriculum_dlt_assets.py` —
   the 33+ Ireland curriculum assets, each wrapping a dlt source

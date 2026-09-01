@@ -80,9 +80,9 @@ spec:
               value: "true"
 ```
 
-## KCG usage
+## Cianfhoghlaim usage
 
-The KCG stack uses **Dagster on `bunchloch` (M4 Mac) + `arm1-oci`
+The Cianfhoghlaim stack uses **Dagster on `bunchloch` (M4 Mac) + `arm1-oci`
 (ARM)** for orchestration. GCP Cloud Run is a valid alternative
 for cloud-only deployments.
 

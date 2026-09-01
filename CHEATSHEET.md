@@ -1,98 +1,82 @@
-# CHEATSHEET.md — Cianfhoghlaim in 60 Seconds
+# CHEATSHEET — Cianfhoghlaim 60-Second Quick Path
 
-> **The quick-reference card.** For the full onboarding, see
-> [`NEW-USER-ONBOARDING.md`](NEW-USER-ONBOARDING.md).
+> **The 60-second quick path for operators + agents.** For the
+> 10-minute onboarding see [`NEW-USER-ONBOARDING.md`](NEW-USER-ONBOARDING.md).
+> For the canonical agent instructions see [`AGENTS.md`](AGENTS.md).
+> For the V6 era plan see [`openspec/plans/2026-09-01-cianfhoghlaim-nua-v6-era-v1.md`](openspec/plans/2026-09-01-cianfhoghlaim-nua-v6-era-v1.md).
 
-## The 5-Minute Setup
-
-```bash
-brew install mise
-mise install
-bun install && uv sync
-bun run secrets:env
-bun run secrets:init   # requires Infisical on :8081
-```
-
-## The 5 Daily Commands
+## V6 era quick path (2026-09-01)
 
 ```bash
-mise run core                # sync + install + lint + test + format
-mise run data                # lakehouse + Dagster + CocoIndex
-mise run devops              # IaC + stacks + Komodo/Pangolin
-mise run ml                  # OCR/HTR + 12-agent fleet
-mise run web                 # web/apps + Turborepo
+# 1. Open the consolidated web app
+cd web/apps/cianfhoghlaim-nua && bun install && bun dev
+
+# 2. Verify the BAML client is reachable
+uv run python -c "from baml_client.baml_client.sync_client import b; print(b.GenerateStudyPlanAssets)"
+
+# 3. Run the integration test suite
+uv run pytest tests/test_adk_subject_actions.py tests/test_phase7_certificate_pipeline.py -v
+
+# 4. Validate all openspec changes
+for d in openspec/changes/2026-09-01-*/; do
+  uv run openspec validate "$(basename $d)" --strict
+done
+
+# 5. Try the 7-stage certificate pipeline
+uv run python -c "
+import asyncio
+from meaisinfhoghlaim.certificate import run_certificate_pipeline
+result = asyncio.run(run_certificate_pipeline(
+    learner_id='learner-1', learner_name='Test',
+    subject_slug='chemistry', stage='scoil_sinsearach',
+    lo_codes=['LC-CHEM-LO-3.1'],
+    ncca_policy_pdfs=[('SC-L1-L2-Programme-Statement.pdf', 'Sample NCCA text...')],
+))
+print(f'PNG: {result.png_bytes[:8]!r}')
+"
 ```
 
-## The 5 CI Gates
+## 10 priority openspec changes (V6 era)
 
-```bash
-mise run lint:skills              # 65/65 skills pass
-mise run lint:drift-docs          # AGENTS.md numbers in sync with reality
-mise run lint:registry           # no hardcoded model strings in agents/
-mise run cic:stack-doctor         # 94 stacks GOLD_STANDARD conformant
-mise run lint:mcp-runtime         # 12/12 enabled MCPs have smoke tasks
-```
+| Phase | Change | Key surface |
+|--:|--|--|
+| 1 | `2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1/` | Phase 1 study-plan + oral-plan BAML |
+| 0.5 | `2026-09-01-baml-regeneration-blocker-v1/` | baml_client regenerated |
+| 2 | `2026-09-01-cianfhoghlaim-nua-a2ui-catalog-v1/` | 11-component A2UI v0.9 catalog |
+| 3 | `2026-09-01-cianfhoghlaim-nua-web-consolidation-v1/` | 5 apps → 1 consolidated |
+| 4 | `2026-09-01-cianfhoghlaim-nua-biep-ncce-showcase-v1/` | 5 NCCE PDFs + 48 equivalencies |
+| 6 | `2026-09-01-cianfhoghlaim-nua-oral-study-plans-v1/` | Pipecat + TTS router |
+| 7 | `2026-09-01-cianfhoghlaim-nua-certificate-pipeline-v1/` | 7-stage certificate pipeline |
+| 8 | `2026-09-01-sister-side-mirrors-v1/` | 6 sister-side transfers |
+| 9 | `2026-09-01-gcp-opt-in-completion-v1/` | 6 GCP mirror stacks enabled |
+| 10 | `2026-09-01-v7-from-the-ground-up-v1/` (DEFERRED) | V7 architecture goals |
 
-## The 12-MCP Surface (per `2026-08-21-mcp-server-revival-overview.md`)
+## Top 10 priority mise tasks
 
-| Domain | MCPs |
+| Task | Purpose |
 |:--|:--|
-| **code search** | ccc |
-| **web data** | firecrawl + crawl4ai + chrome |
-| **data engineering** | dlt-workspace + motherduck |
-| **knowledge/memory** | cognee + graphiti + design-system |
-| **observability** | langfuse |
-| **secrets** | infisical |
-| **model hub** | huggingface |
+| `cic:stack-doctor` | Validate all 94 stacks against the 6-file GOLD_STANDARD |
+| `stack-doctor:strict` | `cic:stack-doctor` + grammar checks |
+| `lint:mcp-runtime` | Verify every enabled MCP has a corresponding smoke test |
+| `deploy:full` | 10-phase full-stack deploy orchestrator |
+| `preflight:arm-oci` | Mandatory safety gate for iac:bootstrap / iac:plan |
+| `baml:generate` | Regenerate the baml_client from baml_src |
+| `baml:check` | Validate BAML source files parse cleanly |
+| `lint:registry` | 0 hardcoded model strings |
+| `lint:skills` | All 167 skills pass |
+| `openspec:validate-all` | All 11+ openspec changes pass strict validation |
 
-## The 3 Secrets You MUST Populate
+## Top 10 priority skills (V6 era)
 
-| Secret | How |
+| Skill | Purpose |
 |:--|:--|
-| `INFISICAL_CLIENT_ID` | Create machine identity in Infisical UI, copy to `.infisical.env:699` |
-| `INFISICAL_CLIENT_SECRET` | Same as above, copy `client_secret` |
-| `CRAWL4AI_JWT_SECRET` | `openssl rand -hex 32`, push to vault `cianfhoghlaim/crawl4ai-jwt-secret` |
-
-## The 3 Network Dependencies
-
-| Dependency | Setup |
-|:--|:--|
-| **Cloudflare DNS for `*.cianfhoghlaim.ie`** | CNAME `*` → Pangolin host |
-| **Cloudflare API token** | Cloudflare → API Tokens → Edit zone DNS |
-| **The 8 third-party API accounts** | Firecrawl, HuggingFace, OpenAI, Anthropic, DeepSeek, Gemini, Z.ai, Komodo |
-
-## The 5 Most Common Failure Modes
-
-| Symptom | Fix |
-|:--|:--|
-| `mise can't find task X` | `openspec list 2>&1 \| grep X` |
-| `MCP not registering` | `mise run lint:mcp-runtime` |
-| `Stack fails stack-doctor` | `bash scripts/stack-doctor.sh` |
-| `Infisical returns 401` | populate the 3 `INFISICAL_*` values, re-run `secrets:init` |
-| `Browser MCP returns 401` | populate `CRAWL4AI_JWT_SECRET` (v0.9.0 secure-by-default contract) |
-
-## The 3 Openspec Commands You Run Daily
-
-```bash
-openspec list                       # what changes are pending
-openspec validate <id> --strict     # before commit
-openspec archive <id> --yes         # after deploy
-```
-
-## The 3 Path Shortcuts
-
-| What | Where |
-|:--|:--|
-| **The big picture** | [`README.md`](README.md) |
-| **The agent surface** | [`AGENTS.md`](AGENTS.md) |
-| **The IaC + stacks** | [`bonneagar/README.md`](bonneagar/README.md) |
-
-## The 3 Numbers to Remember
-
-- **94** — total Docker Compose stacks in `bonneagar/stacks/`
-- **12** — total enabled MCP servers (after `f63c6a57b`)
-- **137** — total openspec items validated (per `openspec validate --all`)
-
----
-
-Last updated: 2026-08-21.
+| `cianfhoghlaim-nua-v6-era` | The 5-pillar pattern + the 11 openspec changes |
+| `openspec` | The canonical openspec workflow |
+| `baml` | The BAML v0.226.2 schema + the Phase 0.5 regeneration |
+| `cocoindex` | The CocoIndex factory pattern + the NCCE flow |
+| `agentic-frontend-frameworks` | The A2UI v0.9 catalog + the 11 components |
+| `agent-fleet-orchestration` | The 12-agent fleet + the ADK 2 integration |
+| `agent-memory-systems` | The 5 memory backends + the Phase 7 certificate |
+| `agent-observability` | The 5 observability pillars |
+| `infrastructure-stacks` | The 6 GCP mirror stacks + the 89 self-hosted stacks |
+| `mise` | The mise task catalog |

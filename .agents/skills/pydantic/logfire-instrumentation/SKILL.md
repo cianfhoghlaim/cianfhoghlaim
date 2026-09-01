@@ -236,7 +236,7 @@ Detailed patterns and integration tables, organized by language:
 - **JavaScript/TypeScript**: [patterns](./references/javascript/patterns.md) (log levels, spans, error handling, config) and [frameworks](./references/javascript/frameworks.md) (Node.js, Cloudflare Workers, Next.js, Deno setup)
 - **Rust**: [patterns](./references/rust/patterns.md) (macros, spans, tracing/log crate integration, async, shutdown)
 
-## KCG Logfire wiring (Agent 64 — 2026-06-29)
+## Cianfhoghlaim Logfire wiring (Agent 64 — 2026-06-29)
 
 **Pydantic Logfire is partially wired** in the v4-consolidated `cianfhoghlaim/` tree:
 

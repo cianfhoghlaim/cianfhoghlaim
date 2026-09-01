@@ -174,7 +174,7 @@ guide to invoke the most appropriate resource:
 - **`crawl4ai`** — see `references/crawl4ai-dlt-summary.md` (alternative
   to Firecrawl for JS-heavy sites)
 
-## 3. Project-specific recipes (KCG patterns)
+## 3. Project-specific recipes (Cianfhoghlaim patterns)
 
 ### Type-safe pipeline (BAML → dlt → oRPC → MCP)
 
@@ -214,7 +214,7 @@ print(load_info)
 The BAML class is the **single source of truth** — both the
 Pydantic `BaseModel` and the dlt `primary_key` derive from it.
 
-### Canonical KCG pattern — British-Isles Education pipeline (lc6)
+### Canonical Cianfhoghlaim pattern — British-Isles Education pipeline (lc6)
 
 The post-v4 canonical pipeline ingests one of the six Irish Leaving
 Certificate subjects (Mathematics, Chemistry, Geography, Gaeilge,
@@ -446,14 +446,14 @@ Cross-references:
 ## 2026-06 updates (from the `upstream-package-monitoring` openspec change)
 
 - **dltHub Pro** launched 2026-04-14. The Pro tier adds 9,700+ known
-  source contexts that DLT can pull from in one call. The KCG dev
+  source contexts that DLT can pull from in one call. The Cianfhoghlaim dev
   plan is tracked by `openspec/changes/dlt-pro-source-registry/`.
 - **Cortex Code** (Snowflake's AI assistant, launched ~9 weeks before
   dltHub Pro) integrates directly with the dlt Pro source registry.
 - **ADE-Bench** (the AI data-engineer benchmark) reported 65% task
   success on Snowflake via Cortex Code vs 58% for Claude Code. The
   paper's key finding: **"without the workbench, the agent leaked
-  credentials"** — directly validates KCG's strict-secret-hydration
+  credentials"** — directly validates Cianfhoghlaim's strict-secret-hydration
   mandate (see `docs/secrets/secrets_management_plan.md` for the
   Infisical + Locket + mise three-way contract).
 - **dlthub upstream monitor** — `dlthub_blog.yml` in

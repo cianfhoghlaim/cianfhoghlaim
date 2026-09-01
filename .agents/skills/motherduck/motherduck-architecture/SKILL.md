@@ -42,7 +42,7 @@ CREATE DATABASE oideachais;
 ATTACH 'md:cianfhoghlaim' AS cianfhoghlaim;
 ```
 
-### 2. BYOB — Bring Your Own Bucket (KCG preferred for production)
+### 2. BYOB — Bring Your Own Bucket (Cianfhoghlaim preferred for production)
 
 You own the S3-compatible bucket; MotherDuck reads/writes through
 it. Best for: large-scale, predictable cost, when you already have
@@ -54,10 +54,10 @@ USE oideachais;
 -- All Parquet files live in your bucket; metadata in MotherDuck
 ```
 
-### 3. DuckLake on MotherDuck (KCG `oideachais` pattern)
+### 3. DuckLake on MotherDuck (Cianfhoghlaim `oideachais` pattern)
 
 DuckLake stores the catalog in a single SQL database (Postgres
-in KCG) and the data in Parquet files in object storage.
+in Cianfhoghlaim) and the data in Parquet files in object storage.
 MotherDuck reads the catalog + files as one logical database.
 
 ```sql
@@ -73,7 +73,7 @@ sidecar.
 ### 4. Own-compute DuckLake
 
 Same DuckLake pattern but you run the DuckDB compute yourself
-(on `bunchloch` M4 in KCG). No MotherDuck service. Use when you
+(on `bunchloch` M4 in Cianfhoghlaim). No MotherDuck service. Use when you
 need zero-egress, on-prem, or air-gapped.
 
 ## Decision tree
@@ -163,7 +163,7 @@ multiple clients:
 - `motherduck-data-modeling/SKILL.md` — schema + ingestion
 - `motherduck-analytics/SKILL.md` — SQL + Dives + dashboards
 - `motherduck-connections/SKILL.md` — wiring (Postgres endpoint, MCP)
-- `cianfhoghlaim-storage/SKILL.md` — the KCG DuckLake-on-MotherDuck
+- `cianfhoghlaim-storage/SKILL.md` — the Cianfhoghlaim DuckLake-on-MotherDuck
   storage mental model
 
 ## Cross-references

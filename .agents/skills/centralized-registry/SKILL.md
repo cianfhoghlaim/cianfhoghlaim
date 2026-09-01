@@ -215,7 +215,7 @@ from agents.adk.litellm_agent import make_litellm_agent, litellm_model
 # Option A: Use the make_litellm_agent helper
 agent = make_litellm_agent(
     name="my_agent",
-    description="Routes through the KCG minimax LiteLLM gateway.",
+    description="Routes through the Cianfhoghlaim LiteLLM gateway.",
     model_alias="minimax",
     tools=[my_tool],
     instruction="...",

@@ -66,7 +66,7 @@ table.create_scalar_index("lat")
 table.create_scalar_index("lon")
 ```
 
-## KCG example
+## Cianfhoghlaim example
 
 The `cocoindex/geospatial_indexing.py` CocoIndex v1
 App embeds + indexes the Celtic place-name corpora (Gaeltacht

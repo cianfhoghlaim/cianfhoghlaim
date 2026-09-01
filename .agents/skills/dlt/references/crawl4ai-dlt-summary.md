@@ -36,11 +36,11 @@ load_info = pipeline.run(scraped_pages(["https://example.com/page1", ...]))
 | **Cost** | Free (self-hosted) | API credits |
 | **Proxy rotation** | Built-in | Optional |
 | **Best for** | SPAs, JS-heavy sites | Static + light JS sites |
-| **KCG usage** | Rare (Firecrawl is primary) | Primary (NCCA, SEC, DES) |
+| **Cianfhoghlaim usage** | Rare (Firecrawl is primary) | Primary (NCCA, SEC, DES) |
 
-## KCG usage
+## Cianfhoghlaim usage
 
-- The KCG stack uses **Firecrawl** as the primary scraper
+- The Cianfhoghlaim stack uses **Firecrawl** as the primary scraper
   (`FirecrawlSource` in `dlt/`)
 - `crawl4ai` is the fallback for JS-heavy sites that Firecrawl
   cannot handle

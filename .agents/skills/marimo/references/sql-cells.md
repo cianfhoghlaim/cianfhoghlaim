@@ -230,7 +230,7 @@ The reactive dataflow means changing the multi-select
 automatically re-runs the cell with the new filter. **No
 explicit `on_change` callback is needed.**
 
-## KCG conventions
+## Cianfhoghlaim conventions
 
 - All SQL queries in marimo notebooks use `mo.sql(engine=conn,
   output=False)` + `mo.ui.table(df)` for display

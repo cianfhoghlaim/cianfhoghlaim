@@ -106,7 +106,7 @@ def _():
     return
 ```
 
-## KCG conventions
+## Cianfhoghlaim conventions
 
 - All production dashboards use `width="full"` + multi-column
   layout

@@ -1,7 +1,7 @@
 # Orchestration + CocoIndex + Lakehouse Deep Analysis (2026-08-24)
 
 > Read-only research subagent deliverable. Working directory:
-> `/Users/cianmacandeisigh/dev/kings_college_galway`. Date: 2026-08-24.
+> `/Users/cianmacandeisigh/dev/cianfhoghlaim`. Date: 2026-08-24.
 >
 > **TL;DR.** The platform is *partially* on the modern Dagster
 > Components (dg) architecture (1.13+ `dg.load_defs()`) but the
@@ -28,7 +28,7 @@
 | `orchestration/_defs_walker.py` | 131 | **FALLBACK** walker for Dagster <1.13; bypasses Python 3.13 tokenizer bug for digit-leading identifiers (`2_m`,`3_model_lifecycle`). Uses `importlib.util.spec_from_file_location`. |
 | `orchestration/definitions.py` | 348 | **PRIMARY** code-location entry point. `dg.load_defs(defs_root=_defs_pkg)` → falls back to `_defs_walker.load_defs_via_walker()`. Plus 4 explicit merges: `sync_schedules`, `DagsterDltResource`, UoG exam/official-docs/NUI/personal-archive modules. |
 | `orchestration/cli.py` | 69 | Stub CLI; not on the agent hot path. |
-| `orchestration/components/__init__.py` | 109 | Re-exports all 5 KCG Components + 5 jurisdiction/topic-scoped Components (BIEP, England boards, Junior Cycle, KCG cognify, OCR ensemble, Federated OCR). |
+| `orchestration/components/__init__.py` | 109 | Re-exports all 5 Cianfhoghlaim Components + 5 jurisdiction/topic-scoped Components (BIEP, England boards, Junior Cycle, Cianfhoghlaim cognify, OCR ensemble, Federated OCR). |
 | `orchestration/components/layer1_ingestion.py` | 324 | `CelticIngestionComponent` + `CelticFederatedOcrComponent`. StateBackedComponent support + `defs_state` resolution. |
 | `orchestration/components/layer2_materials.py` | 255 | `CelticMaterialsComponent` — wraps BAML extraction as partitioned `@asset` + `@asset_check`. |
 | `orchestration/components/layer3_model_lifecycle.py` | 648 | `CelticModelLifecycleComponent` — emits `is_virtual=True` `@asset` per CocoIndex App. R1-R4 conformance check at execute time. |
@@ -134,7 +134,7 @@ The walker is **explicitly retained** because `dg.load_defs()` is the canonical 
 
 ### A.8 4 cross-stack lineage contracts (verified from `definitions.py`)
 
-1. **Jurisdiction factory** — `_base/<jurisdiction>_assets.py` is **disabled** (comment block at lines:189-205). The 10 jurisdictions are *intended* to flow through `JurisdictionAssetsBase`, but the broken runtime forces them through `2_materials/<jurisdiction>_education/generic_<jurisdiction>_assets.py` instead. Wave 1 of the KCG roadmap = repair the `_base` factory.
+1. **Jurisdiction factory** — `_base/<jurisdiction>_assets.py` is **disabled** (comment block at lines:189-205). The 10 jurisdictions are *intended* to flow through `JurisdictionAssetsBase`, but the broken runtime forces them through `2_materials/<jurisdiction>_education/generic_<jurisdiction>_assets.py` instead. Wave 1 of the Cianfhoghlaim roadmap = repair the `_base` factory.
 2. **Registry drift alert** — `sync_assets.py` `registry_drift_alert` is auto-discovered by `dg.load_defs()`, so the explicit merge only adds the job + sensor (lines:226-252).
 3. **`@dlt_assets` resource wiring** — `definitions.py:267-280` is the only place that actually supplies the `dlt` resource key (`DagsterDltResource()`).
 4. **UoG + NUI + BI tertiary merges** — `definitions.py:319-345` is a 5-element loop that dynamically imports each module and merges assets via `__all__`. The pattern is "if it has `__all__` and the names are callable, merge them".
@@ -200,7 +200,7 @@ The `_lifespan.py` supports v1 (`detect_change=True` on the embedder ContextKey 
 ### B.4 Risk / dependency
 
 - The PyPI `cocoindex` package is **not installed** (per `_lifespan.py:59-69`). All existing apps degrade gracefully via `COCOINDEX_AVAILABLE = False`. Before any v1-feature adoption, `uv add cocoindex>=1.0,<2.0,!=1.0.8` must land in `pyproject.toml`.
-- The repo's own `cocoindex_flows/` directory shadows the package name. The 88 L3 defs.yaml files use the **wrong module path** (`cianfhoghlaim.cocoindex.<app>` instead of `cocoindex_flows.<subpkg>.<app>`). This is documented at `layer3_model_lifecycle.py:295-303` as a "Wave 0 item in the KCG refactor roadmap".
+- The repo's own `cocoindex_flows/` directory shadows the package name. The 88 L3 defs.yaml files use the **wrong module path** (`cianfhoghlaim.cocoindex.<app>` instead of `cocoindex_flows.<subpkg>.<app>`). This is documented at `layer3_model_lifecycle.py:295-303` as a "Wave 0 item in the Cianfhoghlaim refactor roadmap".
 
 ---
 
@@ -376,7 +376,7 @@ The 6 legacy namespaces are scheduled for consolidation into `ducklake_cianfhogh
 
    **Verdict:** the convention documented at `docs/dagster/group-name-underscore-migration.md` is `{layer}_<domain>_<nation>_<...>` (e.g. `1_ingestion_education_ireland_documents`), but the post-2026-08-22 modules use bare names. **Action:** enforce the convention via `dg check yaml` lint.
 
-3. **Pydantic module paths**: 88 L3 defs.yaml files use `cianfhoghlaim.cocoindex.<app>` (the pre-v7 flat layout) — the actual module path is `cocoindex_flows.<subpkg>.<app>`. Documented at `layer3_model_lifecycle.py:295-303` as Wave 0 in the KCG refactor roadmap. **The Components emit `dg.Failure` with "88 of the 95 L3 defs.yaml files still use the pre-refactor flat layout" — these Apps are broken at execute time.**
+3. **Pydantic module paths**: 88 L3 defs.yaml files use `cianfhoghlaim.cocoindex.<app>` (the pre-v7 flat layout) — the actual module path is `cocoindex_flows.<subpkg>.<app>`. Documented at `layer3_model_lifecycle.py:295-303` as Wave 0 in the Cianfhoghlaim refactor roadmap. **The Components emit `dg.Failure` with "88 of the 95 L3 defs.yaml files still use the pre-refactor flat layout" — these Apps are broken at execute time.**
 
 4. **Bilingual subject slugs**: `celtic_curriculum_embedding.py` uses `celtic_curriculum_embedding` while `biep_parity` uses `gaeilge` / `english` / `mathematics` (the LC subject slugs). The cross-jurisdiction BIEP naming is `cianhoghlaim.<jurisdiction>.<stage>.<subject_slug>` while the cross-cocoindex naming is `cianhoghlaim.<vertical>.<sub>`. **Two parallel namespace conventions.**
 
@@ -523,7 +523,7 @@ When DLT sources change (e.g. a new jurisdiction factory is added or a source's 
 | Bulk-rewrite `module:` in `orchestration/defs/3_model_lifecycle/cocoindex_v1/<app>/defs.yaml` to use `cocoindex_flows/<subpkg>/<app>`. | `dagster` subagent | 2 hr |
 | Install the PyPI `cocoindex` package: `uv add 'cocoindex>=1.0,<2.0,!=1.0.8'`. | `mise` subagent | 30 min |
 | Add the `pyproject.toml` entry: `[tool.dg] registry_modules = ["orchestration.components"]`. | `mise` subagent | 15 min |
-| Verify `dg list components` shows the 11 KCG Components. | `dagster` subagent | 30 min |
+| Verify `dg list components` shows the 11 Cianfhoghlaim Components. | `dagster` subagent | 30 min |
 
 #### Wave 1 — Componentise L1 ingestion (Week 2, ~5 days)
 
@@ -772,7 +772,7 @@ The **biggest gaps** are:
 - `openspec/specs/british-isles-education-pipeline/spec.md` — the flagship BIEP v3 spec
 - `openspec/specs/cianfhoghlaim-personal-archive-typed-modules/spec.md` — the new UoG personal-archive spec
 - `.agents/skills/INDEXING_AND_COGNITION.md` — CCC + Cognee + Firecrawl triple-search architecture
-- `.agents/skills/dagster/SKILL.md` — Dagster 1.13+ Declarative Automation + KCG Components
+- `.agents/skills/dagster/SKILL.md` — Dagster 1.13+ Declarative Automation + Cianfhoghlaim Components
 - `.agents/skills/cocoindex/SKILL.md` — CocoIndex v1 + R1-R4 conformance
 - `.agents/skills/ducklake/SKILL.md` — DuckLake v1.0 reference
 - `.agents/skills/lancedb/SKILL.md` — LanceDB HNSW vector store
@@ -788,6 +788,6 @@ The **biggest gaps** are:
 
 **Author:** Read-only research subagent.
 **Date:** 2026-08-24.
-**Working directory:** `/Users/cianmacandeisigh/dev/kings_college_galway`.
+**Working directory:** `/Users/cianmacandeisigh/dev/cianfhoghlaim`.
 **Scope:** `orchestration/` + `cocoindex_flows/` + `observability/` + `docs/{dagster,cocoindex,lakehouse,observability,firecrawl}/`.
 **Status:** Analysis complete. Ready for review and openspec change authoring.

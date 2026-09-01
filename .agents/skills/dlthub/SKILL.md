@@ -1,11 +1,11 @@
 ---
 name: dlthub
-description: KCG-side routing skill for the dltHub Platform CLI (`dlthub 1.28+`) — deployment manifest authoring, the `dlthub run` vs `dlthub serve` split, the 5 most common CLI errors and their recovery, and the 5-step `dlthub ai status` health check. Use when the user asks about "dlthub", "deploying to dlthub", "the dlthub CLI", "dlt Hub workspace", "jobs.workspace.dashboard", the `dlthub run`/`dlthub serve` verbs, or the `Matched jobs are interactive` error.
+description: Cianfhoghlaim-side routing skill for the dltHub Platform CLI (`dlthub 1.28+`) — deployment manifest authoring, the `dlthub run` vs `dlthub serve` split, the 5 most common CLI errors and their recovery, and the 5-step `dlthub ai status` health check. Use when the user asks about "dlthub", "deploying to dlthub", "the dlthub CLI", "dlt Hub workspace", "jobs.workspace.dashboard", the `dlthub run`/`dlthub serve` verbs, or the `Matched jobs are interactive` error.
 ---
 
-# dlthub Platform — KCG Routing Skill
+# dlthub Platform — Cianfhoghlaim Routing Skill
 
-This skill is the **KCG-side frontmatter + router** for the dltHub Platform
+This skill is the **Cianfhoghlaim-side frontmatter + router** for the dltHub Platform
 CLI (`dlthub 1.28+`). The long-form runbook (5-section diagnostic tree,
 canonical happy-path workflow, cross-link map) lives at
 [`docs/agents/dlthub-run-vs-serve.md`](../../../docs/agents/dlthub-run-vs-serve.md).

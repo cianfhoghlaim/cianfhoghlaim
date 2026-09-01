@@ -115,7 +115,7 @@ results["rerank_score"] = scores
 results = results.sort_values("rerank_score", ascending=False).head(10)
 ```
 
-## KCG example
+## Cianfhoghlaim example
 
 The `cocoindex/leabharlann_embedding.py` CocoIndex
 v1 App embeds the books corpus as text + image (BGE-large-en-v1.5

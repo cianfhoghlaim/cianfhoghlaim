@@ -519,7 +519,7 @@ export default users
 - Ensure `await next()` is called in custom middleware
 - Verify route patterns match
 
-## KCG integration
+## Cianfhoghlaim integration
 
 The Cianfhoghlaim platform's API layer — serving curriculum
 data to the TanStack Start front-end, exposing the MCP server
@@ -536,7 +536,7 @@ The middleware composition enables:
 - **Rate limiting** — `rateLimit()` middleware
 - **AG-UI SSE** — `mount('/agui', AGUIAdapter(agent).as_starlette_app())`
 
-The KCG Hono apps are:
+The Cianfhoghlaim Hono apps are:
 
 - `web/apps/cianfhoghlaim-web/src/server/router.ts` — the public
   lakehouse API
@@ -579,7 +579,7 @@ app.get("/api/curriculum", async (c) => {
 export const http = HttpRouterWithHono(app);
 ```
 
-The canonical KCG pattern is `HttpRouterWithHono` — Hono
+The canonical Cianfhoghlaim pattern is `HttpRouterWithHono` — Hono
 runs as the public API gateway; Convex handles the
 real-time subscriptions and mutations.
 

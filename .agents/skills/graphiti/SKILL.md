@@ -86,9 +86,9 @@ results = await graphiti.search_("FalkorDB curriculum", num_results=10)
    extra (Python 3.12+). For embedded mode pass `FalkorDriver(falkor_db=AsyncFalkorDB(dbfilename=...))`.
 5. **Don't hard-code `gpt-4o-mini` as the default.** v0.29.2 #1551 promoted `gpt-5.5` as the
    upstream default with model-tied reasoning effort. Override with `OpenAIClient(config=LLMConfig(model="your-model"))`.
-6. **Don't use `EpisodeType.text` for KCG product/catalog updates** — `EpisodeType.json`
+6. **Don't use `EpisodeType.text` for Cianfhoghlaim product/catalog updates** — `EpisodeType.json`
    bypasses entity extraction prompts and is ~10× faster.
-7. **Don't assume the docs live at `help.getzep.com/graphiti/graphiti/...`.** The KCG
+7. **Don't assume the docs live at `help.getzep.com/graphiti/graphiti/...`.** The Cianfhoghlaim
    `.env.example` should set `GRAPHPITI_DOCS_URL=https://help.getzep.com/graphiti` (root,
    no double prefix) for the OpenSpec "live-docs" verification.
 

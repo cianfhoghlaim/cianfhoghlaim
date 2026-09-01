@@ -100,42 +100,42 @@ For every question, identify which reference file(s) are relevant using the inde
 - [Migration Guides](./references/migration/INDEX.md) — sensor migration to declarative automation, sensor migration to automation condition
 <!-- END GENERATED INDEX -->
 
-## KCG-relevant references (added by `sync-skills-from-docs`)
+## Cianfhoghlaim-relevant references (added by `sync-skills-from-docs`)
 
 These are project-specific reference files that extend the core
-Dagster skill with KCG production patterns:
+Dagster skill with Cianfhoghlaim production patterns:
 
 ### Integrations
 
-- [DuckLake integration (canonical KCG lakehouse sink)](./references/integrations/dagster-ducklake/INDEX.md) —
+- [DuckLake integration (canonical Cianfhoghlaim lakehouse sink)](./references/integrations/dagster-ducklake/INDEX.md) —
   `DuckLakeResource` config (Postgres catalog + S3 + `dg.EnvVar` secrets)
 - [SQLMesh integration](./references/integrations/dagster-sqlmesh/INDEX.md) —
   `@sqlmesh_assets` + `SQLMeshResource` + central `SQLMeshDagsterTranslator`
 - [DLT parallel-asset factory (GitHub reference)](./references/integrations/dagster-dlt/parallel-github.md) —
-  the closest analogue to KCG's `ireland/curriculum/` 33+ REST endpoints
+  s the closest analogue to Cianfhoghlaim's `ireland/curriculum/` 33+ REST endpoints
 - [Evidence.dev BI dashboards](./references/integrations/dagster-evidence/INDEX.md) —
-  thin INDEX stub (KCG currently uses marimo; Evidence is a future option)
+  thin INDEX stub (Cianfhoghlaim currently uses marimo; Evidence is a future option)
 - [Modal GPU compute](./references/integrations/dagster-modal/INDEX.md) —
-  thin INDEX stub (KCG uses Modal for HTR fine-tuning + OCR ensemble)
+  thin INDEX stub (Cianfhoghlaim uses Modal for HTR fine-tuning + OCR ensemble)
 - [Iceberg table integration](./references/integrations/dagster-iceberg/INDEX.md) —
-  thin INDEX stub (KCG uses DuckLake primarily; Iceberg via the
+  thin INDEX stub (Cianfhoghlaim uses DuckLake primarily; Iceberg via the
   Lance + Iceberg companion-table pattern)
 
 ### Deployment
 
 - [Self-hosted Docker Dagster deploy](./references/deployment/docker-self-hosted.md) —
   the canonical 4-service topology (Postgres + gRPC user-code +
-  webserver + daemon) for KCG production (not Dagster+ Hybrid)
+  webserver + daemon) for Cianfhoghlaim production (not Dagster+ Hybrid)
 
 ### Orchestration
 
-- [KCG CocoIndex + Graphiti asset graph](./references/orchestration/kcg-cocoindex-graphiti.md) —
+- [Cianfhoghlaim CocoIndex + Graphiti asset graph](./references/orchestration/cianfhoghlaim-cocoindex-graphiti.md) —
   the canonical
   `raw_pdf → extracted_markdown → semantic_chunks → vector_embeddings → knowledge_graph_episodes`
   asset graph with `DynamicPartitionsDefinition` per file and
   sensor-driven `add_dynamic_partitions(...)`
 
-## KCG 4-layer asset graph (canonical)
+## Cianfhoghlaim 4-layer asset graph (canonical)
 
 The Cianfhoghlaim platform organises its Dagster assets in
 4 layers. Each layer is a separate asset group with its own
@@ -202,7 +202,7 @@ new `is:` filter (`is:external`, `is:materializable`) for asset selection.
 def duchas_grammar_table() -> None: ...
 ```
 
-## Dagster ports (KCG-specific)
+## Dagster ports (Cianfhoghlaim-specific)
 
 | Service | Port | Notes |
 |:--|:--|:--|
@@ -214,7 +214,7 @@ def duchas_grammar_table() -> None: ...
 When developing locally, use port 3335 for the main Dagster UI.
 Use port 3000 only for croilar-specific work.
 
-## KCG port list summary
+## Cianfhoghlaim port list summary
 
 - Dagster: 3335 (engineering) / 3000 (croilar) / 4000 (gRPC)
 - Lakekeeper Iceberg: 8181
@@ -224,17 +224,17 @@ Use port 3000 only for croilar-specific work.
 - FalkorDB: 6379
 - LanceDB Cloud: db://<db-name>
 
-## KCG install + integration (canonical)
+## Cianfhoghlaim install + integration (canonical)
 
 ```bash
-# KCG engineering Dagster stack (the canonical one)
+# Cianfhoghlaim engineering Dagster stack (the canonical one)
 cd oideachais
 uv add dagster dagster-duckdb "dagster-dlt>=0.29.11"
 uv run dagster dev -m orchestration.definitions
 # UI at http://localhost:3335
 ```
 
-The KCG Dagster integration lives at:
+The Cianfhoghlaim Dagster integration lives at:
 
 - `orchestration/defs/` — the Dagster
   definitions module (assets, jobs, schedules, sensors, resources)
@@ -243,7 +243,7 @@ The KCG Dagster integration lives at:
 - `dg.toml` — the Dagster workspace config (registers
   oideachais, tuatha, meaisínfhoghlaim, croilar as code-locations)
 
-### KCG asset groups (4-layer narrative)
+### Cianfhoghlaim asset groups (4-layer narrative)
 
 The Cianfhoghlaim asset graph is organised in 4 narrative
 layers. Each layer has its own asset group, schedule, and
@@ -264,7 +264,7 @@ ownership:
 
 ### DLT + Firecrawl integration patterns
 
-The KCG DLT sources use the `firecrawl-mcp` + Cianfhoghlaim browser
+The Cianfhoghlaim DLT sources use the `firecrawl-mcp` + Cianfhoghlaim browser
 + `Firecrawl API` fallback ladder (see
 `.agents/skills/dlt/SKILL.md` for the full pattern):
 
@@ -322,7 +322,7 @@ attributes:
 
 ### Multi-tenant DLT asset factory (legacy `@dlt_assets`)
 
-The KCG `orchestration/defs/1_ingestion/curriculum_dlt_assets.py`
+The Cianfhoghlaim `orchestration/defs/1_ingestion/curriculum_dlt_assets.py`
 defines a factory pattern for the 33+ Ireland curriculum
 assets, each with the canonical
 `MultiPartitionsDefinition(language, subject)` partition:
@@ -345,10 +345,10 @@ assets, each with the canonical
 def ireland_curriculum_assets(context, dlt_run_resource):
     yield from dlt_run_resource.run(context=context)
 
-## KCG: 21-asset-module / 7-group inventory (canonical)
+## Cianfhoghlaim: 21-asset-module / 7-group inventory (canonical)
 
 Per `orchestration/definitions.py` and the
-leabharlann stack overview, the KCG Dagster workspace has
+leabharlann stack overview, the Cianfhoghlaim Dagster workspace has
 **21 asset modules** across **7 groups**:
 
 | Group | Asset modules | Notes |
@@ -439,7 +439,7 @@ defs = dg.Definitions(
 )
 ```
 
-### The KCG code-location pattern
+### The Cianfhoghlaim code-location pattern
 
 REFRESHED 2026-08-01 (lakehouse-and-reproducible-deploy-v1):
 The Cianfhoghlaim platform runs **1 consolidated code-location**
@@ -447,7 +447,7 @@ from a single Dagster UI (post-v7). The historical 5-code-location
 list was collapsed in the 2026-06-28 consolidation.
 
 ```toml
-# /Users/cianmacandeisigh/dev/kings_college_galway/dg.toml
+# /Users/cianmacandeisigh/dev/cianfhoghlaim/dg.toml
 directory_type = "workspace"
 [workspace]
 [[workspace.locations]]
@@ -461,7 +461,7 @@ sub-components via `dg.load_defs_via_walker(...)` (or the
 Dagster 1.13+ `dg.load_defs()` API path; see
 `orchestration/definitions.py:71-86`).
 
-## British-Isles Education pipeline — Canonical KCG pattern (post-v4)
+## British-Isles Education pipeline — Canonical Cianfhoghlaim pattern (post-v4)
 
 The post-v4 lc6 pipeline (`openspec/changes/lc6-biep/`) wraps
 the 6 LC subjects (Mathematics, Chemistry, Geography, Gaeilge,
@@ -539,7 +539,7 @@ Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
   `uv run dagster dev -m orchestration.definitions`
   (NOT `uv run dagster dev -m cianfhoghlaim.dagster.definitions` which was the
   pre-v7 path that no longer exists)
-- The 5 KCG Components map to the 5-layer DAG:
+- The 5 Cianfhoghlaim Components map to the 5-layer DAG:
   - L1 Ingestion (CelticIngestionComponent) — NCCA / SEC / gov.ie DLT sources
   - L2 Materials (CelticMaterialsComponent) — BAML extraction with R1-R4 conformance
   - L3 Model Lifecycle (CelticModelLifecycleComponent) — 17 v1 CocoIndex Apps

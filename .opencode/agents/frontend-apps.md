@@ -95,3 +95,28 @@ You are the frontend-apps functional subagent for the cianfhoghlaim monorepo. Yo
 - BAML source files: `baml_src/` (NOT `baml/`)
 - The cianfhoghlaim Python package is the repo itself
 - The post-v4 quadrant AGENTS.md files are gone — web/AGENTS.md is the canonical entry point for web work
+
+---
+
+## V6 era notes (2026-09-01)
+
+For the cianfhoghlaim-nua v6 era, the canonical web app is
+`web/apps/cianfhoghlaim-nua/` (consolidated from the 5 prior apps
+per Phase 3). It uses:
+
+- TanStack Start (file-based routing + server functions)
+- CopilotKit v2 + AG-UI SSE
+- The canonical A2UI v0.9 catalog from `@cianfhoghlaim/a2ui`
+  (mounted via `createCatalog()`)
+- Convex for reactive persistence (5 new tables per Phase 1 +
+  `ncce_learning_graphs` per Phase 4)
+- The canonical Hono API at `web/hono-api/`
+- The 4 + N per-subject action routes at
+  `web/hono-api/src/routes/copilotkit/lc/<subject>.ts`
+
+The 4 Phase 1 study-plan routes live at
+`web/apps/cianfhoghlaim-nua/routes/(student)/lc/<subject>/study-plan.tsx`.
+
+Phase 2 ships 7 new A2UI components (WeekTimeline, MilestoneBadge,
+KCWeightsBar, ExamPaperCard, MarksBreakdownTable, StageOverview,
+SubjectCard). Phase 6 ships OralStudyPlayer.

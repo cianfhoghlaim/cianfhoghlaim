@@ -1,6 +1,6 @@
 ---
 name: agent-memory-systems
-description: Router for the agent memory capability. Use when an agent needs to remember, recall, search, or learn across sessions. The 5 memory backends are Cognee (knowledge graph), Graphiti (temporal knowledge graph), LanceDB (vector search), FalkorDB (vector + graph hybrid), and Memgraph (production graph). The KCG-recommended default is Cognee for structured knowledge + Graphiti for temporal + LanceDB for vector RAG. Triggers: 'agent memory', 'cognee', 'graphiti', 'falkordb', 'memgraph', 'lancedb memory', 'cognify', 'remember', 'recall', 'long-term memory', 'episodic memory', 'temporal knowledge graph', 'knowledge graph for agents'.
+description: Router for the agent memory capability. Use when an agent needs to remember, recall, search, or learn across sessions. The 5 memory backends are Cognee (knowledge graph), Graphiti (temporal knowledge graph), LanceDB (vector search), FalkorDB (vector + graph hybrid), and Memgraph (production graph). The cianfhoghlaim-recommended default is Cognee for structured knowledge + Graphiti for temporal + LanceDB for vector RAG. Triggers: 'agent memory', 'cognee', 'graphiti', 'falkordb', 'memgraph', 'lancedb memory', 'cognify', 'remember', 'recall', 'long-term memory', 'episodic memory', 'temporal knowledge graph', 'knowledge graph for agents'.
 ---
 
 # Agent Memory Systems — Router
@@ -28,9 +28,9 @@ Need pure vector RAG with HNSW?                     → LanceDB
 Need Cypher + production graph analytics?           → Memgraph
 ```
 
-## The KCG memory stack (the recommended pattern)
+## The Cianfhoghlaim memory stack (the recommended pattern)
 
-For KCG agents, the canonical pattern is:
+For Cianfhoghlaim agents, the canonical pattern is:
 
 ```
   [agent runtime]
@@ -57,14 +57,14 @@ For KCG agents, the canonical pattern is:
 **Why not FalkorDB / Memgraph**:
 
 - **FalkorDB** is great for Redis-compatible graph + vector in
-  one store. KCG does not use it in production (the 3 above are
+  one store. Cianfhoghlaim does not use it in production (the 3 above are
   the canonical choice). It shines when you want one store, not
   three.
 - **Memgraph** is the production graph for teams that need
-  Cypher + MAGE algorithms + a Lab UI. KCG does not use it for
+  Cypher + MAGE algorithms + a Lab UI. Cianfhoghlaim does not use it for
   agent memory (Cognee + Graphiti + LanceDB cover the use cases).
 
-## KCG conventions (the rules)
+## Cianfhoghlaim conventions (the rules)
 
 1. **All agent memory calls go through the LiteLLM gateway**
    (`http://litellm:4000/v1`). Never call the underlying LLM
@@ -80,7 +80,7 @@ For KCG agents, the canonical pattern is:
 
 ## Pair this skill with
 
-- `cianfhoghlaim-storage/SKILL.md` — the KCG storage mental model
+- `cianfhoghlaim-storage/SKILL.md` — the Cianfhoghlaim storage mental model
   (which backends store what)
 - `cognee/SKILL.md` — the Cognee detail
 - `graphiti/SKILL.md` — the Graphiti detail

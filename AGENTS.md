@@ -55,6 +55,74 @@ uv run python -c "import duckdb; from dlt_sources.lakehouse import register_pers
 uv run python -c "from pathlib import Path; from dlt_sources.filesystem.uog_personal_archive import _classify_file; print(_classify_file(Path('leabharlann/ollscoil_na_gaillimhe/mata/networks/CS4423 - Networks/cian_mac_liathain_assignment_3.pdf')))"
 ```
 
+
+## New in 2026-09-01 (Cianfhoghlaim-Nua V6 Era) — What shipped
+
+The V6 era (2026-09-01) shipped 11 openspec changes + ~5,500 LOC that
+lift the GCP-first `gemini_hackathon/` sister-repo learnings into the
+canonical OSS-first `cianfhoghlaim/` substrate. The 5-pillar pattern:
+**BAML → Convex → A2UI → Hono → React**.
+
+### 11 openspec changes (in openspec/changes/)
+
+| # | Phase | Change |
+|--:|--|--|
+| 0 | Phase 1 umbrella | `2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1/` |
+| 0.1 | Sister-side mirrors (6) | `2026-09-01-{bonneagar,tuatha,ciancheiltis,ciandlithe,cianchosaint,gemini-hackathon}-sister-umbrella-mirror-v1/` |
+| 0.5 | BAML regeneration | `2026-09-01-baml-regeneration-blocker-v1/` |
+| 1 | End-to-end showcase (4 subjects) | `2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1/` |
+| 2 | A2UI v0.9 catalog (11 components) | `2026-09-01-cianfhoghlaim-nua-a2ui-catalog-v1/` |
+| 3 | Web consolidation (5 apps → 1) | `2026-09-01-cianfhoghlaim-nua-web-consolidation-v1/` |
+| 4 | NCCE showcase | `2026-09-01-cianfhoghlaim-nua-biep-ncce-showcase-v1/` |
+| 5 | BAML/CocoIndex/DLT hardening | (partial) FTS index added |
+| 6 | Oral study plans | `2026-09-01-cianfhoghlaim-nua-oral-study-plans-v1/` |
+| 7 | LC/JC certificate pipeline | `2026-09-01-cianfhoghlaim-nua-certificate-pipeline-v1/` |
+| 8 | Sister-side mirrors activation | `2026-09-01-sister-side-mirrors-v1/` |
+| 9 | GCP opt-in completion | `2026-09-01-gcp-opt-in-completion-v1/` |
+| 10 | V7 from-the-ground-up (DEFERRED) | `2026-09-01-v7-from-the-ground-up-v1/` |
+
+### Key file paths
+
+| Layer | Path |
+|---|---|
+| Phase 1 BAML (study-plan) | `baml_src/british_isles/_shared/study_plan.baml` |
+| Phase 1 BAML (oral-study) | `baml_src/british_isles/_shared/oral_study_plan.baml` |
+| Phase 1 planner | `agents/adk/subjects/lc/planner.py` |
+| Phase 2 A2UI catalog | `web/packages/a2ui/src/catalog.tsx` + `web/packages/a2ui/src/components/` |
+| Phase 3 consolidated app | `web/apps/cianfhoghlaim-nua/` |
+| Phase 4 NCCE BAML | `baml_src/british_isles/uk_ncce/learning_graph.baml` |
+| Phase 4 NCCE equivalencies | `baml_src/british_isles/uk_ncce/equivalencies.baml` |
+| Phase 4 CocoIndex flow | `cocoindex_flows/uk_ncce/learning_graphs_app.py` |
+| Phase 5 FTS index | `cocoindex_flows/biep_parity/ireland_lc_factory.py:139-141` |
+| Phase 6 Pipecat client | `agents/api/_oideachais_api/services/pipecat_client.py` |
+| Phase 6 TTS router | `agents/api/_oideachais_api/services/tts_router.py` |
+| Phase 6 OralStudyPlayer | `web/packages/a2ui/src/components/OralStudyPlayer.tsx` |
+| Phase 7 certificate types | `meaisinfhoghlaim/certificate/types.py` |
+| Phase 7 certificate pipeline | `meaisinfhoghlaim/certificate/pipeline.py` |
+| Phase 7 certification BAML | `baml_src/british_isles/ireland/education/certification.baml` |
+| Tests | `tests/test_adk_subject_actions.py` (11) + `tests/test_phase7_certificate_pipeline.py` (7) |
+
+### Phase 7 quick-start
+
+```bash
+# 1. Validate the BAML client is reachable
+uv run python -c "from baml_client.baml_client.sync_client import b; print(b.ExtractNCCAPolicyCriteria)"
+
+# 2. Run the 7-stage certificate pipeline
+uv run python -c "
+import asyncio
+from meaisinfhoghlaim.certificate import run_certificate_pipeline
+result = asyncio.run(run_certificate_pipeline(
+    learner_id='learner-1',
+    learner_name='Test',
+    subject_slug='chemistry',
+    stage='scoil_sinsearach',
+    lo_codes=['LC-CHEM-LO-3.1'],
+    ncca_policy_pdfs=[('SC-L1-L2-Programme-Statement.pdf', 'Sample NCCA text...')],
+))
+print(result.png_bytes[:8])  # PNG magic bytes
+"
+```
 ## Priority quick reference
 
 The 5 priority skills, the 4 priority commands, the 4 priority

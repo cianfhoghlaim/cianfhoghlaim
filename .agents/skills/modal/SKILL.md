@@ -48,9 +48,9 @@ Key features:
 - The job requires 24/7 uptime (Modal cold-starts ~5-15s; use
   a dedicated server)
 
-## KCG integration (PRESERVED from the docs)
+## Cianfhoghlaim integration (PRESERVED from the docs)
 
-The KCG burst-training story is:
+The Cianfhoghlaim burst-training story is:
 
 ```
         ┌─────────────────┐
@@ -100,7 +100,7 @@ The same pattern applies to:
 ```python
 import modal
 
-app = modal.App("kcg-htr-finetune")
+app = modal.App("cianfhoghlaim-htr-finetune")
 
 image = (
     modal.Image.debian_slim(python_version="3.12")
@@ -113,8 +113,8 @@ def train_htr(epochs: int = 3) -> str:
     """Fine-tune a HTR model on a 13B parameter base."""
     from transformers import ...
     # ... training code ...
-    model.save_pretrained("/mnt/models/kcg-htr-v1")
-    return "/mnt/models/kcg-htr-v1"
+    model.save_pretrained("/mnt/models/cianfhoghlaim-htr-v1")
+    return "/mnt/models/cianfhoghlaim-htr-v1"
 
 
 @app.local_entrypoint()
@@ -128,7 +128,7 @@ Run: `modal run --detach train.py --epochs 3`
 ### Volumes (shared storage)
 
 ```python
-volume = modal.Volume.from_name("kcg-models", create_if_missing=True)
+volume = modal.Volume.from_name("cianfhoghlaim-models", create_if_missing=True)
 
 
 @app.function(gpu="A100", volumes={"/mnt/models": volume}, timeout=3600)
@@ -205,8 +205,8 @@ modal run list
 modal run logs <run-id>
 
 # Volume management
-modal volume create kcg-models
-modal volume ls kcg-models
+modal volume create cianfhoghlaim-models
+modal volume ls cianfhoghlaim-models
 ```
 
 ## Best practices
@@ -246,13 +246,13 @@ modal volume ls kcg-models
   layer; Modal is invoked from Dagster assets
 - `.agents/skills/dlt/SKILL.md` — Modal is the deployment
   target for the `deploy-modal` recipe
-- The KCG `infrastructure/stacks/modal/` stack
+- The Cianfhoghlaim `infrastructure/stacks/modal/` stack
   (planned; not yet provisioned)
 
 ## Resources
 
 - Modal docs: <https://modal.com/docs>
 - Modal examples: <https://github.com/modal-labs/modal-examples>
-- KCG burst-training workflow: see the
+- Cianfhoghlaim burst-training workflow: see the
   `cianfhoghlaim/agents/meaisinfhoghlaim/ocr/ensemble_gradio.py` for a
   working example

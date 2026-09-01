@@ -1,6 +1,6 @@
-# KCG Orchestration: CocoIndex + Graphiti Asset Graph
+# Cianfhoghlaim Orchestration: CocoIndex + Graphiti Asset Graph
 
-The KCG asset graph is the canonical orchestration pattern for
+The Cianfhoghlaim asset graph is the canonical orchestration pattern for
 ingesting Celtic education content end-to-end. It chains:
 
 ```
@@ -127,7 +127,7 @@ def vector_embeddings_check(context: AssetCheckEvaluationContext, vector_embeddi
     return AssetCheckResult(passed=True)
 ```
 
-## KCG production usage
+## Cianfhoghlaim production usage
 
 - The `cianfhoghlaim-pipeline` spec — the canonical asset graph
 - The `orchestration/defs/curriculum_assets.py` — the

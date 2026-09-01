@@ -4,6 +4,19 @@ mode: subagent
 model: minimax-coding-plan/MiniMax-M3
 temperature: 0.1
 color: "#3a5a3a"
+mcp:
+  dlt-workspace-mcp: true
+  firecrawl: true
+  crawl4ai: true
+  infisical: true
+  motherduck: true
+  chrome: true
+  cocoindex-code: true
+  cognee: true
+  graphiti: true
+  langfuse: true
+  huggingface: true
+  design-system: true
 permission:
   edit: allow
   bash:

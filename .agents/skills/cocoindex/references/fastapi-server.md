@@ -56,14 +56,14 @@ if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
 
-## KCG examples
+## Cianfhoghlaim examples
 
 - `cocoindex/image_search/pipeline.py` (deleted
   with the docs but the pattern is the same) — CLIP embeddings +
   Qdrant + FastAPI
 - `cocoindex/image_search_colpali/pipeline.py` —
   ColPali multi-vector + Qdrant MaxSim + FastAPI
-- `agents/api/_cianfhoghlaim_api/routes/search.py` — the KCG `/search/semantic`
+- `agents/api/_cianfhoghlaim_api/routes/search.py` — the Cianfhoghlaim `/search/semantic`
   endpoint (FastAPI route that hits the v1 leabharlann embeddings)
 
 ## Deployment

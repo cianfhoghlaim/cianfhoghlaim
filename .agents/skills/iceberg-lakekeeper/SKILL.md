@@ -1,9 +1,9 @@
 ---
 name: iceberg-lakekeeper
-description: KCG canonical reference for Apache Iceberg 1.4+ tables, the Iceberg REST catalog spec, and the Lakekeeper (Rust, lakekeeper.io) catalog implementation that backs `infrastructure/stacks/lakehouse`. Use when designing time-travel / hidden-partitioning / schema-evolution flows, wiring PyIceberg / DuckDB / Spark / Trino against the `lakehouse-lakekeeper:8181` REST endpoint, choosing between DuckDB ATTACH and PyIceberg for read paths, or extending the `cianfhoghlaim-pipeline` lakehouse ingestion with Iceberg features (sort orders, Z-order, V3 Variant, encryption.key-id, soft-delete, undrop, vended credentials).
+description: Cianfhoghlaim canonical reference for Apache Iceberg 1.4+ tables, the Iceberg REST catalog spec, and the Lakekeeper (Rust, lakekeeper.io) catalog implementation that backs `infrastructure/stacks/lakehouse`. Use when designing time-travel / hidden-partitioning / schema-evolution flows, wiring PyIceberg / DuckDB / Spark / Trino against the `lakehouse-lakekeeper:8181` REST endpoint, choosing between DuckDB ATTACH and PyIceberg for read paths, or extending the `cianfhoghlaim-pipeline` lakehouse ingestion with Iceberg features (sort orders, Z-order, V3 Variant, encryption.key-id, soft-delete, undrop, vended credentials).
 ---
 
-# Iceberg + Lakekeeper (KCG canonical)
+# Iceberg + Lakekeeper (Cianfhoghlaim canonical)
 
 ## Versions (verified 2026-06-29)
 - PyIceberg 0.11.1 (2026-03-03) — `pip install "pyiceberg[s3fs,pyarrow,duckdb,pyiceberg-core]"`
@@ -11,7 +11,7 @@ description: KCG canonical reference for Apache Iceberg 1.4+ tables, the Iceberg
 - Lakekeeper v0.12.4 (2026-06-17) — `quay.io/lakekeeper/catalog:v0.12.4`
 - DuckDB iceberg extension — **core** (auto-loads on first use)
 
-## KCG wiring (current)
+## Cianfhoghlaim wiring (current)
 - Catalog endpoint: `http://lakehouse-lakekeeper:8181` (lakehouse-net)
 - Postgres backend (shared with DuckLake/Nimtable) at `lakehouse-postgres:5432`
 - S3 backend: `http://lakehouse-garage:3900` (region `garage`)
@@ -19,7 +19,7 @@ description: KCG canonical reference for Apache Iceberg 1.4+ tables, the Iceberg
 
 ## Two read paths, one write path
 - **Read fast path** — DuckDB `ATTACH ... (TYPE iceberg, SECRET, ENDPOINT)`; supports `AT (VERSION => snap)` and `AT (TIMESTAMP => ...)` natively. No JVM. Lakekeeper is in the docs' "Iceberg REST Catalogs" list.
-- **Read BAML / Arrow path** — PyIceberg 0.11.1 `load_catalog("kcg", type="rest", uri=...)` → returns PyArrow fragments; use this when feeding the BAML extraction pipeline.
+- **Read BAML / Arrow path** — PyIceberg 0.11.1 `load_catalog("cianfhoghlaim", type="rest", uri=...)` → returns PyArrow fragments; use this when feeding the BAML extraction pipeline.
 - **Write path** — PyIceberg 0.11.1 only (DuckDB iceberg write support is still beta for v2 schema ops); commit to Lakekeeper via `/v1/transactions/commit`.
 
 ## What changed since Wave 1 (2026-06-28)

@@ -26,12 +26,12 @@ Use this skill when:
 For storage pattern and ingestion, use the `motherduck-architecture`
 and `motherduck-data-modeling` sister skills.
 
-## DuckDB SQL dialect (the KCG cheatsheet)
+## DuckDB SQL dialect (the Cianfhoghlaim cheatsheet)
 
 DuckDB is a SQL superset. Most ANSI SQL works. The differences
 from PostgreSQL matter most:
 
-| Feature | DuckDB | PostgreSQL | KCG use |
+| Feature | DuckDB | PostgreSQL | Cianfhoghlaim use |
 |:--|:--|:--|:--|
 | `QUALIFY` | ✅ | ❌ (use subquery) | filter window results inline |
 | `SELECT * EXCLUDE (col)` | ✅ | ❌ | column-drop without naming the rest |

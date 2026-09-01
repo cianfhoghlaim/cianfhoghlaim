@@ -72,10 +72,10 @@ def ingest_all():
     ingest_one.map(pdf_paths)  # all parallel
 ```
 
-## KCG usage
+## Cianfhoghlaim usage
 
-The KCG stack runs Modal for **GPU workloads** (HTR training, OCR
-ensemble). For dlt pipelines, the KCG stack prefers **Dagster on
+The Cianfhoghlaim stack runs Modal for **GPU workloads** (HTR training, OCR
+ensemble). For dlt pipelines, the Cianfhoghlaim stack prefers **Dagster on
 `bunchloch` (M4 Mac) + `arm1-oci` (ARM)** because:
 
 - dlt pipelines are I/O-bound, not GPU-bound

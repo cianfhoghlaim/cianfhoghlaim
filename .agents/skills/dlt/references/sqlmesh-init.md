@@ -32,7 +32,7 @@ chain. The `dlt` skill's job is done at the init command; the
 SQLMesh-specific patterns (incremental models, audits, unit tests,
 virtual data warehouse) are covered by the **`sqlmesh` skill**.
 
-## KCG usage
+## Cianfhoghlaim usage
 
 - The `celtic-data-engineering-pipeline` spec — the dbt-duckdb
   project at `orchestration/sqlmesh/` + `CelticDagsterDbtTranslator`

@@ -7,7 +7,7 @@ in 4 regions and includes auto-compaction + auto-reindexing.
 
 - `us-east-1` (Virginia)
 - `us-west-2` (Oregon)
-- `eu-west-1` (Ireland) — **the KCG region**, closest to Galway
+- `eu-west-1` (Ireland) — **the Cianfhoghlaim region**, closest to Galway
 - `ap-south-1` (Mumbai)
 
 ## Connection
@@ -59,7 +59,7 @@ db = lancedb.connect(
 - **Writes**: per 1k rows inserted
 - **Free tier**: 100 GB storage, 10M queries/month
 
-For KCG production, use LanceDB Cloud in `eu-west-1` for the
+For Cianfhoghlaim production, use LanceDB Cloud in `eu-west-1` for the
 leabharlann + curriculum indexes.
 
 ## Local → Cloud migration
@@ -84,7 +84,7 @@ cloud_table.add(batch)
 
 ## Cloudflare R2 + LanceDB Cloud
 
-For a self-hosted R2 backend (the KCG production target), use the
+For a self-hosted R2 backend (the Cianfhoghlaim production target), use the
 rclone-sidecar Compose pattern (see
 `references/hosting-lancedb-docker-compose.md` for the docker-compose
 example). The pattern:

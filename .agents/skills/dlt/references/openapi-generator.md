@@ -59,7 +59,7 @@ load_info = dlt.pipeline(
 - The spec is unstable → you'll regenerate often, hand-writing is
   more stable
 
-## KCG usage
+## Cianfhoghlaim usage
 
 - `dlt/british_isles/ireland/` (NCCA, SEC, DES) — most
   Irish sources are hand-written (no OpenAPI spec)

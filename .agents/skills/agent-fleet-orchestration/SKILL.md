@@ -1,6 +1,6 @@
 ---
 name: agent-fleet-orchestration
-description: "The KCG 12-agent fleet orchestration pattern in `agents/meaisinfhoghlaim/`. Covers 5 frameworks (Custom/ADK/Agno/Pipecat/CopilotKit), the 12 specialist agents (root, curriculum, translation, corpus, research, education_research, bunchloch_research, geospatial, statistics, curriculum_comparison, agui_curriculum, mcp_curriculum), the LiteLLM routing keyword map, the Letta memory layer, the RisingWave event streaming layer, the Langfuse + MLflow observability stack, the OpenClaw channel-fanout gateway (WebChat + Telegram + Slack + Discord + WhatsApp + Teams), the Firecrawl MCP external search surface (per the 2026-08-14-firecrawl-mcp-ccc-dual-search-v1 change), and the British-Isles Education pipeline use case. Use when adding a new agent, debugging routing, wiring Langfuse traces, integrating Letta, or asking 'how do I orchestrate the 12-agent fleet for the LC subjects?'"
+description: "The Cianfhoghlaim 12-agent fleet orchestration pattern in `agents/meaisinfhoghlaim/`. Covers 5 frameworks (Custom/ADK/Agno/Pipecat/CopilotKit), the 12 specialist agents (root, curriculum, translation, corpus, research, education_research, bunchloch_research, geospatial, statistics, curriculum_comparison, agui_curriculum, mcp_curriculum), the LiteLLM routing keyword map, the Letta memory layer, the RisingWave event streaming layer, the Langfuse + MLflow observability stack, the OpenClaw channel-fanout gateway (WebChat + Telegram + Slack + Discord + WhatsApp + Teams), the Firecrawl MCP external search surface (per the 2026-08-14-firecrawl-mcp-ccc-dual-search-v1 change), and the British-Isles Education pipeline use case. Use when adding a new agent, debugging routing, wiring Langfuse traces, integrating Letta, or asking 'how do I orchestrate the 12-agent fleet for the LC subjects?'"
 ---
 
 # Agent Fleet Orchestration
@@ -193,7 +193,7 @@ via the `langfuse_trace` + `mlflow_log` decorators.
 
 ## The cross-quadrant observability contract
 
-The agent fleet integrates with the broader KCG observability
+The agent fleet integrates with the broader Cianfhoghlaim observability
 stack:
 
 - **Oideachais** reads the agent traces via the FastAPI middleware

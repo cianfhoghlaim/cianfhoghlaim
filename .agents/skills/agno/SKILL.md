@@ -1,6 +1,6 @@
 ---
 name: agno
-description: Expert assistance for building AI agent systems with Agno (formerly PhiData) v2.0+. Use when users need multi-agent orchestration via the A2A Protocol, AgentOS production hosting, Z.ai GLM-4.6 via OpenAILike, agentic chunking, native Browserbase MCP integration, or Dagster+DLT+Agno KCG integration.
+description: Expert assistance for building AI agent systems with Agno (formerly PhiData) v2.0+. Use when users need multi-agent orchestration via the A2A Protocol, AgentOS production hosting, Z.ai GLM-4.6 via OpenAILike, agentic chunking, native Browserbase MCP integration, or Dagster+DLT+Agno Cianfhoghlaim integration.
 ---
 
 # Agno - AI Agent Framework
@@ -48,9 +48,9 @@ Activate when users need:
 - "Use Z.ai GLM-4.6 (or any OpenAI-compatible model)"
 - "Add agentic chunking to a knowledge base"
 - "Integrate with Browserbase for browser automation"
-- "Build the KCG 5-stage Dagster+DLT+Agno pipeline"
+- "Build the Cianfhoghlaim 5-stage Dagster+DLT+Agno pipeline"
 
-## KCG context (PRESERVED + extended)
+## Cianfhoghlaim context (PRESERVED + extended)
 
 - LLM backend: **LiteLLM gateway** (routes to OpenAI, Anthropic,
   Google, Z.ai, etc.)
@@ -59,16 +59,16 @@ Activate when users need:
   for dev
 - Knowledge base: **LanceDB** (BGE-M3 embeddings) or
   **PgVector** for Postgres-native
-- Knowledge graph: **FalkorDB** (the KCG primary) or
+- Knowledge graph: **FalkorDB** (the Cianfhoghlaim primary) or
   **Memgraph** for Cypher
-- The KCG agent chain: **OCR → BAML → embedding → Graphiti
+- The Cianfhoghlaim agent chain: **OCR → BAML → embedding → Graphiti
   → RAGAS** (5 SequentialAgents in a Dagster asset)
 - Dagster wiring: `cianfhoghlaim-curriculum-extraction` runs the
   agent chain against NCCA PDFs
 - DLT wiring: `@dlt.destination` writes the BAML output to
   DuckLake
 
-## Domain-specific agent teams (KCG)
+## Domain-specific agent teams (Cianfhoghlaim)
 
 For the Cianfhoghlaim platform, the standard agent team is:
 
@@ -76,7 +76,7 @@ For the Cianfhoghlaim platform, the standard agent team is:
 from agno.team import Team
 from agno.models.openai.like import OpenAILike
 
-# KCG uses Z.ai GLM-4.6 for cost + speed, with OpenAI as fallback
+# Cianfhoghlaim uses Z.ai GLM-4.6 for cost + speed, with OpenAI as fallback
 model = OpenAILike(
     id="glm-4.6",
     base_url="https://api.z.ai/v1",
@@ -94,7 +94,7 @@ team = Team(
         statistics_agent,   # CSO + DES education statistics
         research_agent,     # Zotero + Gemini deep research
     ],
-    model=kcg_model,
+    model=cianfhoghlaim_model,
 )
 ```
 
@@ -202,11 +202,11 @@ z_ai = OpenAILike(
     api_key=os.environ["Z_AI_API_KEY"],
 )
 
-agent = Agent(name="kcg_translator", model=z_ai)
+agent = Agent(name="cianfhoghlaim_translator", model=z_ai)
 ```
 
 Z.ai's GLM-4.6 is a fast, cheap Chinese model that performs
-well on translation + structured extraction. KCG uses it as
+well on translation + structured extraction. Cianfhoghlaim uses it as
 the cost-effective default, with OpenAI / Anthropic as
 fallback for high-stakes calls.
 
@@ -265,7 +265,7 @@ result = client.call("extract_curriculum", {"pdf_url": "..."})
 from agno.os import AgentOS
 
 agent_os = AgentOS(
-    agents=[kcg_team, curriculum_agent, translation_agent],
+    agents=[cianfhoghlaim_team, curriculum_agent, translation_agent],
     # The OpenAPI spec is auto-generated
 )
 
@@ -284,7 +284,7 @@ The OpenAPI spec is at
 ```python
 from agno.os.agui import AGUIInterface
 
-agui = AGUIInterface(agent=kcg_team)
+agui = AGUIInterface(agent=cianfhoghlaim_team)
 
 # Mount under any FastAPI app
 from fastapi import FastAPI
@@ -385,9 +385,9 @@ agent = Agent(
 
 For production, use Postgres. For dev, SQLite is fine.
 
-## KCG integration: Dagster + DLT + Agno
+## Cianfhoghlaim integration: Dagster + DLT + Agno
 
-The KCG 5-stage pipeline is a Dagster asset that orchestrates
+The Cianfhoghlaim 5-stage pipeline is a Dagster asset that orchestrates
 5 Agno agents:
 
 ```python
@@ -400,7 +400,7 @@ from cianfhoghlaim.agents.agno import (
 
 @asset(group_name="curriculum")
 def ireland_curriculum_extraction(context: AssetExecutionContext):
-    """Run the 5-stage KCG agent chain against an NCCA PDF."""
+    """Run the 5-stage Cianfhoghlaim agent chain against an NCCA PDF."""
     pipeline = AgentOS(agents=[
         ocr_agent, baml_extractor, embedder, graphiti_agent, ragas_evaluator,
     ])
@@ -477,7 +477,7 @@ result = agent.run("https://github.com/agno-agi/agno")
 - **Z.ai GLM-4.6:** <https://docs.z.ai/guides/llm/glm-4.6>
 - **A2A Protocol:** <https://a2a.dev/>
 - **AG-UI Protocol:** <https://ag-ui.com/>
-- **KCG Dagster asset:** `orchestration/defs/curriculum_assets.py`
+- **Cianfhoghlaim Dagster asset:** `orchestration/defs/curriculum_assets.py`
 - **Related skills:** `.agents/skills/google-adk/`,
   `.agents/skills/pydantic-ai/`, `.agents/skills/litellm/`,
   `.agents/skills/langfuse/`, `.agents/skills/cognee/`,
@@ -501,7 +501,7 @@ result = agent.run("https://github.com/agno-agi/agno")
 | Modal H100 burst | ✅ | ✅ | ✅ |
 
 **Rule of thumb**: use **Agno** for multi-agent teams with
-Z.ai GLM-4.6 (cost-effective, the KCG default); use
+Z.ai GLM-4.6 (cost-effective, the Cianfhoghlaim default); use
 **Google ADK** for Gemini-heavy workflows (Live API, A2A,
 Agent Engine); use **Pydantic AI** for type-safe I/O with
-Pydantic models (the KCG standard).
+Pydantic models (the Cianfhoghlaim standard).

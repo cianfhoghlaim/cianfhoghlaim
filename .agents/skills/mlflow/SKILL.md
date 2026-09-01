@@ -484,4 +484,4 @@ mlflow.create_external_model(name="my-external-model")
 
 6. **MLflow 3 model_id URIs**: prefer `models:/<model_id>` over `runs:/<run_id>/path` for new code
 7. **Serialization pinning**: set `serialization_format` explicitly on `log_model` calls in v3.14.0+ to avoid the default flip
-8. **Local KCG code**: `cianfhoghlaim/core/obs/observability/mlflow_config.py` should migrate `runs:/{run_id}/model` → `models:/{model_info.model_id}` for MLflow 3
+8. **Local Cianfhoghlaim code**: `cianfhoghlaim/core/obs/observability/mlflow_config.py` should migrate `runs:/{run_id}/model` → `models:/{model_info.model_id}` for MLflow 3

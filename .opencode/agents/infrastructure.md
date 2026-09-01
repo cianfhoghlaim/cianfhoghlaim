@@ -4,6 +4,19 @@ mode: subagent
 model: minimax-coding-plan/MiniMax-M3
 temperature: 0.1
 color: "#5a5a5a"
+mcp:
+  dlt-workspace-mcp: true
+  firecrawl: true
+  crawl4ai: true
+  infisical: true
+  motherduck: true
+  chrome: true
+  cocoindex-code: true
+  cognee: true
+  graphiti: true
+  langfuse: true
+  huggingface: true
+  design-system: true
 permission:
   edit: allow
   bash:
@@ -74,3 +87,27 @@ You are the infrastructure functional subagent for the cianfhoghlaim monorepo. Y
 - `bonneagar/` is now a SUBDIRECTORY of cianfhoghlaim (not a separate repo)
 - IaC forward: `bun run --cwd bonneagar iac:*` (instead of `cd bonneagar && bun run iac:*`)
 - The 2-repo split enforcement: cianfhoghlaim (this) + leabharlann (separate) — bonneagar is now part of this repo
+
+---
+
+## V6 era notes (2026-09-01)
+
+For the cianfhoghlaim-nua v6 era, the canonical infrastructure surfaces are:
+
+- **Phase 9 GCP opt-in** — 6 GCP mirror stacks at `bonneagar/stacks/gcp-*/`:
+  - `gcp-gemini-vertex` (Vertex AI Gemini 3.5 Flash)
+  - `gcp-gemma-unsloth` (Unsloth Studio Gemma 4 on Cloud Run GPU)
+  - `gcp-bigquery-mirror` (BigQuery mirror of DuckLake)
+  - `gcp-gcs-bucket` (GCS bucket for syllabus_raw storage)
+  - `gcp-secret-manager` (GCP Secret Manager for API keys)
+  - `gcp-cloud-run` (Cloud Run for the ADK 2 backend)
+- All 6 follow the canonical 6-file GOLD_STANDARD pattern
+  (README + blueprint + compose + pangolin + secrets + sidecar)
+- **Phase 8 sister-side mirrors** — the 6 sister repos
+  (bonneagar + tuatha + ciancheiltis + ciandlithe + cianchosaint +
+  gemini_hackathon) receive curated subsets of the cianfhoghlaim
+  substrate (per `2026-09-01-sister-side-mirrors-v1/`)
+
+The OSS-first substrate (Pangolin + Komodo + Locket + Infisical +
+89 self-hosted stacks) remains canonical.
+The GCP substrate is opt-in via `deployment-choice.yaml`.

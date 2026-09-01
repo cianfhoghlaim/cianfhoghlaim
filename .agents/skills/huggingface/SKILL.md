@@ -426,3 +426,34 @@ gr.Interface(fn=generate, inputs="text", outputs="text").launch()
 - **Dataset Hub**: https://huggingface.co/datasets
 - **Course**: https://huggingface.co/learn
 - **PEFT**: https://huggingface.co/docs/peft
+
+## MCP route (OpenCode agent sessions)
+
+When an agent is running inside OpenCode with the `huggingface` MCP
+server loaded (`https://huggingface.co/mcp?login`), the following
+tools appear in the system prompt:
+
+| Tool | Purpose | Use instead of |
+|:--|:--|:--|
+| `huggingface_hf_whoami` | Current HF account | `hf auth whoami` |
+| `huggingface_hub_repo_search` | Search models / datasets / Spaces | `huggingface_hub.HfApi().list_models(...)` |
+| `huggingface_hub_repo_details` | Get one repo's metadata + siblings | `huggingface_hub.HfApi().model_info(...)` |
+| `huggingface_dataset_structure` | Dataset's configs / splits / columns | manual parquet download |
+| `huggingface_dataset_preview` | First N rows of a dataset split | manual parquet download |
+| `huggingface_dynamic_space` | Invoke a Gradio / Docker Space tool | opening a browser tab |
+| `huggingface_hf_jobs` | Run a job on HF infrastructure (Python / Docker / UV) | manual cluster provisioning |
+| `huggingface_hf_fs` | ls/cat/attach over `hf://` URIs | `huggingface_hub.snapshot_download` |
+
+**Decision rules:**
+
+- "What's the best OCR-VLM model for handwritten Irish?" →
+  `huggingface_hub_repo_search` with `task: image-to-text` + Irish filter.
+- "Show me the README for `BAAI/bge-m3`" → `huggingface_hub_repo_details`.
+- "Run this Python script with `transformers` on a T4" →
+  `huggingface_hf_jobs` with `operation: uv` + the script.
+- "List trending models today" → `huggingface_hf_fs` with
+  `ls hf://models/trending --limit 10`.
+
+Auth: the first tool call in a session triggers OAuth
+(`https://huggingface.co/mcp?login`). The token is cached in
+`~/.cache/huggingface/mcp-auth.json` per the OpenCode MCP auth cache.

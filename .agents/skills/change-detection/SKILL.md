@@ -320,7 +320,7 @@ sensors live in `orchestration/defs/sensors/`:
   and triggers a LanceDB re-index when the canonical
   `BAAI/bge-m3` embedder bumps a minor version.
 - **Dagster `MultiPartitionsDefinition`** — the canonical
-  KCG BIEP partition: `(language × subject × level)` for the
+  Cianfhoghlaim BIEP partition: `(language × subject × level)` for the
   curriculum + `(year)` for the exam-papers partition.
 
 Cross-references:

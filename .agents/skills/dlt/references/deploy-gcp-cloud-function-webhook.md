@@ -54,15 +54,15 @@ gcloud functions deploy your-webhook \
   --timeout 60s
 ```
 
-## KCG usage
+## Cianfhoghlaim usage
 
-The KCG stack uses Cloudflare Workers (not GCP Cloud Functions) for
+The Cianfhoghlaim stack uses Cloudflare Workers (not GCP Cloud Functions) for
 webhook ingestion. The Cloudflare Worker pattern is similar but
 uses the Workers Python (`pyodide`) or TypeScript runtime. See the
 `tuatha` and `croilar` quadrants for the Workers-based webhook
 ingestion.
 
-For GCP, this pattern is a valid alternative if the KCG stack
+For GCP, this pattern is a valid alternative if the Cianfhoghlaim stack
 ever migrates from Cloudflare to GCP.
 
 ## Reference

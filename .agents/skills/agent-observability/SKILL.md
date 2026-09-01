@@ -1,6 +1,6 @@
 ---
 name: agent-observability
-description: Unified agent observability stack — Langfuse cost + prompt management (`@observe`), Logfire Python tracing, MLflow experiment tracking + model registry, Ragas evaluation as a Dagster asset_check, structlog. Use when wiring traces, costs, RAG quality, and experiments across the KCG agent layer.
+description: Unified agent observability stack — Langfuse cost + prompt management (`@observe`), Logfire Python tracing, MLflow experiment tracking + model registry, Ragas evaluation as a Dagster asset_check, structlog. Use when wiring traces, costs, RAG quality, and experiments across the Cianfhoghlaim agent layer.
 ---
 
 # Agent Observability
@@ -18,7 +18,7 @@ Use when you need to:
 
 ## Overview
 
-The KCG agent observability stack is **5 layers**, all wired
+The Cianfhoghlaim agent observability stack is **5 layers**, all wired
 together. Each layer covers a different concern:
 
 ```
@@ -104,7 +104,7 @@ automatically capture:
 import mlflow
 
 mlflow.set_tracking_uri("https://mlflow.cianfhoghlaim.ie")
-mlflow.set_experiment("kcg-rag-pipeline")
+mlflow.set_experiment("cianfhoghlaim-rag-pipeline")
 
 
 @mlflow.trace
@@ -122,7 +122,7 @@ def run_rag_experiment(query: str) -> dict:
 ```python
 mlflow.register_model(
     "runs:/abc123/model",
-    "kcg-bge-m3-v3",
+    "cianfhoghlaim-bge-m3-v3",
 )
 ```
 
@@ -179,7 +179,7 @@ def rag_quality_check(context, rag_asset):
     )
 ```
 
-**KCG thresholds**: faithfulness ≥ 0.8, answer-relevancy ≥ 0.7.
+**Cianfhoghlaim thresholds**: faithfulness ≥ 0.8, answer-relevancy ≥ 0.7.
 
 ## 5. Structured logging with structlog
 
@@ -206,7 +206,7 @@ Output:
 
 ## Observability checklist
 
-For every new agent in the KCG stack, ensure:
+For every new agent in the Cianfhoghlaim stack, ensure:
 
 - [ ] Every LLM call is wrapped in `logfire.instrument_*` (Logfire)
   or `@observe` (Langfuse)
@@ -218,7 +218,7 @@ For every new agent in the KCG stack, ensure:
 - [ ] MLflow experiment for any model retraining
 - [ ] structlog JSON logging in production
 
-## KCG integration
+## Cianfhoghlaim integration
 
 - `observability/` — the integration module
   (Logfire + MLflow + Langfuse + Ragas)
@@ -416,7 +416,7 @@ config, the 3-span trace template, the
 indexing trace pattern, the 6 key metrics table, the web
 UI trace view, the dashboard view, and the 3 alerts.
 
-## KCG MCP inventory
+## Cianfhoghlaim MCP inventory
 
 9 MCP servers are wired in `opencode.json` to give every
 agent a tool surface covering cognition, code search,
@@ -588,18 +588,18 @@ of this file, and the implementation checklist is the
 
 ## 2026-06 update: Langfuse v3 + MLflow GenAI + RAGAS trace-based
 
-The 4 observability tools that KCG agents use (Langfuse, MLflow, RAGAS, Logfire) all shipped major updates in 2026.
+The 4 observability tools that Cianfhoghlaim agents use (Langfuse, MLflow, RAGAS, Logfire) all shipped major updates in 2026.
 
 ### Langfuse v3 (released 2026-05)
 
-The v3 release is what KCG runs at `langfuse.cianfhoghlaim.ie`. Key features for KCG agents:
+The v3 release is what Cianfhoghlaim runs at `langfuse.cianfhoghlaim.ie`. Key features for Cianfhoghlaim agents:
 
 - **Prompt management v2** — version + A/B test prompts from the Langfuse UI; the agent runtime picks up new prompts at the next request without a restart
 - **Cost tracking per model** — separate cost lines for `gpt-4o`, `claude-sonnet-4.5`, `gemini-2.0-flash`, `llama-swap` (the local M4 model)
 - **Session grouping** — group 5 agent turns into 1 user session, so the dashboard shows the cost + latency for the whole conversation
 - **Dataset + experiment tracking** — link every LLM call to a dataset version + an experiment run, so you can reproduce any past agent trace
 
-The KCG pattern: every agent call goes through LiteLLM with `langfuse_callback` enabled, so the Langfuse trace is populated automatically.
+The Cianfhoghlaim pattern: every agent call goes through LiteLLM with `langfuse_callback` enabled, so the Langfuse trace is populated automatically.
 
 ### MLflow GenAI evaluation (the 2026-06 feature)
 
@@ -609,7 +609,7 @@ MLflow added a GenAI evaluation mode in 2026 that complements Langfuse:
 - Tracks quality metrics (faithfulness, answer relevance, context precision) per model
 - Integrates with the MLflow model registry: a model can only be promoted to "Production" if it passes the eval gate
 
-The KCG pattern: nightly batch eval of the `agents/curriculum_agent` against the `cianfhoghlaim_eval_v3` dataset, logged to MLflow. The Dagster asset `mlflow_eval_curriculum` (in `agents/meaisinfhoghlaim/dagster_defs/`) is the entry point.
+The Cianfhoghlaim pattern: nightly batch eval of the `agents/curriculum_agent` against the `cianfhoghlaim_eval_v3` dataset, logged to MLflow. The Dagster asset `mlflow_eval_curriculum` (in `agents/meaisinfhoghlaim/dagster_defs/`) is the entry point.
 
 ### RAGAS trace-based metrics
 
@@ -620,11 +620,11 @@ RAGAS now ships trace-based metrics that work on the Langfuse trace (not just th
 - **Context precision** — is the retrieved context actually relevant?
 - **Context recall** — is the retrieved context complete?
 
-The KCG pattern: the RAGAS-as-Dagster-asset-check pattern runs these on every `cognee.remember` call. The asset check `ragas_faithfulness_check` in `orchestration/asset_checks.py` fails the asset materialisation if faithfulness drops below 0.85.
+The Cianfhoghlaim pattern: the RAGAS-as-Dagster-asset-check pattern runs these on every `cognee.remember` call. The asset check `ragas_faithfulness_check` in `orchestration/asset_checks.py` fails the asset materialisation if faithfulness drops below 0.85.
 
 ### Logfire MCP (2026-06)
 
-Pydantic Logfire now ships an MCP server that exposes traces to the agent runtime. KCG does not yet wire it, but the skill is in `.agents/skills/pydantic-ai/SKILL.md` for future use.
+Pydantic Logfire now ships an MCP server that exposes traces to the agent runtime. Cianfhoghlaim does not yet wire it, but the skill is in `.agents/skills/pydantic-ai/SKILL.md` for future use.
 
 ### Pair this skill with
 

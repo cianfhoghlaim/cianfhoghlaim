@@ -586,7 +586,7 @@ table.create_index(metric="cosine", index_type="HNSW", m=20, ef_construction=150
 11. **FTS tokenizer matters for multilingual corpora** — use
     `default` (Unicode) for Irish, Welsh, etc.; `en_stem` for English
 12. **TS: use `search()`, not the deprecated `vectorSearch()`**
-13. **The KCG canonical embedding model is `BAAI/bge-m3`**
+13. **The Cianfhoghlaim canonical embedding model is `BAAI/bge-m3`**
     (1024-d, multilingual, 100+ languages including all 6
     Celtic languages, MIT-licensed). Use it for any
     multilingual RAG corpus. Cache the model weights at
@@ -642,7 +642,7 @@ LanceDB Cloud features:
 - **Serverless** — no instance management
 - **Multi-region** — pick the region closest to your data
 
-**For self-hosted Cloudflare R2 + Lance** (the KCG production target),
+**For self-hosted Cloudflare R2 + Lance** (the Cianfhoghlaim production target),
 use the rclone-sidecar Compose pattern (see
 `references/hosting-lancedb-docker-compose.md` or the deleted
 `docs/lance/lancedb.compose.yaml` for the upstream example).
@@ -673,10 +673,10 @@ use the rclone-sidecar Compose pattern (see
 ## 2026-06 updates (from the `upstream-package-monitoring` openspec change)
 
 - **Lance Format v2.2** — 50%+ storage reduction vs Parquet; 68× faster
-  blob reads. The KCG migration to format v2.2 is tracked by
+  blob reads. The Cianfhoghlaim migration to format v2.2 is tracked by
   `openspec/changes/lancedb-format-v22-migration/`.
 - **Lance Blob V2** — 4 storage modes: Inline / Packed / Dedicated /
-  External. KCG recommends **Packed** for leabharlann assets (where
+  External. Cianfhoghlaim recommends **Packed** for leabharlann assets (where
   blobs are <1 MB) and **Dedicated** for upstream blog payloads
   (where blobs can be >10 MB).
 - **LanceDB embedder model note** — the value actually exported by
@@ -714,7 +714,7 @@ notebooks (8 total, ~17 MB). Highlights:
 - `data_engineering_lance_multimodal-recipe-agent_*.ipynb` —
   multimodal (image + text) recipe agent
 
-## British-Isles Education pipeline — Canonical KCG pattern (post-v4)
+## British-Isles Education pipeline — Canonical Cianfhoghlaim pattern (post-v4)
 
 The post-v4 lc6 pipeline (`openspec/changes/lc6-biep/`) uses
 LanceDB as the **vector companion** to DuckLake. Each of the
@@ -729,7 +729,7 @@ import lancedb
 from lancedb.pydantic import LanceModel, Vector
 from lancedb.embeddings import get_registry
 
-# Shared KCG embedder: BAAI/bge-m3 (1024-d, multilingual)
+# Shared Cianfhoghlaim embedder: BAAI/bge-m3 (1024-d, multilingual)
 embedder = get_registry().get("sentence-transformers").create(
     name="BAAI/bge-m3",
     device="mps",  # M-series Mac native
@@ -744,13 +744,13 @@ class MathChunk(LanceModel):
     module_id: str
     source_pdf: str
 
-# Connect via the canonical KCG pattern (local + S3-compatible Garage)
+# Connect via the canonical Cianfhoghlaim pattern (local + S3-compatible Garage)
 db = lancedb.connect("s3://garage/lance")
 
 # 1 of the 24 BIEP per-subject tables (en/higher/Mathematics)
 table = db.open_table("cianfhoghlaim.lc.mathematics.higher_en")
 
-# Hybrid vector + BM25 search with RRF reranking (the canonical KCG pattern)
+# Hybrid vector + BM25 search with RRF reranking (the canonical Cianfhoghlaim pattern)
 results = (
     table.search(query_type="hybrid")
     .vector(embedder.embed("algebraic fractions").tolist())

@@ -45,7 +45,7 @@ transparently — the consumer sees the new schema on the next read.
   `sync-skills-from-docs` change). The same content is in the
   upstream [dagster-iceberg](https://github.com/dagster-io/dagster/tree/master/python_modules/libraries/dagster-iceberg)
   package and the PyIceberg docs at <https://py.iceberg.apache.org/>
-- The KCG stack uses **DuckLake** (not Iceberg) as the primary
+- The Cianfhoghlaim stack uses **DuckLake** (not Iceberg) as the primary
   lakehouse sink — see
   `.agents/skills/dagster/references/integrations/dagster-ducklake/INDEX.md`
 - The `lancedb` skill's `lance-namespace-and-iceberg.md` for the

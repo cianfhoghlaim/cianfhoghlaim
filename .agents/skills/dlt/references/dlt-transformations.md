@@ -96,9 +96,9 @@ def document_analysis(pdf_paths: list[str]):
 
 The destination has 3 tables: `raw_text`, `chunk`, `entity`.
 
-## KCG usage
+## Cianfhoghlaim usage
 
-The KCG stack uses `dlt.transformer` in:
+The Cianfhoghlaim stack uses `dlt.transformer` in:
 
 - `dlt/british_isles/ireland/` — chain raw pages → parsed
   curriculum → BAML-extracted outcomes

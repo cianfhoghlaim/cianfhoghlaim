@@ -13,7 +13,7 @@ examples are in the upstream cocoindex repo).
   binary (no Python runtime)
 - **Edge / WASM**: CocoIndex Rust is the basis for the WASM build
 
-For most KCG use cases, the Python v1 Apps are sufficient and the
+For most Cianfhoghlaim use cases, the Python v1 Apps are sufficient and the
 ergonomics of `@coco.fn` + BAML are better.
 
 ## Module map (Rust port)
@@ -29,7 +29,7 @@ ergonomics of `@coco.fn` + BAML are better.
 | `mount_each(fn, items, target)` | `mount_each!` macro |
 | `await coco.use_context(KEY)` | `coco::use_context(KEY)` |
 
-## KCG example (Rust port)
+## Cianfhoghlaim example (Rust port)
 
 - `cocoindex/rust/text_embedding/src/main.rs` —
   mirror of `cocoindex/leabharlann_embedding.py`

@@ -4,7 +4,7 @@ BAML supports **named clients** with explicit `retry_policy` blocks,
 `fallback` chains, and `round-robin` strategies. This is the
 canonical way to manage LLM clients in BAML.
 
-## The 3 KCG production clients
+## The 3 Cianfhoghlaim production clients
 
 The `baml/clients.baml` defines:
 
@@ -163,10 +163,10 @@ client<llm> ExtractEn {
 }
 ```
 
-For high-concurrency KCG pipelines (the dlt → BAML → Dagster
+For high-concurrency Cianfhoghlaim pipelines (the dlt → BAML → Dagster
 pattern), `default_client_mode async` is required.
 
-## KCG conventions
+## Cianfhoghlaim conventions
 
 - `ExtractEn` (GPT-4o-mini) for production extraction
 - `ExtractEnStrong` (GPT-4o) for higher-accuracy or fallback
@@ -175,12 +175,12 @@ pattern), `default_client_mode async` is required.
 - Always `temperature 0.0` for deterministic extraction
 - Always wrap the LLM in a `retry_policy` (default `Constant` with
   3 retries, 1s delay)
-- For multimodal: `safetySettings` with `BLOCK_NONE` (KCG content
+- For multimodal: `safetySettings` with `BLOCK_NONE` (Cianfhoghlaim content
   includes historical political / cultural material)
 
 ## Reference
 
 - The full `baml/clients.baml` (and `clients_0.baml`
-  in the repo) define the KCG production clients
+  in the repo) define the Cianfhoghlaim production clients
 - BAML clients docs: <https://docs.boundaryml.com/docs/snippets/clients>
 - BAML retry docs: <https://docs.boundaryml.com/docs/configuration/retries>

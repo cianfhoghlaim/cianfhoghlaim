@@ -87,7 +87,7 @@ The `.where()` filter is applied BEFORE the vector search
 (pre-filter); use `.prefilter(False)` for post-filtering
 when the filter is non-selective.
 
-## Pattern 5: BGE-M3 multilingual (KCG canonical)
+## Pattern 5: BGE-M3 multilingual (Cianfhoghlaim canonical)
 
 ```python
 from lancedb.embeddings import get_registry
@@ -124,7 +124,7 @@ def _():
     return
 ```
 
-## KCG conventions
+## Cianfhoghlaim conventions
 
 - Vector search always uses `RRFReranker` for hybrid queries
 - FTS index is created with `use_tantivy=True`

@@ -43,7 +43,7 @@ class DocPage:
 
 Qdrant's MaxSim scoring picks the best patch match per document.
 
-## KCG examples
+## Cianfhoghlaim examples
 
 - `cocoindex/leabharlann_embedding.py` — text-only
   (BGE-large-en-v1.5) for the leabharlann books corpus

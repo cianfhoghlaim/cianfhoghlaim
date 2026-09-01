@@ -39,8 +39,8 @@ The script:
    `1_ingestion/`, `2_materials/`, `3_model_lifecycle/`,
    `4_asset_generation/`, `5_agent_ops/`
 2. **Counts `@asset`, `@asset_check`, `@sensor` decorators** per layer
-3. **Counts YAML defs** (the KCG Component YAML files)
-4. **Counts the KCG Component classes** at `orchestration/components/`
+3. **Counts YAML defs** (the Cianfhoghlaim Component YAML files)
+4. **Counts the Cianfhoghlaim Component classes** at `orchestration/components/`
 5. **Writes a per-group report** to
    `stedding/sync-reports/dagster-{date}.md`
 6. **Returns 0** if the total asset count is > 0 (suspicious if 0)
@@ -91,8 +91,8 @@ uv run marimo edit notebooks/sync_health.py
 ## The new CCC concept guide: dagster-asset-graph
 
 The 21st concept guide in `.cocoindex_code/guides.yml`. Maps queries
-about "Dagster asset graph", "5-layer defs/", "KCG Components" to the
-canonical files (the 5 layer folders + the 5 KCG Component classes).
+about "Dagster asset graph", "5-layer defs/", "Cianfhoghlaim Components" to the
+canonical files (the 5 layer folders + the 5 Cianfhoghlaim Component classes).
 
 ## Quick routing
 

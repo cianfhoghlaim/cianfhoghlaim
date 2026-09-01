@@ -364,7 +364,7 @@ con.close()
 - **Extensions**: https://duckdb.org/docs/extensions/overview
 - **GitHub**: https://github.com/duckdb/duckdb
 
-## British-Isles Education pipeline — Canonical KCG pattern (post-v4)
+## British-Isles Education pipeline — Canonical Cianfhoghlaim pattern (post-v4)
 
 The post-v4 BIEP (`openspec/changes/lc6-biep/`) uses DuckDB as
 the **federated SQL layer** that joins DuckLake (the OLTP sink
@@ -399,7 +399,7 @@ LIMIT 25;
 ```python
 import duckdb
 
-# The KCG-preferred pattern: federated SQL via MotherDuck + DuckLake
+# The cianfhoghlaim-preferred pattern: federated SQL via MotherDuck + DuckLake
 con = duckdb.connect("md:cianfhoghlaim")  # MOTHERDUCK_TOKEN from Infisical
 
 # Pull the Mathematics syllabus topics (DuckLake) + LanceDB chunks in one go

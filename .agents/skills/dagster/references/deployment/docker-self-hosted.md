@@ -1,6 +1,6 @@
-# Self-Hosted Docker Dagster Deploy (canonical KCG pattern)
+# Self-Hosted Docker Dagster Deploy (canonical Cianfhoghlaim pattern)
 
-The KCG stack uses **self-hosted Docker** for the production Dagster
+The Cianfhoghlaim stack uses **self-hosted Docker** for the production Dagster
 deploy (not Dagster+ Hybrid). The pattern is from the official
 `docs/dagster/integrations/deploy/` example (deleted with the
 `sync-skills-from-docs` change).
@@ -144,9 +144,9 @@ COPY dagster_module /app/dagster_module
 ENV DAGSTER_HOME=/app/dagster_home
 ```
 
-## KCG production usage
+## Cianfhoghlaim production usage
 
-The KCG stack runs this same 4-service topology on `bunchloch` (M4
+The Cianfhoghlaim stack runs this same 4-service topology on `bunchloch` (M4
 Mac) + `arm1-oci` (ARM). The Docker Compose file is at
 `infrastructure/stacks/dagster/`, with:
 

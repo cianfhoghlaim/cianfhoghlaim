@@ -1,7 +1,7 @@
 # SQLMesh Integration (`@sqlmesh_assets`)
 
 The `dagster-sqlmesh` integration wraps a SQLMesh project as a set
-of Dagster assets. SQLMesh is dbt-compatible; the KCG stack uses it
+of Dagster assets. SQLMesh is dbt-compatible; the Cianfhoghlaim stack uses it
 for the analytical layer on top of the DuckLake raw tables.
 
 ## Resource + translator
@@ -47,7 +47,7 @@ class CurriculumSQLMeshTranslator(SQLMeshDagsterTranslator):
         return context.partition_key  # e.g. "ie|primary|english"
 ```
 
-## KCG usage
+## Cianfhoghlaim usage
 
 - The `celtic-data-engineering-patterns` openspec change
 - `orchestration/sqlmesh/` (or its SQLMesh equivalent) — the

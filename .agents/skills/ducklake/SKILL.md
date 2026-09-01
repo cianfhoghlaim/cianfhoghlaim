@@ -1,6 +1,6 @@
 ---
 name: ducklake
-description: Expert assistance for DuckLake lightweight data lakehouse. Use when users need ACID transactions on object storage, time-travel queries, DLT integration, schema evolution, or a simpler alternative to Iceberg/Delta Lake with DuckDB. Canonical KCG sink for the British-Isles Education pipeline — stores 24 BIEP tables (6 LC subjects × 2 languages × 2 levels) + `gov.ie` circulars under `cianfhoghlaim.leaving_cert.*` and `cianfhoghlaim.education.ie.*` schemas in the `md:cianfhoghlaim` MotherDuck database.
+description: Expert assistance for DuckLake lightweight data lakehouse. Use when users need ACID transactions on object storage, time-travel queries, DLT integration, schema evolution, or a simpler alternative to Iceberg/Delta Lake with DuckDB. Canonical Cianfhoghlaim sink for the British-Isles Education pipeline — stores 24 BIEP tables (6 LC subjects × 2 languages × 2 levels) + `gov.ie` circulars under `cianfhoghlaim.leaving_cert.*` and `cianfhoghlaim.education.ie.*` schemas in the `md:cianfhoghlaim` MotherDuck database.
 ---
 
 # DuckLake Expert Assistant
@@ -21,7 +21,7 @@ You have deep knowledge of:
 - Cloud storage integration (S3, R2, GCS, Azure Blob)
 - Incremental ETL pipelines and state management
 
-## KCG project context
+## Cianfhoghlaim project context
 
 The Cianfhoghlaim platform uses DuckLake as the canonical
 lakehouse sink with this topology:
@@ -905,10 +905,10 @@ When users invoke this skill:
 
 Remember: You're not just answering questions, you're teaching modern lakehouse architecture and helping users build production-grade data pipelines with DuckLake's lightweight approach.
 
-## KCG-Specific Patterns
+## cianfhoghlaim-Specific Patterns
 
 The Cianfhoghlaim platform uses DuckDB + DuckLake in
-production. These KCG-specific patterns are not in the generic
+production. These cianfhoghlaim-specific patterns are not in the generic
 DuckDB/DuckLake upstream docs.
 
 ### DuckLake `ATTACH` (production)
@@ -946,7 +946,7 @@ con = duckdb.connect("md:cianfhoghlaim")
 # the MOTHERDUCK_TOKEN env var authenticates.
 ```
 
-### KCG-cocoindex chunked Parquet writes
+### cianfhoghlaim-cocoindex chunked Parquet writes
 
 The `cocoindex/` Apps write to DuckLake in
 ZSTD-compressed Parquet, with row group size tuned for HNSW
@@ -964,7 +964,7 @@ await lancedb.mount_table_target(
 
 ### `stedding/ingest_queue/` reads
 
-The KCG offline-fallback cache is at `stedding/ingest_queue/`.
+The Cianfhoghlaim offline-fallback cache is at `stedding/ingest_queue/`.
 Read partitioned Parquet via DuckDB's hive-partitioning
 support:
 
@@ -981,9 +981,9 @@ df = con.execute("""
 """).df()
 ```
 
-### KCG-specific QUALIFY/ROW_NUMBER pattern (latest version)
+### cianfhoghlaim-specific QUALIFY/ROW_NUMBER pattern (latest version)
 
-The KCG `ireland/curriculum/` partitions are versioned
+The Cianfhoghlaim `ireland/curriculum/` partitions are versioned
 (by academic year). To get the "latest" version of each
 curriculum area, use `QUALIFY`:
 
@@ -1024,7 +1024,7 @@ notebooks (6 total). Highlights:
 - `data_engineering_ducklake_pointblank.ipynb` — data validation
 - `data_engineering_ducklake_mlflow_kafka_ducklake_notebooks_econ_comp.ipynb` — MLflow + Kafka streaming on DuckLake
 
-## British-Isles Education pipeline — Canonical KCG pattern (post-v4)
+## British-Isles Education pipeline — Canonical Cianfhoghlaim pattern (post-v4)
 
 The post-v4 lc6 pipeline (`openspec/changes/lc6-biep/`) uses
 DuckLake as the **canonical BIEP sink**. The 24+ per-subject

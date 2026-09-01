@@ -457,7 +457,7 @@ await cognee.prune.prune_data()
 - Use `await cognee.prune.prune_data()`
 - Process in batches
 
-## KCG Quick Start
+## Cianfhoghlaim Quick Start
 
 The Cianfhoghlaim deployment of Cognee is a **Docker container on port 8100**, using **DeepSeek V4 Pro** (via the OpenAI-compatible API), **Neo4j** for the graph backend, and **LanceDB** for vector storage:
 
@@ -492,7 +492,7 @@ See `references/cognee-readme.md` (the 80-line
 `docs/01-cognee/README.md` index) for the full quick-start
 table, the per-file purpose list, and the MCP server inventory.
 
-## KCG Architecture Diagram
+## Cianfhoghlaim Architecture Diagram
 
 The 8-stack cognition pipeline that turns `docs/` into a
 queryable knowledge graph, accessible to agents via MCP and
@@ -534,9 +534,9 @@ See `references/architecture/ARCHITECTURE.md` for the full
 component-role table, the end-to-end data flow, and the
 agent-access matrix.
 
-## KCG Docker Stack
+## Cianfhoghlaim Docker Stack
 
-The KCG Cognee container runs `cognee/cognee:latest`
+The Cianfhoghlaim Cognee container runs `cognee/cognee:latest`
 (v1.1.2) on **port 8100** with the following
 `compose.yaml` shape:
 
@@ -572,7 +572,7 @@ setup guide, the Docker Compose configuration, the API
 endpoint reference, the ingestion patterns (HTTP + Python),
 and the troubleshooting matrix.
 
-## KCG Per-Cluster Cognify Model
+## Cianfhoghlaim Per-Cluster Cognify Model
 
 The `cognee_readiness_audit` (517 lines, the
 round-1 audit) recommended **per-cluster cognify** over a
@@ -614,7 +614,7 @@ recommendation rationale.
 
 The 4 supporting stacks the cognition pipeline depends on
 (Lakehouse, LakeFS, Dozzle, Beszel), with their roles and
-KCG-specific ports:
+cianfhoghlaim-specific ports:
 
 | Stack | Stack path | Port | Role in cognition pipeline |
 |:--|:--|:--|:--|
@@ -649,7 +649,7 @@ Beszel alert matrix, and the combined health-check script.
 
 ## 2026-06 update: temporal cognify + session memory + auto-routing
 
-Cognee 0.1+ adds the 3 features below that the KCG curriculum pipeline uses.
+Cognee 0.1+ adds the 3 features below that the Cianfhoghlaim curriculum pipeline uses.
 
 ### Temporal cognify
 
@@ -699,7 +699,7 @@ results = await cognee.recall(
 
 The available search types (per `SearchType` enum) are: `GRAPH_COMPLETION`, `GRAPH_COMPLETION_COT`, `RAG_COMPLETION`, `CHUNKS`, `SUMMARIES`, `TEMPORAL`, `FEELING_LUCKY`. Override with `search_type=...`.
 
-For the KCG curriculum pipeline specifically, the `cocoindex/cognee_integration/cross_stage_cognify.py` uses these features to:
+For the Cianfhoghlaim curriculum pipeline specifically, the `cocoindex/cognee_integration/cross_stage_cognify.py` uses these features to:
 
 - Store 5-stage cognify (Aistear → Primary → JC → SC → Tertiary)
 - Run `improve()` after each agent session

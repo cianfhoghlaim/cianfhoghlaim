@@ -1,6 +1,6 @@
 ---
 name: better-auth
-description: BetterAuth authentication framework for TypeScript + React. Use for OAuth (Google, GitHub, Apple), email/password, magic links, SIWE (Sign-In With Ethereum), passkeys, and 2FA. Integrates with Drizzle ORM, Convex, and Hono. KCG: multi-layer auth architecture (BetterAuth customer-facing → PocketID admin → TinyAuth proxy → Infisical secrets).
+description: BetterAuth authentication framework for TypeScript + React. Use for OAuth (Google, GitHub, Apple), email/password, magic links, SIWE (Sign-In With Ethereum), passkeys, and 2FA. Integrates with Drizzle ORM, Convex, and Hono. Cianfhoghlaim: multi-layer auth architecture (BetterAuth customer-facing → PocketID admin → TinyAuth proxy → Infisical secrets).
 ---
 
 # BetterAuth
@@ -38,7 +38,7 @@ email/password, magic links, SIWE, passkeys, and 2FA.
 | Convex | ✅ adapter | ❌ |
 | Hono | ✅ native | ❌ |
 
-## KCG multi-layer auth architecture
+## Cianfhoghlaim multi-layer auth architecture
 
 The Cianfhoghlaim platform uses 4 auth layers, each with a
 different threat model:
@@ -250,7 +250,7 @@ export const auth = betterAuth({
 });
 ```
 
-## KCG integration
+## Cianfhoghlaim integration
 
 - **Tuatha game front-end** (`web/apps/tuatha-ui/`): BetterAuth + Convex
   adapter; users sign in with SIWE (crypto) or Google OAuth
@@ -282,7 +282,7 @@ export const auth = betterAuth({
 
 ## Self-hosted stack (BetterAuth OIDC + Convex + Hono + Supabase)
 
-The canonical KCG self-hosting pattern (from
+The canonical Cianfhoghlaim self-hosting pattern (from
 `references/self-hosted-stack.md`):
 
 ```
@@ -337,12 +337,12 @@ token verification. This means a single sign-on across
 `web/apps/cianfhoghlaim-web` (no auth), `web/apps/croilar-portal` (BetterAuth),
 and any Convex-powered surface.
 
-## KCG multi-layer auth (round-9 deep dive)
+## Cianfhoghlaim multi-layer auth (round-9 deep dive)
 
 The 4-layer model from `references/clippings/` is unchanged,
 but the round-9 synthesised **layer-to-technology mapping**:
 
-| Layer | KCG tech | KCG URL pattern | Threat model |
+| Layer | Cianfhoghlaim tech | Cianfhoghlaim URL pattern | Threat model |
 |:--|:--|:--|:--|
 | 1. Customer-facing | BetterAuth + Convex | `*.cianfhoghlaim.ie` | OAuth / SIWE brute force |
 | 2. Admin (OIDC) | PocketID (WebAuthn passkeys) | `pocketid.cianfhoghlaim.ie` | No-password admin breach |
@@ -379,5 +379,5 @@ See `references/self-hosted-stack.md` for the full
 - PocketID: <https://pocketid.io/>
 - Pangolin: <https://pangolin.net/>
 - Infisical: <https://infisical.com/>
-- KCG: `.agents/skills/convex/SKILL.md`, `.agents/skills/hono/SKILL.md`,
+- Cianfhoghlaim: `.agents/skills/convex/SKILL.md`, `.agents/skills/hono/SKILL.md`,
   `.agents/skills/tanstack-start/SKILL.md`

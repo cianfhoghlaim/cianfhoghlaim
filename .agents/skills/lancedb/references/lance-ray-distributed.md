@@ -86,7 +86,7 @@ lr.create_scalar_index(
 ## When to use lance-ray
 
 - **> 1M rows** and a one-time transformation (re-embed, re-index)
-- **Multi-machine cluster** (KCG uses `bunchloch` M4 Mac for
+- **Multi-machine cluster** (Cianfhoghlaim uses `bunchloch` M4 Mac for
   in-house, `arm1-oci` ARM for cluster)
 - **ML inference workloads** (embedding, OCR, translation) where
   the bottleneck is GPU/CPU, not I/O
@@ -98,9 +98,9 @@ lr.create_scalar_index(
 - **Single-machine CPU-bound work** — use `concurrent.futures` or
   `asyncio` instead
 
-## KCG integration
+## Cianfhoghlaim integration
 
-The KCG stack runs Ray on the `bunchloch` M4 Mac (local) for
+The Cianfhoghlaim stack runs Ray on the `bunchloch` M4 Mac (local) for
 leabharlann re-indexing. The Dagster asset
 `orchestration/defs/leabharlann_assets.py` includes a
 `leabharlann_reindex` asset that uses `lance-ray` under the hood.

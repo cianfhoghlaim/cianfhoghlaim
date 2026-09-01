@@ -8,7 +8,7 @@ helpers `baml_py.Image.from_base64(...)` and
 ## The BAML signature
 
 ```baml
-// baml_src/receipts.baml (or ocr_extraction.baml in the KCG repo)
+// baml_src/receipts.baml (or ocr_extraction.baml in the Cianfhoghlaim repo)
 class Transaction {
   item_name string
   quantity int
@@ -138,10 +138,10 @@ pages), consider:
 - **RAG** over the PDF text (extract text with PyMuPDF, embed,
   retrieve) instead of feeding the whole PDF to the LLM
 
-## In-repo KCG usage
+## In-repo Cianfhoghlaim usage
 
 - `baml/ocr_extraction.baml` (9,368 bytes) — the
-  canonical multimodal pattern in the KCG stack. Extracts text from
+  canonical multimodal pattern in the Cianfhoghlaim stack. Extracts text from
   scanned NCCA / SEC PDFs via Gemini vision
 - `baml/audio_extraction.baml` — for audio transcripts
 - `baml/portfolio_extraction.baml` — for the croilar
