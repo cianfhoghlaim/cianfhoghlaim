@@ -9,7 +9,7 @@ unified MODEL_REGISTRY** at construction time.
 
 The historical pattern used `LlmAgent(model=config.model_name)`
 where `config.model_name` defaulted to `"gemini-2.0-flash"` —
-hardcoded, bypassing the KCG `minimax` 7-tier LiteLLM fallback
+hardcoded, bypassing the Cianfhoghlaim `minimax` 7-tier LiteLLM fallback
 alias (the Agent 06 P0-#1 drift finding). As of
 `2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1`:
 
@@ -31,7 +31,7 @@ import os
 from typing import Any, Type
 
 # Lazy imports — Google ADK and LiteLLM are optional deps at type-check
-# time but always available at runtime in the KCG agent surface.
+# time but always available at runtime in the Cianfhoghlaim agent surface.
 try:
     from google.adk.agents import LlmAgent
     from google.adk.models.lite_llm import LiteLlm
@@ -52,14 +52,14 @@ def make_litellm_agent(
     **kwargs: Any,
 ) -> Any:
     """Construct an LlmAgent with the LiteLlm wrapper around the
-    KCG LiteLLM gateway.
+    Cianfhoghlaim LiteLLM gateway.
 
     Args:
         name: The agent name (e.g. ``"statistics_agent"``).
         description: The agent's description (used by the routing
             layer).
         model_alias: The LiteLLM alias to route through
-            (default ``"minimax"`` — the KCG 7-tier fallback).
+            (default ``"minimax"`` — the Cianfhoghlaim 7-tier fallback).
         temperature: Sampling temperature (default 0.7).
         max_output_tokens: Max output tokens (default 8192).
         **kwargs: Additional kwargs forwarded to ``LlmAgent(...)``
@@ -102,7 +102,7 @@ def make_litellm_agent(
 def litellm_model(
     model_alias: str = "minimax",
 ) -> Any:
-    """Return a LiteLlm model wrapper around the KCG LiteLLM gateway.
+    """Return a LiteLlm model wrapper around the Cianfhoghlaim LiteLLM gateway.
 
     Use this when constructing agents manually:
 

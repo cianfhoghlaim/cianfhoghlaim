@@ -24,7 +24,7 @@ Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
            tasks.md — Sub-batch 3.3.1
 
 Usage:
-    from dlt_sources.british_isles.ireland.education.gov_ie_circulars import (
+    from dlt_sources.education.ireland.british_isles.education.gov_ie_circulars import (
         gov_ie_circulars_source,
     )
 
@@ -93,7 +93,7 @@ _LOCAL_SCRAPES = os.environ.get("USE_LOCAL_SCRAPES", "").lower() in (
 _STEDDING_OIDE = Path(
     os.environ.get(
         "STEDDING_OIDE_DIR",
-        "/Users/cianmacandeisigh/dev/kings_college_galway/stedding/site_scrape_samples/oide.ie",
+        os.path.join(os.environ.get("CIANFHOGHLAIM_ROOT", os.path.expanduser("~/dev/cianfhoghlaim")), "stedding/site_scrape_samples/oide.ie"),
     )
 )
 

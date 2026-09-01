@@ -7,7 +7,7 @@ def test_nui_federation_lists_4_current_constituents():
     """GIVEN no Firecrawl creds
     WHEN the nui_members resource runs
     THEN 4 current constituents + 1 historical QUB member are emitted."""
-    from dlt_sources.british_isles.ireland.education.university.official_docs import (
+    from dlt_sources.education.ireland.british_isles.university.official_docs import (
         nui_federation_source,
     )
 
@@ -26,7 +26,7 @@ def test_nui_historical_member_is_qub_pre_1908():
     """GIVEN the canonical NUI_HISTORICAL_MEMBERS seed
     WHEN the historical member is emitted
     THEN `member_name` mentions 'Queen's University Belfast'."""
-    from dlt_sources.british_isles.ireland.education.university.official_docs import (
+    from dlt_sources.education.ireland.british_isles.university.official_docs import (
         NUI_HISTORICAL_MEMBERS,
     )
 
@@ -36,7 +36,7 @@ def test_nui_historical_member_is_qub_pre_1908():
 
 
 def test_nui_constituent_circulars_emits_one_per_member():
-    from dlt_sources.british_isles.ireland.education.university.official_docs import (
+    from dlt_sources.education.ireland.british_isles.university.official_docs import (
         NUI_CURRENT_CONSTITUENTS,
         nui_federation_source,
     )
@@ -52,7 +52,7 @@ def test_nui_constituent_circulars_emits_one_per_member():
 
 
 def test_nui_archive_lists_pre_1908_links():
-    from dlt_sources.british_isles.ireland.education.university.official_docs import (
+    from dlt_sources.education.ireland.british_isles.university.official_docs import (
         nui_federation_source,
     )
 

@@ -49,7 +49,7 @@ ISLE_OF_MAN_SUBJECTS: tuple[str, ...] = (
     automation_condition=make_yearly_education_automation(),
 )
 def isle_of_man_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]:
-    from dlt_sources.british_isles.isle_of_man.education.isle_of_man_jurisdiction_pipeline import (
+    from dlt_sources.education.isle_of_man.british_isles.education.isle_of_man_jurisdiction_pipeline import (
         isle_of_man_jurisdiction_pipeline,
     )
     load_info = isle_of_man_jurisdiction_pipeline.run()

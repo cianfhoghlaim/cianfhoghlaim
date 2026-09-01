@@ -43,7 +43,7 @@ from collections.abc import Iterator
 from datetime import UTC, datetime
 from pathlib import Path
 
-from dlt_sources.british_isles.ireland.education.examinations import LC6_SUBJECTS
+from dlt_sources.education.ireland.british_isles.education.examinations import LC6_SUBJECTS
 
 import dlt_sources
 from observability.logging import get_logger
@@ -66,7 +66,7 @@ GARAGE_PDF_PREFIX = "leaving_cert"
 _CIANFHOGHLAIM_ROOT = Path(
     os.environ.get(
         "CIANFHOGHLAIM_ROOT",
-        "/Users/cianmacandeisigh/dev/kings_college_galway/cianfhoghlaim",
+        os.path.expanduser("~/dev/cianfhoghlaim"),
     )
 )
 _LOCAL_PDF_CACHE = _CIANFHOGHLAIM_ROOT / "leaving_certificate"

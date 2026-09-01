@@ -56,8 +56,8 @@ INFISICAL_CLIENT_SECRET = os.environ.get("INFISICAL_CLIENT_SECRET", "")
 
 # The committed template + the hydrated output. The output is gitignored.
 # On bunchloch the canonical paths are:
-#   /Users/cianmacandeisigh/dev/kings_college_galway/.infisical.env
-#   /Users/cianmacandeisigh/dev/kings_college_galway/.env
+#   ~/dev/cianfhoghlaim/.infisical.env
+#   ~/dev/cianfhoghlaim/.env
 # Override via env vars if running on a different host.
 REPO_ROOT = Path(os.environ.get("CIANFHOGHLAIM_REPO_ROOT", Path.cwd()))
 INFISICAL_ENV_FILE = REPO_ROOT / ".infisical.env"
@@ -105,7 +105,8 @@ def secrets_env_refresh(context: AssetExecutionContext) -> str:
             "`brew install infisical` or `npm install -g @infisical/cli`."
         )
 
-    # Atomic write-temp + rename (per bons-locket-shim.py:write_atomic pattern).
+    # Atomic write-temp + rename (per the `write_atomic` pattern in
+    # bonneagar/scripts/cianfhoghlaim-locket-shim.py).
     # We write to a temp file in the same dir, then rename() — atomic on POSIX.
     with tempfile.NamedTemporaryFile(
         mode="w",

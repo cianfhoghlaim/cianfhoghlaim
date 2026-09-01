@@ -6,7 +6,7 @@ Reference: dlt_sources/british_isles/ireland/education/university/
 
 from __future__ import annotations
 
-from dlt_sources.british_isles.ireland.education.university.exam_papers.uog_exam_vlm import (
+from dlt_sources.education.ireland.british_isles.university.exam_papers.uog_exam_vlm import (
     UOG_VLM_MODEL_REGISTRY,
     UoGExamVLMConfig,
     pdf_to_images,
@@ -57,7 +57,7 @@ def test_run_vlm_eval_returns_skip_when_baml_client_missing(monkeypatch, uog_fak
     monkeypatch.setitem(sys.modules, "baml_client", None)
     # Force pdf_to_images to return something.
     monkeypatch.setattr(
-        "dlt_sources.british_isles.ireland.education.university.exam_papers.uog_exam_vlm.pdf_to_images",
+        "dlt_sources.education.ireland.british_isles.university.exam_papers.uog_exam_vlm.pdf_to_images",
         lambda *_, **__: [b"%PNG-fake"],
     )
     result = run_vlm_eval(uog_fake_pdf, module_code="CT516", academic_year=2023)
@@ -76,7 +76,7 @@ def test_run_thesis_eval_emits_one_row_per_model_per_paper(monkeypatch, tmp_path
     years = {pdf1: 2023, pdf2: 2023}
 
     monkeypatch.setattr(
-        "dlt_sources.british_isles.ireland.education.university.exam_papers.uog_exam_vlm.run_vlm_eval",
+        "dlt_sources.education.ireland.british_isles.university.exam_papers.uog_exam_vlm.run_vlm_eval",
         lambda pdf, **kwargs: {
             "status": "no_images",
             "module_code": kwargs["module_code"],

@@ -1,9 +1,9 @@
 # `dlt_sources/` migrations — Phase 0.2 (ISO-3 → snake_case)
 
 Per Phase 0.2 of the openspec change
-[`2026-08-24-dlt-sources-to-multi-repo-scaffold-v1`](../../../../kings_college_galway/openspec/changes/2026-08-24-dlt-sources-to-multi-repo-scaffold-v1/proposal.md)
+[`2026-08-24-dlt-sources-to-multi-repo-scaffold-v1`](../../../../openspec/changes/2026-08-24-dlt-sources-to-multi-repo-scaffold-v1/proposal.md)
 and the v2 plan
-[`openspec/plans/2026-08-24-dlt-deep-analysis-v2.md`](../../../../kings_college_galway/openspec/plans/2026-08-24-dlt-deep-analysis-v2.md).
+[`openspec/plans/2026-08-24-dlt-deep-analysis-v2.md`](../../../../openspec/plans/2026-08-24-dlt-deep-analysis-v2.md).
 
 The 873 broken legacy imports in `dlt_sources/` are bulk-fixed by 6
 deterministic `git mv` + `sed` one-liners (one per wave), grouped into 6
@@ -143,8 +143,8 @@ dlt_sources/.migrations/
 
 ## Cross-references
 
-- [`openspec/changes/2026-08-24-dlt-sources-to-multi-repo-scaffold-v1/proposal.md`](../../../../kings_college_galway/openspec/changes/2026-08-24-dlt-sources-to-multi-repo-scaffold-v1/proposal.md)
-- [`openspec/changes/2026-08-24-dlt-sources-to-multi-repo-scaffold-v1/tasks.md`](../../../../kings_college_galway/openspec/changes/2026-08-24-dlt-sources-to-multi-repo-scaffold-v1/tasks.md) — Phase 0.2 tasks 2.1–2.5
-- [`openspec/plans/2026-08-24-dlt-deep-analysis-v2.md`](../../../../kings_college_galway/openspec/plans/2026-08-24-dlt-deep-analysis-v2.md) — the v2 plan §C Phase 0
+- [`openspec/changes/2026-08-24-dlt-sources-to-multi-repo-scaffold-v1/proposal.md`](../../../../openspec/changes/2026-08-24-dlt-sources-to-multi-repo-scaffold-v1/proposal.md)
+- [`openspec/changes/2026-08-24-dlt-sources-to-multi-repo-scaffold-v1/tasks.md`](../../../../openspec/changes/2026-08-24-dlt-sources-to-multi-repo-scaffold-v1/tasks.md) — Phase 0.2 tasks 2.1–2.5
+- [`openspec/plans/2026-08-24-dlt-deep-analysis-v2.md`](../../../../openspec/plans/2026-08-24-dlt-deep-analysis-v2.md) — the v2 plan §C Phase 0
 - [`dlt_sources/LEGACY_ALIASES.md`](../../../LEGACY_ALIASES.md) — the rename map (single source of truth)
 - [`dlt_sources/AGENTS.md`](../../../AGENTS.md) — the canonical dlt_sources/ entry point

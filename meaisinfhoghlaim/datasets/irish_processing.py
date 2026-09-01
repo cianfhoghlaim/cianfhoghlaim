@@ -17,7 +17,7 @@ Usage:
     from oideachas.ocr.irish_processing import IrishOCRProcessor
 
     processor = IrishOCRProcessor()
-    result = await processor.process_with_fallback(image_bytes, "qwen3-vl")
+    result = await processor.process_with_fallback(image_bytes, "gemma-4-e4b-vision")
     analysis = processor.analyze_irish_quality(ocr_text)
 """
 
@@ -56,7 +56,7 @@ class SpellingStandard(str, Enum):
 IRISH_MODELS = [
     "uccix-13b",  # Best for Irish (trained on Irish data)
     "qwen2.5-vl-7b",  # Good multilingual with Irish
-    "qwen3-vl",  # Decent Irish support
+    "gemma-4-e4b-vision",  # Decent Irish support
     "glm-4.6v-flash",  # Basic Irish
 ]
 

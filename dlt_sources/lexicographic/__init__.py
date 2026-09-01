@@ -1,49 +1,42 @@
-"""dlt_sources.lexicographic — backward-compat re-export shim.
+"""dlt_sources.lexicographic — Irish-language + Celtic lexicographic sources.
 
-Per the 2026-09-25-ciancheiltis-init-v1 openspec change + the parent change
-`2026-08-24-dlt-sources-to-multi-repo-scaffold-v1` §21.3 (the Phase 4 carve-out
-hand-off), the `language/`, `cultural_heritage/`, and `lexicographic/`
-subtrees have moved from Cianfhoghlaim to the new Ciancheiltis sister repo.
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change (master plan §3.2, §7.1). This package replaces the previous
+`dlt_sources/language/` grab-bag. Each module is a single DLT source
+that produces rows for one of the canonical Celtic / Irish-language
+lexicographic databases:
 
-This module is the backward-compatibility shim that lives at the OLD path in
-Cianfhoghlaim. New code SHOULD import directly from the Ciancheiltis sister
-repo: `from ciancheiltis.dlt_sources.lexicographic import <symbol>`.
+| Module | Source name | Database |
+|:--|:--|:--|
+| `ainm.py` | `ainm_source` | Ainm — Irish place-names |
+| `canuint.py` | `canuint_source` | Canúint — Irish dialect corpus |
+| `canuint_audio.py` | `canuint_audio_source` | Canúint audio recordings |
+| `canuint_dialect_summary.py` | `canuint_dialect_summary_source` | Canúint dialect summaries |
+| `canuint_search.py` | `canuint_search_source` | Canúint search index |
+| `canuint_word_alignment.py` | `canuint_word_alignment_source` | Canúint word alignment |
+| `duchas.py` | `duchas_folklore` | Dúchas lexicon — *Schools' Collection* terminology |
+| `gaois.py` | `gaois_source` | Gaois — National Terminology Database (English) |
+| `gaois_combined.py` | `gaois_combined_source` | Gaois combined (multi-language) |
+| `logainm.py` | `logainm_source` | Logainm — Placenames Database of Ireland |
+| `tearma.py` | `tearma_source` | Téarma — Irish National Terminology Database |
+| `tearma_search.py` | `tearma_search_source` | Téarma search index |
 
-Emits a `DeprecationWarning` on import. Per the v2 plan §F + the openspec
-bidirectional cascade contract #1, the Ciancheiltis sister repo mirrors
-changes back into Cianfhoghlaim via the per-PR reciprocal PR + the
-nightly mirror-merge sensor.
+The 5 helpers (`_canuint_helpers.py`, `_gaois_helpers.py`,
+`_tearma_helpers.py` + the `duchas_*.py` and `logainm.py` inline
+helpers) are co-located with their primary sources per the master
+plan §1.3 convention.
+
+Reference:
+- Master plan §3.2 ("Themed sub-trees")
+- Master plan §7.1 ("dlt_sources/ migrations — lexicographic")
+- `dlt_sources.AGENTS.md` §"Themed sub-trees"
 """
 from __future__ import annotations
 
-import warnings as _warnings
-
-_warnings.warn(
-    "dlt_sources.lexicographic has moved to the ciancheiltis sister repo. "
-    "Update your imports to `from ciancheiltis.dlt_sources.lexicographic "
-    "import <symbol>`. See openspec/changes/2026-09-25-ciancheiltis-init-v1/"
-    "proposal.md for the carve-out plan + the bilingual educational carve rule.",
-    DeprecationWarning,
-    stacklevel=2,
-)
-
-
-def __getattr__(name: str):
-    """Lazy re-export — Ciancheiltis must be installed for the carved
-    `lexicographic` symbols. Phase 3+ will wire the [tool.uv.sources]
-    workspace declaration so the re-export resolves transparently."""
-    try:
-        from ciancheiltis.dlt_sources import lexicographic as _lex
-    except ImportError as exc:
-        raise ImportError(
-            "dlt_sources.lexicographic.* requires ciancheiltis to be installed "
-            "(the carve-out target per the 2026-09-25-ciancheiltis-init-v1 "
-            "openspec change). Install via `uv pip install -e ../ciancheiltis` "
-            "or wire the [tool.uv.sources] workspace declaration in Phase 3+."
-        ) from exc
-    return getattr(_lex, name)
-
-
+# Re-export the canonical source functions for convenience so that
+# `from dlt_sources.lexicographic import ainm, canuint, ...` works.
+# Each module exposes its own source function; importing the module
+# is sufficient.
 __all__ = [
     "ainm",
     "canuint",
@@ -51,8 +44,10 @@ __all__ = [
     "canuint_dialect_summary",
     "canuint_search",
     "canuint_word_alignment",
+    "duchas",
+    "gaois",
+    "gaois_combined",
     "logainm",
     "tearma",
     "tearma_search",
-    "universal_dependencies",
 ]

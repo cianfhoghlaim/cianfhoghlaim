@@ -16,7 +16,7 @@ import dlt
 from collections.abc import Iterator
 
 import dlt_sources
-from dlt_sources.british_isles.jersey.education._channel_islands_helpers import (
+from dlt_sources.education.jersey.british_isles.education._channel_islands_helpers import (
     CHANNEL_ISLANDS_URLS,
     _crawl_guernsey_education,
 )

@@ -26,7 +26,7 @@ class EnglandBoardSubjectComponent(BIEPSubjectComponent):
     dagster_group_name_prefix) are accepted and stored for forward
     compatibility but not yet consumed by build_defs() — deliberately not
     over-engineered per-board asset specialization in this pass; see the
-    KCG local-lakehouse plan's Phase 6 for where that's picked up.
+    Cianfhoghlaim local-lakehouse plan's Phase 6 for where that's picked up.
     """
 
     def __init__(

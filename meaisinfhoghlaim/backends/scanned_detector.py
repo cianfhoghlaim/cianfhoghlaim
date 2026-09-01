@@ -1,4 +1,4 @@
-"""Scanned-PDF detection for the KCG OCR fanout layer.
+"""Scanned-PDF detection for the Cianfhoghlaim OCR fanout layer.
 
 Per the 2026-08-10-ocr-vision-activation-v1 openspec change.
 
@@ -11,7 +11,7 @@ Detection rules (per spec):
 - `is_scanned = (total_text_chars < 50) OR (blank_pages / total_pages > 0.8)`
 - `image_ratio = total_images / page_count`
 - `recommended_backend`:
-  - `is_scanned=True AND image_ratio > 0.5` → `"qwen3-vl-8b"` (workhorse VLM)
+  - `is_scanned=True AND image_ratio > 0.5` → `"gemma-4-26b-a4b-vision"` (workhorse VLM)
   - `is_scanned=True AND image_ratio <= 0.5` → `"docling-serve"` (layout)
   - `is_scanned=False` → `""` (text-layer is sufficient)
 """
@@ -87,7 +87,7 @@ def is_scanned_pdf(path: Path) -> ScannedPDFReport:
     )
 
     if is_scanned and image_ratio > IMAGE_HEAVY_THRESHOLD:
-        recommended_backend = "qwen3-vl-8b"
+        recommended_backend = "gemma-4-26b-a4b-vision"
     elif is_scanned:
         recommended_backend = "docling-serve"
     else:

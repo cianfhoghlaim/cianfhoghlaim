@@ -29,7 +29,7 @@ import dlt_sources
 
 logger = structlog.get_logger(__name__)
 
-from dlt_sources.british_isles.ireland.education.curriculum import (  # type: ignore[import-not-found]  # noqa: E402
+from dlt_sources.education.ireland.british_isles.education.curriculum import (  # type: ignore[import-not-found]  # noqa: E402
     _crawl_source,
 )
 

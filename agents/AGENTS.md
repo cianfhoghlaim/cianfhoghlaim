@@ -282,7 +282,7 @@ on every skill in `.agents/skills/`.
 
 ## LiteLlm migration (NEW 2026-08-15)
 
-Historical drift (RESOLVED 2026-08-15): the 32 `LlmAgent(model=config.model_name)` constructors in `agents/adk/*` were hardcoding `"gemini-2.0-flash"`, BYPASSING the KCG `minimax` 7-tier LiteLLM fallback alias (the Agent 06 P0-#1 drift finding). All 32 sites now route through `MODEL_REGISTRY`.
+Historical drift (RESOLVED 2026-08-15): the 32 `LlmAgent(model=config.model_name)` constructors in `agents/adk/*` were hardcoding `"gemini-2.0-flash"`, BYPASSING the Cianfhoghlaim `minimax` 7-tier LiteLLM fallback alias (the Agent 06 P0-#1 drift finding). All 32 sites now route through `MODEL_REGISTRY`.
 
 The new canonical surface is **`agents/adk/litellm_agent.py`** (129 LOC), which exposes two helpers:
 
@@ -292,7 +292,7 @@ from agents.adk.litellm_agent import make_litellm_agent, litellm_model
 # Option A: Construct an LlmAgent with explicit LiteLlm routing
 agent = make_litellm_agent(
     name="my_agent",
-    description="Routes through the KCG minimax LiteLLM gateway.",
+    description="Routes through the Cianfhoghlaim minimax LiteLLM gateway.",
     model_alias="minimax",  # the canonical 7-tier fallback
     temperature=0.7,
     max_output_tokens=8192,

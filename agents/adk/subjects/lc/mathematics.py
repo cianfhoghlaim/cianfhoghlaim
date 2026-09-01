@@ -69,7 +69,7 @@ mathematics_agent = SubjectAgentBase(
 # The per-subject action handlers (the 13 actions)
 async def get_syllabus_topics(parameters: dict[str, Any]) -> dict[str, Any]:
     """Get the Ireland LC Mathematics syllabus topics + learning outcomes."""
-    from dlt_sources.british_isles.ireland.education.curriculum import get_syllabus_topics
+    from dlt_sources.education.ireland.british_isles.education.curriculum import get_syllabus_topics
     return await get_syllabus_topics(
         subject="mathematics",
         level=parameters.get("level"),
@@ -79,7 +79,7 @@ async def get_syllabus_topics(parameters: dict[str, Any]) -> dict[str, Any]:
 
 async def get_exam_papers(parameters: dict[str, Any]) -> dict[str, Any]:
     """Get the Ireland LC Mathematics exam papers."""
-    from dlt_sources.british_isles.ireland.education.examinations_papers import get_exam_papers
+    from dlt_sources.education.ireland.british_isles.education.examinations_papers import get_exam_papers
     return await get_exam_papers(
         subject="mathematics",
         year=parameters["year"],
@@ -89,7 +89,7 @@ async def get_exam_papers(parameters: dict[str, Any]) -> dict[str, Any]:
 
 async def get_marking_schemes(parameters: dict[str, Any]) -> dict[str, Any]:
     """Get the Ireland LC Mathematics marking schemes."""
-    from dlt_sources.british_isles.ireland.education.examinations_marking_schemes import get_marking_schemes
+    from dlt_sources.education.ireland.british_isles.education.examinations_marking_schemes import get_marking_schemes
     return await get_marking_schemes(
         subject="mathematics",
         year=parameters["year"],
@@ -99,7 +99,7 @@ async def get_marking_schemes(parameters: dict[str, Any]) -> dict[str, Any]:
 
 async def get_topic_detail(parameters: dict[str, Any]) -> dict[str, Any]:
     """Get the full details of a specific NCCA topic."""
-    from dlt_sources.british_isles.ireland.education.curriculum import get_topic_detail
+    from dlt_sources.education.ireland.british_isles.education.curriculum import get_topic_detail
     return await get_topic_detail(
         subject="mathematics",
         topic_code=parameters["topic_code"],

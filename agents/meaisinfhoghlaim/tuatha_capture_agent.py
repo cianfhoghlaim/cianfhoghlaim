@@ -3,7 +3,7 @@
 Phase 1 (current): disabled behind TUATHER_HERMES_ENABLED=false env var.
 Phase 2 (future):  enabled — Hermes Agent computer-use will drive the
                    screen while the Swift daemon captures. The agent
-                   exposes a small tool surface for the KCG agent
+                   exposes a small tool surface for the Cianfhoghlaim agent
                    runtime to call.
 
 Per the agent-fleet-orchestration skill, this agent is registered in

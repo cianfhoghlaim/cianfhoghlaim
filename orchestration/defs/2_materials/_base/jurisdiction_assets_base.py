@@ -45,7 +45,7 @@ class JurisdictionAssetsBase:
         - ``pipeline_factory: Callable[[], Any]`` — a function that
           returns the freshly-constructed jurisdiction pipeline
           (e.g. ``ireland_jurisdiction_pipeline`` from
-          ``dlt_sources.british_isles.ireland.education.ireland_jurisdiction_pipeline``).
+          ``dlt_sources.education.ireland.british_isles.education.ireland_jurisdiction_pipeline``).
         - ``asset_name: str`` (default: ``f"{jurisdiction_name}_documents_ingested"``)
 
     Subclasses MAY override:
@@ -145,7 +145,7 @@ class IrelandAssets(JurisdictionAssetsBase):
     @staticmethod
     def pipeline_factory():
         """Return the freshly-constructed Ireland jurisdiction pipeline."""
-        from dlt_sources.british_isles.ireland.education.ireland_jurisdiction_pipeline import (
+        from dlt_sources.education.ireland.british_isles.education.ireland_jurisdiction_pipeline import (
             ireland_jurisdiction_pipeline,
         )
         return ireland_jurisdiction_pipeline()

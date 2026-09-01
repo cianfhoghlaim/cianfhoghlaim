@@ -18,7 +18,7 @@ This file reads the canonical registry
   - 30 subjects × 4 qualification levels (GCSE + A-Level + IB + French
     Bac) × 1 language (en) = 120 cohorts
 
-## KCG patterns used
+## Cianfhoghlaim patterns used
 - ibis (per `.agents/skills/ibis/SKILL.md`) — every query uses
   ``ibis.duckdb.connect()`` (NO raw ``duckdb.connect``).
 - dlt (per `.agents/skills/dlt/SKILL.md`) — the canonical destination

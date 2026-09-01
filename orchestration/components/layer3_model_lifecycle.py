@@ -397,7 +397,16 @@ class CelticModelLifecycleComponent(Component, Resolvable):
             RESOLVED_FILE_REGISTRY) OR declares an additional one with
             `# R2-exempt: <reason>`
         R3: `coco.App(...)` is at module scope (NOT inside a function body)
-        R4: At least one `@coco.fn(` decorator is present
+            — OR a LiveComponent class with `process_live(operator)` is
+            declared (Wave 3 R5 escape hatch — see `_has_live_component`)
+        R4: At least one `@coco.fn(` decorator is present — OR a
+            LiveComponent class with `process()` is declared
+            (Wave 3 R5 escape hatch)
+        R5: A module that defines a LiveComponent class (one with a
+            `process_live(operator)` method) may use `coco.mount(...)`
+            with the class instead of `coco.App(...)` + `@coco.fn(...)`.
+            The class itself is the canonical v1 LiveComponent pattern
+            (per <https://cocoindex.io/docs/advanced_topics/live_component/>).
         """
         try:
             mod = importlib.import_module(module_path)
@@ -425,6 +434,14 @@ class CelticModelLifecycleComponent(Component, Resolvable):
                 message=f"cannot read {src}: {exc}",
                 fix="Check the file permissions on the source module",
             ) from exc
+
+        # R5 escape hatch: a module that defines a LiveComponent class
+        # (one with a `process_live(operator)` method) may use
+        # `coco.mount(...)` instead of `coco.App(...)` + `@coco.fn(...)`.
+        # This is the canonical v1 LiveComponent pattern (per the
+        # `2026-08-24-cocoindex-live-v1` openspec change bundle + the
+        # master refactor v1 plan §3.4).
+        has_live_component = self._has_live_component(mod)
 
         # R1: shared_lifespan import (the canonical module must be imported)
         if "from ._lifespan import" not in source_text:
@@ -462,26 +479,98 @@ class CelticModelLifecycleComponent(Component, Resolvable):
                 ),
             )
 
-        # R3: `coco.App(...)` at module scope
-        if "coco.App(" not in source_text:
+        # R3: `coco.App(...)` at module scope, OR a LiveComponent class
+        # (R5 escape hatch — see `has_live_component`).
+        if "coco.App(" not in source_text and not has_live_component:
             raise ConformanceError(
                 rule="R3",
                 message="no `coco.App(...)` construction found",
-                fix="Move the `coco.App(coco.AppConfig(name=...))` construction to module scope",
+                fix=(
+                    "Either move the `coco.App(coco.AppConfig(name=...))` "
+                    "construction to module scope, OR define a "
+                    "LiveComponent class with a `process_live(operator)` "
+                    "method and mount it with `await coco.mount(MyLiveComp(...))` "
+                    "(Wave 3 R5 escape hatch — see the 2026-08-24-cocoindex-live-v1 change)."
+                ),
             )
 
         # R4: at least one `@coco.fn(` decorator, unless explicitly exempted
-        # with a stated reason (see `_r4_is_required`).
-        if self._r4_is_required() and "@coco.fn(" not in source_text:
+        # with a stated reason (see `_r4_is_required`), OR a LiveComponent
+        # class with a `process()` method (R5 escape hatch).
+        if (
+            self._r4_is_required()
+            and "@coco.fn(" not in source_text
+            and not has_live_component
+        ):
             raise ConformanceError(
                 rule="R4",
                 message="no `@coco.fn(` decorator found",
                 fix=(
                     "Add `@coco.fn(memo=True)` to your processing function, or "
                     "set `r4_exempt: true` + `r4_exempt_reason: <why>` if this "
-                    "App legitimately has no embedding column"
+                    "App legitimately has no embedding column. As a Wave 3 "
+                    "alternative (R5), define a LiveComponent class with a "
+                    "`process()` method and mount it with "
+                    "`await coco.mount(MyLiveComp(...))`."
                 ),
             )
+
+        # R5: when a LiveComponent class is declared, the LiveComponent
+        # itself is the canonical v1 mount point — no separate `coco.App`
+        # + `@coco.fn` pair is required. We just verify the class has
+        # both `process()` + `process_live(operator)` methods (the v1
+        # `LiveComponent` protocol — see
+        # <https://cocoindex.io/docs/advanced_topics/live_component/>).
+        if has_live_component:
+            for obj in vars(mod).values():
+                if not isinstance(obj, type):
+                    continue
+                proc_live = getattr(obj, "process_live", None)
+                proc = getattr(obj, "process", None)
+                if proc_live is None or proc is None:
+                    continue
+                # Found a candidate LiveComponent class. Verify both
+                # methods are async (the v1 protocol requires coroutines).
+                import inspect
+
+                if not inspect.iscoroutinefunction(proc) or not inspect.iscoroutinefunction(proc_live):
+                    raise ConformanceError(
+                        rule="R5",
+                        message=(
+                            f"class {obj.__name__!r} has `process_live` but "
+                            "one of `process` / `process_live` is not a "
+                            "coroutine function (the v1 LiveComponent "
+                            "protocol requires both to be `async def`)."
+                        ),
+                        fix=(
+                            "Change the methods to `async def` so they "
+                            "satisfy the CocoIndex v1 LiveComponent protocol."
+                        ),
+                    )
+
+    @staticmethod
+    def _has_live_component(mod: Any) -> bool:
+        """Detect whether a module declares a CocoIndex v1 LiveComponent class.
+
+        The v1 LiveComponent protocol (per
+        <https://cocoindex.io/docs/advanced_topics/live_component/>)
+        requires both `process()` + `process_live(operator)` as
+        async methods. This helper returns True when at least one
+        class in the module defines both.
+
+        Used as the R5 escape hatch for R3+R4 (a LiveComponent class
+        may be mounted via `coco.mount(MyLiveComp(...))` instead of
+        `coco.App(...)` + `@coco.fn(...)`).
+        """
+        for obj in vars(mod).values():
+            if not isinstance(obj, type):
+                continue
+            proc_live = getattr(obj, "process_live", None)
+            proc = getattr(obj, "process", None)
+            if proc_live is None or proc is None:
+                continue
+            return True
+        return False
 
     def _find_app(self, mod: Any, app_name: str) -> Any:
         """Find the App instance in the module by AppConfig.name.

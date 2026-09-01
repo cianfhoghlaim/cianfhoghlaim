@@ -11,7 +11,7 @@ Key Features:
 - Efficient incremental updates
 
 Usage:
-    from dlt_sources.british_isles.ireland.education.curriculum import (
+    from dlt_sources.education.ireland.british_isles.education.curriculum import (
         curriculum_source,
     )
 
@@ -89,7 +89,7 @@ def _crawl_source(
     if not samples_dir.exists():
         samples_dir = Path(__file__).parent.parent.parent.parent.parent.parent / "stedding" / "ingest_queue"
         if not samples_dir.exists():
-            samples_dir = Path("/Users/cianmacandeisigh/dev/kings_college_galway/stedding/ingest_queue")
+            samples_dir = Path(os.environ.get("CIANFHOGHLAIM_ROOT", os.path.expanduser("~/dev/cianfhoghlaim"))) / "stedding" / "ingest_queue"
 
     parsed_url = urlparse(base_url)
     domain = parsed_url.netloc.replace("www.", "")

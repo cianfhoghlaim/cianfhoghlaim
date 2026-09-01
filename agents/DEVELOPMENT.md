@@ -47,7 +47,7 @@ Edit `agents/agent_registry.py` and add a new entry:
     baml_prefix="MyNew",
     langfuse_trace_name="agent.my_new.search",
     cognee_dataset="oideachais_my_new",
-    letta_agent_id="kcg-my-new-agent",
+    letta_agent_id="cianfhoghlaim-my-new-agent",
     litellm_routing_key="my_new",
 ),
 ```

@@ -1,111 +1,31 @@
-"""orchestration.defs.british_isles_tertiary — the 5-asset group for the
-British Isles tertiary factory (QUB + Ulster + future subnations).
+"""orchestration.defs.british_isles_tertiary — DEPRECATION SHIM.
 
-Off-by-default: the asset materialises only when
-`[[tool.dlt.sources.bitertiary_universities.entries]]` is added to
-`pyproject.toml`. In CI / local dev (no config block) the assets
-emit `MaterializeResult(skipped_no_entries)` rows so Dagster
-stays healthy.
+This module has been moved to `orchestration.pipelines.education.tertiary.british_isles` as part of
+Wave 2 of the 2026-08-24 master refactor (per the canonical
+`dagster-pipeline-components` spec).
+
+It re-exports the original `__all__` from the new location for
+backward compatibility with downstream consumers that haven't yet
+migrated. New code SHOULD import from the canonical destination
+path; this shim will be removed in a future release.
+
+Reference: openspec/changes/2026-08-24-master-refactor-v1/specs/dagster-pipeline-components/spec.md
 """
+from __future__ import annotations
 
-from dagster import (
-    AssetKey,
-    MaterializeResult,
-    asset,
+import warnings
+
+_ORIGINAL_MODULE = 'orchestration.defs.british_isles_tertiary'
+_DESTINATION_MODULE = 'orchestration.pipelines.education.tertiary.british_isles'
+
+_DEPRECATION_MSG = (
+    f"`{_ORIGINAL_MODULE}` is deprecated as of Wave 2 of the 2026-08-24 master refactor; "
+    f"import from `{_DESTINATION_MODULE}` instead. The legacy module will be "
+    "removed in a future release."
 )
+warnings.warn(_DEPRECATION_MSG, DeprecationWarning, stacklevel=2)
 
+# Re-export every public symbol from the canonical destination module.
+from orchestration.pipelines.education.tertiary.british_isles import *  # noqa: E402, F401, F403
 
-def _has_bitertiary_entries() -> bool:
-    """True iff the operator has opted in via `pyproject.toml`.
-
-    Reads `[tool.dlt.sources.bitertiary_universities]` if present.
-    The empty block means "0 universities" — CI default.
-    """
-    try:
-        import tomllib  # Python 3.11+
-
-        with open("pyproject.toml", "rb") as f:
-            data = tomllib.load(f)
-        entries = (
-            data.get("tool", {})
-            .get("dlt", {})
-            .get("sources", {})
-            .get("bitertiary_universities", {})
-            .get("entries", [])
-        )
-        return len(entries) > 0
-    except Exception:
-        return False
-
-
-@asset(
-    key=["bitertiary", "pre_research"],
-    group_name="bitertiary",
-    compute_kind="scrape",
-    description="Stage 0 — Firecrawl `/agent` URL discover per opted-in institution.",
-)
-def bitertiary_pre_research(context) -> MaterializeResult:
-    if not _has_bitertiary_entries():
-        return MaterializeResult(metadata={"status": "skipped_no_entries"})
-    return MaterializeResult(metadata={"status": "ok"})
-
-
-@asset(
-    key=["bitertiary", "bulk_scrape"],
-    group_name="bitertiary",
-    compute_kind="scrape",
-    deps=[AssetKey(["bitertiary", "pre_research"])],
-    description="Stage 1 — bulk_scrape each discovered URL per opted-in institution.",
-)
-def bitertiary_bulk_scrape(context) -> MaterializeResult:
-    if not _has_bitertiary_entries():
-        return MaterializeResult(metadata={"status": "skipped_no_entries"})
-    return MaterializeResult(metadata={"status": "ok"})
-
-
-@asset(
-    key=["bitertiary", "extract_courses"],
-    group_name="bitertiary",
-    compute_kind="baml",
-    deps=[AssetKey(["bitertiary", "bulk_scrape"])],
-    description="Stage 2 — ExtractCourseDescriptor per institution.",
-)
-def bitertiary_extract_courses(context) -> MaterializeResult:
-    if not _has_bitertiary_entries():
-        return MaterializeResult(metadata={"status": "skipped_no_entries"})
-    return MaterializeResult(metadata={"status": "ok"})
-
-
-@asset(
-    key=["bitertiary", "extract_modules"],
-    group_name="bitertiary",
-    compute_kind="baml",
-    deps=[AssetKey(["bitertiary", "bulk_scrape"])],
-    description="Stage 2 — ExtractModuleDescriptor per institution.",
-)
-def bitertiary_extract_modules(context) -> MaterializeResult:
-    if not _has_bitertiary_entries():
-        return MaterializeResult(metadata={"status": "skipped_no_entries"})
-    return MaterializeResult(metadata={"status": "ok"})
-
-
-@asset(
-    key=["bitertiary", "extract_programmes"],
-    group_name="bitertiary",
-    compute_kind="baml",
-    deps=[AssetKey(["bitertiary", "bulk_scrape"])],
-    description="Stage 2 — ExtractProgrammeDescriptor per institution.",
-)
-def bitertiary_extract_programmes(context) -> MaterializeResult:
-    if not _has_bitertiary_entries():
-        return MaterializeResult(metadata={"status": "skipped_no_entries"})
-    return MaterializeResult(metadata={"status": "ok"})
-
-
-__all__ = [
-    "bitertiary_bulk_scrape",
-    "bitertiary_extract_courses",
-    "bitertiary_extract_modules",
-    "bitertiary_extract_programmes",
-    "bitertiary_pre_research",
-]
+__all__ = ['bitertiary_bulk_scrape', 'bitertiary_extract_courses', 'bitertiary_extract_modules', 'bitertiary_extract_programmes', 'bitertiary_pre_research']

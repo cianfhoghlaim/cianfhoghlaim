@@ -18,7 +18,7 @@ definitions mount:
     or if `load_defs()` fails.
 
 The developer workflow:
-    dg list components   # 5 KCG Components (post [tool.dg] section)
+    dg list components   # 5 Cianfhoghlaim Components (post [tool.dg] section)
     dg list defs         # 833 loadable defs (95 hand-written + 783 YAML
                          # once dg.load_defs() is wired)
     dg check yaml        # validate the 783 YAML defs
@@ -65,7 +65,7 @@ import dagster as dg
 #
 # The [tool.dg] section in pyproject.toml declares:
 #   registry_modules = ["orchestration.components"]
-# so the 5 KCG Components are auto-discovered.
+# so the 5 Cianfhoghlaim Components are auto-discovered.
 
 _DEFS_LOADED_VIA: str = "unknown"
 _DEFS_AVAILABLE: bool = False
@@ -156,8 +156,16 @@ except Exception as _exc:  # pragma: no cover
 # ============================================================================
 # The new `orchestration/pipelines/` namespace mirrors `dlt_sources/`
 # domain-first layout. Each per-pipeline `defs.yaml` declares a
-# `PipelineFactoryComponent` (or one of the 5 KCG Components) and is
+# canonical `dagster_dlt.DltLoadCollectionComponent` (per master plan
+# §3.3 + the canonical `dagster-pipeline-components` spec) and is
 # loaded by `dg.load_defs()` exactly like the horizontal `defs/` tree.
+#
+# The Cianfhoghlaim customisation is via the shared helpers at
+# `orchestration.pipelines._shared.dagster_dlt_integration` (the
+# canonical `translation:` defaults) + the Cianfhoghlaim custom Component at
+# `orchestration.pipelines._shared.state_helpers.KCGStateBackedDltComponent`
+# (the canonical `StateBackedComponent` compositing pattern for the 5
+# high-churn sources per master plan §3.3).
 #
 # To support BOTH the horizontal (`defs/{1_ingestion,...,5_agent_ops}/`)
 # AND the vertical (`pipelines/<domain>/<jurisdiction>/`) trees, we
@@ -176,6 +184,58 @@ except Exception as _exc:  # pragma: no cover
 
     structlog.get_logger().warning(
         f"dg.load_defs_pipelines_failed: {_exc}; continuing without vertical pipelines"
+    )
+
+
+# ============================================================================
+# Wave 2: per-pipeline Component shared helpers (canonical translation + state)
+# ============================================================================
+# Imports the Cianfhoghlaim customisation helpers that every per-pipeline `defs.yaml`
+# inherits. The `kcg_default_translation` callable is referenced from each
+# `defs.yaml` via:
+#
+#   translation: orchestration.pipelines._shared.dagster_dlt_integration.kcg_default_translation
+#
+# The `KCGStateBackedDltComponent` is the canonical Cianfhoghlaim custom Component
+# (composition of `dagster_dlt.DltLoadCollectionComponent` +
+# `dagster.components.StateBackedComponent`). Per master plan §3.3, the 5
+# high-churn sources (NCCA + SEC + CCEA + SQA + WJEC) default to
+# `LOCAL_FILESYSTEM` state; everything else defaults to
+# `LEGACY_CODE_SERVER_SNAPSHOTS`.
+#
+# These imports are defensive — they MUST NOT raise at module import time
+# (else the entire code location fails to load). The errors are logged
+# and the rest of the Definitions merge continues.
+
+try:
+    from orchestration.pipelines._shared.dagster_dlt_integration import (  # noqa: F401
+        kcg_default_translation,
+        build_translation_for_pipeline,
+        build_dlt_pipeline,
+        high_churn_source_modules,
+    )
+    _DEFS_LOADED_VIA = f"{_DEFS_LOADED_VIA} + pipelines._shared.dagster_dlt_integration"
+except Exception as _exc:  # pragma: no cover
+    import structlog
+
+    structlog.get_logger().warning(
+        f"kcg_dagster_dlt_integration_load_failed: {_exc}; "
+        "per-pipeline Components will fall back to the dagster_dlt default translation"
+    )
+
+try:
+    from orchestration.pipelines._shared.state_helpers import (  # noqa: F401
+        LOCAL_FILESYSTEM_DEFAULTS,
+        default_state_block_for,
+        local_defs_state_root,
+    )
+    _DEFS_LOADED_VIA = f"{_DEFS_LOADED_VIA} + pipelines._shared.state_helpers"
+except Exception as _exc:  # pragma: no cover
+    import structlog
+
+    structlog.get_logger().warning(
+        f"kcg_state_helpers_load_failed: {_exc}; "
+        "per-pipeline Components will use the dagster StateBackedComponent defaults"
     )
 
 
@@ -230,7 +290,7 @@ try:
     # `2_materials/<jurisdiction>_education/generic_*_assets.py`.
     #
     # Left in place (not deleted) because the `_base` factory is still the
-    # intended long-term shape — repairing it is Wave 1 of the KCG roadmap.
+    # intended long-term shape — repairing it is Wave 1 of the Cianfhoghlaim roadmap.
     _jurisdiction_assets: list = []
 except Exception as _exc:  # pragma: no cover
     import structlog

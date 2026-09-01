@@ -17,7 +17,7 @@ This single file reads the canonical registry
   - 88 + 88 distinct subjects per board = 264 distinct per-board cohorts
   - 43 GCSE + 49 A-Level × 3 = **276 unique qualifications**
 
-## KCG patterns used
+## Cianfhoghlaim patterns used
 - ibis (per `.agents/skills/ibis/SKILL.md`) — every query uses
   ``ibis.duckdb.connect()`` (NO raw ``duckdb.connect``).
 - dlt (per `.agents/skills/dlt/SKILL.md`) — the canonical destination

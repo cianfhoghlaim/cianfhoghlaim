@@ -1,44 +1,21 @@
 # orchestration/pipelines/education/tertiary/uog/personal_archive/defs.yaml
 #
-# L3 PipelineFactoryComponent for the University of Galway personal
-# archive (assignments + notes + transcripts).
+# Per-pipeline Component (Wave 2 of the 2026-08-24 master refactor).
 #
-# Pipeline kind: personal_archive — content extraction + figure
-# extraction. The legacy flat file was `uog_personal_archive.py` +
-# `uog_personal_archive_figures.py`; this vertical pipeline unifies them.
+# Migrated from the legacy `PipelineFactoryComponent` to the canonical
+# `dagster_dlt.DltLoadCollectionComponent` per master plan §3.3 + the
+# canonical `dagster-pipeline-components` spec. The Cianfhoghlaim customisation
+# (the canonical group_name + tags + the StateBackedComponent pattern)
+# is wired via the shared helpers at
+# `orchestration.pipelines._shared.dagster_dlt_integration` +
+# `orchestration.pipelines._shared.state_helpers`.
 #
-# Reference: openspec/changes/2026-08-24-wave-2-orchestration-vertical-pipelines-v1/
-type: orchestration.components.PipelineFactoryComponent
+# Mirrors the `dlt_sources.education.tertiary.uog.personal_archive` source.
+# Pipeline kind: personal_archive
+# Group name: 1_ingestion_education_ie_personal_archive
+type: dagster_dlt.DltLoadCollectionComponent
 attributes:
-  dlt_source: dlt_sources.education.tertiary.uog.personal_archive
-  pipeline_kind: personal_archive
-  embedding_model: BAAI/bge-large-en-v1.5
-  hnsw_index: true
-  conformance_required: true
-  destinations:
-    - ducklake_cianfhoghlaim
-  processing:
-    - baml_extraction
-    - cocoindex_live_update
-    - marimo_dashboard
-  schedules:
-    - cron: "0 4 * * *"
-      timezone: UTC
-  sensors:
-    - upstream_change
-  tags:
-    - tertiary
-    - uog
-    - personal_archive
-    - assignments
-    - notes
-    - transcripts
-    - figures
-  metadata:
-    openspec_change: 2026-08-24-wave-2-orchestration-vertical-pipelines-v1
-    spec: orchestration-vertical-pipelines
-    kind: personal_archive
-    institution: university_of_galway
-    legacy_files:
-      - orchestration/defs/uog_personal_archive.py
-      - orchestration/defs/uog_personal_archive_figures.py
+  loads:
+    - pipeline: orchestration.pipelines._shared.dagster_dlt_integration:build_dlt_pipeline|dlt_sources.education.tertiary.uog.personal_archive
+      source: dlt_sources.education.tertiary.uog.personal_archive
+      translation: orchestration.pipelines._shared.dagster_dlt_integration.kcg_default_translation

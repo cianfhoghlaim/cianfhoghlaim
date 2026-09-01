@@ -1,43 +1,21 @@
 # orchestration/pipelines/education/tertiary/nui_federation/defs.yaml
 #
-# L3 PipelineFactoryComponent for the NUI (National University of
-# Ireland) federation — includes UoG + UCD + UCC + NUIG + NUI Maynooth.
+# Per-pipeline Component (Wave 2 of the 2026-08-24 master refactor).
 #
-# Pipeline kind: official_docs — HTML scraping + federation-level
-# schema inference.
+# Migrated from the legacy `PipelineFactoryComponent` to the canonical
+# `dagster_dlt.DltLoadCollectionComponent` per master plan §3.3 + the
+# canonical `dagster-pipeline-components` spec. The Cianfhoghlaim customisation
+# (the canonical group_name + tags + the StateBackedComponent pattern)
+# is wired via the shared helpers at
+# `orchestration.pipelines._shared.dagster_dlt_integration` +
+# `orchestration.pipelines._shared.state_helpers`.
 #
-# Reference: openspec/changes/2026-08-24-wave-2-orchestration-vertical-pipelines-v1/
-type: orchestration.components.PipelineFactoryComponent
+# Mirrors the `dlt_sources.education.tertiary.nui_federation` source.
+# Pipeline kind: official_docs
+# Group name: 1_ingestion_education_cross_official_docs
+type: dagster_dlt.DltLoadCollectionComponent
 attributes:
-  dlt_source: dlt_sources.education.tertiary.nui_federation
-  pipeline_kind: official_docs
-  embedding_model: BAAI/bge-large-en-v1.5
-  hnsw_index: true
-  conformance_required: true
-  destinations:
-    - ducklake_cianfhoghlaim
-  processing:
-    - cocoindex_live_update
-    - ag_ui_auto_gen
-  schedules:
-    - cron: "0 8 * * *"
-      timezone: UTC
-  sensors:
-    - upstream_change
-  tags:
-    - tertiary
-    - nui
-    - federation
-    - multi_institution
-  metadata:
-    openspec_change: 2026-08-24-wave-2-orchestration-vertical-pipelines-v1
-    spec: orchestration-vertical-pipelines
-    kind: official_docs
-    institution: nui_federation
-    legacy_files:
-      - orchestration/defs/nui_federation.py
-    member_institutions:
-      - university_of_galway
-      - university_college_dublin
-      - university_college_cork
-      - maynooth_university
+  loads:
+    - pipeline: orchestration.pipelines._shared.dagster_dlt_integration:build_dlt_pipeline|dlt_sources.education.tertiary.nui_federation
+      source: dlt_sources.education.tertiary.nui_federation
+      translation: orchestration.pipelines._shared.dagster_dlt_integration.kcg_default_translation

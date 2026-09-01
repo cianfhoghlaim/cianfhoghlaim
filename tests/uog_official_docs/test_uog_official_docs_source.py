@@ -7,7 +7,7 @@ def test_source_yields_5_resources():
     """GIVEN the uog_official_docs_source() factory
     WHEN it is constructed
     THEN it emits exactly 5 resource names."""
-    from dlt_sources.british_isles.ireland.education.university.official_docs import (
+    from dlt_sources.education.ireland.british_isles.university.official_docs import (
         uog_official_docs_source,
     )
 
@@ -26,7 +26,7 @@ def test_each_resource_yields_fixture_row_when_no_credentials():
     """GIVEN the Firecrawl audit credentials are fixture-only
     WHEN the source runs
     THEN every resource yields a single skipped_fixture row."""
-    from dlt_sources.british_isles.ireland.education.university.official_docs import (
+    from dlt_sources.education.ireland.british_isles.university.official_docs import (
         uog_official_docs_source,
     )
 
@@ -47,7 +47,7 @@ def test_each_resource_yields_fixture_row_when_no_credentials():
 
 
 def test_uog_official_homempages_lists_5_homepages():
-    from dlt_sources.british_isles.ireland.education.university.official_docs import (
+    from dlt_sources.education.ireland.british_isles.university.official_docs import (
         UOG_OFFICIAL_HOMEPAGES,
     )
 

@@ -5,7 +5,7 @@ Per 2026-08-25-tuatha-british-isles-mmo-consolidation-v1
 (Step 2.2): the 3 media_intel files (the 10-tool ADK agent +
 the records helper + this __init__.py) were moved to the
 new `tuatha/` independent sub-project at
-/Users/cianmacandeisigh/dev/kings_college_galway/tuatha/agents/media_intel/.
+/Users/cianmacandeisigh/dev/tuatha/agents/media_intel/.
 
 This shim re-exports the canonical symbols from the new
 location so any existing parent-repo code that imports from

@@ -12,7 +12,7 @@ The registry is the source of truth for the BIEP v3 generic pipelines
 discover which (subject, stage, board, qualification_level, language)
 tuples to materialise.
 
-## KCG patterns used
+## Cianfhoghlaim patterns used
 - ibis (per `.agents/skills/ibis/SKILL.md`) — every query uses
   ``ibis.duckdb.connect()`` (NO raw ``duckdb.connect()``).
 - python (per the BAML client conventions) — the public API is

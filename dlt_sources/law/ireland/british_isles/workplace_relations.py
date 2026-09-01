@@ -27,7 +27,7 @@ import dlt_sources
 
 logger = structlog.get_logger(__name__)
 
-from dlt_sources.british_isles.ireland.education.curriculum import (  # type: ignore[import-not-found]
+from dlt_sources.education.ireland.british_isles.education.curriculum import (  # type: ignore[import-not-found]
     _crawl_source,
 )
 

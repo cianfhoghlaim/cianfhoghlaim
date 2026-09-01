@@ -39,7 +39,7 @@ _LOCAL_SCRAPES = os.environ.get("USE_LOCAL_SCRAPES", "").lower() in (
 _STEDDING_OIDE = Path(
     os.environ.get(
         "STEDDING_OIDE_DIR",
-        "/Users/cianmacandeisigh/dev/kings_college_galway/stedding/site_scrape_samples/oide.ie",
+        os.path.join(os.environ.get("CIANFHOGHLAIM_ROOT", os.path.expanduser("~/dev/cianfhoghlaim")), "stedding/site_scrape_samples/oide.ie"),
     )
 )
 

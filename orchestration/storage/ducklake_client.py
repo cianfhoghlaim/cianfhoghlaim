@@ -1,62 +1,72 @@
-"""
-DuckLake Client — DEPRECATED, kept only for backwards compatibility.
+"""DEPRECATION SHIM — re-exports from ``dlt_sources.destinations.ducklake``.
 
-Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this module's
-docstring used to claim it was "the canonical DuckLake client... imported
-by `orchestration.resources.DuckLakeResource.get_client()`" and that it
-"MUST be importable as `storage.ducklake_client.DuckLakeClient`" per a
-`2026-08-13-biep-v3-systematic-download-ireland-england-v1` change —
-that top-level `storage` package never existed anywhere in the repo, so
-every real call to `DuckLakeResource.get_client()` raised
-`ModuleNotFoundError` until this pass fixed it.
+Per Wave 4 §4.8 of the 2026-08-24 master refactor plan. This file
+was previously the canonical DuckLake client implementation (per the
+2026-08-08-lakehouse-extensive-hydration-v1 change) but is now
+**superseded** by the canonical destination module at
+``dlt_sources/destinations/ducklake.py`` (the dlt-first-party
+``DuckLakeCredentials`` + the Wave 1 layer-grouped destinations +
+the Wave 4 v1.0 best practices).
 
-The actual canonical implementation is now
-`dlt_sources.common.destinations_cianfhoghlaim` — it's the only one of
-the 4+ divergent DuckLake client implementations that existed across the
-repo (this file, `sruth/oideachais/storage/{ducklake_client,ducklake,
-config}.py`, `sruth/crypteolas/storage/ducklake_client.py`) using dlt's
-first-party `DuckLakeCredentials` config object instead of hand-rolled
-`ATTACH` SQL strings, and it already documents the canonical bucket name
-(`ducklake-cianfhoghlaim`) and env var names. `DuckLakeResource` in
-`orchestration/resources.py` now wraps that module directly and no
-longer imports anything from here.
+The historical original implementation (DuckLakeConfig + DuckLakeClient
++ hand-rolled ``ATTACH`` SQL) is preserved verbatim below for
+reference + backwards compatibility. **Any new caller should import
+from the canonical location**:
 
-Verified (grep, root `cianfhoghlaim`/`orchestration` package only) that
-nothing in the root package imports `DuckLakeClient` from this file
-anymore — it's kept in place rather than deleted only because the
-sibling `sruth/oideachais/` and `sruth/crypteolas/` packages (separate
-`pyproject.toml` workspaces, not reachable from `orchestration/` code
-regardless) still define their own near-duplicate versions of this same
-class. Consolidating those is flagged as separate follow-up work, out of
-scope here since it crosses a package boundary this change doesn't
-otherwise touch.
+    # ✅ Canonical (post Wave 4):
+    from dlt_sources.destinations.ducklake import get_ducklake_destination
+    from dlt_sources.destinations.ducklake import get_ducklake_namespace
 
-Original docstring content (connection pattern, credential tiers) below
-is still accurate as a description of this file's own behavior if it is
-used directly — just not as "the" canonical path anymore.
-
-    client = DuckLakeClient(storage_path="./storage/data/ducklake")
-    with client.connect() as conn:
-        rows = conn.execute("SELECT * FROM cianfhoghlaim.education.ireland.leaving_cycle.mathematics").fetchall()
-
-- Local: PostgreSQL `ducklake_oideachais` (created by `lakehouse-postgres` init-db.sql)
-        + Garage S3 `s3://ducklake-cianfhoghlaim/<namespace>/<dataset>/`
-- Production: Cloudflare R2 + PlanetScale Postgres (override via env vars)
+    # ⚠️ Legacy (still works; prints DeprecationWarning):
+    from orchestration.storage.ducklake_client import DuckLakeClient  # noqa: F401
 """
 
 from __future__ import annotations
 
 import os
+import warnings
 from collections.abc import Generator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+# Re-export the canonical DuckLake v1.0 best-practice surface. Per
+# Wave 4 §4.1 + §4.5 + §4.6 + §4.7, these are the canonical access
+# points; the legacy ``DuckLakeClient`` / ``DuckLakeConfig`` classes
+# below are preserved verbatim and emit a DeprecationWarning on
+# construction.
+from dlt_sources.destinations.ducklake import (  # noqa: F401
+    DEFAULT_GARAGE_S3_STORAGE,
+    DEFAULT_LAKEKEEPER_ENDPOINT,
+    DEFAULT_POSTGRES_CATALOG,
+    DUCKLAKE_NAME,
+    DUCKLAKE_NAMESPACE,
+    attach_as_iceberg_rest_sql,
+    ducklake_cianfhoghlaim_table_changes,
+    expire_snapshots_all_quadrants,
+    get_ducklake_destination,
+    get_ducklake_namespace,
+    get_iceberg_rest_endpoint,
+    set_namespace_encryption_sql,
+)
+
+
+# Backwards-compatible alias. The legacy ``get_dlt_destination()``
+# signature used ``(use_ducklake=None, namespace="cianfhoghlaim")``;
+# the canonical ``get_ducklake_destination(...)`` takes different
+# params. The legacy function name is not re-exported here because
+# it never existed in the canonical ``dlt_sources.destinations``
+# package — callers should adopt ``get_ducklake_destination`` instead.
+
 
 @dataclass
 class DuckLakeConfig:
-    """Resolved DuckLake connection configuration."""
+    """Resolved DuckLake connection configuration.
+
+    DEPRECATED. Use ``dlt_sources.destinations.ducklake.DuckLakeCredentials``
+    via ``get_ducklake_destination()`` instead.
+    """
 
     s3_endpoint: str
     s3_bucket: str
@@ -74,10 +84,18 @@ class DuckLakeConfig:
     def from_env(cls, namespace: str = "cianfhoghlaim") -> "DuckLakeConfig":
         """Resolve DuckLake config from environment variables.
 
-        The lakehouse stack (`bonneagar/stacks/lakehouse/.env.dev`) sets
-        `GARAGE_*` style env vars; this helper maps them to the AWS_*
-        style that DuckDB's S3 extension expects.
+        DEPRECATED. The canonical path is
+        ``get_ducklake_destination()`` which reads the same env vars
+        via the canonical env-var contract (per Wave 1
+        ``_common.REQUIRED_ENV_VARS``).
         """
+        warnings.warn(
+            "DuckLakeConfig.from_env() is deprecated; use "
+            "dlt_sources.destinations.ducklake.get_ducklake_destination() "
+            "instead. This shim will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return cls(
             s3_endpoint=os.environ.get("GARAGE_S3_ENDPOINT", "http://localhost:3900"),
             s3_bucket=os.environ.get("GARAGE_BUCKET", f"ducklake-{namespace}"),
@@ -95,7 +113,11 @@ class DuckLakeConfig:
         )
 
     def duckdb_secret_sql(self) -> str:
-        """Render the DuckDB secret SQL for S3 access."""
+        """Render the DuckDB secret SQL for S3 access.
+
+        DEPRECATED. Equivalent to the canonical
+        ``DuckLakeCredentials(storage=...)`` constructor.
+        """
         return (
             f"CREATE OR REPLACE SECRET lakehouse_s3 ("
             f"TYPE S3, PROVIDER config, "
@@ -108,7 +130,11 @@ class DuckLakeConfig:
         )
 
     def duckdb_attach_sql(self, alias: str = "lakehouse") -> str:
-        """Render the DuckDB ATTACH SQL for the DuckLake catalog."""
+        """Render the DuckDB ATTACH SQL for the DuckLake catalog.
+
+        DEPRECATED. Equivalent to the canonical
+        ``get_ducklake_destination(catalog=..., storage=...)``.
+        """
         return (
             f"ATTACH 'ducklake:postgres:"
             f"dbname={self.postgres_db} "
@@ -121,14 +147,24 @@ class DuckLakeConfig:
 
 
 class DuckLakeClient:
-    """Canonical DuckLake client for the BIEP v3 lakehouse.
+    """DEPRECATION SHIM for the legacy DuckLake client (Wave 4 §4.8).
 
-    Wraps the DuckDB `ATTACH 'ducklake:...'` pattern and exposes a
-    `connect()` context manager that yields a ready-to-use DuckDB
-    connection with the DuckLake catalog attached.
+    The canonical implementation is now
+    ``dlt_sources.destinations.ducklake.get_ducklake_destination()``
+    (the dlt-first-party ``DuckLakeCredentials`` + the Wave 4 v1.0
+    best practices). New code MUST use the canonical path; this
+    shim is preserved for backwards compatibility only and emits a
+    ``DeprecationWarning`` on construction.
     """
 
     def __init__(self, storage_path: str | os.PathLike[str] | None = None, namespace: str = "cianfhoghlaim"):
+        warnings.warn(
+            "DuckLakeClient is deprecated; use "
+            "dlt_sources.destinations.ducklake.get_ducklake_destination() "
+            "instead. This shim will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         self.storage_path = Path(storage_path) if storage_path else Path("./storage/data/ducklake")
         self.namespace = namespace
         self.config = DuckLakeConfig.from_env(namespace=namespace)
@@ -137,10 +173,10 @@ class DuckLakeClient:
     def connect(self, alias: str = "lakehouse") -> Generator[Any, None, None]:
         """Yield a DuckDB connection with the DuckLake catalog attached.
 
-        The connection has the `lakehouse_s3` secret + the `lakehouse`
-        DuckLake ATTACH setup. Caller can then query e.g.
-
-            SELECT * FROM lakehouse.cianfhoghlaim.education.ireland.leaving_cycle.mathematics
+        DEPRECATED. The canonical path is ``get_ducklake_destination()``
+        which returns a dlt destination; raw DuckDB connections should
+        use ``DuckLakeResource.get_client()`` in
+        ``orchestration/resources.py``.
         """
         import duckdb
 
@@ -154,7 +190,11 @@ class DuckLakeClient:
             conn.close()
 
     def execute(self, query: str, params: tuple | None = None) -> list[tuple]:
-        """Execute a single query and return all rows."""
+        """Execute a single query and return all rows.
+
+        DEPRECATED. Use ``DuckLakeResource.get_client()`` + execute
+        directly, or ``motherduck_execute_query`` for federated queries.
+        """
         with self.connect() as conn:
             if params:
                 return conn.execute(query, params).fetchall()
@@ -163,8 +203,9 @@ class DuckLakeClient:
     def table_exists(self, table_name: str) -> bool:
         """Check if a table exists in the DuckLake catalog.
 
-        `table_name` is the unqualified table name (e.g.
-        `mathematics`); the schema is the cianfhoghlaim namespace.
+        DEPRECATED. Use the canonical
+        ``select count(*) from <namespace>.information_schema.tables``
+        via ``DuckLakeResource.get_client()`` instead.
         """
         with self.connect() as conn:
             result = conn.execute(
@@ -175,4 +216,21 @@ class DuckLakeClient:
             return bool(result and result[0] > 0)
 
 
-__all__ = ["DuckLakeClient", "DuckLakeConfig"]
+__all__ = [
+    # Canonical re-exports (Wave 4 §4.8 — the new public surface)
+    "DUCKLAKE_NAMESPACE",
+    "DUCKLAKE_NAME",
+    "DEFAULT_POSTGRES_CATALOG",
+    "DEFAULT_GARAGE_S3_STORAGE",
+    "DEFAULT_LAKEKEEPER_ENDPOINT",
+    "get_ducklake_namespace",
+    "get_ducklake_destination",
+    "ducklake_cianfhoghlaim_table_changes",
+    "set_namespace_encryption_sql",
+    "expire_snapshots_all_quadrants",
+    "get_iceberg_rest_endpoint",
+    "attach_as_iceberg_rest_sql",
+    # Legacy shim classes (deprecated — preserved for back-compat)
+    "DuckLakeConfig",
+    "DuckLakeClient",
+]

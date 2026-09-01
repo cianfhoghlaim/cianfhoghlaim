@@ -53,34 +53,180 @@ mise run biep:v3:lint                        # ibis-first contract lint
 `dlt_sources/` is the **DLT ingestion layer** of the Cianfhoghlaim
 monorepo. It houses:
 
-- **1,905 `.py` files** containing **920 `@dlt.source` decorated
-  functions** + 4,900+ helper functions across **13 top-level
+- **1,905+ `.py` files** containing **920+ `@dlt.source` decorated
+  functions** + 4,900+ helper functions across **18 top-level
   sub-trees**:
-  - `british_isles/` (the BIEP focus: ireland + england + scotland +
-    wales + ni + isle_of_man + jersey + guernsey + sct_wls_ni +
-    crown_dependencies + `_cross/`)
-  - `european_nations/` (40 nations × {education, government, law,
-    medicine, statistics} via the universal template)
-  - `european_union/` (EUR-Lex + CEDEFOP + ECDC + EMA + Eurostat +
-    Eurydice + Commission press + ...)
-  - `commonwealth/` (australia + canada (12 provinces + quebec/
-    montreal) + india + new_zealand + nigeria (federal + 36 states)
-    + south_africa)
-  - `american_nations/` (brazil + mexico + united_states (CA) +
-    venezuela)
-  - `common/` (25 helpers — destinations, endpoint_recovery,
-    observability, http_client, motherduck_options, etc.)
-  - `language/` (Celtic-language sources: Logainm, Téarma, Ainm,
-    Gaois, Dúchas, Canúint)
-  - `official_media/` (British Crown + Channel Islands government
-    feeds)
-  - `api_sources/` (generic non-jurisdictional API clients — Spotify,
-    SoundCloud, YouTube, GitHub, LinkedIn, ResearchGate)
-  - `filesystem/` (10 DLT filesystem pipeline utilities)
-  - `jobs/` (long-running scheduled jobs — only `government_circulars_job.py`)
-  - `portfolio/` (CV, teaching, artwork, labels)
-  - `apple_photos/` (the 5th leabharlann corpus via osxphotos;
-    empty stub awaiting the `apple-photos-ingestion` openspec change)
+  - **Geographic (KEEP ENGLISH — ISO/toponym conventions)**:
+    - `british_isles/` (the BIEP focus: ireland + england + scotland +
+      wales + ni + isle_of_man + jersey + guernsey + sct_wls_ni +
+      crown_dependencies + `_cross/`)
+    - `european_nations/` (40 nations × {education, government, law,
+      medicine, statistics} via the universal template)
+    - `european_union/` (EUR-Lex + CEDEFOP + ECDC + EMA + Eurostat +
+      Eurydice + Commission press + ...)
+    - `commonwealth/` (australia + canada (12 provinces + quebec/
+      montreal) + india + new_zealand + nigeria (federal + 36 states)
+      + south_africa)
+    - `american_nations/` (brazil + mexico + united_states (CA) +
+      venezuela)
+  - **Domain-first (the new layout)**:
+    - `law/<jurisdiction>/<geography>/` (59 directories — jurisdiction
+      pipelines for legal sources)
+    - `medicine/<jurisdiction>/<geography>/` (61 directories —
+      jurisdiction pipelines for medical sources)
+    - `education/<jurisdiction>/<geography>/` (61 directories — K-12 +
+      secondary education pipelines)
+    - `education/tertiary/<institution>/` (UoG + NUI + BI tertiary)
+  - **Themed (the language/ split)**:
+    - `lexicographic/` (11 source files + 3 helpers — Irish +
+      Celtic lexicographic: ainm, canuint×5, duchas, gaois×2,
+      logainm, tearma×2)
+    - `cultural_heritage/` (6 source files + 2 helpers — folklore +
+      mythology + heritage sites: celtic_mythology, duchas_corpus,
+      heritage, hidden_heritages, local_documents×2)
+    - `language_models/` (1 source file — Universal Dependencies
+      treebanks; sister-repo-owned per INVARIANT 1)
+  - **Official media (the 4-way split)**:
+    - `official_media/british_crown/` (sct + wls feeds)
+    - `official_media/channel_islands/` (ggy + iom + jsy feeds)
+    - `official_media/companies/` (companies_house + cro feeds)
+    - `official_media/fediverse/` (mastodon/activitypub feeds)
+    - `official_media/hmgcc/`, `official_media/_resolver_live.py`,
+      `official_media/allowlist.py`, `official_media/classifier.py`,
+      `official_media/instagram_export.py`, `official_media/source_resolver.py`
+  - **Cross-cutting helpers + shared infra**:
+    - `destinations/` (CANONICAL top-level home for the layer-grouped
+      destinations package — `_common.py` + `ducklake.py` +
+      `motherduck.py` + `filesystem.py` + `iceberg.py`)
+    - `common/` (25+ helpers — destinations (DEPRECATION SHIM), 
+      endpoint_recovery, observability, http_client,
+      motherduck_options, named_destinations (DEPRECATION SHIM), etc.)
+    - `lakehouse/` (DuckLake bridge — renamed from `_lakehouse/`;
+      `pool.py`, `options.py`, `personal_archive.py`,
+      `cognify_health.py`)
+  - **Pipeline + ops**:
+    - `_jobs/` (CLI dispatcher for long-running scheduled jobs)
+    - `apple_photos/` (the 5th leabharlann corpus via osxphotos)
+    - `api_sources/` (generic non-jurisdictional API clients)
+    - `filesystem/` (`raw_files/` rename in flight)
+    - `media/` (5 sub-themes already distinct — kept as-is)
+    - `crypteolas/`, `crypteolas_chain/`, `crypteolas_docs/`,
+      `crypteolas_defi/` (the crypto credentials system)
+    - `cv/`, `artwork/`, `labels/` (the portfolio split)
+    - `media_text/`, `media_comics/`, `media_games/`,
+      `media_personal/` (the media split)
+    - `local_archive/` (the local archive sub-tree)
+    - `tuatha_media_intel/` (the big media-intel pipeline)
+
+## Themed sub-trees (Wave 1 — 2026-08-24)
+
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change (master plan §3.2, §7.1). The previous `dlt_sources/language/`
+grab-bag (16 source files + 5 helpers across 3 unrelated domains) was
+split into 3 themed sub-trees, one concern per sub-tree:
+
+| Sub-tree | Files | Domain |
+|:--|--:|:--|
+| `dlt_sources/lexicographic/` | 11 sources + 3 helpers | Word-form + translation + definition — the *lexicon* |
+| `dlt_sources/cultural_heritage/` | 6 sources + 2 helpers | Folklore + monuments + archival — the *narrative corpus* |
+| `dlt_sources/language_models/` | 1 source | Treebanks — a *training corpus* for ML, not a heritage source |
+
+Each sub-tree has different ingestion cadence, destination, and embedding
+strategy (per master plan §2.1.2).
+
+### `lexicographic/` (the *lexicon*)
+
+```
+lexicographic/
+├── ainm.py                     (Irish place-names — Ainm)
+├── canuint.py + canuint_*.py   (Canúint — Irish dialect corpus × 5)
+├── duchas.py                   (the Dúchas lexicon — Schools' Collection terminology)
+├── gaois.py + gaois_combined.py
+├── logainm.py                  (Logainm — Placenames Database of Ireland)
+├── tearma.py + tearma_search.py
+├── _canuint_helpers.py
+├── _gaois_helpers.py
+├── _tearma_helpers.py
+└── AGENTS.md
+```
+
+Ingestion cadence: monthly. Destination: typed DuckLake tables.
+Embedding strategy: keyword sparse.
+
+### `cultural_heritage/` (the *narrative corpus*)
+
+```
+cultural_heritage/
+├── celtic_mythology.py         (Celtic mythology corpus)
+├── duchas_corpus.py            (Dúchas manuscript images + transcriptions, was duchas_images.py)
+├── heritage.py                 (Heritage Council of Ireland — sites & monuments)
+├── hidden_heritages.py
+├── local_documents_by_subject.py
+├── local_education_documents.py
+├── _duchas_corpus_helpers.py   (was _duchas_images_helpers.py)
+├── _local_documents_helpers.py
+└── AGENTS.md
+```
+
+Ingestion cadence: archival. Destination: fulltext + BAML.
+Embedding strategy: BGE-M3 dense.
+
+### `language_models/` (the *training corpus*)
+
+```
+language_models/
+├── universal_dependencies.py   (UD treebanks — CoNLL-U)
+└── AGENTS.md
+```
+
+Ingestion cadence: snapshot releases. Destination: Arrow IPC for
+training. Embedding strategy: syntax-aware.
+
+> **Sister-repo ownership** (per master plan INVARIANT 1, bilingual
+> carve rule): UD corpora are owned by the `ciancheiltis` sister repo.
+> Pinned cross-repo reference: `ciar://ciancheiltis/datasets/ud_<lang>@v<N>`.
+
+### Layer-grouped destinations (Wave 1)
+
+The previous 3-way split (`common/destinations_cianfhoghlaim.py` +
+`common/destinations_tuatha.py` + `lakehouse/destinations.py`) was
+consolidated into a single layer-grouped package:
+
+```
+dlt_sources/destinations/        (CANONICAL — top-level)
+├── __init__.py                  (named_destinations() factory + re-exports)
+├── _common.py                   (credential validation + namespace defaults)
+├── ducklake.py                  (DuckLake + Postgres catalog + Garage S3)
+├── motherduck.py                (MotherDuck managed DuckLake)
+├── filesystem.py                (local FS + S3 + GCS + Azure)
+└── iceberg.py                   (Iceberg REST catalog via Lakekeeper :8181)
+```
+
+Re-export shims at the legacy paths (`common/destinations_*.py`,
+`common/named_destinations.py`, `common/destinations/`,
+`lakehouse/destinations.py`, `lakehouse/personal_archive_destinations.py`)
+preserve backwards compatibility for at least one release cycle per
+the `LEGACY_ALIASES.md` precedent.
+
+The single DuckLake namespace is `ducklake_cianfhoghlaim` (per master
+plan §1.1). The 6 → 10 legacy namespace aliases all route to this
+consolidated namespace via the `DESTINATIONS` registry.
+
+### Backwards-compat policy
+
+Every themed sub-tree import path continues to work:
+
+| New (canonical) | Legacy (shim) |
+|:--|:--|
+| `from dlt_sources.lexicographic import ainm, canuint, tearma` | `from dlt_sources.language import ainm, canuint, tearma` |
+| `from dlt_sources.cultural_heritage import celtic_mythology, duchas_corpus` | `from dlt_sources.language import celtic_mythology, duchas_images` |
+| `from dlt_sources.language_models import universal_dependencies` | `from dlt_sources.language import universal_dependencies` |
+| `from dlt_sources.destinations import named_destinations` | `from dlt_sources.common.destinations import named_destinations` |
+| `from dlt_sources.destinations import named_destinations` | `from dlt_sources.common.destinations_cianfhoghlaim import named_destinations` |
+
+The `mise run lint:dlt-paths` CI gate (per master plan §1.10) fails
+the build if any source `.py` file is added back to the deprecated
+`dlt_sources/language/` directory (other than `__init__.py` shims).
 
 ## The BIEP v3 generic pipeline pattern
 
@@ -137,24 +283,44 @@ BI jurisdictions). The legacy `seed_registry()` definition at
 
 ## The destination contract
 
-The canonical destination factory is
-`common/destinations_cianfhoghlaim.py:191:get_dlt_destination()`:
+The canonical destination factory is now at the TOP LEVEL of the
+package — `dlt_sources.destinations.named_destinations()` — per the
+Wave 1 destination consolidation (master plan §3.2, §7.1):
 
 ```python
-from dlt_sources.common.destinations_cianfhoghlaim import get_dlt_destination
+from dlt_sources.destinations import named_destinations
 
-# Local DuckDB at ./data/cianfhoghlaim.duckdb
-con = get_dlt_destination(mode="local")
+# The single consolidated DuckLake namespace
+con = named_destinations("ducklake_cianfhoghlaim")
+
+# Per-quadrant Postgres metadata schemas
+con = named_destinations("ducklake_oideachais_quadrant")
+con = named_destinations("ducklake_tuatha_quadrant")
 
 # MotherDuck (cloud SaaS)
-con = get_dlt_destination(mode="production")
+con = named_destinations("motherduck")
 
-# DuckLake (local + Iceberg-compatible)
-con = get_dlt_destination(use_ducklake=True)
+# Filesystem (local + S3 + GCS + Azure)
+con = named_destinations("filesystem_local")
+con = named_destinations("filesystem_s3")
+
+# Iceberg REST catalog (via Lakekeeper :8181)
+con = named_destinations("iceberg_rest")
 ```
 
-Namespace defaults to `"cianfhoghlaim"` (line 47). Tables land at
-`cianfhoghlaim.<jurisdiction>.<stage>.<subject>.<variant>`.
+The single DuckLake namespace is `"ducklake_cianfhoghlaim"` (per master
+plan §1.1). The 6 → 10 legacy namespace aliases all route to this
+consolidated namespace via the `DESTINATIONS` registry.
+
+Legacy import paths continue to work via deprecation shims:
+
+```python
+# These all resolve to the same factory:
+from dlt_sources.destinations import named_destinations
+from dlt_sources.common.destinations import named_destinations
+from dlt_sources.common.destinations_cianfhoghlaim import named_destinations
+from dlt_sources.common.named_destinations import named_destinations
+```
 
 ## The LEGACY_ALIASES.md migration story
 
@@ -193,7 +359,12 @@ remaining.
 | Add a new MotherDuck Dive target | See `motherduck/README.md` (this repo) |
 | Add a new CocoIndex embedding | See `cocoindex/AGENTS.md` (this repo) |
 | Run the BIEP v3 Ireland pipeline | `python -c "from dlt_sources.british_isles.ireland.education.ireland_jurisdiction_pipeline import ireland_jurisdiction_pipeline; ireland_jurisdiction_pipeline.run()"` |
-| Diagnose a destination issue | `python -c "from dlt_sources.common.destinations_cianfhoghlaim import get_dlt_destination; print(get_dlt_destination())"` |
+| Diagnose a destination issue | `python -c "from dlt_sources.destinations import named_destinations; print(named_destinations('ducklake_cianfhoghlaim'))"` |
+| Add a new lexicographic source | `dlt_sources/lexicographic/<source>.py` (then `from dlt_sources.lexicographic import <source>`) |
+| Add a new cultural-heritage source | `dlt_sources/cultural_heritage/<source>.py` (then `from dlt_sources.cultural_heritage import <source>`) |
+| Add a new language-models source | `dlt_sources/language_models/<source>.py` (then `from dlt_sources.language_models import <source>`) |
+| Add a new destination layer | `dlt_sources/destinations/<layer>.py` + register in `dlt_sources/destinations/__init__.py:DESTINATIONS` |
+| Use the legacy `language/` paths | The `dlt_sources/language/` shim re-exports from the 3 themed sub-trees — `from dlt_sources.language import ainm` works |
 
 ## Cross-references
 

@@ -13,7 +13,7 @@ ireland_embeddings) cover all 544 Ireland cohorts (LC + JC + short courses
 + CBAs). This module adds 3 JC-specific asset checks + 70 per-subject
 backfill jobs (18 JC + 36 CBA + 16 short course).
 
-## KCG patterns used
+## Cianfhoghlaim patterns used
 - ibis (per `.agents/skills/ibis/SKILL.md`) — every query uses
   ``ibis.duckdb.connect()``.
 - dagster (per `.agents/skills/dagster/SKILL.md`) — 5-layer group_name
@@ -137,7 +137,7 @@ IRELAND_JC_TOTAL_COHORTS = (
 )
 def ireland_jc_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]:
     """Layer 1 — DLT ingestion of all Ireland JC cohorts (88 rows)."""
-    from dlt_sources.british_isles.ireland.education.junior_cycle import (
+    from dlt_sources.education.ireland.british_isles.education.junior_cycle import (
         ireland_junior_cycle_source,
     )
     from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction

@@ -21,7 +21,7 @@ level, in both EN + GA. Partitions are:
     )
 
 Usage:
-    from dlt_sources.british_isles.ireland.education.ncca import (
+    from dlt_sources.education.ireland.british_isles.education.ncca import (
         ncca_source, LC6_SUBJECTS, ncca_lc6_partitions,
     )
 

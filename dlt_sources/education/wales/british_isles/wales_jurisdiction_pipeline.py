@@ -20,7 +20,7 @@ The Welsh-medium overlay (cy language) is the BIEP v3 v1 spec default per
 the 2026-08-13 systematic download change. English-medium subjects
 can be loaded separately via the `baml_function` field of the registry.
 
-## KCG patterns used
+## Cianfhoghlaim patterns used
 - ibis (per `.agents/skills/ibis/SKILL.md`) — every query uses
   ``ibis.duckdb.connect()`` (NO raw ``duckdb.connect``).
 - dlt (per `.agents/skills/dlt/SKILL.md`) — the canonical destination

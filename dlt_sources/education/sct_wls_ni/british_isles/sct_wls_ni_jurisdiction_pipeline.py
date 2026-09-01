@@ -5,11 +5,11 @@ the 3 deferred "mainland" British Isles jurisdictions (Scotland + Wales +
 Northern Ireland) have been **promoted to proper per-jurisdiction
 directories**. The canonical jurisdiction pipeline files are now:
 
-- `dlt_sources.british_isles.scotland.education.scotland_jurisdiction_pipeline`
+- `dlt_sources.education.scotland.british_isles.education.scotland_jurisdiction_pipeline`
   — `ScotlandJurisdictionPipeline` (BIEP v3)
-- `dlt_sources.british_isles.wales.education.wales_jurisdiction_pipeline`
+- `dlt_sources.education.wales.british_isles.education.wales_jurisdiction_pipeline`
   — `WalesJurisdictionPipeline` (BIEP v3)
-- `dlt_sources.british_isles.northern_ireland.education.northern_ireland_jurisdiction_pipeline`
+- `dlt_sources.education.northern_ireland.british_isles.education.northern_ireland_jurisdiction_pipeline`
   — `NorthernIrelandJurisdictionPipeline` (BIEP v3)
 
 This file is kept as a **re-export shim** for backward compatibility
@@ -28,15 +28,15 @@ Reference: openspec/changes/2026-08-13-biep-v3-systematic-download-ireland-engla
 """
 from __future__ import annotations
 
-from dlt_sources.british_isles.northern_ireland.education.northern_ireland_jurisdiction_pipeline import (
+from dlt_sources.education.northern_ireland.british_isles.education.northern_ireland_jurisdiction_pipeline import (
     NorthernIrelandJurisdictionPipeline,
     northern_ireland_jurisdiction_pipeline,
 )
-from dlt_sources.british_isles.scotland.education.scotland_jurisdiction_pipeline import (
+from dlt_sources.education.scotland.british_isles.education.scotland_jurisdiction_pipeline import (
     ScotlandJurisdictionPipeline,
     scotland_jurisdiction_pipeline,
 )
-from dlt_sources.british_isles.wales.education.wales_jurisdiction_pipeline import (
+from dlt_sources.education.wales.british_isles.education.wales_jurisdiction_pipeline import (
     WalesJurisdictionPipeline,
     wales_jurisdiction_pipeline,
 )
@@ -72,7 +72,7 @@ def sct_wls_ni_jurisdiction_pipeline(
     deferred openspec change `2026-07-30-biep-v3-sct-wls-ni-v1/`. New
     code SHOULD import the per-jurisdiction pipelines directly:
 
-        from dlt_sources.british_isles.scotland.education.scotland_jurisdiction_pipeline import (
+        from dlt_sources.education.scotland.british_isles.education.scotland_jurisdiction_pipeline import (
             scotland_jurisdiction_pipeline,
         )
 

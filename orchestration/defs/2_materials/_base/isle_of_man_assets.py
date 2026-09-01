@@ -15,7 +15,7 @@ from .jurisdiction_assets_base import make_jurisdiction_assets
 
 def _pipeline_factory():
     """Lazy-imported factory for the Isle Of Man jurisdiction pipeline."""
-    from dlt_sources.british_isles.isle_of_man.education.isle_of_man_jurisdiction_pipeline import (
+    from dlt_sources.education.isle_of_man.british_isles.education.isle_of_man_jurisdiction_pipeline import (
         isle_of_man_jurisdiction_pipeline,
     )
     return isle_of_man_jurisdiction_pipeline()

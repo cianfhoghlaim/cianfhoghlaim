@@ -12,12 +12,12 @@ canonical test fixture) so the router returns the
 from __future__ import annotations
 
 import importlib.util
+import os
 from pathlib import Path
 
 
-_HTR_ROUTER = Path(
-    "/Users/cianmacandeisigh/dev/kings_college_galway/dlt_sources/filesystem/_htr_ensemble.py"
-)
+_CIANFHOGHLAIM_ROOT = Path(os.environ.get("CIANFHOGHLAIM_ROOT", os.path.expanduser("~/dev/cianfhoghlaim")))
+_HTR_ROUTER = _CIANFHOGHLAIM_ROOT / "dlt_sources/filesystem/_htr_ensemble.py"
 
 
 def _load_htr_router():

@@ -1,4 +1,4 @@
-"""dlt_sources.british_isles.university — British Isles tertiary pipelines.
+"""dlt_sources.education.university.british_isles.university — British Isles tertiary pipelines.
 
 The generalised factory + per-institution sources for the British
 Isles tertiary surface. Reference:

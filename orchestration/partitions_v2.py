@@ -306,7 +306,7 @@ year_partitions = StaticPartitionsDefinition(
 # NOTE: The partition name was corrected from `cianhoghlaim_scope` (typo,
 # missing 'f') to `cianfhoghlaim_scope` as part of the
 # 2026-08-24-wave-0-cocoindex-module-path-repair-v1 openspec change.
-# Verified via `grep -rn "cianhoghlaim_scope" orchestration` that no
+# Verified via `grep -rn "cianfhoghlaim_scope" orchestration` that no
 # `defs.yaml` file referenced the typo'd name (only `partitions_v2.py`
 # declared it), so this is a self-contained string swap with zero
 # migration impact.

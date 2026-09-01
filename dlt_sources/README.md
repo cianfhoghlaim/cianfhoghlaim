@@ -71,7 +71,7 @@ my_pipeline.run()  # writes to md:cianfhoghlaim.education.my_jurisdiction.*
 | `USE_LOCAL_SCRAPES` | `false` | Set `true` for the curated `stedding/ingest_queue/` snapshot fallback |
 | `MOTHERDUCK_TOKEN` | _required for MD_ | Read from Infisical `dev-baile` via mise |
 | `MOTHERDUCK_ENABLED` | `false` | Set `true` to opt-in to `md:cianfhoghlaim` |
-| `CIANFHOGHLAIM_ROOT` | `~/dev/kings_college_galway` | Repo root (overridden by `nb_utils.REPO_ROOT`) |
+| `CIANFHOGHLAIM_ROOT` | `~/dev/cianfhoghlaim` | Repo root (overridden by `nb_utils.REPO_ROOT`) |
 | `BIEP_REGISTRY_URI` | local DuckDB | Override for the cross-jurisdiction registry location |
 
 ## Cross-references

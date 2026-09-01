@@ -13,13 +13,13 @@ The file must export the 5 expected symbols:
 """
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 
 
-_CONVEX_TS = Path(
-    "/Users/cianmacandeisigh/dev/kings_college_galway/web/apps/cianfhoghlaim/convex/personalArchive.ts"
-)
+_CIANFHOGHLAIM_ROOT = Path(os.environ.get("CIANFHOGHLAIM_ROOT", os.path.expanduser("~/dev/cianfhoghlaim")))
+_CONVEX_TS = _CIANFHOGHLAIM_ROOT / "web/apps/cianfhoghlaim/convex/personalArchive.ts"
 
 
 def _expected_symbols() -> set[str]:

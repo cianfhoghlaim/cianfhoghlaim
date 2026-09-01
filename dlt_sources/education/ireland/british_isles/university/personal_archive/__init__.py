@@ -1,4 +1,4 @@
-"""dlt_sources.british_isles.ireland.education.university.personal_archive
+"""dlt_sources.education.ireland.british_isles.university.personal_archive
 
 The transferable factory for the personal-archive pipeline. The
 same code runs against any student's `leabharlann/<university>/`

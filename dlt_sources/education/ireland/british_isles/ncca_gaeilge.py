@@ -22,7 +22,7 @@ The canonical BIEP v1 pattern (per `9e97ca0ca`):
 
 Usage:
 
-    from dlt_sources.british_isles.ireland.education.ncca_gaeilge import (
+    from dlt_sources.education.ireland.british_isles.education.ncca_gaeilge import (
         ncca_gaeilge_source,
     )
 

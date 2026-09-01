@@ -121,7 +121,7 @@ if _PYDANTIC_V2:
         # =========================================================================
         #
         # The Cognee code-side backend selection (falkordb primary +
-        # memgraph fallback) is the canonical KCG default per the
+        # memgraph fallback) is the canonical Cianfhoghlaim default per the
         # agent-observability spec. New code MUST use falkordb; the
         # memgraph defaults below remain for legacy call-sites only.
 
@@ -317,7 +317,7 @@ else:
         # =========================================================================
         #
         # The Cognee code-side backend selection (falkordb primary +
-        # memgraph fallback) is the canonical KCG default per the
+        # memgraph fallback) is the canonical Cianfhoghlaim default per the
         # agent-observability spec. New code MUST use falkordb; the
         # memgraph defaults below remain for legacy call-sites only.
 

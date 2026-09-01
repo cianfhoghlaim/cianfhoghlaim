@@ -21,7 +21,7 @@ Partitions:
     )
 
 Usage:
-    from dlt_sources.british_isles.ireland.education.examinations import (
+    from dlt_sources.education.ireland.british_isles.education.examinations import (
         examinations_source, examinations_lc6_source, examinations_lc6_partitions,
         LC6_SUBJECTS, LC6_YEAR_RANGE, PAPER_KINDS,
     )

@@ -75,7 +75,7 @@ def load_defs_via_walker(defs_root: Path) -> dg.Definitions:
 
     FALLBACK path: used when `dg.load_defs()` is unavailable
     (Dagster <1.13). The PRIMARY path in definitions.py is
-    `dg.load_defs()` which uses the 5 KCG Components.
+    `dg.load_defs()` which uses the 5 Cianfhoghlaim Components.
     """
     modules = _discover_modules(defs_root)
     if not modules:

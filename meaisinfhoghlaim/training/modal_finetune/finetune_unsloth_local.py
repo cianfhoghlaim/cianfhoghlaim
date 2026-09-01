@@ -107,7 +107,7 @@ def main() -> int:
     parser.add_argument(
         "--hub-model-id",
         type=str,
-        default="cianfhoghlaim/irish-qwen3.8-27b-instruct",
+        default="cianfhoghlaim/irish-gemma-4-26b-a4b-instruct",
         help="HF Hub model ID for publishing.",
     )
     parser.add_argument(
