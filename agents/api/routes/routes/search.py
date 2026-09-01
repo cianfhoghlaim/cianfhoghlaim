@@ -10,11 +10,15 @@ from typing import Literal
 from fastapi import APIRouter, Query
 from pydantic import BaseModel, Field
 
-from ...knowledge_graph import (
-    HybridSearchConfig,
-    SearchMode,
-    get_search_engine,
-)
+# Per the 2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1 change
+# (Phase 1 §2.2): the legacy `from ...knowledge_graph import
+# HybridSearchConfig` import pointed at a non-existent module. Route
+# through the canonical MemoryRouter instead (the Cognee + LanceDB +
+# Graphiti RRF hybrid search).
+try:
+    from agents.meaisinfhoghlaim.firecrawl_mcp.memory.router import MemoryRouter
+except ImportError:
+    MemoryRouter = None  # type: ignore[assignment]
 
 router = APIRouter()
 

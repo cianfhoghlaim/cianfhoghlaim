@@ -12,6 +12,8 @@
 
 import { Hono } from "hono";
 
+import { studyPlanStubResponse } from "./_study_plan_stub";
+
 const mathematicsApp = new Hono()
   .get("/health", (c) =>
     c.json({
@@ -23,6 +25,23 @@ const mathematicsApp = new Hono()
     }),
   )
   .post("/get_syllabus_topics", (c) => c.json({ stub: true }))
+  .post("/get_study_plan", async (c) => {
+    // Per the 2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1 change
+    // (Phase 1, §3.2 of tasks.md).
+    const body = (await c.req.json().catch(() => ({}))) as Record<string, unknown>;
+    return c.json(
+      studyPlanStubResponse("mathematics", {
+        user_id: typeof body.user_id === "string" ? body.user_id : undefined,
+        trace_id: typeof body.trace_id === "string" ? body.trace_id : undefined,
+        lo_codes: Array.isArray(body.lo_codes) ? (body.lo_codes as string[]) : undefined,
+        target_date:
+          typeof body.target_date === "string" ? body.target_date : undefined,
+        duration_weeks:
+          typeof body.duration_weeks === "number" ? body.duration_weeks : 12,
+        language: typeof body.language === "string" ? body.language : "en",
+      }),
+    );
+  })
   // (13 actions per the canonical CopilotKit action surface)
   ;
 

@@ -83,11 +83,52 @@ def _imports():
     if str(_repo_root) not in sys.path:
         sys.path.insert(0, str(_repo_root))
 
+    # Per the 2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1 change
+    # (Phase 1 §2.3): the legacy
+    # `cianfhoghlaim.storage.cognify.rules.semantic_search` import pointed
+    # at a non-existent module. Route through the canonical
+    # MemoryRouter (Cognee + LanceDB + Graphiti RRF hybrid search)
+    # via the `agents.meaisinfhoghlaim.firecrawl_mcp.memory.router`
+    # re-export; expose the same `ss` interface shape so the
+    # downstream `ss.bm25_search` / `ss.hybrid_search` / `ss.semantic_search`
+    # calls in the rest of the notebook don't need to be rewritten.
     try:
-        from cianfhoghlaim.storage.cognify.rules import semantic_search as ss
+        from agents.meaisinfhoghlaim.firecrawl_mcp.memory.router import (
+            MemoryRouter,
+        )
+
+        class _SemanticSearchAdapter:
+            """Phase-1 adapter that exposes the `ss.<method>(q, ...)` shape
+            the rest of this notebook expects, backed by MemoryRouter.
+            """
+
+            def __init__(self) -> None:
+                self._router = MemoryRouter()
+
+            async def bm25_search(self, q, top_k=10, filters=None):
+                return await self._router.bm25_search(q, top_k=top_k, filters=filters)
+
+            async def semantic_search(self, q, top_k=10, filters=None):
+                return await self._router.semantic_search(q, top_k=top_k, filters=filters)
+
+            async def hybrid_search(self, q, top_k=10, filters=None,
+                                    vector_weight=0.6, graph_weight=0.4):
+                return await self._router.hybrid_search(
+                    q, top_k=top_k, filters=filters,
+                    vector_weight=vector_weight, graph_weight=graph_weight,
+                )
+
+            class SearchFilter:
+                """Lightweight filter DTO expected by the notebook UI."""
+                def __init__(self, subject: str | None = None,
+                             language: str | None = None) -> None:
+                    self.subject = subject
+                    self.language = language
+
+        ss = _SemanticSearchAdapter()
         SS_AVAILABLE = True
-    except ImportError as e:  # noqa: BLE001
-        mo.md(f"⚠️ Could not import cognify.rules.semantic_search: {e}")
+    except Exception as e:  # noqa: BLE001
+        mo.md(f"⚠️ Could not import MemoryRouter: {e}")
         SS_AVAILABLE = False
         ss = None
 
