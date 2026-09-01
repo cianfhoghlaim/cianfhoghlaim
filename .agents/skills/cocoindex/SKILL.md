@@ -512,7 +512,7 @@ DSPy signatures + `dspy.ChainOfThought` work in v1 via `@coco.fn` wrapping
 
 **For all sources**: <https://cocoindex.io/docs/sources/>
 
-### `localfs.walk_dir` (canonical KCG pattern)
+### `localfs.walk_dir` (canonical Cianfhoghlaim pattern)
 
 ```python
 from cocoindex.connectors import localfs
@@ -547,7 +547,7 @@ for memoisation.
 
 ### Targets (verified against v1.0.14 docs at https://cocoindex.io/docs/connectors/, 2026-06-29)
 
-See the connector inventory at the top of this skill. KCG v1.0.x only wires **LanceDB / FalkorDB / Postgres**; the 7 NEW connectors since 1.0.7 (Qdrant, Turbopuffer, Valkey, SurrealDB, zvec, Iggy, OCI Object Storage, Doris) are not yet integrated. Track via `openspec/research/2026-06-28-upstream-package-monitoring/`.
+See the connector inventory at the top of this skill. Cianfhoghlaim v1.0.x only wires **LanceDB / FalkorDB / Postgres**; the 7 NEW connectors since 1.0.7 (Qdrant, Turbopuffer, Valkey, SurrealDB, zvec, Iggy, OCI Object Storage, Doris) are not yet integrated. Track via `openspec/research/2026-06-28-upstream-package-monitoring/`.
 
 #### NEW 1.0.11 — `declare_fts_index` for keyword search
 
@@ -647,9 +647,9 @@ skill's deprecation banner.
 **For comprehensive documentation:** <https://cocoindex.io/docs/>
 **Search specific topics:** <https://cocoindex.io/docs/search?q=url%20encoded%20keyword>
 
-## KCG ColPali cache location (project-specific)
+## Cianfhoghlaim ColPali cache location (project-specific)
 
-The KCG CocoIndex flows that use `ColPaliEmbedImage` cache the
+The Cianfhoghlaim CocoIndex flows that use `ColPaliEmbedImage` cache the
 model weights at:
 
 ```
@@ -660,7 +660,7 @@ stedding/huggingface/hub/
 The canonical model is **`vidore/colpali-v1.3`** (1024-d
 multi-vector, vision + text). For LlamaIndex aliasing via
 LiteLLM, use the alias `vision` (set in
-`agents/api/router.py`). The KCG marimo dashboard
+`agents/api/router.py`). The Cianfhoghlaim marimo dashboard
 `/dashboards/curriculum-images` shows a live demo of the
 multimodal ColPali + Qdrant MaxSim search.
 ## 2026-06 update (CocoIndex v1.0.1–1.0.14)
@@ -718,12 +718,12 @@ Lets you see growth vs churn vs reprocess storms per slice, not just one aggrega
 - **Source: Apache Iggy** — high-throughput persistent message streaming
 - **Target: Turbopuffer** — serverless object-storage-backed vector + full-text search
 - **Target: Neo4j** — native property graph target
-- **Target: FalkorDB** — Redis-based property graph (KCG uses this for the curriculum KG)
+- **Target: FalkorDB** — Redis-based property graph (Cianfhoghlaim uses this for the curriculum KG)
 - **Target: LanceDB** — v1 target now optimises (compacts) tables periodically AND adds columns in place for schema evolution
 
 ### LiteLLM speech-to-text
 
-The new `LiteLLMTranscriber` wraps any LiteLLM-backed STT provider (e.g. `whisper-1`), extending CocoIndex's multimodal reach from images/PDFs into audio. The KCG `asr/SKILL.md` covers the Celtic-Irish ASR pattern that uses this.
+The new `LiteLLMTranscriber` wraps any LiteLLM-backed STT provider (e.g. `whisper-1`), extending CocoIndex's multimodal reach from images/PDFs into audio. The Cianfhoghlaim `asr/SKILL.md` covers the Celtic-Irish ASR pattern that uses this.
 
 ### Code splitter: 8 new languages
 
@@ -740,7 +740,7 @@ For the full changelog, see <https://cocoindex.io/blogs/changelog-101-107/>.
 
 ### 2026-06-25 update (CocoIndex v1.0.7 + the `upstream-package-monitoring` skill)
 
-- **`cocoindex_v1_conformance` App** — the 14th v1 App in the KCG
+- **`cocoindex_v1_conformance` App** — the 14th v1 App in the Cianfhoghlaim
   oideachais tree (`cocoindex_flows/infrastructure/cocoindex_v1_conformance.py`).
   It's a static AST linter that checks every other v1 App against
   the 4-rule conformance contract:
@@ -780,7 +780,7 @@ For the full changelog, see <https://cocoindex.io/blogs/changelog-101-107/>.
 - **v1.0.9 (12 Jun 2026) — `coco.fn` directly callable outside a component context (#2101)**.
 - **v1.0.8 (11 Jun 2026 — YANKED on PyPI per release history) — `coco.use_state()` persistent per-component state (#2034); `LiveMap` in-memory intermediate collection (#2088); Preview mode for update actions (#1945); Token-bucket `RateLimiter` (#2057); `LiteLLMTranscriber` STT (#2059); Tigris alongside MinIO (#2063). Do not install.**
 
-## British-Isles Education pipeline — Canonical KCG pattern (post-v4)
+## British-Isles Education pipeline — Canonical Cianfhoghlaim pattern (post-v4)
 
 The post-v4 lc6 pipeline (`openspec/changes/lc6-biep/`) defines
 **7 v1 CocoIndex Apps** — one per LC subject plus the
@@ -898,3 +898,21 @@ Cross-references:
   the 42 lc5/lc6 assets
 
 > Docs badge: every page renders `v 1.0.7` / `Last reviewed Jun 23, 2026` — frozen since 2026-06-23, even after 7 newer releases. The "Copy page as Markdown" / "Open in ChatGPT" / "Open in Claude" buttons are present on every URL fetched in this verification (install path: `npx skills install cocoindex_flows/cocoindex --skill <slug>`).
+
+---
+
+## V6 era updates (2026-09-01)
+
+Per the 2026-09-01-cianfhoghlaim-nua-biep-ncce-showcase-v1 change
+(Phase 4 of the cianfhoghlaim-nua v6 era plan), a new CocoIndex
+App was added at `cocoindex_flows/uk_ncce/learning_graphs_app.py`
+that walks the 5 NCCE PDF artefacts at
+`data/bi_ep/syllabi_raw/uk_ncce/curriculum/` and writes grid-aware
+Markdown output to `data/bi_ep/syllabi_md/uk_ncce/`.
+
+Per the 2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1 change
+(Phase 1 §2.6), the `ireland_lc_factory.py` CocoIndex factory now
+declares both a vector_index on `embedding` AND a
+`declare_full_text_search_index` on `text` for hybrid search (BM25
++ vector). Older LanceDB versions without FTS support gracefully
+degrade (try/except).

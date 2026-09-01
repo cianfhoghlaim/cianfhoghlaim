@@ -13,8 +13,7 @@
 // `LCSyllabus` return type that carries the per-subject
 // discriminator.
 //
-// Per the british-isles-education-pipeline (BIEP) v1 spec,
-// the 6 in-scope subjects are: Mathematics, Chemistry,
+// Per the british-isles-education-pipeline (BIEP) v1 spec
 // Geography, Gaeilge, English, Computer Science (the user's
 // locked plan). Applied Mathematics and History are out of
 // scope per the user.
@@ -30,8 +29,7 @@
 //
 // A discriminated Pydantic class that carries the per-subject
 // discriminator. The `discriminator` field is one of:
-//   "mathematics", "chemistry", "geography", "gaeilge",
-//   "english", "computer_science"
+//   "mathematics", "chemistry", "geography", "gaeilge"
 // and selects which per-subject syllabus class is present in
 // the `payload` field.
 //
@@ -125,11 +123,6 @@ function ExtractLC6Syllabus(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    LCSyllabus {
-      document syllabusdocument {},
-    }
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -142,8 +135,12 @@ function ExtractLC6Syllabus(
 // subject. Each is a one-line alias for ExtractLC6Syllabus
 // with the `subject` argument pinned.
 
-function ExtractMathSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
-    prompt #"
+function ExtractMathSyllabus(
+  text: string,
+  language: string
+) -> LCSyllabus {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -151,14 +148,9 @@ function ExtractMathSyllabus(text: string, language: string) -> LCSyllabus {  cl
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    LCSyllabus {
-      document syllabusdocument {},
-    }
-  }
 }
 
 function ExtractChemSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
@@ -201,15 +193,14 @@ function ExtractChemSyllabus(text: string, language: string) -> LCSyllabus {  cl
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    LCSyllabus {
-      document syllabusdocument {},
-    }
-  }
 }
 
-function ExtractGeogSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
-    prompt #"
+function ExtractGeogSyllabus(
+  text: string,
+  language: string
+) -> LCSyllabus {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -217,18 +208,17 @@ function ExtractGeogSyllabus(text: string, language: string) -> LCSyllabus {  cl
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    LCSyllabus {
-      document syllabusdocument {},
-    }
-  }
 }
 
-function ExtractGaelSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
-    prompt #"
+function ExtractGaelSyllabus(
+  text: string,
+  language: string
+) -> LCSyllabus {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -236,18 +226,17 @@ function ExtractGaelSyllabus(text: string, language: string) -> LCSyllabus {  cl
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    LCSyllabus {
-      document syllabusdocument {},
-    }
-  }
 }
 
-function ExtractEnglSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
-    prompt #"
+function ExtractEnglSyllabus(
+  text: string,
+  language: string
+) -> LCSyllabus {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -255,18 +244,17 @@ function ExtractEnglSyllabus(text: string, language: string) -> LCSyllabus {  cl
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    LCSyllabus {
-      document syllabusdocument {},
-    }
-  }
 }
 
-function ExtractCompSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
-    prompt #"
+function ExtractCompSyllabus(
+  text: string,
+  language: string
+) -> LCSyllabus {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -274,12 +262,7 @@ function ExtractCompSyllabus(text: string, language: string) -> LCSyllabus {  cl
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    LCSyllabus {
-      document syllabusdocument {},
-    }
-  }
 }

@@ -62,7 +62,6 @@ class DocSkillTag {
   confidence    float       @description("Calibrated 0-1 confidence in the category+quadrant assignment")
   short_label   string      @description("<= 80-char human label summarising the doc's primary topic")
   is_canonical  bool        @description("True if this doc is the canonical reference for its category+quadrant; False otherwise")
-  @@stream.done
 }
 
 class Triple {
@@ -73,15 +72,18 @@ class Triple {
 
 class TriplesResult {
   triples    Triple[] @description("All (subject, predicate, object) triples extracted from the document")
-  @@stream.done
 }
 
 // -----------------------------------------------------------------------------
 // Functions
 // -----------------------------------------------------------------------------
 
-function ExtractDocSkillTag(content: string, path: string) -> DocSkillTag {  client ExtractEn
-    prompt #"
+function ExtractDocSkillTag(
+  content: string,
+  path: string
+) -> DocSkillTag {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -89,16 +91,16 @@ function ExtractDocSkillTag(content: string, path: string) -> DocSkillTag {  cli
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    DocSkillTag {}
-  }
 }
 
-function ExtractTriples(content: string, path: string) -> TriplesResult {  client ExtractEn
-    prompt #"
+function ExtractTriples(
+  content: string,
+  path: string
+) -> TriplesResult {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -106,12 +108,8 @@ function ExtractTriples(content: string, path: string) -> TriplesResult {  clien
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    TriplesResult {}
-  }
 }
 
 // -----------------------------------------------------------------------------

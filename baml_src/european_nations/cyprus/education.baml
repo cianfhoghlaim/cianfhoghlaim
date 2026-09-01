@@ -18,8 +18,9 @@ function ExtractCyprusSubjectCurriculum(
   language: string,
   subject: string,
   text: string
-) -> CyprusSubjectCurriculum {  client ExtractEn
-    prompt #"
+) -> CyprusSubjectCurriculum {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -27,14 +28,6 @@ function ExtractCyprusSubjectCurriculum(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    CyprusSubjectCurriculum {
-      title "",
-      source_url "",
-      content_hash null,
-    }
-  }
 }

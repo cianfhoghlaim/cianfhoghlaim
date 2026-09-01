@@ -198,9 +198,9 @@ with mlflow.start_run():
 3. **More epochs for Irish** - Compensate for limited data
 4. **Export to GGUF** - Deploy with Ollama for inference
 
-## Related tools (KCG canonical)
+## Related tools (Cianfhoghlaim canonical)
 
-Unsloth is the KCG canonical wrapper for PEFT. The full
+Unsloth is the Cianfhoghlaim canonical wrapper for PEFT. The full
 fine-tuning stack is:
 
 - **`.agents/skills/peft/SKILL.md`** — LoRA / QLoRA / IA³

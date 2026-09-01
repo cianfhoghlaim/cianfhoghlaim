@@ -2,8 +2,7 @@
 // Medium-agnostic MediaDescriptor schema + the Class A
 // (Hickman Marvel run) extractor function.
 //
-// The 7-axis descriptor (power_event, visual_grammar, palette,
-// vfx_vocabulary, narrative_beat, transferability, provenance)
+// The 7-axis descriptor (power_event, visual_grammar, palette
 // is the canonical record type emitted by every per-medium
 // extractor. All descriptors ship with `shippable: false`
 // enforced.
@@ -13,40 +12,40 @@
 //             spec.md § media-intel-corpus Requirement 2 (the schema)
 
 class Element {
-  earth
-  air
-  water
-  fire
-  spirit
-  none
+  earth string
+  air string
+  water string
+  fire string
+  spirit string
+  none string
 }
 
 class ScaleTier {
-  personal
-  local
-  regional
-  continental
-  planetary
-  cosmic
+  personal string
+  local string
+  regional string
+  continental string
+  planetary string
+  cosmic string
 }
 
 class ParticleClass {
-  dust
-  ember
-  mist
-  spark
-  lattice
-  ash
-  ink
-  glyph
-  none
+  dust string
+  ember string
+  mist string
+  spark string
+  lattice string
+  ash string
+  ink string
+  glyph string
+  none string
 }
 
 class Density {
-  sparse
-  moderate
-  dense
-  overwhelming
+  sparse string
+  moderate string
+  dense string
+  overwhelming string
 }
 
 class PowerEvent {
@@ -98,9 +97,9 @@ class Transferability {
 }
 
 class DerivationClass {
-  description_only
-  derivative
-  fair_use_quote
+  description_only string
+  derivative string
+  fair_use_quote string
 }
 
 class Provenance {
@@ -139,7 +138,7 @@ function ExtractComicDescriptor(
   source_page: int,
   work: string,
   language: string,
-  evidence: string,
+  evidence: string
 ) -> MediaDescriptor {
   client MediaIntelPrimary
   prompt #"

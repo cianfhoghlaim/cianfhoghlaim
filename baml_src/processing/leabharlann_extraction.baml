@@ -13,8 +13,7 @@
 //
 // All extractions route through the `Default` client alias (per commit
 // 667635dfd, the single text-extraction generator is `minimax-m3` on the
-// coding plan API). The litellm clients (`ExtractEn`, `LitellmClient`,
-// etc.) all route to the same backend, so a future swap is a one-line
+// coding plan API). The litellm clients (`ExtractEn`, `LitellmClient`
 // change in `clients.baml`.
 //
 // Reference: openspec/changes/2026-07-15-oideachais-leabharlann-v1/
@@ -119,8 +118,9 @@ function ExtractLeabharlannDoc(
   text: string,
   file_name: string,
   subcorpus: LeabharlannSubcorpus
-) -> LeabharlannDoc {  client ExtractEn
-    prompt #"
+) -> LeabharlannDoc {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -128,12 +128,8 @@ function ExtractLeabharlannDoc(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    LeabharlannDoc {}
-  }
 }
 
 // =============================================================================

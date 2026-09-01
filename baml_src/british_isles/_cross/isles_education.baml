@@ -144,7 +144,6 @@ class CurriculumSpecIsles {
 
     source_url string @description("Source URL of document")
     source_org string @description("Source organization")
-  @@stream.done
 }
 
 // =============================================================================
@@ -177,7 +176,6 @@ class ExamPaperIsles {
 
     source_url string @description("Source URL")
     source_org string @description("Source organization")
-  @@stream.done
 }
 
 class ExamSectionIsles {
@@ -198,7 +196,6 @@ class TermEntry {
     context string? @description("Usage context")
     related_terms string[]? @description("Related terms")
     source string? @description("Source of term")
-  @@stream.done
 }
 
 // =============================================================================
@@ -221,15 +218,17 @@ class TeachingResource {
     source_url string @description("Source URL")
     source_org string @description("Source organization")
     license string? @description("License/copyright")
-  @@stream.done
 }
 
 // =============================================================================
 // EXTRACTION FUNCTIONS
 // =============================================================================
 
-function ExtractCurriculumSpec(document: string) -> CurriculumSpecIsles {  client ExtractEn
-    prompt #"
+function ExtractCurriculumSpec(
+  document: string
+) -> CurriculumSpecIsles {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -237,80 +236,15 @@ function ExtractCurriculumSpec(document: string) -> CurriculumSpecIsles {  clien
 
     {{ ctx.output_format }}
 
-    {{ input }}
-  "#
-
-  catch_all (err) {
-    CurriculumSpecIsles {}
-  }
-}
-
-function ExtractExamPaper(document: string) -> ExamPaperIsles {  client ExtractEn
-    prompt #"
-    {{ _.role("user") }}
-    You are an expert extractor. From the input below, extract every field
-    in the return type according to the @description decorators on the
-    class definition. Preserve the canonical field names + types.
-
-    {{ ctx.output_format }}
-
-    {{ input }}
-  "#
-
-  catch_all (err) {
-    ExamPaperIsles {}
-  }
-}
-
-function ExtractTerminology(document: string) -> TermEntry[] {  client ExtractEn
-    prompt #"
-    {{ _.role("user") }}
-    You are an expert extractor. From the input below, extract every field
-    in the return type according to the @description decorators on the
-    class definition. Preserve the canonical field names + types.
-
-    {{ ctx.output_format }}
-
-    {{ input }}
-  "#
-
-  catch_all (err) {
-    TermEntry[] {}
-  }
-}
-
-function ExtractTeachingResource(document: string) -> TeachingResource {  client ExtractEn
-    prompt #"
-    {{ _.role("user") }}
-    You are an expert extractor. From the input below, extract every field
-    in the return type according to the @description decorators on the
-    class definition. Preserve the canonical field names + types.
-
-    {{ ctx.output_format }}
-
-    {{ input }}
-  "#
-
-  catch_all (err) {
-    TeachingResource {}
-  }
-}
-
-function DetectDocumentType(document: string) -> DocumentTypeIsles {  client ExtractEn
-    prompt #"
-    {{ _.role("user") }}
-    You are an expert extractor. From the input below, extract every field
-    in the return type according to the @description decorators on the
-    class definition. Preserve the canonical field names + types.
-
-    {{ ctx.output_format }}
-
-    {{ input }}
+    {{ text }}
   "#
 }
 
-function DetectLanguages(text: string) -> LanguageCodeIsles[] {  client ExtractEn
-    prompt #"
+function ExtractExamPaper(
+  document: string
+) -> ExamPaperIsles {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -318,7 +252,71 @@ function DetectLanguages(text: string) -> LanguageCodeIsles[] {  client ExtractE
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
+  "#
+}
+
+function ExtractTerminology(
+  document: string
+) -> TermEntry[] {
+  client ExtractEn
+  prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ text }}
+  "#
+}
+
+function ExtractTeachingResource(
+  document: string
+) -> TeachingResource {
+  client ExtractEn
+  prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ text }}
+  "#
+}
+
+function DetectDocumentType(
+  document: string
+) -> DocumentTypeIsles {
+  client ExtractEn
+  prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ text }}
+  "#
+}
+
+function DetectLanguages(
+  text: string
+) -> LanguageCodeIsles[] {
+  client ExtractEn
+  prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ text }}
   "#
 }
 

@@ -21,8 +21,7 @@
 // Mathematics, English, Gaeilge, Science, Geography, History, CSPE, SPHE.
 //
 // The canonical 14 LC subjects (per LC_SUBJECT_CONFIG):
-// mathematics, applied_mathematics, chemistry, physics, biology,
-// geography, english, gaeilge, french, history, business, accounting,
+// mathematics, applied_mathematics, chemistry, physics, biology
 // art, music, computer_science.
 //
 // The canonical 15 A-Level + 9 GCSE subjects (per the 3 boards):
@@ -133,7 +132,7 @@ function GenerateSubjectQuestPack(
   subject: NCCASubjectSlug,
   stage: QuestPackStage,
   language: QuestPackLanguage,
-  lo_codes: string[],
+  lo_codes: string[]
 ) -> SubjectQuestPack {
   client BIEPV3Extract
   prompt #"
@@ -276,7 +275,7 @@ function GenerateSubjectFormativeItem(
   stage: QuestPackStage,
   language: QuestPackLanguage,
   lo_code: string,
-  difficulty: QuestPackDifficulty,
+  difficulty: QuestPackDifficulty
 ) -> QuestPackFormativeItem {
   client BIEPV3Extract
   prompt #"
@@ -298,7 +297,7 @@ function GenerateSubjectFormativeItem(
 function ScoreSubjectFormativeResponse(
   item: QuestPackFormativeItem,
   student_response: string,
-  subject: NCCASubjectSlug,
+  subject: NCCASubjectSlug
 ) -> QuestPackScore {
   client BIEPV3ExtractStrong
   prompt #"

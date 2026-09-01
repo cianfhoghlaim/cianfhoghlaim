@@ -41,7 +41,6 @@ class GrammarTopic {
   examples CelticExample[] @description("Usage examples")
   difficulty int @description("1-5 difficulty scale")
   common_errors string[] @description("Mistakes learners often make")
-  @@stream.done
 }
 
 class CelticExample {
@@ -55,7 +54,6 @@ class VocabularySet {
   theme string @description("Vocabulary theme")
   words CelticWord[] @description("Words in the set")
   cultural_context string? @description("Cultural background")
-  @@stream.done
 }
 
 class CelticWord {
@@ -83,12 +81,16 @@ class CurriculumUnit {
   cultural_content string[] @description("Cultural elements")
   assessment_criteria string[] @description("How to assess")
   resources string[] @description("Suggested resources")
-  @@stream.done
 }
 
 // Extract curriculum unit from document
-function ExtractCurriculumUnit(document: string, language: CelticLanguageCurriculum, nation: string) -> CurriculumUnit {  client ExtractEn
-    prompt #"
+function ExtractCurriculumUnit(
+  document: string,
+  language: CelticLanguageCurriculum,
+  nation: string
+) -> CurriculumUnit {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting Celtic-language curriculum data from a national curriculum document.
 
@@ -111,17 +113,17 @@ function ExtractCurriculumUnit(document: string, language: CelticLanguageCurricu
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    CurriculumUnit {}
-  }
 }
 
 // Extract grammar explanation
-function ExtractGrammarTopic(content: string, language: CelticLanguageCurriculum) -> GrammarTopic {  client ExtractEn
-    prompt #"
+function ExtractGrammarTopic(
+  content: string,
+  language: CelticLanguageCurriculum
+) -> GrammarTopic {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting Celtic-language curriculum data from a national curriculum document.
 
@@ -144,17 +146,18 @@ function ExtractGrammarTopic(content: string, language: CelticLanguageCurriculum
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    GrammarTopic {}
-  }
 }
 
 // Extract vocabulary from text
-function ExtractVocabulary(text: string, language: CelticLanguageCurriculum, theme: string?) -> VocabularySet {  client ExtractEn
-    prompt #"
+function ExtractVocabulary(
+  text: string,
+  language: CelticLanguageCurriculum,
+  theme: string?
+) -> VocabularySet {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting Celtic-language curriculum data from a national curriculum document.
 
@@ -177,12 +180,8 @@ function ExtractVocabulary(text: string, language: CelticLanguageCurriculum, the
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    VocabularySet {}
-  }
 }
 
 // Generate learning outcome assessment
@@ -207,8 +206,9 @@ function GenerateAssessment(
   outcome: CelticLearningOutcome,
   language: CelticLanguageCurriculum,
   question_count: int
-) -> OutcomeAssessment {  client ExtractEn
-    prompt #"
+) -> OutcomeAssessment {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting Celtic-language curriculum data from a national curriculum document.
 
@@ -231,7 +231,7 @@ function GenerateAssessment(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -250,8 +250,9 @@ function CompareCelticCurricula(
   irish_content: string?,
   gaelic_content: string?,
   welsh_content: string?
-) -> CurriculumComparison {  client ExtractEn
-    prompt #"
+) -> CurriculumComparison {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting Celtic-language curriculum data from a national curriculum document.
 
@@ -274,7 +275,7 @@ function CompareCelticCurricula(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -307,9 +308,10 @@ class CelticCurriculumComparison {
 
 function CompareCelticNations(
   topic_query: string,
-  scope: string[],
-) -> CelticCurriculumComparison {  client ExtractEn
-    prompt #"
+  scope: string[]
+) -> CelticCurriculumComparison {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting Celtic-language curriculum data from a national curriculum document.
 
@@ -332,7 +334,7 @@ function CompareCelticNations(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -361,8 +363,9 @@ class CelticCurriculumSpec {
 function ExtractCelticCurriculum(
   text: string,
   language: CelticLanguageCurriculum
-) -> CelticCurriculumSpec {  client ExtractEn
-    prompt #"
+) -> CelticCurriculumSpec {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting Celtic-language curriculum data from a national curriculum document.
 
@@ -385,10 +388,6 @@ function ExtractCelticCurriculum(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    CelticCurriculumSpec {}
-  }
 }

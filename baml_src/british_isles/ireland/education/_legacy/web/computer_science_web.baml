@@ -16,10 +16,8 @@
 //
 // Usage:
 //   from cianfhoghlaim.baml_client import b
-//   plan = b.WebStudyPlan(subject="computer_science", weeks_until_exam=12,
-//                        target_level="LC_HL", language="en")
-//   discussion = b.WebExamPaperDiscussion(subject="computer_science", paper_year=2024,
-//                                        paper_level="LC_HL", paper_language="en",
+//   plan = b.WebStudyPlan(subject="computer_science", weeks_until_exam=12
+//   discussion = b.WebExamPaperDiscussion(subject="computer_science", paper_year=2024
 //                                        question_text="...")
 //
 // Re-gen after changes:  cd cianfhoghlaim && uv run baml-cli generate
@@ -128,8 +126,9 @@ function ComputerScienceWebStudyPlan(
   target_level: ComputerScienceLevel,
   language: ComputerScienceLanguage,
   focus_topics: string[]
-) -> ComputerScienceWebStudyPlanResponse {  client ExtractEn
-    prompt #"
+) -> ComputerScienceWebStudyPlanResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -137,7 +136,7 @@ function ComputerScienceWebStudyPlan(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -147,8 +146,9 @@ function ComputerScienceWebExamPaperDiscussion(
   paper_level: ComputerScienceLevel,
   paper_language: ComputerScienceLanguage,
   question_text: string
-) -> ComputerScienceWebExamPaperDiscussionResponse {  client ExtractEn
-    prompt #"
+) -> ComputerScienceWebExamPaperDiscussionResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -156,7 +156,7 @@ function ComputerScienceWebExamPaperDiscussion(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -165,8 +165,9 @@ function ComputerScienceWebMarkingSchemeExplanation(
   paper_year: int,
   paper_level: ComputerScienceLevel,
   paper_language: ComputerScienceLanguage
-) -> ComputerScienceWebMarkingSchemeExplanationResponse {  client ExtractEn
-    prompt #"
+) -> ComputerScienceWebMarkingSchemeExplanationResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -174,6 +175,6 @@ function ComputerScienceWebMarkingSchemeExplanation(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

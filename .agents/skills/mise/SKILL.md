@@ -19,7 +19,7 @@ that ships with macOS via Homebrew) you will see this warning on every
 `mise` invocation:
 
 ```
-mise WARN  unknown field in ~/dev/kings_college_galway/mise.toml: settings.monorepo_root
+mise WARN  unknown field in ~/dev/cianfhoghlaim/mise.toml: settings.monorepo_root
 ```
 
 The flag is silently ignored — your tasks still work, but the
@@ -45,7 +45,7 @@ source ~/.zshrc
 mise --version  # MUST print 2026.8.10 or later
 
 # 5. Now `cd` into the repo; mise will see the [tools] + [settings] blocks
-cd ~/dev/kings_college_galway
+cd ~/dev/cianfhoghlaim
 mise install     # installs the pinned python + uv + bun + dagger + etc.
 mise doctor      # confirms everything is healthy
 ```

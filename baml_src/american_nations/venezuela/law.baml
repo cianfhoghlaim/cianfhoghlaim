@@ -16,8 +16,9 @@ function ExtractVenezuelaLawDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> VenezuelaLawDocument {  client ExtractEn
-    prompt #"
+) -> VenezuelaLawDocument {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -25,17 +26,6 @@ function ExtractVenezuelaLawDocument(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    VenezuelaLawDocument {
-      language "",
-      title "",
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
 }

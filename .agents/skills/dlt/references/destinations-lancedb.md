@@ -97,7 +97,7 @@ table = db.open_table("curriculum_chunks")
 results = table.search("handwriting recognition for Irish").limit(10).to_pandas()
 ```
 
-## KCG usage
+## Cianfhoghlaim usage
 
 - `cianfhoghlaim-semantic-search` spec (cross-corpus LanceDB HNSW)
 - `cianfhoghlaim-leabharlann` (the books + zotero + takeout corpora

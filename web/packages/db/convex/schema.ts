@@ -261,7 +261,188 @@ export const subject_caches = defineTable({
   .index("by_board_year", ["board", "year"])
   .index("by_language", ["language"]);
 
-// ─── The canonical Cianfhoghlaim schema ────────────────────────────────────
+// ─── 7. ncce_learning_graphs (the Phase 4 NCCE showcase) ──────────────────
+//
+// Per the 2026-09-01-cianfhoghlaim-nua-biep-ncce-showcase-v1 change
+// (Phase 4 of the cianfhoghlaim-nua v6 era plan). One row per
+// extracted NCCE learning graph (the 5 NCCE PDF artefacts lifted
+// from the gemini_hackathon sister repo + the 6 per-subject
+// extractors in baml_src/british_isles/uk_ncce/learning_graph.baml).
+
+export const ncce_learning_graphs = defineTable({
+  subject: v.string(),  // "computer_science", "mathematics", "english", "gaeilge", "geography"
+  year_level: v.string(),  // "Y6", "Y7", "Y8", "Y9", "Y10", "Y11"
+  title: v.string(),
+  source_pdf: v.string(),
+  rows_json: v.array(v.record(v.string(), v.any())),
+  columns_json: v.array(v.record(v.string(), v.any())),
+  cells_json: v.array(v.record(v.string(), v.any())),
+  prerequisites_json: v.array(v.record(v.string(), v.any())),
+  total_lessons: v.number(),
+  total_skills: v.number(),
+  pedagogy_principles_json: v.array(v.record(v.string(), v.any())),
+  // The pedagogy overlay (Phase 4 §B)
+  pedagogy_overlay_json: v.optional(v.record(v.string(), v.any())),
+  // The equivalency graph (Phase 4 §C)
+  equivalencies_json: v.optional(v.array(v.record(v.string(), v.any()))),
+  created_at: v.number(),
+})
+  .index("by_subject", ["subject"])
+  .index("by_year_level", ["year_level"])
+  .index("by_subject_year", ["subject", "year_level"]);
+
+// ─── 8. study_plans (chat-with-syllabus → study-plan surface) ─────────────
+//
+// Per the 2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1 change
+// (Phase 1, §3.1 of tasks.md). One row per generated study plan,
+// hydrated from the canonical Phase 1 planner at
+// `agents.adk.subjects.lc.planner.generate_study_plan(...)`.
+// Phase 1 scope: chemistry + mathematics + gaeilge + computer_science.
+// Phase 5 broadens to the 14 NCCA LC subjects.
+
+export const study_plans = defineTable({
+  // The user who requested the plan (foreign key to users)
+  user_id: v.id("users"),
+  // The NCCA subject slug (e.g. "chemistry", "gaeilge")
+  subject: v.string(),
+  // The LO codes the student selected (array of NCCA LO codes)
+  lo_codes: v.array(v.string()),
+  // Total weeks in the plan (1-52)
+  duration_weeks: v.number(),
+  // Irish dialect for the Gaeilge subject; null otherwise
+  dialect: v.union(
+    v.literal("connacht"),
+    v.literal("munster"),
+    v.literal("ulster"),
+    v.literal("standard"),
+  ),
+  // Serialised StudyPlanWeeks[] (canonical Phase 1 schema)
+  weeks_plan_json: v.array(v.record(v.string(), v.any())),
+  // Serialised StudyPlanMilestone[]
+  milestones_json: v.array(v.record(v.string(), v.any())),
+  // Serialised KC weights (map of competency → weight 0.0-1.0)
+  kc_weights_json: v.record(v.string(), v.number()),
+  // Serialised PastPaperRef[] (with NCCA page citations)
+  recommended_past_papers_json: v.array(v.record(v.string(), v.any())),
+  // The Convex id of the matching oral_study_plan row (Phase 1: null
+  // — populated in Phase 6 when the oral-plan companion call ships)
+  oral_study_plan_id: v.optional(v.id("oral_study_plans")),
+  // Langfuse trace id for cross-service correlation
+  langfuse_trace_id: v.optional(v.string()),
+  // The optional stub_reason from the planner (populated when BAML
+  // is unavailable or the call fails — used for observability)
+  stub_reason: v.optional(v.string()),
+  created_at: v.number(),
+})
+  .index("by_user", ["user_id"])
+  .index("by_subject", ["subject"])
+  .index("by_created_at", ["created_at"]);
+
+// ─── 9. quest_packs (the formative-assessment quest packs) ────────────────
+//
+// Per the 2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1 change
+// (Phase 1, §3.1). One row per quest-pack materialisation from the
+// fixed `orchestration/defs/2_materials/lc_extraction/quest_pack_assets.py`
+// Dagster asset (which now calls the consolidated
+// `b.GenerateSubjectQuestPack(...)` per Phase 1 §2.1).
+
+export const quest_packs = defineTable({
+  subject: v.string(),
+  // Stage (LC_HL | LC_OL | LC_FDN | JC | GCSE | A_LEVEL)
+  stage: v.string(),
+  language: v.union(v.literal("en"), v.literal("ga"), v.literal("en_and_ga")),
+  // The NCCA LO codes covered by this pack
+  lo_codes: v.array(v.string()),
+  // Serialised SubjectQuestPack (the qpack_template.baml response shape)
+  items_json: v.array(v.record(v.string(), v.any())),
+  // Total marks across all items
+  total_marks: v.number(),
+  // Estimated completion time in minutes
+  estimated_duration_minutes: v.number(),
+  created_at: v.number(),
+})
+  .index("by_subject", ["subject"])
+  .index("by_stage_language", ["stage", "language"]);
+
+// ─── 10. oral_study_plans (the oral-delivery companion to study_plans) ────
+//
+// Per the 2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1 change
+// (Phase 1, §3.1). One row per oral study plan; Phase 1 ships the
+// schema + an empty audio_segments[] stub from
+// `baml_src/british_isles/_shared/oral_study_plan.baml`; Phase 6
+// fills the audio_segments[] via the wired Pipecat + Chatterbox
+// dispatch.
+
+export const oral_study_plans = defineTable({
+  // The parent study_plans row (foreign key)
+  study_plan_id: v.id("study_plans"),
+  dialect: v.union(
+    v.literal("connacht"),
+    v.literal("munster"),
+    v.literal("ulster"),
+    v.literal("standard"),
+  ),
+  // Total estimated oral duration in minutes
+  duration_min: v.number(),
+  // Provider-specific voice id (empty in Phase 1)
+  voice_id: v.string(),
+  // Serialised OralStudySegment[] (empty in Phase 1; filled in Phase 6)
+  audio_segments_json: v.array(v.record(v.string(), v.any())),
+  // The implementation phase marker
+  phase: v.union(
+    v.literal("phase1_stub"),
+    v.literal("phase6_wired"),
+  ),
+  created_at: v.number(),
+})
+  .index("by_study_plan", ["study_plan_id"])
+  .index("by_dialect", ["dialect"]);
+
+// ─── 11. formative_attempts (student responses to quest-pack items) ───────
+//
+// Per the 2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1 change
+// (Phase 1, §3.1). Phase 1 ships the schema; Phase 5 (BAML/CocoIndex
+// hardening) wires the population.
+
+export const formative_attempts = defineTable({
+  user_id: v.id("users"),
+  quest_pack_id: v.id("quest_packs"),
+  item_id: v.string(),
+  student_response: v.string(),
+  // Serialised QuestPackScore (overall_score + per_criterion_scores +
+  // feedback_text + next_steps)
+  score_json: v.record(v.string(), v.any()),
+  created_at: v.number(),
+})
+  .index("by_user", ["user_id"])
+  .index("by_quest_pack", ["quest_pack_id"]);
+
+// ─── 12. audio_segments (per-segment audio bytes for oral study plans) ────
+//
+// Per the 2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1 change
+// (Phase 1, §3.1). Phase 1 ships the schema; Phase 6 (oral delivery)
+// wires the population from the wired Pipecat + Chatterbox dispatch.
+
+export const audio_segments = defineTable({
+  oral_study_plan_id: v.id("oral_study_plans"),
+  week_number: v.number(),
+  text_en: v.string(),
+  text_ga: v.optional(v.string()),
+  estimated_duration_sec: v.number(),
+  tts_provider: v.union(
+    v.literal("chatterbox"),
+    v.literal("orpheus-tts-3b-ft"),
+    v.literal("facebook-mms-tts-gle"),
+  ),
+  voice_id: v.string(),
+  // The audio bytes (stored as a base64 string; a real production
+  // system would offload to R2 + signed URLs per the existing
+  // `web/hono-api/src/routes/pdf/[...r2-key].ts` pattern).
+  audio_b64: v.string(),
+  created_at: v.number(),
+})
+  .index("by_oral_study_plan", ["oral_study_plan_id"])
+  .index("by_tts_provider", ["tts_provider"]);
 
 export default defineSchema({
   users,
@@ -271,4 +452,10 @@ export default defineSchema({
   messages,
   knowledge_graph_nodes,
   subject_caches,
+  ncce_learning_graphs,
+  study_plans,
+  quest_packs,
+  oral_study_plans,
+  formative_attempts,
+  audio_segments,
 });

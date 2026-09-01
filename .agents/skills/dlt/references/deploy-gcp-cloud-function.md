@@ -55,9 +55,9 @@ gcloud scheduler jobs create http daily-ingest \
   --oidc-service-account-email your-sa@project.iam.gserviceaccount.com
 ```
 
-## KCG usage
+## Cianfhoghlaim usage
 
-The KCG stack uses Dagster for scheduling (the `dagster` skill),
+The Cianfhoghlaim stack uses Dagster for scheduling (the `dagster` skill),
 not GCP Cloud Functions + Cloud Scheduler. The Cloud Function
 pattern is a valid alternative for small, single-purpose pipelines
 that don't need a full orchestrator.

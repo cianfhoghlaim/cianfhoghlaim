@@ -152,11 +152,23 @@ async def track_progress(parameters: dict[str, Any]) -> dict[str, Any]:
 
 
 async def get_study_plan(parameters: dict[str, Any]) -> dict[str, Any]:
-    """Generate a personalized Mathematics study plan."""
-    from agents.adk.subjects.lc.mathematics.planner import generate_study_plan
+    """Generate a personalized Mathematics study plan.
+
+    Per the 2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1 change
+    (Phase 1 §1.2). Delegates to the canonical shared planner at
+    `agents/adk/subjects/lc/planner.py` (replaces the broken
+    `agents.adk.subjects.lc.mathematics.planner` import that pointed
+    at a non-existent `agents/adk/subjects/lc/mathematics/planner.py`).
+    """
+    from agents.adk.subjects.lc.planner import generate_study_plan
     return await generate_study_plan(
         subject="mathematics",
+        lo_codes=parameters.get("lo_codes"),
         target_date=parameters.get("target_date"),
+        duration_weeks=parameters.get("duration_weeks", 12),
+        language=parameters.get("language", "en"),
+        user_id=parameters.get("user_id"),
+        trace_id=parameters.get("trace_id"),
     )
 
 

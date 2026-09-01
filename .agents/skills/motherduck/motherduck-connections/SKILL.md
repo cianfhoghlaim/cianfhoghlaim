@@ -21,7 +21,7 @@ Use this skill when:
   per-tenant isolation patterns.
 - Setting up service accounts, tokens, and read-only access
   for agents.
-- Using the mcp-server-motherduck (the KCG-preferred agent path).
+- Using the mcp-server-motherduck (the cianfhoghlaim-preferred agent path).
 - Talking to a security / compliance owner about residency,
   access boundaries, or isolation.
 
@@ -32,13 +32,13 @@ For SQL / Dives, use `motherduck-analytics`.
 
 ### 1. Native DuckDB API (Python / Node / Go / R / Java)
 
-The KCG-preferred connection. Use `duckdb` >= 1.1.
+The cianfhoghlaim-preferred connection. Use `duckdb` >= 1.1.
 
 ```python
 import duckdb
 
 con = duckdb.connect("md:cianfhoghlaim?motherduck_token=...")
-# OR, preferred for KCG:
+# OR, preferred for Cianfhoghlaim:
 con = duckdb.connect("md:cianfhoghlaim", config={"motherduck_token": token})
 ```
 
@@ -71,9 +71,9 @@ return errors.
 ### 3. pg_duckdb (in-process DuckDB inside Postgres)
 
 For workloads that need DuckDB's analytics inside a Postgres
-transaction. Not used in KCG; mentioned for completeness.
+transaction. Not used in Cianfhoghlaim; mentioned for completeness.
 
-### 4. mcp-server-motherduck (KCG agent path)
+### 4. mcp-server-motherduck (Cianfhoghlaim agent path)
 
 See `motherduck/SKILL.md` §"MCP server" for the full reference.
 TL;DR:
@@ -87,7 +87,7 @@ uvx mcp-server-motherduck \
     --query-timeout 300
 ```
 
-For KCG agents, this is the default. The `--read-only --saas-mode`
+For Cianfhoghlaim agents, this is the default. The `--read-only --saas-mode`
 flags are non-negotiable for any agent that does not own the
 data it queries.
 
@@ -96,7 +96,7 @@ data it queries.
 ```python
 # 1. Create a service account in MotherDuck (one-time, via UI)
 #    Org → Settings → Service Accounts → "Create"
-#    Name: "kcg-cianfhoghlaim-readonly"
+#    Name: "cianfhoghlaim-cianfhoghlaim-readonly"
 #    Role: "Read-only" (never "Admin" for an agent)
 
 # 2. Mint a token (one-time, via UI)
@@ -113,7 +113,7 @@ data it queries.
 MOTHERDUCK_TOKEN=infisical://dev-baile/motherduck/cianfhoghlaim_readonly_token
 ```
 
-**Token rotation policy** (the KCG standard):
+**Token rotation policy** (the Cianfhoghlaim standard):
 
 | Token type | Lifetime | Rotation |
 |:--|:--|:--|
@@ -138,7 +138,7 @@ infrastructure:
 - **Connection pool with a per-tenant token** in the
   application server. Never share a connection across tenants.
 
-## Read-only consumer pattern (the KCG default for agents)
+## Read-only consumer pattern (the Cianfhoghlaim default for agents)
 
 For agents that consume but do not own the data (most agents):
 
@@ -174,7 +174,7 @@ its own first-Dive moment.
 
 ## Security & governance — the 8 things security will ask
 
-| Question | The KCG answer |
+| Question | The Cianfhoghlaim answer |
 |:--|:--|
 | Where is the data physically? | Pinned to the org's region (US-East, EU-West, AP-South). Use the MotherDuck `REGION` setting. |
 | Is the data encrypted at rest? | Yes — AES-256 by MotherDuck. KMS-backed if the org is on the Enterprise plan. |

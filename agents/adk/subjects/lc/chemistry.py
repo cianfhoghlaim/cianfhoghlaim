@@ -65,4 +65,29 @@ chemistry_agent = SubjectAgentBase(
 )
 
 
-__all__ = ["chemistry_agent", "CHEMISTRY_ACTIONS"]
+# ---------------------------------------------------------------------------
+# Per-action handlers — Phase 1 of the
+# 2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1 change.
+#
+# Each subject ships the canonical 13 CopilotKit actions; the
+# get_study_plan handler delegates to the shared planner at
+# `agents/adk/subjects/lc/planner.py` (the Phase 1 fix for the
+# missing `agents/adk/subjects/lc/chemistry/planner.py` import).
+# ---------------------------------------------------------------------------
+
+
+async def get_study_plan(parameters: dict[str, Any]) -> dict[str, Any]:
+    """Generate a personalized Chemistry study plan."""
+    from agents.adk.subjects.lc.planner import generate_study_plan
+    return await generate_study_plan(
+        subject="chemistry",
+        lo_codes=parameters.get("lo_codes"),
+        target_date=parameters.get("target_date"),
+        duration_weeks=parameters.get("duration_weeks", 12),
+        language=parameters.get("language", "en"),
+        user_id=parameters.get("user_id"),
+        trace_id=parameters.get("trace_id"),
+    )
+
+
+__all__ = ["chemistry_agent", "CHEMISTRY_ACTIONS", "get_study_plan"]

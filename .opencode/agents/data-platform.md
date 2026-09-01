@@ -4,6 +4,19 @@ mode: subagent
 model: minimax-coding-plan/MiniMax-M3
 temperature: 0.1
 color: "#3a5f3a"
+mcp:
+  dlt-workspace-mcp: true
+  firecrawl: true
+  crawl4ai: true
+  infisical: true
+  motherduck: true
+  chrome: true
+  cocoindex-code: true
+  cognee: true
+  graphiti: true
+  langfuse: true
+  huggingface: true
+  design-system: true
 permission:
   edit: allow
   bash:
@@ -82,3 +95,21 @@ You are the data-platform functional subagent for the cianfhoghlaim monorepo. Yo
 - Dagster code-location: `orchestration.definitions`
 - CocoIndex imports: `from .._shared._lifespan import`
 - The `cianfhoghlaim` Python package is the repo itself
+
+---
+
+## V6 era notes (2026-09-01)
+
+For the cianfhoghlaim-nua v6 era, the canonical data surfaces are:
+
+- **Phase 0.5 BAML client** — `baml_client/` regenerated
+  (all 343+ parser errors fixed per `2026-09-01-baml-regeneration-blocker-v1/`)
+- **Phase 4 NCCE CocoIndex flow** — `cocoindex_flows/uk_ncce/learning_graphs_app.py`
+  + the row × column detector at `_docling_grid_segmenter.py`
+- **Phase 5 FTS index** — `cocoindex_flows/biep_parity/ireland_lc_factory.py`
+  declares both vector_index on `embedding` AND FTS on `text`
+- **Phase 9 GCP opt-in** — 6 GCP mirror stacks at `bonneagar/stacks/gcp-*/`
+  (enabled in `deployment-choice.yaml` per Phase 9)
+
+The OSS-first substrate remains canonical (operator direction 2026-09-01).
+The GCP substrate is opt-in via `deployment-choice.yaml`.

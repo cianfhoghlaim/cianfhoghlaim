@@ -40,7 +40,7 @@ table.add([{"text": "..."}, {"text": "..."}])  # embeddings are computed automat
 | OpenCLIP | `open-clip` | `ViT-B-32`, `ViT-L-14` | Multimodal (image + text) |
 | Jina | `jina` | `jina-embeddings-v3` (1024-d) | Multilingual |
 
-## Multilingual pattern (KCG-relevant)
+## Multilingual pattern (cianfhoghlaim-relevant)
 
 For oideachais (Irish, Welsh, Scottish Gaelic, Breton), use
 multilingual models:

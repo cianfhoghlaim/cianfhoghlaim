@@ -21,5 +21,5 @@ BI tool (think "dbt + Observable HQ" for SQL-driven analytics).
   upstream [dagster-evidence](https://github.com/dagster-io/dagster/tree/master/python_modules/libraries/dagster-evidence)
   package
 - The Evidence.dev docs: <https://docs.evidence.dev/>
-- The KCG stack currently uses **marimo notebooks** (not Evidence)
+- The Cianfhoghlaim stack currently uses **marimo notebooks** (not Evidence)
   for BI; see the `cianfhoghlaim-marimo-dashboards` openspec spec

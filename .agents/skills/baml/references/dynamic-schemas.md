@@ -109,7 +109,7 @@ def extract_anything(content: str | bytes, content_type: str = "text"):
     return response
 ```
 
-## Use cases in KCG
+## Use cases in Cianfhoghlaim
 
 - **Ad-hoc corpus ingestion** — user dumps a folder of obscure PDFs
   (e.g. an old Irish-medium exam paper) and the system extracts

@@ -1,7 +1,6 @@
 // =============================================================================
 // Tertiary (post-Leaving Certificate) — BAML Schema
-// Bilingual EN/GA extraction of CAO courses, NUI/HEI matriculation, QQI FET awards,
-// and Apprenticeship pathways. Merged from:
+// Bilingual EN/GA extraction of CAO courses, NUI/HEI matriculation, QQI FET awards
 //   - baml/tertiary.baml (332 LOC) — the canonical tertiary schema
 //   - baml/cianfhoghlaim_other/tertiary.baml (79 LOC) — the URL-extraction variant
 // See:
@@ -68,7 +67,6 @@ class MatriculationRequirement {
   subject string                 @description("LC subject code, e.g., 'mathematics', 'irish', 'english'")
   minimum_grade string           @description("e.g., 'H4', 'O6', 'H6'")
   notes string?                  @description("e.g., 'required for Modern Languages', 'lab science required for Medicine'")
-  @@stream.done
 }
 
 class CaliforniaOCourse {
@@ -88,7 +86,6 @@ class CaliforniaOCourse {
   points_required int            @description("Cutoff points from the most recent cycle")
   cao_url string?
   application_pathways EntryPathway[]
-  @@stream.done
 }
 
 class QqiFetAward {
@@ -99,7 +96,6 @@ class QqiFetAward {
   institution string
   links_to_courses string[]      @description("CAO course codes this FET award can ladder into")
   source_url string
-  @@stream.done
 }
 
 class Apprenticeship {
@@ -111,7 +107,6 @@ class Apprenticeship {
   consortia_lead string          @description("Lead coordinating provider")
   consortia_partners string[]
   source_url string
-  @@stream.done
 }
 
 class Programme {
@@ -137,7 +132,6 @@ class ApplicationTimeline {
   offer_round_1 string           @description("e.g., '2026-08-21'")
   offer_round_2 string?
   registration_open string
-  @@stream.done
 }
 
 class CaliforniaOGradeProfile {
@@ -170,8 +164,12 @@ class MatriculationAudit {
 // Functions
 // -----------------------------------------------------------------------------
 
-function ExtractCaliforniaOCourseList(page_markdown: string, year: int) -> CaliforniaOCourse[] {  client ExtractEn
-    prompt #"
+function ExtractCaliforniaOCourseList(
+  page_markdown: string,
+  year: int
+) -> CaliforniaOCourse[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -179,16 +177,16 @@ function ExtractCaliforniaOCourseList(page_markdown: string, year: int) -> Calif
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    CaliforniaOCourse[] {}
-  }
 }
 
-function ExtractMatriculationRules(page_markdown: string, institution: string) -> MatriculationRequirement[] {  client ExtractEn
-    prompt #"
+function ExtractMatriculationRules(
+  page_markdown: string,
+  institution: string
+) -> MatriculationRequirement[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -196,16 +194,15 @@ function ExtractMatriculationRules(page_markdown: string, institution: string) -
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    MatriculationRequirement[] {}
-  }
 }
 
-function ExtractQQIFetAwards(page_markdown: string) -> QqiFetAward[] {  client ExtractEn
-    prompt #"
+function ExtractQQIFetAwards(
+  page_markdown: string
+) -> QqiFetAward[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -213,16 +210,15 @@ function ExtractQQIFetAwards(page_markdown: string) -> QqiFetAward[] {  client E
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    QqiFetAward[] {}
-  }
 }
 
-function ExtractApprenticeshipListings(page_markdown: string) -> Apprenticeship {  client ExtractEn
-    prompt #"
+function ExtractApprenticeshipListings(
+  page_markdown: string
+) -> Apprenticeship {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -230,26 +226,18 @@ function ExtractApprenticeshipListings(page_markdown: string) -> Apprenticeship 
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    Apprenticeship {
-      programme_code "",
-      title_en "",
-      title_ga null,
-      duration_years 0,
-      nfq_level nfqlevel {},
-      consortia_partners null,
-      source_url "",
-    }
-  }
 }
 
 
-function ExtractApplicationTimeline(page_markdown: string,
-  year: int) -> ApplicationTimeline {  client ExtractEn
-    prompt #"
+function ExtractApplicationTimeline(
+  page_markdown: string,
+  year: int
+) -> ApplicationTimeline {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -257,24 +245,18 @@ function ExtractApplicationTimeline(page_markdown: string,
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    ApplicationTimeline {
-      course_code "",
-      late_application_close null,
-      offer_round_2 null,
-      registration_open "",
-    }
-  }
 }
 
 
-function EstimateCoursePoints(course: SOLASCourse,
+function EstimateCoursePoints(
+  course: SOLASCourse,
   historical_points: int[],
-  applicant_profile: string) -> CoursePointsPrediction {  client ExtractEn
-    prompt #"
+  applicant_profile: string
+) -> CoursePointsPrediction {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -282,15 +264,18 @@ function EstimateCoursePoints(course: SOLASCourse,
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
 
-function AuditMatriculation(institution: string,
+function AuditMatriculation(
+  institution: string,
   course_code: string,
-  applicant_grades: string) -> MatriculationAudit {  client ExtractEn
-    prompt #"
+  applicant_grades: string
+) -> MatriculationAudit {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -298,7 +283,7 @@ function AuditMatriculation(institution: string,
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -307,8 +292,12 @@ function AuditMatriculation(institution: string,
 // From-URL extraction functions (merged from cianfhoghlaim_other/tertiary.baml)
 // =============================================================================
 
-function ExtractCaliforniaOCourseListFromUrl(page_url: string, year: int) -> CaliforniaOCourse[] {  client ExtractEn
-    prompt #"
+function ExtractCaliforniaOCourseListFromUrl(
+  page_url: string,
+  year: int
+) -> CaliforniaOCourse[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -316,16 +305,16 @@ function ExtractCaliforniaOCourseListFromUrl(page_url: string, year: int) -> Cal
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    CaliforniaOCourse[] {}
-  }
 }
 
-function ExtractMatriculationRulesFromUrl(page_url: string, institution: string) -> MatriculationRequirement[] {  client ExtractEn
-    prompt #"
+function ExtractMatriculationRulesFromUrl(
+  page_url: string,
+  institution: string
+) -> MatriculationRequirement[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -333,19 +322,16 @@ function ExtractMatriculationRulesFromUrl(page_url: string, institution: string)
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    MatriculationRequirement[] {}
-  }
 }
 
 function AuditMatriculationStdLib(
   institution: string,
   applicant_grades: map<string, string>
-) -> MatriculationAudit {  client ExtractEn
-    prompt #"
+) -> MatriculationAudit {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -353,6 +339,6 @@ function AuditMatriculationStdLib(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

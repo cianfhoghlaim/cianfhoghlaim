@@ -12,7 +12,7 @@ the references below.
 - **Self-hosted Docker** (local-only) — see
   `hosting-lancedb-docker-compose.md` (a generic Docker Compose
   pattern for the LanceDB REST API server)
-- **Cloudflare R2 + rclone sidecar** (the KCG production target) —
+- **Cloudflare R2 + rclone sidecar** (the Cianfhoghlaim production target) —
   see `hosting-lancedb-r2.md`
 - **LanceDB Cloud** (managed, serverless, 4 regions) — see
   `lancedb-cloud.md`

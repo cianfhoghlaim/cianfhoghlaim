@@ -1,6 +1,5 @@
 // === ARCHIVED 2026-06-24 ===
-// The 3 functions in this file (ExtractMorphology, AnalyzeSentence,
-// IdentifyDialect) have no current Python consumer in the oideachais
+// The 3 functions in this file (ExtractMorphology, AnalyzeSentence
 // quadrant. They are intended for the meaisinfhoghlaim/
 // Celtic-linguistic agents (e.g. canuint_alignment_assets.py would
 // benefit from IdentifyDialect), which are not yet built.
@@ -13,8 +12,7 @@
 // 3. Remove the ARCHIVED header from the top
 // 4. Update STATUS.md to mark the functions as wired
 // 5. Update REFACTORING.md to remove the archive entry
-// 6. The 3 enums below were renamed with an `Archive` suffix (CelticLanguageArchive,
-//    IrishDialectArchive, PartOfSpeechArchive) on 2026-07-13 to avoid a BAML
+// 6. The 3 enums below were renamed with an `Archive` suffix (CelticLanguageArchive
 //    compile conflict with the active definitions in celtic/sources.baml and
 //    celtic/gaois/tearma.baml. On re-activation, drop the `Archive` suffix
 //    (or merge with the active definitions if their shapes have converged).
@@ -206,7 +204,7 @@ function ExtractMorphology(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -223,7 +221,7 @@ function AnalyzeSentence(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -239,6 +237,6 @@ function IdentifyDialect(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

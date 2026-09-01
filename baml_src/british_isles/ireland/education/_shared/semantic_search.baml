@@ -49,8 +49,12 @@ class SearchTelemetry {
 }
 
 
-function SemanticSearch(query: string, filters: string) -> SearchResult[] {  client ExtractEn
-    prompt #"
+function SemanticSearch(
+  query: string,
+  filters: string
+) -> SearchResult[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -58,7 +62,7 @@ function SemanticSearch(query: string, filters: string) -> SearchResult[] {  cli
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -70,9 +74,10 @@ function SemanticSearchTelemetry(
   latency_ms: float,
   result_count: int,
   cache_hit: bool,
-  search_id: string,
-) -> SearchTelemetry {  client ExtractEn
-    prompt #"
+  search_id: string
+) -> SearchTelemetry {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -80,6 +85,6 @@ function SemanticSearchTelemetry(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

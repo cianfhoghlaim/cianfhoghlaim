@@ -463,7 +463,7 @@ normalization engine auto-creates a child table
 
 The same BAML class can fan out to:
 
-| Store | dlt mechanism | KCG use |
+| Store | dlt mechanism | Cianfhoghlaim use |
 |:--|:--|:--|
 | **Postgres / DuckDB** | Native dlt destination | `secrets.toml` swap |
 | **LanceDB** | `dlt.destinations.adapters.lancedb_adapter(embed=[...])` | Vector search |
@@ -522,7 +522,7 @@ Add a field once; propagate everywhere.
 | 7 | API | oRPC + Zod | Validated response |
 | 8 | UI | React + TS interface | Rendered |
 
-### KCG anti-patterns for polyglot BAML
+### Cianfhoghlaim anti-patterns for polyglot BAML
 
 - **Don't write Zod by hand** — drift is inevitable.
   Always `ts-to-zod` from the BAML-generated TS.
@@ -540,7 +540,7 @@ Add a field once; propagate everywhere.
 See `openspec/changes/lc6-biep/references/baml-adaptive-syllabus.md` and
 the full BAML+DLT+TanStack deep dive in
 `openspec/changes/lc6-biep/references/baml-irish-education-kg.md`
-for the canonical KCG pattern with Restate workflows
+for the canonical Cianfhoghlaim pattern with Restate workflows
 and adaptive TypeBuilder schemas.
 
 ## Cross-references
@@ -790,3 +790,31 @@ observability hook only fires when `evaluate_ensemble()` is called
 with populated per-path usage + raw_response fields).
 
 [Collector](https://docs.boundaryml.com/ref/baml_client/collector.md) · [@trace](https://docs.boundaryml.com/ref/baml_client/collector.md#tags) · [client<llm>](https://docs.boundaryml.com/ref/baml/client-llm.md) · [Changelog](https://docs.boundaryml.com/changelog/changelog.md) · [docs llms.txt](https://docs.boundaryml.com/llms.txt)
+
+---
+
+## V6 era updates (2026-09-01)
+
+Per the 2026-09-01-baml-regeneration-blocker-v1 change (Phase 0.5 of the
+cianfhoghlaim-nua v6 era plan), the baml-py 0.226.2 parser was made
+strictly compliant with 343+ parser errors fixed. Key changes:
+
+- **Reserved keyword `input` is now reserved** — function parameters
+  named `input` (e.g. `function ExtractXxx(input: string)`) fail.
+  Rename to `text` (or another non-reserved name).
+- **{{ input }} → {{ ctx.input }}** is no longer required — the
+  existing `{{ input }}` form is still accepted (it produces a
+  warning, not an error). But `{{ ctx.input }}` is the canonical form
+  going forward.
+- **`catch_all` blocks removed** — the 223 files that used
+  `catch_all (err) { ... }` were stripped. The inner classes are
+  no longer required since the schema is now strict.
+- **`client_resource_fallback` removed** — replaced with the canonical
+  `options { ... }` block format.
+- **Long function signatures must be split** — single-line signatures
+  over ~150 chars confuse the parser. Split into multi-line.
+- **Class fields must have types** — `field_name` (no type) is rejected.
+  Add `field_name string` (or the appropriate type).
+
+See `openspec/changes/2026-09-01-baml-regeneration-blocker-v1/` for
+the full diff (16 mechanical scripts, 0 manual edits).

@@ -12,7 +12,6 @@ class StyleFeatures {
   lighting_style string @description("soft, harsh, ambient, dramatic")
   perspective string @description("flat, depth, isometric, dynamic")
   edge_treatment string @description("clean, blurred, glowing, rough")
-  @@stream.done
 }
 
 class StyleTransferSpec {
@@ -41,8 +40,11 @@ class StyleBlend {
 
 // Style transfer functions
 
-function ExtractStyleFeatures(artwork: image) -> StyleFeatures {  client ExtractEn
-    prompt #"
+function ExtractStyleFeatures(
+  artwork: image
+) -> StyleFeatures {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at generating a style transfer specification from a reference prompt.
 
@@ -61,19 +63,16 @@ function ExtractStyleFeatures(artwork: image) -> StyleFeatures {  client Extract
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    StyleFeatures {}
-  }
 }
 
 function CreateStyleTransferSpec(
   content_prompt: string,
   style_reference: image
-) -> StyleTransferSpec {  client ExtractEn
-    prompt #"
+) -> StyleTransferSpec {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at generating a style transfer specification from a reference prompt.
 
@@ -92,7 +91,7 @@ function CreateStyleTransferSpec(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -101,8 +100,9 @@ function BlendStyles(
   style_b: image,
   blend_ratio: float,
   content: string
-) -> StyleBlend {  client ExtractEn
-    prompt #"
+) -> StyleBlend {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at generating a style transfer specification from a reference prompt.
 
@@ -121,7 +121,7 @@ function BlendStyles(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -129,8 +129,9 @@ function GenerateSeriesPrompts(
   base_style: image,
   count: int,
   variation_axis: string
-) -> string[] {  client ExtractEn
-    prompt #"
+) -> string[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at generating a style transfer specification from a reference prompt.
 
@@ -149,12 +150,15 @@ function GenerateSeriesPrompts(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
-function AnalyzeForIPAdapter(artwork: image) -> StyleEmbedding {  client ExtractEn
-    prompt #"
+function AnalyzeForIPAdapter(
+  artwork: image
+) -> StyleEmbedding {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at generating a style transfer specification from a reference prompt.
 
@@ -173,7 +177,7 @@ function AnalyzeForIPAdapter(artwork: image) -> StyleEmbedding {  client Extract
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -185,8 +189,9 @@ function GenerateAlbumCoverSpec(
   track_list: string[],
   style_reference: image?,
   genre: string
-) -> StyleTransferSpec {  client ExtractEn
-    prompt #"
+) -> StyleTransferSpec {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at generating a style transfer specification from a reference prompt.
 
@@ -205,15 +210,16 @@ function GenerateAlbumCoverSpec(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
 function GenerateSingleCoverVariation(
   original_album_cover: image,
   single_title: string
-) -> string {  client ExtractEn
-    prompt #"
+) -> string {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at generating a style transfer specification from a reference prompt.
 
@@ -232,7 +238,7 @@ function GenerateSingleCoverVariation(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 

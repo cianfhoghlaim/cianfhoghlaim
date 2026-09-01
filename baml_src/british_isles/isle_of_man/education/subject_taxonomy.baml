@@ -64,8 +64,7 @@ enum IsleOfManSubject {
 //
 // Extracts the structured syllabus data from an Isle of Man PDF
 // specification. The Isle of Man uses the English GCSE + A-Level
-// system. Administered by the Isle of Man Department of Education,
-// Sport and Culture.
+// system. Administered by the Isle of Man Department of Education
 
 class IsleOfManSyllabusSpec {
   source_pdf string
@@ -104,8 +103,9 @@ class IsleOfManAssessmentObjective {
 function ExtractIsleOfManSyllabus(
   pdf_text: string,
   subject: IsleOfManSubject?,
-  level: IsleOfManLevel?,
-) -> IsleOfManSyllabusSpec {  client BIEPV3Extract
+  level: IsleOfManLevel?
+) -> IsleOfManSyllabusSpec {
+  client BIEPV3Extract
   prompt #"
     Extract the structured syllabus data from this Isle of Man
     (Department of Education, Sport and Culture) PDF specification
@@ -119,22 +119,6 @@ function ExtractIsleOfManSyllabus(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    IsleOfManSyllabusSpec {
-      source_pdf "",
-      source_pages 0,
-      subject isleofmansubject {},
-      level isleofmanlevel {},
-      title "",
-      version "",
-      first_teaching_year null,
-      last_certification_year null,
-      total_marks 0,
-      component_papers 0,
-      topics null,
-      assessment_objectives null,
-    }
-  }
 }
 
 test ExtractIsleOfManSyllabus {

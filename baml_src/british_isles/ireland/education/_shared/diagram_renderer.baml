@@ -63,9 +63,10 @@ function RenderConceptMap(
   syllabus_topics_json: string,
   past_papers_json: string,
   marking_schemes_json: string,
-  five_key_competencies_json: string,
-) -> DiagramPayload {  client ExtractEn
-    prompt #"
+  five_key_competencies_json: string
+) -> DiagramPayload {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -73,7 +74,7 @@ function RenderConceptMap(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -85,9 +86,10 @@ function RenderTopicHeatmap(
   subject: string,
   language: string,
   past_papers_json: string,
-  year_range: int[],
-) -> DiagramPayload {  client ExtractEn
-    prompt #"
+  year_range: int[]
+) -> DiagramPayload {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -95,7 +97,7 @@ function RenderTopicHeatmap(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -108,9 +110,10 @@ function RenderPCLMFlow(
   language: string,
   marking_scheme_json: string,
   paper: string,
-  year: int,
-) -> DiagramPayload {  client ExtractEn
-    prompt #"
+  year: int
+) -> DiagramPayload {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -118,7 +121,7 @@ function RenderPCLMFlow(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -130,9 +133,10 @@ function RenderQuestionSankey(
   subject: string,
   language: string,
   past_papers_json: string,
-  year_range: int[],
-) -> DiagramPayload {  client ExtractEn
-    prompt #"
+  year_range: int[]
+) -> DiagramPayload {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -140,6 +144,6 @@ function RenderQuestionSankey(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

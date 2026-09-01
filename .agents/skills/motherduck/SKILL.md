@@ -1,6 +1,6 @@
 ---
 name: motherduck
-description: Master routing skill for all MotherDuck operations. Use this to determine which of the 4 task-specific MotherDuck sub-skills to invoke (architecture, data-modeling, analytics, connections), or to wire the mcp-server-motherduck (the KCG-preferred agent path). Powers the 4 BIEP Dives (`lc_syllabus_topics`, `lc_exam_difficulty`, `lc_marking_complexity`, `gov_circulars_archive`) + the lc6 MotherDuck Flights (scheduled DuckDB queries for BAML row backfill).
+description: Master routing skill for all MotherDuck operations. Use this to determine which of the 4 task-specific MotherDuck sub-skills to invoke (architecture, data-modeling, analytics, connections), or to wire the mcp-server-motherduck (the cianfhoghlaim-preferred agent path). Powers the 4 BIEP Dives (`lc_syllabus_topics`, `lc_exam_difficulty`, `lc_marking_complexity`, `gov_circulars_archive`) + the lc6 MotherDuck Flights (scheduled DuckDB queries for BAML row backfill).
 ---
 
 # MotherDuck Master Router
@@ -30,7 +30,7 @@ and best practices.
 MotherDuck ships an official **MCP server** (`mcp-server-motherduck`)
 that exposes DuckDB / MotherDuck SQL analytics to any MCP
 client (Cursor, VS Code, Claude Desktop, opencode). This
-is the KCG-preferred way to drive `oideachais` analytics
+is the cianfhoghlaim-preferred way to drive `oideachais` analytics
 from inside an IDE or agent runtime without leaving the
 DuckDB dialect.
 
@@ -60,9 +60,9 @@ DuckDB dialect.
 
 | Flag | Default | When to override |
 |:--|:--|:--|
-| `--db-path` | `md:` | Use `/path/to/local.duckdb` for local-only; `md:cianfhoghlaim` for the read-only KCG lakehouse (post-v7 canonical); `s3://bucket/path.duckdb` for object-storage |
+| `--db-path` | `md:` | Use `/path/to/local.duckdb` for local-only; `md:cianfhoghlaim` for the read-only Cianfhoghlaim lakehouse (post-v7 canonical); `s3://bucket/path.duckdb` for object-storage |
 | `--motherduck-token` | `$motherduck_token` env | Required for any `md:` access |
-| `--read-only` | `false` | **Always set true** for the KCG read-only consumer pattern |
+| `--read-only` | `false` | **Always set true** for the Cianfhoghlaim read-only consumer pattern |
 | `--saas-mode` | `false` | Enable in production for security: disables filesystem + write perms for local DuckDB |
 | `--max-rows` | 1024 | Lower to 256 for chat contexts; raise to 4096 for marimo notebooks |
 | `--max-chars` | 50000 | Raise to 200000 for marimo notebooks; lower to 5000 for narrow chat contexts |
@@ -78,10 +78,10 @@ uvx mcp-server-motherduck --help
 
 # Local DuckDB file (read-only)
 uvx mcp-server-motherduck \
-  --db-path /Users/cianmacandeisigh/dev/kings_college_galway/stedding/cianfhoghlaim.duckdb \
+  --db-path /Users/cianmacandeisigh/dev/cianfhoghlaim/stedding/cianfhoghlaim.duckdb \
   --read-only
 
-# MotherDuck cloud (KCG read-only consumer)
+# MotherDuck cloud (Cianfhoghlaim read-only consumer)
 uvx mcp-server-motherduck \
   --db-path md:cianfhoghlaim \
   --motherduck-token "$MOTHERDUCK_TOKEN" \
@@ -127,7 +127,7 @@ the secret store, then referenced as
 **Claude Desktop** (`claude_desktop_config.json`): same
 `mcpServers` shape as Cursor.
 
-### KCG production rules
+### Cianfhoghlaim production rules
 
 - **Always `--read-only --saas-mode`** for the
   `oideachais` consumer pattern. The agent must not be
@@ -162,9 +162,43 @@ for the full 457-line reference including all transport
 modes, the SaaS-mode security model, and the
 data-sharing semantics.
 
+## MCP route (OpenCode agent sessions)
+
+When an agent is running inside OpenCode with the `motherduck` MCP
+server loaded (see `opencode.json`), the following tools appear in the
+system prompt:
+
+| Tool | Purpose |
+|:--|:--|
+| `motherduck_execute_query` | Run a SQL query against the in-memory or remote MotherDuck DB |
+| `motherduck_list_databases` | List all available databases (in-memory + remote shares) |
+| `motherduck_list_tables` | List tables in a database/schema |
+| `motherduck_list_columns` | List columns of a table/view |
+| `motherduck_switch_database_connection` | Switch to a different DuckDB file or `md:<db>` |
+
+**When to prefer the MCP tool over Python `duckdb.connect(...)`:**
+
+- One-shot analytical queries (e.g. "row count of
+  `leaving_cert.mathematics.higher_en.syllabus_topics`")
+- Listing databases/tables when you don't know the schema
+- Working in an OpenCode session where you don't want to spawn a
+  Python REPL
+
+**When to keep using Python:**
+
+- Pipelines that need Ibis, LanceDB joins (`lance_scan()`),
+  dataframe transforms, or marimo reactive notebooks
+- Anything in `notebooks/` or `dlt_sources/lakehouse/`
+- Migrations / DDL that needs transactional control
+
+Both surfaces share the same MotherDuck authentication — the
+`MOTHERDUCK_TOKEN` is resolved by the `infisical run --` wrapper in
+the MCP command, and by the Python `os.environ['MOTHERDUCK_TOKEN']`
+hydration from `mise`/`Infisical` for the Python API.
+
 ## 2026-06 updates (from the `upstream-package-monitoring` openspec change)
 
-- **DuckLake 1.0** launched 2026-04-16 on MotherDuck. The KCG
+- **DuckLake 1.0** launched 2026-04-16 on MotherDuck. The Cianfhoghlaim
   production lakehouse (`cianfhoghlaim/`) uses DuckLake 1.0. New
   features in 1.0:
   - **Data inlining** — also applies to updates and deletes (not
@@ -181,7 +215,7 @@ data-sharing semantics.
     geospatial assets in
     `orchestration/defs/2_materials/geospatial_assets.py`.
 - **3 hosting options** — fully managed (MotherDuck SaaS, default
-  for KCG dev), BYOB (your own Garage S3 bucket, default for KCG
+  for Cianfhoghlaim dev), BYOB (your own Garage S3 bucket, default for Cianfhoghlaim
   production per `dlt/dlt_utils/motherduck_options.py:byob_destination`),
   and BYOC (your own compute + your own bucket — for regulated
   workloads).
@@ -208,9 +242,9 @@ Source: `/docs/key-tasks/ai-and-motherduck/dives/` and `/sql-reference/mcp/`.
 
 ## MotherDuck token — Business-tier required (carry forward)
 
-KCG notebooks use 4 shared databases (`cianfhoghlaim_public`, `cianfhoghlaim_team`, `leabharlann_public`, `leabharlann_team`). Lite is 3 users, 2 service accounts, 10 GB — too small. The token must be a **Business-tier** PAT.
+Cianfhoghlaim notebooks use 4 shared databases (`cianfhoghlaim_public`, `cianfhoghlaim_team`, `leabharlann_public`, `leabharlann_team`). Lite is 3 users, 2 service accounts, 10 GB — too small. The token must be a **Business-tier** PAT.
 
-## British-Isles Education pipeline — Canonical KCG pattern (post-v4)
+## British-Isles Education pipeline — Canonical Cianfhoghlaim pattern (post-v4)
 
 The post-v4 lc6 pipeline (`openspec/changes/lc6-biep/`) consumes
 the BAML-extracted DuckLake tables via **4 MotherDuck Dives**

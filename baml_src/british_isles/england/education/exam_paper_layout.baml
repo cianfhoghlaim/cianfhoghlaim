@@ -114,20 +114,4 @@ function ExtractAQAExamPaper(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    AQAExamPaper {
-      board examboard {},
-      qualification_level qualificationlevel {},
-      subject "",
-      language null,
-      year 0,
-      source_pdf "",
-      total_pages 0,
-      total_marks 0,
-      duration_minutes null,
-      has_formula_sheet false,
-      has_data_booklet false,
-      sections null,
-    }
-  }
 }

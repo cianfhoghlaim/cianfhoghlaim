@@ -1,6 +1,6 @@
 ---
 name: google-adk
-description: Expert assistance for building AI agents with Google's Agent Development Kit. Use when users need multi-agent coordination via the Multi-Agent Workflow Engine + NodeRunner, Native Inter-Agent Routing (v2.1+), the A2A Protocol for cross-agent communication, neuro-symbolic OWL truth-anchoring, or production deployment to Agent Engine. KCG-specific: agent chain is OCR → BAML → embedding → Graphiti → RAGAS.
+description: Expert assistance for building AI agents with Google's Agent Development Kit. Use when users need multi-agent coordination via the Multi-Agent Workflow Engine + NodeRunner, Native Inter-Agent Routing (v2.1+), the A2A Protocol for cross-agent communication, neuro-symbolic OWL truth-anchoring, or production deployment to Agent Engine. cianfhoghlaim-specific: agent chain is OCR → BAML → embedding → Graphiti → RAGAS.
 ---
 
 # Google ADK - Agent Development Kit
@@ -198,7 +198,7 @@ anchored_agent = anchor.wrap(
 )
 ```
 
-**Canonical KCG use case:** the `Mionnscríbhinn` (Irish-language
+**Canonical Cianfhoghlaim use case:** the `Mionnscríbhinn` (Irish-language
 land deed) Compliance Agent. The LLM proposes extracted
 entities, the OWL ontology (which encodes the 19th-century
 Irish land-tenure model) validates, and any output that
@@ -219,7 +219,7 @@ gcloud run deploy my-agent \
   --set-env-vars GOOGLE_API_KEY=...
 ```
 
-`make deploy` (in the KCG `saoi/` project layout) builds,
+`make deploy` (in the Cianfhoghlaim `saoi/` project layout) builds,
 pushes, and deploys in one step. After deployment, the agent
 endpoint is available at the Agent Engine URL.
 
@@ -312,9 +312,9 @@ const agent = new Agent({
 The `firecrawl` tool can scrape, crawl, and extract structured
 data from any URL.
 
-## KCG agent chain (KCG-specific)
+## Cianfhoghlaim agent chain (cianfhoghlaim-specific)
 
-The KCG ingestion pipeline is a 5-stage SequentialAgent:
+The Cianfhoghlaim ingestion pipeline is a 5-stage SequentialAgent:
 
 ```python
 from google.adk.agents import SequentialAgent
@@ -353,7 +353,7 @@ agent = Agent(
 For production, use a persistent memory store (Vertex AI
 Memory Bank or a custom backend).
 
-## KCG integration notes
+## Cianfhoghlaim integration notes
 
 - LLM backend: **LiteLLM gateway** (project gateway; LiteLLM
   routes to Gemini, OpenAI, Anthropic, etc.)
@@ -373,9 +373,9 @@ Memory Bank or a custom backend).
 - A2A Protocol: <https://a2a.dev/>
 - Agent Engine: <https://cloud.google.com/agent-engine>
 - Gemini Live API: <https://ai.google.dev/gemini-api/docs/live>
-- KCG agent chain: `cianfhoghlaim-curriculum-extraction` Dagster
+- Cianfhoghlaim agent chain: `cianfhoghlaim-curriculum-extraction` Dagster
   asset
-- KCG examples: `cianfhoghlaim/saoi/` (the canonical KCG ADK
+- Cianfhoghlaim examples: `cianfhoghlaim/saoi/` (the canonical Cianfhoghlaim ADK
   project layout)
 
 ## Framework comparison (when to use this vs Pydantic AI / Agno)
@@ -394,13 +394,13 @@ Memory Bank or a custom backend).
 
 **Rule of thumb**: use **Google ADK** for Gemini-heavy
 workflows (Live API, A2A, Agent Engine); use **Pydantic AI**
-for type-safe I/O with Pydantic models (the KCG standard);
+for type-safe I/O with Pydantic models (the Cianfhoghlaim standard);
 use **Agno** for multi-agent teams with Z.ai GLM-4.6
 (cost-effective).
 
-## KCG LiteLLM wire-up (Agent 63 — 2026-06-29)
+## Cianfhoghlaim LiteLLM wire-up (Agent 63 — 2026-06-29)
 
-**Historical drift (RESOLVED 2026-08-15)**: the 32 `LlmAgent(model=config.model_name)` constructors historically hardcoded `"gemini-2.0-flash"`, BYPASSING the KCG `minimax` 7-tier LiteLLM fallback alias (Agent 06 P0-#1 drift finding). As of `2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1`, all 32 sites now resolve through the unified `MODEL_REGISTRY` (`meaisinfhoghlaim.models.MU_REGISTRY.resolve("text_llm", "default")`), so the default flows through the LiteLLM alias without further code changes.
+**Historical drift (RESOLVED 2026-08-15)**: the 32 `LlmAgent(model=config.model_name)` constructors historically hardcoded `"gemini-2.0-flash"`, BYPASSING the Cianfhoghlaim `minimax` 7-tier LiteLLM fallback alias (Agent 06 P0-#1 drift finding). As of `2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1`, all 32 sites now resolve through the unified `MODEL_REGISTRY` (`meaisinfhoghlaim.models.MU_REGISTRY.resolve("text_llm", "default")`), so the default flows through the LiteLLM alias without further code changes.
 
 For new agent code, prefer the `LiteLlm` model wrapper (ADK 1.5+) to make the LiteLLM routing explicit:
 
@@ -409,9 +409,9 @@ from google.adk.models.lite_llm import LiteLlm
 from collections.abc import Callable
 
 def _minimax_model() -> LiteLlm:
-    """Resolve the KCG `minimax` 7-tier LiteLLM alias at agent-construction time."""
+    """Resolve the Cianfhoghlaim `minimax` 7-tier LiteLLM alias at agent-construction time."""
     return LiteLlm(
-        model="minimax",                                                  # KCG canonical alias
+        model="minimax",                                                  # Cianfhoghlaim canonical alias
         api_base=os.getenv("LITELLM_API_BASE", "https://litellm.cianfhoghlaim.ie"),
     )
 
@@ -420,9 +420,9 @@ from google.adk.models.lite_llm import LiteLlm
 from collections.abc import Callable
 
 def _minimax_model() -> LiteLlm:
-    """Resolve the KCG `minimax` 7-tier LiteLLM alias at agent-construction time."""
+    """Resolve the Cianfhoghlaim `minimax` 7-tier LiteLLM alias at agent-construction time."""
     return LiteLlm(
-        model="minimax",                                                  # KCG canonical alias
+        model="minimax",                                                  # Cianfhoghlaim canonical alias
         api_base=os.getenv("LITELLM_API_BASE", "https://litellm.cianfhoghlaim.ie"),
     )
 

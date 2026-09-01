@@ -178,8 +178,9 @@ class GlossaryEntry {
 // Parse Logainm API JSON response for a single place
 function ParseLogainmPlace(
   json_response: string
-) -> LogainmPlace {  client ExtractEn
-    prompt #"
+) -> LogainmPlace {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -187,15 +188,16 @@ function ParseLogainmPlace(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
 // Parse Logainm search results
 function ParseLogainmSearchResults(
   json_response: string
-) -> LogainmSearchResult {  client ExtractEn
-    prompt #"
+) -> LogainmSearchResult {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -203,15 +205,16 @@ function ParseLogainmSearchResults(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
 // Extract placename etymology from glossary references
 function ExtractPlacenameEtymology(
   place: LogainmPlace
-) -> string {  client ExtractEn
-    prompt #"
+) -> string {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -219,12 +222,8 @@ function ExtractPlacenameEtymology(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    ""
-  }
 }
 
 // Find places within a geographic radius
@@ -233,8 +232,9 @@ function ParseGeoQuery(
   center_lat: float,
   center_lon: float,
   radius_m: int
-) -> LogainmSearchResult {  client ExtractEn
-    prompt #"
+) -> LogainmSearchResult {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -242,7 +242,7 @@ function ParseGeoQuery(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -263,8 +263,9 @@ class LogainmDuchasLink {
 function EnrichPlaceWithFolklore(
   place: LogainmPlace,
   duchas_data: string
-) -> LogainmDuchasLink {  client ExtractEn
-    prompt #"
+) -> LogainmDuchasLink {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -272,6 +273,6 @@ function EnrichPlaceWithFolklore(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

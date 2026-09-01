@@ -1,6 +1,6 @@
 ---
 name: motherduck-data-modeling
-description: Design and load data into MotherDuck. Use when creating tables, choosing column types, defining relationships, restructuring for analytics, or loading data from local files / object storage / HTTPS / dataframes / external databases. Covers the KCG-preferred CTAS + INSERT...SELECT patterns, bulk-loading from Parquet/CSV/JSON, secrets handling for cloud object storage, the Postgres-endpoint vs DuckDB-client tradeoff, and dbt/SQLMesh modeling on top. Triggers: 'CREATE TABLE', 'CTAS', 'INSERT...SELECT', 'load Parquet', 'load CSV', 'schema design', 'dbt project', 'SQLMesh model', 'data modeling'.
+description: Design and load data into MotherDuck. Use when creating tables, choosing column types, defining relationships, restructuring for analytics, or loading data from local files / object storage / HTTPS / dataframes / external databases. Covers the cianfhoghlaim-preferred CTAS + INSERT...SELECT patterns, bulk-loading from Parquet/CSV/JSON, secrets handling for cloud object storage, the Postgres-endpoint vs DuckDB-client tradeoff, and dbt/SQLMesh modeling on top. Triggers: 'CREATE TABLE', 'CTAS', 'INSERT...SELECT', 'load Parquet', 'load CSV', 'schema design', 'dbt project', 'SQLMesh model', 'data modeling'.
 ---
 
 # MotherDuck — Data Modeling & Ingestion
@@ -45,9 +45,9 @@ Anti-pattern: `FLOAT` without a precision spec. Always use
 `DOUBLE` for full IEEE 754 precision; reserve `REAL` for legacy
 compat only.
 
-## Loading data — the KCG-preferred path
+## Loading data — the cianfhoghlaim-preferred path
 
-For KCG workloads, always prefer **CTAS from Parquet on S3**:
+For Cianfhoghlaim workloads, always prefer **CTAS from Parquet on S3**:
 
 ```sql
 -- Single table from a Parquet file
@@ -70,7 +70,7 @@ FROM postgres_scan('host=lakehouse-postgres port=5432 dbname=lakehouse',
                    'SELECT * FROM ie_education_primary');
 ```
 
-**Why CTAS over `COPY`**: CTAS is the only KCG-tested pattern
+**Why CTAS over `COPY`**: CTAS is the only cianfhoghlaim-tested pattern
 that handles object-storage paths, hive partitioning, and
 zero-copy Parquet reads correctly. The `COPY` command works
 but requires the file to be local.
@@ -163,7 +163,7 @@ re-materialisation.
 - `motherduck-analytics/SKILL.md` — query the tables you just
   designed
 - `dlt/SKILL.md` — DLT sources that feed into MotherDuck
-- `cianfhoghlaim-storage/SKILL.md` — the KCG DuckLake layout
+- `cianfhoghlaim-storage/SKILL.md` — the Cianfhoghlaim DuckLake layout
 
 ## Cross-references
 

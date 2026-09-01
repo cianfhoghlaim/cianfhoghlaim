@@ -76,3 +76,22 @@ You are the canonical Cianfhoghlaim BAML authoring subagent. You author, lint, a
 - All BAML schemas MUST be referenced via `schema_introspect()` from `notebooks/_shared/schema.py` — never hardcode the Pydantic class in Python
 - NEVER use the literal stub string `'Auto-generated extraction prompt.'` (per the `centralized-schema-registry` spec)
 - The 5 canonical LC6 extraction functions (ExtractCurriculumSyllabus / ExtractExamPaperLayout / ExtractMarkingSchemeGuideline / ExtractCrossLinguisticConcept / ExtractSyllabusDiagram) live at `baml_src/british_isles/ireland/education/lc_extraction/`
+
+---
+
+## V6 era notes (2026-09-01)
+
+For the cianfhoghlaim-nua v6 era, the canonical BAML surfaces are:
+
+- **Phase 1 study-plan** — `baml_src/british_isles/_shared/study_plan.baml`
+  (the canonical `StudyPlan` schema + `GenerateStudyPlanAssets` function)
+- **Phase 1 oral-plan** — `baml_src/british_isles/_shared/oral_study_plan.baml`
+  (the `OralStudyPlan` schema + `GenerateOralStudyPlan` function)
+- **Phase 4 NCCE** — `baml_src/british_isles/uk_ncce/learning_graph.baml`
+  (6 per-subject extractors + 1 pedagogy overlay)
+- **Phase 4 equivalencies** — `baml_src/british_isles/uk_ncce/equivalencies.baml`
+  (the 48 cell-level cross-walks)
+- **Phase 7 certification** — `baml_src/british_isles/ireland/education/certification.baml`
+  (the `NCCAPolicyCriteria` schema + `ExtractNCCAPolicyCriteria` function)
+
+All use `client Primary` per the v5 BAML Primary alias convention.

@@ -25,7 +25,6 @@ class CourtForm {
   fillable_fields        string[]                        @description("Names of fields the form requires (e.g. 'PPSN', 'Date of Birth', 'Solicitor details')")
   related_statutes       StatuteReference[]              @description("Statutes referenced by this form")
   extraction_confidence  float                           @description("0.0-1.0")
-  @@stream.done
 }
 
 class CourtFee {
@@ -37,14 +36,14 @@ class CourtFee {
   effective_date         string?                         @description("ISO 8601 — when the fee schedule came into effect")
   notes                  string?                         @description("Any conditions or exemptions")
   extraction_confidence  float                           @description("0.0-1.0")
-  @@stream.done
 }
 
 function ExtractCourtForm(
   page_url: string,
-  page_html: string,
-) -> CourtForm {  client ExtractEn
-    prompt #"
+  page_html: string
+) -> CourtForm {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -52,23 +51,17 @@ function ExtractCourtForm(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    CourtForm {
-      url "",
-      form_title "",
-      court_level courtlevel {},
-    }
-  }
 }
 
 function ExtractCourtFee(
   page_url: string,
-  page_html: string,
-) -> CourtFee {  client ExtractEn
-    prompt #"
+  page_html: string
+) -> CourtFee {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -76,13 +69,7 @@ function ExtractCourtFee(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    CourtFee {
-      url "",
-      court_level courtlevel {},
-    }
-  }
 }

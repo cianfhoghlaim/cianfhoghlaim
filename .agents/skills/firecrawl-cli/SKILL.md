@@ -27,7 +27,7 @@ npm install -g firecrawl-cli
 # Or use the npx pattern (no install)
 npx firecrawl --help
 
-# Or via the KCG mise task (preferred in Cianfhoghlaim)
+# Or via the Cianfhoghlaim mise task (preferred in Cianfhoghlaim)
 mise run firecrawl:cli -- --help
 ```
 

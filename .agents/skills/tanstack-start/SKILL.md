@@ -5,7 +5,7 @@ description: Comprehensive toolkit for TanStack Start — file-based routing, se
 
 # TanStack Start
 
-## KCG context (PRESERVED from the original 9-line skill)
+## Cianfhoghlaim context (PRESERVED from the original 9-line skill)
 
 - Adopt a **Local-First** reactive strategy.
 - Use `@tanstack/react-router` for SSR routing and `@tanstack/db`
@@ -350,7 +350,7 @@ function ContactForm() {
 }
 ```
 
-## Type-Safe Forms with TanStack Form + Zod (KCG canonical)
+## Type-Safe Forms with TanStack Form + Zod (Cianfhoghlaim canonical)
 
 For complex forms (multi-step, conditional fields, async
 validation), use `@tanstack/react-form` + `zodValidator`:
@@ -426,7 +426,7 @@ function LoginForm() {
 ```
 
 The `form.Field` render-prop pattern + `form.Subscribe` for
-state-derived UI is the canonical KCG form pattern. Pair with
+state-derived UI is the canonical Cianfhoghlaim form pattern. Pair with
 `zodValidator` for runtime type safety (the Zod schema
 mirrors the BAML Pydantic model — see
 `.agents/skills/baml/SKILL.md`).
@@ -454,9 +454,9 @@ mirrors the BAML Pydantic model — see
 - **Build slow?** The route tree is generated on every build;
   cache the generator with `tanstackRouter: { generatedRouteTree: "src/routeTree.gen.ts" }`
 
-## KCG TanStack patterns (round-9 deep dive)
+## Cianfhoghlaim TanStack patterns (round-9 deep dive)
 
-The 6 long-form references under `references/` are KCG
+The 6 long-form references under `references/` are Cianfhoghlaim
 synthesised patterns. The canonical lines to take from each:
 
 ### 1. Isomorphic server-fn + AI tool (`createServerFnTool`)
@@ -491,7 +491,7 @@ same execution context. No OpenAPI spec to maintain.
 ### 2. BAML → Zod schema bridge (the "Schema Gap")
 
 BAML generates **TypeScript interfaces** for outputs; TanStack
-AI requires **Zod schemas** for inputs. The KCG bridge pattern
+AI requires **Zod schemas** for inputs. The Cianfhoghlaim bridge pattern
 is the **"Interface-Implements" utility type**:
 
 ```typescript
@@ -536,7 +536,7 @@ DuckDB results to sync TanStack DB collections:
 
 For > 4 GB datasets, **MotherDuck** transparently routes
 the same SQL to cloud execution; the client sees the
-Arrow result either way. The KCG pattern uses
+Arrow result either way. The Cianfhoghlaim pattern uses
 `registerFileUrl` + `httpfs` so DuckDB streams Parquet
 column groups from R2 over HTTP Range requests — only
 the queried columns download.
@@ -546,7 +546,7 @@ the queried columns download.
 Every `cianfhoghlaim/` frontend (`web/apps/cianfhoghlaim-web`, `tuath/ui`,
 `aleyum`, `crypteolas`) is scaffolded from
 `cianfhoghlaim-base`, which is the **Better-T-Stack CLI**
-output with the KCG agent-instructions overlay
+output with the Cianfhoghlaim agent-instructions overlay
 (`.roo/rules/ultracite.md`, `.ruler/bts.md`,
 `.github/copilot-instructions.md`). The layout is fixed:
 
@@ -574,7 +574,7 @@ streams use the `ReadableStream` controller in a route
 file's `server.handlers.POST` — see `tanstack-ai-litellm.md`
 for the full pattern (agent + RAG chunk streaming).
 
-## KCG file conventions (round-9 synthesis)
+## Cianfhoghlaim file conventions (round-9 synthesis)
 
 From the `patterns-conventions.md` deep-dive:
 

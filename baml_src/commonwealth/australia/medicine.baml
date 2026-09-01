@@ -15,8 +15,9 @@ function ExtractAustraliaMedicineDocument(
   country_code: string,
   language: string,
   text: string
-) -> AustraliaMedicineDocument {  client ExtractEn
-    prompt #"
+) -> AustraliaMedicineDocument {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -24,17 +25,6 @@ function ExtractAustraliaMedicineDocument(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    AustraliaMedicineDocument {
-      language "",
-      title "",
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
 }

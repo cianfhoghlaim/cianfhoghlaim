@@ -1,6 +1,6 @@
 ---
 name: ibis
-description: Expert assistance for Ibis portable dataframe library. Use when users need backend-agnostic analytics, pandas migration, SQL generation, or switching between DuckDB, BigQuery, Snowflake, and other backends. KCG-preferred analytics layer over the BIEP `md:cianfhoghlaim` MotherDuck database — `ibis.duckdb.connect("md:cianfhoghlaim")` is the canonical entrypoint for the 6 LC subjects (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) and `gov.ie` circulars.
+description: Expert assistance for Ibis portable dataframe library. Use when users need backend-agnostic analytics, pandas migration, SQL generation, or switching between DuckDB, BigQuery, Snowflake, and other backends. Cianfhoghlaim-preferred analytics layer over the BIEP `md:cianfhoghlaim` MotherDuck database — `ibis.duckdb.connect("md:cianfhoghlaim")` is the canonical entrypoint for the 6 LC subjects (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) and `gov.ie` circulars.
 ---
 
 # Ibis - Portable Dataframe Library
@@ -370,7 +370,7 @@ t["column-with-dash"]
 - **Backends**: https://ibis-project.org/backends/
 - **GitHub**: https://github.com/ibis-project/ibis
 
-## British-Isles Education pipeline — Canonical KCG pattern (post-v4)
+## British-Isles Education pipeline — Canonical Cianfhoghlaim pattern (post-v4)
 
 The post-v4 lc6 pipeline (`openspec/changes/lc6-biep/`) uses
 Ibis as the **portable analytics layer** on top of the
@@ -385,7 +385,7 @@ backend-portable:
 import ibis
 from ibis import _
 
-# Canonical KCG entrypoint: MotherDuck + DuckLake via Ibis
+# Canonical Cianfhoghlaim entrypoint: MotherDuck + DuckLake via Ibis
 con = ibis.duckdb.connect("md:cianfhoghlaim")
 
 # 6 LC subjects × 2 languages × 2 levels — 24 partitions

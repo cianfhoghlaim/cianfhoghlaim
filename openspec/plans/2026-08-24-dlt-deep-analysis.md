@@ -337,7 +337,7 @@ DuckLake = **ACID transactions on object storage** = Parquet files + a SQL metad
 | Practice | Recommendation | Rationale (per the dlt + DuckLake docs) |
 |--|--|--|
 | **1. Catalog choice** | Use **Postgres** for prod, **SQLite** for dev. | Postgres is the only catalog with full parallelism (SQLite and DuckDB cannot do parallel writes — dlt falls back to sequential mode). Motherduck-as-catalog is experimental. |
-| **2. Storage choice** | Use **S3** for prod, **local files** for dev. | The Garage S3 stack at `bonneagar/stacks/lakehouse/` is the canonical KCG store. Local files for `USE_LOCAL_SCRAPES=true` dev. |
+| **2. Storage choice** | Use **S3** for prod, **local files** for dev. | The Garage S3 stack at `bonneagar/stacks/lakehouse/` is the canonical Cianfhoghlaim store. Local files for `USE_LOCAL_SCRAPES=true` dev. |
 | **3. `metadata_schema` ATTACH option** | Set **per-tenant** in Postgres. | New in dlt 1.25.0. Lets you use the same Postgres instance for multiple tenants by giving each its own metadata schema. For the Cianfhoghlaim platform, we'd set `metadata_schema="oideachais"` (one schema per quadrant: `oideachais`, `tuatha`, `croilar`, `agents`, `media`). |
 | **4. Snapshot / time travel** | Enable for prod, expire nightly. | `snapshots()` table + `AT (VERSION => N)` time-travel queries. Maintain via `expire_snapshots()` + `cleanup_old_files()` + `merge_adjacent_files()` + `rewrite_data_files()` (for delete-heavy tables). |
 | **5. Partitioning** | **Identity partitions only** for now. | DuckLake supports `partition` hint on a column (DuckDB 1.4.x) — simple identity partitions are created. **Partition evolution is not supported.** For the LC subjects, partition by `jurisdiction` + `stage`. |

@@ -80,7 +80,6 @@ class ColorInfo {
   hex string @description("Hex color code like #FF5733")
   name string? @description("Common color name if applicable")
   percentage float @description("Percentage of image area")
-  @@stream.done
 }
 
 class StyleAnalysis {
@@ -138,8 +137,11 @@ class GenerationSpec {
 
 // Extraction functions
 
-function AnalyzeArtwork(artwork: image) -> ArtworkAnalysis {  client ExtractEn
-    prompt #"
+function AnalyzeArtwork(
+  artwork: image
+) -> ArtworkAnalysis {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -147,12 +149,15 @@ function AnalyzeArtwork(artwork: image) -> ArtworkAnalysis {  client ExtractEn
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
-function QuickAnalyzeArtwork(artwork: image) -> QuickAnalysis {  client ExtractEn
-    prompt #"
+function QuickAnalyzeArtwork(
+  artwork: image
+) -> QuickAnalysis {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -160,12 +165,16 @@ function QuickAnalyzeArtwork(artwork: image) -> QuickAnalysis {  client ExtractE
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
-function CompareArtworkStyles(artwork1: image, artwork2: image) -> StyleComparison {  client ExtractEn
-    prompt #"
+function CompareArtworkStyles(
+  artwork1: image,
+  artwork2: image
+) -> StyleComparison {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -173,7 +182,7 @@ function CompareArtworkStyles(artwork1: image, artwork2: image) -> StyleComparis
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -182,8 +191,9 @@ function GenerateArtworkSpec(
   reference_artwork: image?,
   target_genre: MusicGenreArtwork,
   preferred_mood: MoodCategory?
-) -> GenerationSpec {  client ExtractEn
-    prompt #"
+) -> GenerationSpec {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -191,12 +201,15 @@ function GenerateArtworkSpec(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
-function ExtractColorPalette(artwork: image) -> ColorInfo[] {  client ExtractEn
-    prompt #"
+function ExtractColorPalette(
+  artwork: image
+) -> ColorInfo[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -204,16 +217,16 @@ function ExtractColorPalette(artwork: image) -> ColorInfo[] {  client ExtractEn
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    ColorInfo[] {}
-  }
 }
 
-function GenerateVariationPrompt(artwork: image, variation_type: string) -> string {  client ExtractEn
-    prompt #"
+function GenerateVariationPrompt(
+  artwork: image,
+  variation_type: string
+) -> string {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -221,7 +234,7 @@ function GenerateVariationPrompt(artwork: image, variation_type: string) -> stri
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 

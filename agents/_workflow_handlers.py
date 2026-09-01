@@ -90,6 +90,13 @@ async def dispatch_study_plan(ctx: StudyPlanContext) -> dict[str, Any]:
     Returns a dict with the per-subject ``lectionary`` and
     per-student ``progress`` keys. Returns ``{}`` when no
     agents are reachable.
+
+    Per the 2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1 change
+    (Phase 1 §2.5): this dispatcher no longer returns a stub. It
+    delegates to the canonical Phase 1 planner at
+    `agents.adk.subjects.lc.planner.generate_study_plan` (the
+    shared planner that replaces the missing
+    `agents/adk/subjects/lc/<subject>/planner.py` modules).
     """
     from .agent_registry import AGENT_REGISTRY
 
@@ -115,6 +122,34 @@ async def dispatch_study_plan(ctx: StudyPlanContext) -> dict[str, Any]:
         "progress": {},
     }
 
+    # Real implementation: delegate to the canonical Phase 1 planner.
+    # Wrapped in try/except so a planner import failure (BAML client
+    # not generated yet, planner module moved, etc.) does not crash
+    # the dispatch path; the lectionary/progress keys are still
+    # populated for any matching per-subject agents in the registry.
+    planner_response: dict[str, Any] = {}
+    if ctx.subject:
+        try:
+            from agents.adk.subjects.lc.planner import (
+                generate_study_plan as _planner_generate,
+            )
+
+            planner_response = await _planner_generate(
+                subject=ctx.subject,
+                lo_codes=getattr(ctx, "lo_codes", None),
+                target_date=getattr(ctx, "target_date", None),
+                duration_weeks=ctx.duration_weeks,
+                dialect=getattr(ctx, "dialect", None),
+                language=getattr(ctx, "language", None),
+                user_id=getattr(ctx, "user_id", None),
+                trace_id=getattr(ctx, "trace_id", None),
+            )
+        except Exception as exc:  # noqa: BLE001
+            logger.warning(
+                "dispatch_study_plan: planner.generate_study_plan failed: %s",
+                exc,
+            )
+
     for agent_name in target_agents:
         if agent_name not in AGENT_REGISTRY:
             logger.debug(
@@ -123,9 +158,6 @@ async def dispatch_study_plan(ctx: StudyPlanContext) -> dict[str, Any]:
             )
             continue
         try:
-            # In a full implementation, this would call the agent's
-            # ``generate_study_plan()`` method. For the wiring layer
-            # we return a stub.
             out["lectionary"][agent_name] = {
                 "subject": ctx.subject,
                 "student_level": ctx.student_level,
@@ -137,6 +169,14 @@ async def dispatch_study_plan(ctx: StudyPlanContext) -> dict[str, Any]:
                 "dispatch_study_plan(%s): %s", agent_name, exc
             )
             continue
+
+    if planner_response:
+        out["lectionary"]["planner"] = planner_response
+        out["progress"]["planner"] = {
+            "weeks_planned": planner_response.get("duration_weeks", 0),
+            "lo_codes_count": len(planner_response.get("lo_codes", [])),
+            "stub_reason": planner_response.get("stub_reason"),
+        }
 
     return out
 

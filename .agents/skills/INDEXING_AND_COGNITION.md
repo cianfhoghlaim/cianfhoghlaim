@@ -31,7 +31,7 @@ spec formalises the contract.
 
 | Metric | Value |
 |:--|:--|
-| Project | `/Users/cianmacandeisigh/dev/kings_college_galway` |
+| Project | `/Users/cianmacandeisigh/dev/cianfhoghlaim` |
 | Settings | `.cocoindex_code/settings.yml` |
 | Index DB | `.cocoindex_code/target_sqlite.db` (2.1 GB) |
 | Flow state | `.cocoindex_code/cocoindex.db` (incremental tracking) |
@@ -276,24 +276,26 @@ exposes the following tools to every agent:
 
 ---
 
-## 3. The full MCP inventory (10 servers in `opencode.json`)
+## 3. The full MCP inventory (12 enabled servers in `opencode.json`)
 
-| MCP server | Purpose | Tool count | Required? |
-|:--|:--|--:|:--|
-| **cocoindex-code** | Semantic code search via `ccc mcp` | 9 | ✅ Yes (always on) |
-| **cognee** | Knowledge graph over docs via `cognee-mcp` | 10 | ✅ Yes (always on) |
-| **graphiti** | Temporal knowledge graph (bi-temporal memory) | 6 | ✅ Yes (always on) |
-| **langfuse** | LLM observability (traces, costs, prompt mgmt) | 8 | ✅ Yes (always on) |
-| **firecrawl** | Web scraping / crawling / monitoring | 6 | ✅ Yes (always on) |
-| **browserbase** | Cloud browser automation (Stagehand) | 12 | ✅ Yes (always on) |
-| **chrome** | Local Chrome DevTools MCP (for debugging web apps) | 6 | Optional |
-| **motherduck** | DuckDB / MotherDuck analytics | 8 | ✅ Yes (always on) |
-| **infisical** | Secrets management | 10 | ✅ Yes (always on) |
+| Server | Tools (n) | Backend | Use for |
+|:--|--:|:--|:--|
+| `cocoindex-code` (ccc) | 9 | SQLite + BGE-M3 | semantic code search |
+| `cognee` | 10 | Neo4j + LanceDB + DeepSeek | knowledge graph over docs |
+| `firecrawl` | 14+ | Firecrawl SaaS | web search / scrape / crawl / agent / research / monitor / develop |
+| `chrome` (chrome-devtools-mcp) | 28+ | Chrome DevTools | navigation / screenshot / a11y snapshot / JS eval / performance / lighthouse |
+| `motherduck` | 5 | DuckDB + MotherDuck | SQL analytics |
+| `huggingface` | 10+ | HF Hub API | model + dataset + Space discovery |
+| `design-system` | 1+ | Python FastMCP | AG-UI self-heal |
+| `dlt-workspace-mcp` | 8 | dlthub CLI | dlt pipeline workspace |
+| `crawl4ai` | 7+ | self-hosted | open-source bulk scraping |
+| `infisical` | 12 | Infisical API | runtime secret mutation |
+| `graphiti` | 8 | FalkorDB + OpenAI | bi-temporal knowledge graph |
+| `langfuse` | 15+ | Langfuse API | LLM trace retrieval |
 
-**Total: 15 MCP servers, 100+ tools** wired in `opencode.json`.
-
-All secrets are auto-hydrated from Infisical (`dev-baile`
-environment) — never hard-coded in `opencode.json`.
+**Total: 12 enabled MCP servers, 130+ tools.** Run
+`mise run lint:mcp-runtime` to verify every enabled MCP has a
+`mcp:smoke:<name>` mise task.
 
 ---
 
@@ -369,7 +371,7 @@ documented" — agent merges code (CCC) with architecture
 | Doc | Lines | Purpose |
 |:--|--:|:--|
 | `.agents/skills/ccc/SKILL.md` | 400 | Agent usage guide for CCC |
-| `.agents/skills/ccc/references/integration/CCC_INTEGRATION.md` | 187 | KCG-specific setup + dual-search workflow |
+| `.agents/skills/ccc/references/integration/CCC_INTEGRATION.md` | 187 | cianfhoghlaim-specific setup + dual-search workflow |
 | `.agents/skills/ccc/references/health/cocoindex_readiness_audit.md` | 327 | Index health audit (1.4 GB → 2.1 GB, 8,845 files, 257,957 chunks) |
 | `.agents/skills/ccc/references/settings.md` | — | Index settings (`include_patterns`, `exclude_patterns`, embedding model) |
 | `.agents/skills/ccc/references/management.md` | — | CLI commands (init, index, search, status, reset, doctor, mcp, daemon) |
@@ -643,7 +645,7 @@ subagents + 1 research subagent** in `opencode.json`:
 
 The pre-v4 subagent `skill_filter` arrays referenced ~35 legacy
 skill names that no longer exist as top-level skills (e.g.
-`cianfhoghlaim-pipeline`, `kcg-pangolin-stack`, `agent-fleet-orchestration`,
+`cianfhoghlaim-pipeline`, `agent-fleet-orchestration`,
 `document-intelligence`, `tuatha-mmo`, `pent-elemental-cosmology`,
 `croilar-stream-registry`, etc.). These have all been replaced with
 top-level skills that resolve to existing directories under
@@ -796,3 +798,38 @@ uv run python -c "from cocoindex.codebase_indexing import search_api_endpoints; 
 
 **Last updated**: 2026-08-13 (added §10 Code-search canonical entrypoint — resolves the CLI vs v1 App vs graph companion split; 3 surfaces + decision matrix + code samples + 4 infrastructure companions).
 **Owner**: Build agent.
+
+---
+
+## 5. The triple-tool workflow (MCP-native)
+
+Per the §MCP Tool Routing table in `AGENTS.md`, agents should call
+the MCP tools directly when they need a live result. The dual-search
+workflow in §4 stays valid for build pipelines and shell scripts
+(`bun run ccc:search "..."` and `curl /api/v1/search`); agents in a
+fresh OpenCode session should prefer the MCP tools.
+
+```python
+# 1. CCC: find the code (MCP tool — appears in system prompt)
+result = call_mcp_tool("cocoindex-code_search", {
+    "query": "BAML extraction function",
+    "limit": 5,
+})
+
+# 2. Cognee: find the architecture (MCP tool)
+context = call_mcp_tool("cognee_search", {
+    "query": "BAML extraction patterns",
+    "datasets": ["docs-agents", "docs-ml"],
+})
+
+# 3. Firecrawl: check upstream (MCP tool, needs API key)
+upstream = call_mcp_tool("firecrawl_search", {
+    "query": "BAML 0.6 schema changes",
+    "categories": ["developer"],
+    "limit": 3,
+})
+```
+
+`call_mcp_tool` here is conceptual — OpenCode's actual surface is the
+qualified tool name in the system prompt (e.g.
+`mcp__cocoindex-code__cocoindex-code_search`).

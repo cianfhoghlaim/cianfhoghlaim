@@ -4,6 +4,19 @@ mode: primary
 hidden: true
 model: minimax-coding-plan/MiniMax-M3
 color: "#3a5a8f"
+mcp:
+  dlt-workspace-mcp: true
+  firecrawl: true
+  crawl4ai: true
+  infisical: true
+  motherduck: true
+  chrome: true
+  cocoindex-code: true
+  cognee: true
+  graphiti: true
+  langfuse: true
+  huggingface: true
+  design-system: true
 permission:
   edit: ask
   bash: { "*": "ask", "mise run *": "allow", "uv run *": "allow", "openspec *": "allow", "git *": "allow" }

@@ -22,7 +22,7 @@ Use when you need to:
 - "Add MCP / A2UI / MCP-UI to an existing web surface"
 - "Understand the relationship between `web/apps/cianfhoghlaim-web/`,
   `web/apps/croilar-web/`, `web/apps/croilar-portal/`, `web/apps/tuatha-ui/`"
-- "Explain the KCG agentic-web pattern to a new contributor"
+- "Explain the Cianfhoghlaim agentic-web pattern to a new contributor"
 
 ## Overview
 
@@ -106,18 +106,18 @@ all 4 canonical surfaces.
 | **1. Frontend framework** | TanStack Start (React 19 + Vite) | Isomorphic (SSR + RSC + server functions); the same TanStack Router / Query / AI primitives the rest of the monorepo uses |
 | **2. Agentic UI primitives** | CopilotKit React components | Chat panels, generative UI, human-in-the-loop, state diffs; the canonical React-side agentic UI |
 | **3. Agent↔UI protocol** | AG-UI (CopilotKit) | Open, typed, event-streamed protocol; transport-agnostic (HTTP, SSE, WebSocket); tool-call and state-diff events |
-| **4. Edge gateway** | Hono | Lightweight, runs on Cloudflare Workers, Bun, Node, Deno; the KCG OIDC bridge and DuckDB API wrapper |
+| **4. Edge gateway** | Hono | Lightweight, runs on Cloudflare Workers, Bun, Node, Deno; the Cianfhoghlaim OIDC bridge and DuckDB API wrapper |
 | **5. Type-safe RPC** | oRPC | Contract-first RPC; auto-OpenAPI generation; TanStack Query client on the web side; Python `httpx` on the backend side |
 | **6. Real-time backend** | Convex | Reactive queries, durable mutations, scheduled functions, vector search, the Convex Agent component for RAG |
 | **7. Agent runtime** | BAML / Pydantic AI / Agno / Google ADK | One of 4 (see **"Picking the agent runtime"** below) |
 
 ## Picking the agent runtime
 
-The KCG agentic-web pattern is **runtime-agnostic** at the
+The Cianfhoghlaim agentic-web pattern is **runtime-agnostic** at the
 AG-UI / Convex / TanStack layers. Pick the runtime based on
 the agent's shape:
 
-| Runtime | When to use it | KCG exemplar |
+| Runtime | When to use it | Cianfhoghlaim exemplar |
 |:--|:--|:--|
 | **BAML** | Typed structured outputs (the agent emits strongly-typed objects: a `TutorStep`, a `CelticConcept`, a `RAGResponse`). Use when the LLM call is "extract → type" shaped. | Oideachais Celtic Tutor (BAML generates the typed response from a Celtic-language model) |
 | **Pydantic AI** | Pydantic-native agent graphs. Use when the agent is a stateful Pydantic graph (typed inputs, typed outputs, tool-calling, structured streaming). | Croílár Portfolio Research Assistant (Pydantic AI + Pydantic models + FastAPI) |
@@ -146,7 +146,7 @@ React tree. The event types are:
 | `MESSAGES_SNAPSHOT` | server → client | The full message history (re-sync) |
 | `RUN_FINISHED` / `RUN_ERROR` | server → client | Run completed (or failed) |
 
-The KCG pattern uses **typed state** (Zod / Pydantic) for
+The Cianfhoghlaim pattern uses **typed state** (Zod / Pydantic) for
 the `STATE_*` events — the agent emits a typed
 `TutorState` (lesson progress, mastery score, last
 concept), the client applies the delta, and CopilotKit
@@ -209,7 +209,7 @@ re-renders the right component.
 
 OpenChamber is the cross-cutting **agent-IDE surface** —
 a web/desktop UI that gives humans direct hands-on access to
-the `opencode-ai` runtime (the canonical KCG agent harness).
+the `opencode-ai` runtime (the canonical Cianfhoghlaim agent harness).
 It is NOT a replacement for the 4 TanStack + CopilotKit +
 AG-UI surfaces above; it sits orthogonal to them as the
 **developer-facing workbench** for the 12-agent fleet.
@@ -240,7 +240,7 @@ The full contract is in
 
 ## The 3 backend options (under the AG-UI server)
 
-| Backend | When to use it | KCG exemplar |
+| Backend | When to use it | Cianfhoghlaim exemplar |
 |:--|:--|:--|
 | **BAML** | Typed structured outputs (the LLM emits a typed object) | Oideachais Celtic Tutor (BAML `TutorStep` / `CelticConcept` / `RAGResponse`) |
 | **Pydantic AI** | Stateful Pydantic agent graphs | Croílár Portfolio Research Assistant |
@@ -396,7 +396,7 @@ workflow.
 ## MCP servers
 
 The **9 MCP servers** wired in `opencode.json` for the
-KCG agent layer (cognition, code search, tracing, web
+Cianfhoghlaim agent layer (cognition, code search, tracing, web
 scraping, browser automation, SQL analytics, secret
 management):
 
@@ -504,11 +504,11 @@ were archived to `docs/archive/2026-06-06-agents/`.
 
 ## 2026-06 update: AG-UI + Pydantic AI + DBOS
 
-The 4 agentic-frontend frameworks KCG uses (TanStack Start, CopilotKit, AG-UI, Hono, oRPC) are joined by 3 new ones in 2026.
+The 4 agentic-frontend frameworks Cianfhoghlaim uses (TanStack Start, CopilotKit, AG-UI, Hono, oRPC) are joined by 3 new ones in 2026.
 
 ### AG-UI protocol (CopilotKit's agent↔UI protocol)
 
-The AG-UI protocol is the open SSE-based standard for agent↔UI streaming. The KCG surface uses it for the oideachais API (port 8000) and the croilar portal (port 3001). The protocol handles:
+The AG-UI protocol is the open SSE-based standard for agent↔UI streaming. The Cianfhoghlaim surface uses it for the oideachais API (port 8000) and the croilar portal (port 3001). The protocol handles:
 
 - Streamed text tokens (the agent's response as it's generated)
 - Streamed tool calls (the agent's BAML extraction in flight)
@@ -521,11 +521,11 @@ The `ag-ui` skill (in `.agents/skills/ag-ui/SKILL.md`) documents the full protoc
 
 Pydantic AI is a Pydantic-native agent framework that pairs naturally with the AG-UI protocol. The Pydantic AI Gateway (BYOK/managed/cost-limits) routes the agent's LLM calls through a central gateway, with cost limits per agent per model.
 
-The KCG pattern: any new agent (e.g. the 12 in `agents/`) should use Pydantic AI for typed I/O. The `pydantic-ai` skill documents the framework.
+The Cianfhoghlaim pattern: any new agent (e.g. the 12 in `agents/`) should use Pydantic AI for typed I/O. The `pydantic-ai` skill documents the framework.
 
 ### DBOS durable execution
 
-DBOS is a durable execution layer for Python — the agent's state survives crashes and restarts. The KCG pattern is documented in the `pydantic-ai` skill, with a reference implementation in `agents/dbos_demo.py`.
+DBOS is a durable execution layer for Python — the agent's state survives crashes and restarts. The Cianfhoghlaim pattern is documented in the `pydantic-ai` skill, with a reference implementation in `agents/dbos_demo.py`.
 
 ### Pair this skill with
 
@@ -537,3 +537,33 @@ DBOS is a durable execution layer for Python — the agent's state survives cras
 - `orpc/SKILL.md` — the oRPC type-safe RPC
 - `conex/SKILL.md` — the Convex real-time backend
 - `cloudflare/SKILL.md` — the Cloudflare Workers / D1 / R2 deploy
+
+---
+
+## V6 era updates (2026-09-01)
+
+Per the 2026-09-01-cianfhoghlaim-nua-a2ui-catalog-v1 change
+(Phase 2 of the cianfhoghlaim-nua v6 era plan), a canonical A2UI v0.9
+catalog was added at `web/packages/a2ui/` with 11 components:
+- `StudyPlanCard` (Phase 1)
+- `WeekTimeline`
+- `MilestoneBadge`
+- `ExamPaperCard`
+- `MarksBreakdownTable`
+- `KCWeightsBar`
+- `StageOverview`
+- `SubjectCard`
+- `MarimoEmbed` (existing)
+- `CiPdfLibraryPanel` (existing)
+- `TranslationToggle` (existing)
+- `OralStudyPlayer` (Phase 6)
+
+The catalog factory `createCatalog()` mounts all 11 components
+in any CopilotKit host. The catalogId is
+`https://cianfhoghlaim.ie/a2ui/catalogs/cianfhoghlaim-nua-v1.json`.
+
+Per the 2026-09-01-cianfhoghlaim-nua-web-consolidation-v1 change
+(Phase 3), the 5 web apps (`cianfhoghlaim` + `oideachais` +
+`oideachais-dashboard` + `tuatha` + `croilar-web`) are collapsed
+into one consolidated `web/apps/cianfhoghlaim-nua/` app with 6
+route groups (student + educator + researcher + author + mmo + admin).

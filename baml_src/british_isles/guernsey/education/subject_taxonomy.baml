@@ -104,8 +104,9 @@ class GuernseyAssessmentObjective {
 function ExtractGuernseySyllabus(
   pdf_text: string,
   subject: GuernseySubject?,
-  level: GuernseyLevel?,
-) -> GuernseySyllabusSpec {  client BIEPV3Extract
+  level: GuernseyLevel?
+) -> GuernseySyllabusSpec {
+  client BIEPV3Extract
   prompt #"
     Extract the structured syllabus data from this Guernsey (States of
     Guernsey Education Services) PDF specification for the subject
@@ -119,22 +120,6 @@ function ExtractGuernseySyllabus(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    GuernseySyllabusSpec {
-      source_pdf "",
-      source_pages 0,
-      subject guernseysubject {},
-      level guernseylevel {},
-      title "",
-      version "",
-      first_teaching_year null,
-      last_certification_year null,
-      total_marks 0,
-      component_papers 0,
-      topics null,
-      assessment_objectives null,
-    }
-  }
 }
 
 test ExtractGuernseySyllabus {

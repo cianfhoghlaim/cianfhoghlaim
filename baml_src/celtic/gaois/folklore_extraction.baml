@@ -68,8 +68,9 @@ class DuchasPersonNameExtraction {
 // Parse Dúchas XML response
 function ParseDuchasXML(
   xml_content: string
-) -> DuchasXMLRecord {  client ExtractEn
-    prompt #"
+) -> DuchasXMLRecord {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -77,7 +78,7 @@ function ParseDuchasXML(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -105,15 +106,15 @@ class HandwritingExtraction {
   writer_estimated_age string? @description("Estimated age of writer (child/adult)")
   legibility string @description("Legibility assessment: clear, fair, poor")
   special_features string[]? @description("Special features: crossouts, marginalia, etc.")
-  @@stream.done
 }
 
 // Extract text from handwritten manuscript image
 function ExtractHandwriting(
   page_image: image,
   context: DuchasXMLRecord?
-) -> HandwritingExtraction {  client ExtractEn
-    prompt #"
+) -> HandwritingExtraction {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -121,12 +122,8 @@ function ExtractHandwriting(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    HandwritingExtraction {}
-  }
 }
 
 // Batch extraction for multi-page stories
@@ -139,15 +136,15 @@ class StoryExtraction {
   topics FolkloreTopic[] @description("Classified folklore topics")
   summary string @description("Brief summary of the story content")
   summary_ga string? @description("Summary in Irish")
-  @@stream.done
 }
 
 // Extract complete story from multiple pages
 function ExtractStory(
   page_images: image[],
   metadata: DuchasXMLRecord
-) -> StoryExtraction {  client ExtractEn
-    prompt #"
+) -> StoryExtraction {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -155,12 +152,8 @@ function ExtractStory(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    StoryExtraction {}
-  }
 }
 
 // ============================================================================

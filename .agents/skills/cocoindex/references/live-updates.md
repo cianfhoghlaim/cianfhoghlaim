@@ -60,7 +60,7 @@ skipped files (see `orchestration/defs/docs_skills_assets.py`).
 - Global env vars: `COCOINDEX_SOURCE_MAX_INFLIGHT_ROWS`,
   `COCOINDEX_SOURCE_MAX_INFLIGHT_BYTES`
 
-## KCG live-update patterns
+## Cianfhoghlaim live-update patterns
 
 - `cocoindex/docs_skills_consolidation.py` —
   live-walks `docs/` and `.agents/skills/`

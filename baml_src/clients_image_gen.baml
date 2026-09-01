@@ -11,8 +11,7 @@
 //   - role="legacy"    → sdxl            (legacy SDXL)
 //   - role="diagrams"   → fibo            (diagrams + textures)
 //
-// When the image_gen stack is deployed (InvokeAI / ComfyUI / llama.cpp),
-// replace the `InvokeAILocalImageGen` endpoint with the production
+// When the image_gen stack is deployed (InvokeAI / ComfyUI / llama.cpp)
 // server. The 5 client blocks below remain unchanged.
 //
 // Reference:
@@ -124,7 +123,10 @@ class ImageAssetMetadata {
   created_at string
 }
 
-function ExtractImageAssetMetadata(prompt: string, language: string?) -> ImageAssetMetadata {
+function ExtractImageAssetMetadata(
+  prompt: string,
+  language: string?
+) -> ImageAssetMetadata {
   client ImageGenDefault
   prompt #"
     {{ _.role("user") }}
@@ -143,19 +145,6 @@ function ExtractImageAssetMetadata(prompt: string, language: string?) -> ImageAs
 
     PROMPT: {{ prompt }}
   "#
-
-  catch_all (err) {
-    ImageAssetMetadata {
-      subject "",
-      style null,
-      palette null,
-      width 0,
-      height 0,
-      baml_routing_role "",
-      cocoindex_record_id "",
-      created_at "",
-    }
-  }
 }
 
 // ====== Style-match function (for the style_match tool) ======
@@ -174,7 +163,11 @@ class StyleMatchVariant {
   rationale string
 }
 
-function ExtractStyleMatchVariants(reference_prompt: string, target_prompt: string, count: int) -> StyleMatchVariants {
+function ExtractStyleMatchVariants(
+  reference_prompt: string,
+  target_prompt: string,
+  count: int
+) -> StyleMatchVariants {
   client ImageGenBilingual
   prompt #"
     {{ _.role("user") }}
@@ -194,12 +187,4 @@ function ExtractStyleMatchVariants(reference_prompt: string, target_prompt: stri
     REFERENCE STYLE: {{ reference_prompt }}
     TARGET SUBJECT: {{ target_prompt }}
   "#
-
-  catch_all (err) {
-    StyleMatchVariants {
-      reference_prompt "",
-      target_prompt "",
-      variants null,
-    }
-  }
 }

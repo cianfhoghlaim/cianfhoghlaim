@@ -2,8 +2,7 @@
 //
 // Used by the Gemini 6-corpus pipeline (change C) to extract
 // structured data from agent-generated PDFs in
-// `leabharlann/gemini_deep_research/{law,medical,politics,culture,
-// technology,other}/`. Each corpus has its own per-corpus variants
+// `leabharlann/gemini_deep_research/{law,medical,politics,culture
 // (LegalCaseProfile for law; MedicalCaseProfile for medical; etc.)
 // but the 4 shared classes below are used across all 6 corpora.
 //

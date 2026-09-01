@@ -2,7 +2,7 @@
 
 The `docs/dagster/integrations/dlt_github/` example (deleted with
 the `sync-skills-from-docs` change) is the closest analogue to
-KCG's `ireland/curriculum/` ingestion pattern: 5 parallel REST
+Cianfhoghlaim's `ireland/curriculum/` ingestion pattern: 5 parallel REST
 endpoints, each as its own Dagster asset, with incremental loading
 and a daily schedule.
 
@@ -83,7 +83,7 @@ def github_daily(context: ScheduleEvaluationContext):
     return RunRequest()
 ```
 
-## KCG usage
+## Cianfhoghlaim usage
 
 - The `ireland/curriculum/` assets (33+ sources) use this exact
   pattern

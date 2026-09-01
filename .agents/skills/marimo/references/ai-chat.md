@@ -163,7 +163,7 @@ def _():
     return (chat,)
 ```
 
-## KCG conventions
+## Cianfhoghlaim conventions
 
 - All marimo AI chats MUST have an `OPENAI_API_KEY` (or
   `Z_AI_API_KEY`) gate at the top (use `mo.stop(not key, ...)`)

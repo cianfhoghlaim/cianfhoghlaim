@@ -1,6 +1,6 @@
-# Marimo on Cloudflare Workers + Container (KCG production)
+# Marimo on Cloudflare Workers + Container (Cianfhoghlaim production)
 
-The KCG production deployment for marimo is a Cloudflare
+The Cianfhoghlaim production deployment for marimo is a Cloudflare
 Worker that proxies requests to a marimo Container via a
 Durable Object. This is the canonical "deploy a marimo
 notebook as a public dashboard" pattern.
@@ -85,10 +85,10 @@ export default {
 };
 ```
 
-## KCG examples
+## Cianfhoghlaim examples
 
 - `infrastructure/stacks/marimo/` — the canonical
-  KCG Cloudflare Workers + marimo stack
+  Cianfhoghlaim Cloudflare Workers + marimo stack
 - `notebooks/` — example notebooks (curriculum,
   leabharlann, etc.) that follow this pattern
 - The 5 educational-stage dashboards at
@@ -114,4 +114,4 @@ export default {
 
 - Cloudflare Workers + Containers: <https://developers.cloudflare.com/workers/runtime/apis/durable-objects/>
 - Marimo server docs: <https://docs.marimo.io/guides/deploying/>
-- KCG example: `infrastructure/stacks/marimo/`
+- Cianfhoghlaim example: `infrastructure/stacks/marimo/`

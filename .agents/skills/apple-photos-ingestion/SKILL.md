@@ -98,7 +98,7 @@ regardless (no GPS needed for those).
 
 The user has prior experience with offline vision models for
 vehicle analysis (from an HMG government comms project). The
-`apple_photos_vehicle_cross_frame` asset is the KCG
+`apple_photos_vehicle_cross_frame` asset is the Cianfhoghlaim
 implementation of that pattern: given successive photos of the
 same vehicle (same `plate_text` OCR'd), compute the velocity
 from GPS delta + time delta. Skips pairs where:

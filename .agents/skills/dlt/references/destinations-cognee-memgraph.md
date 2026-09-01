@@ -96,7 +96,7 @@ def cognee_destination(items, table):
     asyncio.run(_run())
 ```
 
-## KCG usage
+## Cianfhoghlaim usage
 
 - `cianfhoghlaim-cognify-knowledge-graph` spec — 5-stage cross-stage
   cognify + 3 leabharlann cognify + 3 cross-archive FalkorDB edges

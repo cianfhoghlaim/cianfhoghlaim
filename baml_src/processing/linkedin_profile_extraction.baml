@@ -36,11 +36,13 @@ class LinkedInProfile {
   streamId string @description("The croilar Stream id this profile belongs to: music, teaching, cv, or research")
   ownerDisplayName string @description("Canonical owner display name, e.g. 'Cian Mac an Déisigh Uí Liatháin'")
   ownerSlug string? @description("Owner alias from Stream.owner, e.g. 'cianfhoghlaim'")
-  @@stream.done
 }
 
-function ExtractLinkedInProfile(text: string) -> LinkedInProfile {  client ExtractEn
-    prompt #"
+function ExtractLinkedInProfile(
+  text: string
+) -> LinkedInProfile {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -48,26 +50,15 @@ function ExtractLinkedInProfile(text: string) -> LinkedInProfile {  client Extra
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    LinkedInProfile {
-      name "",
-      headline "",
-      location "",
-      about "",
-      experience null,
-      education null,
-      skills null,
-      recommendations null,
-      profileUrl "",
-    }
-  }
 }
 
-function ExtractExperienceHighlights(profile: LinkedInProfile) -> string {  client ExtractEn
-    prompt #"
+function ExtractExperienceHighlights(
+  profile: LinkedInProfile
+) -> string {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -75,10 +66,6 @@ function ExtractExperienceHighlights(profile: LinkedInProfile) -> string {  clie
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    ""
-  }
 }

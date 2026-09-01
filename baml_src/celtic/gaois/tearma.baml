@@ -133,7 +133,6 @@ class IrishGrammar {
   verb_grammar IrishVerbGrammar? @description("Verb-specific grammar if applicable")
   adjective_grammar IrishAdjectiveGrammar? @description("Adjective-specific grammar if applicable")
   notes string? @description("Additional grammatical notes")
-  @@stream.done
 }
 
 // Term in a single language
@@ -231,7 +230,6 @@ class TearmaDomainTerms {
   domain_name_en string @description("Domain name in English")
   term_count int @description("Number of terms in this domain")
   terms TearmaTerm[] @description("Terms in this domain")
-  @@stream.done
 }
 
 // ============================================================================
@@ -248,7 +246,6 @@ class EducationalTerm {
   curriculum_code string? @description("NCCA curriculum reference code")
   definition_ga string? @description("Short definition in Irish")
   definition_en string? @description("Short definition in English")
-  @@stream.done
 }
 
 // Legal term (subset for law domain)
@@ -280,8 +277,9 @@ class ITTerm {
 // Parse Tearma API JSON response for a single term
 function ParseTearmaTerm(
   json_response: string
-) -> TearmaTerm {  client ExtractEn
-    prompt #"
+) -> TearmaTerm {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
 
@@ -305,15 +303,16 @@ function ParseTearmaTerm(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
 // Parse Tearma search results
 function ParseTearmaSearchResults(
   json_response: string
-) -> TearmaSearchResult {  client ExtractEn
-    prompt #"
+) -> TearmaSearchResult {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
 
@@ -337,7 +336,7 @@ function ParseTearmaSearchResults(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -345,8 +344,9 @@ function ParseTearmaSearchResults(
 function ExtractDomainTerminology(
   json_response: string,
   target_domain: TerminologyDomain
-) -> TearmaDomainTerms {  client ExtractEn
-    prompt #"
+) -> TearmaDomainTerms {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
 
@@ -370,12 +370,8 @@ function ExtractDomainTerminology(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    TearmaDomainTerms {}
-  }
 }
 
 // Extract educational terminology for curriculum alignment
@@ -383,8 +379,9 @@ function ExtractEducationalTerms(
   json_response: string,
   subject: string,
   level: string
-) -> EducationalTerm[] {  client ExtractEn
-    prompt #"
+) -> EducationalTerm[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
 
@@ -408,20 +405,17 @@ function ExtractEducationalTerms(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    EducationalTerm[] {}
-  }
 }
 
 // Extract Irish grammar information from term
 function ExtractIrishGrammar(
   term_text: string,
   context: string
-) -> IrishGrammar {  client ExtractEn
-    prompt #"
+) -> IrishGrammar {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
 
@@ -445,19 +439,16 @@ function ExtractIrishGrammar(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    IrishGrammar {}
-  }
 }
 
 // Generate bilingual term card for vocabulary learning
 function GenerateTermCard(
   term: TearmaTerm
-) -> string {  client ExtractEn
-    prompt #"
+) -> string {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
 
@@ -481,7 +472,7 @@ function GenerateTermCard(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -489,8 +480,9 @@ function GenerateTermCard(
 function LinkTermToPlacenames(
   term: TearmaTerm,
   placename_contexts: string[]
-) -> int[] {  client ExtractEn
-    prompt #"
+) -> int[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
 
@@ -514,7 +506,7 @@ function LinkTermToPlacenames(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -523,8 +515,9 @@ function TranslateTerm(
   source_text: string,
   source_language: string,
   domain_context: TerminologyDomain?
-) -> TearmaTerm {  client ExtractEn
-    prompt #"
+) -> TearmaTerm {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
 
@@ -548,7 +541,7 @@ function TranslateTerm(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -577,8 +570,9 @@ class DuchasFolkloreReference {
 function FindFolkloreUsage(
   term: TearmaTerm,
   duchas_search_results: string
-) -> TearmaFolkloreLink {  client ExtractEn
-    prompt #"
+) -> TearmaFolkloreLink {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
 
@@ -602,7 +596,7 @@ function FindFolkloreUsage(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -622,8 +616,9 @@ function CrossReferencePlacenameElement(
   term_text: string,
   tearma_data: string,
   logainm_glossary: string
-) -> BilingualPlaceTerm {  client ExtractEn
-    prompt #"
+) -> BilingualPlaceTerm {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
 
@@ -647,6 +642,6 @@ function CrossReferencePlacenameElement(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

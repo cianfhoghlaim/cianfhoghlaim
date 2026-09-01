@@ -5,7 +5,7 @@
 > and the missing DLT deep-analysis — substituted inline with the canonical
 > `dlt_sources/AGENTS.md` + `LEGACY_ALIASES.md`) plus upstream-verified best
 > practices from `dlthub.com`, `docs.dagster.io`, `cocoindex.io`, and
-> `tanstack.com`. Date: 2026-08-24. Repo: `/Users/cianmacandeisigh/dev/kings_college_galway`.
+> `tanstack.com`. Date: 2026-08-24. Repo: `/Users/cianmacandeisigh/dev/cianfhoghlaim`.
 >
 > **Authoritative scope.** This plan supersedes the sub-reports; the source-of-truth
 > for the action plan lives here. Sub-reports remain as evidence + line-level audit.
@@ -237,7 +237,7 @@ The doc is **historical** (no `import dlt.european_nations.alb` shim remains).
 | Total LOC | **19,464** |
 | Dagster version | **1.13+** (`dg.load_defs(defs_root=...)` canonical) |
 | Walker fallback for Dagster <1.13 | **131 LOC** (`_defs_walker.py`) — bypasses Python 3.13 tokenizer bug |
-| Components defined | **11** (5 KCG + 5 jurisdiction/topic + 1 federated OCR) |
+| Components defined | **11** (5 Cianfhoghlaim + 5 jurisdiction/topic + 1 federated OCR) |
 | Components instantiated via `defs.yaml` | **~96** (all in L3 model_lifecycle) |
 | Resources (`ConfigurableResource`) | **22** |
 | Layers fully Componentised | **1/5** (only L3) |
@@ -852,7 +852,7 @@ print(c.search('StateBackedComponent defs_state site:docs.dagster.io', categorie
 | # | Task | Files touched | Tests | Verification |
 |--:|:--|:--|:--|:--|
 | **2.1** | Scaffold the `orchestration/pipelines/` directory tree (mirror of `dlt_sources/`). | 18 dirs (NEW) under `orchestration/pipelines/` | `tree orchestration/pipelines/` | Tree matches dlt_sources/ |
-| **2.2** | Write the shared helper at `orchestration/pipelines/_shared/dagster_dlt_integration.py` — wraps `DltLoadCollectionComponent` for the KCG namespace. Adds the `translation:` key defaults. | `orchestration/pipelines/_shared/dagster_dlt_integration.py` (NEW) | `dg check yaml` | Exits 0 |
+| **2.2** | Write the shared helper at `orchestration/pipelines/_shared/dagster_dlt_integration.py` — wraps `DltLoadCollectionComponent` for the Cianfhoghlaim namespace. Adds the `translation:` key defaults. | `orchestration/pipelines/_shared/dagster_dlt_integration.py` (NEW) | `dg check yaml` | Exits 0 |
 | **2.3** | Write the State-backed helper at `orchestration/pipelines/_shared/state_helpers.py` — defaults to `LOCAL_FILESYSTEM` (the 1.13+ canonical). Wires `.local_defs_state/` for the 5 high-churn sources. | `orchestration/pipelines/_shared/state_helpers.py` (NEW) | `dg utils refresh-defs-state --help` | Exits 0 |
 | **2.4** | For each dlt source in `dlt_sources/british_isles/`, create the corresponding `defs.yaml` in `orchestration/pipelines/british_isles/`. **Use the canonical `dg scaffold defs` pattern**: `dg scaffold defs dagster_dlt.DltLoadCollectionComponent ireland_lc_subjects --source dlt_sources.british_isles.ireland.education.lc_subjects --destination ducklake` | ~45 defs.yaml files | `dg check yaml` per dir | All British Isles defs.yaml validate |
 | **2.5** | Repeat 2.4 for the remaining ~80 `defs.yaml` files (european_nations, european_union, commonwealth, american_nations, celtic, lexicographic, cultural_heritage, language_models, official_media, portfolio, apple_photos, api_sources, filesystem, media_intel). | ~80 files | `dg check yaml` per dir | Exits 0 |
@@ -1101,7 +1101,7 @@ This section consolidates Section 4 into a single per-wave matrix.
 **Risk.** Per orchestration report §A.9: L1 = "Legacy", L2 = "Mixed", L4 = "Mixed", L4 budget/memory = "Legacy", L5 = "Legacy". The `CelticIngestionComponent` (L1) + `CelticAgentOpsComponent` (L5) are **defined** but **never instantiated** anywhere. The 619 empty placeholder YAMLs under `defs/1_ingestion/` (per Wave 0.5) are the audit trail.
 
 **Mitigation.**
-- Wave 2 reorganises Dagster to per-pipeline Components. Every dlt source gets a `defs.yaml` backed by `DltLoadCollectionComponent`. The `CelticIngestionComponent` becomes the **shared base class** for these (the KCG wrapper around `DltLoadCollectionComponent`).
+- Wave 2 reorganises Dagster to per-pipeline Components. Every dlt source gets a `defs.yaml` backed by `DltLoadCollectionComponent`. The `CelticIngestionComponent` becomes the **shared base class** for these (the Cianfhoghlaim wrapper around `DltLoadCollectionComponent`).
 - The `CelticAgentOpsComponent` becomes instantiated by the 12-agent fleet (Wave 2.6, moves the agent ops files into Components).
 
 ### 6.3 The post-2026-08-23 UoG batch bypasses Components
@@ -1352,7 +1352,7 @@ This section consolidates Section 4 into a single per-wave matrix.
 
 **Author:** Read-only synthesis subagent.
 **Date:** 2026-08-24.
-**Working directory:** `/Users/cianmacandeisigh/dev/kings_college_galway`.
+**Working directory:** `/Users/cianmacandeisigh/dev/cianfhoghlaim`.
 **Scope:** `dlt_sources/` + `orchestration/` + `cocoindex_flows/` + `observability/` + `dlt_sources/_lakehouse/` + `web/`.
 **Status:** Synthesis complete. Ready for openspec change authoring + Wave 0 execution.
 

@@ -26,7 +26,6 @@ class LegalAidPage {
   statutory_basis        StatuteReference[]              @description("Statutes referenced (e.g. Civil Legal Aid Act 1995)")
   summary                string                          @description("2-3 sentence summary of the page")
   extraction_confidence  float                           @description("0.0-1.0")
-  @@stream.done
 }
 
 class LegalAidForm {
@@ -39,14 +38,14 @@ class LegalAidForm {
   fillable_fields        string[]                        @description("Names of fields the form requires (e.g. 'PPSN', 'Income', 'Assets')")
   related_statutes       StatuteReference[]              @description("Statutes the form is made under")
   extraction_confidence  float                           @description("0.0-1.0")
-  @@stream.done
 }
 
 function ExtractLegalAidPage(
   page_url: string,
-  page_html: string,
-) -> LegalAidPage {  client ExtractEn
-    prompt #"
+  page_html: string
+) -> LegalAidPage {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -54,24 +53,17 @@ function ExtractLegalAidPage(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    LegalAidPage {
-      url "",
-      title "",
-      legal_aid_category legalaidcategory {},
-      eligibility_outcome legalaideligibilityoutcome {},
-    }
-  }
 }
 
 function ExtractLegalAidForm(
   page_url: string,
-  page_html: string,
-) -> LegalAidForm {  client ExtractEn
-    prompt #"
+  page_html: string
+) -> LegalAidForm {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -79,14 +71,7 @@ function ExtractLegalAidForm(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    LegalAidForm {
-      url "",
-      form_title "",
-      legal_aid_category legalaidcategory {},
-    }
-  }
 }

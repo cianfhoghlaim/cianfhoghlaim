@@ -13,28 +13,28 @@
 //             spec.md § media-intel-acquisition-plan Requirement 3
 
 class AvatarElement {
-  earth
-  air
-  water
-  fire
-  spirit
-  none
+  earth string
+  air string
+  water string
+  fire string
+  spirit string
+  none string
 }
 
 class BendingSubdiscipline {
   // The sub-discipline of bending the actor is using. "none"
   // for non-bending; "spirit" for the Avatar State /
   // energybending.
-  metal
-  blood
-  lightning
-  healing
-  sand
-  lavabending
-  combustion
-  flight
-  energy
-  none
+  metal string
+  blood string
+  lightning string
+  healing string
+  sand string
+  lavabending string
+  combustion string
+  flight string
+  energy string
+  none string
 }
 
 class AnimationPowerEvent {
@@ -123,7 +123,7 @@ function ExtractAnimationDescriptor(
   source_frame: int,
   work: string,
   language: string,
-  evidence: string,
+  evidence: string
 ) -> AnimationMediaDescriptor {
   client MediaIntelPrimary
   prompt #"

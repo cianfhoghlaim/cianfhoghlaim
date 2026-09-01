@@ -295,7 +295,7 @@ pip install "ragas[embeddings]"
 - [`lancedb`](.skills/lancedb/SKILL.md) - Vector database for RAG
 - [`cognee`](.skills/cognee/SKILL.md) - Knowledge graph for RAG
 
-## KCG integration
+## Cianfhoghlaim integration
 
 The Cianfhoghlaim curriculum pipeline uses RAGAS in two
 critical places:

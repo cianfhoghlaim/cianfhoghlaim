@@ -173,9 +173,10 @@ class CrossJurisdictionBridge {
 // ----------------------------------------------------------------------------
 
 function QueryRegistryByJurisdiction(
-  jurisdiction: "baml_src.british_isles._cross.biep_subject.Jurisdiction",
-) -> SubjectRegistryRow[] {  client ExtractEn
-    prompt #"
+  jurisdiction: "baml_src.british_isles._cross.biep_subject.Jurisdiction"
+) -> SubjectRegistryRow[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -183,14 +184,15 @@ function QueryRegistryByJurisdiction(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
 function QueryRegistryByConcept(
-  concept: CrossJurisdictionConcept,
-) -> SubjectRegistryRow[] {  client ExtractEn
-    prompt #"
+  concept: CrossJurisdictionConcept
+) -> SubjectRegistryRow[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -198,6 +200,6 @@ function QueryRegistryByConcept(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

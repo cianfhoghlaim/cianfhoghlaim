@@ -374,11 +374,11 @@ journalctl -u komodo-periphery -f
 - **GitHub**: https://github.com/mbecker20/komodo
 - **Discord**: discord.gg/DRqE8Fvg5c
 
-## KCG integration (canonical)
+## Cianfhoghlaim integration (canonical)
 
 The Cianfhoghlaim platform runs **88 stacks** across 5
 categories (storage, engineering, ML, infrastructure, tools),
-all managed via a single Komodo instance. The KCG patterns
+all managed via a single Komodo instance. The Cianfhoghlaim patterns
 that differ from the upstream docs above:
 
 ### 5-stage deploy procedure
@@ -424,7 +424,7 @@ against the live Komodo state, and emits a diff.
 | `cognee` | `cognee.cianfhoghlaim.ie` | `infrastructure/stacks/cognee` |
 | `n8n` | `n8n.cianfhoghlaim.ie` | `infrastructure/stacks/n8n` |
 
-### KCG custom actions
+### Cianfhoghlaim custom actions
 
 - `stack:up <name>` — bring up a Compose stack
 - `stack:down <name>` — bring down a Compose stack

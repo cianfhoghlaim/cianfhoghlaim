@@ -415,7 +415,7 @@ mkdir -p config wireguard
 - **Pangolin API**: http://localhost:3001/v1/docs
 - **Docker Networking**: https://docs.docker.com/network/
 
-## KCG integration (canonical)
+## Cianfhoghlaim integration (canonical)
 
 The Cianfhoghlaim platform uses Pangolin in a **convergence
 architecture**:
@@ -445,14 +445,14 @@ authenticate via WebAuthn passkeys (no passwords).
 # Pangolin resource config (in komodo)
 pangolin.oidc:
   provider: pocketid
-  client_id: kcg-admin
+  client_id: cianfhoghlaim-admin
   client_secret: ${INFISICAL:POCKETID_CLIENT_SECRET}
   issuer_url: https://pocketid.cianfhoghlaim.ie
 ```
 
 ### CrowdSec (anti-bruteforce)
 
-The KCG Pangolin instance fronts CrowdSec for anti-bruteforce.
+The Cianfhoghlaim Pangolin instance fronts CrowdSec for anti-bruteforce.
 CrowdSec runs as a service **inside the Pangolin stack** at
 `infrastructure/stacks/pangolin/compose.yaml`, not as a
 standalone stack:
@@ -490,7 +490,7 @@ The 6 labels (in order): `name`, `mode`, `full-domain`,
 
 ### Multi-site HA
 
-For the canonical KCG production deploy:
+For the canonical Cianfhoghlaim production deploy:
 
 ```yaml
 pangolin.sites:
@@ -519,9 +519,9 @@ The Periphery node is then reachable at
 `https://bunchloch-dev.cianfhoghlaim.ie` from the control
 plane.
 
-### 3-tier host convergence (the canonical KCG topology)
+### 3-tier host convergence (the canonical Cianfhoghlaim topology)
 
-KCG runs across **3 hosts**, not 1 or 2. Pangolin
+Cianfhoghlaim runs across **3 hosts**, not 1 or 2. Pangolin
 WireGuard tunnels wire them together:
 
 | Tier | Host | Role | Pangolin role |

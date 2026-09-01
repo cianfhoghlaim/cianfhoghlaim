@@ -91,7 +91,7 @@ def _():
 from pyiceberg.catalog import load_catalog
 
 catalog = load_catalog(
-    "kcg",
+    "cianfhoghlaim",
     type="rest",
     uri="https://lakekeeper.cianfhoghlaim.ie/catalog",
     token=os.environ["LAKEKEEPER_TOKEN"],
@@ -184,7 +184,7 @@ def _():
 `engine=` passes the connection explicitly. `output=False`
 prevents auto-display.
 
-## KCG conventions
+## Cianfhoghlaim conventions
 
 - All notebooks use `mo.sql(engine=conn, output=False)` +
   `mo.ui.table(df)` for displaying query results

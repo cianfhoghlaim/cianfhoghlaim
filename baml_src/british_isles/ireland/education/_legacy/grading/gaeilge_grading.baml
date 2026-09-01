@@ -51,10 +51,11 @@ class GaeilgeMarkingRationale {
 function GradeGaeilgeResponse(
   student_answer: string,
   question: "baml_src.education.lc_extraction.exam_paper_layout.Question",
-  marking_scheme: "baml_src.education.lc_extraction.marking_scheme.MarkAllocation",
-  is_higher_level: bool,
-) -> GaeilgeGrade {  client ExtractEn
-    prompt #"
+  marking_scheme: "baml_src.education.lc_extraction.marking_scheme.LCMarkAllocation",
+  is_higher_level: bool
+) -> GaeilgeGrade {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -62,15 +63,16 @@ function GradeGaeilgeResponse(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
 function ExplainGaeilgeMarkingScheme(
   marking_scheme_id: string,
-  marking_scheme: "baml_src.education.lc_extraction.marking_scheme.MarkingScheme",
-) -> GaeilgeMarkingRationale {  client ExtractEn
-    prompt #"
+  marking_scheme: "baml_src.education.lc_extraction.marking_scheme.MarkingScheme"
+) -> GaeilgeMarkingRationale {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -78,7 +80,7 @@ function ExplainGaeilgeMarkingScheme(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 

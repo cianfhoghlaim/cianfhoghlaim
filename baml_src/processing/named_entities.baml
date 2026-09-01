@@ -1,6 +1,5 @@
 // === ARCHIVED 2026-06-24 ===
-// The 5 functions in this file (ExtractCelticEntities,
-// ExtractPersonEntities, ExtractPlaceEntities,
+// The 5 functions in this file (ExtractCelticEntities
 // ExtractSupernaturalEntities, ExtractFestivalEntities) have
 // no current Python consumer in the oideachais quadrant. They
 // are intended for the meaisinfhoghlaim/ Celtic-linguistic
@@ -72,7 +71,6 @@ class CelticNamedEntity {
   irish_form string? @description("Irish language form")
   english_form string? @description("English translation/form")
   confidence EntityConfidence @description("Extraction confidence")
-  @@stream.done
 }
 
 // Person entity with role
@@ -85,7 +83,6 @@ class PersonEntity {
   death_year int? @description("Death year if known")
   location string? @description("Associated location")
   occupation string? @description("Occupation if known")
-  @@stream.done
 }
 
 // Place entity with Logainm linkage
@@ -99,7 +96,6 @@ class PlaceEntity {
   logainm_id int? @description("Logainm.ie ID for linking")
   latitude float? @description("Latitude if known")
   longitude float? @description("Longitude if known")
-  @@stream.done
 }
 
 // Supernatural entity with folklore context
@@ -112,7 +108,6 @@ class SupernaturalEntity {
   associated_location string? @description("Where it appears")
   protection string? @description("How to protect against it")
   summoning string? @description("How to summon or attract it")
-  @@stream.done
 }
 
 // Festival/calendar custom entity
@@ -123,7 +118,6 @@ class FestivalEntity {
   customs string? @description("Associated customs")
   foods string? @description("Associated foods")
   beliefs string? @description("Associated beliefs")
-  @@stream.done
 }
 
 // ============================================================================
@@ -143,7 +137,7 @@ function ExtractCelticEntities(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -159,7 +153,7 @@ function ExtractPersonEntities(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -175,7 +169,7 @@ function ExtractPlaceEntities(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -191,7 +185,7 @@ function ExtractSupernaturalEntities(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -207,6 +201,6 @@ function ExtractFestivalEntities(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

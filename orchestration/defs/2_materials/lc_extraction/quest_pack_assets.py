@@ -322,20 +322,91 @@ def _extract_subject_materials(
             continue
         marking_schemes.append(scheme)
 
-    prefix = SUBJECT_BAML_PREFIX[subject]
-    generate_fn = getattr(b, f"Generate{prefix}QuestPack")
+    # Per the 2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1 change
+    # (Phase 1 §2.1): the per-subject Generate<Prefix>QuestPack
+    # functions were consolidated into a single
+    # b.GenerateSubjectQuestPack(syllabus_extract, subject, stage,
+    # language, lo_codes) by the qpack-template change. The per-subject
+    # names no longer exist; calling them via getattr would
+    # AttributeError at materialisation time. Route through the
+    # consolidated entry instead.
+    try:
+        from baml_client.types import (
+            NCCASubjectSlug,
+            QuestPackStage,
+            QuestPackLanguage,
+        )
+    except ImportError:
+        from baml_client import b
+        NCCASubjectSlug = getattr(b, "NCCASubjectSlug", None)
+        QuestPackStage = getattr(b, "QuestPackStage", None)
+        QuestPackLanguage = getattr(b, "QuestPackLanguage", None)
+
+    # Map subject slug -> NCCASubjectSlug enum value
+    _subject_slug_upper = subject.upper()
+    subject_enum = (
+        getattr(NCCASubjectSlug, _subject_slug_upper, None)
+        if NCCASubjectSlug is not None
+        else None
+    ) or _subject_slug_upper
+
+    # Map GENERATION_LEVEL ("LC_HL") -> QuestPackStage.LC_HL
+    stage_enum = (
+        getattr(QuestPackStage, GENERATION_LEVEL, None)
+        if QuestPackStage is not None
+        else GENERATION_LEVEL
+    ) or GENERATION_LEVEL
+
+    # Map primary_language ("en" / "ga") -> QuestPackLanguage enum
+    if primary_language == "ga":
+        language_enum = (
+            getattr(QuestPackLanguage, "GA", None)
+            if QuestPackLanguage is not None
+            else "GA"
+        ) or "GA"
+    else:
+        language_enum = (
+            getattr(QuestPackLanguage, "EN", None)
+            if QuestPackLanguage is not None
+            else "EN"
+        ) or "EN"
+
+    # Extract lo_codes from the syllabus_doc.learning_outcomes[]
+    _raw_los = getattr(syllabus_doc, "learning_outcomes", None) or []
+    lo_codes = [
+        getattr(lo, "code", None) or getattr(lo, "lo_id", None)
+        for lo in _raw_los
+    ]
+    lo_codes = [c for c in lo_codes if c]
+
+    # Serialise the syllabus_doc to a single string for the consolidated
+    # `syllabus_extract` parameter (the consolidated function takes a
+    # text extract, not the full BAML object).
+    if hasattr(syllabus_doc, "model_dump_json"):
+        syllabus_extract = syllabus_doc.model_dump_json()
+    elif hasattr(syllabus_doc, "model_dump"):
+        import json as _json
+        syllabus_extract = _json.dumps(syllabus_doc.model_dump())
+    elif hasattr(syllabus_doc, "dict"):
+        import json as _json
+        syllabus_extract = _json.dumps(syllabus_doc.dict())
+    else:
+        syllabus_extract = str(syllabus_doc)
+
     context.log.info(
-        "%s_quest_pack: generating via Generate%sQuestPack (%d past papers, %d marking schemes)",
+        "%s_quest_pack: generating via GenerateSubjectQuestPack "
+        "(%d LOs from syllabus_doc, stage=%s, language=%s)",
         subject,
-        prefix,
-        len(exam_papers),
-        len(marking_schemes),
+        len(lo_codes),
+        stage_enum,
+        language_enum,
     )
-    pack = generate_fn(
-        syllabus=syllabus_doc,
-        past_papers=exam_papers,
-        marking_schemes=marking_schemes,
-        level=GENERATION_LEVEL,
+    pack = b.GenerateSubjectQuestPack(
+        syllabus_extract=syllabus_extract,
+        subject=subject_enum,
+        stage=stage_enum,
+        language=language_enum,
+        lo_codes=lo_codes,
     )
     return {
         "pack": pack,
@@ -444,7 +515,7 @@ def _make_quest_pack_asset(subject: str):
         description=(
             f"Docs-informed Higher Level quest pack for {subject}, generated "
             f"from the real syllabus/past-paper/marking-scheme PDF corpus via "
-            f"Generate{SUBJECT_BAML_PREFIX[subject]}QuestPack."
+            f"b.GenerateSubjectQuestPack (the consolidated qpack-template entry)."
         ),
     )(_asset_fn)
 

@@ -110,8 +110,9 @@ class NorthernIrelandQuestion {
 function ExtractNorthernIrelandExamPaper(
   pdf_text: string,
   subject: CCEASubject?,
-  level: CCEALevel?,
-) -> NorthernIrelandExamPaper {  client BIEPV3Extract
+  level: CCEALevel?
+) -> NorthernIrelandExamPaper {
+  client BIEPV3Extract
   prompt #"
     Extract the structured exam paper data from this Northern Ireland
     (CCEA) PDF exam paper for the subject {{ subject }} at the
@@ -123,18 +124,6 @@ function ExtractNorthernIrelandExamPaper(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    NorthernIrelandExamPaper {
-      source_pdf "",
-      source_pages 0,
-      subject cceasubject {},
-      level ccealevel {},
-      exam_year 0,
-      total_marks 0,
-      duration_minutes 0,
-      question_sections null,
-    }
-  }
 }
 
 test ExtractNIExamPaper {

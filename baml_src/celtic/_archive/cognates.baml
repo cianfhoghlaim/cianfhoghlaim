@@ -1,10 +1,8 @@
 // === ARCHIVED 2026-06-24 ===
-// The 5 functions in this file (IdentifyCognates,
-// CompareCelticVocabulary, IdentifyFalseFriends, ExplainSoundChanges,
+// The 5 functions in this file (IdentifyCognates
 // GenerateCognateVocabulary) have no current Python consumer in the
 // oideachais quadrant. They are intended for the meaisinfhoghlaim/
-// Celtic-linguistic agents and the croilar/ portfolio surface,
-// which are not yet built.
+// Celtic-linguistic agents and the croilar/ portfolio surface
 //
 // To re-activate:
 // 1. Implement the consumer (e.g. meaisinfhoghlaim/agents/cognates.py)
@@ -112,7 +110,7 @@ function IdentifyCognates(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -130,7 +128,7 @@ function CompareCelticVocabulary(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -148,7 +146,7 @@ function IdentifyFalseFriends(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -166,7 +164,7 @@ function ExplainSoundChanges(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -183,6 +181,6 @@ function GenerateCognateVocabulary(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

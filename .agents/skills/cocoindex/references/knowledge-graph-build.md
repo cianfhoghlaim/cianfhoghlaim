@@ -2,7 +2,7 @@
 
 CocoIndex v1 supports building knowledge graphs in Neo4j and FalkorDB
 via `mount_table_target` for nodes + `mount_relation_target` for
-edges. The canonical KCG pattern is `meeting_notes_graph_neo4j` /
+edges. The canonical Cianfhoghlaim pattern is `meeting_notes_graph_neo4j` /
 `meeting_notes_graph_falkordb` (a 3-phase pipeline: extract →
 resolve entities → declare relations).
 
@@ -74,7 +74,7 @@ await falkordb.mount_table_target(
 ## In-repo examples (canonical v1)
 
 - `cocoindex/learning_outcome_graph.py` — the
-  KCG in-repo knowledge-graph flow (5-stage cross-stage + 3
+  Cianfhoghlaim in-repo knowledge-graph flow (5-stage cross-stage + 3
   leabharlann cognify adapters)
 - `cocoindex/docs_skills_consolidation.py` —
   3-phase FalkorDB graph: DocSkill, Concept, ConsolidationGroup with

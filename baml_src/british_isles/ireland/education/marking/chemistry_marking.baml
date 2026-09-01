@@ -60,8 +60,8 @@ class ChemistryMarkingScheme {
   year int
   source_pdf string
 
-  grade_descriptors GradeDescriptor[]
-  mark_allocations MarkAllocation[]
+  grade_descriptors LCGradeDescriptor[]
+  mark_allocations LCMarkAllocation[]
 
   subject_specific ChemSubjectDiscriminator
 
@@ -73,9 +73,10 @@ class ChemistryMarkingScheme {
 function ExtractChemistryMarkingScheme(
   pdf_text: string,
   year: int?,
-  level: string?,
-) -> ChemistryMarkingScheme {  client ExtractEn
-    prompt #"
+  level: string?
+) -> ChemistryMarkingScheme {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -83,22 +84,9 @@ function ExtractChemistryMarkingScheme(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    ChemistryMarkingScheme {
-      scheme_code "",
-      language "",
-      year 0,
-      source_pdf "",
-      grade_descriptors null,
-      mark_allocations null,
-      subject_specific chemsubjectdiscriminator {},
-      total_marks 0,
-      total_questions 0,
-    }
-  }
 }
 
 // test chemistry_marking_extraction_smoke {

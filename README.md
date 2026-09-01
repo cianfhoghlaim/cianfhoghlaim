@@ -629,6 +629,54 @@ this entry-point scannable:
 - **Self-host a fresh cluster** → [`bonneagar/README.md`](bonneagar/README.md) (the 6-step operator quick start)
 - **Onboarding wizard** (the 3-credentials TUI) → [`scripts/onboard-pocketid.sh`](scripts/onboard-pocketid.sh)
 
+---
+
+## Cianfhoghlaim-Nua V6 Era (2026-09-01) — What shipped
+
+> **Cianfhoghlaim-Nua** ("new Cianfhoghlaim") is the consolidated platform target. The V6 era (2026-09-01) shipped 10 openspec changes + ~5,500 LOC that lift the GCP-first `gemini_hackathon/` sister-repo learnings into the canonical OSS-first `cianfhoghlaim/` substrate. The 5-pillar pattern: **BAML → Convex → A2UI → Hono → React**.
+
+### 10 phases shipped
+
+| # | Phase | Openspec change | Key surface |
+|--:|--|--|--|
+| 0 | OpenSpec scaffolding | 7 changes (1 Phase 1 umbrella + 6 sister-side mirrors) | `openspec/changes/2026-09-01-{ci...}-*` |
+| 1 | End-to-end showcase (4 subjects) | [`2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1/`](openspec/changes/2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1/) | `baml_src/british_isles/_shared/study_plan.baml` + `agents/adk/subjects/lc/planner.py` |
+| 0.5 | BAML regeneration (343+ parser errors fixed) | [`2026-09-01-baml-regeneration-blocker-v1/`](openspec/changes/2026-09-01-baml-regeneration-blocker-v1/) | `baml_client/` regenerated; all Phase 1 BAML functions reachable |
+| 2 | A2UI v0.9 catalog (11 components) | [`2026-09-01-cianfhoghlaim-nua-a2ui-catalog-v1/`](openspec/changes/2026-09-01-cianfhoghlaim-nua-a2ui-catalog-v1/) | `web/packages/a2ui/` |
+| 3 | Web consolidation (5 apps → 1) | [`2026-09-01-cianfhoghlaim-nua-web-consolidation-v1/`](openspec/changes/2026-09-01-cianfhoghlaim-nua-web-consolidation-v1/) | `web/apps/cianfhoghlaim-nua/` |
+| 4 | NCCE showcase (5 PDFs + 48 equivalencies + 12 pedagogy) | [`2026-09-01-cianfhoghlaim-nua-biep-ncce-showcase-v1/`](openspec/changes/2026-09-01-cianfhoghlaim-nua-biep-ncce-showcase-v1/) | `baml_src/british_isles/uk_ncce/learning_graph.baml` + `cocoindex_flows/uk_ncce/learning_graphs_app.py` |
+| 5 | BAML/CocoIndex/DLT hardening | (partial) FTS index added to `ireland_lc_factory.py` | `cocoindex_flows/biep_parity/ireland_lc_factory.py:139-141` |
+| 6 | Oral study plans (Pipecat + TTS router) | [`2026-09-01-cianfhoghlaim-nua-oral-study-plans-v1/`](openspec/changes/2026-09-01-cianfhoghlaim-nua-oral-study-plans-v1/) | `agents/api/_oideachais_api/services/{pipecat_client,tts_router}.py` + `web/packages/a2ui/src/components/OralStudyPlayer.tsx` |
+| 7 | LC/JC certificate pipeline (7 stages) | [`2026-09-01-cianfhoghlaim-nua-certificate-pipeline-v1/`](openspec/changes/2026-09-01-cianfhoghlaim-nua-certificate-pipeline-v1/) | `meaisinfhoghlaim/certificate/` + `baml_src/british_isles/ireland/education/certification.baml` |
+| 8 | Sister-side mirrors (6 per-sister transfers) | [`2026-09-01-sister-side-mirrors-v1/`](openspec/changes/2026-09-01-sister-side-mirrors-v1/) | `openspec/changes/2026-09-01-{bonneagar,tuatha,ciancheiltis,ciandlithe,cianchosaint,gemini-hackathon}-sister-umbrella-mirror-v1/` |
+| 9 | GCP opt-in completion (6 mirror stacks) | [`2026-09-01-gcp-opt-in-completion-v1/`](openspec/changes/2026-09-01-gcp-opt-in-completion-v1/) | `bonneagar/stacks/gcp-*/` (6 stacks) |
+| 10 | V7 from-the-ground-up | [`2026-09-01-v7-from-the-ground-up-v1/`](openspec/changes/2026-09-01-v7-from-the-ground-up-v1/) (DEFERRED) | 5-pillar pattern + 3 REDUCED ops surface (documented) |
+
+### Quick validation
+
+```bash
+# 18 tests, all green
+uv run pytest tests/test_adk_subject_actions.py tests/test_phase7_certificate_pipeline.py -v
+
+# 11 openspec changes, all valid
+for d in openspec/changes/2026-09-01-*/; do
+  uv run openspec validate "$(basename $d)" --strict
+done
+```
+
+### Phase 1 quick path: chat-with-syllabus → study-plan → oral-delivery
+
+```bash
+# 1. Open the consolidated app
+cd web/apps/cianfhoghlaim-nua && bun install && bun dev
+
+# 2. Visit /lc/chemistry/study-plan
+# 3. The Phase 1 BAML function is reachable
+uv run python -c "from baml_client.baml_client.sync_client import b; print(b.GenerateStudyPlanAssets)"
+```
+
+---
+
 <!-- AGENT_TELEMETRY_START -->
 > **Agent Telemetry (Last Updated: 2026-07-29 22:30:52 UTC)**
 > - **Total Cached Structural Documents:** 0

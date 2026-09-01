@@ -120,7 +120,6 @@ class StatisticRecord {
 
   // Metadata
   metadata StatisticMetadata
-  @@stream.done
 }
 
 // =============================================================================
@@ -207,8 +206,9 @@ class QueryResult {
 function ExtractStatistics(
   document: string,
   expected_source: DataSource
-) -> StatisticRecord[] {  client ExtractEn
-    prompt #"
+) -> StatisticRecord[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -216,12 +216,8 @@ function ExtractStatistics(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    StatisticRecord[] {}
-  }
 }
 
 function CompareNationStatistics(
@@ -229,8 +225,9 @@ function CompareNationStatistics(
   category: MetricCategory,
   academic_year: string,
   statistics: StatisticRecord[]
-) -> NationComparison {  client ExtractEn
-    prompt #"
+) -> NationComparison {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -238,7 +235,7 @@ function CompareNationStatistics(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -246,8 +243,9 @@ function AnalyzeTrend(
   metric_name: string,
   nation: string,
   historical_data: TrendPoint[]
-) -> TrendAnalysis {  client ExtractEn
-    prompt #"
+) -> TrendAnalysis {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -255,7 +253,7 @@ function AnalyzeTrend(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -264,8 +262,9 @@ function RankAreas(
   nation: string,
   aggregation_level: AggregationLevel,
   statistics: StatisticRecord[]
-) -> AreaRanking {  client ExtractEn
-    prompt #"
+) -> AreaRanking {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -273,14 +272,15 @@ function RankAreas(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
 function GenerateStatisticsQuery(
   natural_language_query: string
-) -> StatisticsQuery {  client ExtractEn
-    prompt #"
+) -> StatisticsQuery {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -288,7 +288,7 @@ function GenerateStatisticsQuery(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 

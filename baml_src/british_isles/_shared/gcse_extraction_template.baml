@@ -7,8 +7,7 @@
 // (AQA + OCR + Edexcel) via `{% if subject == "x" %}` and `{% if board == "x" %}`.
 //
 // The 9 GCSE priority subjects (per the GCSE BIEP v2 spec):
-// mathematics, english_language, english_literature, biology, chemistry,
-// physics, history, geography, religious_studies.
+// mathematics, english_language, english_literature, biology, chemistry
 //
 // Re-gen: cd cianfhoghlaim && uv run baml-cli generate --from baml_src
 
@@ -126,7 +125,7 @@ class GCSEMarkingScheme {
   year int?
   source_pdf string
   grade_descriptors MarkingBandDescriptor[] @description("Reuses the LC enum (MarkingBand)")
-  mark_allocations MarkAllocation[]
+  mark_allocations LCMarkAllocation[]
   total_bands int
   total_pages int
   descriptor_word_count_avg int
@@ -197,7 +196,7 @@ class GCSESyllabusDiagram {
 function ExtractGCSECurriculumSyllabus(
   pdf_text: string,
   subject: GCSESubjectSlug,
-  board: GCSEExamBoard,
+  board: GCSEExamBoard
 ) -> GCSESyllabusSpec {
   client LitellmClient
   prompt #"
@@ -261,25 +260,6 @@ function ExtractGCSECurriculumSyllabus(
     {{ pdf_text }}
   "#
 
-  catch_all (err) {
-    GCSESyllabusSpec {
-      subject gcsesubjectslug {},
-      board gcseexamboard {},
-      stage gcsestage {},
-      title "",
-      version "",
-      first_teaching_year null,
-      last_certification_year null,
-      source_pdf "",
-      source_pages null,
-      total_marks 0,
-      assessment_objectives null,
-      component_papers 0,
-      area_topics null,
-      total_topics 0,
-      lineage null,
-    }
-  }
 }
 
 function ExtractGCSEExamPaperLayout(
@@ -287,7 +267,7 @@ function ExtractGCSEExamPaperLayout(
   subject: GCSESubjectSlug,
   board: GCSEExamBoard,
   paper_code: string?,
-  year: int?,
+  year: int?
 ) -> GCSEExamPaper {
   client LitellmClient
   prompt #"
@@ -303,29 +283,13 @@ function ExtractGCSEExamPaperLayout(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    GCSEExamPaper {
-      subject gcsesubjectslug {},
-      board gcseexamboard {},
-      stage gcsestage {},
-      year 0,
-      source_pdf "",
-      total_pages 0,
-      total_marks 0,
-      total_questions 0,
-      sections null,
-      duration_minutes null,
-      has_formula_sheet false,
-      tier null,
-    }
-  }
 }
 
 function ExtractGCSEMarkingSchemeGuideline(
   pdf_text: string,
   subject: GCSESubjectSlug,
   board: GCSEExamBoard,
-  year: int?,
+  year: int?
 ) -> GCSEMarkingScheme {
   client LitellmClient
   prompt #"
@@ -339,26 +303,12 @@ function ExtractGCSEMarkingSchemeGuideline(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    GCSEMarkingScheme {
-      subject gcsesubjectslug {},
-      board gcseexamboard {},
-      stage gcsestage {},
-      scheme_code "",
-      year null,
-      source_pdf "",
-      mark_allocations null,
-      total_bands 0,
-      total_pages 0,
-      descriptor_word_count_avg 0,
-    }
-  }
 }
 
 function ExtractGCSESyllabusDiagram(
   pdf_text: string,
   subject: GCSESubjectSlug,
-  board: GCSEExamBoard,
+  board: GCSEExamBoard
 ) -> GCSESyllabusDiagram {
   client LitellmClient
   prompt #"
@@ -372,27 +322,11 @@ function ExtractGCSESyllabusDiagram(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    GCSESyllabusDiagram {
-      diagram_id "",
-      caption_en null,
-      caption_ga null,
-      page_number 0,
-      source_pdf "",
-      subject gcsesubjectslug {},
-      board gcseexamboard {},
-      pointing_model "",
-      confidence_score 0,
-      regions null,
-      related_lo_ids null,
-      lineage null,
-    }
-  }
 }
 
 function ExtractGCSECrossSubjectTopics(
   pdf_text: string,
-  subject: GCSESubjectSlug,
+  subject: GCSESubjectSlug
 ) -> GCSECrossSubjectTopics {
   client LitellmClient
   prompt #"
@@ -406,20 +340,12 @@ function ExtractGCSECrossSubjectTopics(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    GCSECrossSubjectTopics {
-      subject gcsesubjectslug {},
-      topics null,
-      total_topics 0,
-      cross_subject_topics null,
-    }
-  }
 }
 
 function ExtractGCSEPerQuestionScheme(
   pdf_text: string,
   subject: GCSESubjectSlug,
-  board: GCSEExamBoard,
+  board: GCSEExamBoard
 ) -> GCSEPerQuestionScheme[] {
   client LitellmClient
   prompt #"
@@ -430,10 +356,6 @@ function ExtractGCSEPerQuestionScheme(
 
     {{ ctx.output_format }}
   "#
-
-  catch_all (err) {
-    GCSEPerQuestionScheme[] {}
-  }
 }
 
 // ============================================================================

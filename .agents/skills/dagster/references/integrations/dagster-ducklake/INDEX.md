@@ -1,8 +1,8 @@
-# DuckLake Integration (the canonical KCG lakehouse sink)
+# DuckLake Integration (the canonical Cianfhoghlaim lakehouse sink)
 
 The `dagster-ducklake` integration is the canonical way to wire
 DuckLake (Postgres metadata catalog + S3-compatible object store)
-into a Dagster asset. KCG uses DuckLake as the production lakehouse
+into a Dagster asset. Cianfhoghlaim uses DuckLake as the production lakehouse
 sink (the `storage/ducklake_client.py` module is the
 canonical client).
 
@@ -61,7 +61,7 @@ load_info = pipeline.run(hse_source(), dataset_name="cianfhoghlaim.medicine.ni")
 load_info = pipeline.run(site_analysis_source(), dataset_name="cianfhoghlaim.site_analysis.sct")
 ```
 
-## KCG usage
+## Cianfhoghlaim usage
 
 - `storage/ducklake_client.py` — the canonical DuckLake
   client (Postgres catalog + Garage S3 object store)

@@ -114,12 +114,12 @@ enabled_stacks:
   sam3d_objects_server: false     # 2026-08-23-tuatha-media-intel-gameplay-capture-research-v1
   # 2026-08-31: 6 GCP mirror stacks per the v5 model priority change.
   # Opt-in (false by default). Enable when deploying to GCP via Komodo.
-  gcp-gemini-vertex: false
-  gcp-gemma-unsloth: false
-  gcp-bigquery-mirror: false
-  gcp-gcs-bucket: false
-  gcp-secret-manager: false
-  gcp-cloud-run: false
+  gcp-gemini-vertex: true
+  gcp-gemma-unsloth: true
+  gcp-bigquery-mirror: true
+  gcp-gcs-bucket: true
+  gcp-secret-manager: true
+  gcp-cloud-run: true
 monitoring:
   registry_audit: true
   baml_ts_codegen: true

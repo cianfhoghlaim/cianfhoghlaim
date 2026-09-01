@@ -55,7 +55,6 @@ class MythologicalCharacter {
 
   modern_relevance string? @description("Contemporary significance")
   game_role string? @description("Role in Tuath game")
-  @@stream.done
 }
 
 class NameVariant {
@@ -84,7 +83,6 @@ class MythologicalLocation {
 
   real_world_location string? @description("Modern location if known")
   game_zone string? @description("Zone in Tuath game")
-  @@stream.done
 }
 
 class MythologicalStory {
@@ -103,7 +101,6 @@ class MythologicalStory {
 
   source_texts string[] @description("Original manuscript sources")
   educational_value string @description("Learning opportunities")
-  @@stream.done
 }
 
 class StoryEvent {
@@ -122,8 +119,12 @@ class CelticTerm {
 }
 
 // Extract character from mythology text
-function ExtractMythologicalCharacter(text: string, tradition: CelticTradition) -> MythologicalCharacter {  client ExtractEn
-    prompt #"
+function ExtractMythologicalCharacter(
+  text: string,
+  tradition: CelticTradition
+) -> MythologicalCharacter {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -131,22 +132,17 @@ function ExtractMythologicalCharacter(text: string, tradition: CelticTradition) 
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    MythologicalCharacter {
-      character_type charactertype {},
-      tradition celtictradition {},
-      cycle null,
-      relationships null,
-    }
-  }
 }
 
 // Extract story structure
-function ExtractMythologicalStory(text: string) -> MythologicalStory {  client ExtractEn
-    prompt #"
+function ExtractMythologicalStory(
+  text: string
+) -> MythologicalStory {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -154,25 +150,18 @@ function ExtractMythologicalStory(text: string) -> MythologicalStory {  client E
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    MythologicalStory {
-      title "",
-      native_title null,
-      tradition celtictradition {},
-      cycle mythologicalcycle {},
-      main_characters null,
-      locations null,
-      key_events null,
-    }
-  }
 }
 
 // Extract location lore
-function ExtractMythologicalLocation(text: string, tradition: CelticTradition) -> MythologicalLocation {  client ExtractEn
-    prompt #"
+function ExtractMythologicalLocation(
+  text: string,
+  tradition: CelticTradition
+) -> MythologicalLocation {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -180,19 +169,9 @@ function ExtractMythologicalLocation(text: string, tradition: CelticTradition) -
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    MythologicalLocation {
-      name "",
-      native_names null,
-      tradition celtictradition {},
-      description "",
-      associated_characters null,
-      key_events null,
-    }
-  }
 }
 
 // Generate NPC dialogue from character
@@ -216,8 +195,9 @@ function GenerateNPCDialogue(
   context: string,
   player_level: int,
   target_language: CelticLanguage
-) -> NPCDialogue {  client ExtractEn
-    prompt #"
+) -> NPCDialogue {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -225,7 +205,7 @@ function GenerateNPCDialogue(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -237,11 +217,13 @@ class FolkloreElement {
   description string
   celtic_term string?
   game_application string @description("How to use in game")
-  @@stream.done
 }
 
-function ExtractFolkloreElements(text: string) -> FolkloreElement[] {  client ExtractEn
-    prompt #"
+function ExtractFolkloreElements(
+  text: string
+) -> FolkloreElement[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -249,12 +231,8 @@ function ExtractFolkloreElements(text: string) -> FolkloreElement[] {  client Ex
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    FolkloreElement[] {}
-  }
 }
 
 // ============================================================================
@@ -292,10 +270,12 @@ function GenerateNpcDialogue(
   nation_code: string,
   era: string,
   player_utterance: string,
-  conversation_history: string,  // last 6 turns, formatted as "Speaker: text"
-  scholarly_source: string,  // the cached Wikipedia article for this NPC
-) -> NpcDialogueExchange {  client ExtractEn
-    prompt #"
+  conversation_history: string,
+  // formatted as "Speaker: text"
+  scholarly_source: string
+) -> NpcDialogueExchange {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -303,6 +283,6 @@ function GenerateNpcDialogue(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

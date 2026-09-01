@@ -10,7 +10,7 @@ for downstream consumers.
 
 ## Use case
 
-KCG writes leabharlann data to Lance (for vector search) but
+Cianfhoghlaim writes leabharlann data to Lance (for vector search) but
 also wants to expose the same data to PyIceberg consumers
 (marimo notebooks, DuckDB queries, dbt models).
 
@@ -93,9 +93,9 @@ for existing rows.
 - You don't have an Iceberg REST catalog (use plain Lance or plain Iceberg)
 - Your dataset is < 1k rows (the namespace overhead is not worth it)
 
-## KCG example
+## Cianfhoghlaim example
 
-The KCG stack uses **Lakekeeper** as the Iceberg REST catalog
+The Cianfhoghlaim stack uses **Lakekeeper** as the Iceberg REST catalog
 (deployed in `infrastructure/stacks/`), and the `oideachais` DuckLake
 sink is a sibling of the Iceberg tables. The companion-table pattern
 is documented in the

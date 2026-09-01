@@ -331,12 +331,12 @@ def _():
 
 ## Cloudflare Workers + Container deployment
 
-The KCG production pattern: a Cloudflare Worker proxies
+The Cianfhoghlaim production pattern: a Cloudflare Worker proxies
 requests to a marimo Container via a Durable Object. See
 `references/deployment-cloudflare.md` for the full setup
 (Dockerfile + wrangler.jsonc + src/index.ts).
 
-## KCG conventions
+## Cianfhoghlaim conventions
 
 - Every shareable notebook in `notebooks/` MUST
   have a PEP 723 `# /// script` header
@@ -354,7 +354,7 @@ requests to a marimo Container via a Durable Object. See
   multi-author, production dashboard, multi-cell reactive
   layout, deployable to Cloudflare
 
-The KCG convention: start as a notebook, promote to an app
+The Cianfhoghlaim convention: start as a notebook, promote to an app
 once the analysis is stable.
 
 ## Anti-patterns
@@ -373,8 +373,8 @@ once the analysis is stable.
 
 - Marimo docs: <https://docs.marimo.io/>
 - PEP 723: <https://peps.python.org/pep-0723/>
-- KCG notebooks: `notebooks/`
-- KCG dashboard assets:
+- Cianfhoghlaim notebooks: `notebooks/`
+- Cianfhoghlaim dashboard assets:
   `orchestration/defs/4_asset_generation/marimo_dashboards.py`
 - Reference files in this skill:
   - `references/deployment-cloudflare.md` — Cloudflare Workers
@@ -391,7 +391,7 @@ once the analysis is stable.
   `.agents/skills/ducklake/`, `.agents/skills/motherduck/`,
   `.agents/skills/cocoindex/`
 
-## British-Isles Education pipeline — Canonical KCG pattern (post-v4)
+## British-Isles Education pipeline — Canonical Cianfhoghlaim pattern (post-v4)
 
 The post-v4 BIEP (`openspec/changes/lc6-biep/`) ships **6
 per-subject marimo notebooks** (Mathematics, Chemistry, Geography,

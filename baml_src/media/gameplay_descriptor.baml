@@ -12,14 +12,14 @@
 
 class GameGenre {
   // The high-level genre of the game the descriptor is for.
-  rogue_like
-  mmorpg
-  jrpg
-  monster_tamer
-  puzzle
-  language_learning
-  match_three
-  other
+  rogue_like string
+  mmorpg string
+  jrpg string
+  monster_tamer string
+  puzzle string
+  language_learning string
+  match_three string
+  other string
 }
 
 class GameplayPowerEvent {
@@ -106,7 +106,7 @@ function ExtractGameplayDescriptor(
   source_timestamp: string,
   work: string,
   language: string,
-  evidence: string,
+  evidence: string
 ) -> GameplayMediaDescriptor {
   client MediaIntelPrimary
   prompt #"

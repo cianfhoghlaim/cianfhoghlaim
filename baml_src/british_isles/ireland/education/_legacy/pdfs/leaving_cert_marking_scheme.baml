@@ -28,7 +28,6 @@ class MarkingSchemeSec {
   level string @description("H, O, or F")
   totalMarks int
   markingPoints MarkingPointSec[] @stream.with_state
-  @@stream.done
 }
 
 enum MarkingType {
@@ -45,8 +44,14 @@ enum MarkingType {
   AO7
 }
 
-function ExtractMarkingScheme(pdf_text: string, subject: string, year: int, paper: string) -> MarkingSchemeSec {  client ExtractEn
-    prompt #"
+function ExtractMarkingScheme(
+  pdf_text: string,
+  subject: string,
+  year: int,
+  paper: string
+) -> MarkingSchemeSec {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -54,14 +59,6 @@ function ExtractMarkingScheme(pdf_text: string, subject: string, year: int, pape
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    MarkingSchemeSec {
-      year 0,
-      paper "",
-      totalMarks 0,
-    }
-  }
 }

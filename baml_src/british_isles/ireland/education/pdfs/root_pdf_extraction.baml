@@ -39,11 +39,13 @@ class NCCAKeyCompetencyRootPdf {
   name BilingualTextRootPdf @description("The full competency name (EN + GA)")
   definition BilingualTextRootPdf @description("The full competency definition statement")
   evidence EvidenceLink
-  @@stream.done
 }
 
-function ExtractKeyCompetencies(pdf_text: string) -> NCCAKeyCompetencyRootPdf[] {  client ExtractEn
-    prompt #"
+function ExtractKeyCompetencies(
+  pdf_text: string
+) -> NCCAKeyCompetencyRootPdf[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -51,12 +53,8 @@ function ExtractKeyCompetencies(pdf_text: string) -> NCCAKeyCompetencyRootPdf[] 
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    NCCAKeyCompetencyRootPdf[] {}
-  }
 }
 
 // ============================================================================
@@ -69,11 +67,13 @@ class PedagogySet {
   recommended_practices BilingualTextRootPdf[] @description("The recommended practices for educators")
   technology_recommendations BilingualTextRootPdf[] @description("The technology recommendations")
   evidence EvidenceLink
-  @@stream.done
 }
 
-function ExtractOnlineLearningPedagogy(pdf_text: string) -> PedagogySet {  client ExtractEn
-    prompt #"
+function ExtractOnlineLearningPedagogy(
+  pdf_text: string
+) -> PedagogySet {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -81,15 +81,9 @@ function ExtractOnlineLearningPedagogy(pdf_text: string) -> PedagogySet {  clien
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    PedagogySet {
-      introduction bilingualtextrootpdf {},
-      evidence evidencelink {},
-    }
-  }
 }
 
 // ============================================================================
@@ -102,11 +96,13 @@ class CertGuidance {
   reporting_recommendations BilingualTextRootPdf[] @description("The recommendations for online reporting")
   technology_requirements BilingualTextRootPdf[] @description("The technology requirements for online certification")
   evidence EvidenceLink
-  @@stream.done
 }
 
-function ExtractCertificationGuidance(pdf_text: string) -> CertGuidance {  client ExtractEn
-    prompt #"
+function ExtractCertificationGuidance(
+  pdf_text: string
+) -> CertGuidance {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -114,15 +110,9 @@ function ExtractCertificationGuidance(pdf_text: string) -> CertGuidance {  clien
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    CertGuidance {
-      introduction bilingualtextrootpdf {},
-      evidence evidencelink {},
-    }
-  }
 }
 
 // ============================================================================
@@ -135,11 +125,13 @@ class ExaminerCommentary {
   common_mistakes BilingualTextRootPdf[] @description("The common mistakes flagged by the Chief Examiner")
   marker_expectations BilingualTextRootPdf[] @description("The marker expectations (PCLM conventions, marking patterns)")
   evidence EvidenceLink
-  @@stream.done
 }
 
-function ExtractSCRAdvisory(pdf_text: string) -> ExaminerCommentary {  client ExtractEn
-    prompt #"
+function ExtractSCRAdvisory(
+  pdf_text: string
+) -> ExaminerCommentary {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -147,15 +139,9 @@ function ExtractSCRAdvisory(pdf_text: string) -> ExaminerCommentary {  client Ex
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    ExaminerCommentary {
-      introduction bilingualtextrootpdf {},
-      evidence evidencelink {},
-    }
-  }
 }
 
 // ============================================================================
@@ -168,11 +154,13 @@ class AimsExpectations {
   expectations BilingualTextRootPdf[] @description("The expectations for students at L1 (Foundation) and L2 (Ordinary) levels")
   rationale BilingualTextRootPdf @description("The rationale for the Senior Cycle curriculum")
   evidence EvidenceLink
-  @@stream.done
 }
 
-function ExtractProgrammeStatement(pdf_text: string) -> AimsExpectations {  client ExtractEn
-    prompt #"
+function ExtractProgrammeStatement(
+  pdf_text: string
+) -> AimsExpectations {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -180,13 +168,7 @@ function ExtractProgrammeStatement(pdf_text: string) -> AimsExpectations {  clie
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    AimsExpectations {
-      introduction bilingualtextrootpdf {},
-      evidence evidencelink {},
-    }
-  }
 }

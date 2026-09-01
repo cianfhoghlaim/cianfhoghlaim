@@ -3,6 +3,19 @@ description: Research primary agent — browser-driven investigation via firecra
 mode: primary
 model: minimax-coding-plan/MiniMax-M3
 color: "#8a5f3a"
+mcp:
+  dlt-workspace-mcp: true
+  firecrawl: true
+  crawl4ai: true
+  infisical: true
+  motherduck: true
+  chrome: true
+  cocoindex-code: true
+  cognee: true
+  graphiti: true
+  langfuse: true
+  huggingface: true
+  design-system: true
 permission:
   edit: ask
   bash: { "*": "ask", "firecrawl_*": "allow", "bunx firecrawl*": "allow", "rg *": "allow", "ccc *": "allow", "git log*": "allow" }

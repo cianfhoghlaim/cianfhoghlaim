@@ -1,6 +1,6 @@
 # Hosting LanceDB on Cloudflare R2 (Docker Compose)
 
-The KCG production target for LanceDB is **Cloudflare R2** (S3-compatible
+The Cianfhoghlaim production target for LanceDB is **Cloudflare R2** (S3-compatible
 object storage). The recommended pattern is an **rclone sidecar
 container** that mounts R2 as a FUSE filesystem, with the
 LanceDB-using service sharing the mount.
@@ -87,9 +87,9 @@ no_check_bucket = true
 - **Multi-region** — rclone mounts a single bucket. For multi-region,
   use LanceDB Cloud.
 
-## KCG production usage
+## Cianfhoghlaim production usage
 
-The KCG stack uses this pattern in
+The Cianfhoghlaim stack uses this pattern in
 `infrastructure/stacks/lancedb-r2/` (a 6-file
 GOLD_STANDARD stack). The full Compose file is there; the snippet
 above is a minimal version for reference.

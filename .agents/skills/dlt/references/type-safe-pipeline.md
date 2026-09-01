@@ -130,7 +130,7 @@ def list_primary_outcomes(stage: str) -> list[dict]:
     return query_primary_outcomes(stage=stage)
 ```
 
-## KCG usage
+## Cianfhoghlaim usage
 
 - `cianfhoghlaim-leabharlann` spec — the leabharlann books + zotero +
   takeout corpora all flow through this pattern

@@ -126,7 +126,7 @@ if __name__ == "__main__":
         app.run()
 ```
 
-## KCG conventions
+## Cianfhoghlaim conventions
 
 - Notebooks intended to run as CLIs MUST use the
   `argparse` + `mo.running_in_notebook()` pattern

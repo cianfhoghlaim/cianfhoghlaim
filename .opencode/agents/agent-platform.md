@@ -4,6 +4,19 @@ mode: subagent
 model: minimax-coding-plan/MiniMax-M3
 temperature: 0.1
 color: "#1e3a5f"
+mcp:
+  dlt-workspace-mcp: true
+  firecrawl: true
+  crawl4ai: true
+  infisical: true
+  motherduck: true
+  chrome: true
+  cocoindex-code: true
+  cognee: true
+  graphiti: true
+  langfuse: true
+  huggingface: true
+  design-system: true
 permission:
   edit: allow
   bash:
@@ -77,3 +90,21 @@ You are the agent-platform functional subagent for the cianfhoghlaim monorepo. Y
 - The cianfhoghlaim Python package is the repo itself
 - Agent files moved from `agents/tuatha/agents/` → `agents/meaisinfhoghlaim/` (post-v7)
 - For agent fleet work: the 12-agent fleet is at `agents/meaisinfhoghlaim/`
+
+---
+
+## V6 era notes (2026-09-01)
+
+For the cianfhoghlaim-nua v6 era, the canonical agent surfaces are:
+
+- **Phase 1 planner** — `agents/adk/subjects/lc/planner.py`
+  (the canonical shared `generate_study_plan` + 4 per-subject handlers)
+- **Phase 6 voice agent** — `agents/adk/voice_agent.py`
+  (Pipecat HTTP client + dialect-aware TTS router fallback)
+- **Phase 6 Pipecat client** — `agents/api/_oideachais_api/services/pipecat_client.py`
+- **Phase 6 TTS router** — `agents/api/_oideachais_api/services/tts_router.py`
+- **Phase 7 certificate** — `meaisinfhoghlaim/certificate/`
+  (the 7-stage pipeline + types + rubric)
+
+All wired through the canonical OpenSpec workflow at
+`openspec/changes/2026-09-01-*`.

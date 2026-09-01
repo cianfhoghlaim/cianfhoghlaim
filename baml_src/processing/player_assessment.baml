@@ -97,8 +97,9 @@ function AnalyzePlayerResponse(
   context: string,
   language: CelticLanguage,
   skill_being_tested: SkillDomain
-) -> ResponseAnalysis {  client ExtractEn
-    prompt #"
+) -> ResponseAnalysis {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -106,7 +107,7 @@ function AnalyzePlayerResponse(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -149,8 +150,9 @@ function GenerateAdaptiveAssessment(
   player_profile: PlayerLanguageProfile,
   focus_areas: SkillDomain[],
   question_count: int
-) -> AdaptiveAssessment {  client ExtractEn
-    prompt #"
+) -> AdaptiveAssessment {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -158,7 +160,7 @@ function GenerateAdaptiveAssessment(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -182,8 +184,9 @@ class PlacementResult {
 function EvaluatePlacementTest(
   responses: PlacementResponse[],
   language: CelticLanguage
-) -> PlacementResult {  client ExtractEn
-    prompt #"
+) -> PlacementResult {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -191,7 +194,7 @@ function EvaluatePlacementTest(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -246,8 +249,9 @@ function GenerateProgressReport(
   activity_data: map<string, string>,
   language: CelticLanguage,
   period: string
-) -> ProgressReport {  client ExtractEn
-    prompt #"
+) -> ProgressReport {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -255,7 +259,7 @@ function GenerateProgressReport(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -293,9 +297,10 @@ function GenerateExitCardQuestions(
   subject: string,
   level: string,
   num_questions: int,
-  curriculum_extract: CircularExtraction?,
-) -> ExitCardSet {  client ExtractEn
-    prompt #"
+  curriculum_extract: CircularExtraction?
+) -> ExitCardSet {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -303,6 +308,6 @@ function GenerateExitCardQuestions(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

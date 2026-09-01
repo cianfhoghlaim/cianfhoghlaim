@@ -43,7 +43,6 @@ class GrammarPattern {
   structure string @description("Structural description")
   language CelticLanguage @description("Language")
   notes string? @description("Usage notes")
-  @@stream.done
 }
 
 // Irish copula pattern analysis
@@ -55,7 +54,6 @@ class IrishCopulaPattern {
   subject string @description("The subject")
   translation string @description("English translation")
   explanation string @description("Why this form is used")
-  @@stream.done
 }
 
 // VSO word order analysis
@@ -75,7 +73,6 @@ class PossessionPattern {
   possessed string @description("What is possessed")
   construction_type string @description("ag + owner, le + owner, etc.")
   translation string @description("English translation")
-  @@stream.done
 }
 
 // Prepositional pronoun
@@ -129,7 +126,7 @@ function ExtractGrammarPatterns(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -160,7 +157,7 @@ function ExtractIrishCopula(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -192,7 +189,7 @@ function AnalyzeVSOOrder(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -223,7 +220,7 @@ function ExtractPossession(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -255,7 +252,7 @@ function GeneratePrepositionalPronouns(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -286,7 +283,7 @@ function DocumentMutationTriggers(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -314,8 +311,9 @@ function ExtractCelticGrammar(
   text: string,
   language: CelticLanguageCurriculum,
   max_patterns: int?
-) -> CelticGrammarPattern[] {  client ExtractEn
-    prompt #"
+) -> CelticGrammarPattern[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting Celtic-language grammar patterns from a pedagogical text.
 
@@ -338,10 +336,6 @@ function ExtractCelticGrammar(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    CelticGrammarPattern[] {}
-  }
 }

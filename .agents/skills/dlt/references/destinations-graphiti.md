@@ -78,7 +78,7 @@ results = await graphiti.search(
 all_facts = await graphiti.get_all_facts()
 ```
 
-## KCG usage
+## Cianfhoghlaim usage
 
 - `cocoindex/learning_outcome_graph.py` —
   the CocoIndex v1 App that feeds Graphiti

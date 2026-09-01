@@ -606,7 +606,7 @@ npx convex codegen
 - **GitHub**: https://github.com/get-convex
 - **Discord**: https://discord.gg/convex
 
-## AI Agents component (KCG)
+## AI Agents component (Cianfhoghlaim)
 
 The Tuatha MMO uses Convex's `@convex-dev/agent` package for
 real-time agent state (NPC dialogue, player inventory, world
@@ -643,7 +643,7 @@ LLM agents (Pydantic AI, Agno, Google ADK).
 
 ## BetterAuth + Hono integration
 
-The KCG auth layer (BetterAuth, see `.agents/skills/better-auth/SKILL.md`)
+The Cianfhoghlaim auth layer (BetterAuth, see `.agents/skills/better-auth/SKILL.md`)
 runs behind a Hono API in the web/apps/croilar-portal app:
 
 ```typescript
@@ -656,10 +656,10 @@ app.on(["GET", "POST"], "/api/auth/*", (c) => auth.handler(c.req.raw));
 export default app;
 ```
 
-## KCG Convex patterns (round-9 deep dive)
+## Cianfhoghlaim Convex patterns (round-9 deep dive)
 
 The 3,400-line `references/auth-integration-guide.md` is the
-canonical Convex reference for KCG. The patterns that matter:
+canonical Convex reference for Cianfhoghlaim. The patterns that matter:
 
 ### 1. Function-type discipline (Q/M/A)
 
@@ -690,7 +690,7 @@ export const scheduleJob = mutation({
 
 ### 2. Auth integration (Convex Auth vs BetterAuth)
 
-Two viable paths in the KCG stack:
+Two viable paths in the Cianfhoghlaim stack:
 
 - **Convex Auth** (`@convex-dev/auth`) — built on Auth.js;
   ships GitHub / Google / Resend / Password providers
@@ -773,7 +773,7 @@ export const vectorSearch = query({
 Pair with a `search` **action** that calls OpenAI for the
 embedding, then `ctx.runQuery(api.documents.vectorSearch, ...)`.
 The `@convex-dev/agent` package builds on this primitive
-for the KCG agent RAG layer.
+for the Cianfhoghlaim agent RAG layer.
 
 ### 5. Scheduled + cron + scheduler
 
@@ -786,7 +786,7 @@ for the KCG agent RAG layer.
 
 Convex **components** are deployable sub-apps that own
 their own tables and functions but share the deployment.
-The KCG stack uses:
+The Cianfhoghlaim stack uses:
 
 - `@convex-dev/agent` — agent threads, RAG, workflows
 - `@convex-dev/rate-limiter` — per-player action quotas

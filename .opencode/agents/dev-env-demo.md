@@ -4,6 +4,19 @@ mode: subagent
 hidden: true
 model: minimax-coding-plan/MiniMax-M3
 color: "#5f8a5f"
+mcp:
+  dlt-workspace-mcp: true
+  firecrawl: true
+  crawl4ai: true
+  infisical: true
+  motherduck: true
+  chrome: true
+  cocoindex-code: true
+  cognee: true
+  graphiti: true
+  langfuse: true
+  huggingface: true
+  design-system: true
 permission:
   edit: deny
   bash: { "*": "ask", "bun run ccc:*": "allow", "bun run ccc:search *": "allow", "rg *": "allow" }
