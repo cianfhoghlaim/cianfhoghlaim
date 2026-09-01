@@ -23,7 +23,7 @@ class StreamState(BaseModel, typing.Generic[StreamStateValueT]):
     value: StreamStateValueT
     state: typing_extensions.Literal["Pending", "Incomplete", "Complete"]
 # #########################################################################
-# Generated classes (906)
+# Generated classes (908)
 # #########################################################################
 
 class ALevelAreaTopic(BaseModel):
@@ -1118,6 +1118,12 @@ class CertGuidance(BaseModel):
     reporting_recommendations: typing.List["BilingualTextRootPdf"] = Field(description='The recommendations for online reporting')
     technology_requirements: typing.List["BilingualTextRootPdf"] = Field(description='The technology requirements for online certification')
     evidence: typing.Optional["EvidenceLink"] = None
+
+class CertificationCitation(BaseModel):
+    source_pdf: typing.Optional[str] = Field(default=None, description='The NCCA policy PDF filename')
+    page: typing.Optional[int] = Field(default=None, description='1-indexed page number')
+    quote: typing.Optional[str] = Field(default=None, description='Verbatim quote from the page')
+    relevance: typing.Optional[str] = Field(default=None, description='1-sentence explanation of how this page informed the criteria')
 
 class CharacterRelationship(BaseModel):
     related_character: typing.Optional[str] = Field(default=None, description='Name of related character')
@@ -5617,6 +5623,14 @@ class NCCAKeyCompetencyRootPdf(BaseModel):
     definition: typing.Optional["BilingualTextRootPdf"] = Field(default=None, description='The full competency definition statement')
     evidence: typing.Optional["EvidenceLink"] = None
 
+class NCCAPolicyCriteria(BaseModel):
+    stage: typing.Optional[types.NCCACertificationStage] = None
+    subject_slug: typing.Optional[str] = None
+    award_descriptor: typing.Optional[types.NCCAAwardDescriptor] = None
+    descriptor_vocabulary: typing.List[types.NCCAAwardDescriptor]
+    key_competencies: typing.List[types.NCCAKeyCompetency]
+    policy_citations: typing.List["CertificationCitation"]
+
 class NPC(BaseModel):
     id: typing.Optional[str] = None
     name: typing.Optional[str] = None
@@ -8857,7 +8871,7 @@ TopicExtraction: typing_extensions.TypeAlias = typing.Optional["LCTopicExtractio
 
 
 # #########################################################################
-# Model rebuilds (900)
+# Model rebuilds (902)
 # #########################################################################
 # Resolve string forward references now that every model above is defined so
 # class declaration order never breaks Pydantic construction (issue #793).
@@ -8978,6 +8992,7 @@ CelticNamedEntity.model_rebuild()
 CelticTerm.model_rebuild()
 CelticWord.model_rebuild()
 CertGuidance.model_rebuild()
+CertificationCitation.model_rebuild()
 CharacterRelationship.model_rebuild()
 ChariotOfSidrach.model_rebuild()
 ChemSubjectDiscriminator.model_rebuild()
@@ -9441,6 +9456,7 @@ MythologicalCharacter.model_rebuild()
 MythologicalLocation.model_rebuild()
 MythologicalStory.model_rebuild()
 NCCAKeyCompetencyRootPdf.model_rebuild()
+NCCAPolicyCriteria.model_rebuild()
 NPC.model_rebuild()
 NPCDialogue.model_rebuild()
 NPCGreeting.model_rebuild()

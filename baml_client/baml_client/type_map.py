@@ -361,6 +361,9 @@ type_map = {
     "types.CertGuidance": types.CertGuidance,
     "stream_types.CertGuidance": stream_types.CertGuidance,
 
+    "types.CertificationCitation": types.CertificationCitation,
+    "stream_types.CertificationCitation": stream_types.CertificationCitation,
+
     "types.CharacterRelationship": types.CharacterRelationship,
     "stream_types.CharacterRelationship": stream_types.CharacterRelationship,
 
@@ -1765,6 +1768,9 @@ type_map = {
     "types.NCCAKeyCompetencyRootPdf": types.NCCAKeyCompetencyRootPdf,
     "stream_types.NCCAKeyCompetencyRootPdf": stream_types.NCCAKeyCompetencyRootPdf,
 
+    "types.NCCAPolicyCriteria": types.NCCAPolicyCriteria,
+    "stream_types.NCCAPolicyCriteria": stream_types.NCCAPolicyCriteria,
+
     "types.NPC": types.NPC,
     "stream_types.NPC": stream_types.NPC,
 
@@ -3128,6 +3134,12 @@ type_map = {
     "types.MutationType": types.MutationType,
 
     "types.MythologicalCycle": types.MythologicalCycle,
+
+    "types.NCCAAwardDescriptor": types.NCCAAwardDescriptor,
+
+    "types.NCCACertificationStage": types.NCCACertificationStage,
+
+    "types.NCCAKeyCompetency": types.NCCAKeyCompetency,
 
     "types.NCCASubjectSlug": types.NCCASubjectSlug,
 

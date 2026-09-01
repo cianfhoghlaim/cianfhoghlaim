@@ -2045,6 +2045,12 @@ class LlmResponseParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractMythologicalStory", llm_response=llm_response, mode="request")
         return typing.cast(types.MythologicalStory, __result__)
 
+    def ExtractNCCAPolicyCriteria(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.NCCAPolicyCriteria:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractNCCAPolicyCriteria", llm_response=llm_response, mode="request")
+        return typing.cast(types.NCCAPolicyCriteria, __result__)
+
     def ExtractNCCEPedagogyPrinciples(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> types.PedagogyOverlay:
@@ -5556,6 +5562,12 @@ class LlmStreamParser:
     ) -> stream_types.MythologicalStory:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractMythologicalStory", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.MythologicalStory, __result__)
+
+    def ExtractNCCAPolicyCriteria(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.NCCAPolicyCriteria:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractNCCAPolicyCriteria", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.NCCAPolicyCriteria, __result__)
 
     def ExtractNCCEPedagogyPrinciples(
         self, llm_response: str, baml_options: BamlCallOptions = {},

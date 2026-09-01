@@ -37,7 +37,7 @@ def get_checks(checks: typing.Dict[CheckName, Check]) -> typing.List[Check]:
 def all_succeeded(checks: typing.Dict[CheckName, Check]) -> bool:
     return all(check.status == "succeeded" for check in get_checks(checks))
 # #########################################################################
-# Generated enums (285)
+# Generated enums (288)
 # #########################################################################
 
 class ALevelAQASubject(str, Enum):
@@ -2304,6 +2304,28 @@ class MythologicalCycle(str, Enum):
     ARTHURIAN = "ARTHURIAN"
     FOLK = "FOLK"
 
+class NCCAAwardDescriptor(str, Enum):
+    EXCEPTIONAL = "EXCEPTIONAL"
+    ABOVE_EXPECTATIONS = "ABOVE_EXPECTATIONS"
+    IN_LINE_WITH_EXPECTATIONS = "IN_LINE_WITH_EXPECTATIONS"
+    BELOW_EXPECTATIONS = "BELOW_EXPECTATIONS"
+    FAR_BELOW_EXPECTATIONS = "FAR_BELOW_EXPECTATIONS"
+
+class NCCACertificationStage(str, Enum):
+    AISTEAR = "AISTEAR"
+    BUNSCOIL = "BUNSCOIL"
+    MEANSCOIL = "MEANSCOIL"
+    SCOIL_SINSEARACH = "SCOIL_SINSEARACH"
+    OLLSCOIL = "OLLSCOIL"
+
+class NCCAKeyCompetency(str, Enum):
+    COMMUNICATING = "COMMUNICATING"
+    INFORMATION_PROCESSING = "INFORMATION_PROCESSING"
+    CRITICAL_AND_CREATIVE_THINKING = "CRITICAL_AND_CREATIVE_THINKING"
+    PERSONAL_EFFECTIVENESS = "PERSONAL_EFFECTIVENESS"
+    WORKING_WITH_OTHERS = "WORKING_WITH_OTHERS"
+    STAYING_WELL = "STAYING_WELL"
+
 class NCCASubjectSlug(str, Enum):
     MATHEMATICS = "MATHEMATICS"
     APPLIED_MATHEMATICS = "APPLIED_MATHEMATICS"
@@ -3298,7 +3320,7 @@ class WJECSubject(str, Enum):
     OTHER = "OTHER"
 
 # #########################################################################
-# Generated classes (906)
+# Generated classes (908)
 # #########################################################################
 
 class ALevelAreaTopic(BaseModel):
@@ -4393,6 +4415,12 @@ class CertGuidance(BaseModel):
     reporting_recommendations: typing.List["BilingualTextRootPdf"] = Field(description='The recommendations for online reporting')
     technology_requirements: typing.List["BilingualTextRootPdf"] = Field(description='The technology requirements for online certification')
     evidence: "EvidenceLink"
+
+class CertificationCitation(BaseModel):
+    source_pdf: str = Field(description='The NCCA policy PDF filename')
+    page: int = Field(description='1-indexed page number')
+    quote: str = Field(description='Verbatim quote from the page')
+    relevance: str = Field(description='1-sentence explanation of how this page informed the criteria')
 
 class CharacterRelationship(BaseModel):
     related_character: str = Field(description='Name of related character')
@@ -8892,6 +8920,14 @@ class NCCAKeyCompetencyRootPdf(BaseModel):
     definition: "BilingualTextRootPdf" = Field(description='The full competency definition statement')
     evidence: "EvidenceLink"
 
+class NCCAPolicyCriteria(BaseModel):
+    stage: NCCACertificationStage
+    subject_slug: str
+    award_descriptor: NCCAAwardDescriptor
+    descriptor_vocabulary: typing.List[NCCAAwardDescriptor]
+    key_competencies: typing.List[NCCAKeyCompetency]
+    policy_citations: typing.List["CertificationCitation"]
+
 class NPC(BaseModel):
     id: str
     name: str
@@ -12132,7 +12168,7 @@ TopicExtraction: typing_extensions.TypeAlias = "LCTopicExtraction"
 
 
 # #########################################################################
-# Model rebuilds (900)
+# Model rebuilds (902)
 # #########################################################################
 # Resolve string forward references now that every model above is defined so
 # class declaration order never breaks Pydantic construction (issue #793).
@@ -12253,6 +12289,7 @@ CelticNamedEntity.model_rebuild()
 CelticTerm.model_rebuild()
 CelticWord.model_rebuild()
 CertGuidance.model_rebuild()
+CertificationCitation.model_rebuild()
 CharacterRelationship.model_rebuild()
 ChariotOfSidrach.model_rebuild()
 ChemSubjectDiscriminator.model_rebuild()
@@ -12716,6 +12753,7 @@ MythologicalCharacter.model_rebuild()
 MythologicalLocation.model_rebuild()
 MythologicalStory.model_rebuild()
 NCCAKeyCompetencyRootPdf.model_rebuild()
+NCCAPolicyCriteria.model_rebuild()
 NPC.model_rebuild()
 NPCDialogue.model_rebuild()
 NPCGreeting.model_rebuild()

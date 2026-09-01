@@ -4812,6 +4812,20 @@ class BamlSyncClient:
                 "text": text,
             })
             return typing.cast(types.MythologicalStory, __result__.cast_to(types, types, stream_types, False, __runtime__))
+    def ExtractNCCAPolicyCriteria(self, pdf_text: str,subject_slug: str,stage: types.NCCACertificationStage,
+        baml_options: BamlCallOptions = {},
+    ) -> types.NCCAPolicyCriteria:
+        # Check if on_tick is provided
+        if 'on_tick' in baml_options:
+            __stream__ = self.stream.ExtractNCCAPolicyCriteria(pdf_text=pdf_text,subject_slug=subject_slug,stage=stage,
+                baml_options=baml_options)
+            return __stream__.get_final_response()
+        else:
+            # Original non-streaming code
+            __result__ = self.__options.merge_options(baml_options).call_function_sync(function_name="ExtractNCCAPolicyCriteria", args={
+                "pdf_text": pdf_text,"subject_slug": subject_slug,"stage": stage,
+            })
+            return typing.cast(types.NCCAPolicyCriteria, __result__.cast_to(types, types, stream_types, False, __runtime__))
     def ExtractNCCEPedagogyPrinciples(self, pdf_text: str,source_pdf: str,
         baml_options: BamlCallOptions = {},
     ) -> types.PedagogyOverlay:
@@ -12323,6 +12337,18 @@ class BamlStreamClient:
           lambda x: typing.cast(types.MythologicalStory, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
+    def ExtractNCCAPolicyCriteria(self, pdf_text: str,subject_slug: str,stage: types.NCCACertificationStage,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlSyncStream[stream_types.NCCAPolicyCriteria, types.NCCAPolicyCriteria]:
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_sync_stream(function_name="ExtractNCCAPolicyCriteria", args={
+            "pdf_text": pdf_text,"subject_slug": subject_slug,"stage": stage,
+        })
+        return baml_py.BamlSyncStream[stream_types.NCCAPolicyCriteria, types.NCCAPolicyCriteria](
+          __result__,
+          lambda x: typing.cast(stream_types.NCCAPolicyCriteria, x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(types.NCCAPolicyCriteria, x.cast_to(types, types, stream_types, False, __runtime__)),
+          __ctx__,
+        )
     def ExtractNCCEPedagogyPrinciples(self, pdf_text: str,source_pdf: str,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlSyncStream[stream_types.PedagogyOverlay, types.PedagogyOverlay]:
@@ -17654,6 +17680,13 @@ class BamlHttpRequestClient:
             "text": text,
         }, mode="request")
         return __result__
+    def ExtractNCCAPolicyCriteria(self, pdf_text: str,subject_slug: str,stage: types.NCCACertificationStage,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="ExtractNCCAPolicyCriteria", args={
+            "pdf_text": pdf_text,"subject_slug": subject_slug,"stage": stage,
+        }, mode="request")
+        return __result__
     def ExtractNCCEPedagogyPrinciples(self, pdf_text: str,source_pdf: str,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
@@ -21748,6 +21781,13 @@ class BamlHttpStreamRequestClient:
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="ExtractMythologicalStory", args={
             "text": text,
+        }, mode="stream")
+        return __result__
+    def ExtractNCCAPolicyCriteria(self, pdf_text: str,subject_slug: str,stage: types.NCCACertificationStage,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="ExtractNCCAPolicyCriteria", args={
+            "pdf_text": pdf_text,"subject_slug": subject_slug,"stage": stage,
         }, mode="stream")
         return __result__
     def ExtractNCCEPedagogyPrinciples(self, pdf_text: str,source_pdf: str,
