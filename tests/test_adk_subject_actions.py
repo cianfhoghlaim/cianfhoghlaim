@@ -179,8 +179,8 @@ def test_phase1_voice_agent_process_audio_not_a_pass():
         "`pass # TODO: Pipecat SDK integration` stub body."
     )
     # The Phase 1 stub returns the canonical response shape.
-    assert "phase1_stub" in src
-    assert "_silent_wav_bytes" in src
+    assert "phase1_stub" in src or "phase6_wired" in src or "phase6_unreachable" in src
+    assert "_silent_wav_bytes" in src or "silent_wav_bytes" in src
 
 
 def test_phase1_dispatch_study_plan_delegates_to_planner():

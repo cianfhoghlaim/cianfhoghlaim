@@ -6,6 +6,16 @@ Bridges:
 - Agent: LiteLLM gateway (root_agent or curriculum_agent)
 - TTS:   ABAIR (Irish) / Chatterbox (English) / SAM-Audio (source separation)
 
+Per the 2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1 change
+(Phase 1 §2.4) + the 2026-09-01-cianfhoghlaim-nua-a2ui-catalog-v1
+change (Phase 6 oral study plans):
+
+- Phase 1 ships a wired Pipecat client stub that logs the round-trip.
+- Phase 6 wires the real Pipecat HTTP client
+  (agents.api._oideachais_api.services.pipecat_client.call_pipecat_roundtrip)
+  + the dialect-aware TTS router
+  (agents.api._oideachais_api.services.tts_router).
+
 Requires: bonneagar/stacks/pipecat/ (port 8765)
 Reference: docs/meaisínfhoghlaim/README.md (audio model table)
 """
@@ -43,7 +53,15 @@ def _voice_models_for(language: str) -> tuple[str, str]:
 
 
 class VoiceAgent:
-    """High-level wrapper that abstracts the Pipecat real-time transport."""
+    """High-level wrapper that abstracts the Pipecat real-time transport.
+
+    Phase 6 (oral study plans) replaces the Phase 1 stub body with
+    a real Pipecat HTTP round-trip (agents.api._oideachais_api.services.
+    pipecat_client.call_pipecat_roundtrip). Falls back to the Phase 1
+    silent-WAV stub when the Pipecat service is unreachable (the
+    canonical lightweight-container behaviour).
+    """
+
     def __init__(self, language: str = "en"):
         self.language = language
         self.asr_model, self.tts_model = _voice_models_for(language)
@@ -51,65 +69,60 @@ class VoiceAgent:
     async def process_audio(self, audio_bytes: bytes, session_id: str) -> dict:
         """Send audio → get agent response → TTS audio back.
 
-        Per the 2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1 change
-        (Phase 1 §2.4): Phase 1 ships a wired Pipecat client stub that
-        logs the round-trip; the real TTS round-trip (Chatterbox +
-        orpheus-tts-3b-ft + facebook-mms-tts-gle) is delivered in
-        Phase 6 (oral study plans).
-
-        The stub returns the canonical response shape so callers can
-        consume it end-to-end; the audio bytes field is populated with
-        a 1-second silent WAV. Tries `MockTTSService` first (which
-        uses torch + torchaudio); falls back to a stdlib-only silent
-        WAV generator when torch isn't installed (so the stub works in
-        lightweight container builds).
+        Phase 6 wired implementation: delegates to the canonical Pipecat
+        HTTP client. When the service is unreachable (PipecatUnreachable
+        exception), falls back to the Phase 1 silent-WAV behaviour so the
+        agent works in lightweight container builds.
         """
         import base64
-        import struct
-        import wave
 
-        # Phase 1 stub: round-trip the audio through MockTTSService when
-        # torch is available; otherwise emit a 1-second silent WAV via
-        # the stdlib `wave` module. The response shape is identical so
-        # downstream consumers don't need to branch on the provider.
-        tts_audio_bytes = _silent_wav_bytes(duration_sec=1.0)
-        tts_provider = "phase1_stdlib_wav"
-        try:
-            from agents.api._oideachais_api.services.chatterbox import (
-                MockTTSService,
-            )
-
-            mock = MockTTSService()
-            tts_audio_bytes = await mock.synthesize(
-                text=f"phase1-stub echo for session {session_id}",
-            )
-            tts_provider = "mock_chatterbox_phase1_stub"
-        except Exception as exc:  # noqa: BLE001 — torch unavailable
-            logger.debug(
-                "voice_agent.process_audio: MockTTSService unavailable, "
-                "falling back to stdlib silent WAV: %s",
-                exc,
-            )
-
-        logger.info(
-            "voice_agent.process_audio phase1_stub session_id=%s "
-            "tts_provider=%s audio_out_bytes=%d",
-            session_id,
-            tts_provider,
-            len(tts_audio_bytes),
+        from agents.api._oideachais_api.services.pipecat_client import (
+            PipecatAudioRequest,
+            PipecatUnreachable,
+            b64_audio_from_bytes,
+            call_pipecat_roundtrip,
         )
 
-        return {
-            "session_id": session_id,
-            "transcript_in": None,  # Phase 6: real Whisper ASR
-            "agent_text": None,  # Phase 6: real LLM response
-            "audio_out_bytes": tts_audio_bytes,
-            "audio_out_b64": base64.b64encode(tts_audio_bytes).decode("ascii"),
-            "tts_provider": tts_provider,
-            "voice_id": "",
-            "phase": "phase1_stub",
-            "phase_marker": "PHASE_1_STUB",
-        }
+        audio_b64 = b64_audio_from_bytes(audio_bytes)
+        request = PipecatAudioRequest(
+            audio_b64=audio_b64,
+            session_id=session_id,
+            language=self.language,
+            agent="cianfhoghlaim",
+        )
+
+        tts_provider = "phase6_unreachable"
+        try:
+            response = await call_pipecat_roundtrip(request)
+            return {
+                "session_id": session_id,
+                "transcript_in": response.transcript_in,
+                "agent_text": response.agent_text,
+                "audio_out_bytes": base64.b64decode(response.audio_out_b64),
+                "audio_out_b64": response.audio_out_b64,
+                "tts_provider": response.tts_provider,
+                "voice_id": response.voice_id,
+                "phase": "phase6_wired",
+                "phase_marker": "PHASE_6_WIRED",
+            }
+        except PipecatUnreachable as exc:
+            logger.warning(
+                "voice_agent.process_audio: Pipecat unreachable at %s, "
+                "falling back to silent WAV",
+                exc.url,
+            )
+            tts_audio_bytes = _silent_wav_bytes(duration_sec=1.0)
+            return {
+                "session_id": session_id,
+                "transcript_in": None,
+                "agent_text": None,
+                "audio_out_bytes": tts_audio_bytes,
+                "audio_out_b64": base64.b64encode(tts_audio_bytes).decode("ascii"),
+                "tts_provider": tts_provider,
+                "voice_id": "",
+                "phase": "phase6_unreachable",
+                "phase_marker": "PHASE_6_UNREACHABLE",
+            }
 
 
 def _silent_wav_bytes(duration_sec: float = 1.0, sample_rate: int = 22050) -> bytes:
