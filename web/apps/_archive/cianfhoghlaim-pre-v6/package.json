@@ -1,0 +1,59 @@
+{
+  "name": "@cianfhoghlaim/cianfhoghlaim",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "app.config.ts",
+  "scripts": {
+    "dev": "vite dev --port 3000",
+    "build": "vite build",
+    "start": "node .output/server/index.mjs",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo ok",
+    "test": "echo ok",
+    "clean": "rm -rf .output .vinxi .next node_modules/.cache",
+    "deploy": "wrangler deploy",
+    "deploy:dry-run": "wrangler deploy --dry-run"
+  },
+  "dependencies": {
+    "@cianfhoghlaim/auth": "workspace:*",
+    "@cianfhoghlaim/contracts": "workspace:*",
+    "@cianfhoghlaim/db": "workspace:*",
+    "@cianfhoghlaim/ui-kit": "workspace:*",
+    "@ag-ui/core": "^0.0.58",
+    "@copilotkit/react-core": "^1.69.2",
+    "@copilotkit/react-ui": "^1.69.2",
+    "@copilotkit/runtime": "^1.69.2",
+    "@orpc/client": "^1.7.0",
+    "@tanstack/ai": "^0.49.1",
+    "@tanstack/ai-react": "^0.22.1",
+    "@tanstack/db": "^0.8.5",
+    "@tanstack/react-db": "^0.3.5",
+    "@tanstack/react-form": "^1.33.5",
+    "@tanstack/react-query": "^5.62.0",
+    "@tanstack/react-router": "^1.95.0",
+    "@tanstack/react-start": "^1.95.0",
+    "@tanstack/router-plugin": "^1.132.0",
+    "@tanstack/start": "^1.95.0",
+    "better-auth": "^1.7.0",
+    "convex": "^1.40.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.1.11",
+    "vite": "^7.0.6",
+    "vite-tsconfig-paths": "^5.1.4",
+    "wrangler": "^4.20.0"
+  },
+  "devDependencies": {
+    "@tanstack/router-devtools": "^1.132.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^4.7.0",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "bun": ">=1.4.0"
+  },
+  "packageManager": "bun@1.4.0"
+}
