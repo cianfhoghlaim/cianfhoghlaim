@@ -9,8 +9,7 @@
 //
 // The 4 paths run concurrently as `spawn` blocks (BEP-034, the green
 // threads pattern). Each path uses `catch_all` to degrade gracefully on
-// per-call failure (no abort, just an `EnsemblePathOutput { path: \"x\",
-// schema_valid: false }`).
+// per-call failure (no abort, just an `EnsemblePathOutput { path: \"x\"
 //
 // `render_null_as=\"-1\"` is applied to `doc_confidence` so missing
 // confidence scores render as -1 instead of null (per the 0.223.0
@@ -116,7 +115,9 @@ function Run4PathEnsemble(
 // existing BAML or HTTP call)
 // ============================================================================
 
-function ExtractEnglandBAMLPath(pdf_text: string) -> EnsemblePathOutput {
+function ExtractEnglandBAMLPath(
+  pdf_text: string
+) -> EnsemblePathOutput {
   client ExtractEn
   prompt #"
     {{ _.role("user") }}
@@ -135,17 +136,11 @@ function ExtractEnglandBAMLPath(pdf_text: string) -> EnsemblePathOutput {
     PDF TEXT:
     {{ pdf_text }}
   "#
-
-  catch_all (err) {
-    EnsemblePathOutput {
-      ragas_faithfulness null,
-      ragas_answer_relevance null,
-      ragas_context_precision null,
-    }
-  }
 }
 
-function ExtractEnglandUnstractPath(pdf_text: string) -> EnsemblePathOutput {
+function ExtractEnglandUnstractPath(
+  pdf_text: string
+) -> EnsemblePathOutput {
   client ExtractEn
   prompt #"
     {{ _.role("user") }}
@@ -161,17 +156,11 @@ function ExtractEnglandUnstractPath(pdf_text: string) -> EnsemblePathOutput {
 
     {{ ctx.output_format }}
   "#
-
-  catch_all (err) {
-    EnsemblePathOutput {
-      ragas_faithfulness null,
-      ragas_answer_relevance null,
-      ragas_context_precision null,
-    }
-  }
 }
 
-function ExtractEnglandQwen3VLPath(pdf_text: string) -> EnsemblePathOutput {
+function ExtractEnglandQwen3VLPath(
+  pdf_text: string
+) -> EnsemblePathOutput {
   client LocalVisionQwen3vl
   prompt #"
     {{ _.role("user") }}
@@ -185,17 +174,11 @@ function ExtractEnglandQwen3VLPath(pdf_text: string) -> EnsemblePathOutput {
 
     {{ ctx.output_format }}
   "#
-
-  catch_all (err) {
-    EnsemblePathOutput {
-      ragas_faithfulness null,
-      ragas_answer_relevance null,
-      ragas_context_precision null,
-    }
-  }
 }
 
-function ExtractEnglandGemma4Path(pdf_text: string) -> EnsemblePathOutput {
+function ExtractEnglandGemma4Path(
+  pdf_text: string
+) -> EnsemblePathOutput {
   client LocalVisionGemma4
   prompt #"
     {{ _.role("user") }}
@@ -209,14 +192,6 @@ function ExtractEnglandGemma4Path(pdf_text: string) -> EnsemblePathOutput {
 
     {{ ctx.output_format }}
   "#
-
-  catch_all (err) {
-    EnsemblePathOutput {
-      ragas_faithfulness null,
-      ragas_answer_relevance null,
-      ragas_context_precision null,
-    }
-  }
 }
 
 // ============================================================================
@@ -230,7 +205,7 @@ function ExtractEnglandEnsembleConsensus(
   unstract_json: string?,
   qwen3_vl_response: string?,
   gemma4_response: string?,
-  subject: string?,
+  subject: string?
 ) -> EnsembleConsensus {
   client ExtractEn
   prompt #"
@@ -255,19 +230,4 @@ function ExtractEnglandEnsembleConsensus(
 
     {{ ctx.output_format }}
   "#
-
-  catch_all (err) {
-    EnsembleConsensus {
-      paths null,
-      baml_canonical_id null,
-      unstract_canonical_id null,
-      qwen3_vl_canonical_id null,
-      gemma4_canonical_id null,
-      source_pdf "",
-      ingested_at "",
-      board null,
-      qualification_level null,
-      subject null,
-    }
-  }
 }

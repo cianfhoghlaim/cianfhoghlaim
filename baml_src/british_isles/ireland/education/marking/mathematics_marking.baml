@@ -6,9 +6,8 @@
 // MathCommonMistake) and the `ExtractMathematicsMarkingScheme` function.
 //
 // Replaces the generic ExtractMarkingSchemeGuideline path for
-// `subject="mathematics"` so the MarkAllocation items reflect
-// Mathematics-specific mistake patterns (sign errors, arithmetic slips,
-// algebraic manipulation errors, unit errors) and question types
+// `subject="mathematics"` so the LCMarkAllocation items reflect
+// Mathematics-specific mistake patterns (sign errors, arithmetic slips
 // (WORKED_SOLUTION / PROOF / VISUAL_INTERPRETATION).
 //
 // Usage:
@@ -79,8 +78,8 @@ class MathematicsMarkingScheme {
   source_pdf string
 
   // Inherited BAML types referenced for compatibility with the generic extractor
-  grade_descriptors GradeDescriptor[] @description("5 generic grade bands from the canonical extractor")
-  mark_allocations MarkAllocation[]
+  grade_descriptors LCGradeDescriptor[] @description("5 generic grade bands from the canonical extractor")
+  mark_allocations LCMarkAllocation[]
 
   // Mathematics-specific discriminator
   subject_specific MathSubjectDiscriminator
@@ -97,9 +96,10 @@ class MathematicsMarkingScheme {
 function ExtractMathematicsMarkingScheme(
   pdf_text: string,
   year: int?,
-  level: string?,
-) -> MathematicsMarkingScheme {  client ExtractEn
-    prompt #"
+  level: string?
+) -> MathematicsMarkingScheme {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -107,19 +107,9 @@ function ExtractMathematicsMarkingScheme(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    MathematicsMarkingScheme {
-      year 0,
-      source_pdf "",
-      mark_allocations null,
-      subject_specific mathsubjectdiscriminator {},
-      total_marks 0,
-      total_questions 0,
-    }
-  }
 }
 
 // test mathematics_marking_extraction_smoke {

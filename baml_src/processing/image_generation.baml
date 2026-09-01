@@ -81,7 +81,6 @@ class ImagePromptSpec {
   cta_text string? @description("Optional call-to-action or tagline")
   bria_json_config string @description("The Bria FIBO JSON config (filled by BuildFIBOConfig)")
   irish_translation string? @description("Irish (Gaeilge) translation of the subject_text + overlays, if available")
-  @@stream.done
 }
 
 // =============================================================================
@@ -115,8 +114,9 @@ function ExtractImagePrompt(
   subject: string,
   cycle: string,
   purpose: ImagePurpose
-) -> ImagePromptSpec {  client ExtractEn
-    prompt #"
+) -> ImagePromptSpec {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -124,26 +124,18 @@ function ExtractImagePrompt(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    ImagePromptSpec {
-      purpose imagepurpose {},
-      camera_angle cameraangle {},
-      lighting lightingstyle {},
-      mood mood {},
-      style visualstyle {},
-    }
-  }
 }
 
 function BuildFIBOConfig(
   spec: ImagePromptSpec,
   outcome_id: string,
   syllabus_path: string
-) -> FIBOConfig {  client ExtractEn
-    prompt #"
+) -> FIBOConfig {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -151,6 +143,6 @@ function BuildFIBOConfig(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

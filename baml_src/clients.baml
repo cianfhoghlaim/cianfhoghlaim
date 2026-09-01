@@ -3,8 +3,7 @@
 // ============================================================================
 // 2026-08-31: BAML switching strategy (per the v5 model priority change)
 // ============================================================================
-// 3 layers stacked: a single canonical `Primary` alias per BAML function,
-// a MODEL_PROFILE env-driven dispatch, and a per-function `fallback` chain.
+// 3 layers stacked: a single canonical `Primary` alias per BAML function
 //
 // Switching the primary model = changing one of 3 knobs:
 //   (a) Env-driven primary  —  MODEL_BASE_URL / MODEL_API_KEY / MODEL_PRIMARY

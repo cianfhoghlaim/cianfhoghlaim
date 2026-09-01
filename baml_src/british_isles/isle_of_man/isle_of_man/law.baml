@@ -15,8 +15,9 @@ function ExtractIsleOfManLawDocument(
   island: string,
   language: string,
   text: string
-) -> IsleOfManLawDocument {  client ExtractEn
-    prompt #"
+) -> IsleOfManLawDocument {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -24,16 +25,6 @@ function ExtractIsleOfManLawDocument(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    IsleOfManLawDocument {
-      title "",
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
 }

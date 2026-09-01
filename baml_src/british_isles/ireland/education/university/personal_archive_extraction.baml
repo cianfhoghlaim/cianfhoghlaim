@@ -16,8 +16,7 @@
 // client (per `baml_src/clients.baml`).
 //
 // The `UoGQuestion` class is intentionally F-granular — each question
-// is its own row, with `my_answer_text`, `my_answer_latex`, `my_mark`,
-// `my_mark_breakdown`, `htr_backend_used`, and `htr_confidence` so the
+// is its own row, with `my_answer_text`, `my_answer_latex`, `my_mark`
 // downstream marimo notebook can show "every question on Laplace
 // transforms I ever got wrong" (the user's worked-example).
 //
@@ -99,7 +98,6 @@ class UoGPersonalArchiveArtefact {
   provenance_meta UoGArtefactProvenanceMeta
   content_hash string
   scraped_at string
-  @@stream.done
 }
 
 // =============================================================================
@@ -122,7 +120,6 @@ class UoGQuestion {
   htr_confidence float?
   answer_topic_tags string[]
   confidence float
-  @@stream.done
 }
 
 // =============================================================================
@@ -141,7 +138,6 @@ class UoGAssignment {
   question_count int
   questions UoGQuestion[]
   confidence float
-  @@stream.done
 }
 
 // =============================================================================
@@ -155,7 +151,6 @@ class UoGTopic {
   module_codes string[]
   occurrence_count int
   confidence float
-  @@stream.done
 }
 
 // =============================================================================
@@ -173,7 +168,6 @@ class UoGReadingItem {
   url string?
   is_essential bool
   confidence float
-  @@stream.done
 }
 
 // =============================================================================
@@ -191,7 +185,6 @@ class UoGCodeCell {
   output_text string?
   demonstrates_topics string[]
   confidence float
-  @@stream.done
 }
 
 // =============================================================================
@@ -208,7 +201,6 @@ class UoGCaMark {
   academic_year int?
   extracted_from_artefact_id string?
   confidence float
-  @@stream.done
 }
 
 // =============================================================================
@@ -233,7 +225,6 @@ class StudentTranscriptRow {
   source_url string?
   scraped_at string
   confidence float
-  @@stream.done
 }
 
 // =============================================================================
@@ -257,14 +248,21 @@ class UoGModuleSummary {
   first_artefact_year int?
   last_artefact_year int?
   confidence float
-  @@stream.done
 }
 
 // =============================================================================
 // Functions
 // =============================================================================
 
-function ExtractUoGPersonalArchiveArtefact(embedded_text: string, file_name: string, file_type: string, inferred_module_code: string?, provenance_hint: ArtefactProvenance) -> UoGPersonalArchiveArtefact { client ExtractEn prompt #"
+function ExtractUoGPersonalArchiveArtefact(
+  embedded_text: string,
+  file_name: string,
+  file_type: string,
+  inferred_module_code: string?,
+  provenance_hint: ArtefactProvenance
+) -> UoGPersonalArchiveArtefact {
+  client ExtractEn
+  prompt #"
   {{ _.role("user") }}
   You are an expert at extracting University of Galway (or Irish university) personal-archive artefact metadata from rendered text.
 
@@ -287,26 +285,16 @@ function ExtractUoGPersonalArchiveArtefact(embedded_text: string, file_name: str
   {{ ctx.output_format }}
 "#
 
-  catch_all (err) {
-    UoGPersonalArchiveArtefact {
-      artefact_id "UNKNOWN"
-      artefact_kind OTHER
-      artefact_provenance UNKNOWN
-      module_code ""
-      file_path ""
-      file_hash ""
-      bytes 0
-      file_extension ""
-      embedded_text ""
-      confidence 0.0
-      provenance_meta UoGArtefactProvenanceMeta { htr_required false htr_backend_used NONE }
-      content_hash ""
-      scraped_at "1970-01-01T00:00:00Z"
-    }
-  }
 }
 
-function ExtractUoGAssignment(embedded_text: string, file_name: string, module_code: string, assignment_number: int?) -> UoGAssignment { client ExtractEn prompt #"
+function ExtractUoGAssignment(
+  embedded_text: string,
+  file_name: string,
+  module_code: string,
+  assignment_number: int?
+) -> UoGAssignment {
+  client ExtractEn
+  prompt #"
   {{ _.role("user") }}
   You are an expert at extracting University of Galway (or Irish university) personal-archive assignment + per-question data from rendered text.
 
@@ -348,20 +336,14 @@ function ExtractUoGAssignment(embedded_text: string, file_name: string, module_c
   {{ ctx.output_format }}
 "#
 
-  catch_all (err) {
-    UoGAssignment {
-      assignment_id "UNKNOWN"
-      artefact_id "UNKNOWN"
-      module_code "{{ module_code }}"
-      assignment_number 0
-      question_count 0
-      questions []
-      confidence 0.0
-    }
-  }
 }
 
-function ExtractUoGTopicList(embedded_text: string, module_code: string) -> UoGTopic[] { client ExtractEn prompt #"
+function ExtractUoGTopicList(
+  embedded_text: string,
+  module_code: string
+) -> UoGTopic[] {
+  client ExtractEn
+  prompt #"
   {{ _.role("user") }}
   You are an expert at extracting the canonical topic list from a University of Galway (or Irish university) lecture / problem-sheet / assignment text.
 
@@ -386,13 +368,14 @@ function ExtractUoGTopicList(embedded_text: string, module_code: string) -> UoGT
 
   {{ ctx.output_format }}
 "#
-
-  catch_all (err) {
-    UoGTopic[] {}
-  }
 }
 
-function ExtractUoGLectureReadingList(embedded_text: string, module_code: string) -> UoGReadingItem[] { client ExtractEn prompt #"
+function ExtractUoGLectureReadingList(
+  embedded_text: string,
+  module_code: string
+) -> UoGReadingItem[] {
+  client ExtractEn
+  prompt #"
   {{ _.role("user") }}
   You are an expert at extracting University of Galway (or Irish university) per-module reading-list items from lecture notes / module descriptor text.
 
@@ -418,13 +401,16 @@ function ExtractUoGLectureReadingList(embedded_text: string, module_code: string
 
   {{ ctx.output_format }}
 "#
-
-  catch_all (err) {
-    UoGReadingItem[] {}
-  }
 }
 
-function ExtractUoGCodeCell(cell_source: string, cell_output: string?, cell_index: int, module_code: string) -> UoGCodeCell { client ExtractEn prompt #"
+function ExtractUoGCodeCell(
+  cell_source: string,
+  cell_output: string?,
+  cell_index: int,
+  module_code: string
+) -> UoGCodeCell {
+  client ExtractEn
+  prompt #"
   {{ _.role("user") }}
   You are an expert at extracting structured per-cell metadata from a University of Galway (or Irish university) personal-archive code cell (Jupyter notebook `.ipynb` cell, or a function in a `.py` file).
 
@@ -459,21 +445,14 @@ function ExtractUoGCodeCell(cell_source: string, cell_output: string?, cell_inde
   {{ ctx.output_format }}
 "#
 
-  catch_all (err) {
-    UoGCodeCell {
-      cell_id "UNKNOWN"
-      module_code "{{ module_code }}"
-      notebook_path "unknown"
-      cell_index {{ cell_index }}
-      cell_type "code"
-      source_text "{{ cell_source }}"
-      demonstrates_topics []
-      confidence 0.0
-    }
-  }
 }
 
-function ExtractStudentTranscript(pdf_text: string, student_id: string) -> StudentTranscriptRow[] { client ExtractEn prompt #"
+function ExtractStudentTranscript(
+  pdf_text: string,
+  student_id: string
+) -> StudentTranscriptRow[] {
+  client ExtractEn
+  prompt #"
   {{ _.role("user") }}
   You are an expert at extracting structured per-module transcript rows from a University of Galway (or Irish university) official academic transcript PDF.
 
@@ -507,13 +486,17 @@ function ExtractStudentTranscript(pdf_text: string, student_id: string) -> Stude
 
   {{ ctx.output_format }}
 "#
-
-  catch_all (err) {
-    StudentTranscriptRow[] {}
-  }
 }
 
-function BuildModuleSummary(artefact_rows: UoGPersonalArchiveArtefact[], assignment_rows: UoGAssignment[], topic_rows: UoGTopic[], transcript_rows: StudentTranscriptRow[], module_code: string) -> UoGModuleSummary { client ExtractEn prompt #"
+function BuildModuleSummary(
+  artefact_rows: UoGPersonalArchiveArtefact[],
+  assignment_rows: UoGAssignment[],
+  topic_rows: UoGTopic[],
+  transcript_rows: StudentTranscriptRow[],
+  module_code: string
+) -> UoGModuleSummary {
+  client ExtractEn
+  prompt #"
   {{ _.role("user") }}
   You are an expert at building the per-module summary row for a University of Galway (or Irish university) personal-archive pipeline.
 
@@ -550,18 +533,4 @@ function BuildModuleSummary(artefact_rows: UoGPersonalArchiveArtefact[], assignm
   {{ ctx.output_format }}
 "#
 
-  catch_all (err) {
-    UoGModuleSummary {
-      module_code "{{ module_code }}"
-      artefact_count 0
-      assignment_count 0
-      question_count 0
-      topic_count 0
-      code_cell_count 0
-      reading_count 0
-      ca_marks []
-      topic_names []
-      confidence 0.0
-    }
-  }
 }

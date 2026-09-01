@@ -51,8 +51,9 @@ function ClassifyEmail(
   email_body: string,
   sender_domain: string,
   recipient_domain: string
-) -> EmailClassificationResult {  client ExtractEn
-    prompt #"
+) -> EmailClassificationResult {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -60,7 +61,7 @@ function ClassifyEmail(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -75,14 +76,14 @@ class EmailThread {
   decision_points string[]      @description("Decisions taken in the thread, in chronological order")
   dates_mentioned string[]      @description("ISO 8601 dates (YYYY-MM-DD) explicitly mentioned in the thread body, ordered chronologically")
   key_quotes string[]           @description("3-5 verbatim quotes (max 200 chars each) that capture the thread's most important points")
-  @@stream.done
 }
 
 function ExtractEmailThread(
   thread_messages: string[],
   thread_subject: string
-) -> EmailThread {  client ExtractEn
-    prompt #"
+) -> EmailThread {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -90,12 +91,8 @@ function ExtractEmailThread(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    EmailThread {}
-  }
 }
 
 // =============================================================================
@@ -118,8 +115,9 @@ class CandidatePDF {
 function LinkEmailToResearch(
   email_body: string,
   candidate_pdfs: CandidatePDF[]
-) -> ResearchLink[] {  client ExtractEn
-    prompt #"
+) -> ResearchLink[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -127,7 +125,7 @@ function LinkEmailToResearch(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 

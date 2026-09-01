@@ -3,14 +3,12 @@
 // Companion to `university_extraction.baml` (course / module / programme /
 // reading-list descriptors) and `_cross/isles_education.baml::ExamPaperIsles`
 // (generic Celtic-nations exam paper). This file ADDS the UoG-specific fields
-// (module_code, programme_code, NFQ level, sitting, paper_format, language,
-// source_kind) needed to wire authenticated exam papers back to the existing
+// (module_code, programme_code, NFQ level, sitting, paper_format, language
 // `module_pages` / `ModuleDescriptor` corpus via the
 // `UoGExamPaper-COVERS-UoGModuleDescriptor` Cognee edge (see
 // `cognify/rules/uog_exam_cross_archive.py`).
 //
-// All three extraction functions (`ExtractUoGExamPaper`,
-// `ExtractUoGSyllabus`, `MapUoGExamQuestionsToLOs`) route through the
+// All three extraction functions (`ExtractUoGExamPaper`
 // canonical `ExtractEn` LiteLLM client so the platform keeps one LLM
 // surface to operate. The image-mulitmodal path (VLM extraction when the
 // PDF has no embedded text layer — most UoG maths papers are scanned)
@@ -88,7 +86,6 @@ class UoGExamPaper {
   content_hash string @description("SHA-256[:16] of the PDF — idempotency key for DLT merge")
   scraped_at string @description("ISO-8601 timestamp of the BAML extraction")
   confidence float @description("Overall extraction confidence 0.0–1.0 (VLM self-reported, validated by the deterministic eval)")
-  @@stream.done
 }
 
 // =============================================================================
@@ -111,7 +108,6 @@ class UoGSyllabusDescriptor {
   source_url string @description("Canonical URL of the source (public page or authenticated index)")
   scraped_at string @description("ISO-8601 timestamp of the extraction")
   confidence float @description("Overall extraction confidence 0.0–1.0")
-  @@stream.done
 }
 
 class UoGLearningOutcome {
@@ -140,7 +136,6 @@ class UoGModuleCatalogueRow {
   academic_year int @description("Latest academic year with a verified listing")
   scraped_at string @description("ISO-8601 timestamp")
   confidence float @description("Overall extraction confidence 0.0–1.0")
-  @@stream.done
 }
 
 // =============================================================================
@@ -151,7 +146,8 @@ function ExtractUoGExamPaper(
   pdf_text: string,
   module_code: string,
   academic_year: int
-) -> UoGExamPaper {  client ExtractEn
+) -> UoGExamPaper {
+  client ExtractEn
   prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) past exam paper
@@ -190,20 +186,12 @@ function ExtractUoGExamPaper(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    UoGExamPaper {
-      module_code "{{ module_code }}"
-      academic_year {{ academic_year }}
-      total_marks 0
-      questions []
-      confidence 0.0
-    }
-  }
 }
 
 function ExtractUoGSyllabus(
   syllabus_pdf_text: string
-) -> UoGSyllabusDescriptor {  client ExtractEn
+) -> UoGSyllabusDescriptor {
+  client ExtractEn
   prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway module syllabus data from PDF.
@@ -236,16 +224,6 @@ function ExtractUoGSyllabus(
 
     {{ ctx.output_format }}
   "#
-
-  catch_all (err) {
-    UoGSyllabusDescriptor {
-      module_code "UNKNOWN"
-      ects 0
-      academic_year 0
-      learning_outcomes []
-      confidence 0.0
-    }
-  }
 }
 
 function MapUoGExamQuestionsToLOs(
@@ -285,16 +263,13 @@ function MapUoGExamQuestionsToLOs(
 
     {{ ctx.output_format }}
   "#
-
-  catch_all (err) {
-    {}
-  }
 }
 
 function ExtractUoGModuleCatalogueRow(
   catalogue_page_markdown: string,
   module_code: string
-) -> UoGModuleCatalogueRow {  client ExtractEn
+) -> UoGModuleCatalogueRow {
+  client ExtractEn
   prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway module catalogue rows from the
@@ -319,13 +294,6 @@ function ExtractUoGModuleCatalogueRow(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    UoGModuleCatalogueRow {
-      module_code "{{ module_code }}"
-      ects 0
-      scraped_at "1970-01-01T00:00:00Z"
-    }
-  }
 }
 
 // =============================================================================

@@ -155,7 +155,6 @@ class DocumentStructure {
   page_count int @description("Number of pages")
   column_count int @description("Number of columns per page")
   reading_order ReadingOrder @description("Detected reading order")
-  @@stream.done
 }
 
 // Document types
@@ -273,8 +272,9 @@ function ValidateOCRResult(
   ocr_text: string,
   model_id: string,
   processing_time: float
-) -> OCRValidationResult {  client ExtractEn
-    prompt #"
+) -> OCRValidationResult {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -282,15 +282,16 @@ function ValidateOCRResult(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
 // Validate Irish language quality specifically
 function ValidateIrishContent(
   text: string
-) -> IrishContentQuality {  client ExtractEn
-    prompt #"
+) -> IrishContentQuality {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -298,7 +299,7 @@ function ValidateIrishContent(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -306,8 +307,9 @@ function ValidateIrishContent(
 function ExtractDocumentStructure(
   ocr_text: string,
   page_count: int
-) -> DocumentStructure {  client ExtractEn
-    prompt #"
+) -> DocumentStructure {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -315,20 +317,17 @@ function ExtractDocumentStructure(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    DocumentStructure {}
-  }
 }
 
 // Compare results from multiple OCR models
 function CompareOCRModels(
   document_id: string,
   model_results: ModelResult[]
-) -> ModelComparisonResult {  client ExtractEn
-    prompt #"
+) -> ModelComparisonResult {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -336,7 +335,7 @@ function CompareOCRModels(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 

@@ -7,8 +7,7 @@
 // `audio_segments[]` with the dialect echoed from the input. Phase 6
 // replaces the stub with a real Pipecat + Chatterbox dispatch wired to
 // the canonical `agents/api/_oideachais_api/services/chatterbox.py`
-// TTS service (and `orpheus-tts-3b-ft` for the LC Gaeilge subject,
-// `facebook/mms-tts-gle` for the other 5 Celtic languages).
+// TTS service (and `orpheus-tts-3b-ft` for the LC Gaeilge subject
 //
 // The dialect routing table:
 //
@@ -73,7 +72,7 @@ function GenerateOralStudyPlan(
   text_plan_id: string,
   subject: string,
   dialect: string,
-  total_weeks: string,
+  total_weeks: string
 ) -> OralStudyPlan {
   client Primary
   prompt #"

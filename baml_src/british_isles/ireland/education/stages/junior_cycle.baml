@@ -88,7 +88,6 @@ class CBATask {
   descriptor JcRubricDescriptor[]
   weight_pct int?             @description("CBAs are formative; this is for display only")
   duration_weeks int?
-  @@stream.done
 }
 
 class JuniorCycleWellbeingStatement {
@@ -122,7 +121,6 @@ class JuniorCycleSubjectSpec {
   learning_outcomes JcLearningOutcome[]     @description("Bilingual learning outcomes")
   specification_url string
   language string                         @description("en | ga | bilingual")
-  @@stream.done
 }
 
 class L2LPOutcome {
@@ -137,9 +135,12 @@ class L2LPOutcome {
 // Functions
 // -----------------------------------------------------------------------------
 
-function ExtractJuniorCycleSpec(text: string,
-  subject: string) -> JuniorCycleSubjectSpec {  client ExtractEn
-    prompt #"
+function ExtractJuniorCycleSpec(
+  text: string,
+  subject: string
+) -> JuniorCycleSubjectSpec {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert Irish Junior Cycle (ages 12-15) curriculum extractor for the 8 NCCA JC subjects.
 
@@ -163,26 +164,21 @@ function ExtractJuniorCycleSpec(text: string,
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    JuniorCycleSubjectSpec {
-      subject juniorcyclesubject {},
-      specification_year 0,
-      cba_tasks null,
-      specification_url "",
-    }
-  }
 }
 
 
 
 
 
-function ExtractShortCourse(text: string,
-  course_name: string) -> JuniorCycleShortCourse {  client ExtractEn
-    prompt #"
+function ExtractShortCourse(
+  text: string,
+  course_name: string
+) -> JuniorCycleShortCourse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert Irish Junior Cycle (ages 12-15) curriculum extractor for the 8 NCCA JC subjects.
 
@@ -206,20 +202,17 @@ function ExtractShortCourse(text: string,
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    JuniorCycleShortCourse {}
-  }
 }
 
 
 function ExtractJuniorCycleSpecFromUrl(
   source_url: string,
   subject: JuniorCycleSubject
-) -> JuniorCycleSubjectSpec {  client ExtractEn
-    prompt #"
+) -> JuniorCycleSubjectSpec {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert Irish Junior Cycle (ages 12-15) curriculum extractor for the 8 NCCA JC subjects.
 
@@ -243,17 +236,9 @@ function ExtractJuniorCycleSpecFromUrl(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    JuniorCycleSubjectSpec {
-      subject juniorcyclesubject {},
-      specification_year 0,
-      cba_tasks null,
-      specification_url "",
-    }
-  }
 }
 
 

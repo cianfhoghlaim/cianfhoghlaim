@@ -6,8 +6,7 @@
 // (figure captioning, formula OCR, multimodal extraction).
 //
 // Per the openspec change 2026-06-29-fix-ocr-vlm-registry-with-unsloth-priority
-// and oideachais-pdf-processing/spec.md (the 6-stage PDF pipeline),
-// this client is the canonical VL extraction path for Stages 1-3 of
+// and oideachais-pdf-processing/spec.md (the 6-stage PDF pipeline)
 // the PDF processing pipeline.
 //
 // Usage in BAML schemas:
@@ -16,8 +15,7 @@
 // Re-gen after changes:  `cd oideachais && uv run baml-cli generate`
 //
 // MODEL_REGISTRY canonical home:
-// Per the centralized-model-registry openspec change (2026-08-15),
-// the model strings (`qwen3-vl-8b`, `gemma-4-12B`, `qwen3.6-27b-mtp`)
+// Per the centralized-model-registry openspec change (2026-08-15)
 // below are resolved via the unified `MODEL_REGISTRY` at
 // `meaisinfhoghlaim/models/model_registry.py` at runtime. The
 // following entries map to this file's clients:

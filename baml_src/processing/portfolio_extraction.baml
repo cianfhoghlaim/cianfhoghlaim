@@ -1,6 +1,5 @@
 // === ARCHIVED 2026-06-24 ===
-// The 6 functions in this file (ExtractProfileFromCV,
-// ExtractProfileFromGitHubReadme, ExtractMusicProfile,
+// The 6 functions in this file (ExtractProfileFromCV
 // ExtractGameProject, MergeProfiles, GenerateProfileSummary)
 // have no current Python consumer in the oideachais quadrant.
 // They are intended for the croilar/ portfolio surface (per
@@ -198,7 +197,6 @@ class MusicProfile {
     collaborators string[] @description("Frequent collaborators")
     equipment string[] @description("Production equipment/software")
     influences string[] @description("Musical influences")
-  @@stream.done
 }
 
 // =============================================================================
@@ -226,7 +224,6 @@ class GameProject {
     repoUrl string? @description("Source code repository")
     mediaUrls string[] @description("Screenshots, videos, etc.")
     releaseDate string? @description("Release date if published")
-  @@stream.done
 }
 
 // =============================================================================
@@ -247,7 +244,6 @@ class DeveloperProfile {
     publications string[] @description("Papers, articles, blog posts")
     socialLinks SocialLink[] @description("Social media/platform links")
     languages string[] @description("Natural languages spoken")
-  @@stream.done
 }
 
 // Music producer profile
@@ -285,7 +281,6 @@ class HybridProfile {
 
     socialLinks SocialLink[] @description("All social/platform links")
     languages string[] @description("Languages spoken")
-  @@stream.done
 }
 
 // =============================================================================
@@ -293,8 +288,11 @@ class HybridProfile {
 // =============================================================================
 
 // Extract profile from CV/resume document
-function ExtractProfileFromCV(document: string) -> HybridProfile {  client ExtractEn
-    prompt #"
+function ExtractProfileFromCV(
+  document: string
+) -> HybridProfile {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -302,17 +300,17 @@ function ExtractProfileFromCV(document: string) -> HybridProfile {  client Extra
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    HybridProfile {}
-  }
 }
 
 // Extract profile from GitHub README
-function ExtractProfileFromGitHubReadme(readme: string, username: string) -> DeveloperProfile {  client ExtractEn
-    prompt #"
+function ExtractProfileFromGitHubReadme(
+  readme: string,
+  username: string
+) -> DeveloperProfile {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -320,17 +318,17 @@ function ExtractProfileFromGitHubReadme(readme: string, username: string) -> Dev
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    DeveloperProfile {}
-  }
 }
 
 // Extract music profile from Spotify/SoundCloud data
-function ExtractMusicProfile(platformData: string, platform: PlatformType) -> MusicProfile {  client ExtractEn
-    prompt #"
+function ExtractMusicProfile(
+  platformData: string,
+  platform: PlatformType
+) -> MusicProfile {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -338,17 +336,16 @@ function ExtractMusicProfile(platformData: string, platform: PlatformType) -> Mu
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    MusicProfile {}
-  }
 }
 
 // Extract game project details from documentation/README
-function ExtractGameProject(projectDocs: string) -> GameProject {  client ExtractEn
-    prompt #"
+function ExtractGameProject(
+  projectDocs: string
+) -> GameProject {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -356,17 +353,16 @@ function ExtractGameProject(projectDocs: string) -> GameProject {  client Extrac
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    GameProject {}
-  }
 }
 
 // Merge profiles from multiple sources into unified profile
-function MergeProfiles(profiles: HybridProfile[]) -> HybridProfile {  client ExtractEn
-    prompt #"
+function MergeProfiles(
+  profiles: HybridProfile[]
+) -> HybridProfile {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -374,17 +370,18 @@ function MergeProfiles(profiles: HybridProfile[]) -> HybridProfile {  client Ext
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
 // Generate profile summary for a specific tenant context
 function GenerateProfileSummary(
-    profile: HybridProfile,
-    tenantType: ProfileType,
-    maxLength: int
-) -> string {  client ExtractEn
-    prompt #"
+  profile: HybridProfile,
+  tenantType: ProfileType,
+  maxLength: int
+) -> string {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -392,7 +389,7 @@ function GenerateProfileSummary(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 

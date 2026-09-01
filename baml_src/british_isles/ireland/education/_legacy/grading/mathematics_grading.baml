@@ -62,10 +62,11 @@ class MathematicsMarkingRationale {
 function GradeMathematicsResponse(
   student_answer: string,
   question: "baml_src.education.lc_extraction.exam_paper_layout.Question",
-  marking_scheme: "baml_src.education.lc_extraction.marking_scheme.MarkAllocation",
-  is_higher_level: bool,
-) -> MathematicsGrade {  client ExtractEn
-    prompt #"
+  marking_scheme: "baml_src.education.lc_extraction.marking_scheme.LCMarkAllocation",
+  is_higher_level: bool
+) -> MathematicsGrade {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -73,15 +74,16 @@ function GradeMathematicsResponse(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
 function ExplainMathematicsMarkingScheme(
   marking_scheme_id: string,
-  marking_scheme: "baml_src.education.lc_extraction.marking_scheme.MarkingScheme",
-) -> MathematicsMarkingRationale {  client ExtractEn
-    prompt #"
+  marking_scheme: "baml_src.education.lc_extraction.marking_scheme.MarkingScheme"
+) -> MathematicsMarkingRationale {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -89,7 +91,7 @@ function ExplainMathematicsMarkingScheme(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 

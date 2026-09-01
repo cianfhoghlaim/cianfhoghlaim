@@ -124,8 +124,9 @@ class ScotlandAssessmentObjective {
 function ExtractScotlandSyllabus(
   pdf_text: string,
   subject: SCQFSubject?,
-  level: SCQFLevel?,
-) -> ScotlandSyllabusSpec {  client BIEPV3Extract
+  level: SCQFLevel?
+) -> ScotlandSyllabusSpec {
+  client BIEPV3Extract
   prompt #"
     Extract the structured syllabus data from this Scotland (SQA)
     qualification PDF for the subject {{ subject }} at the
@@ -137,20 +138,6 @@ function ExtractScotlandSyllabus(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    ScotlandSyllabusSpec {
-      source_pdf "",
-      source_pages 0,
-      subject scqfsubject {},
-      level scqflevel {},
-      first_teaching_year null,
-      last_certification_year null,
-      total_marks 0,
-      topics null,
-      assessment_objectives null,
-      coursework_pct 0,
-    }
-  }
 }
 
 test ExtractScotlandSyllabus {

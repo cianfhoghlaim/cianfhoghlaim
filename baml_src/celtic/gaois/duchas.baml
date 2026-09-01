@@ -282,8 +282,9 @@ class DuchasPhotograph {
 // Parse CBES volume response
 function ParseSchoolsVolume(
   json_response: string
-) -> DuchasSchoolsVolume {  client ExtractEn
-    prompt #"
+) -> DuchasSchoolsVolume {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -291,15 +292,16 @@ function ParseSchoolsVolume(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
 // Parse CBED person response
 function ParsePerson(
   json_response: string
-) -> DuchasPerson {  client ExtractEn
-    prompt #"
+) -> DuchasPerson {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -307,15 +309,16 @@ function ParsePerson(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
 // Parse CBEG photograph response
 function ParsePhotograph(
   json_response: string
-) -> DuchasPhotograph {  client ExtractEn
-    prompt #"
+) -> DuchasPhotograph {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -323,7 +326,7 @@ function ParsePhotograph(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -331,8 +334,9 @@ function ParsePhotograph(
 function ClassifyFolkloreTopic(
   item_text: string,
   available_topics: DuchasSchoolsTopic[]
-) -> DuchasSchoolsTopic[] {  client ExtractEn
-    prompt #"
+) -> DuchasSchoolsTopic[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -340,7 +344,7 @@ function ClassifyFolkloreTopic(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -348,8 +352,9 @@ function ClassifyFolkloreTopic(
 function LinkStoryToPlaces(
   story: DuchasSchoolsItem,
   mentioned_places: string[]
-) -> int[] {  client ExtractEn
-    prompt #"
+) -> int[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -357,7 +362,7 @@ function LinkStoryToPlaces(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -427,8 +432,9 @@ class DuchasTranscriptionLine {
 function ExtractDuchasManuscript(
   xml_record: string,
   image_path: string?
-) -> DuchasManuscriptRecord {  client ExtractEn
-    prompt #"
+) -> DuchasManuscriptRecord {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -436,12 +442,8 @@ function ExtractDuchasManuscript(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    DuchasManuscriptRecord {}
-  }
 }
 
 // Extract 5-level bounding box alignment from a handwritten manuscript page
@@ -451,8 +453,9 @@ function ExtractDuchasImageBoundingBox(
   image_path: string,
   transcript: string,
   collection: DuchasCollection
-) -> DuchasBoundingBox[] {  client ExtractEn
-    prompt #"
+) -> DuchasBoundingBox[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -460,12 +463,8 @@ function ExtractDuchasImageBoundingBox(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    DuchasBoundingBox[] {}
-  }
 }
 
 // Extract a transcription line-by-line from a handwritten manuscript page
@@ -474,8 +473,9 @@ function ExtractDuchasTranscription(
   handwritten_image: string,
   collection: DuchasCollection,
   language_hint: string?
-) -> DuchasTranscriptionLine[] {  client ExtractEn
-    prompt #"
+) -> DuchasTranscriptionLine[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -483,10 +483,6 @@ function ExtractDuchasTranscription(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    DuchasTranscriptionLine[] {}
-  }
 }

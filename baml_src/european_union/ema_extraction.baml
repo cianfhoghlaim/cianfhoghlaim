@@ -18,8 +18,9 @@ class EMAMedicine {
 function ExtractEMAMedicine(
   language: EULanguage,
   text: string
-) -> EMAMedicine {  client ExtractEn
-    prompt #"
+) -> EMAMedicine {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -27,16 +28,7 @@ function ExtractEMAMedicine(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    EMAMedicine {
-      language eulanguage {},
-      authorisation_date null,
-      atc_class_description null,
-      source_url "",
-      content_hash null,
-    }
-  }
 }

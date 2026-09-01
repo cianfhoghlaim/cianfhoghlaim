@@ -16,8 +16,9 @@ class ECDCSurveillance {
 function ExtractECDCSurveillance(
   language: EULanguage,
   text: string
-) -> ECDCSurveillance {  client ExtractEn
-    prompt #"
+) -> ECDCSurveillance {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -25,16 +26,7 @@ function ExtractECDCSurveillance(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    ECDCSurveillance {
-      dataset_id "",
-      language eulanguage {},
-      title "",
-      source_url "",
-      content_hash null,
-    }
-  }
 }

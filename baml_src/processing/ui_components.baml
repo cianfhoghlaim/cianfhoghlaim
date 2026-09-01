@@ -53,7 +53,8 @@ function SuggestUIComponents(
   extracted_subjects: string[],
   cognee_index_summary: string,
   stage: string
-) -> UIComponentSuggestion[] {  client ExtractEn
+) -> UIComponentSuggestion[] {
+  client ExtractEn
   prompt #"
     {{ _.role("user") }}
     {{ ctx.output_format }}

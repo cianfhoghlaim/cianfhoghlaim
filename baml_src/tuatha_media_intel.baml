@@ -161,44 +161,54 @@ class BoundingBox {
 // The 4 client<llm> declarations — routed via MODEL_REGISTRY, never hardcoded.
 
 client<llm> HadesBoonClient {
-  provider      "openai-generic"
-  base_url      env.LLAMASWAP_URL
-  api_key       env.LLAMASWAP_API_KEY
-  model_name    env.VISION_MODEL_HADES    // resolves to MODEL_REGISTRY ocr_vision:tier2_medium
-  max_tokens    1024
-  temperature   0.0
+  provider "openai-generic"
+  options {
+    base_url env.LLAMASWAP_URL
+    api_key  env.LLAMASWAP_API_KEY
+    model_name env.VISION_MODEL_HADES
+    max_tokens 1024
+    temperature 0.0
+  }
 }
 
 client<llm> ComicParticleClient {
-  provider      "openai-generic"
-  base_url      env.LLAMASWAP_URL
-  api_key       env.LLAMASWAP_API_KEY
-  model_name    env.VISION_MODEL_COMIC    // resolves to MODEL_REGISTRY ocr_vision:tier2_medium
-  max_tokens    1024
-  temperature   0.0
+  provider "openai-generic"
+  options {
+    base_url env.LLAMASWAP_URL
+    api_key  env.LLAMASWAP_API_KEY
+    model_name env.VISION_MODEL_COMIC
+    max_tokens 1024
+    temperature 0.0
+  }
 }
 
 client<llm> GbaMagicClient {
-  provider      "openai-generic"
-  base_url      env.LLAMASWAP_URL
-  api_key       env.LLAMASWAP_API_KEY
-  model_name    env.VISION_MODEL_GBA      // resolves to MODEL_REGISTRY ocr_vision:tier3_light
-  max_tokens    512
-  temperature   0.0
+  provider "openai-generic"
+  options {
+    base_url env.LLAMASWAP_URL
+    api_key  env.LLAMASWAP_API_KEY
+    model_name env.VISION_MODEL_GBA
+    max_tokens 512
+    temperature 0.0
+  }
 }
 
 client<llm> AnamMapClient {
-  provider      "openai-generic"
-  base_url      env.LITELLM_URL
-  api_key       env.LITELLM_API_KEY
-  model_name    env.TEXT_MODEL_DEFAULT    // resolves to MODEL_REGISTRY text_llm:default
-  max_tokens    2048
-  temperature   0.2
+  provider "openai-generic"
+  options {
+    base_url env.LITELLM_URL
+    api_key  env.LITELLM_API_KEY
+    model    env.TEXT_MODEL_DEFAULT
+    max_tokens 2048
+    temperature 0.2
+  }
 }
 
 // The 7 BAML functions the pipeline calls.
 
-function ExtractHadesBoon(image: image) -> HadesBoon {
+function ExtractHadesBoon(
+  image: image
+) -> HadesBoon {
   client HadesBoonClient
   prompt #"
     You are a precise visual game analyst. Extract the Hades boon visible
@@ -219,9 +229,11 @@ function ExtractHadesBoon(image: image) -> HadesBoon {
   "#
 }
 
-function ExtractComicParticle(image: image, issue_context: string) -> ComicParticleFrame {
+function ExtractComicParticle(
+  image: image,
+  issue_context: string
+) -> ComicParticleFrame {
   client ComicParticleClient
-  client_resource_fallback
   prompt #"
     You are a comic-book panel visual analyst working on DC's Absolute
     Superman (Jason Aaron, 2024). {{ issue_context }}
@@ -240,7 +252,9 @@ function ExtractComicParticle(image: image, issue_context: string) -> ComicParti
   "#
 }
 
-function ExtractGbaMagic(frame: image) -> GbaMagicSystem {
+function ExtractGbaMagic(
+  frame: image
+) -> GbaMagicSystem {
   client GbaMagicClient
   prompt #"
     You are a Golden Sun / Golden Sun: The Lost Age visual analyst.
@@ -261,7 +275,7 @@ function ExtractGbaMagic(frame: image) -> GbaMagicSystem {
 
 function MapToAnamParticle(
   source: AnamSource,
-  source_payload: string, // JSON-encoded source row
+  source_payload: string,
   bias_mode: BiasMode
 ) -> AnamParticle {
   client AnamMapClient
@@ -301,11 +315,8 @@ function ExtractCrossLinguisticAnamDescription(
 // Test cases (run via `baml-cli test` per the BAML skill).
 
 test hades_athena_divine_strike {
-  functions [ExtractHadesBoon]
-  input {
+  functions [ExtractHadesBoon] args {
     image "hades_athena_divine_strike.png"
-  }
-  output {
     boon_id "hades:athena:divine_strike"
     god GodName::Athena
     tier BoonTier::Common
@@ -316,12 +327,9 @@ test hades_athena_divine_strike {
 }
 
 test comic_absolute_superman_dust {
-  functions [ExtractComicParticle]
-  input {
+  functions [ExtractComicParticle] args {
     image "absolute_superman_001_p1.png"
     issue_context "Absolute Superman #1, cover dust reveal"
-  }
-  output {
     issue_id "absolute-superman-2024-001"
     page_number 1
     particle_form ComicParticleForm::Dust
@@ -331,11 +339,8 @@ test comic_absolute_superman_dust {
 }
 
 test gba_golden_sun_jupiter {
-  functions [ExtractGbaMagic]
-  input {
+  functions [ExtractGbaMagic] args {
     image "golden_sun_jupiter_jolt.png"
-  }
-  output {
     game GbaGame::GoldenSun
     element GbaElement::Jupiter
     color_hex "#FFD700"

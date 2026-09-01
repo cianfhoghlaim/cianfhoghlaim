@@ -16,8 +16,9 @@ function ExtractUS_US_CAMedicineDocument(
   jurisdiction: string,
   language: string,
   text: string
-) -> US_US_CAMedicineDocument {  client ExtractEn
-    prompt #"
+) -> US_US_CAMedicineDocument {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -25,17 +26,6 @@ function ExtractUS_US_CAMedicineDocument(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    US_US_CAMedicineDocument {
-      language "",
-      title "",
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
 }

@@ -16,10 +16,8 @@
 //
 // Usage:
 //   from cianfhoghlaim.baml_client import b
-//   plan = b.WebStudyPlan(subject="mathematics", weeks_until_exam=12,
-//                        target_level="LC_HL", language="en")
-//   discussion = b.WebExamPaperDiscussion(subject="mathematics", paper_year=2024,
-//                                        paper_level="LC_HL", paper_language="en",
+//   plan = b.WebStudyPlan(subject="mathematics", weeks_until_exam=12
+//   discussion = b.WebExamPaperDiscussion(subject="mathematics", paper_year=2024
 //                                        question_text="...")
 //
 // Re-gen after changes:  cd cianfhoghlaim && uv run baml-cli generate
@@ -130,8 +128,9 @@ function MathematicsWebStudyPlan(
   target_level: MathematicsLevel,
   language: MathematicsLanguage,
   focus_topics: string[]
-) -> MathematicsWebStudyPlanResponse {  client ExtractEn
-    prompt #"
+) -> MathematicsWebStudyPlanResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -139,7 +138,7 @@ function MathematicsWebStudyPlan(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -149,8 +148,9 @@ function MathematicsWebExamPaperDiscussion(
   paper_level: MathematicsLevel,
   paper_language: MathematicsLanguage,
   question_text: string
-) -> MathematicsWebExamPaperDiscussionResponse {  client ExtractEn
-    prompt #"
+) -> MathematicsWebExamPaperDiscussionResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -158,7 +158,7 @@ function MathematicsWebExamPaperDiscussion(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -167,8 +167,9 @@ function MathematicsWebMarkingSchemeExplanation(
   paper_year: int,
   paper_level: MathematicsLevel,
   paper_language: MathematicsLanguage
-) -> MathematicsWebMarkingSchemeExplanationResponse {  client ExtractEn
-    prompt #"
+) -> MathematicsWebMarkingSchemeExplanationResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -176,6 +177,6 @@ function MathematicsWebMarkingSchemeExplanation(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

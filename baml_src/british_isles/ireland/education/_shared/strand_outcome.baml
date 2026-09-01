@@ -333,8 +333,7 @@ class ExtractionBudget {
 // per-strand / per-outcome / per-spec / per-assessment-component
 // properties into the 4 @@dynamic classes above.
 //
-// The tests below exercise the helper end-to-end (load catalog,
-// inject properties, verify the TypeBuilder instantiates without
+// The tests below exercise the helper end-to-end (load catalog
 // error against a representative strand set).
 
 // test strand_type_builder_smoke {
@@ -393,8 +392,11 @@ class ExtractionBudget {
 //   }
 // }
 
-function ExtractStrandFromCatalog(catalog_yaml: string) -> CurriculumSpecStrand[] {  client ExtractEn
-    prompt #"
+function ExtractStrandFromCatalog(
+  catalog_yaml: string
+) -> CurriculumSpecStrand[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -402,10 +404,6 @@ function ExtractStrandFromCatalog(catalog_yaml: string) -> CurriculumSpecStrand[
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    CurriculumSpecStrand[] {}
-  }
 }

@@ -16,10 +16,8 @@
 //
 // Usage:
 //   from cianfhoghlaim.baml_client import b
-//   plan = b.WebStudyPlan(subject="geography", weeks_until_exam=12,
-//                        target_level="LC_HL", language="en")
-//   discussion = b.WebExamPaperDiscussion(subject="geography", paper_year=2024,
-//                                        paper_level="LC_HL", paper_language="en",
+//   plan = b.WebStudyPlan(subject="geography", weeks_until_exam=12
+//   discussion = b.WebExamPaperDiscussion(subject="geography", paper_year=2024
 //                                        question_text="...")
 //
 // Re-gen after changes:  cd cianfhoghlaim && uv run baml-cli generate
@@ -128,8 +126,9 @@ function GeographyWebStudyPlan(
   target_level: GeographyLevel,
   language: GeographyLanguage,
   focus_topics: string[]
-) -> GeographyWebStudyPlanResponse {  client ExtractEn
-    prompt #"
+) -> GeographyWebStudyPlanResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -137,7 +136,7 @@ function GeographyWebStudyPlan(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -147,8 +146,9 @@ function GeographyWebExamPaperDiscussion(
   paper_level: GeographyLevel,
   paper_language: GeographyLanguage,
   question_text: string
-) -> GeographyWebExamPaperDiscussionResponse {  client ExtractEn
-    prompt #"
+) -> GeographyWebExamPaperDiscussionResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -156,7 +156,7 @@ function GeographyWebExamPaperDiscussion(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -165,8 +165,9 @@ function GeographyWebMarkingSchemeExplanation(
   paper_year: int,
   paper_level: GeographyLevel,
   paper_language: GeographyLanguage
-) -> GeographyWebMarkingSchemeExplanationResponse {  client ExtractEn
-    prompt #"
+) -> GeographyWebMarkingSchemeExplanationResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -174,6 +175,6 @@ function GeographyWebMarkingSchemeExplanation(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

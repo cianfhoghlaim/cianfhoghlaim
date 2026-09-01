@@ -93,8 +93,9 @@ class EdexcelQualSpec {
 function ExtractAQAQualSpec(
   pdf_text: string,
   subject: string?,
-  qualification_level: string?,
-) -> AQAQualSpec {  client BIEPV3Extract
+  qualification_level: string?
+) -> AQAQualSpec {
+  client BIEPV3Extract
   prompt #"
     Extract the qualification specification from this AQA further education
     document at {{ qualification_level }} level for the subject {{ subject }}.
@@ -116,29 +117,14 @@ function ExtractAQAQualSpec(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    AQAQualSpec {
-      board null,
-      qualification_level qualificationlevel {},
-      title "",
-      version "",
-      first_teaching_year null,
-      last_certification_year null,
-      total_marks 0,
-      assessment_objectives null,
-      component_papers 0,
-      source_pdf "",
-      source_pages null,
-      language null,
-    }
-  }
 }
 
 function ExtractOCRQualSpec(
   pdf_text: string,
   subject: string?,
-  qualification_level: string?,
-) -> OCRQualSpec {  client BIEPV3Extract
+  qualification_level: string?
+) -> OCRQualSpec {
+  client BIEPV3Extract
   prompt #"
     Extract the qualification specification from this OCR further education
     document at {{ qualification_level }} level for the subject {{ subject }}.
@@ -160,29 +146,14 @@ function ExtractOCRQualSpec(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    OCRQualSpec {
-      board null,
-      qualification_level qualificationlevel {},
-      title "",
-      version "",
-      first_teaching_year null,
-      last_certification_year null,
-      total_marks 0,
-      assessment_objectives null,
-      component_papers 0,
-      source_pdf "",
-      source_pages null,
-      language null,
-    }
-  }
 }
 
 function ExtractEdexcelQualSpec(
   pdf_text: string,
   subject: string?,
-  qualification_level: string?,
-) -> EdexcelQualSpec {  client BIEPV3Extract
+  qualification_level: string?
+) -> EdexcelQualSpec {
+  client BIEPV3Extract
   prompt #"
     Extract the qualification specification from this Edexcel further
     education document at {{ qualification_level }} level for the subject
@@ -205,30 +176,13 @@ function ExtractEdexcelQualSpec(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    EdexcelQualSpec {
-      board null,
-      qualification_level qualificationlevel {},
-      title "",
-      version "",
-      first_teaching_year null,
-      last_certification_year null,
-      total_marks 0,
-      assessment_objectives null,
-      component_papers 0,
-      source_pdf "",
-      source_pages null,
-      language null,
-    }
-  }
 }
 
 // ============================================================================
 // BAML function: Generic UK Qualification Specification (BIEP v3)
 // ============================================================================
 //
-// Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change,
-// the 3 board-specific functions above collapse into a single generic
+// Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change
 // `ExtractUKQualSpec(board: ExamBoard, ...)` for the BIEP v3 generic
 // jurisdiction pipeline. The 3 board-specific functions are retained for
 // backwards compatibility but the v3 jurisdiction pipeline routes through
@@ -260,7 +214,7 @@ function ExtractUKQualSpec(
   pdf_text: string,
   board: ExamBoard,
   subject: string?,
-  qualification_level: string?,
+  qualification_level: string?
 ) -> UKQualificationSpec {
   client BIEPV3Extract
   prompt #"
@@ -284,20 +238,4 @@ function ExtractUKQualSpec(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    UKQualificationSpec {
-      board examboard {},
-      qualification_level qualificationlevel {},
-      title "",
-      version "",
-      first_teaching_year null,
-      last_certification_year null,
-      total_marks 0,
-      assessment_objectives null,
-      component_papers 0,
-      source_pdf "",
-      source_pages null,
-      language null,
-    }
-  }
 }

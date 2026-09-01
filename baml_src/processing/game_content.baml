@@ -88,8 +88,9 @@ function GenerateLanguageQuest(
   language: CelticLanguage,
   zone: string,
   difficulty: QuestDifficulty
-) -> Quest {  client ExtractEn
-    prompt #"
+) -> Quest {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured game content from a game design document.
 
@@ -108,7 +109,7 @@ function GenerateLanguageQuest(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -118,8 +119,9 @@ function GenerateMythologyQuest(
   character: MythologicalCharacter?,
   language: CelticLanguage,
   difficulty: QuestDifficulty
-) -> Quest {  client ExtractEn
-    prompt #"
+) -> Quest {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured game content from a game design document.
 
@@ -138,7 +140,7 @@ function GenerateMythologyQuest(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -179,8 +181,9 @@ function GenerateNPC(
   role: string,
   language: CelticLanguage,
   mythological_inspiration: MythologicalCharacter?
-) -> NPC {  client ExtractEn
-    prompt #"
+) -> NPC {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured game content from a game design document.
 
@@ -199,7 +202,7 @@ function GenerateNPC(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -241,8 +244,9 @@ function GenerateGameLocation(
   real_world_basis: string?,
   mythology_connection: MythologicalLocation?,
   language: CelticLanguage
-) -> GameLocation {  client ExtractEn
-    prompt #"
+) -> GameLocation {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured game content from a game design document.
 
@@ -261,7 +265,7 @@ function GenerateGameLocation(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -291,8 +295,9 @@ function GenerateGameItem(
   rarity: string,
   mythology_inspiration: string?,
   language: CelticLanguage
-) -> GameItem {  client ExtractEn
-    prompt #"
+) -> GameItem {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured game content from a game design document.
 
@@ -311,6 +316,6 @@ function GenerateGameItem(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

@@ -1,7 +1,6 @@
 // BAML schema: Gemini Corpus Topic Profile Extraction
 //
-// Used for the non-legal/medical Gemini corpora (politics, culture,
-// technology, other). Each corpus has a profile class with corpus-
+// Used for the non-legal/medical Gemini corpora (politics, culture
 // specific fields, but the 4 shared classes below are reused across
 // the 4 corpora.
 //

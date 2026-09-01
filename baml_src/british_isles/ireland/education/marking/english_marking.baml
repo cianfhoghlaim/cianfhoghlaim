@@ -54,8 +54,8 @@ class EnglishMarkingScheme {
   year int
   source_pdf string
 
-  grade_descriptors GradeDescriptor[]
-  mark_allocations MarkAllocation[]
+  grade_descriptors LCGradeDescriptor[]
+  mark_allocations LCMarkAllocation[]
 
   subject_specific EngSubjectDiscriminator
 
@@ -67,9 +67,10 @@ class EnglishMarkingScheme {
 function ExtractEnglishMarkingScheme(
   pdf_text: string,
   year: int?,
-  level: string?,
-) -> EnglishMarkingScheme {  client ExtractEn
-    prompt #"
+  level: string?
+) -> EnglishMarkingScheme {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -77,21 +78,9 @@ function ExtractEnglishMarkingScheme(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    EnglishMarkingScheme {
-      scheme_code "",
-      year 0,
-      source_pdf "",
-      grade_descriptors null,
-      mark_allocations null,
-      subject_specific engsubjectdiscriminator {},
-      total_marks 0,
-      total_questions 0,
-    }
-  }
 }
 
 // test english_marking_extraction_smoke {

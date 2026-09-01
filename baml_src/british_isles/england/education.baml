@@ -17,8 +17,9 @@ function ExtractEnglandEducationDocument(
   nation: string,
   language: string,
   text: string
-) -> EnglandEducationDocument {  client ExtractEn
-    prompt #"
+) -> EnglandEducationDocument {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -26,16 +27,6 @@ function ExtractEnglandEducationDocument(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    EnglandEducationDocument {
-      title "",
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
 }

@@ -167,7 +167,6 @@ class CrossNationCurriculumSpec {
   source_url string
   last_crawled string
   content_hash string? @description("For change detection")
-  @@stream.done
 }
 
 class AssessmentStructure {
@@ -275,8 +274,9 @@ function ExtractCrossNationSpec(
   document: string,
   nation: Nation,
   level: NationEducationLevel
-) -> CrossNationCurriculumSpec {  client ExtractEn
-    prompt #"
+) -> CrossNationCurriculumSpec {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -284,30 +284,17 @@ function ExtractCrossNationSpec(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    CrossNationCurriculumSpec {
-      nation nation {},
-      level nationeducationlevel {},
-      framework curriculumframework {},
-      board null,
-      subject "",
-      learning_outcomes null,
-      assessment_structure null,
-      resources_required null,
-      source_url "",
-      last_crawled "",
-    }
-  }
 }
 
 function AlignOutcomes(
   source_outcomes: CrossNationLearningOutcome[],
   target_outcomes: CrossNationLearningOutcome[]
-) -> OutcomeAlignment[] {  client ExtractEn
-    prompt #"
+) -> OutcomeAlignment[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -315,15 +302,16 @@ function AlignOutcomes(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
 function CompareCurricula(
   specs: CrossNationCurriculumSpec[],
   subject: string
-) -> CrossNationComparison {  client ExtractEn
-    prompt #"
+) -> CrossNationComparison {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -331,15 +319,16 @@ function CompareCurricula(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
 function IdentifyResourceSharing(
   source_spec: CrossNationCurriculumSpec,
   target_specs: CrossNationCurriculumSpec[]
-) -> ResourceSharingRecommendation[] {  client ExtractEn
-    prompt #"
+) -> ResourceSharingRecommendation[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -347,7 +336,7 @@ function IdentifyResourceSharing(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -370,8 +359,11 @@ class ResourceSharingRecommendation {
 // LEVEL EQUIVALENCE MAPPING
 // ============================================================================
 
-function MapLevelEquivalence(level: NationEducationLevel) -> NationEducationLevel[] {  client ExtractEn
-    prompt #"
+function MapLevelEquivalence(
+  level: NationEducationLevel
+) -> NationEducationLevel[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -379,7 +371,7 @@ function MapLevelEquivalence(level: NationEducationLevel) -> NationEducationLeve
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -404,8 +396,11 @@ class TranslationResult {
   terminology_used string[]? @description("Official terminology applied")
 }
 
-function TranslateEducationalContent(request: TranslationRequest) -> TranslationResult {  client ExtractEn
-    prompt #"
+function TranslateEducationalContent(
+  request: TranslationRequest
+) -> TranslationResult {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -413,7 +408,7 @@ function TranslateEducationalContent(request: TranslationRequest) -> Translation
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -481,34 +476,22 @@ client<llm> ClaudeMini {
 //   args {
 //     source_outcomes [
 //       {
-//         outcome_id: "IE_JC_MATH_N1",
-//         nation: "IRELAND",
-//         level: "IE_JUNIOR_CYCLE",
-//         framework: "JUNIOR_CYCLE",
-//         title: "Number operations",
-//         description: "Use whole numbers, fractions, decimals and percentages",
-//         subject: "mathematics",
-//         strand: "number",
-//         skills: ["calculation", "estimation", "problem-solving"],
-//         knowledge_areas: ["arithmetic", "fractions"],
-//         is_core: true,
-//         source_url: "https://curriculumonline.ie"
+//         outcome_id: "IE_JC_MATH_N1"
+//         level: "IE_JUNIOR_CYCLE"
+//         title: "Number operations"
+//         subject: "mathematics"
+//         skills: ["calculation", "estimation", "problem-solving"]
+//         is_core: true
 //       }
 //     ]
 //     target_outcomes [
 //       {
-//         outcome_id: "SC_N5_MATH_NUM1",
-//         nation: "SCOTLAND",
-//         level: "SC_NATIONAL_5",
-//         framework: "CURRICULUM_FOR_EXCELLENCE",
-//         title: "Numerical calculations",
-//         description: "Apply numerical skills in real-life contexts",
-//         subject: "mathematics",
-//         strand: "numeracy",
-//         skills: ["calculation", "application", "reasoning"],
-//         knowledge_areas: ["number operations"],
-//         is_core: true,
-//         source_url: "https://sqa.org.uk"
+//         outcome_id: "SC_N5_MATH_NUM1"
+//         level: "SC_NATIONAL_5"
+//         title: "Numerical calculations"
+//         subject: "mathematics"
+//         skills: ["calculation", "application", "reasoning"]
+//         is_core: true
 //       }
 //     ]
 //   }

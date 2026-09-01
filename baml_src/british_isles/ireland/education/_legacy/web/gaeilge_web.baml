@@ -16,10 +16,8 @@
 //
 // Usage:
 //   from cianfhoghlaim.baml_client import b
-//   plan = b.WebStudyPlan(subject="gaeilge", weeks_until_exam=12,
-//                        target_level="LC_HL", language="en")
-//   discussion = b.WebExamPaperDiscussion(subject="gaeilge", paper_year=2024,
-//                                        paper_level="LC_HL", paper_language="en",
+//   plan = b.WebStudyPlan(subject="gaeilge", weeks_until_exam=12
+//   discussion = b.WebExamPaperDiscussion(subject="gaeilge", paper_year=2024
 //                                        question_text="...")
 //
 // Re-gen after changes:  cd cianfhoghlaim && uv run baml-cli generate
@@ -124,8 +122,9 @@ function GaeilgeWebStudyPlan(
   target_level: GaeilgeLevel,
   language: "baml_src.british_isles.ireland.education._shared.content_types.GaeilgeLanguage",
   focus_topics: string[]
-) -> GaeilgeWebStudyPlanResponse {  client ExtractEn
-    prompt #"
+) -> GaeilgeWebStudyPlanResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -133,7 +132,7 @@ function GaeilgeWebStudyPlan(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -143,8 +142,9 @@ function GaeilgeWebExamPaperDiscussion(
   paper_level: GaeilgeLevel,
   paper_language: "baml_src.british_isles.ireland.education._shared.content_types.GaeilgeLanguage",
   question_text: string
-) -> GaeilgeWebExamPaperDiscussionResponse {  client ExtractEn
-    prompt #"
+) -> GaeilgeWebExamPaperDiscussionResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -152,7 +152,7 @@ function GaeilgeWebExamPaperDiscussion(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -161,8 +161,9 @@ function GaeilgeWebMarkingSchemeExplanation(
   paper_year: int,
   paper_level: GaeilgeLevel,
   paper_language: "baml_src.british_isles.ireland.education._shared.content_types.GaeilgeLanguage"
-) -> GaeilgeWebMarkingSchemeExplanationResponse {  client ExtractEn
-    prompt #"
+) -> GaeilgeWebMarkingSchemeExplanationResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -170,6 +171,6 @@ function GaeilgeWebMarkingSchemeExplanation(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

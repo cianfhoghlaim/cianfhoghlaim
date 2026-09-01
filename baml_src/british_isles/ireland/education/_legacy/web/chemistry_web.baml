@@ -16,10 +16,8 @@
 //
 // Usage:
 //   from cianfhoghlaim.baml_client import b
-//   plan = b.WebStudyPlan(subject="chemistry", weeks_until_exam=12,
-//                        target_level="LC_HL", language="en")
-//   discussion = b.WebExamPaperDiscussion(subject="chemistry", paper_year=2024,
-//                                        paper_level="LC_HL", paper_language="en",
+//   plan = b.WebStudyPlan(subject="chemistry", weeks_until_exam=12
+//   discussion = b.WebExamPaperDiscussion(subject="chemistry", paper_year=2024
 //                                        question_text="...")
 //
 // Re-gen after changes:  cd cianfhoghlaim && uv run baml-cli generate
@@ -128,8 +126,9 @@ function ChemistryWebStudyPlan(
   target_level: ChemistryLevel,
   language: ChemistryLanguage,
   focus_topics: string[]
-) -> ChemistryWebStudyPlanResponse {  client ExtractEn
-    prompt #"
+) -> ChemistryWebStudyPlanResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -137,7 +136,7 @@ function ChemistryWebStudyPlan(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -147,8 +146,9 @@ function ChemistryWebExamPaperDiscussion(
   paper_level: ChemistryLevel,
   paper_language: ChemistryLanguage,
   question_text: string
-) -> ChemistryWebExamPaperDiscussionResponse {  client ExtractEn
-    prompt #"
+) -> ChemistryWebExamPaperDiscussionResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -156,7 +156,7 @@ function ChemistryWebExamPaperDiscussion(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -165,8 +165,9 @@ function ChemistryWebMarkingSchemeExplanation(
   paper_year: int,
   paper_level: ChemistryLevel,
   paper_language: ChemistryLanguage
-) -> ChemistryWebMarkingSchemeExplanationResponse {  client ExtractEn
-    prompt #"
+) -> ChemistryWebMarkingSchemeExplanationResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -174,6 +175,6 @@ function ChemistryWebMarkingSchemeExplanation(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

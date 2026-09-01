@@ -3,10 +3,13 @@
 // Cross-stage relationship extraction functions for the 5-stage cognify pass.
 // =============================================================================
 
-function ExtractLearningOutcomeRelationships(source_outcome: LearningOutcome,
+function ExtractLearningOutcomeRelationships(
+  source_outcome: LearningOutcome,
   target_outcomes: LearningOutcome[],
-  subject_context: string) -> RelationshipExtractionResult {  client ExtractEn
-    prompt #"
+  subject_context: string
+) -> RelationshipExtractionResult {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -14,18 +17,17 @@ function ExtractLearningOutcomeRelationships(source_outcome: LearningOutcome,
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    RelationshipExtractionResult {}
-  }
 }
 
 
-function ExtractSkillsFromOutcome(outcome: LearningOutcome,
-  curriculum_context: string) -> SkillExtractionResult {  client ExtractEn
-    prompt #"
+function ExtractSkillsFromOutcome(
+  outcome: LearningOutcome,
+  curriculum_context: string
+) -> SkillExtractionResult {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -33,19 +35,18 @@ function ExtractSkillsFromOutcome(outcome: LearningOutcome,
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    SkillExtractionResult {}
-  }
 }
 
 
-function ExtractCurriculumFromDocument(document_text: string,
+function ExtractCurriculumFromDocument(
+  document_text: string,
   subject: string,
-  level: EducationLevel) -> ExtractedCurriculumDocument {  client ExtractEn
-    prompt #"
+  level: EducationLevel
+) -> ExtractedCurriculumDocument {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -53,19 +54,18 @@ function ExtractCurriculumFromDocument(document_text: string,
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    ExtractedCurriculumDocument {}
-  }
 }
 
 
-function IdentifyPrerequisiteChain(target_outcome: LearningOutcome,
+function IdentifyPrerequisiteChain(
+  target_outcome: LearningOutcome,
   available_outcomes: LearningOutcome[],
-  max_depth: int) -> LearningOutcome[] {  client ExtractEn
-    prompt #"
+  max_depth: int
+) -> LearningOutcome[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -73,6 +73,6 @@ function IdentifyPrerequisiteChain(target_outcome: LearningOutcome,
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

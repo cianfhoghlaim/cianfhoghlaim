@@ -14,7 +14,6 @@ class EducationEntry {
   description_en string @description("English description of the programme or achievement")
   description_ga string @description("Gaeilge description, if present in the source")
   grade string | null
-  @@stream.done
 }
 
 class Award {
@@ -23,7 +22,6 @@ class Award {
   year string
   description_en string
   category string @description("e.g. Academic, Professional, Teaching, Music")
-  @@stream.done
 }
 
 class Publication {
@@ -33,7 +31,6 @@ class Publication {
   authors string[]
   abstract_en string
   url string | null
-  @@stream.done
 }
 
 class Reference {
@@ -43,14 +40,12 @@ class Reference {
   email string | null
   relationship string @description("e.g. MSc Supervisor, Programme Director, Cooperating Teacher")
   phone string | null
-  @@stream.done
 }
 
 class SkillCategoryCv {
   category string @description("e.g. Music Production, Software Development, Languages, Teaching")
   skills string[]
   proficiency float @description("0-100 self-assessed proficiency level")
-  @@stream.done
 }
 
 class ProfessionalExperience {
@@ -61,11 +56,13 @@ class ProfessionalExperience {
   description_en string
   description_ga string | null
   location string | null
-  @@stream.done
 }
 
-function ExtractCV(text: string) -> EducationEntry[] {  client ExtractEn
-    prompt #"
+function ExtractCV(
+  text: string
+) -> EducationEntry[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured CV / resume data from a PDF.
 
@@ -84,16 +81,15 @@ function ExtractCV(text: string) -> EducationEntry[] {  client ExtractEn
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    EducationEntry[] {}
-  }
 }
 
-function ExtractAward(text: string) -> Award[] {  client ExtractEn
-    prompt #"
+function ExtractAward(
+  text: string
+) -> Award[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured CV / resume data from a PDF.
 
@@ -112,16 +108,15 @@ function ExtractAward(text: string) -> Award[] {  client ExtractEn
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    Award[] {}
-  }
 }
 
-function ExtractPublication(text: string) -> Publication[] {  client ExtractEn
-    prompt #"
+function ExtractPublication(
+  text: string
+) -> Publication[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured CV / resume data from a PDF.
 
@@ -140,16 +135,15 @@ function ExtractPublication(text: string) -> Publication[] {  client ExtractEn
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    Publication[] {}
-  }
 }
 
-function ExtractReference(text: string) -> Reference[] {  client ExtractEn
-    prompt #"
+function ExtractReference(
+  text: string
+) -> Reference[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured CV / resume data from a PDF.
 
@@ -168,16 +162,15 @@ function ExtractReference(text: string) -> Reference[] {  client ExtractEn
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    Reference[] {}
-  }
 }
 
-function ExtractSkills(text: string) -> SkillCategoryCv[] {  client ExtractEn
-    prompt #"
+function ExtractSkills(
+  text: string
+) -> SkillCategoryCv[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured CV / resume data from a PDF.
 
@@ -196,16 +189,15 @@ function ExtractSkills(text: string) -> SkillCategoryCv[] {  client ExtractEn
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    SkillCategoryCv[] {}
-  }
 }
 
-function ExtractExperience(text: string) -> ProfessionalExperience[] {  client ExtractEn
-    prompt #"
+function ExtractExperience(
+  text: string
+) -> ProfessionalExperience[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured CV / resume data from a PDF.
 
@@ -224,10 +216,6 @@ function ExtractExperience(text: string) -> ProfessionalExperience[] {  client E
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    ProfessionalExperience[] {}
-  }
 }

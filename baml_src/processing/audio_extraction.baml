@@ -36,7 +36,6 @@ class CanuintRecording {
   // Dialect classification
   dialect IrishDialect @description("Dialect classification")
   dialect_features string[]? @description("Notable dialect features identified")
-  @@stream.done
 }
 
 // Speaker information
@@ -111,8 +110,9 @@ class VocabularyNote {
 function ExtractCanuintPage(
   page_content: string,
   barony_id: int
-) -> CanuintRecording {  client ExtractEn
-    prompt #"
+) -> CanuintRecording {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -120,12 +120,8 @@ function ExtractCanuintPage(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    CanuintRecording {}
-  }
 }
 
 // Extract multiple recordings from barony listing page
@@ -133,8 +129,9 @@ function ExtractBaronyRecordings(
   page_content: string,
   barony_id: int,
   barony_name: string
-) -> CanuintRecording[] {  client ExtractEn
-    prompt #"
+) -> CanuintRecording[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -142,12 +139,8 @@ function ExtractBaronyRecordings(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    CanuintRecording[] {}
-  }
 }
 
 // ============================================================================
@@ -205,8 +198,9 @@ function AnalyzeDialect(
   transcription: CanuintTranscription,
   speaker: CanuintSpeaker,
   location: CanuintLocation
-) -> DialectAnalysis {  client ExtractEn
-    prompt #"
+) -> DialectAnalysis {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -214,6 +208,6 @@ function AnalyzeDialect(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

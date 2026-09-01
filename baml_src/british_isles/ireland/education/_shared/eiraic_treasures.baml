@@ -9,8 +9,7 @@
 // Each treasure is also a pedagogical *competency signal* — a teaching
 // superpower that maps to a single NCCA subject area. The BAML types below
 // carry the full mythology provenance so the Cianfhoghlaim Educational MMO can
-// anchor its 8-subject domain agents (math_agent, appm_agent, chem_agent,
-// geog_agent, hist_agent, engl_agent, gael_agent, comp_agent — see
+// anchor its 8-subject domain agents (math_agent, appm_agent, chem_agent
 // .agents/skills/cianfhoghlaim-mmo/SKILL.md) to the originating myth.
 //
 // The 13 treasures + their primary subject mapping:
@@ -93,8 +92,7 @@ class EiraicTitle {
 // -----------------------------------------------------------------------------
 // The 13 éraic treasure classes
 //   Each class is named after the treasure and exposes the same canonical
-//   shape: title (bilingual), provenance, capability, primary subject,
-//   pedagogical rationale, and how it shows up in the Cianfhoghlaim MMO.
+//   shape: title (bilingual), provenance, capability, primary subject
 // -----------------------------------------------------------------------------
 
 class PigSkinOfDobar {
@@ -273,11 +271,13 @@ class EiraicTreasures {
 //
 // Subject slugs (matches NCCA syllabus slugs + the cianfhoghlaim
 // Educational MMO 8-subject roster):
-//   mathematics, applied_mathematics, computer_science, biology,
-//   geography, english, gaeilge, history
+//   mathematics, applied_mathematics, computer_science, biology
 
-function GetEiraicTreasures(subject: string) -> EiraicTreasures {  client ExtractEn
-    prompt #"
+function GetEiraicTreasures(
+  subject: string
+) -> EiraicTreasures {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -285,6 +285,6 @@ function GetEiraicTreasures(subject: string) -> EiraicTreasures {  client Extrac
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

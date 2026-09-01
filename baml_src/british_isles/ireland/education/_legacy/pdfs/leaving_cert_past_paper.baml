@@ -25,11 +25,13 @@ class PastPaper {
   level string
   totalMarks int
   questions PastExamQuestion[]
-  @@stream.done
 }
 
-function ExtractPastPaper(pdf_text: string) -> PastPaper {  client ExtractEn
-    prompt #"
+function ExtractPastPaper(
+  pdf_text: string
+) -> PastPaper {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -37,17 +39,6 @@ function ExtractPastPaper(pdf_text: string) -> PastPaper {  client ExtractEn
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    PastPaper {
-      subject "",
-      year 0,
-      paper "",
-      level "",
-      totalMarks 0,
-      questions null,
-    }
-  }
 }

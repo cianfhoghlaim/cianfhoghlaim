@@ -22,8 +22,7 @@
 // Reference:
 //   openspec/changes/2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1/
 //   openspec/specs/oideachais-pipeline/spec.md (StudyPlan Requirement)
-//   baml_src/british_isles/_shared/qpack_template.baml (sister template,
-//     the canonical 4-stage quest pack generator)
+//   baml_src/british_isles/_shared/qpack_template.baml (sister template
 
 // ============================================================================
 // Canonical enums
@@ -121,7 +120,7 @@ function GenerateStudyPlanAssets(
   duration_weeks: int,
   dialect: StudyPlanIrishDialect?,
   target_date: string?,
-  language: string?,
+  language: string?
 ) -> StudyPlan {
   client Primary
   prompt #"

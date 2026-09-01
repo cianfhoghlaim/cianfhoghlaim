@@ -145,8 +145,12 @@ class HandwrittenEquation {
 // Functions
 // =============================================================================
 
-function ExtractGeminiReport(pdf_text: string, file_name: string) -> GeminiDeepResearchReport {  client ExtractEn
-    prompt #"
+function ExtractGeminiReport(
+  pdf_text: string,
+  file_name: string
+) -> GeminiDeepResearchReport {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
 
@@ -166,16 +170,17 @@ function ExtractGeminiReport(pdf_text: string, file_name: string) -> GeminiDeepR
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    GeminiDeepResearchReport {}
-  }
 }
 
-function ExtractUoGArtifact(pdf_text: string, file_name: string, file_type: string) -> UniversityOfGalwayArtifact {  client ExtractEn
-    prompt #"
+function ExtractUoGArtifact(
+  pdf_text: string,
+  file_name: string,
+  file_type: string
+) -> UniversityOfGalwayArtifact {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
 
@@ -195,16 +200,16 @@ function ExtractUoGArtifact(pdf_text: string, file_name: string, file_type: stri
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    UniversityOfGalwayArtifact {}
-  }
 }
 
-function ExtractHandwrittenEquations(ocr_text: string, file_name: string) -> HandwrittenEquation[] {  client ExtractEn
-    prompt #"
+function ExtractHandwrittenEquations(
+  ocr_text: string,
+  file_name: string
+) -> HandwrittenEquation[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
 
@@ -224,16 +229,17 @@ function ExtractHandwrittenEquations(ocr_text: string, file_name: string) -> Han
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    HandwrittenEquation[] {}
-  }
 }
 
-function ExtractZoteroMetadata(pdf_text: string, file_name: string, arxiv_id: string?) -> ZoteroPaper {  client ExtractEn
-    prompt #"
+function ExtractZoteroMetadata(
+  pdf_text: string,
+  file_name: string,
+  arxiv_id: string?
+) -> ZoteroPaper {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
 
@@ -253,12 +259,8 @@ function ExtractZoteroMetadata(pdf_text: string, file_name: string, arxiv_id: st
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    ZoteroPaper {}
-  }
 }
 
 // =============================================================================
@@ -288,8 +290,7 @@ function ExtractZoteroMetadata(pdf_text: string, file_name: string, arxiv_id: st
 //   args {
 //     pdf_text #"
 //       ED305 Assignment 2: A reflective account of a 4th-year B.Ed placement
-//       at an urban DEIS school. Topics: lesson planning, classroom management,
-//       inclusive education, assessment for learning.
+//       at an urban DEIS school. Topics: lesson planning, classroom management
 //     "#
 //     file_name "ed305_assignment_2.pdf"
 //     file_type "pdf"
@@ -381,8 +382,9 @@ function PreResearchSite(
   goal: string,
   backend_payload: string,
   backend_name: string
-) -> ResearchSiteMap {  client ExtractEn
-    prompt #"
+) -> ResearchSiteMap {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
 
@@ -402,7 +404,7 @@ function PreResearchSite(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -435,8 +437,9 @@ function CondenseToCriticalInfo(
   raw_markdown: string,
   goal: string,
   max_output_bytes: int
-) -> CondensedPage {  client ExtractEn
-    prompt #"
+) -> CondensedPage {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
 
@@ -456,7 +459,7 @@ function CondenseToCriticalInfo(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -489,8 +492,9 @@ class UiIndicator {
 function IdentifyUiPatterns(
   raw_markdown: string,
   goal: string
-) -> UiIndicator[] {  client ExtractEn
-    prompt #"
+) -> UiIndicator[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
 
@@ -510,18 +514,17 @@ function IdentifyUiPatterns(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
 // -----------------------------------------------------------------------------
 // 4. VisualGroundingFromScreenshot — find an element on a screenshot.
-//    Currently invoked by the Stagehand or Browserbase backend (free paths),
-//    or by Z.AI vision (paid). This BAML function normalises the response
+//    Currently invoked by the Stagehand or Browserbase backend (free paths)
 //    shape for storage in the ui_elements table.
 // -----------------------------------------------------------------------------
 
-class BoundingBox {
+class AuthorArchiveBoundingBox {
   x_min float @description("Left edge in normalised 0-1 coordinates")
   y_min float @description("Top edge in normalised 0-1 coordinates")
   x_max float @description("Right edge in normalised 0-1 coordinates")
@@ -539,8 +542,9 @@ class GroundedElement {
 function VisualGroundingFromScreenshot(
   screenshot_description: string,
   natural_language_query: string
-) -> GroundedElement {  client ExtractEn
-    prompt #"
+) -> GroundedElement {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
 
@@ -560,7 +564,7 @@ function VisualGroundingFromScreenshot(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -574,8 +578,9 @@ function SummarizeSite(
   goal: string,
   sitemap_urls: string[],
   sample_markdown: string
-) -> ResearchSiteMap {  client ExtractEn
-    prompt #"
+) -> ResearchSiteMap {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
 
@@ -595,7 +600,7 @@ function SummarizeSite(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -623,8 +628,9 @@ function ClassifySiteCivic(
   url: string,
   site_structure_summary: string,
   primary_content_types: string[]
-) -> AuthorArchiveCivicCategory {  client ExtractEn
-    prompt #"
+) -> AuthorArchiveCivicCategory {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
 
@@ -644,7 +650,7 @@ function ClassifySiteCivic(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -741,10 +747,8 @@ function ClassifySiteCivic(
 //     url "https://www.cps.gov.uk"
 //     goal "Extract press releases and legal guidance"
 //     sitemap_urls [
-//       "https://www.cps.gov.uk/",
-//       "https://www.cps.gov.uk/news",
-//       "https://www.cps.gov.uk/legal-guidance",
-//       "https://www.cps.gov.uk/about"
+//       "https://www.cps.gov.uk/"
+//       "https://www.cps.gov.uk/legal-guidance"
 //     ]
 //     sample_markdown #"
 //       # Crown Prosecution Service

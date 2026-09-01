@@ -6,8 +6,7 @@
 // join key against the ISB `acts` table).
 //
 // Source: https://www.courts.ie/judgements (Courts Service of Ireland)
-// ~30,000 published decisions from Supreme, Court of Appeal, High,
-// Circuit, and District courts.
+// ~30,000 published decisions from Supreme, Court of Appeal, High
 //
 // Re-uses:
 //   - CourtLevel       from `ie/law/shared_legal_enums.baml`
@@ -27,14 +26,14 @@ class Judgement {
   statutes_cited         StatuteReference[]              @description("Canonical join key against cianfhoghlaim.education.ie.irish_statute_book.acts")
   cases_cited            string[]                        @description("Other case citations referenced")
   extraction_confidence  float                           @description("0.0-1.0")
-  @@stream.done
 }
 
 function ExtractJudgement(
   page_url: string,
-  page_html: string,
-) -> Judgement {  client ExtractEn
-    prompt #"
+  page_html: string
+) -> Judgement {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -42,13 +41,7 @@ function ExtractJudgement(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    Judgement {
-      url "",
-      court_level courtlevel {},
-    }
-  }
 }

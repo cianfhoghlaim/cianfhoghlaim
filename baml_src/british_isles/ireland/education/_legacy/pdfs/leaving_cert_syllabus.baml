@@ -33,11 +33,13 @@ class LeavingCertSyllabus {
   year int @description("Year this syllabus applies to")
   level string @description("One of: 'Higher', 'Ordinary', 'Foundation', 'Higher+Ordinary'")
   topics SyllabusTopic[] @description("All topics in this syllabus")
-  @@stream.done
 }
 
-function ExtractLeavingCertSyllabus(pdf_text: string) -> LeavingCertSyllabus {  client ExtractEn
-    prompt #"
+function ExtractLeavingCertSyllabus(
+  pdf_text: string
+) -> LeavingCertSyllabus {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -45,12 +47,8 @@ function ExtractLeavingCertSyllabus(pdf_text: string) -> LeavingCertSyllabus {  
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    LeavingCertSyllabus {}
-  }
 }
 
 // ---------------------------------------------------------------------------
@@ -75,11 +73,15 @@ class SyllabusStructure {
   level_sections SyllabusLevel[] @description("One entry per level this subject is examined at. Mathematics + Gaeilge = 3 levels (Foundation, Ordinary, Higher). English/History/Geography/Chemistry/Applied Maths/Computer Science = 2 levels (Ordinary, Higher).")
   subject_overview string @description("1-3 paragraphs from the front matter describing the subject")
   assessment_overview string @description("1-3 paragraphs from the front matter describing how the subject is assessed")
-  @@stream.done
 }
 
-function ExtractSyllabusStructure(pdf_text: string, subject: string, language: string) -> SyllabusStructure {  client ExtractEn
-    prompt #"
+function ExtractSyllabusStructure(
+  pdf_text: string,
+  subject: string,
+  language: string
+) -> SyllabusStructure {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -87,10 +89,6 @@ function ExtractSyllabusStructure(pdf_text: string, subject: string, language: s
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    SyllabusStructure {}
-  }
 }

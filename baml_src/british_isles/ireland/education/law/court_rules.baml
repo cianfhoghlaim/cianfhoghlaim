@@ -23,14 +23,14 @@ class CourtRule {
   effective_date         string?                         @description("ISO 8601 — when the rule came into effect")
   related_statutes       StatuteReference[]              @description("Statutes the rule is made under")
   extraction_confidence  float                           @description("0.0-1.0")
-  @@stream.done
 }
 
 function ExtractCourtRule(
   page_url: string,
-  page_html: string,
-) -> CourtRule {  client ExtractEn
-    prompt #"
+  page_html: string
+) -> CourtRule {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -38,13 +38,7 @@ function ExtractCourtRule(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    CourtRule {
-      url "",
-      court_level courtlevel {},
-    }
-  }
 }

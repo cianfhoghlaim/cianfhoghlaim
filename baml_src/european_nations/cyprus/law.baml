@@ -15,8 +15,9 @@ function ExtractCyprusStatute(
   nation: string,
   language: string,
   text: string
-) -> CyprusStatute {  client ExtractEn
-    prompt #"
+) -> CyprusStatute {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -24,14 +25,6 @@ function ExtractCyprusStatute(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    CyprusStatute {
-      title "",
-      source_url "",
-      content_hash null,
-    }
-  }
 }

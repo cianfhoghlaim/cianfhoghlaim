@@ -63,7 +63,6 @@ class BlogPostMetadata {
   affected_capabilities string[]
   code_examples string[]
   api_changes string[]
-  @@stream.done
 }
 
 class ApiChange {
@@ -77,7 +76,6 @@ class ApiChange {
   changelog_url string
   detected_at string // ISO 8601
   v1_app_affected string? // e.g. "upstream_blog_monitor", matched by symbol
-  @@stream.done
 }
 
 class PackageRelease {
@@ -88,10 +86,13 @@ class PackageRelease {
   new_features string[]
   deprecations string[]
   release_notes_url string
-  @@stream.done
 }
 
-function ExtractBlogPostMetadata(content: string, url: string) -> BlogPostMetadata {  client ExtractEn
+function ExtractBlogPostMetadata(
+  content: string,
+  url: string
+) -> BlogPostMetadata {
+  client ExtractEn
   prompt #"
     {{ _.role("user") }}
     {{ ctx.output_format }}
@@ -127,23 +128,13 @@ function ExtractBlogPostMetadata(content: string, url: string) -> BlogPostMetada
     Return ONLY the structured BlogPostMetadata. No prose, no markdown.
   "#
 
-  catch_all (err) {
-    BlogPostMetadata {
-      title "",
-      url "",
-      author null,
-      published_at "",
-      pkg package {},
-      blog_post_type blogposttype {},
-      summary "",
-      affected_capabilities null,
-      code_examples null,
-      api_changes null,
-    }
-  }
 }
 
-function ExtractCocoIndexApiChange(content: string, url: string) -> ApiChange {  client ExtractEn
+function ExtractCocoIndexApiChange(
+  content: string,
+  url: string
+) -> ApiChange {
+  client ExtractEn
   prompt #"
     {{ _.role("user") }}
     {{ ctx.output_format }}
@@ -180,23 +171,13 @@ function ExtractCocoIndexApiChange(content: string, url: string) -> ApiChange { 
     Return ONLY the structured ApiChange. No prose, no markdown.
   "#
 
-  catch_all (err) {
-    ApiChange {
-      symbol "",
-      pkg package {},
-      severity changeseverity {},
-      old_signature "",
-      new_signature "",
-      migration_steps null,
-      example_code null,
-      changelog_url "",
-      detected_at "",
-      v1_app_affected null,
-    }
-  }
 }
 
-function ExtractPackageRelease(content: string, url: string) -> PackageRelease {  client ExtractEn
+function ExtractPackageRelease(
+  content: string,
+  url: string
+) -> PackageRelease {
+  client ExtractEn
   prompt #"
     {{ _.role("user") }}
     {{ ctx.output_format }}
@@ -228,15 +209,4 @@ function ExtractPackageRelease(content: string, url: string) -> PackageRelease {
     Return ONLY the structured PackageRelease. No prose, no markdown.
   "#
 
-  catch_all (err) {
-    PackageRelease {
-      pkg package {},
-      version "",
-      release_date "",
-      breaking_changes null,
-      new_features null,
-      deprecations null,
-      release_notes_url "",
-    }
-  }
 }

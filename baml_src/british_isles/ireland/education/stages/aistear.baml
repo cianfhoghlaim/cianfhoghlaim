@@ -91,7 +91,6 @@ class AistearFramework {
   themes string[] @description("The 4 Aistear themes in English: 'Well-being', 'Identity and Belonging', 'Communicating', 'Exploring and Thinking'.")
   principles AistearPrincipleSimple[] @description("The 12 Aistear principles extracted from the document.")
   learning_goals AistearLearningGoalSimple[] @description("All learning goals extracted (typically 40-60 per document).")
-  @@stream.done
 }
 
 class GeoPoint {
@@ -110,7 +109,6 @@ class Naionra {
   enrollment int?
   source_url string
   geo GeoPoint
-  @@stream.done
 }
 
 class AistearDocument {
@@ -125,7 +123,6 @@ class AistearDocument {
   extracted_at string             @description("ISO 8601 timestamp")
   language string                 @description("en | ga | bilingual")
   framework AistearFramework?     @description("The full framework extracted from the document (from early_childhood.baml)")
-  @@stream.done
 }
 
 class BridgeEdge {
@@ -140,9 +137,12 @@ class BridgeEdge {
 // Functions
 // -----------------------------------------------------------------------------
 
-function ExtractAistearFrameworkFromText(text: string,
-  language: string) -> AistearDocument {  client ExtractEn
-    prompt #"
+function ExtractAistearFrameworkFromText(
+  text: string,
+  language: string
+) -> AistearDocument {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -150,26 +150,17 @@ function ExtractAistearFrameworkFromText(text: string,
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    AistearDocument {
-      document_id "",
-      title_en "",
-      title_ga null,
-      source_url "",
-      age_band aistearageband {},
-      themes null,
-      principles null,
-      learning_goals null,
-    }
-  }
 }
 
 
-function ExtractNaionraListing(page_markdown: string) -> Naionra[] {  client ExtractEn
-    prompt #"
+function ExtractNaionraListing(
+  page_markdown: string
+) -> Naionra[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -177,32 +168,17 @@ function ExtractNaionraListing(page_markdown: string) -> Naionra[] {  client Ext
 
     {{ ctx.output_format }}
 
-    {{ input }}
-  "#
-
-  catch_all (err) {
-    Naionra[] {}
-  }
-}
-
-
-function BridgeAistearToPrimary(aistear_doc: AistearDocument,
-  primary_doc: PrimaryCurriculumArea) -> BridgeEdge[] {  client ExtractEn
-    prompt #"
-    {{ _.role("user") }}
-    You are an expert extractor. From the input below, extract every field
-    in the return type according to the @description decorators on the
-    class definition. Preserve the canonical field names + types.
-
-    {{ ctx.output_format }}
-
-    {{ input }}
+    {{ text }}
   "#
 }
 
 
-function ExtractAistearFrameworkFromUrl(source_url: string) -> AistearDocument {  client ExtractEn
-    prompt #"
+function BridgeAistearToPrimary(
+  aistear_doc: AistearDocument,
+  primary_doc: PrimaryCurriculumArea
+) -> BridgeEdge[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -210,26 +186,16 @@ function ExtractAistearFrameworkFromUrl(source_url: string) -> AistearDocument {
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    AistearDocument {
-      document_id "",
-      title_en "",
-      title_ga null,
-      source_url "",
-      age_band aistearageband {},
-      themes null,
-      principles null,
-      learning_goals null,
-    }
-  }
 }
 
 
-function ExtractAistearFrameworkFromPdf(pdf_text: string) -> AistearFramework {  client ExtractEn
-    prompt #"
+function ExtractAistearFrameworkFromUrl(
+  source_url: string
+) -> AistearDocument {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -237,12 +203,26 @@ function ExtractAistearFrameworkFromPdf(pdf_text: string) -> AistearFramework { 
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    AistearFramework {}
-  }
+}
+
+
+function ExtractAistearFrameworkFromPdf(
+  pdf_text: string
+) -> AistearFramework {
+  client ExtractEn
+  prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ text }}
+  "#
 }
 
 // =============================================================================
@@ -250,9 +230,12 @@ function ExtractAistearFrameworkFromPdf(pdf_text: string) -> AistearFramework { 
 // =============================================================================
 
 // Alias for the canonical aistear.baml ExtractAistearFramework(text, language) call
-function ExtractAistearFramework(text: string,
-  language: string) -> AistearDocument {  client ExtractEn
-    prompt #"
+function ExtractAistearFramework(
+  text: string,
+  language: string
+) -> AistearDocument {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -260,26 +243,17 @@ function ExtractAistearFramework(text: string,
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    AistearDocument {
-      document_id "",
-      title_en "",
-      title_ga null,
-      source_url "",
-      age_band aistearageband {},
-      themes null,
-      principles null,
-      learning_goals null,
-    }
-  }
 }
 
 // Alias for the early_childhood.baml ExtractAistearFramework(pdf_text) call
-function ExtractAistearFrameworkLegacy(pdf_text: string) -> AistearFramework {  client ExtractEn
-    prompt #"
+function ExtractAistearFrameworkLegacy(
+  pdf_text: string
+) -> AistearFramework {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -287,10 +261,6 @@ function ExtractAistearFrameworkLegacy(pdf_text: string) -> AistearFramework {  
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    AistearFramework {}
-  }
 }

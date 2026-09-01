@@ -17,8 +17,7 @@
 //   Path 4 (gemma4):   client ExtractEnStrong (gemma-4-26B-A4B M4 default MoE)
 //
 // MODEL_REGISTRY canonical home:
-// Per the centralized-model-registry openspec change (2026-08-15),
-// the model strings (`docling`, `UNSTRACT_DEPLOYMENT_ID`) for these
+// Per the centralized-model-registry openspec change (2026-08-15)
 // clients are resolved via the unified `MODEL_REGISTRY` at
 // `meaisinfhoghlaim/models/model_registry.py` at runtime. The
 // `docling` backend is a REST adapter (not a model in the registry);

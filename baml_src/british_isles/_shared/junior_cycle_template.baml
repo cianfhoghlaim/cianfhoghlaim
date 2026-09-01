@@ -12,14 +12,12 @@
 //   = 518 LOC removed, ~200 LOC added, net -318 LOC
 //
 // The 8 NCCA Junior Cycle subjects at full scope (per Q4):
-// Mathematics, English, Gaeilge, Science, Geography, History,
-// CSPE (Civic, Social, Political Education), SPHE (Social, Personal,
+// Mathematics, English, Gaeilge, Science, Geography, History
 // Health Education).
 //
 // The other 10 NCCA JC subjects (per the existing
 // JuniorCycleSubjectSlug enum) are deferred to a follow-up change:
-// Irish_History, Business_Studies, French, German, Spanish, Italian,
-// Home_Economics, Music, Art, Technology, Engineering, Graphics,
+// Irish_History, Business_Studies, French, German, Spanish, Italian
 // Wood_Technology.
 //
 // Re-gen: cd cianfhoghlaim && uv run baml-cli generate --from baml_src
@@ -163,7 +161,7 @@ class JCSubjectPDFLink {
 function ExtractJuniorCycleCurriculum(
   pdf_text: string,
   subject: JCSubjectSlug,
-  language: JCLanguage,
+  language: JCLanguage
 ) -> JCSubjectSpecification {
   client BIEPV3Extract
   prompt #"
@@ -222,25 +220,12 @@ function ExtractJuniorCycleCurriculum(
     {{ pdf_text }}
   "#
 
-  catch_all (err) {
-    JCSubjectSpecification {
-      subject jcsubjectslug {},
-      language jclanguage {},
-      source_pdf "",
-      learning_outcomes null,
-      total_learning_outcomes 0,
-      strands null,
-      cross_curricular null,
-      assessment_objectives null,
-      key_competencies null,
-    }
-  }
 }
 
 function ExtractJuniorCycleExamPaper(
   pdf_text: string,
   subject: JCSubjectSlug,
-  language: JCLanguage,
+  language: JCLanguage
 ) -> JuniorCycleExamPaper {
   client BIEPV3Extract
   prompt #"
@@ -260,26 +245,11 @@ function ExtractJuniorCycleExamPaper(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    JuniorCycleExamPaper {
-      subject jcsubjectslug {},
-      paper_code "",
-      language jclanguage {},
-      year 0,
-      source_pdf "",
-      total_pages 0,
-      total_marks 0,
-      total_questions 0,
-      sections null,
-      duration_minutes null,
-      has_formula_sheet false,
-    }
-  }
 }
 
 function ExtractJuniorCycleCBADescriptor(
   cba_pdf_text: string,
-  subject: JCSubjectSlug,
+  subject: JCSubjectSlug
 ) -> JCCBADescriptor {
   client BIEPV3Extract
   prompt #"
@@ -298,20 +268,11 @@ function ExtractJuniorCycleCBADescriptor(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    JCCBADescriptor {
-      cba_id "",
-      cba_title jcbilingualtext {},
-      cba_description jcbilingualtext {},
-      duration_minutes 0,
-      deliverables null,
-    }
-  }
 }
 
 function ExtractJuniorCycleShortCourse(
   pdf_text: string,
-  subject: JCSubjectSlug,
+  subject: JCSubjectSlug
 ) -> JuniorCycleShortCourse {
   client BIEPV3Extract
   prompt #"
@@ -328,14 +289,6 @@ function ExtractJuniorCycleShortCourse(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    JuniorCycleShortCourse {
-      subject jcsubjectslug {},
-      course_code "",
-      learning_outcomes null,
-      assessment_objectives null,
-    }
-  }
 }
 
 // ============================================================================

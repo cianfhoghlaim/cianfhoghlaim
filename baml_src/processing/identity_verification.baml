@@ -20,7 +20,6 @@ class IdentityDocument {
   status string @description("Verified, Pending, Expired")
   verifiedBy string | null @description("Entity that verified the document")
   verifiedDate string | null
-  @@stream.done
 }
 
 class GardaVetting {
@@ -29,7 +28,6 @@ class GardaVetting {
   expiryDate string | null
   status string @description("Clear, Pending, Expired")
   issuingBureau string @description("e.g. National Vetting Bureau, An Garda Síochána")
-  @@stream.done
 }
 
 class ProfessionalRegistration {
@@ -39,7 +37,6 @@ class ProfessionalRegistration {
   expiryDate string | null
   status string @description("Active, Provisional, Expired")
   subjects string[] @description("Registered subjects for teaching registrations")
-  @@stream.done
 }
 
 class VerificationSummary {
@@ -52,8 +49,11 @@ class VerificationSummary {
   lastUpdated string
 }
 
-function ExtractIdentityDocument(text: string) -> IdentityDocument[] {  client ExtractEn
-    prompt #"
+function ExtractIdentityDocument(
+  text: string
+) -> IdentityDocument[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -61,16 +61,15 @@ function ExtractIdentityDocument(text: string) -> IdentityDocument[] {  client E
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    IdentityDocument[] {}
-  }
 }
 
-function ExtractGardaVetting(text: string) -> GardaVetting[] {  client ExtractEn
-    prompt #"
+function ExtractGardaVetting(
+  text: string
+) -> GardaVetting[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -78,16 +77,15 @@ function ExtractGardaVetting(text: string) -> GardaVetting[] {  client ExtractEn
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    GardaVetting[] {}
-  }
 }
 
-function ExtractProfessionalRegistration(text: string) -> ProfessionalRegistration[] {  client ExtractEn
-    prompt #"
+function ExtractProfessionalRegistration(
+  text: string
+) -> ProfessionalRegistration[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -95,16 +93,17 @@ function ExtractProfessionalRegistration(text: string) -> ProfessionalRegistrati
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    ProfessionalRegistration[] {}
-  }
 }
 
-function GenerateVerificationSummary(docs: IdentityDocument[], vetting: GardaVetting[], regs: ProfessionalRegistration[]) -> VerificationSummary {  client ExtractEn
-    prompt #"
+function GenerateVerificationSummary(
+  docs: IdentityDocument[],
+  vetting: GardaVetting[],
+  regs: ProfessionalRegistration[]
+) -> VerificationSummary {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -112,6 +111,6 @@ function GenerateVerificationSummary(docs: IdentityDocument[], vetting: GardaVet
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

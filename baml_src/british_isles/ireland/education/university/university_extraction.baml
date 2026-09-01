@@ -79,7 +79,6 @@ class ReadingListItem {
   library_ref string? @description("Library / shelf reference, set when format = INTERNAL_REF")
   essential bool @description("True if this reading is marked 'essential' or 'core' on the module page")
   confidence float @description("Extraction confidence 0.0-1.0")
-  @@stream.done
 }
 
 // =============================================================================
@@ -130,7 +129,6 @@ class CourseDescriptor {
   source_url string @description("The canonical URL this descriptor was extracted from")
   scraped_at string @description("ISO-8601 timestamp of the scrape, e.g. '2026-06-29T14:00:00Z'")
   confidence float @description("Overall extraction confidence 0.0-1.0")
-  @@stream.done
 }
 
 // =============================================================================
@@ -160,7 +158,6 @@ class ModuleDescriptor {
   source_url string @description("The canonical URL this descriptor was extracted from")
   scraped_at string @description("ISO-8601 timestamp of the scrape")
   confidence float @description("Overall extraction confidence 0.0-1.0")
-  @@stream.done
 }
 
 // =============================================================================
@@ -181,7 +178,6 @@ class ProgrammeDescriptor {
   source_url string @description("The canonical URL this descriptor was extracted from")
   scraped_at string @description("ISO-8601 timestamp of the scrape")
   confidence float @description("Overall extraction confidence 0.0-1.0")
-  @@stream.done
 }
 
 // =============================================================================
@@ -191,8 +187,9 @@ class ProgrammeDescriptor {
 function ExtractCourseDescriptor(
   course_page_markdown: string,
   course_url: string
-) -> CourseDescriptor {  client ExtractEn
-    prompt #"
+) -> CourseDescriptor {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -212,19 +209,16 @@ function ExtractCourseDescriptor(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    CourseDescriptor {}
-  }
 }
 
 function ExtractModuleDescriptor(
   module_page_markdown: string,
   module_url: string
-) -> ModuleDescriptor {  client ExtractEn
-    prompt #"
+) -> ModuleDescriptor {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -244,19 +238,16 @@ function ExtractModuleDescriptor(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    ModuleDescriptor {}
-  }
 }
 
 function ExtractProgrammeDescriptor(
   programme_page_markdown: string,
   programme_url: string
-) -> ProgrammeDescriptor {  client ExtractEn
-    prompt #"
+) -> ProgrammeDescriptor {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -276,19 +267,16 @@ function ExtractProgrammeDescriptor(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    ProgrammeDescriptor {}
-  }
 }
 
 function ExtractReadingList(
   module_page_markdown: string,
   module_url: string
-) -> ReadingListItem[] {  client ExtractEn
-    prompt #"
+) -> ReadingListItem[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -308,12 +296,8 @@ function ExtractReadingList(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    ReadingListItem[] {}
-  }
 }
 
 // =============================================================================
@@ -334,21 +318,18 @@ function ExtractReadingList(
 // 
 //       ## Module Description
 //       This module introduces the foundations of deep learning, covering
-//       feedforward and convolutional networks, recurrent networks,
-//       attention mechanisms, and transformer architectures. Students
+//       feedforward and convolutional networks, recurrent networks
 //       will implement and train models using PyTorch on a series of
 //       coursework assignments and a final project.
 // 
 //       ## Learning Outcomes
 //       On completion of this module, students should be able to:
-//       1. Explain the mathematical foundations of gradient descent,
-//          backpropagation, and stochastic optimisation.
+//       1. Explain the mathematical foundations of gradient descent
 //       2. Implement feedforward, convolutional, and recurrent neural
 //          networks in PyTorch.
 //       3. Apply transformer architectures to sequence-modelling tasks.
 //       4. Evaluate deep-learning models using appropriate metrics.
-//       5. Diagnose and fix common training pathologies (overfitting,
-//          underfitting, vanishing gradients, mode collapse).
+//       5. Diagnose and fix common training pathologies (overfitting
 // 
 //       ## Assessment
 //       - Continuous assessment: 60% (3 assignments, 20% each)
@@ -366,8 +347,7 @@ function ExtractReadingList(
 //         https://www.universityofgalway.ie/our-research/people/conor-obrien
 // 
 //       ## Recommended Reading
-//       - **Essential:** Deep Learning, Ian Goodfellow, Yoshua Bengio,
-//         Aaron Courville. MIT Press, 2016. ISBN 9780262033848.
+//       - **Essential:** Deep Learning, Ian Goodfellow, Yoshua Bengio
 //       - **Essential:** Neural Networks and Deep Learning, Michael
 //         Nielsen. Online, 2015. http://neuralnetworksanddeeplearning.com/
 //       - **Recommended:** Attention Is All You Need, Vaswani et al.
@@ -460,8 +440,7 @@ function ExtractReadingList(
 //       ## Recommended Reading
 //       - **Essential:** Clean Architecture, Robert C. Martin.
 //         Pearson, 2017. ISBN 9780134494166.
-//       - **Essential:** Designing Data-Intensive Applications,
-//         Martin Kleppmann. O'Reilly, 2017.
+//       - **Essential:** Designing Data-Intensive Applications
 //         ISBN 9781449373320.
 //       - **Recommended:** Site Reliability Engineering, Niall
 //         Murphy et al. O'Reilly, 2016. ISBN 9781491929124.
@@ -478,20 +457,16 @@ function ExtractReadingList(
 // change. The 5+ classes + 4+ enums + 1+ function below cover the
 // **Tertiary 18+ stage** of the K-12 → university pipeline:
 //
-//   1. `University` — the 8 Republic of Ireland universities (TCD, UCD,
-//      UCC, UoG, UL, DCU, Maynooth, RCSI). One row per (institution_id,
+//   1. `University` — the 8 Republic of Ireland universities (TCD, UCD
 //      language). Distinct from the per-university `CourseDescriptor`
 //      above (which is a single course/module/programme extracted from a
 //      specific page).
-//   2. `TU` — the 5 Technological Universities (TUD, MTU, TUS, ATU,
-//      SETU). One row per (tu_id, language).
+//   2. `TU` — the 5 Technological Universities (TUD, MTU, TUS, ATU
 //   3. `QQIAward` — the canonical QQI awards at NFQ 6-10 (Higher
-//      Cert, Ordinary Bachelor, Honours Bachelor, Higher Diploma,
-//      Masters, Ph.D., etc.). One row per (award_code, language).
+//      Cert, Ordinary Bachelor, Honours Bachelor, Higher Diploma
 //   4. `CAOChoice` — a CAO course choice entry (cao_code, institution
 //      id, nfq_level, points_required). One row per (cao_code, year).
-//   5. `SOLASCourse` — a SOLAS Further Education course (PLC,
-//      apprenticeship, Youthreach). One row per (course_code, etb_slug).
+//   5. `SOLASCourse` — a SOLAS Further Education course (PLC
 //
 // Together with the 4 per-university functions above, the 9 total
 // functions + 9 enums + 11 Pydantic classes cover the full Tertiary
@@ -562,7 +537,6 @@ class University {
   source_url string @description("Canonical URL this record was extracted from")
   scraped_at string @description("ISO-8601 timestamp of the scrape")
   confidence float @description("Overall extraction confidence 0.0-1.0")
-  @@stream.done
 }
 
 // =============================================================================
@@ -584,7 +558,6 @@ class TU {
   source_url string @description("Canonical URL this record was extracted from")
   scraped_at string @description("ISO-8601 timestamp of the scrape")
   confidence float @description("Overall extraction confidence 0.0-1.0")
-  @@stream.done
 }
 
 // =============================================================================
@@ -603,7 +576,6 @@ class QQIAward {
   source_url string @description("Canonical URL this record was extracted from (typically https://www.qqi.ie)")
   scraped_at string @description("ISO-8601 timestamp of the scrape")
   confidence float @description("Overall extraction confidence 0.0-1.0")
-  @@stream.done
 }
 
 // =============================================================================
@@ -623,7 +595,6 @@ class CaliforniaOChoice {
   source_url string @description("Canonical CAO URL, e.g. 'https://www.cao.ie/index.php?page=courses&course=GY101'")
   scraped_at string @description("ISO-8601 timestamp of the scrape")
   confidence float @description("Overall extraction confidence 0.0-1.0")
-  @@stream.done
 }
 
 // =============================================================================
@@ -642,7 +613,6 @@ class SOLASCourse {
   fetchcourses_url string @description("The canonical fetchcourses.ie URL for this course")
   scraped_at string @description("ISO-8601 timestamp of the scrape")
   confidence float @description("Overall extraction confidence 0.0-1.0")
-  @@stream.done
 }
 
 // =============================================================================
@@ -652,8 +622,9 @@ class SOLASCourse {
 function ExtractUniversityInfo(
   page_markdown: string,
   institution_id: string
-) -> University {  client ExtractEn
-    prompt #"
+) -> University {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -673,19 +644,16 @@ function ExtractUniversityInfo(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    University {}
-  }
 }
 
 function ExtractTuInfo(
   page_markdown: string,
   tu_id: string
-) -> TU {  client ExtractEn
-    prompt #"
+) -> TU {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -705,19 +673,16 @@ function ExtractTuInfo(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    TU {}
-  }
 }
 
 function ExtractQQIAward(
   page_markdown: string,
   award_code: string
-) -> QQIAward {  client ExtractEn
-    prompt #"
+) -> QQIAward {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -737,19 +702,16 @@ function ExtractQQIAward(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    QQIAward {}
-  }
 }
 
 function ExtractCaliforniaOChoice(
   page_markdown: string,
   cao_code: string
-) -> CaliforniaOChoice {  client ExtractEn
-    prompt #"
+) -> CaliforniaOChoice {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -769,19 +731,16 @@ function ExtractCaliforniaOChoice(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    CaliforniaOChoice {}
-  }
 }
 
 function ExtractSOLASCourse(
   page_markdown: string,
   course_code: string
-) -> SOLASCourse {  client ExtractEn
-    prompt #"
+) -> SOLASCourse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -801,12 +760,8 @@ function ExtractSOLASCourse(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    SOLASCourse {}
-  }
 }
 
 // =============================================================================

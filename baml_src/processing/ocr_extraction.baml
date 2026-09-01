@@ -45,7 +45,6 @@ class HiddenHeritagesTale {
   // Related tales
   related_tales string[]? @description("IDs of related tales")
   same_informant_tales string[]? @description("Other tales from same informant")
-  @@stream.done
 }
 
 // Informant (storyteller) details
@@ -119,8 +118,9 @@ class TaleType {
 function ExtractHiddenHeritagesTale(
   page_content: string,
   tale_id: string
-) -> HiddenHeritagesTale {  client ExtractEn
-    prompt #"
+) -> HiddenHeritagesTale {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -128,12 +128,8 @@ function ExtractHiddenHeritagesTale(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    HiddenHeritagesTale {}
-  }
 }
 
 test ExtractHiddenHeritagesTale {
@@ -164,8 +160,9 @@ test ExtractHiddenHeritagesTale {
 function ExtractTalesListing(
   page_content: string,
   page_number: int
-) -> TalesListingPage {  client ExtractEn
-    prompt #"
+) -> TalesListingPage {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -173,12 +170,8 @@ function ExtractTalesListing(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    TalesListingPage {}
-  }
 }
 
 // Summary of tales on a listing page
@@ -187,7 +180,6 @@ class TalesListingPage {
   total_pages int? @description("Total pages if known")
   tales TaleSummary[] @description("Tale summaries on this page")
   has_next_page bool @description("Whether there's a next page")
-  @@stream.done
 }
 
 // Brief tale summary from listing

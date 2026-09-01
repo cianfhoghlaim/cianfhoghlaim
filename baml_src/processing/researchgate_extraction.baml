@@ -19,7 +19,6 @@ class ResearchGatePublication {
   readCount int?
   recommendationCount int?
   url string
-  @@stream.done
 }
 
 class ResearchGateProfile {
@@ -40,11 +39,13 @@ class ResearchGateProfile {
   streamId string @description("The croilar Stream id this profile belongs to: music, teaching, cv, or research")
   ownerDisplayName string @description("Canonical owner display name, e.g. 'Cian Mac an Déisigh Uí Liatháin'")
   ownerSlug string? @description("Owner alias from Stream.owner, e.g. 'cianfhoghlaim'")
-  @@stream.done
 }
 
-function ExtractResearchGateProfile(text: string) -> ResearchGateProfile {  client ExtractEn
-    prompt #"
+function ExtractResearchGateProfile(
+  text: string
+) -> ResearchGateProfile {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -52,28 +53,15 @@ function ExtractResearchGateProfile(text: string) -> ResearchGateProfile {  clie
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    ResearchGateProfile {
-      name "",
-      institution null,
-      location null,
-      about null,
-      skillsAndExpertise null,
-      publications null,
-      followers null,
-      following null,
-      totalReads null,
-      totalCitations null,
-      profileUrl "",
-    }
-  }
 }
 
-function ExtractResearchGatePublication(publication_text: string) -> ResearchGatePublication {  client ExtractEn
-    prompt #"
+function ExtractResearchGatePublication(
+  publication_text: string
+) -> ResearchGatePublication {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -81,20 +69,6 @@ function ExtractResearchGatePublication(publication_text: string) -> ResearchGat
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    ResearchGatePublication {
-      title "",
-      authors null,
-      year null,
-      doi null,
-      abstract null,
-      citationCount null,
-      readCount null,
-      recommendationCount null,
-      url "",
-    }
-  }
 }

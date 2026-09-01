@@ -95,7 +95,7 @@ function ExtractProseDescriptor(
   source_paragraph: int,
   work: string,
   language: string,
-  evidence: string,
+  evidence: string
 ) -> WheelOfTimeMediaDescriptor {
   client MediaIntelPrimary
   prompt #"

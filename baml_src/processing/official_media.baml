@@ -16,8 +16,7 @@
 class OfficialMediaCategory {
   // The category enum mirrors the BAML-side category strings.
   // Python `classify_with_baml` maps these to lowercase strings
-  // ('intelligence', 'university', 'party', 'jurisdiction',
-  // 'agency', 'emergency_service', 'military', 'government', 'other').
+  // ('intelligence', 'university', 'party', 'jurisdiction'
   // When the function returns "Other", the Python wrapper falls
   // back to "other" (catch-all bucket).
   is_official_media bool @description("True if the profile is an official-media account.")
@@ -30,8 +29,9 @@ function ClassifyOfficialMedia(
   ig_username: string,
   ig_bio: string,
   ig_external_url: string?
-) -> OfficialMediaCategory {  client ExtractEn
-    prompt #"
+) -> OfficialMediaCategory {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -39,7 +39,7 @@ function ClassifyOfficialMedia(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 

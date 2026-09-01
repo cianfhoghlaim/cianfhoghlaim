@@ -17,8 +17,9 @@ function ExtractMoldovaSubjectCurriculum(
   language: string,
   subject: string,
   text: string
-) -> MoldovaSubjectCurriculum {  client ExtractEn
-    prompt #"
+) -> MoldovaSubjectCurriculum {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -26,13 +27,6 @@ function ExtractMoldovaSubjectCurriculum(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    MoldovaSubjectCurriculum {
-      publication_date null,
-      content_hash null,
-    }
-  }
 }

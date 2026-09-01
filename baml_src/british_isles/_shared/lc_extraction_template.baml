@@ -13,8 +13,7 @@
 //   = 1,287 LOC removed, ~250 LOC added, net -1,037 LOC
 //
 // Covers the canonical 14 LC subjects via `{% if subject == "x" %}`:
-// mathematics, applied_mathematics, chemistry, physics, biology,
-// geography, english, gaeilge, french, history, business, accounting,
+// mathematics, applied_mathematics, chemistry, physics, biology
 // art, music, computer_science.
 //
 // Re-gen: cd cianfhoghlaim && uv run baml-cli generate --from baml_src
@@ -308,7 +307,7 @@ class LineageTrace {
 function ExtractCurriculumSyllabus(
   pdf_text: string,
   subject: LCSubjectSlug,
-  language: string,
+  language: string
 ) -> LCSyllabusDocument {
   client BIEPV3Extract
   prompt #"
@@ -387,25 +386,13 @@ function ExtractCurriculumSyllabus(
     {{ pdf_text }}
   "#
 
-  catch_all (err) {
-    LCSyllabusDocument {
-      subject lcsubjectslug {},
-      stage lceducationstage {},
-      source_pdf "",
-      module_topics null,
-      total_learning_outcomes 0,
-      cross_curricular null,
-      assessment_objectives null,
-      lineage null,
-    }
-  }
 }
 
 function ExtractExamPaperLayout(
   pdf_text: string,
   subject: LCSubjectSlug?,
   paper_code: string?,
-  year: int?,
+  year: int?
 ) -> LCExamPaper {
   client BIEPV3Extract
   prompt #"
@@ -423,29 +410,12 @@ function ExtractExamPaperLayout(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    LCExamPaper {
-      subject lcsubjectslug {},
-      paper_code "",
-      year 0,
-      source_pdf "",
-      total_pages 0,
-      total_marks 0,
-      total_questions 0,
-      sections null,
-      duration_minutes null,
-      has_formula_sheet false,
-      has_data_booklet false,
-      formula_sheet_pages null,
-      lineage null,
-    }
-  }
 }
 
 function ExtractMarkingSchemeGuideline(
   pdf_text: string,
   subject: LCSubjectSlug?,
-  year: int?,
+  year: int?
 ) -> LCMarkingScheme {
   client BIEPV3Extract
   prompt #"
@@ -460,29 +430,13 @@ function ExtractMarkingSchemeGuideline(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    LCMarkingScheme {
-      subject lcsubjectslug {},
-      scheme_code "",
-      language "",
-      level "",
-      year null,
-      source_pdf "",
-      grade_descriptors null,
-      mark_allocations null,
-      total_bands 0,
-      total_pages 0,
-      descriptor_word_count_avg 0,
-      lineage null,
-    }
-  }
 }
 
 function ExtractCrossLinguisticConcept(
   pdf_text_en: string,
   pdf_text_ga: string?,
   subject: LCSubjectSlug?,
-  concept_id: string?,
+  concept_id: string?
 ) -> LCCrossLinguisticConcept[] {
   client BIEPV3Extract
   prompt #"
@@ -499,15 +453,11 @@ function ExtractCrossLinguisticConcept(
 
     {{ ctx.output_format }}
   "#
-
-  catch_all (err) {
-    LCCrossLinguisticConcept[] {}
-  }
 }
 
 function ExtractSyllabusDiagram(
   pdf_text: string,
-  subject: LCSubjectSlug,
+  subject: LCSubjectSlug
 ) -> LCSyllabusDiagram {
   client BIEPV3Extract
   prompt #"
@@ -522,26 +472,13 @@ function ExtractSyllabusDiagram(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    LCSyllabusDiagram {
-      diagram_id "",
-      caption_en null,
-      caption_ga null,
-      page_number 0,
-      source_pdf "",
-      subject lcsubjectslug {},
-      confidence_score 0,
-      regions null,
-      lineage null,
-    }
-  }
 }
 
 function ExtractCircular(
   url: string,
   html: string,
   pdf_text: string,
-  language: string,
+  language: string
 ) -> LCEducationCircular {
   client BIEPV3Extract
   prompt #"
@@ -552,26 +489,11 @@ function ExtractCircular(
 
     {{ ctx.output_format }}
   "#
-
-  catch_all (err) {
-    LCEducationCircular {
-      year 0,
-      language "",
-      title_en "",
-      title_ga null,
-      summary "",
-      full_text "",
-      url "",
-      published_at "",
-      extraction_confidence 0,
-      extracted_at "",
-    }
-  }
 }
 
 function LinkCircularToSyllabus(
   circular: LCEducationCircular,
-  candidate_syllabi: string[],
+  candidate_syllabi: string[]
 ) -> LCCircularToSyllabusLink[] {
   client BIEPV3Extract
   prompt #"
@@ -586,7 +508,7 @@ function LinkCircularToSyllabus(
 
 function ClassifyCircular(
   pdf_text: string,
-  url: string,
+  url: string
 ) -> LCCircularDepartment {
   client BIEPV3Extract
   prompt #"
@@ -601,7 +523,7 @@ function ClassifyCircular(
 
 function ExtractLCTopicExtraction(
   pdf_text: string,
-  subject: LCSubjectSlug?,
+  subject: LCSubjectSlug?
 ) -> LCTopicExtraction {
   client BIEPV3Extract
   prompt #"
@@ -616,18 +538,11 @@ function ExtractLCTopicExtraction(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    LCTopicExtraction {
-      subject lcsubjectslug {},
-      topics null,
-      total_topics 0,
-    }
-  }
 }
 
 // ============================================================================
 // Type aliases (back-compat for the legacy files that reference
-// GradeDescriptor / MarkAllocation / SyllabusDocument / ExamPaper
+// LCGradeDescriptor / LCMarkAllocation / SyllabusDocument / ExamPaper
 // without the LC prefix — see the 2026-08-26-mega-3a-baml-and-adk-v1
 // change for the migration plan)
 //
@@ -635,8 +550,6 @@ function ExtractLCTopicExtraction(
 // classes elsewhere in the project.
 // ============================================================================
 
-type GradeDescriptor = LCGradeDescriptor
-type MarkAllocation = LCMarkAllocation
 type SyllabusDocument = LCSyllabusDocument
 type ExamPaper = LCExamPaper
 type QuestionSection = LCQuestionSection

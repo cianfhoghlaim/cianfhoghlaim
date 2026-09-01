@@ -7,8 +7,7 @@
 // (AQA + OCR + Edexcel) via `{% if subject == "x" %}` and `{% if board == "x" %}`.
 //
 // The 15 priority subjects (per ALevelPrioritySubjectSlug):
-// MATHEMATICS, FURTHER_MATHEMATICS, ENGLISH_LITERATURE, ENGLISH_LANGUAGE,
-// BIOLOGY, CHEMISTRY, PHYSICS, PSYCHOLOGY, HISTORY, GEOGRAPHY,
+// MATHEMATICS, FURTHER_MATHEMATICS, ENGLISH_LITERATURE, ENGLISH_LANGUAGE
 // ECONOMICS, BUSINESS, HISTORY_OF_ART, POLITICS, SOCIOLOGY.
 //
 // Re-gen: cd cianfhoghlaim && uv run baml-cli generate --from baml_src
@@ -217,7 +216,7 @@ class ALevelSyllabusDiagram {
 function ExtractALevelCurriculumSyllabus(
   pdf_text: string,
   subject: ALevelSubjectSlug,
-  board: ALevelExamBoard,
+  board: ALevelExamBoard
 ) -> ALevelSyllabusSpec {
   client LitellmClient
   prompt #"
@@ -306,26 +305,6 @@ function ExtractALevelCurriculumSyllabus(
     {{ pdf_text }}
   "#
 
-  catch_all (err) {
-    ALevelSyllabusSpec {
-      subject alevelsubjectslug {},
-      language alevellanguage {},
-      board alevelexamboard {},
-      stage alevelstage {},
-      title "",
-      version "",
-      first_teaching_year null,
-      last_certification_year null,
-      source_pdf "",
-      source_pages null,
-      total_marks 0,
-      assessment_objectives null,
-      component_papers 0,
-      module_topics null,
-      total_learning_outcomes 0,
-      lineage null,
-    }
-  }
 }
 
 function ExtractALevelExamPaperLayout(
@@ -333,7 +312,7 @@ function ExtractALevelExamPaperLayout(
   subject: ALevelSubjectSlug,
   board: ALevelExamBoard,
   paper_code: string?,
-  year: int?,
+  year: int?
 ) -> ALevelExamPaper {
   client LitellmClient
   prompt #"
@@ -348,30 +327,13 @@ function ExtractALevelExamPaperLayout(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    ALevelExamPaper {
-      subject alevelsubjectslug {},
-      board alevelexamboard {},
-      stage alevelstage {},
-      language alevellanguage {},
-      year 0,
-      source_pdf "",
-      total_pages 0,
-      total_marks 0,
-      total_questions 0,
-      sections null,
-      duration_minutes null,
-      has_formula_sheet false,
-      lineage null,
-    }
-  }
 }
 
 function ExtractALevelMarkingSchemeGuideline(
   pdf_text: string,
   subject: ALevelSubjectSlug,
   board: ALevelExamBoard,
-  year: int?,
+  year: int?
 ) -> ALevelMarkingScheme {
   client LitellmClient
   prompt #"
@@ -385,29 +347,12 @@ function ExtractALevelMarkingSchemeGuideline(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    ALevelMarkingScheme {
-      subject alevelsubjectslug {},
-      board alevelexamboard {},
-      stage alevelstage {},
-      scheme_code "",
-      language alevellanguage {},
-      year null,
-      source_pdf "",
-      grade_descriptors null,
-      mark_allocations null,
-      total_bands 0,
-      total_pages 0,
-      descriptor_word_count_avg 0,
-      lineage null,
-    }
-  }
 }
 
 function ExtractALevelSyllabusDiagram(
   pdf_text: string,
   subject: ALevelSubjectSlug,
-  board: ALevelExamBoard,
+  board: ALevelExamBoard
 ) -> ALevelSyllabusDiagram {
   client LitellmClient
   prompt #"
@@ -421,26 +366,11 @@ function ExtractALevelSyllabusDiagram(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    ALevelSyllabusDiagram {
-      diagram_id "",
-      caption_en null,
-      caption_ga null,
-      page_number 0,
-      source_pdf "",
-      subject alevelsubjectslug {},
-      board alevelexamboard {},
-      pointing_model "",
-      confidence_score 0,
-      related_lo_ids null,
-      lineage null,
-    }
-  }
 }
 
 function ExtractALevelCrossSubjectTopics(
   pdf_text: string,
-  subject: ALevelSubjectSlug,
+  subject: ALevelSubjectSlug
 ) -> ALevelCrossSubjectTopics {
   client LitellmClient
   prompt #"
@@ -454,20 +384,12 @@ function ExtractALevelCrossSubjectTopics(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    ALevelCrossSubjectTopics {
-      subject alevelsubjectslug {},
-      topics null,
-      total_topics 0,
-      cross_subject_topics null,
-    }
-  }
 }
 
 function ExtractALevelPerQuestionScheme(
   pdf_text: string,
   subject: ALevelSubjectSlug,
-  board: ALevelExamBoard,
+  board: ALevelExamBoard
 ) -> ALevelMarkAllocation[] {
   client LitellmClient
   prompt #"
@@ -478,10 +400,6 @@ function ExtractALevelPerQuestionScheme(
 
     {{ ctx.output_format }}
   "#
-
-  catch_all (err) {
-    ALevelMarkAllocation[] {}
-  }
 }
 
 // ============================================================================

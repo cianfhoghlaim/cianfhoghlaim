@@ -12,7 +12,9 @@
 // Re-gen: `python scripts/baml_generate_templates.py`
 // Re-apply: `python scripts/baml_bulk_replace_stubs.py`
 
-function DomainExtractor(input: string) -> string {
+function DomainExtractor_ProcessingGeminiReport(
+  text: string
+) -> string {
   client ExtractEn
   prompt #"
     {{ _.role("user") }}
@@ -33,6 +35,6 @@ function DomainExtractor(input: string) -> string {
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

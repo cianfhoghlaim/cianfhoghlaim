@@ -1,8 +1,7 @@
 // BAML Schema for Tertiary Mathematics / Statistics Extraction
 //
 // Structured extraction for UoG (and any tertiary) math/stats artefacts:
-// formulas, theorems, statistical procedures, numerical methods,
-// nonlinear systems, assignment briefs, exam papers, worked solutions,
+// formulas, theorems, statistical procedures, numerical methods
 // student answer scripts, and academic-history snapshots.
 //
 // Companion to `author_archive.baml` (generic artefact extraction) and
@@ -572,8 +571,9 @@ class AcademicHistorySnapshot {
 function ExtractAcademicModuleSyllabus(
   pdf_text: string,
   module_code: string
-) -> AcademicModuleDescriptor {  client ExtractEn
-    prompt #"
+) -> AcademicModuleDescriptor {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -593,20 +593,17 @@ function ExtractAcademicModuleSyllabus(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    AcademicModuleDescriptor {}
-  }
 }
 
 function ExtractCourseworkArtifact(
   pdf_text: string,
   file_name: string,
   document_kind: DocumentKind
-) -> CourseworkArtifactExtraction {  client ExtractEn
-    prompt #"
+) -> CourseworkArtifactExtraction {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -626,20 +623,17 @@ function ExtractCourseworkArtifact(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    CourseworkArtifactExtraction {}
-  }
 }
 
 function ExtractTertiaryExamPaper(
   pdf_text: string,
   module_code: string,
   year: int
-) -> TertiaryExamPaper {  client ExtractEn
-    prompt #"
+) -> TertiaryExamPaper {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -659,21 +653,16 @@ function ExtractTertiaryExamPaper(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    TertiaryExamPaper {
-      confidence 0,
-    }
-  }
 }
 
 function ExtractAssignmentBrief(
   pdf_text: string,
   module_code: string
-) -> AssignmentBrief {  client ExtractEn
-    prompt #"
+) -> AssignmentBrief {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -693,21 +682,16 @@ function ExtractAssignmentBrief(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    AssignmentBrief {
-      confidence 0,
-    }
-  }
 }
 
 function ExtractStudentAnswerScript(
   pdf_text: string,
   assignment_id: string
-) -> StudentAnswerScript {  client ExtractEn
-    prompt #"
+) -> StudentAnswerScript {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -727,21 +711,16 @@ function ExtractStudentAnswerScript(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    StudentAnswerScript {
-      confidence 0,
-    }
-  }
 }
 
 function ExtractWorkedSolution(
   pdf_text: string,
   question_id: string
-) -> WorkedSolution {  client ExtractEn
-    prompt #"
+) -> WorkedSolution {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -761,20 +740,15 @@ function ExtractWorkedSolution(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    WorkedSolution {
-      confidence 0,
-    }
-  }
 }
 
 function ExtractFormulaRecords(
   pdf_text: string
-) -> FormulaRecord[] {  client ExtractEn
-    prompt #"
+) -> FormulaRecord[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -794,18 +768,15 @@ function ExtractFormulaRecords(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    FormulaRecord[] {}
-  }
 }
 
 function ExtractTheorems(
   pdf_text: string
-) -> TheoremRecord[] {  client ExtractEn
-    prompt #"
+) -> TheoremRecord[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -825,18 +796,15 @@ function ExtractTheorems(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    TheoremRecord[] {}
-  }
 }
 
 function ExtractStatisticalProcedureRecords(
   pdf_text: string
-) -> StatisticalProcedureRecord[] {  client ExtractEn
-    prompt #"
+) -> StatisticalProcedureRecord[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -856,18 +824,15 @@ function ExtractStatisticalProcedureRecords(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    StatisticalProcedureRecord[] {}
-  }
 }
 
 function ExtractNumericalMethodRecords(
   pdf_text: string
-) -> NumericalMethodRecord[] {  client ExtractEn
-    prompt #"
+) -> NumericalMethodRecord[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -887,18 +852,15 @@ function ExtractNumericalMethodRecords(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    NumericalMethodRecord[] {}
-  }
 }
 
 function ExtractNonlinearSystemRecords(
   pdf_text: string
-) -> NonlinearSystemRecord[] {  client ExtractEn
-    prompt #"
+) -> NonlinearSystemRecord[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -918,18 +880,15 @@ function ExtractNonlinearSystemRecords(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    NonlinearSystemRecord[] {}
-  }
 }
 
 function ExtractAcademicHistorySnapshot(
   history_json: string
-) -> AcademicHistorySnapshot {  client ExtractEn
-    prompt #"
+) -> AcademicHistorySnapshot {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
 
@@ -949,14 +908,8 @@ function ExtractAcademicHistorySnapshot(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    AcademicHistorySnapshot {
-      confidence 0,
-    }
-  }
 }
 
 // =============================================================================
@@ -970,12 +923,10 @@ function ExtractAcademicHistorySnapshot(
 //       ST311 — Probability and Statistics (University of Galway, 2024-25)
 //       ECTS: 5. Semester: 1. School of Mathematical and Statistical Sciences.
 // 
-//       Topics: random variables, expectation, joint distributions,
-//       limit theorems (LLN, CLT), MLE, UMVUE, hypothesis testing,
+//       Topics: random variables, expectation, joint distributions
 //       ANOVA, linear regression.
 // 
-//       Key theorems: Law of Large Numbers, Central Limit Theorem,
-//       Cramér-Rao bound, Neyman-Pearson lemma.
+//       Key theorems: Law of Large Numbers, Central Limit Theorem
 // 
 //       Assessment: 30% midterm test, 30% assignments, 40% final exam.
 //       Software: R.
@@ -991,8 +942,7 @@ function ExtractAcademicHistorySnapshot(
 //   functions [ExtractCourseworkArtifact]
 //   args {
 //     pdf_text #"
-//       ST311 Assignment 1. A one-sample t-test on exam scores: H0: mu = 50,
-//       sample mean = 53, n = 25, s = 4.2, t = (53 - 50) / (4.2 / sqrt(25)) = 3.57,
+//       ST311 Assignment 1. A one-sample t-test on exam scores: H0: mu = 50
 //       df = 24, p-value = 0.0016, alpha = 0.05. Reject H0. Effect size (Cohen's d) = 0.71.
 //       Shapiro-Wilk p on the sample = 0.31 (normality OK).
 //     "#
@@ -1072,8 +1022,7 @@ function ExtractAcademicHistorySnapshot(
 //   args {
 //     pdf_text #"
 //       Newton's iteration: x_{n+1} = x_n - f(x_n) / f'(x_n).
-//       Convergence: quadratic under standard assumptions (f' continuous,
-//       f'(x*) != 0).
+//       Convergence: quadratic under standard assumptions (f' continuous
 //       Bisection: requires f(a) * f(b) < 0. Linear convergence.
 //       Trapezoidal rule: T_n = (h/2) * (f(x_0) + 2 sum_{i=1..n-1} f(x_i) + f(x_n)).
 //     "#
@@ -1097,8 +1046,7 @@ function ExtractAcademicHistorySnapshot(
 //   args {
 //     pdf_text #"
 //       Two-sample t-test (independent samples, equal variances):
-//       t = (xbar1 - xbar2) / (s_p * sqrt(1/n1 + 1/n2)), df = n1 + n2 - 2,
-//       s_p^2 = ((n1-1) s1^2 + (n2-1) s2^2) / (n1 + n2 - 2).
+//       t = (xbar1 - xbar2) / (s_p * sqrt(1/n1 + 1/n2)), df = n1 + n2 - 2
 //       Result: t = 2.31, df = 38, p = 0.026, alpha = 0.05, reject H0.
 //       Cohen's d = 0.74.
 //     "#
@@ -1135,19 +1083,13 @@ function ExtractAcademicHistorySnapshot(
 //   args {
 //     history_json #"
 //       {
-//         "pseudonym_hash": "h:f1d3...",
-//         "modules": [
-//           {"module_code": "ST311", "status": "completed", "academic_year": "2024-25"},
-//           {"module_code": "ST312", "status": "in_progress", "academic_year": "2025-26"}
-//         ],
-//         "artefacts": [
-//           {"module_code": "ST311", "kind": "assignment", "confidence": 0.92},
-//           {"module_code": "ST311", "kind": "exam", "confidence": 0.85}
-//         ],
-//         "findings": [
+//         "pseudonym_hash": "h:f1d3..."
+//           {"module_code": "ST311", "status": "completed", "academic_year": "2024-25"}
+//         ]
+//           {"module_code": "ST311", "kind": "assignment", "confidence": 0.92}
+//         ]
 //           {"code": "PVALUE_ALPHA_INCONSISTENT", "severity": "ERROR", "count": 1}
-//         ],
-//         "last_active_iso": "2026-03-12T10:30:00Z"
+//         ]
 //       }
 //     "#
 //   }

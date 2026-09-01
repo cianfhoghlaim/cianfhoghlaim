@@ -38,14 +38,14 @@ class CircularExtraction {
   scheme MarkingSchemeSummary
   raw_text_excerpt string
   extraction_confidence float  // 0.0 - 1.0
-  @@stream.done
 }
 
 function ExtractCircularMeta(
   pdf_text: string,
-  filename: string,
-) -> CircularExtraction {  client ExtractEn
-    prompt #"
+  filename: string
+) -> CircularExtraction {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured metadata from an Irish government education circular.
 
@@ -65,15 +65,7 @@ function ExtractCircularMeta(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    CircularExtraction {
-      circular circularreference {},
-      scheme markingschemesummary {},
-      raw_text_excerpt "",
-      extraction_confidence 0,
-    }
-  }
 }

@@ -16,8 +16,9 @@ function ExtractDenmarkHealthGuidance(
   nation: string,
   language: string,
   text: string
-) -> DenmarkHealthGuidance {  client ExtractEn
-    prompt #"
+) -> DenmarkHealthGuidance {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -25,15 +26,6 @@ function ExtractDenmarkHealthGuidance(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    DenmarkHealthGuidance {
-      title "",
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
 }

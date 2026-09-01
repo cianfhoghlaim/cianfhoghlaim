@@ -29,14 +29,14 @@ class CultureHeritageClaim {
   evidence_quality EvidenceQuality @description("PRIMARY (a birth cert, a memorial, a verified public record) | SECONDARY (newspaper, biography, Wikipedia) | INFERENCE (analytical interpretation or synthesis).")
   wikipedia_links string[] @description("Direct https://en.wikipedia.org/wiki/... URLs cited or implied in the claim.")
   confidence float @description("0.0-1.0 self-rated extraction confidence. Claims with confidence < 0.6 are routed to low_confidence_review.")
-  @@stream.done
 }
 
 function ExtractCultureClaims(
   pdf_path: string,
   context: string
-) -> CultureHeritageClaim[] {  client ExtractEn
-    prompt #"
+) -> CultureHeritageClaim[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -44,10 +44,6 @@ function ExtractCultureClaims(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    CultureHeritageClaim[] {}
-  }
 }

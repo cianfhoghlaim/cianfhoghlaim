@@ -16,10 +16,8 @@
 //
 // Usage:
 //   from cianfhoghlaim.baml_client import b
-//   plan = b.WebStudyPlan(subject="english", weeks_until_exam=12,
-//                        target_level="LC_HL", language="en")
-//   discussion = b.WebExamPaperDiscussion(subject="english", paper_year=2024,
-//                                        paper_level="LC_HL", paper_language="en",
+//   plan = b.WebStudyPlan(subject="english", weeks_until_exam=12
+//   discussion = b.WebExamPaperDiscussion(subject="english", paper_year=2024
 //                                        question_text="...")
 //
 // Re-gen after changes:  cd cianfhoghlaim && uv run baml-cli generate
@@ -128,8 +126,9 @@ function EnglishWebStudyPlan(
   target_level: EnglishLevel,
   language: EnglishLanguage,
   focus_topics: string[]
-) -> EnglishWebStudyPlanResponse {  client ExtractEn
-    prompt #"
+) -> EnglishWebStudyPlanResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -137,7 +136,7 @@ function EnglishWebStudyPlan(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -147,8 +146,9 @@ function EnglishWebExamPaperDiscussion(
   paper_level: EnglishLevel,
   paper_language: EnglishLanguage,
   question_text: string
-) -> EnglishWebExamPaperDiscussionResponse {  client ExtractEn
-    prompt #"
+) -> EnglishWebExamPaperDiscussionResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -156,7 +156,7 @@ function EnglishWebExamPaperDiscussion(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -165,8 +165,9 @@ function EnglishWebMarkingSchemeExplanation(
   paper_year: int,
   paper_level: EnglishLevel,
   paper_language: EnglishLanguage
-) -> EnglishWebMarkingSchemeExplanationResponse {  client ExtractEn
-    prompt #"
+) -> EnglishWebMarkingSchemeExplanationResponse {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -174,6 +175,6 @@ function EnglishWebMarkingSchemeExplanation(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }

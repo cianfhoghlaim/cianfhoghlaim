@@ -8,7 +8,7 @@
 //
 // Re-gen:  cd cianfhoghlaim && uv run baml-cli generate
 
-// Reuse the canonical `MarkingBand` + `GradeDescriptor` + `MarkAllocation`
+// Reuse the canonical `MarkingBand` + `LCGradeDescriptor` + `LCMarkAllocation`
 // classes from the BIEP v1 marking-scheme schema. Reference these by their
 // bare class names (BAML 0.222+ resolves cross-file imports via the
 // import statement below).
@@ -59,8 +59,8 @@ class ComputerScienceMarkingScheme {
   year int
   source_pdf string
 
-  grade_descriptors GradeDescriptor[]
-  mark_allocations MarkAllocation[]
+  grade_descriptors LCGradeDescriptor[]
+  mark_allocations LCMarkAllocation[]
 
   subject_specific CsSubjectDiscriminator
 
@@ -72,9 +72,10 @@ class ComputerScienceMarkingScheme {
 function ExtractComputerScienceMarkingScheme(
   pdf_text: string,
   year: int?,
-  level: string?,
-) -> ComputerScienceMarkingScheme {  client ExtractEn
-    prompt #"
+  level: string?
+) -> ComputerScienceMarkingScheme {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -82,21 +83,9 @@ function ExtractComputerScienceMarkingScheme(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    ComputerScienceMarkingScheme {
-      scheme_code "",
-      year 0,
-      source_pdf "",
-      grade_descriptors null,
-      mark_allocations null,
-      subject_specific cssubjectdiscriminator {},
-      total_marks 0,
-      total_questions 0,
-    }
-  }
 }
 
 // test computer_science_marking_extraction_smoke {

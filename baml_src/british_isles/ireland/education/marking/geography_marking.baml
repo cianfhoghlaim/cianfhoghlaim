@@ -3,8 +3,7 @@
 // Per-subject extension of the canonical `MarkingScheme` class in
 // `baml_src/education/lc_extraction/marking_scheme.baml`. Adds the
 // Geography-specific discriminator (GeoSkillType + GeoRegionalFocus +
-// GeoCommonMistake). LC Geography mixes short-answer factual recall,
-// OS-map interpretation, and discursive essays on regional / thematic
+// GeoCommonMistake). LC Geography mixes short-answer factual recall
 // topics.
 //
 // Re-gen:  cd cianfhoghlaim && uv run baml-cli generate
@@ -53,8 +52,8 @@ class GeographyMarkingScheme {
   year int
   source_pdf string
 
-  grade_descriptors GradeDescriptor[]
-  mark_allocations MarkAllocation[]
+  grade_descriptors LCGradeDescriptor[]
+  mark_allocations LCMarkAllocation[]
 
   subject_specific GeoSubjectDiscriminator
 
@@ -66,9 +65,10 @@ class GeographyMarkingScheme {
 function ExtractGeographyMarkingScheme(
   pdf_text: string,
   year: int?,
-  level: string?,
-) -> GeographyMarkingScheme {  client ExtractEn
-    prompt #"
+  level: string?
+) -> GeographyMarkingScheme {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -76,21 +76,9 @@ function ExtractGeographyMarkingScheme(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    GeographyMarkingScheme {
-      scheme_code "",
-      year 0,
-      source_pdf "",
-      grade_descriptors null,
-      mark_allocations null,
-      subject_specific geosubjectdiscriminator {},
-      total_marks 0,
-      total_questions 0,
-    }
-  }
 }
 
 // test geography_marking_extraction_smoke {

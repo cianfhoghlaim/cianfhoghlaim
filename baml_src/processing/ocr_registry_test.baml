@@ -16,13 +16,15 @@ function GetOptimalForM4() -> OCRModelV4 {
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
-function SelectOCRBackend(pdf_path: string) -> OCRBackendV4 {
+function SelectOCRBackend(
+  pdf_path: string
+) -> OCRBackendV4 {
   client ExtractEn
-    prompt #"
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -30,7 +32,7 @@ function SelectOCRBackend(pdf_path: string) -> OCRBackendV4 {
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 

@@ -58,7 +58,6 @@ class PrimaryLearningOutcome {
   key_competencies CompetencyLink[]
   action_verbs string[]      @description("e.g., 'investigate', 'analyse', 'create'")
   cross_curricular_links string[] @description("Other primary areas this outcome links to")
-  @@stream.done
 }
 
 class PrimaryStrand {
@@ -79,17 +78,19 @@ class PrimaryCurriculumArea {
   source_url string
   document_year int
   language string          @description("en | ga | bilingual")
-  @@stream.done
 }
 
 // -----------------------------------------------------------------------------
 // Functions
 // -----------------------------------------------------------------------------
 
-function ExtractPrimaryFramework(text: string,
+function ExtractPrimaryFramework(
+  text: string,
   stage: PrimaryStage,
-  area: PrimaryAreaCode) -> PrimaryCurriculumArea {  client ExtractEn
-    prompt #"
+  area: PrimaryAreaCode
+) -> PrimaryCurriculumArea {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -97,26 +98,19 @@ function ExtractPrimaryFramework(text: string,
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    PrimaryCurriculumArea {
-      name primaryareacode {},
-      rationale "",
-      rationale_ga null,
-      strands null,
-      source_url "",
-      document_year 0,
-    }
-  }
 }
 
 
-function ExtractPrimaryLearningOutcomes(text: string,
+function ExtractPrimaryLearningOutcomes(
+  text: string,
   stage: PrimaryStage,
-  area: PrimaryAreaCode) -> PrimaryLearningOutcome[] {  client ExtractEn
-    prompt #"
+  area: PrimaryAreaCode
+) -> PrimaryLearningOutcome[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -124,19 +118,18 @@ function ExtractPrimaryLearningOutcomes(text: string,
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    PrimaryLearningOutcome[] {}
-  }
 }
 
 
-function ExtractPrimaryFrameworkFromUrl(source_url: string,
+function ExtractPrimaryFrameworkFromUrl(
+  source_url: string,
   stage: PrimaryStage,
-  area: PrimaryAreaCode) -> PrimaryCurriculumArea {  client ExtractEn
-    prompt #"
+  area: PrimaryAreaCode
+) -> PrimaryCurriculumArea {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -144,19 +137,9 @@ function ExtractPrimaryFrameworkFromUrl(source_url: string,
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    PrimaryCurriculumArea {
-      name primaryareacode {},
-      rationale "",
-      rationale_ga null,
-      strands null,
-      source_url "",
-      document_year 0,
-    }
-  }
 }
 
 // -----------------------------------------------------------------------------

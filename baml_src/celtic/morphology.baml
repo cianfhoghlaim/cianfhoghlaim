@@ -75,7 +75,6 @@ class VerbConjugation {
   imperative_2pl string? @description("2nd person plural imperative")
   imperative_3pl string? @description("3rd person plural imperative")
   imperative_auto string? @description("Autonomous imperative")
-  @@stream.done
 }
 
 // ============================================================================
@@ -113,7 +112,6 @@ class NounDeclension {
   // Notes
   plural_type string? @description("How plural is formed: strong, weak, irregular")
   notes string? @description("Special notes about this noun")
-  @@stream.done
 }
 
 // ============================================================================
@@ -145,7 +143,7 @@ function ExtractVerbConjugation(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -162,7 +160,7 @@ function ExtractNounDeclension(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -180,7 +178,7 @@ function IdentifyMorphologicalClass(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -197,7 +195,7 @@ function CompareAdjective(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -234,8 +232,9 @@ function ExtractCelticMorphology(
   text: string,
   language: CelticLanguageCurriculum,
   word_class_hint: string?
-) -> CelticMorphologySpec[] {  client ExtractEn
-    prompt #"
+) -> CelticMorphologySpec[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -243,10 +242,6 @@ function ExtractCelticMorphology(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    CelticMorphologySpec[] {}
-  }
 }

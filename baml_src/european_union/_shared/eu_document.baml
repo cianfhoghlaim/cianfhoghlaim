@@ -43,14 +43,14 @@ class EUDocument {
   source_url string @description("Canonical source URL")
   content_hash string? @description("Hash of the document body for change detection")
   multilingual_text EUMultilingualText? @description("Cross-language metadata when the document carries translations")
-  @@stream.done
 }
 
 function ExtractEUDocument(
   language: EULanguage,
   text: string
-) -> EUDocument {  client ExtractEn
-    prompt #"
+) -> EUDocument {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -58,12 +58,8 @@ function ExtractEUDocument(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    EUDocument {}
-  }
 }
 
 
@@ -93,8 +89,9 @@ function ExtractEUDocumentBilingualEnGa(
   institution: EUInstitution,
   language: EULanguage,
   text: string
-) -> EUExtractableBilingualDocument {  client ExtractEn
-    prompt #"
+) -> EUExtractableBilingualDocument {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -102,20 +99,7 @@ function ExtractEUDocumentBilingualEnGa(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    EUExtractableBilingualDocument {
-      url "",
-      institution euinstitution {},
-      language eulanguage {},
-      celex_id null,
-      title bilingualtextenga {},
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
 }

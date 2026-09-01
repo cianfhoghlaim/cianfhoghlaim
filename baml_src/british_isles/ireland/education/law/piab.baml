@@ -34,14 +34,14 @@ class PIABPage {
   statutory_basis        StatuteReference[]              @description("Statutes referenced (e.g. Personal Injuries Assessment Board Act 2003)")
   summary                string                          @description("2-3 sentence summary of the page")
   extraction_confidence  float                           @description("0.0-1.0 — the model's confidence in the extraction")
-  @@stream.done
 }
 
 function ExtractPIABPage(
   page_url: string,
-  page_html: string,
-) -> PIABPage {  client ExtractEn
-    prompt #"
+  page_html: string
+) -> PIABPage {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -49,14 +49,7 @@ function ExtractPIABPage(
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 
-  catch_all (err) {
-    PIABPage {
-      url "",
-      title "",
-      page_kind piabpagekind {},
-    }
-  }
 }

@@ -144,8 +144,11 @@ class Notebook {
   difficulty string
 }
 
-function GetSubjectList(language: string) -> Subject[] {  client ExtractEn
-    prompt #"
+function GetSubjectList(
+  language: string
+) -> Subject[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -153,12 +156,17 @@ function GetSubjectList(language: string) -> Subject[] {  client ExtractEn
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
-function GetPastPapers(subject: string, year_from: int, year_to: int) -> PastPaperStorage[] {  client ExtractEn
-    prompt #"
+function GetPastPapers(
+  subject: string,
+  year_from: int,
+  year_to: int
+) -> PastPaperStorage[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -166,12 +174,17 @@ function GetPastPapers(subject: string, year_from: int, year_to: int) -> PastPap
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
-function GetMarkingSchemes(subject: string, year_from: int, year_to: int) -> MarkingSchemeShared[] {  client ExtractEn
-    prompt #"
+function GetMarkingSchemes(
+  subject: string,
+  year_from: int,
+  year_to: int
+) -> MarkingSchemeShared[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -179,12 +192,16 @@ function GetMarkingSchemes(subject: string, year_from: int, year_to: int) -> Mar
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
-function GetPracticeItems(subject: string, lo_code: string) -> PracticeItem[] {  client ExtractEn
-    prompt #"
+function GetPracticeItems(
+  subject: string,
+  lo_code: string
+) -> PracticeItem[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -192,7 +209,7 @@ function GetPracticeItems(subject: string, lo_code: string) -> PracticeItem[] { 
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -205,12 +222,15 @@ function GetFoundations() -> Foundation[] {  client ExtractEn
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
-function GetNotebooks(subject: string) -> Notebook[] {  client ExtractEn
-    prompt #"
+function GetNotebooks(
+  subject: string
+) -> Notebook[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -218,7 +238,7 @@ function GetNotebooks(subject: string) -> Notebook[] {  client ExtractEn
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
 }
 
@@ -236,8 +256,11 @@ function GetNotebooks(subject: string) -> Notebook[] {  client ExtractEn
 // from the v0.223.0 / 5-tangent bump).
 
 /// Bilingual EN+GA text extractor; returns the canonical BilingualText shape.
-function ExtractBilingualText(content: string) -> BilingualText {  client ExtractEn
-    prompt #"
+function ExtractBilingualText(
+  content: string
+) -> BilingualText {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -245,17 +268,16 @@ function ExtractBilingualText(content: string) -> BilingualText {  client Extrac
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    BilingualText {}
-  }
 }
 
 /// NCCA strand/outcome extractor; returns the GA-canonical statement list.
-function ExtractStrandGaStatement(paragraph: string) -> string[] {  client ExtractEn
-    prompt #"
+function ExtractStrandGaStatement(
+  paragraph: string
+) -> string[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -263,10 +285,6 @@ function ExtractStrandGaStatement(paragraph: string) -> string[] {  client Extra
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    string[] {}
-  }
 }

@@ -12,15 +12,15 @@
 //             spec.md § media-intel-acquisition-plan Requirement 5
 
 class OfficialDocumentType {
-  syllabus                // NCCA / SEC / SQA / WJEC / DESC curriculum spec
-  exam_paper              // SEC / examinations.ie / Pearson / AQA / OCR
-  marking_scheme          // NCCA / SEC / SQA / WJEC / DESC marking scheme
-  research_pdf            // NCCA / DES research PDFs (formative assessment, certificate, online learning)
-  census                  // CSO / NISRA / ONS census tables
-  boundary                 // OSi / Tailte Éireann / Ordnance Survey / Met Éireann / Met Office boundary files
-  wiki                    // Wikipedia article
-  celt_text               // CELT (UCC) Corpus of Electronic Texts
-  duchas_text             // Dúchas / Gaois (Goidelic + Brythonic surface)
+  syllabus string                // NCCA / SEC / SQA / WJEC / DESC curriculum spec
+  exam_paper string              // SEC / examinations.ie / Pearson / AQA / OCR
+  marking_scheme string          // NCCA / SEC / SQA / WJEC / DESC marking scheme
+  research_pdf string            // NCCA / DES research PDFs (formative assessment, certificate, online learning)
+  census string                  // CSO / NISRA / ONS census tables
+  boundary string                 // OSi / Tailte Éireann / Ordnance Survey / Met Éireann / Met Office boundary files
+  wiki string                    // Wikipedia article
+  celt_text string               // CELT (UCC) Corpus of Electronic Texts
+  duchas_text string             // Dúchas / Gaois (Goidelic + Brythonic surface)
 }
 
 class OfficialPowerEvent {
@@ -107,7 +107,7 @@ function ExtractOfficialDocumentDescriptor(
   source_timestamp: string,
   work: string,
   language: string,
-  evidence: string,
+  evidence: string
 ) -> OfficialDocumentMediaDescriptor {
   client MediaIntelPrimary
   prompt #"

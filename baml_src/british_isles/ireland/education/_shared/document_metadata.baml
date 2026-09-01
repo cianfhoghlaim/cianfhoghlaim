@@ -13,12 +13,14 @@ class DocumentMetadata {
   year_examined int? @description("Extracted from phrases like \"examination to 2028\"")
   language string? @description("en or ga")
   url string @description("The exact URL to the PDF")
-  @@stream.done
 }
 
-function ExtractAllPdfMetadata(page_markdown: string,
-  pdf_urls: string[]) -> DocumentMetadata[] {  client ExtractEn
-    prompt #"
+function ExtractAllPdfMetadata(
+  page_markdown: string,
+  pdf_urls: string[]
+) -> DocumentMetadata[] {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -26,12 +28,8 @@ function ExtractAllPdfMetadata(page_markdown: string,
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    DocumentMetadata[] {}
-  }
 }
 
 
@@ -50,11 +48,13 @@ class CurriculumExtraction {
   year int @description("Syllabus year")
   topics CurriculumTopic[]
   totalSuggestedHours int
-  @@stream.done
 }
 
-function ExtractCurriculumExtraction(pdf_text: string) -> CurriculumExtraction {  client ExtractEn
-    prompt #"
+function ExtractCurriculumExtraction(
+  pdf_text: string
+) -> CurriculumExtraction {
+  client ExtractEn
+  prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
     in the return type according to the @description decorators on the
@@ -62,14 +62,6 @@ function ExtractCurriculumExtraction(pdf_text: string) -> CurriculumExtraction {
 
     {{ ctx.output_format }}
 
-    {{ input }}
+    {{ text }}
   "#
-
-  catch_all (err) {
-    CurriculumExtraction {
-      subject "",
-      topics null,
-      totalSuggestedHours 0,
-    }
-  }
 }
