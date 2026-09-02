@@ -748,6 +748,9 @@ type_map = {
     "types.EMAMedicine": types.EMAMedicine,
     "stream_types.EMAMedicine": stream_types.EMAMedicine,
 
+    "types.ENSubjectSpec": types.ENSubjectSpec,
+    "stream_types.ENSubjectSpec": stream_types.ENSubjectSpec,
+
     "types.EUDocument": types.EUDocument,
     "stream_types.EUDocument": stream_types.EUDocument,
 
@@ -1060,6 +1063,9 @@ type_map = {
     "types.GaelSubjectDiscriminator": types.GaelSubjectDiscriminator,
     "stream_types.GaelSubjectDiscriminator": stream_types.GaelSubjectDiscriminator,
 
+    "types.GaeltachtOverlay": types.GaeltachtOverlay,
+    "stream_types.GaeltachtOverlay": stream_types.GaeltachtOverlay,
+
     "types.GameGenre": types.GameGenre,
     "stream_types.GameGenre": stream_types.GameGenre,
 
@@ -1278,6 +1284,9 @@ type_map = {
 
     "types.HybridProfile": types.HybridProfile,
     "stream_types.HybridProfile": stream_types.HybridProfile,
+
+    "types.IMSubjectSpec": types.IMSubjectSpec,
+    "stream_types.IMSubjectSpec": stream_types.IMSubjectSpec,
 
     "types.ITTerm": types.ITTerm,
     "stream_types.ITTerm": stream_types.ITTerm,
@@ -1630,6 +1639,9 @@ type_map = {
     "types.MaltaSubjectCurriculum": types.MaltaSubjectCurriculum,
     "stream_types.MaltaSubjectCurriculum": stream_types.MaltaSubjectCurriculum,
 
+    "types.ManxOverlay": types.ManxOverlay,
+    "stream_types.ManxOverlay": stream_types.ManxOverlay,
+
     "types.MarkingAnnotation": types.MarkingAnnotation,
     "stream_types.MarkingAnnotation": stream_types.MarkingAnnotation,
 
@@ -1812,6 +1824,9 @@ type_map = {
 
     "types.NCCAPolicyCriteria": types.NCCAPolicyCriteria,
     "stream_types.NCCAPolicyCriteria": stream_types.NCCAPolicyCriteria,
+
+    "types.NISubjectSpec": types.NISubjectSpec,
+    "stream_types.NISubjectSpec": stream_types.NISubjectSpec,
 
     "types.NPC": types.NPC,
     "stream_types.NPC": stream_types.NPC,
@@ -2224,6 +2239,9 @@ type_map = {
     "types.RubricScore": types.RubricScore,
     "stream_types.RubricScore": stream_types.RubricScore,
 
+    "types.SCSubjectSpec": types.SCSubjectSpec,
+    "stream_types.SCSubjectSpec": stream_types.SCSubjectSpec,
+
     "types.SOLASCourse": types.SOLASCourse,
     "stream_types.SOLASCourse": stream_types.SOLASCourse,
 
@@ -2250,6 +2268,9 @@ type_map = {
 
     "types.ScotlandTopic": types.ScotlandTopic,
     "stream_types.ScotlandTopic": stream_types.ScotlandTopic,
+
+    "types.ScottishGaelicOverlay": types.ScottishGaelicOverlay,
+    "stream_types.ScottishGaelicOverlay": stream_types.ScottishGaelicOverlay,
 
     "types.ScrapingSession": types.ScrapingSession,
     "stream_types.ScrapingSession": stream_types.ScrapingSession,
@@ -2734,6 +2755,9 @@ type_map = {
     "types.VolumeSummary": types.VolumeSummary,
     "stream_types.VolumeSummary": stream_types.VolumeSummary,
 
+    "types.WLSubjectSpec": types.WLSubjectSpec,
+    "stream_types.WLSubjectSpec": stream_types.WLSubjectSpec,
+
     "types.WalesAssessmentObjective": types.WalesAssessmentObjective,
     "stream_types.WalesAssessmentObjective": stream_types.WalesAssessmentObjective,
 
@@ -2751,6 +2775,9 @@ type_map = {
 
     "types.WalesTopic": types.WalesTopic,
     "stream_types.WalesTopic": stream_types.WalesTopic,
+
+    "types.WelshMediumOverlay": types.WelshMediumOverlay,
+    "stream_types.WelshMediumOverlay": stream_types.WelshMediumOverlay,
 
     "types.WheelOfTimeMediaDescriptor": types.WheelOfTimeMediaDescriptor,
     "stream_types.WheelOfTimeMediaDescriptor": stream_types.WheelOfTimeMediaDescriptor,
@@ -2959,6 +2986,12 @@ type_map = {
 
     "types.DuchasCollection": types.DuchasCollection,
 
+    "types.ENAwardDescriptor": types.ENAwardDescriptor,
+
+    "types.ENKeyCompetency": types.ENKeyCompetency,
+
+    "types.ENStage": types.ENStage,
+
     "types.EQFLevel": types.EQFLevel,
 
     "types.EUInstitution": types.EUInstitution,
@@ -3091,6 +3124,12 @@ type_map = {
 
     "types.HistoryQuestionType": types.HistoryQuestionType,
 
+    "types.IMAwardDescriptor": types.IMAwardDescriptor,
+
+    "types.IMKeyCompetency": types.IMKeyCompetency,
+
+    "types.IMStage": types.IMStage,
+
     "types.ImagePurpose": types.ImagePurpose,
 
     "types.InferenceProcedure": types.InferenceProcedure,
@@ -3221,6 +3260,12 @@ type_map = {
 
     "types.NFQLevel": types.NFQLevel,
 
+    "types.NIAwardDescriptor": types.NIAwardDescriptor,
+
+    "types.NIKeyCompetency": types.NIKeyCompetency,
+
+    "types.NIStage": types.NIStage,
+
     "types.Nation": types.Nation,
 
     "types.NationEducationLevel": types.NationEducationLevel,
@@ -3317,9 +3362,15 @@ type_map = {
 
     "types.RubricStyle": types.RubricStyle,
 
+    "types.SCAwardDescriptor": types.SCAwardDescriptor,
+
+    "types.SCKeyCompetency": types.SCKeyCompetency,
+
     "types.SCQFLevel": types.SCQFLevel,
 
     "types.SCQFSubject": types.SCQFSubject,
+
+    "types.SCStage": types.SCStage,
 
     "types.SOLASPath": types.SOLASPath,
 
@@ -3396,5 +3447,11 @@ type_map = {
     "types.WJECLevel": types.WJECLevel,
 
     "types.WJECSubject": types.WJECSubject,
+
+    "types.WLAwardDescriptor": types.WLAwardDescriptor,
+
+    "types.WLKeyCompetency": types.WLKeyCompetency,
+
+    "types.WLStage": types.WLStage,
 
 }

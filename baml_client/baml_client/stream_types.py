@@ -23,7 +23,7 @@ class StreamState(BaseModel, typing.Generic[StreamStateValueT]):
     value: StreamStateValueT
     state: typing_extensions.Literal["Pending", "Incomplete", "Complete"]
 # #########################################################################
-# Generated classes (924)
+# Generated classes (933)
 # #########################################################################
 
 class ALevelAreaTopic(BaseModel):
@@ -2363,6 +2363,21 @@ class EMAMedicine(BaseModel):
     source_url: typing.Optional[str] = None
     content_hash: typing.Optional[str] = None
 
+class ENSubjectSpec(BaseModel):
+    stage: typing.Optional[types.ENStage] = None
+    subject_slug: typing.Optional[str] = None
+    display_name: typing.Optional[str] = None
+    display_name_ga: typing.Optional[str] = None
+    display_name_local: typing.Optional[str] = None
+    award_descriptor: typing.Optional[types.ENAwardDescriptor] = None
+    descriptor_vocabulary: typing.List[types.ENAwardDescriptor]
+    key_competencies: typing.List[types.ENKeyCompetency]
+    source_pdf: typing.Optional[str] = None
+    source_url: typing.Optional[str] = None
+    language: typing.Optional[str] = None
+    year: typing.Optional[int] = None
+    page: typing.Optional[int] = None
+
 class EUDocument(BaseModel):
     document_id: typing.Optional[str] = Field(default=None, description='The institution-specific document id (CELEX, case id, dataset id, publication id, ...)')
     institution: typing.Optional[types.EUInstitution] = Field(default=None, description='The EU institution that published the document')
@@ -3384,6 +3399,10 @@ class GaelSubjectDiscriminator(BaseModel):
     most_common_mistake: typing.Optional[types.GaelCommonMistake] = None
     text_ga_primary: typing.Optional[bool] = Field(default=None, description='Always true — primary content is in Irish')
 
+class GaeltachtOverlay(BaseModel):
+    gaeltacht_school: typing.Optional[bool] = None
+    irish_medium_stream: typing.Optional[bool] = None
+
 class GameGenre(BaseModel):
     rogue_like: typing.Optional[str] = None
     mmorpg: typing.Optional[str] = None
@@ -4069,6 +4088,21 @@ class HybridProfile(BaseModel):
     creativeWorks: typing.List["Project"] = Field(description='Other creative works')
     socialLinks: typing.List["SocialLink"] = Field(description='All social/platform links')
     languages: typing.List[str] = Field(description='Languages spoken')
+
+class IMSubjectSpec(BaseModel):
+    stage: typing.Optional[types.IMStage] = None
+    subject_slug: typing.Optional[str] = None
+    display_name: typing.Optional[str] = None
+    display_name_ga: typing.Optional[str] = None
+    display_name_local: typing.Optional[str] = None
+    award_descriptor: typing.Optional[types.IMAwardDescriptor] = None
+    descriptor_vocabulary: typing.List[types.IMAwardDescriptor]
+    key_competencies: typing.List[types.IMKeyCompetency]
+    source_pdf: typing.Optional[str] = None
+    source_url: typing.Optional[str] = None
+    language: typing.Optional[str] = None
+    year: typing.Optional[int] = None
+    page: typing.Optional[int] = None
 
 class ITTerm(BaseModel):
     term_id: typing.Optional[int] = Field(default=None, description='Tearma ID')
@@ -5186,6 +5220,10 @@ class MaltaSubjectCurriculum(BaseModel):
     source_url: typing.Optional[str] = None
     content_hash: typing.Optional[str] = None
 
+class ManxOverlay(BaseModel):
+    manx_medium: typing.Optional[bool] = None
+    bunscoill_gaelgagh: typing.Optional[bool] = None
+
 class MarkingAnnotation(BaseModel):
     annotation: typing.Optional[str] = Field(default=None, description='e.g. \'M1\', \'A1\', \'B2\', \'E1\', \'R\', \'FT\'')
     description_en: typing.Optional[str] = Field(default=None, description='English description')
@@ -5756,6 +5794,21 @@ class NCCAPolicyCriteria(BaseModel):
     descriptor_vocabulary: typing.List[types.NCCAAwardDescriptor]
     key_competencies: typing.List[types.NCCAKeyCompetency]
     policy_citations: typing.List["CertificationCitation"]
+
+class NISubjectSpec(BaseModel):
+    stage: typing.Optional[types.NIStage] = None
+    subject_slug: typing.Optional[str] = None
+    display_name: typing.Optional[str] = None
+    display_name_ga: typing.Optional[str] = None
+    display_name_local: typing.Optional[str] = None
+    award_descriptor: typing.Optional[types.NIAwardDescriptor] = None
+    descriptor_vocabulary: typing.List[types.NIAwardDescriptor]
+    key_competencies: typing.List[types.NIKeyCompetency]
+    source_pdf: typing.Optional[str] = None
+    source_url: typing.Optional[str] = None
+    language: typing.Optional[str] = None
+    year: typing.Optional[int] = None
+    page: typing.Optional[int] = None
 
 class NPC(BaseModel):
     id: typing.Optional[str] = None
@@ -7105,6 +7158,21 @@ class RubricScore(BaseModel):
     reviewer_notes_en: typing.Optional[str] = None
     reviewer_notes_ga: typing.Optional[str] = None
 
+class SCSubjectSpec(BaseModel):
+    stage: typing.Optional[types.SCStage] = None
+    subject_slug: typing.Optional[str] = None
+    display_name: typing.Optional[str] = None
+    display_name_ga: typing.Optional[str] = None
+    display_name_local: typing.Optional[str] = None
+    award_descriptor: typing.Optional[types.SCAwardDescriptor] = None
+    descriptor_vocabulary: typing.List[types.SCAwardDescriptor]
+    key_competencies: typing.List[types.SCKeyCompetency]
+    source_pdf: typing.Optional[str] = None
+    source_url: typing.Optional[str] = None
+    language: typing.Optional[str] = None
+    year: typing.Optional[int] = None
+    page: typing.Optional[int] = None
+
 class SOLASCourse(BaseModel):
     course_code: typing.Optional[str] = Field(default=None, description='SOLAS / fetchcourses.ie course code, e.g. \'PLC-DIT-CS-2025\'')
     etb_slug: typing.Optional[str] = Field(default=None, description='The 16 ETBs slug, e.g. \'cavan-monaghan\', \'city-of-dublin\', \'galway-roscommon\'')
@@ -7200,6 +7268,10 @@ class ScotlandTopic(BaseModel):
     strand: typing.Optional[str] = Field(default=None, description='The topic strand (e.g. \'Algebra\', \'Calculus\', \'Cell Biology\')')
     learning_outcomes: typing.List[str]
     weighting_pct: typing.Optional[int] = None
+
+class ScottishGaelicOverlay(BaseModel):
+    gaelic_medium: typing.Optional[bool] = None
+    cfe_gaelic: typing.Optional[bool] = None
 
 class ScrapingSession(BaseModel):
     session_id: typing.Optional[str] = Field(default=None, description='Unique session identifier')
@@ -8787,6 +8859,21 @@ class VolumeSummary(BaseModel):
     townlands_mentioned: typing.List[str] = Field(description='Townlands referenced in stories')
     neighboring_schools: typing.Optional[typing.List[str]] = Field(default=None, description='Related school volumes')
 
+class WLSubjectSpec(BaseModel):
+    stage: typing.Optional[types.WLStage] = None
+    subject_slug: typing.Optional[str] = None
+    display_name: typing.Optional[str] = None
+    display_name_ga: typing.Optional[str] = None
+    display_name_local: typing.Optional[str] = None
+    award_descriptor: typing.Optional[types.WLAwardDescriptor] = None
+    descriptor_vocabulary: typing.List[types.WLAwardDescriptor]
+    key_competencies: typing.List[types.WLKeyCompetency]
+    source_pdf: typing.Optional[str] = None
+    source_url: typing.Optional[str] = None
+    language: typing.Optional[str] = None
+    year: typing.Optional[int] = None
+    page: typing.Optional[int] = None
+
 class WalesAssessmentObjective(BaseModel):
     ao_id: typing.Optional[str] = None
     ao_label: typing.Optional[str] = None
@@ -8850,6 +8937,10 @@ class WalesTopic(BaseModel):
     strand: typing.Optional[str] = Field(default=None, description='e.g. \'Algebra\', \'Calculus\', \'Cell Biology\'')
     learning_outcomes: typing.List[str]
     weighting_pct: typing.Optional[int] = None
+
+class WelshMediumOverlay(BaseModel):
+    welsh_medium: typing.Optional[bool] = None
+    school_language: typing.Optional[str] = None
 
 class WheelOfTimeMediaDescriptor(BaseModel):
     work: typing.Optional[str] = None
@@ -9015,7 +9106,7 @@ TopicExtraction: typing_extensions.TypeAlias = typing.Optional["LCTopicExtractio
 
 
 # #########################################################################
-# Model rebuilds (918)
+# Model rebuilds (927)
 # #########################################################################
 # Resolve string forward references now that every model above is defined so
 # class declaration order never breaks Pydantic construction (issue #793).
@@ -9265,6 +9356,7 @@ DuchasTranscriptionLine.model_rebuild()
 DuchasXMLRecord.model_rebuild()
 ECDCSurveillance.model_rebuild()
 EMAMedicine.model_rebuild()
+ENSubjectSpec.model_rebuild()
 EUDocument.model_rebuild()
 EUExtractableBilingualDocument.model_rebuild()
 EUMultilingualText.model_rebuild()
@@ -9364,6 +9456,7 @@ GaeilgeWebExamPaperDiscussionResponse.model_rebuild()
 GaeilgeWebMarkingSchemeExplanationResponse.model_rebuild()
 GaeilgeWebStudyPlanResponse.model_rebuild()
 GaelSubjectDiscriminator.model_rebuild()
+GaeltachtOverlay.model_rebuild()
 GameGenre.model_rebuild()
 GameItem.model_rebuild()
 GameLocation.model_rebuild()
@@ -9437,6 +9530,7 @@ HungaryHealthGuidance.model_rebuild()
 HungaryStatute.model_rebuild()
 HungarySubjectCurriculum.model_rebuild()
 HybridProfile.model_rebuild()
+IMSubjectSpec.model_rebuild()
 ITTerm.model_rebuild()
 IcelandHealthGuidance.model_rebuild()
 IcelandStatute.model_rebuild()
@@ -9554,6 +9648,7 @@ LuxembourgSubjectCurriculum.model_rebuild()
 MaltaHealthGuidance.model_rebuild()
 MaltaStatute.model_rebuild()
 MaltaSubjectCurriculum.model_rebuild()
+ManxOverlay.model_rebuild()
 MarkingAnnotation.model_rebuild()
 MarkingBandDescriptor.model_rebuild()
 MarkingCriteria.model_rebuild()
@@ -9615,6 +9710,7 @@ MythologicalLocation.model_rebuild()
 MythologicalStory.model_rebuild()
 NCCAKeyCompetencyRootPdf.model_rebuild()
 NCCAPolicyCriteria.model_rebuild()
+NISubjectSpec.model_rebuild()
 NPC.model_rebuild()
 NPCDialogue.model_rebuild()
 NPCGreeting.model_rebuild()
@@ -9752,6 +9848,7 @@ RomaniaStatute.model_rebuild()
 RomaniaSubjectCurriculum.model_rebuild()
 RubricDescriptor.model_rebuild()
 RubricScore.model_rebuild()
+SCSubjectSpec.model_rebuild()
 SOLASCourse.model_rebuild()
 SamildanachOfLugh.model_rebuild()
 ScaleTier.model_rebuild()
@@ -9761,6 +9858,7 @@ ScotlandLawDocument.model_rebuild()
 ScotlandMedicineDocument.model_rebuild()
 ScotlandSyllabusSpec.model_rebuild()
 ScotlandTopic.model_rebuild()
+ScottishGaelicOverlay.model_rebuild()
 ScrapingSession.model_rebuild()
 ScriptStep.model_rebuild()
 SearchFilter.model_rebuild()
@@ -9921,12 +10019,14 @@ VocabularyNotePlayer.model_rebuild()
 VocabularyProgress.model_rebuild()
 VocabularySet.model_rebuild()
 VolumeSummary.model_rebuild()
+WLSubjectSpec.model_rebuild()
 WalesAssessmentObjective.model_rebuild()
 WalesEducationDocument.model_rebuild()
 WalesLawDocument.model_rebuild()
 WalesMedicineDocument.model_rebuild()
 WalesSyllabusSpec.model_rebuild()
 WalesTopic.model_rebuild()
+WelshMediumOverlay.model_rebuild()
 WheelOfTimeMediaDescriptor.model_rebuild()
 WheelOfTimeNarrativeBeat.model_rebuild()
 WheelOfTimePowerEvent.model_rebuild()

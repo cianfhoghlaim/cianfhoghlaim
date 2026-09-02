@@ -37,7 +37,7 @@ def get_checks(checks: typing.Dict[CheckName, Check]) -> typing.List[Check]:
 def all_succeeded(checks: typing.Dict[CheckName, Check]) -> bool:
     return all(check.status == "succeeded" for check in get_checks(checks))
 # #########################################################################
-# Generated enums (304)
+# Generated enums (319)
 # #########################################################################
 
 class ALevelAQASubject(str, Enum):
@@ -982,6 +982,27 @@ class DuchasCollection(str, Enum):
     CBEG = "CBEG"
     CBED = "CBED"
 
+class ENAwardDescriptor(str, Enum):
+    EXCEPTIONAL = "EXCEPTIONAL"
+    ABOVE_EXPECTATIONS = "ABOVE_EXPECTATIONS"
+    IN_LINE_WITH_EXPECTATIONS = "IN_LINE_WITH_EXPECTATIONS"
+    BELOW_EXPECTATIONS = "BELOW_EXPECTATIONS"
+    FAR_BELOW_EXPECTATIONS = "FAR_BELOW_EXPECTATIONS"
+
+class ENKeyCompetency(str, Enum):
+    COMMUNICATING = "COMMUNICATING"
+    INFORMATION_PROCESSING = "INFORMATION_PROCESSING"
+    CRITICAL_AND_CREATIVE_THINKING = "CRITICAL_AND_CREATIVE_THINKING"
+    PERSONAL_EFFECTIVENESS = "PERSONAL_EFFECTIVENESS"
+    WORKING_WITH_OTHERS = "WORKING_WITH_OTHERS"
+
+class ENStage(str, Enum):
+    AISTEAR = "AISTEAR"
+    PRIMARY = "PRIMARY"
+    JUNIOR_CYCLE = "JUNIOR_CYCLE"
+    LEAVING_CERT = "LEAVING_CERT"
+    UNIVERSITY = "UNIVERSITY"
+
 class EQFLevel(str, Enum):
     EQF_3 = "EQF_3"
     EQF_4 = "EQF_4"
@@ -1695,6 +1716,27 @@ class HistoryQuestionType(str, Enum):
     DATA_ANALYSIS = "DATA_ANALYSIS"
     ESSAY = "ESSAY"
     DIAGRAM_BASED = "DIAGRAM_BASED"
+
+class IMAwardDescriptor(str, Enum):
+    EXCEPTIONAL = "EXCEPTIONAL"
+    ABOVE_EXPECTATIONS = "ABOVE_EXPECTATIONS"
+    IN_LINE_WITH_EXPECTATIONS = "IN_LINE_WITH_EXPECTATIONS"
+    BELOW_EXPECTATIONS = "BELOW_EXPECTATIONS"
+    FAR_BELOW_EXPECTATIONS = "FAR_BELOW_EXPECTATIONS"
+
+class IMKeyCompetency(str, Enum):
+    COMMUNICATING = "COMMUNICATING"
+    INFORMATION_PROCESSING = "INFORMATION_PROCESSING"
+    CRITICAL_AND_CREATIVE_THINKING = "CRITICAL_AND_CREATIVE_THINKING"
+    PERSONAL_EFFECTIVENESS = "PERSONAL_EFFECTIVENESS"
+    WORKING_WITH_OTHERS = "WORKING_WITH_OTHERS"
+
+class IMStage(str, Enum):
+    AISTEAR = "AISTEAR"
+    PRIMARY = "PRIMARY"
+    JUNIOR_CYCLE = "JUNIOR_CYCLE"
+    LEAVING_CERT = "LEAVING_CERT"
+    UNIVERSITY = "UNIVERSITY"
 
 class ImagePurpose(str, Enum):
     STUDY_CARD = "STUDY_CARD"
@@ -2453,6 +2495,27 @@ class NFQLevel(str, Enum):
     NFQ_9 = "NFQ_9"
     NFQ_10 = "NFQ_10"
 
+class NIAwardDescriptor(str, Enum):
+    EXCEPTIONAL = "EXCEPTIONAL"
+    ABOVE_EXPECTATIONS = "ABOVE_EXPECTATIONS"
+    IN_LINE_WITH_EXPECTATIONS = "IN_LINE_WITH_EXPECTATIONS"
+    BELOW_EXPECTATIONS = "BELOW_EXPECTATIONS"
+    FAR_BELOW_EXPECTATIONS = "FAR_BELOW_EXPECTATIONS"
+
+class NIKeyCompetency(str, Enum):
+    COMMUNICATING = "COMMUNICATING"
+    INFORMATION_PROCESSING = "INFORMATION_PROCESSING"
+    CRITICAL_AND_CREATIVE_THINKING = "CRITICAL_AND_CREATIVE_THINKING"
+    PERSONAL_EFFECTIVENESS = "PERSONAL_EFFECTIVENESS"
+    WORKING_WITH_OTHERS = "WORKING_WITH_OTHERS"
+
+class NIStage(str, Enum):
+    AISTEAR = "AISTEAR"
+    PRIMARY = "PRIMARY"
+    JUNIOR_CYCLE = "JUNIOR_CYCLE"
+    LEAVING_CERT = "LEAVING_CERT"
+    UNIVERSITY = "UNIVERSITY"
+
 class Nation(str, Enum):
     IRELAND = "IRELAND"
     ENGLAND = "ENGLAND"
@@ -2950,6 +3013,20 @@ class RubricStyle(str, Enum):
     RUBRIC_PCLM_IRISH = "RUBRIC_PCLM_IRISH"
     LINGUISTIC_PRINCIPLES = "LINGUISTIC_PRINCIPLES"
 
+class SCAwardDescriptor(str, Enum):
+    EXCEPTIONAL = "EXCEPTIONAL"
+    ABOVE_EXPECTATIONS = "ABOVE_EXPECTATIONS"
+    IN_LINE_WITH_EXPECTATIONS = "IN_LINE_WITH_EXPECTATIONS"
+    BELOW_EXPECTATIONS = "BELOW_EXPECTATIONS"
+    FAR_BELOW_EXPECTATIONS = "FAR_BELOW_EXPECTATIONS"
+
+class SCKeyCompetency(str, Enum):
+    COMMUNICATING = "COMMUNICATING"
+    INFORMATION_PROCESSING = "INFORMATION_PROCESSING"
+    CRITICAL_AND_CREATIVE_THINKING = "CRITICAL_AND_CREATIVE_THINKING"
+    PERSONAL_EFFECTIVENESS = "PERSONAL_EFFECTIVENESS"
+    WORKING_WITH_OTHERS = "WORKING_WITH_OTHERS"
+
 class SCQFLevel(str, Enum):
     NATIONAL_5 = "NATIONAL_5"
     HIGHER = "HIGHER"
@@ -3000,6 +3077,13 @@ class SCQFSubject(str, Enum):
     EARLY_YEARS_AND_CHILDCARE = "EARLY_YEARS_AND_CHILDCARE"
     CHILD_CARE_AND_DEVELOPMENT = "CHILD_CARE_AND_DEVELOPMENT"
     OTHER = "OTHER"
+
+class SCStage(str, Enum):
+    AISTEAR = "AISTEAR"
+    PRIMARY = "PRIMARY"
+    JUNIOR_CYCLE = "JUNIOR_CYCLE"
+    LEAVING_CERT = "LEAVING_CERT"
+    UNIVERSITY = "UNIVERSITY"
 
 class SOLASPath(str, Enum):
     PLC = "PLC"
@@ -3429,8 +3513,29 @@ class WJECSubject(str, Enum):
     TEXTILES = "TEXTILES"
     OTHER = "OTHER"
 
+class WLAwardDescriptor(str, Enum):
+    EXCEPTIONAL = "EXCEPTIONAL"
+    ABOVE_EXPECTATIONS = "ABOVE_EXPECTATIONS"
+    IN_LINE_WITH_EXPECTATIONS = "IN_LINE_WITH_EXPECTATIONS"
+    BELOW_EXPECTATIONS = "BELOW_EXPECTATIONS"
+    FAR_BELOW_EXPECTATIONS = "FAR_BELOW_EXPECTATIONS"
+
+class WLKeyCompetency(str, Enum):
+    COMMUNICATING = "COMMUNICATING"
+    INFORMATION_PROCESSING = "INFORMATION_PROCESSING"
+    CRITICAL_AND_CREATIVE_THINKING = "CRITICAL_AND_CREATIVE_THINKING"
+    PERSONAL_EFFECTIVENESS = "PERSONAL_EFFECTIVENESS"
+    WORKING_WITH_OTHERS = "WORKING_WITH_OTHERS"
+
+class WLStage(str, Enum):
+    AISTEAR = "AISTEAR"
+    PRIMARY = "PRIMARY"
+    JUNIOR_CYCLE = "JUNIOR_CYCLE"
+    LEAVING_CERT = "LEAVING_CERT"
+    UNIVERSITY = "UNIVERSITY"
+
 # #########################################################################
-# Generated classes (924)
+# Generated classes (933)
 # #########################################################################
 
 class ALevelAreaTopic(BaseModel):
@@ -5770,6 +5875,21 @@ class EMAMedicine(BaseModel):
     source_url: str
     content_hash: typing.Optional[str] = None
 
+class ENSubjectSpec(BaseModel):
+    stage: ENStage
+    subject_slug: str
+    display_name: str
+    display_name_ga: str
+    display_name_local: str
+    award_descriptor: ENAwardDescriptor
+    descriptor_vocabulary: typing.List[ENAwardDescriptor]
+    key_competencies: typing.List[ENKeyCompetency]
+    source_pdf: str
+    source_url: str
+    language: str
+    year: int
+    page: int
+
 class EUDocument(BaseModel):
     document_id: str = Field(description='The institution-specific document id (CELEX, case id, dataset id, publication id, ...)')
     institution: EUInstitution = Field(description='The EU institution that published the document')
@@ -6791,6 +6911,10 @@ class GaelSubjectDiscriminator(BaseModel):
     most_common_mistake: GaelCommonMistake
     text_ga_primary: bool = Field(description='Always true — primary content is in Irish')
 
+class GaeltachtOverlay(BaseModel):
+    gaeltacht_school: bool
+    irish_medium_stream: bool
+
 class GameGenre(BaseModel):
     rogue_like: str
     mmorpg: str
@@ -7476,6 +7600,21 @@ class HybridProfile(BaseModel):
     creativeWorks: typing.List["Project"] = Field(description='Other creative works')
     socialLinks: typing.List["SocialLink"] = Field(description='All social/platform links')
     languages: typing.List[str] = Field(description='Languages spoken')
+
+class IMSubjectSpec(BaseModel):
+    stage: IMStage
+    subject_slug: str
+    display_name: str
+    display_name_ga: str
+    display_name_local: str
+    award_descriptor: IMAwardDescriptor
+    descriptor_vocabulary: typing.List[IMAwardDescriptor]
+    key_competencies: typing.List[IMKeyCompetency]
+    source_pdf: str
+    source_url: str
+    language: str
+    year: int
+    page: int
 
 class ITTerm(BaseModel):
     term_id: int = Field(description='Tearma ID')
@@ -8593,6 +8732,10 @@ class MaltaSubjectCurriculum(BaseModel):
     source_url: str
     content_hash: typing.Optional[str] = None
 
+class ManxOverlay(BaseModel):
+    manx_medium: bool
+    bunscoill_gaelgagh: bool
+
 class MarkingAnnotation(BaseModel):
     annotation: str = Field(description='e.g. \'M1\', \'A1\', \'B2\', \'E1\', \'R\', \'FT\'')
     description_en: str = Field(description='English description')
@@ -9163,6 +9306,21 @@ class NCCAPolicyCriteria(BaseModel):
     descriptor_vocabulary: typing.List[NCCAAwardDescriptor]
     key_competencies: typing.List[NCCAKeyCompetency]
     policy_citations: typing.List["CertificationCitation"]
+
+class NISubjectSpec(BaseModel):
+    stage: NIStage
+    subject_slug: str
+    display_name: str
+    display_name_ga: str
+    display_name_local: str
+    award_descriptor: NIAwardDescriptor
+    descriptor_vocabulary: typing.List[NIAwardDescriptor]
+    key_competencies: typing.List[NIKeyCompetency]
+    source_pdf: str
+    source_url: str
+    language: str
+    year: int
+    page: int
 
 class NPC(BaseModel):
     id: str
@@ -10512,6 +10670,21 @@ class RubricScore(BaseModel):
     reviewer_notes_en: str
     reviewer_notes_ga: typing.Optional[str] = None
 
+class SCSubjectSpec(BaseModel):
+    stage: SCStage
+    subject_slug: str
+    display_name: str
+    display_name_ga: str
+    display_name_local: str
+    award_descriptor: SCAwardDescriptor
+    descriptor_vocabulary: typing.List[SCAwardDescriptor]
+    key_competencies: typing.List[SCKeyCompetency]
+    source_pdf: str
+    source_url: str
+    language: str
+    year: int
+    page: int
+
 class SOLASCourse(BaseModel):
     course_code: str = Field(description='SOLAS / fetchcourses.ie course code, e.g. \'PLC-DIT-CS-2025\'')
     etb_slug: str = Field(description='The 16 ETBs slug, e.g. \'cavan-monaghan\', \'city-of-dublin\', \'galway-roscommon\'')
@@ -10607,6 +10780,10 @@ class ScotlandTopic(BaseModel):
     strand: str = Field(description='The topic strand (e.g. \'Algebra\', \'Calculus\', \'Cell Biology\')')
     learning_outcomes: typing.List[str]
     weighting_pct: int
+
+class ScottishGaelicOverlay(BaseModel):
+    gaelic_medium: bool
+    cfe_gaelic: bool
 
 class ScrapingSession(BaseModel):
     session_id: str = Field(description='Unique session identifier')
@@ -12194,6 +12371,21 @@ class VolumeSummary(BaseModel):
     townlands_mentioned: typing.List[str] = Field(description='Townlands referenced in stories')
     neighboring_schools: typing.Optional[typing.List[str]] = Field(default=None, description='Related school volumes')
 
+class WLSubjectSpec(BaseModel):
+    stage: WLStage
+    subject_slug: str
+    display_name: str
+    display_name_ga: str
+    display_name_local: str
+    award_descriptor: WLAwardDescriptor
+    descriptor_vocabulary: typing.List[WLAwardDescriptor]
+    key_competencies: typing.List[WLKeyCompetency]
+    source_pdf: str
+    source_url: str
+    language: str
+    year: int
+    page: int
+
 class WalesAssessmentObjective(BaseModel):
     ao_id: str
     ao_label: str
@@ -12257,6 +12449,10 @@ class WalesTopic(BaseModel):
     strand: str = Field(description='e.g. \'Algebra\', \'Calculus\', \'Cell Biology\'')
     learning_outcomes: typing.List[str]
     weighting_pct: int
+
+class WelshMediumOverlay(BaseModel):
+    welsh_medium: bool
+    school_language: str
 
 class WheelOfTimeMediaDescriptor(BaseModel):
     work: str
@@ -12422,7 +12618,7 @@ TopicExtraction: typing_extensions.TypeAlias = "LCTopicExtraction"
 
 
 # #########################################################################
-# Model rebuilds (918)
+# Model rebuilds (927)
 # #########################################################################
 # Resolve string forward references now that every model above is defined so
 # class declaration order never breaks Pydantic construction (issue #793).
@@ -12672,6 +12868,7 @@ DuchasTranscriptionLine.model_rebuild()
 DuchasXMLRecord.model_rebuild()
 ECDCSurveillance.model_rebuild()
 EMAMedicine.model_rebuild()
+ENSubjectSpec.model_rebuild()
 EUDocument.model_rebuild()
 EUExtractableBilingualDocument.model_rebuild()
 EUMultilingualText.model_rebuild()
@@ -12771,6 +12968,7 @@ GaeilgeWebExamPaperDiscussionResponse.model_rebuild()
 GaeilgeWebMarkingSchemeExplanationResponse.model_rebuild()
 GaeilgeWebStudyPlanResponse.model_rebuild()
 GaelSubjectDiscriminator.model_rebuild()
+GaeltachtOverlay.model_rebuild()
 GameGenre.model_rebuild()
 GameItem.model_rebuild()
 GameLocation.model_rebuild()
@@ -12844,6 +13042,7 @@ HungaryHealthGuidance.model_rebuild()
 HungaryStatute.model_rebuild()
 HungarySubjectCurriculum.model_rebuild()
 HybridProfile.model_rebuild()
+IMSubjectSpec.model_rebuild()
 ITTerm.model_rebuild()
 IcelandHealthGuidance.model_rebuild()
 IcelandStatute.model_rebuild()
@@ -12961,6 +13160,7 @@ LuxembourgSubjectCurriculum.model_rebuild()
 MaltaHealthGuidance.model_rebuild()
 MaltaStatute.model_rebuild()
 MaltaSubjectCurriculum.model_rebuild()
+ManxOverlay.model_rebuild()
 MarkingAnnotation.model_rebuild()
 MarkingBandDescriptor.model_rebuild()
 MarkingCriteria.model_rebuild()
@@ -13022,6 +13222,7 @@ MythologicalLocation.model_rebuild()
 MythologicalStory.model_rebuild()
 NCCAKeyCompetencyRootPdf.model_rebuild()
 NCCAPolicyCriteria.model_rebuild()
+NISubjectSpec.model_rebuild()
 NPC.model_rebuild()
 NPCDialogue.model_rebuild()
 NPCGreeting.model_rebuild()
@@ -13159,6 +13360,7 @@ RomaniaStatute.model_rebuild()
 RomaniaSubjectCurriculum.model_rebuild()
 RubricDescriptor.model_rebuild()
 RubricScore.model_rebuild()
+SCSubjectSpec.model_rebuild()
 SOLASCourse.model_rebuild()
 SamildanachOfLugh.model_rebuild()
 ScaleTier.model_rebuild()
@@ -13168,6 +13370,7 @@ ScotlandLawDocument.model_rebuild()
 ScotlandMedicineDocument.model_rebuild()
 ScotlandSyllabusSpec.model_rebuild()
 ScotlandTopic.model_rebuild()
+ScottishGaelicOverlay.model_rebuild()
 ScrapingSession.model_rebuild()
 ScriptStep.model_rebuild()
 SearchFilter.model_rebuild()
@@ -13328,12 +13531,14 @@ VocabularyNotePlayer.model_rebuild()
 VocabularyProgress.model_rebuild()
 VocabularySet.model_rebuild()
 VolumeSummary.model_rebuild()
+WLSubjectSpec.model_rebuild()
 WalesAssessmentObjective.model_rebuild()
 WalesEducationDocument.model_rebuild()
 WalesLawDocument.model_rebuild()
 WalesMedicineDocument.model_rebuild()
 WalesSyllabusSpec.model_rebuild()
 WalesTopic.model_rebuild()
+WelshMediumOverlay.model_rebuild()
 WheelOfTimeMediaDescriptor.model_rebuild()
 WheelOfTimeNarrativeBeat.model_rebuild()
 WheelOfTimePowerEvent.model_rebuild()
