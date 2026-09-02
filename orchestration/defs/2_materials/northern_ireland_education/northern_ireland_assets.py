@@ -5,6 +5,14 @@ Per the 2026-07-30-biep-v3-sct-wls-ni-v1 change +
 
 70 NI cohorts (35 CCEA subjects × 2 qualification levels × 1 language).
 
+Phase 11 (the 2026-09-XX-orchestration-integration-v1 change) replaces
+the prior ``getattr(b, baml_fn_name, None)`` fallback with the canonical
+``b.ExtractNorthernIrelandSubjectSpec(...)`` invocation defined in
+``baml_src/british_isles/ni/education/ni_extraction.baml``. The Irish
+(``ga``) Gaeltacht vernacular overlay (defined as ``GaeltachtOverlay``
+in the same BAML file) is available for Gaeltacht schools in
+Northern Ireland.
+
 YEARLY automation (1st September 00:00 UTC) per the BIEP v3 scheduling.
 """
 import logging
@@ -22,6 +30,18 @@ try:
 except ImportError:
     BAML_AVAILABLE = False
     b = None  # type: ignore[assignment]
+
+
+def _get_jurisdiction_extractor():
+    """Lazy-importer for the shared Phase 11 helper. See the matching
+    helper in `wales_assets.py` for why this can't be a module-level
+    import.
+    """
+    import importlib
+    return importlib.import_module(
+        "orchestration.defs.2_materials._base.jurisdiction_baml_extractor"
+    )
+
 
 logger = logging.getLogger(__name__)
 
@@ -68,24 +88,50 @@ def northern_ireland_documents_ingested(context: AssetExecutionContext) -> dict[
 
 @asset(
     group_name=NORTHERN_IRELAND_EXTRACTION_GROUP,
-    description="Generic NI BAML extraction (BIEP v3).",
+    description=(
+        "Generic NI BAML extraction (BIEP v3). "
+        "Phase 11: invokes b.ExtractNorthernIrelandSubjectSpec for each "
+        "cohort's canonical PDF (vs the prior getattr fallback)."
+    ),
     automation_condition=make_yearly_education_automation(),
 )
 def northern_ireland_extractions(context: AssetExecutionContext) -> dict[str, Any]:
+    """Phase 11: invoke canonical ``b.ExtractNorthernIrelandSubjectSpec``.
+
+    Replaces the Phase 9 ``getattr(b, baml_fn_name, None)`` fallback.
+    """
     if not BAML_AVAILABLE:
-        return {"rows_extracted": 0, "ragas_scores": {}}
+        return {"rows_extracted": 0, "ragas_scores": {}, "convex_written": 0}
     from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
     subjects = query_by_jurisdiction("northern_ireland")
     counts: dict[str, int] = {}
     ragas_scores: dict[str, float] = {}
+    convex_written = 0
+    _extractor_module = _get_jurisdiction_extractor()
     for row in subjects:
-        baml_fn_name = row.baml_function.removeprefix("b.")
-        fn = getattr(b, baml_fn_name, None)
-        if fn is None:
+        result = _extractor_module.invoke_jurisdiction_extractor(
+            jurisdiction="northern_ireland",
+            pdf_path=getattr(row, "source_url", "") or "",
+            subject_slug=row.subject_slug,
+            source_url=getattr(row, "source_url", None),
+            stage="LEAVING_CERT",
+        )
+        if not result["extracted"]:
+            context.log.warning(
+                "northern_ireland_extractions: %s — %s",
+                row.subject_slug, result.get("reason"),
+            )
             continue
         counts[row.subject_slug] = counts.get(row.subject_slug, 0) + 1
         ragas_scores[row.subject_slug] = 0.85
-    return {"rows_extracted": sum(counts.values()), "ragas_scores": ragas_scores, "counts": counts}
+        if result["convex_written"]:
+            convex_written += 1
+    return {
+        "rows_extracted": sum(counts.values()),
+        "ragas_scores": ragas_scores,
+        "counts": counts,
+        "convex_written": convex_written,
+    }
 
 
 @asset(

@@ -444,6 +444,72 @@ export const audio_segments = defineTable({
   .index("by_oral_study_plan", ["oral_study_plan_id"])
   .index("by_tts_provider", ["tts_provider"]);
 
+// ─── 13. vernacular_documents (Phase 14 — the 7 British Isles vernaculars) ────
+//
+// Per the 2026-09-01-cianfhoghlaim-nua-v7-vernaculars-pipelines-v1
+// change (Phase 14 of the cianfhoghlaim-nua v6 era plan). One row per
+// BAML-extracted ``VernacularSubjectSpec`` across the 7 British
+// Isles vernacular languages (beyond the canonical EN + GA pair):
+//
+//   1. Welsh             (CY)     — Wales
+//   2. Scottish Gaelic   (GD)     — Scotland
+//   3. Manx              (GV)     — Isle of Man
+//   4. Breton            (BR)     — Brittany / sister-repo lift
+//   5. Cornish           (KW)     — Cornwall / sister-repo lift
+//   6. Jersey French     (FR_JE)  — Jersey
+//   7. Guernsey French   (FR_GG)  — Guernsey
+//
+// Note: ``ulster_scots`` is not its own BAML function; it shares the
+// ExtractUlsterScotsSubjectSpec function and is grouped under the
+// ``ni`` (Northern Ireland) jurisdiction code.
+
+export const vernacular_documents = defineTable({
+  // The 7 British Isles vernacular slugs:
+  //   "welsh" | "scottish_gaelic" | "manx" | "breton" | "cornish"
+  //   | "jersey_french" | "guernsey_french"
+  // (Plus "ulster_scots" for the shared Northern Ireland jurisdiction.)
+  vernacular: v.union(
+    v.literal("welsh"),
+    v.literal("scottish_gaelic"),
+    v.literal("manx"),
+    v.literal("breton"),
+    v.literal("cornish"),
+    v.literal("jersey_french"),
+    v.literal("guernsey_french"),
+    v.literal("ulster_scots"),
+  ),
+  // The jurisdiction code (WL/SC/IM/JE/GG/BR/KW/CORN/NI)
+  jurisdiction: v.string(),
+  // The subject slug (mathematics / chemistry / etc.)
+  subject_slug: v.string(),
+  // The qualification stage (gcse / a_level / higher / lycee / etc.)
+  stage: v.string(),
+  // Three canonical display names — bilingual by design:
+  display_name: v.string(),         // in the vernacular
+  display_name_en: v.string(),      // English translation
+  display_name_ga: v.string(),      // Irish (Gaeilge) translation
+  // Source:
+  source_pdf: v.string(),           // URL or R2 key of the source PDF
+  source_url: v.optional(v.string()),
+  // Award descriptor (e.g. "GCSE", "Higher", "Leaving Certificate")
+  award_descriptor: v.optional(v.string()),
+  // Year + page metadata:
+  year: v.optional(v.number()),
+  page: v.optional(v.number()),
+  // Provenance:
+  baml_function: v.string(),        // "ExtractWelshSubjectSpec", etc.
+  dlt_source: v.string(),           // "dlt_sources.education.wales.british_isles.welsh_vernacular"
+  cocoindex_app: v.string(),        // "vernacular_welsh_embedding"
+  dagster_asset: v.string(),        // "welsh_vernacular_extractions"
+  // Phase 14 spec said "indexed by" — we have these three indexes:
+  created_at: v.number(),
+})
+  .index("by_vernacular", ["vernacular"])
+  .index("by_jurisdiction", ["jurisdiction"])
+  .index("by_subject", ["subject_slug"])
+  .index("by_vernacular_jurisdiction", ["vernacular", "jurisdiction"])
+  .index("by_vernacular_subject", ["vernacular", "subject_slug"]);
+
 export default defineSchema({
   users,
   agents,
@@ -458,4 +524,5 @@ export default defineSchema({
   oral_study_plans,
   formative_attempts,
   audio_segments,
+  vernacular_documents,
 });

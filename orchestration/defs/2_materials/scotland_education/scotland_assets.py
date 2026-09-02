@@ -8,6 +8,14 @@ The canonical generic Scotland Dagster assets. Reads from the canonical
 British Isles subject registry and materialises the 150 Scotland
 cohorts (50 SCQF subjects × 3 qualification levels × 1 language).
 
+Phase 11 (the 2026-09-XX-orchestration-integration-v1 change) replaces
+the prior ``getattr(b, baml_fn_name, None)`` fallback with the canonical
+``b.ExtractScotlandSubjectSpec(...)`` invocation defined in
+``baml_src/british_isles/sc/education/sc_extraction.baml``. The
+Scottish Gaelic (``gd``) vernacular overlay (defined as
+``ScottishGaelicOverlay`` in the same BAML file) is available for
+Scottish Gaelic-medium schools.
+
 The 3 generic assets + 3 asset checks + 50 per-subject backfill jobs
 follow the same pattern as the Ireland + England assets
 (per the 2026-08-13 systematic download change).
@@ -43,6 +51,18 @@ try:
 except ImportError:
     BAML_AVAILABLE = False
     b = None  # type: ignore[assignment]
+
+
+def _get_jurisdiction_extractor():
+    """Lazy-importer for the shared Phase 11 helper. See the matching
+    helper in `wales_assets.py` for why this can't be a module-level
+    import (the ``2_materials`` path has a leading digit).
+    """
+    import importlib
+    return importlib.import_module(
+        "orchestration.defs.2_materials._base.jurisdiction_baml_extractor"
+    )
+
 
 try:
     from meaisinfhoghlaim.ocr.ensemble.ensembled_extractor import EnsembledExtractor
@@ -115,41 +135,62 @@ def scotland_documents_ingested(context: AssetExecutionContext) -> dict[str, Any
     group_name=SCOTLAND_EXTRACTION_GROUP,
     description=(
         "Generic Scotland BAML extraction (BIEP v3). "
-        "For each cohort in the registry, invokes the registry's "
-        "`baml_function` field (e.g. b.ExtractScotlandSyllabus). "
+        "Phase 11: invokes b.ExtractScotlandSubjectSpec for each cohort's "
+        "canonical PDF (vs the prior getattr fallback). "
         "Triggers YEARLY (1st September 00:00 UTC)."
     ),
     automation_condition=make_yearly_education_automation(),
 )
 def scotland_extractions(context: AssetExecutionContext) -> dict[str, Any]:
-    """Layer 2 — BAML extraction for all Scotland cohorts."""
+    """Layer 2 — BAML extraction for all Scotland cohorts.
+
+    Phase 11 replaces the Phase 9 ``getattr(b, baml_fn_name, None)``
+    fallback with the canonical ``b.ExtractScotlandSubjectSpec(...)``
+    invocation (defined in
+    ``baml_src/british_isles/sc/education/sc_extraction.baml``). The
+    BAML call is wrapped in ``invoke_jurisdiction_extractor`` which
+    (a) reads the canonical PDF via pypdf, (b) invokes the function,
+    (c) materialises the result to Convex's ``scotland_subject_specs``
+    table.
+    """
     if not BAML_AVAILABLE:
         context.log.warning("BAML not available; returning stub")
-        return {"rows_extracted": 0, "ragas_scores": {}}
+        return {"rows_extracted": 0, "ragas_scores": {}, "convex_written": 0}
 
     from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
 
     subjects = query_by_jurisdiction("scotland")
     counts: dict[str, int] = {}
     ragas_scores: dict[str, float] = {}
+    convex_written = 0
+    _extractor_module = _get_jurisdiction_extractor()
     for row in subjects:
-        baml_fn_name = row.baml_function.removeprefix("b.")
-        fn = getattr(b, baml_fn_name, None)
-        if fn is None:
+        result = _extractor_module.invoke_jurisdiction_extractor(
+            jurisdiction="scotland",
+            pdf_path=getattr(row, "source_url", "") or "",
+            subject_slug=row.subject_slug,
+            source_url=getattr(row, "source_url", None),
+            stage="LEAVING_CERT",
+        )
+        if not result["extracted"]:
             context.log.warning(
-                "scotland_extractions: BAML function %r not found for %r",
-                baml_fn_name, row.subject_slug,
+                "scotland_extractions: %s — %s",
+                row.subject_slug, result.get("reason"),
             )
             continue
         counts[row.subject_slug] = counts.get(row.subject_slug, 0) + 1
         ragas_scores[row.subject_slug] = 0.85
+        if result["convex_written"]:
+            convex_written += 1
     context.log.info(
-        "scotland_extractions: %d subjects processed", len(counts)
+        "scotland_extractions: %d subjects processed, %d convex-written",
+        len(counts), convex_written,
     )
     return {
         "rows_extracted": sum(counts.values()),
         "ragas_scores": ragas_scores,
         "counts": counts,
+        "convex_written": convex_written,
     }
 
 
