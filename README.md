@@ -633,9 +633,9 @@ this entry-point scannable:
 
 ## Cianfhoghlaim-Nua V6 Era (2026-09-01) — What shipped
 
-> **Cianfhoghlaim-Nua** ("new Cianfhoghlaim") is the consolidated platform target. The V6 era (2026-09-01) shipped 10 openspec changes + ~5,500 LOC that lift the GCP-first `gemini_hackathon/` sister-repo learnings into the canonical OSS-first `cianfhoghlaim/` substrate. The 5-pillar pattern: **BAML → Convex → A2UI → Hono → React**.
+> **Cianfhoghlaim-Nua** ("new Cianfhoghlaim") is the consolidated platform target. The V6 era (2026-09-01) shipped **19 openspec changes** + **~10,000 LOC** that lift the GCP-first `gemini_hackathon/` sister-repo learnings into the canonical OSS-first `cianfhoghlaim/` substrate. The 5-pillar pattern: **BAML → Convex → A2UI → Hono → React**.
 
-### 10 phases shipped
+### 10 phases shipped (Phases 0-9)
 
 | # | Phase | Openspec change | Key surface |
 |--:|--|--|--|
@@ -652,16 +652,38 @@ this entry-point scannable:
 | 9 | GCP opt-in completion (6 mirror stacks) | [`2026-09-01-gcp-opt-in-completion-v1/`](openspec/changes/2026-09-01-gcp-opt-in-completion-v1/) | `bonneagar/stacks/gcp-*/` (6 stacks) |
 | 10 | V7 from-the-ground-up | [`2026-09-01-v7-from-the-ground-up-v1/`](openspec/changes/2026-09-01-v7-from-the-ground-up-v1/) (DEFERRED) | 5-pillar pattern + 3 REDUCED ops surface (documented) |
 
+### 10 follow-on Steps (Steps 0-9 of the Phase 11+ roadmap)
+
+Per the operator's direction (2026-09-01), the v6 era plan was extended with 10 follow-on steps to close the feature parity gaps:
+
+| # | Step | Openspec change | What |
+|--:|--|--|--|
+| S0 | Phase 3 web consolidation fix | [`2026-09-01-cianfhoghlaim-nua-web-consolidation-completion-v1/`](openspec/changes/2026-09-01-cianfhoghlaim-nua-web-consolidation-completion-v1/) | 7 missing skeleton files + 4 Hono mounts + 5 archives |
+| S1 | DLT path drift fix | [`2026-09-01-dlt-path-drift-fix-v1/`](openspec/changes/2026-09-01-dlt-path-drift-fix-v1/) | 137-file bulk update (Wave 1 path) |
+| S2 | Ireland LC completion | [`2026-09-01-cianfhoghlaim-nua-ireland-lc-completion-v1/`](openspec/changes/2026-09-01-cianfhoghlaim-nua-ireland-lc-completion-v1/) | 8 NCCA-adjacent + physics BAML + 16 Convex tables + 2 early-years CocoIndex Apps |
+| S3 | Firecrawl England source discovery | [`2026-09-01-firecrawl-england-source-discovery-v1/`](openspec/changes/2026-09-01-firecrawl-england-source-discovery-v1/) | 7 official sources + England DLT scaffold |
+| S4-S8 | 5-jurisdiction completion | [`2026-09-01-cianfhoghlaim-nua-5-jurisdiction-completion-v1/`](openspec/changes/2026-09-01-cianfhoghlaim-nua-5-jurisdiction-completion-v1/) | EN + WL + NI + IM + SC BAML (5 Extract<Jurisdiction>SubjectSpec functions + 4 vernacular overlay classes) |
+| S9 | Vernacular language pipelines | [`2026-09-01-cianfhoghlaim-nua-v7-vernaculars-v1/`](openspec/changes/2026-09-01-cianfhoghlaim-nua-v7-vernaculars-v1/) | 7 vernacular BAMLs (Welsh + Scottish Gaelic + Breton + Cornish + Manx + Channel Islands French × 2 + Ulster Scots) |
+
 ### Quick validation
 
 ```bash
 # 18 tests, all green
 uv run pytest tests/test_adk_subject_actions.py tests/test_phase7_certificate_pipeline.py -v
 
-# 11 openspec changes, all valid
+# 19 openspec changes, all valid
 for d in openspec/changes/2026-09-01-*/; do
   uv run openspec validate "$(basename $d)" --strict
 done
+
+# 22 BAML functions newly reachable (per the Step 4-8 + Step 9 adds)
+uv run python -c "
+from baml_client.baml_client.sync_client import b
+fns = ['GenerateStudyPlanAssets', 'GenerateOralStudyPlan', 'ExtractNCCAPolicyCriteria', 'Extract<6 NCCE subjects>', 'Extract<6 per-subject marking schemes>', 'ExtractEnglandSubjectSpec', 'ExtractWalesSubjectSpec', 'ExtractNorthernIrelandSubjectSpec', 'ExtractIsleOfManSubjectSpec', 'ExtractScotlandSubjectSpec', 'ExtractWelshSubjectSpec', 'ExtractScottishGaelicSubjectSpec', 'ExtractManxSubjectSpec', 'ExtractBretonSubjectSpec', 'ExtractCornishSubjectSpec', 'ExtractJerseyFrenchSubjectSpec', 'ExtractGuernseyFrenchSubjectSpec', 'ExtractUlsterScotsSubjectSpec']
+for f in fns:
+    fn = f.replace('<6 NCCE subjects>', 'ComputerScienceLearningGraph').replace('<6 per-subject marking schemes>', 'AccountingMarkingScheme')
+    if hasattr(b, fn): print(f'  ✓ {fn}')
+"
 ```
 
 ### Phase 1 quick path: chat-with-syllabus → study-plan → oral-delivery

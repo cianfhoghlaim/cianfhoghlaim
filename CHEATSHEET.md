@@ -5,10 +5,10 @@
 > For the canonical agent instructions see [`AGENTS.md`](AGENTS.md).
 > For the V6 era plan see [`openspec/plans/2026-09-01-cianfhoghlaim-nua-v6-era-v1.md`](openspec/plans/2026-09-01-cianfhoghlaim-nua-v6-era-v1.md).
 
-## V6 era quick path (2026-09-01)
+## V6 era + 10 follow-on Steps quick path (2026-09-01)
 
 ```bash
-# 1. Open the consolidated web app
+# 1. Open the consolidated app
 cd web/apps/cianfhoghlaim-nua && bun install && bun dev
 
 # 2. Verify the BAML client is reachable
@@ -34,22 +34,47 @@ result = asyncio.run(run_certificate_pipeline(
 ))
 print(f'PNG: {result.png_bytes[:8]!r}')
 "
+
+# 6. Test the per-jurisdiction extraction
+uv run python -c "
+from baml_client.baml_client.sync_client import b
+fns = ['GenerateStudyPlanAssets', 'GenerateOralStudyPlan', 'ExtractNCCAPolicyCriteria', 'ExtractComputerScienceLearningGraph', 'ExtractEnglandSubjectSpec', 'ExtractWelshSubjectSpec', 'ExtractScottishGaelicSubjectSpec', 'ExtractManxSubjectSpec', 'ExtractWelshSubjectSpec']
+for f in fns:
+    if hasattr(b, f): print(f'  ✓ {f}')
+"
 ```
 
-## 10 priority openspec changes (V6 era)
+## 19 priority openspec changes (V6 era + 10 follow-on Steps)
+
+### Phases 0-9 (the original v6 era)
 
 | Phase | Change | Key surface |
 |--:|--|--|
-| 1 | `2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1/` | Phase 1 study-plan + oral-plan BAML |
-| 0.5 | `2026-09-01-baml-regeneration-blocker-v1/` | baml_client regenerated |
+| 0 | `2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1/` | Phase 1 umbrella |
+| 0.1 | `2026-09-01-{bonneagar,tuatha,ciancheiltis,ciandlithe,cianchosaint,gemini-hackathon}-sister-umbrella-mirror-v1/` | 6 sister-side mirrors |
+| 0.5 | `2026-09-01-baml-regeneration-blocker-v1/` | BAML regenerated |
+| 1 | `2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1/` | Study-plan + oral-plan BAML |
 | 2 | `2026-09-01-cianfhoghlaim-nua-a2ui-catalog-v1/` | 11-component A2UI v0.9 catalog |
 | 3 | `2026-09-01-cianfhoghlaim-nua-web-consolidation-v1/` | 5 apps → 1 consolidated |
+| 3.2 | `2026-09-01-cianfhoghlaim-nua-web-consolidation-completion-v1/` | 7 skeleton files + 4 Hono mounts + 5 archives |
 | 4 | `2026-09-01-cianfhoghlaim-nua-biep-ncce-showcase-v1/` | 5 NCCE PDFs + 48 equivalencies |
+| 5 | (partial) FTS index added | `ireland_lc_factory.py:139-141` |
 | 6 | `2026-09-01-cianfhoghlaim-nua-oral-study-plans-v1/` | Pipecat + TTS router |
 | 7 | `2026-09-01-cianfhoghlaim-nua-certificate-pipeline-v1/` | 7-stage certificate pipeline |
 | 8 | `2026-09-01-sister-side-mirrors-v1/` | 6 sister-side transfers |
 | 9 | `2026-09-01-gcp-opt-in-completion-v1/` | 6 GCP mirror stacks enabled |
 | 10 | `2026-09-01-v7-from-the-ground-up-v1/` (DEFERRED) | V7 architecture goals |
+
+### Steps 0-9 (the 10 follow-on Steps)
+
+| Step | Change | What |
+|--:|--|--|
+| S0 | `2026-09-01-cianfhoghlaim-nua-web-consolidation-completion-v1/` | 7 missing skeleton files + 4 Hono mounts + 5 archives |
+| S1 | `2026-09-01-dlt-path-drift-fix-v1/` | 137-file DLT path bulk update |
+| S2 | `2026-09-01-cianfhoghlaim-nua-ireland-lc-completion-v1/` | 8 NCCA-adjacent + physics BAML + 16 Convex + 2 early-years Apps |
+| S3 | `2026-09-01-firecrawl-england-source-discovery-v1/` | 7 official England sources + DLT scaffold |
+| S4-S8 | `2026-09-01-cianfhoghlaim-nua-5-jurisdiction-completion-v1/` | EN + WL + NI + IM + SC BAML |
+| S9 | `2026-09-01-cianfhoghlaim-nua-v7-vernaculars-v1/` | 7 vernacular language BAMLs |
 
 ## Top 10 priority mise tasks
 
@@ -64,13 +89,13 @@ print(f'PNG: {result.png_bytes[:8]!r}')
 | `baml:check` | Validate BAML source files parse cleanly |
 | `lint:registry` | 0 hardcoded model strings |
 | `lint:skills` | All 167 skills pass |
-| `openspec:validate-all` | All 11+ openspec changes pass strict validation |
+| `openspec:validate-all` | All 19+ openspec changes pass strict validation |
 
-## Top 10 priority skills (V6 era)
+## Top 10 priority skills (V6 era + 10 Steps)
 
 | Skill | Purpose |
 |:--|:--|
-| `cianfhoghlaim-nua-v6-era` | The 5-pillar pattern + the 11 openspec changes |
+| `cianfhoghlaim-nua-v6-era` | The 5-pillar pattern + the 19 openspec changes + the 8 British Isles subnations + the 7 vernaculars |
 | `openspec` | The canonical openspec workflow |
 | `baml` | The BAML v0.226.2 schema + the Phase 0.5 regeneration |
 | `cocoindex` | The CocoIndex factory pattern + the NCCE flow |
