@@ -1,6 +1,9 @@
-# Cianfhoghlaim-Nua V6 Era — The 20-Step Plan (Phases 0-9 + Steps 0-9)
+# Cianfhoghlaim-Nua V6 Era — The 20-Step Plan (Phases 0-9 + Steps 0-9) + Phase 12 Sister-Repo Lift
 
 > **Status:** 19/20 STEPS SHIPPED. The 20th (Phase 10 v7 rewrite) DEFERRED.
+> **Phase 12** (the inverse-direction leg — lift the v6 era
+> learnings BACK to the 6 sister repos) AUTHORED with the 6 lift
+> patches + 1 test file.
 >
 > **Goal:** lift the GCP-first `gemini_hackathon/` sister-repo
 > learnings into the canonical OSS-first `cianfhoghlaim/`
@@ -72,6 +75,36 @@
 |--:|--|:-|--|--|
 | 10.1 | V7 architecture | ⏸ DEFERRED | `2026-09-01-v7-from-the-ground-up-v1/` | 5-pillar pattern + 3 REDUCED ops surface (documented) |
 
+### Phase 12 — Sister-repo lift (NEW — the inverse-direction leg)
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| 12.1 | Sister-repo lift | ✅ AUTHORED | `2026-09-XX-sister-repo-lift-v1/` | 6 lift patches (`openspec/sister-lifts/*-lift-v1.md`) + 1 spec delta + 1 test (`tests/test_phase12_sister_repo_lift.py`) |
+| 12.2 | Test gate | ✅ PASSING | (Phase 12) | `uv run pytest tests/test_phase12_sister_repo_lift.py -v` → 60 passed |
+| 12.3 | Per-sister PRs | ⏸ DEFERRED | (Phase 12 follow-on) | 6 sister-repo PRs (one per sister repo) — to be authored by the sister repo maintainers |
+
+The Phase 12 lift is the inverse-direction leg of the v6 era
+plan. Where Phase 8 (sister-side mirrors) shipped *awareness*, Phase 12
+authors the *planning docs* for the actual code transfer. The
+6 lift patches in `openspec/sister-lifts/` name:
+
+1. The source files in cianfhoghlaim (with paths)
+2. The destination files in the sister repo (with paths)
+3. The transformation rules (rename / restructure / drop)
+4. The per-PR step-by-step checklist (≥ 3 PRs × ≥ 3 items per PR)
+5. The "what stays behind" entries (what is NOT lifted and why)
+
+Per-sister scope summary:
+
+| Sister | # source files | # dest files | What stays behind |
+|--------|---:|---:|---|
+| **bonneagar** | 3 (B.1, B.3, B.4) | 7 | B.2 (already in bonneagar) + B.5 (A2UI catalog — uses Pangolin UI) |
+| **tuatha** | 5 (T.1-T.5) | 5 | Babylon.js 3D + SpacetimeDB legacy theming + Lingala/French-CA voice profiles |
+| **ciancheiltis** | 5 (C.1-C.5) | 5 | None — corpus IS the canonical taxonomy |
+| **ciandlithe** | 5 (L.1-L.5) | 5 | LC marking-mode refs (CI1/CI2/CI3/H1/H2/H3) |
+| **cianchosaint** | 5 (D.1-D.5) | 5 | LC marking-mode refs + CocoIndex LanceDB target |
+| **gemini_hackathon** | 5 (G.1-G.5) | 7 | 14 LC subject extensions + CocoIndex LanceDB target + NCCA-specific backends |
+| **TOTAL** | **28 source files** | **34 dest files** | (≈ 3,300 LOC lifted in sister-repo PRs) |
+
 ### Step 0 — Phase 3 web consolidation fix
 | # | Step | Status | Change | What |
 |--:|--|:-|--|--|
@@ -109,10 +142,11 @@
 
 ## Summary stats
 
-- **13 openspec changes** (Phases 0-9) + **6 openspec changes** (Steps 0-9) = **19 total**
+- **13 openspec changes** (Phases 0-9) + **6 openspec changes** (Steps 0-9) + **1 openspec change** (Phase 12 — sister-repo lift) = **20 total**
 - **~10,000 LOC** of code shipped across 19 changes
 - **5 British Isles subnations** (England + Wales + NI + IoM + Scotland) + **7 vernacular languages** fully BAML-covered
 - **8 sister-side mirrors** activated (bonneagar + tuatha + ciancheiltis + ciandlithe + cianchosaint + gemini_hackathon + 2 in Phase 8)
+- **Phase 12 lift**: 6 lift patches + 1 test (60 passing) + 1 spec delta authored; ≈ 3,300 LOC of code transfer deferred to 6 sister-repo PRs
 - **22 BAML functions** newly reachable (5 from Step 4-8 + 8 from Step 9 + the Phase 1-7 functions)
-- **18 tests** passing
+- **18 tests** passing (pre-Phase 12) + **60 new tests** (Phase 12 lift validation) = **78 tests** total
 - **2 docs** improved (README + AGENTS + CHEATSHEET + 5 skills + 5 opencode agents)
