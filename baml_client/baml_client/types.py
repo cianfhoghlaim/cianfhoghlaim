@@ -37,7 +37,7 @@ def get_checks(checks: typing.Dict[CheckName, Check]) -> typing.List[Check]:
 def all_succeeded(checks: typing.Dict[CheckName, Check]) -> bool:
     return all(check.status == "succeeded" for check in get_checks(checks))
 # #########################################################################
-# Generated enums (319)
+# Generated enums (320)
 # #########################################################################
 
 class ALevelAQASubject(str, Enum):
@@ -3457,6 +3457,16 @@ class VerbTense(str, Enum):
     COND = "COND"
     HAB = "HAB"
 
+class VernacularLanguage(str, Enum):
+    CY = "CY"
+    GD = "GD"
+    BR = "BR"
+    KW = "KW"
+    GV = "GV"
+    FR_JE = "FR_JE"
+    FR_GG = "FR_GG"
+    SCO = "SCO"
+
 class VisualStyle(str, Enum):
     EDUCATIONAL_DIAGRAM = "EDUCATIONAL_DIAGRAM"
     ILLUSTRATION = "ILLUSTRATION"
@@ -3535,7 +3545,7 @@ class WLStage(str, Enum):
     UNIVERSITY = "UNIVERSITY"
 
 # #########################################################################
-# Generated classes (933)
+# Generated classes (934)
 # #########################################################################
 
 class ALevelAreaTopic(BaseModel):
@@ -11767,7 +11777,7 @@ class Transferability(BaseModel):
     particle_effect: typing.Optional[str] = None
 
 class TranslationRequest(BaseModel):
-    source_language: str = Field(description='en, ga, cy, gd, gv')
+    source_language: str = Field(description='en, ga, cy, gd, gv, br, kw, gv-IM, fr-je, fr-gg, sco')
     target_language: str
     source_text: str
     context: str = Field(description='curriculum, assessment, resource')
@@ -12301,6 +12311,20 @@ class VerificationSummary(BaseModel):
     totalExpired: int
     lastUpdated: str
 
+class VernacularSubjectSpec(BaseModel):
+    language: VernacularLanguage
+    jurisdiction_code: str = Field(description='WL/SC/IM/JE/GG/NI')
+    subject_slug: str
+    stage: str
+    display_name: str = Field(description='Subject name in the vernacular language')
+    display_name_en: str = Field(description='English translation')
+    display_name_ga: str = Field(description='Irish (Gaeilge) translation')
+    award_descriptor: str
+    source_pdf: str
+    source_url: str
+    page: int
+    year: int
+
 class VfxVocabulary(BaseModel):
     particle_class: "ParticleClass"
     density: "Density"
@@ -12618,7 +12642,7 @@ TopicExtraction: typing_extensions.TypeAlias = "LCTopicExtraction"
 
 
 # #########################################################################
-# Model rebuilds (927)
+# Model rebuilds (928)
 # #########################################################################
 # Resolve string forward references now that every model above is defined so
 # class declaration order never breaks Pydantic construction (issue #793).
@@ -13522,6 +13546,7 @@ VenezuelaMedicineDocument.model_rebuild()
 VerbConjugation.model_rebuild()
 VerbForm.model_rebuild()
 VerificationSummary.model_rebuild()
+VernacularSubjectSpec.model_rebuild()
 VfxVocabulary.model_rebuild()
 VisualGrammar.model_rebuild()
 VisualScene.model_rebuild()

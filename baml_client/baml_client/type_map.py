@@ -2728,6 +2728,9 @@ type_map = {
     "types.VerificationSummary": types.VerificationSummary,
     "stream_types.VerificationSummary": stream_types.VerificationSummary,
 
+    "types.VernacularSubjectSpec": types.VernacularSubjectSpec,
+    "stream_types.VernacularSubjectSpec": stream_types.VernacularSubjectSpec,
+
     "types.VfxVocabulary": types.VfxVocabulary,
     "stream_types.VfxVocabulary": stream_types.VfxVocabulary,
 
@@ -3441,6 +3444,8 @@ type_map = {
     "types.VerbMood": types.VerbMood,
 
     "types.VerbTense": types.VerbTense,
+
+    "types.VernacularLanguage": types.VernacularLanguage,
 
     "types.VisualStyle": types.VisualStyle,
 

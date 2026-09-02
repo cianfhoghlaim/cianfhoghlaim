@@ -23,7 +23,7 @@ class StreamState(BaseModel, typing.Generic[StreamStateValueT]):
     value: StreamStateValueT
     state: typing_extensions.Literal["Pending", "Incomplete", "Complete"]
 # #########################################################################
-# Generated classes (933)
+# Generated classes (934)
 # #########################################################################
 
 class ALevelAreaTopic(BaseModel):
@@ -8255,7 +8255,7 @@ class Transferability(BaseModel):
     particle_effect: typing.Optional[str] = None
 
 class TranslationRequest(BaseModel):
-    source_language: typing.Optional[str] = Field(default=None, description='en, ga, cy, gd, gv')
+    source_language: typing.Optional[str] = Field(default=None, description='en, ga, cy, gd, gv, br, kw, gv-IM, fr-je, fr-gg, sco')
     target_language: typing.Optional[str] = None
     source_text: typing.Optional[str] = None
     context: typing.Optional[str] = Field(default=None, description='curriculum, assessment, resource')
@@ -8789,6 +8789,20 @@ class VerificationSummary(BaseModel):
     totalExpired: typing.Optional[int] = None
     lastUpdated: typing.Optional[str] = None
 
+class VernacularSubjectSpec(BaseModel):
+    language: typing.Optional[types.VernacularLanguage] = None
+    jurisdiction_code: typing.Optional[str] = Field(default=None, description='WL/SC/IM/JE/GG/NI')
+    subject_slug: typing.Optional[str] = None
+    stage: typing.Optional[str] = None
+    display_name: typing.Optional[str] = Field(default=None, description='Subject name in the vernacular language')
+    display_name_en: typing.Optional[str] = Field(default=None, description='English translation')
+    display_name_ga: typing.Optional[str] = Field(default=None, description='Irish (Gaeilge) translation')
+    award_descriptor: typing.Optional[str] = None
+    source_pdf: typing.Optional[str] = None
+    source_url: typing.Optional[str] = None
+    page: typing.Optional[int] = None
+    year: typing.Optional[int] = None
+
 class VfxVocabulary(BaseModel):
     particle_class: typing.Optional["ParticleClass"] = None
     density: typing.Optional["Density"] = None
@@ -9106,7 +9120,7 @@ TopicExtraction: typing_extensions.TypeAlias = typing.Optional["LCTopicExtractio
 
 
 # #########################################################################
-# Model rebuilds (927)
+# Model rebuilds (928)
 # #########################################################################
 # Resolve string forward references now that every model above is defined so
 # class declaration order never breaks Pydantic construction (issue #793).
@@ -10010,6 +10024,7 @@ VenezuelaMedicineDocument.model_rebuild()
 VerbConjugation.model_rebuild()
 VerbForm.model_rebuild()
 VerificationSummary.model_rebuild()
+VernacularSubjectSpec.model_rebuild()
 VfxVocabulary.model_rebuild()
 VisualGrammar.model_rebuild()
 VisualScene.model_rebuild()

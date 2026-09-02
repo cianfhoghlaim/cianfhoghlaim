@@ -743,6 +743,12 @@ class LlmResponseParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractBrazilMedicineDocument", llm_response=llm_response, mode="request")
         return typing.cast(types.BrazilMedicineDocument, __result__)
 
+    def ExtractBretonSubjectSpec(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.VernacularSubjectSpec:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractBretonSubjectSpec", llm_response=llm_response, mode="request")
+        return typing.cast(types.VernacularSubjectSpec, __result__)
+
     def ExtractBulgariaHealthGuidance(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> types.BulgariaHealthGuidance:
@@ -928,6 +934,12 @@ class LlmResponseParser:
     ) -> types.ConceptChain:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractConceptChain", llm_response=llm_response, mode="request")
         return typing.cast(types.ConceptChain, __result__)
+
+    def ExtractCornishSubjectSpec(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.VernacularSubjectSpec:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractCornishSubjectSpec", llm_response=llm_response, mode="request")
+        return typing.cast(types.VernacularSubjectSpec, __result__)
 
     def ExtractCourseDescriptor(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -1565,6 +1577,12 @@ class LlmResponseParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractGuernseyEducationDocument", llm_response=llm_response, mode="request")
         return typing.cast(types.GuernseyEducationDocument, __result__)
 
+    def ExtractGuernseyFrenchSubjectSpec(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.VernacularSubjectSpec:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractGuernseyFrenchSubjectSpec", llm_response=llm_response, mode="request")
+        return typing.cast(types.VernacularSubjectSpec, __result__)
+
     def ExtractGuernseyLawDocument(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> types.GuernseyLawDocument:
@@ -1738,6 +1756,12 @@ class LlmResponseParser:
     ) -> types.JerseyEducationDocument:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractJerseyEducationDocument", llm_response=llm_response, mode="request")
         return typing.cast(types.JerseyEducationDocument, __result__)
+
+    def ExtractJerseyFrenchSubjectSpec(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.VernacularSubjectSpec:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractJerseyFrenchSubjectSpec", llm_response=llm_response, mode="request")
+        return typing.cast(types.VernacularSubjectSpec, __result__)
 
     def ExtractJerseyLawDocument(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -1954,6 +1978,12 @@ class LlmResponseParser:
     ) -> types.MaltaSubjectCurriculum:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractMaltaSubjectCurriculum", llm_response=llm_response, mode="request")
         return typing.cast(types.MaltaSubjectCurriculum, __result__)
+
+    def ExtractManxSubjectSpec(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.VernacularSubjectSpec:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractManxSubjectSpec", llm_response=llm_response, mode="request")
+        return typing.cast(types.VernacularSubjectSpec, __result__)
 
     def ExtractMarkingScheme(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -2531,6 +2561,12 @@ class LlmResponseParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractScotlandSyllabus", llm_response=llm_response, mode="request")
         return typing.cast(types.ScotlandSyllabusSpec, __result__)
 
+    def ExtractScottishGaelicSubjectSpec(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.VernacularSubjectSpec:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractScottishGaelicSubjectSpec", llm_response=llm_response, mode="request")
+        return typing.cast(types.VernacularSubjectSpec, __result__)
+
     def ExtractSeniorCycleSpecFromUrl(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> types.SubjectRubric:
@@ -2879,6 +2915,12 @@ class LlmResponseParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractUkraineMedicineDocument", llm_response=llm_response, mode="request")
         return typing.cast(types.UkraineMedicineDocument, __result__)
 
+    def ExtractUlsterScotsSubjectSpec(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.VernacularSubjectSpec:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractUlsterScotsSubjectSpec", llm_response=llm_response, mode="request")
+        return typing.cast(types.VernacularSubjectSpec, __result__)
+
     def ExtractUniversityInfo(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> types.University:
@@ -3004,6 +3046,12 @@ class LlmResponseParser:
     ) -> types.WalesSyllabusSpec:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractWalesSyllabus", llm_response=llm_response, mode="request")
         return typing.cast(types.WalesSyllabusSpec, __result__)
+
+    def ExtractWelshSubjectSpec(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> types.VernacularSubjectSpec:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractWelshSubjectSpec", llm_response=llm_response, mode="request")
+        return typing.cast(types.VernacularSubjectSpec, __result__)
 
     def ExtractWorkedSolution(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -4339,6 +4387,12 @@ class LlmStreamParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractBrazilMedicineDocument", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.BrazilMedicineDocument, __result__)
 
+    def ExtractBretonSubjectSpec(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.VernacularSubjectSpec:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractBretonSubjectSpec", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.VernacularSubjectSpec, __result__)
+
     def ExtractBulgariaHealthGuidance(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> stream_types.BulgariaHealthGuidance:
@@ -4524,6 +4578,12 @@ class LlmStreamParser:
     ) -> stream_types.ConceptChain:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractConceptChain", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.ConceptChain, __result__)
+
+    def ExtractCornishSubjectSpec(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.VernacularSubjectSpec:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractCornishSubjectSpec", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.VernacularSubjectSpec, __result__)
 
     def ExtractCourseDescriptor(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -5161,6 +5221,12 @@ class LlmStreamParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractGuernseyEducationDocument", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.GuernseyEducationDocument, __result__)
 
+    def ExtractGuernseyFrenchSubjectSpec(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.VernacularSubjectSpec:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractGuernseyFrenchSubjectSpec", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.VernacularSubjectSpec, __result__)
+
     def ExtractGuernseyLawDocument(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> stream_types.GuernseyLawDocument:
@@ -5334,6 +5400,12 @@ class LlmStreamParser:
     ) -> stream_types.JerseyEducationDocument:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractJerseyEducationDocument", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.JerseyEducationDocument, __result__)
+
+    def ExtractJerseyFrenchSubjectSpec(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.VernacularSubjectSpec:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractJerseyFrenchSubjectSpec", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.VernacularSubjectSpec, __result__)
 
     def ExtractJerseyLawDocument(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -5550,6 +5622,12 @@ class LlmStreamParser:
     ) -> stream_types.MaltaSubjectCurriculum:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractMaltaSubjectCurriculum", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.MaltaSubjectCurriculum, __result__)
+
+    def ExtractManxSubjectSpec(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.VernacularSubjectSpec:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractManxSubjectSpec", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.VernacularSubjectSpec, __result__)
 
     def ExtractMarkingScheme(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -6127,6 +6205,12 @@ class LlmStreamParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractScotlandSyllabus", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.ScotlandSyllabusSpec, __result__)
 
+    def ExtractScottishGaelicSubjectSpec(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.VernacularSubjectSpec:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractScottishGaelicSubjectSpec", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.VernacularSubjectSpec, __result__)
+
     def ExtractSeniorCycleSpecFromUrl(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> stream_types.SubjectRubric:
@@ -6475,6 +6559,12 @@ class LlmStreamParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractUkraineMedicineDocument", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.UkraineMedicineDocument, __result__)
 
+    def ExtractUlsterScotsSubjectSpec(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.VernacularSubjectSpec:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractUlsterScotsSubjectSpec", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.VernacularSubjectSpec, __result__)
+
     def ExtractUniversityInfo(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> stream_types.University:
@@ -6600,6 +6690,12 @@ class LlmStreamParser:
     ) -> stream_types.WalesSyllabusSpec:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractWalesSyllabus", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.WalesSyllabusSpec, __result__)
+
+    def ExtractWelshSubjectSpec(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> stream_types.VernacularSubjectSpec:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractWelshSubjectSpec", llm_response=llm_response, mode="stream")
+        return typing.cast(stream_types.VernacularSubjectSpec, __result__)
 
     def ExtractWorkedSolution(
         self, llm_response: str, baml_options: BamlCallOptions = {},
