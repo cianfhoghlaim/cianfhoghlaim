@@ -380,7 +380,7 @@ function MapLevelEquivalence(
 // ============================================================================
 
 class TranslationRequest {
-  source_language string @description("en, ga, cy, gd, gv")
+  source_language string @description("en, ga, cy, gd, gv, br, kw, gv-IM, fr-je, fr-gg, sco")
   target_language string
   source_text string
   context string @description("curriculum, assessment, resource")

@@ -1,0 +1,40 @@
+# Cloudflare Workers deployment for Croílár (portfolio + CV + data engineering)
+#
+# Per the 2026-08-24-wave-6-frontend-tanstack-modernisation-v1 change.
+# The portfolio app deploys with R2 audio/image assets from the marimo
+# notebook WASM exports (public/wasm/{music,teaching}).
+
+name = "croilar-web"
+compatibility_date = "2025-08-01"
+compatibility_flags = ["nodejs_compat"]
+main = "./.output/server/index.mjs"
+
+[assets]
+directory = "./.output/public"
+binding = "ASSETS"
+
+[vars]
+NODE_ENV = "production"
+PUBLIC_APP_NAME = "croilar-web"
+PUBLIC_APP_TYPE = "portfolio"
+PUBLIC_AUTH_URL = "https://auth.croilar.cianfhoghlaim.ie"
+
+[env.preview]
+name = "croilar-web-preview"
+vars = { NODE_ENV = "preview", PUBLIC_APP_NAME = "croilar-web", PUBLIC_APP_TYPE = "portfolio", PUBLIC_AUTH_URL = "https://preview-auth.croilar.cianfhoghlaim.ie" }
+routes = [ "preview.croilar.cianfhoghlaim.ie" ]
+
+[env.production]
+name = "croilar-web-production"
+vars = { NODE_ENV = "production", PUBLIC_APP_NAME = "croilar-web", PUBLIC_APP_TYPE = "portfolio", PUBLIC_AUTH_URL = "https://auth.croilar.cianfhoghlaim.ie" }
+routes = [ "croilar.cianfhoghlaim.ie", "www.croilar.ie" ]
+
+[[r2_buckets]]
+binding = "ASSETS_BUCKET"
+bucket_name = "aleyum-assets"
+preview_bucket_name = "aleyum-assets-preview"
+
+[[r2_buckets]]
+binding = "DATA_BUCKET"
+bucket_name = "aleyum-data"
+preview_bucket_name = "aleyum-data-preview"

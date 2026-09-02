@@ -48,7 +48,7 @@ JERSEY_SUBJECTS: tuple[str, ...] = (
     automation_condition=make_yearly_education_automation(),
 )
 def jersey_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]:
-    from dlt_sources.british_isles.jersey.education.jersey_jurisdiction_pipeline import (
+    from dlt_sources.education.jersey.british_isles.education.jersey_jurisdiction_pipeline import (
         jersey_jurisdiction_pipeline,
     )
     load_info = jersey_jurisdiction_pipeline.run()

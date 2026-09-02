@@ -43,7 +43,7 @@ Resolution chain for each backend (in priority order):
      operator overrides, or local-dev.
   2. Canonical ocr-router URL (``http://ocr-router:8090/v1``) — the
      production default. The in-network DNS name resolves to the
-     ocr-router sidecar in the KCG docker network.
+     ocr-router sidecar in the Cianfhoghlaim docker network.
 
 Per-backend mapping:
   PADDLEOCR_URL → ``http://ocr-router:8090/v1/paddleocr`` (MCP)

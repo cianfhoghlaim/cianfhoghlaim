@@ -137,7 +137,7 @@ def make_gcse_resource(board: str):
             Path(
                 os.environ.get(
                     "STEDDING_INGEST_QUEUE",
-                    "/Users/cianmacandeisigh/dev/kings_college_galway/stedding/site_scrape_samples",
+                    os.path.join(os.environ.get("CIANFHOGHLAIM_ROOT", os.path.expanduser("~/dev/cianfhoghlaim")), "stedding/site_scrape_samples"),
                 )
             )
             / "england"

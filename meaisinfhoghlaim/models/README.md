@@ -54,7 +54,7 @@ config.embedding_model                 # → "BAAI/bge-m3"
 # Option B: Explicit LiteLlm wrapper
 agent = make_litellm_agent(
     name="my_agent",
-    description="Routes through the KCG minimax LiteLLM gateway.",
+    description="Routes through the Cianfhoghlaim minimax LiteLLM gateway.",
     model_alias="minimax",  # the canonical 7-tier fallback
 )
 ```

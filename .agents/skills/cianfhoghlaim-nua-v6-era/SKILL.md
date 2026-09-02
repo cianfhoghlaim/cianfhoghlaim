@@ -191,3 +191,38 @@ usage validation per operator direction.
 - `.agents/skills/baml/SKILL.md` (the canonical BAML skill)
 - `.agents/skills/cocoindex/SKILL.md` (the canonical CocoIndex skill)
 - `.agents/skills/openspec/SKILL.md` (the canonical OpenSpec skill)
+---
+
+## V6 era follow-on Steps 0-9 (2026-09-01)
+
+The v6 era plan was extended with 10 follow-on Steps to close the
+feature parity gaps. All 10 Steps are shipped.
+
+### Steps 0-9 status
+
+| # | Step | Status | Change | Key file paths |
+|--:|--|:-|--|--|
+| S0 | Phase 3 web consolidation fix | ✅ | `2026-09-01-cianfhoghlaim-nua-web-consolidation-completion-v1/` | 7 skeleton files + 4 Hono mounts + 5 archives |
+| S1 | DLT path drift fix | ✅ | `2026-09-01-dlt-path-drift-fix-v1/` | 137-file bulk update (Wave 1 path) |
+| S2 | Ireland LC completion | ✅ | `2026-09-01-cianfhoghlaim-nua-ireland-lc-completion-v1/` | 8 NCCA-adjacent + physics BAML + 16 Convex + 2 early-years Apps |
+| S3 | Firecrawl England source discovery | ✅ | `2026-09-01-firecrawl-england-source-discovery-v1/` | 7 official sources + England DLT scaffold |
+| S4 | England expansion | ✅ | (Steps 4-8) | `baml_src/british_isles/en/education/en_extraction.baml` |
+| S5 | Wales expansion (Welsh medium) | ✅ | (Steps 4-8) | `baml_src/british_isles/wl/education/wl_extraction.baml` + `WelshMediumOverlay` |
+| S6 | Northern Ireland expansion (Gaeltacht) | ✅ | (Steps 4-8) | `baml_src/british_isles/ni/education/ni_extraction.baml` + `GaeltachtOverlay` |
+| S7 | Isle of Man expansion (Manx) | ✅ | (Steps 4-8) | `baml_src/british_isles/im/education/im_extraction.baml` + `ManxOverlay` |
+| S8 | Scotland expansion (Gàidhlig) | ✅ | (Steps 4-8) | `baml_src/british_isles/sc/education/sc_extraction.baml` + `ScottishGaelicOverlay` |
+| S9 | Vernacular language pipelines | ✅ | `2026-09-01-cianfhoghlaim-nua-v7-vernaculars-v1/` | 7 vernacular BAMLs (Welsh + Scottish Gaelic + Breton + Cornish + Manx + Channel Islands French × 2 + Ulster Scots) |
+
+### Per-jurisdiction coverage matrix (8 British Isles subnations + 7 vernaculars)
+
+| Jurisdiction | BAML | CocoIndex | DLT | Vernacular |
+|---|---|---|---|---|
+| **IE (Ireland)** | ✅ 80+ fns | ✅ 14 flows | ✅ 14 sources | N/A (canonical home) |
+| **EN (England)** | ✅ 13 fns | ✅ 3 (AQA/OCR/Edexcel) | ✅ 6 | English (no vernacular) |
+| **SC (Scotland)** | ✅ 7 fns | ✅ 0 | ✅ 0 | Scottish Gaelic (gd) |
+| **WL (Wales)** | ✅ 7 fns | ✅ 0 | ✅ 0 | Welsh (cy) |
+| **NI (Northern Ireland)** | ✅ 7 fns | ✅ 0 | ✅ 0 | Irish (ga) medium + Ulster Scots (sco) |
+| **IM (Isle of Man)** | ✅ 7 fns | ✅ 0 | ✅ 0 | Manx (gv) |
+| **JE (Jersey)** | ⏳ (deferred) | ⏳ | ⏳ | Channel Islands French (fr-je) |
+| **GG (Guernsey)** | ⏳ (deferred) | ⏳ | ⏳ | Channel Islands French (fr-gg) |
+

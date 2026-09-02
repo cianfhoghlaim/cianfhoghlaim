@@ -1,38 +1,21 @@
 # orchestration/pipelines/education/tertiary/uog/students_union/defs.yaml
 #
-# L3 PipelineFactoryComponent for the University of Galway students'
-# union pipeline (events + society pages + club content).
+# Per-pipeline Component (Wave 2 of the 2026-08-24 master refactor).
 #
-# Pipeline kind: official_docs (re-used for HTML scraping + schema
-# inference). The legacy flat file was `uog_students_union.py`.
+# Migrated from the legacy `PipelineFactoryComponent` to the canonical
+# `dagster_dlt.DltLoadCollectionComponent` per master plan §3.3 + the
+# canonical `dagster-pipeline-components` spec. The Cianfhoghlaim customisation
+# (the canonical group_name + tags + the StateBackedComponent pattern)
+# is wired via the shared helpers at
+# `orchestration.pipelines._shared.dagster_dlt_integration` +
+# `orchestration.pipelines._shared.state_helpers`.
 #
-# Reference: openspec/changes/2026-08-24-wave-2-orchestration-vertical-pipelines-v1/
-type: orchestration.components.PipelineFactoryComponent
+# Mirrors the `dlt_sources.education.tertiary.uog.students_union` source.
+# Pipeline kind: official_docs
+# Group name: 1_ingestion_education_ie_official_docs
+type: dagster_dlt.DltLoadCollectionComponent
 attributes:
-  dlt_source: dlt_sources.education.tertiary.uog.students_union
-  pipeline_kind: official_docs
-  embedding_model: BAAI/bge-large-en-v1.5
-  hnsw_index: true
-  conformance_required: true
-  destinations:
-    - ducklake_cianfhoghlaim
-  processing:
-    - cocoindex_live_update
-  schedules:
-    - cron: "0 12 * * *"
-      timezone: UTC
-  sensors:
-    - upstream_change
-  tags:
-    - tertiary
-    - uog
-    - students_union
-    - events
-    - societies
-  metadata:
-    openspec_change: 2026-08-24-wave-2-orchestration-vertical-pipelines-v1
-    spec: orchestration-vertical-pipelines
-    kind: official_docs
-    institution: university_of_galway
-    legacy_files:
-      - orchestration/defs/uog_students_union.py
+  loads:
+    - pipeline: orchestration.pipelines._shared.dagster_dlt_integration:build_dlt_pipeline|dlt_sources.education.tertiary.uog.students_union
+      source: dlt_sources.education.tertiary.uog.students_union
+      translation: orchestration.pipelines._shared.dagster_dlt_integration.kcg_default_translation

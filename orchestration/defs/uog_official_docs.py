@@ -1,177 +1,31 @@
-"""orchestration.defs.uog_official_docs — the 5-asset group for the
-UoG official-documents pipeline (Stage 0 through DuckLake).
+"""orchestration.defs.uog_official_docs — DEPRECATION SHIM.
 
-Mounts 5 assets:
-  - `uog_official_docs_stage0_audit`       (sensor)
-  - `uog_official_docs_stage1_collect`     (scrape)
-  - `uog_official_docs_baml_extract`       (baml)
-  - `uog_official_docs_embed_lance`        (cocoindex)
-  - `uog_official_docs_duckdb_sink`        (ducklake)
+This module has been moved to `orchestration.pipelines.education.tertiary.uog.official_docs` as part of
+Wave 2 of the 2026-08-24 master refactor (per the canonical
+`dagster-pipeline-components` spec).
 
-Reference: openspec/changes/2026-08-23-uog-official-docs-and-nui-superset-v1/
-            specs/cianfhoghlaim-uog-official-docs/spec.md
+It re-exports the original `__all__` from the new location for
+backward compatibility with downstream consumers that haven't yet
+migrated. New code SHOULD import from the canonical destination
+path; this shim will be removed in a future release.
+
+Reference: openspec/changes/2026-08-24-master-refactor-v1/specs/dagster-pipeline-components/spec.md
 """
+from __future__ import annotations
 
-from dagster import (
-    AssetExecutionContext,
-    MaterializeResult,
-    MetadataValue,
-    asset,
+import warnings
+
+_ORIGINAL_MODULE = 'orchestration.defs.uog_official_docs'
+_DESTINATION_MODULE = 'orchestration.pipelines.education.tertiary.uog.official_docs'
+
+_DEPRECATION_MSG = (
+    f"`{_ORIGINAL_MODULE}` is deprecated as of Wave 2 of the 2026-08-24 master refactor; "
+    f"import from `{_DESTINATION_MODULE}` instead. The legacy module will be "
+    "removed in a future release."
 )
+warnings.warn(_DEPRECATION_MSG, DeprecationWarning, stacklevel=2)
 
-# Defer-imported so Dagster's discovery doesn't hard-require
-# `dlt_sources.*` to resolve at module-load time.
-_DEFAULT_DESTINATION = "local"
+# Re-export every public symbol from the canonical destination module.
+from orchestration.pipelines.education.tertiary.uog.official_docs import *  # noqa: E402, F401, F403
 
-
-@asset(
-    key=["uog_official_docs", "stage0_audit"],
-    group_name="uog_official_docs",
-    compute_kind="sensor",
-    description=(
-        "Stage 0 — Firecrawl `/agent` deep analysis of the 5 UoG homepages. "
-        "Persists discovered paths to LanceDB. STOPS if FIRECRAWL_API_KEY "
-        "is missing or a fixture-only placeholder."
-    ),
-)
-def uog_official_docs_stage0_audit(context: AssetExecutionContext) -> MaterializeResult:
-    from dlt_sources.british_isles.ireland.education.university.official_docs import (
-        uog_official_docs_source,
-    )
-
-    # In fixture-only mode the source yields one skipped_fixture row.
-    rows = list(uog_official_docs_source(destination=_DEFAULT_DESTINATION).selected_resources["url_discovery_log"]())
-    n_discovered = sum(1 for r in rows if r.get("status") == "scraped")
-    credit_used = 2 * sum(1 for r in rows if r.get("credit_used") == 2)
-    return MaterializeResult(
-        metadata={
-            "pages_audited": len({r.get("homepage", "") for r in rows if r.get("homepage")}),
-            "paths_discovered": n_discovered,
-            "credit_used": credit_used,
-            "discovered_urls": MetadataValue.path(
-                "/tmp/cianfhoghlaim.duckdb::cianfhoghlaim.university_research_sitemap"
-            ),
-        }
-    )
-
-
-@asset(
-    key=["uog_official_docs", "stage1_collect"],
-    group_name="uog_official_docs",
-    compute_kind="scrape",
-    description=(
-        "Stage 1 — bulk_scrape every path the Stage 0 audit discovered. "
-        "Drops markdown into the DuckLake staging table."
-    ),
-    deps=[
-        # AssetKey via the canonical `from_user_str` shape so Dagster
-        # can resolve without importing.
-        __import__("dagster").AssetKey(["uog_official_docs", "stage0_audit"]),
-    ],
-)
-def uog_official_docs_stage1_collect(context: AssetExecutionContext) -> MaterializeResult:
-    from dlt_sources.british_isles.ireland.education.university.official_docs import (
-        uog_official_docs_source,
-    )
-
-    rows = list(
-        uog_official_docs_source(
-            destination=_DEFAULT_DESTINATION
-        ).selected_resources["official_documents"]()
-    )
-    n = sum(1 for r in rows if r.get("status") == "scraped")
-    return MaterializeResult(
-        metadata={
-            "rows_collected": n,
-            "ducklake_table": "cianfhoghlaim.education.ie.uog_official_documents",
-        }
-    )
-
-
-@asset(
-    key=["uog_official_docs", "baml_extract"],
-    group_name="uog_official_docs",
-    compute_kind="baml",
-    description=(
-        "Stage 2 — call `b.ExtractUoGOfficialDocument` on every Stage-1 "
-        "row. Writes the typed columns back to the DuckLake table."
-    ),
-    deps=[
-        __import__("dagster").AssetKey(["uog_official_docs", "stage1_collect"]),
-    ],
-)
-def uog_official_docs_baml_extract(context: AssetExecutionContext) -> MaterializeResult:
-    try:
-        from baml_client import b as _baml_b  # noqa: F401  # type: ignore[import-not-found]
-    except ImportError:
-        return MaterializeResult(
-            metadata={"status": "skipped_no_baml_client",
-                     "hint": "Run `baml generate` to produce the baml_client."}
-        )
-    # The real extractor works on parquet rows; in this stage we
-    # delegate to the dlt pipeline + BAML function and let the
-    # typed columns be re-derivable from the JSON-blob column.
-    return MaterializeResult(
-        metadata={
-            "status": "wired",
-            "typed_columns_written": [
-                "document_type", "school_slug", "tags", "effective_year",
-            ],
-        }
-    )
-
-
-@asset(
-    key=["uog_official_docs", "embed_lance"],
-    group_name="uog_official_docs",
-    compute_kind="cocoindex",
-    description=(
-        "Stage 3 — feed the typed DuckLake rows into `UoGOfficialDocsApp`. "
-        "BGE-M3 1024-d on (title + body + tags)."
-    ),
-    deps=[
-        __import__("dagster").AssetKey(["uog_official_docs", "baml_extract"]),
-    ],
-)
-def uog_official_docs_embed_lance(context: AssetExecutionContext) -> MaterializeResult:
-    from cocoindex_flows.british_isles.ireland.education.university.uog_official_docs_embedding import (
-        UoGOfficialDocsApp,
-    )
-    if UoGOfficialDocsApp is None:  # pragma: no cover
-        return MaterializeResult(
-            metadata={"status": "skipped_cocoindex_not_available"}
-        )
-    return MaterializeResult(metadata={"status": "v1_app_present", "app": "UoGOfficialDocsApp"})
-
-
-@asset(
-    key=["uog_official_docs", "duckdb_sink"],
-    group_name="uog_official_docs",
-    compute_kind="ducklake",
-    description=(
-        "Stage 3 — DuckLake-sink. Respects `destination=local|motherduck|bonneagar` "
-        "from `SecretsResolver`."
-    ),
-    deps=[
-        __import__("dagster").AssetKey(["uog_official_docs", "embed_lance"]),
-    ],
-)
-def uog_official_docs_duckdb_sink(context: AssetExecutionContext) -> MaterializeResult:
-    from dlt_sources.lakehouse.destinations import get_destination
-
-    target = get_destination(_DEFAULT_DESTINATION)
-    return MaterializeResult(
-        metadata={
-            "sink": str(target) if hasattr(target, "__str__") else "local",
-            "destination_default": _DEFAULT_DESTINATION,
-        }
-    )
-
-
-__all__ = [
-    "uog_official_docs_baml_extract",
-    "uog_official_docs_duckdb_sink",
-    "uog_official_docs_embed_lance",
-    "uog_official_docs_stage0_audit",
-    "uog_official_docs_stage1_collect",
-]
+__all__ = ['uog_official_docs_baml_extract', 'uog_official_docs_duckdb_sink', 'uog_official_docs_embed_lance', 'uog_official_docs_stage0_audit', 'uog_official_docs_stage1_collect']

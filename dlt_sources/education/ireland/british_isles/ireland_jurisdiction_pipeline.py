@@ -15,7 +15,7 @@ DLT source files. This single file reads the canonical registry
 
 = **544 total cohorts**.
 
-## KCG patterns used
+## Cianfhoghlaim patterns used
 - ibis (per `.agents/skills/ibis/SKILL.md`) — every query uses
   ``ibis.duckdb.connect()`` (NO raw ``duckdb.connect``).
 - dlt (per `.agents/skills/dlt/SKILL.md`) — the canonical destination

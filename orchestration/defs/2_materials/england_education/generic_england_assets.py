@@ -18,7 +18,7 @@ england_embeddings) cover all 276 England cohorts (A-Level + GCSE × 3
 boards). This module adds 3 A-Level-specific asset checks + 147 per-subject
 backfill jobs.
 
-## KCG patterns used
+## Cianfhoghlaim patterns used
 - ibis (per `.agents/skills/ibis/SKILL.md`) — every query uses
   ``ibis.duckdb.connect()`` (NO raw ``duckdb.connect``).
 - dagster (per `.agents/skills/dagster/SKILL.md`) — 5-layer group_name
@@ -109,7 +109,7 @@ ENGLAND_LEVELS: tuple[str, ...] = ("a_level", "gcse")
 )
 def england_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]:
     """Layer 1 — DLT ingestion of all England cohorts (276 rows)."""
-    from dlt_sources.british_isles.england.education.england_jurisdiction_pipeline import (
+    from dlt_sources.education.england.british_isles.education.england_jurisdiction_pipeline import (
         england_jurisdiction_pipeline,
     )
 

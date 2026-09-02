@@ -26,7 +26,7 @@ International GCSE (iGCSE) as a distinct qualification — ~70
 subjects vs AQA's ~50.
 
 Usage:
-    from dlt_sources.british_isles.england.education.pearson.syllabus_source import (
+    from dlt_sources.education.england.british_isles.education.pearson.syllabus_source import (
         pearson_syllabus_source,
     )
 """

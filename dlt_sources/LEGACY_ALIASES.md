@@ -88,6 +88,103 @@ addressed by Wave 1.
 
 ---
 
+## Wave 1 — themed packages (2026-08-24) — APPENDED 2026-08-24 (KEEP-ENGLISH + themed packages + layer-grouped destinations)
+
+Per the master plan
+[`2026-08-24-master-refactor-plan`](../../../openspec/plans/2026-08-24-master-refactor-plan.md)
+§3.2 (target layout) + §7.1 (naming map), the Wave 1 rename waves
+actually executed by this file are:
+
+### Themed sub-tree split — `language/` → 3 themed sub-trees (master plan §3.2, §7.1)
+
+| Old | New |
+|:--|:--|
+| `dlt_sources/language/` | **DEPRECATED** (split into 3 themed sub-trees, kept as a re-export shim for 1 release cycle) |
+| `dlt_sources/language/ainm.py` | `dlt_sources/lexicographic/ainm.py` |
+| `dlt_sources/language/canuint.py` | `dlt_sources/lexicographic/canuint.py` |
+| `dlt_sources/language/canuint_audio.py` | `dlt_sources/lexicographic/canuint_audio.py` |
+| `dlt_sources/language/canuint_dialect_summary.py` | `dlt_sources/lexicographic/canuint_dialect_summary.py` |
+| `dlt_sources/language/canuint_search.py` | `dlt_sources/lexicographic/canuint_search.py` |
+| `dlt_sources/language/canuint_word_alignment.py` | `dlt_sources/lexicographic/canuint_word_alignment.py` |
+| `dlt_sources/language/duchas.py` (the lexicon) | `dlt_sources/lexicographic/duchas.py` (source name `duchas_folklore`) |
+| `dlt_sources/language/duchas_images.py` (the folklore corpus) | `dlt_sources/cultural_heritage/duchas_corpus.py` (source name `duchas_images_source`) |
+| `dlt_sources/language/gaois.py` | `dlt_sources/lexicographic/gaois.py` |
+| `dlt_sources/language/gaois_combined.py` | `dlt_sources/lexicographic/gaois_combined.py` |
+| `dlt_sources/language/logainm.py` | `dlt_sources/lexicographic/logainm.py` |
+| `dlt_sources/language/tearma.py` | `dlt_sources/lexicographic/tearma.py` |
+| `dlt_sources/language/tearma_search.py` | `dlt_sources/lexicographic/tearma_search.py` |
+| `dlt_sources/language/celtic_mythology.py` | `dlt_sources/cultural_heritage/celtic_mythology.py` |
+| `dlt_sources/language/heritage.py` | `dlt_sources/cultural_heritage/heritage.py` |
+| `dlt_sources/language/hidden_heritages.py` | `dlt_sources/cultural_heritage/hidden_heritages.py` |
+| `dlt_sources/language/local_documents_by_subject.py` | `dlt_sources/cultural_heritage/local_documents_by_subject.py` |
+| `dlt_sources/language/local_education_documents.py` | `dlt_sources/cultural_heritage/local_education_documents.py` |
+| `dlt_sources/language/universal_dependencies.py` | `dlt_sources/language_models/universal_dependencies.py` |
+| `dlt_sources/language/_canuint_helpers.py` | `dlt_sources/lexicographic/_canuint_helpers.py` |
+| `dlt_sources/language/_duchas_images_helpers.py` | `dlt_sources/cultural_heritage/_duchas_corpus_helpers.py` |
+| `dlt_sources/language/_gaois_helpers.py` | `dlt_sources/lexicographic/_gaois_helpers.py` |
+| `dlt_sources/language/_local_documents_helpers.py` | `dlt_sources/cultural_heritage/_local_documents_helpers.py` |
+| `dlt_sources/language/_tearma_helpers.py` | `dlt_sources/lexicographic/_tearma_helpers.py` |
+
+### Layer-grouped destinations — `destinations/*.py` at TOP LEVEL (master plan §3.2)
+
+| Old | New |
+|:--|:--|
+| `dlt_sources/common/destinations_cianfhoghlaim.py` | `dlt_sources/destinations/__init__.py` (top-level canonical) + re-export shim at the legacy path |
+| `dlt_sources/common/named_destinations.py` | `dlt_sources/destinations/__init__.py:named_destinations()` + re-export shim at the legacy path |
+| `dlt_sources/_lakehouse/destinations.py` (renamed `lakehouse/`) | `dlt_sources/destinations/ducklake.py` (the dlt-side bridge) — kept at `lakehouse/destinations.py` (renamed from `_lakehouse/destinations.py`) |
+| `dlt_sources/_lakehouse/personal_archive_destinations.py` | `dlt_sources/lakehouse/personal_archive_destinations.py` (rename only; no content change) |
+| `dlt_sources/common/ducklake_options.py` | `dlt_sources/lakehouse/options.py` (rename — not part of dlt destinations) |
+| `dlt_sources/common/ducklake_pool.py` | `dlt_sources/lakehouse/pool.py` (rename — not part of dlt destinations) |
+
+### Single DuckLake namespace — `ducklake_cianfhoghlaim` (master plan §1.1)
+
+| Old namespace | New namespace |
+|:--|:--|
+| `ducklake_oideachais` | `ducklake_cianfhoghlaim` |
+| `ducklake_educational` | `ducklake_cianfhoghlaim` |
+| `ducklake_crypteolas` | `ducklake_cianfhoghlaim` |
+| `ducklake_tertiary` | `ducklake_cianfhoghlaim` |
+| `ducklake_uog` | `ducklake_cianfhoghlaim` |
+| `ducklake_cie` | `ducklake_cianfhoghlaim` |
+| `ducklake_tuath` | `ducklake_cianfhoghlaim` |
+| `ducklake_meaisinfhoghlaim` | `ducklake_cianfhoghlaim` |
+| `ducklake_aleyum` | `ducklake_cianfhoghlaim` |
+| `ducklake_croilar` | `ducklake_cianfhoghlaim` |
+| `ducklake_oideachais_quadrant` | (NEW — per-quadrant Postgres metadata schema) |
+| `ducklake_tuatha_quadrant` | (NEW) |
+| `ducklake_croilar_quadrant` | (NEW) |
+| `ducklake_agents_quadrant` | (NEW) |
+| `ducklake_media_quadrant` | (NEW) |
+
+### Themed sub-tree split — `official_media/` → 4 sub-dirs (master plan §7.1)
+
+| Old | New |
+|:--|:--|
+| `dlt_sources/official_media/sct/` | `dlt_sources/official_media/british_crown/sct/` |
+| `dlt_sources/official_media/wls/` | `dlt_sources/official_media/british_crown/wls/` |
+| `dlt_sources/official_media/ggy/` | `dlt_sources/official_media/channel_islands/ggy/` |
+| `dlt_sources/official_media/iom/` | `dlt_sources/official_media/channel_islands/iom/` |
+| `dlt_sources/official_media/jsy/` | `dlt_sources/official_media/channel_islands/jsy/` |
+| `dlt_sources/official_media/companies_house/` | `dlt_sources/official_media/companies/companies_house/` |
+| `dlt_sources/official_media/fediverse.py` | `dlt_sources/official_media/fediverse/` |
+
+### Validation gate — `mise run lint:dlt-paths` (master plan §1.10)
+
+The `lint:dlt-paths` mise task (added per master plan §1.10) fails
+the CI build if any source `.py` file exists in the deprecated
+`dlt_sources/language/` directory (other than the `__init__.py`
+shim that re-exports from the 3 themed sub-trees).
+
+### Sister-repo carve (master plan INVARIANT 1)
+
+The UD corpora (`universal_dependencies.py`) are owned by the
+`ciancheiltis` sister repo. Pinned cross-repo reference:
+`ciar://ciancheiltis/datasets/ud_<lang>@v<N>` (per master plan
+INVARIANT 1 — bilingual carve rule).
+
+
+---
+
 ## Pre-Wave-1 legacy aliases (still in effect)
 
 ### European nations — ISO 3-letter → full snake_case

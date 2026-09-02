@@ -29,10 +29,21 @@ Usage:
 # The working sibling `lc_chemistry_pilot_assets.py` also omits this import.
 import os
 import subprocess
+from pathlib import Path
 from typing import Any
 
 import httpx
 import structlog
+
+# The canonical repo root — env-var driven so the module works on any host
+# (bunchloch, CI, or a Dagster code-server container). Falls back to the
+# 4-levels-up resolution of this file's location.
+REPO_ROOT = Path(
+    os.environ.get(
+        "CIANFHOGHLAIM_ROOT",
+        str(Path(__file__).resolve().parents[4]),
+    )
+).resolve()
 
 try:
     from dagster import (
@@ -95,12 +106,10 @@ def _resolve_pdf_paths(subject: str) -> list[str]:
     The canonical cache layout is
     `stedding/site_scrape_samples/lc/<subject>/<en|ga>/*.pdf`.
     """
-    from pathlib import Path
-
     cache_root = Path(
         os.environ.get(
             "STEDDING_INGEST_QUEUE",
-            "/Users/cianmacandeisigh/dev/kings_college_galway/stedding/site_scrape_samples",
+            str(REPO_ROOT / "stedding" / "site_scrape_samples"),
         )
     )
     subj_dir = cache_root / "lc" / subject
@@ -248,10 +257,7 @@ def lc_subject_pilot_factory(subject: str) -> tuple[Any, ...]:
     def loaded(context: AssetExecutionContext) -> dict[str, Any]:
         # The loading step is delegated to scripts/load_lc_chemistry_pilot.py
         # (canonical pattern from the chemistry pilot)
-        script = (
-            "/Users/cianmacandeisigh/dev/kings_college_galway/"
-            "scripts/load_lc_chemistry_pilot.py"
-        )
+        script = str(REPO_ROOT / "scripts" / "load_lc_chemistry_pilot.py")
         if not os.path.exists(script):
             context.log.warning(
                 f"load_script_missing: {script} (skipping subprocess)"
@@ -261,7 +267,10 @@ def lc_subject_pilot_factory(subject: str) -> tuple[Any, ...]:
         try:
             result = subprocess.run(
                 [
-                    "/Users/cianmacandeisigh/dev/kings_college_galway/.venv/bin/python3",
+                    os.environ.get(
+                        "CIANFHOGHLAIM_PYTHON",
+                        str(REPO_ROOT / ".venv" / "bin" / "python3"),
+                    ),
                     script,
                     "--subject",
                     subject,

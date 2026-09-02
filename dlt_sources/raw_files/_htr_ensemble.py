@@ -120,7 +120,7 @@ def route_htr(
 def _pymupdf_chars_per_page(file_path: Path) -> float:
     """Return the pymupdf chars/page for a PDF; 0.0 if pymupdf fails."""
     try:
-        from dlt_sources.british_isles.ireland.education._pdf_text import (
+        from dlt_sources.education.ireland.british_isles.education._pdf_text import (
             extract_pdf_text,
         )
 
@@ -141,7 +141,7 @@ def _pymupdf_chars_per_page(file_path: Path) -> float:
 def _extract_pymupdf_typed(file_path: Path) -> tuple[str, float]:
     """Typed-text path via pymupdf (the BIEP v1 helper)."""
     try:
-        from dlt_sources.british_isles.ireland.education._pdf_text import (
+        from dlt_sources.education.ireland.british_isles.education._pdf_text import (
             extract_pdf_text,
         )
 

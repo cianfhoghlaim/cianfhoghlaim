@@ -39,7 +39,7 @@ from typing import Any
 import dlt_sources
 import structlog
 
-from dlt_sources.british_isles.ireland.education._pdf_text import (
+from dlt_sources.education.ireland.british_isles.education._pdf_text import (
     extract_pdf_text,
 )
 
@@ -87,7 +87,7 @@ def _file_hash(path: Path) -> str:
 
 # The shared `extract_pdf_text` helper handles both the real pymupdf extraction
 # and the legacy stub fallback. See
-# dlt_sources.british_isles.ireland.education._pdf_text
+# dlt_sources.education.ireland.british_isles.education._pdf_text
 
 
 def build_jc_subject_source(

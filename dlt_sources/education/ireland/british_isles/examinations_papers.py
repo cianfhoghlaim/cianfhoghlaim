@@ -195,7 +195,7 @@ def examinations_ie_papers_source(
 
 
 if __name__ == "__main__":
-    # The CLI entry point: `python -m dlt_sources.british_isles.ireland.education.examinations_papers`
+    # The CLI entry point: `python -m dlt_sources.education.ireland.british_isles.education.examinations_papers`
     import dlt
 
     pipeline = dlt.pipeline(

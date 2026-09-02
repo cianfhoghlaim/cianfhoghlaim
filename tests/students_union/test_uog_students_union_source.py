@@ -4,7 +4,7 @@ from __future__ import annotations
 
 
 def test_uog_su_source_yields_2_resources():
-    from dlt_sources.british_isles.ireland.education.university.official_docs import (
+    from dlt_sources.education.ireland.british_isles.university.official_docs import (
         uog_students_union_source,
     )
 
@@ -17,7 +17,7 @@ def test_uog_su_source_yields_2_resources():
 
 
 def test_students_union_documents_resource():
-    from dlt_sources.british_isles.ireland.education.university.official_docs import (
+    from dlt_sources.education.ireland.british_isles.university.official_docs import (
         uog_students_union_source,
     )
 
@@ -33,7 +33,7 @@ def test_students_union_documents_resource():
 
 
 def test_class_rep_handbooks_covers_all_5_colleges():
-    from dlt_sources.british_isles.ireland.education.university.official_docs import (
+    from dlt_sources.education.ireland.british_isles.university.official_docs import (
         uog_students_union_source,
     )
 
@@ -48,7 +48,7 @@ def test_class_rep_handbooks_covers_all_5_colleges():
 
 
 def test_canonical_policies_seed():
-    from dlt_sources.british_isles.ireland.education.university.official_docs import (
+    from dlt_sources.education.ireland.british_isles.university.official_docs import (
         UOG_SU_CANONICAL_POLICIES,
     )
 

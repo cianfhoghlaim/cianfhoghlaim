@@ -1,3 +1,0 @@
-"""
-Tuath Demo Scripts.
-"""

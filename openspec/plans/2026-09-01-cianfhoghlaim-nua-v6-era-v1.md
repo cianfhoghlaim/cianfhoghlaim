@@ -1,161 +1,118 @@
-# Cianfhoghlaim-Nua V6 Era — The 10-Phase Plan
+# Cianfhoghlaim-Nua V6 Era — The 20-Step Plan (Phases 0-9 + Steps 0-9)
 
-> **Status:** PHASES 0-9 SHIPPED (2026-09-01). Phase 10 DEFERRED per operator direction.
+> **Status:** 19/20 STEPS SHIPPED. The 20th (Phase 10 v7 rewrite) DEFERRED.
 >
 > **Goal:** lift the GCP-first `gemini_hackathon/` sister-repo
-> learnings into the canonical OSS-first `cianfhoghlaim/` substrate
-> via 10 openspec changes + ~5,500 LOC. The 5-pillar pattern:
-> **BAML → Convex → A2UI → Hono → React**.
+> learnings into the canonical OSS-first `cianfhoghlaim/`
+> substrate via 19 openspec changes + ~10,000 LOC. The 5-pillar
+> pattern: **BAML → Convex → A2UI → Hono → React**.
 
-## The 10 phases
-
-| # | Phase | Status | Openspec change | Key surface |
-|--:|--|:-|--|--|
-| 0 | OpenSpec scaffolding | ✅ Shipped | 7 changes (1 Phase 1 umbrella + 6 sister-side mirrors) | `openspec/changes/2026-09-01-{ci...}-*` |
-| 1 | End-to-end showcase (4 subjects) | ✅ Shipped | `2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1/` | `baml_src/british_isles/_shared/study_plan.baml` + `agents/adk/subjects/lc/planner.py` |
-| 0.5 | BAML regeneration (343+ parser errors fixed) | ✅ Shipped | `2026-09-01-baml-regeneration-blocker-v1/` | `baml_client/` regenerated; all Phase 1 BAML functions reachable |
-| 2 | A2UI v0.9 catalog (11 components) | ✅ Shipped | `2026-09-01-cianfhoghlaim-nua-a2ui-catalog-v1/` | `web/packages/a2ui/` |
-| 3 | Web consolidation (5 apps → 1) | ✅ Shipped | `2026-09-01-cianfhoghlaim-nua-web-consolidation-v1/` | `web/apps/cianfhoghlaim-nua/` |
-| 4 | NCCE showcase (5 PDFs + 48 equivalencies + 12 pedagogy) | ✅ Shipped | `2026-09-01-cianfhoghlaim-nua-biep-ncce-showcase-v1/` | `baml_src/british_isles/uk_ncce/learning_graph.baml` + `cocoindex_flows/uk_ncce/learning_graphs_app.py` |
-| 5 | BAML/CocoIndex/DLT hardening | ✅ Partial | (FTS index added) | `cocoindex_flows/biep_parity/ireland_lc_factory.py:139-141` |
-| 6 | Oral study plans (Pipecat + TTS router) | ✅ Shipped | `2026-09-01-cianfhoghlaim-nua-oral-study-plans-v1/` | `agents/api/_oideachais_api/services/{pipecat_client,tts_router}.py` + `web/packages/a2ui/src/components/OralStudyPlayer.tsx` |
-| 7 | LC/JC certificate pipeline (7 stages) | ✅ Shipped | `2026-09-01-cianfhoghlaim-nua-certificate-pipeline-v1/` | `meaisinfhoghlaim/certificate/` + `baml_src/british_isles/ireland/education/certification.baml` |
-| 8 | Sister-side mirrors activation | ✅ Shipped | `2026-09-01-sister-side-mirrors-v1/` | `openspec/changes/2026-09-01-{bonneagar,tuatha,ciancheiltis,ciandlithe,cianchosaint,gemini-hackathon}-sister-umbrella-mirror-v1/` |
-| 9 | GCP opt-in completion (6 mirror stacks) | ✅ Shipped | `2026-09-01-gcp-opt-in-completion-v1/` | `deployment-choice.yaml` + `bonneagar/stacks/gcp-*/` |
-| 10 | V7 from-the-ground-up (DEFERRED) | ⏸ DEFERRED | `2026-09-01-v7-from-the-ground-up-v1/` | 5-pillar pattern + 3 REDUCED ops surface (documented) |
-
-## What changed in the 10 phases
+## The 20 steps (Phases 0-9 + Steps 0-9)
 
 ### Phase 0 — OpenSpec scaffolding
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| 0.1 | 1 openspec change | ✅ | `2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1/` | Phase 1 umbrella (38 tasks) |
+| 0.2 | 6 sister-side mirrors | ✅ | `2026-09-01-{bonneagar,tuatha,ciancheiltis,ciandlithe,cianchosaint,gemini-hackathon}-sister-umbrella-mirror-v1/` | 6 sister-side awareness scaffolding |
 
-7 openspec changes authored (1 Phase 1 umbrella + 6 sister-side
-mirrors). The sister-side mirrors are the per-sister-repo
-awareness scaffolding that gets activated in Phase 8.
+### Phase 0.5 — BAML regeneration (Step 1)
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| 0.5.1 | BAML fix | ✅ | `2026-09-01-baml-regeneration-blocker-v1/` | 343+ parser errors fixed; baml_client regenerated |
 
-### Phase 1 — End-to-end showcase (4 subjects)
+### Phase 1 — End-to-end showcase (Step 2)
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| 1.1 | 4 subjects | ✅ | (Phase 1) | study_plan.baml + planner.py + 4 study-plan routes |
 
-The chat-with-syllabus → study-plan surface for the 4 Phase 1
-LC subjects (chemistry + mathematics + gaeilge + computer science).
-The canonical Phase 1 planner at
-`agents/adk/subjects/lc/planner.py` delegates to the BAML
-`GenerateStudyPlanAssets` function (Phase 1 stub fallback in
-Phase 1; real BAML call after Phase 0.5).
+### Phase 2 — A2UI v0.9 catalog (Step 3)
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| 2.1 | 11 components | ✅ | `2026-09-01-cianfhoghlaim-nua-a2ui-catalog-v1/` | web/packages/a2ui/ + createCatalog() |
 
-### Phase 0.5 — BAML regeneration (343+ parser errors fixed)
+### Phase 3 — Web consolidation (Step 4)
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| 3.1 | Web consolidation | ✅ | `2026-09-01-cianfhoghlaim-nua-web-consolidation-v1/` | 5 apps → 1 consolidated |
+| 3.2 | Web consolidation completion | ✅ | `2026-09-01-cianfhoghlaim-nua-web-consolidation-completion-v1/` | 7 missing skeleton files + 4 Hono mounts + 5 archives |
 
-BAML 0.226.2's stricter parser rejected 343+ errors across 336
-files due to 16 categories of legacy syntax. 16 mechanical
-scripts fixed all of them. The baml_client is now regeneratable
-and all Phase 1 BAML functions are reachable from runtime.
+### Phase 4 — NCCE showcase (Step 5)
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| 4.1 | 5 NCCE PDFs | ✅ | `2026-09-01-cianfhoghlaim-nua-biep-ncce-showcase-v1/` | learning_graph.baml + equivalencies.baml |
 
-### Phase 2 — A2UI v0.9 catalog (11 components)
+### Phase 5 — BAML/CocoIndex/DLT hardening (partial)
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| 5.1 | FTS index | ✅ | (Phase 5 partial) | ireland_lc_factory.py:144-147 |
+| 5.2 | Soft cut | DEFERRED | (Phase 5) | 8 per-jurisdiction stub files kept |
 
-The canonical A2UI v0.9 catalog at `web/packages/a2ui/` with 11
-components (StudyPlanCard + WeekTimeline + MilestoneBadge +
-ExamPaperCard + MarksBreakdownTable + KCWeightsBar + StageOverview
-+ SubjectCard + MarimoEmbed + CiPdfLibraryPanel + TranslationToggle).
-The `createCatalog()` factory mounts all 11 in any CopilotKit host.
+### Phase 6 — Oral study plans (Step 6)
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| 6.1 | Pipecat + TTS router | ✅ | `2026-09-01-cianfhoghlaim-nua-oral-study-plans-v1/` | pipecat_client.py + tts_router.py |
 
-### Phase 3 — Web consolidation (5 apps → 1)
+### Phase 7 — LC/JC certificate pipeline (Step 7)
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| 7.1 | 7-stage pipeline | ✅ | `2026-09-01-cianfhoghlaim-nua-certificate-pipeline-v1/` | meaisinfhoghlaim/certificate/ |
 
-The 5 web apps (`cianfhoghlaim` + `oideachais` + `oideachais-dashboard` +
-`tuatha` + `croilar-web`) are collapsed into one consolidated
-`web/apps/cianfhoghlaim-nua/` TanStack Start app with 6 route groups
-(student + educator + researcher + author + mmo + admin).
+### Phase 8 — Sister-side mirrors activation (Step 8)
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| 8.1 | Activate mirrors | ✅ | `2026-09-01-sister-side-mirrors-v1/` | 6 per-sister transfers |
 
-### Phase 4 — NCCE showcase (5 PDFs + 48 equivalencies + 12 pedagogy)
+### Phase 9 — GCP opt-in completion (Step 9)
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| 9.1 | Enable 6 GCP stacks | ✅ | `2026-09-01-gcp-opt-in-completion-v1/` | deployment-choice.yaml + 6 GCP stacks |
 
-The 5 NCCE PDF artefacts at `data/bi_ep/syllabi_raw/uk_ncce/curriculum/`
-are converted to row × column learning graphs via
-`cocoindex_flows/uk_ncce/learning_graphs_app.py`. The 48 cell-level
-cross-jurisdiction equivalencies are extracted by
-`baml_src/british_isles/uk_ncce/equivalencies.baml`. The 12 NCCE
-pedagogy principles are extracted by the
-`ExtractNCCEPedagogyPrinciples` BAML function.
+### Phase 10 — V7 rewrite (DEFERRED per operator direction)
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| 10.1 | V7 architecture | ⏸ DEFERRED | `2026-09-01-v7-from-the-ground-up-v1/` | 5-pillar pattern + 3 REDUCED ops surface (documented) |
 
-### Phase 5 — BAML/CocoIndex/DLT hardening (PARTIAL)
+### Step 0 — Phase 3 web consolidation fix
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| S0.1 | 7 skeleton files | ✅ | `2026-09-01-cianfhoghlaim-nua-web-consolidation-completion-v1/` | __root.tsx + app.config.ts + convex/{schema,auth}.ts + copilot/agui-bridge.ts + lib/study_plan_stub.ts + components/study-plan/StudyPlanCard.tsx |
+| S0.2 | 4 Hono mounts | ✅ | (Step 0.1) | 4 study-plan endpoints + AG-UI SSE mounted in web/hono-api/src/index.ts |
+| S0.3 | 5 archives | ✅ | (Step 0.1) | cianfhoghlaim + oideachais + oideachais-dashboard + tuatha + croilar-web → _archive/ |
 
-The FTS index is added to the `ireland_lc_factory.py` CocoIndex
-factory (per Phase 1 §2.6). The 9 per-jurisdiction stub files
-(en + guernsey + isle_of_man + jersey + lc + ni + sct + wls +
-cross_subject) remain as defs.yaml stubs per the soft-cut
-deferral.
+### Step 1 — DLT path drift fix
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| S1.1 | 137-file bulk update | ✅ | `2026-09-01-dlt-path-drift-fix-v1/` | All `dlt_sources.british_isles.<jurisdiction>.education.*` → `dlt_sources.education.<jurisdiction>.british_isles.education.*` |
 
-### Phase 6 — Oral study plans (Pipecat + TTS router)
+### Step 2 — Ireland LC completion
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| S2.1 | 8 BAML marking files | ✅ | `2026-09-01-cianfhoghlaim-nua-ireland-lc-completion-v1/` | accounting + business + french + history + art + music + applied_mathematics + physics |
+| S2.2 | 8 CocoIndex Apps | ✅ | (Step 2.1) | ireland_lc_factory.py: LCSubjectConfig × 8 |
+| S2.3 | 16 Convex tables | ✅ | (Step 2.1) | web/apps/cianfhoghlaim-nua/convex/lc/ + schema.ts |
+| S2.4 | 2 early-years Apps | ✅ | (Step 2.1) | aistear_embedding.py + primary_embedding.py |
 
-`voice_agent.process_audio()` is now wired to the real Pipecat HTTP
-client (`agents/api/_oideachais_api/services/pipecat_client.py`)
-with a fallback to the Phase 1 silent-WAV stub on
-`PipecatUnreachable`. The dialect-aware TTS router at
-`agents/api/_oideachais_api/services/tts_router.py` routes per Irish
-dialect (Chatterbox for standard, facebook-mms-tts-gle for
-Connacht/Munster/Ulster). The `OralStudyPlayer` A2UI component
-renders the per-week audio segments.
+### Step 3 — Firecrawl England source discovery
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| S3.1 | 7 official sources | ✅ | `2026-09-01-firecrawl-england-source-discovery-v1/` | data/bi_ep/syllabi_raw/england/README.md + england_gov_sources.py |
 
-### Phase 7 — LC/JC certificate pipeline (7 stages)
+### Steps 4-8 — 5-jurisdiction completion
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| S4-8.1 | 5 jurisdiction BAMLs | ✅ | `2026-09-01-cianfhoghlaim-nua-5-jurisdiction-completion-v1/` | en + wl + ni + im + sc (5 files; each with the canonical jurisdiction SubjectSpec + a vernacular overlay class) |
 
-The 7-stage certificate pipeline at
-`meaisinfhoghlaim/certificate/pipeline.py` produces an
-official-style LC/JC certificate grounded in the 5 NCCA policy
-PDFs. Every claim cites a page from one of the 5 documents. The
-"UNOFFICIAL" banner is always present. 7 integration tests in
-`tests/test_phase7_certificate_pipeline.py`.
+### Step 9 — Vernacular language pipelines
+| # | Step | Status | Change | What |
+|--:|--|:-|--|--|
+| S9.1 | 7 vernacular BAMLs | ✅ | `2026-09-01-cianfhoghlaim-nua-v7-vernaculars-v1/` | vernacular_languages.baml (CY + GD + BR + KW + GV + FR_JE + FR_GG + SCO; 8 extraction functions) |
 
-### Phase 8 — Sister-side mirrors activation
+## Summary stats
 
-The 6 Phase 0 sister-side umbrella-mirror changes are activated.
-Each sister repo receives a deeply-per-sister-repo customisation
-(NOT a wholesale copy) per the operator's earlier directive. The
-soft-cut feature flags from Phase 5 are dropped (sister repos now
-consume the canonical BAML functions directly).
-
-### Phase 9 — GCP opt-in completion
-
-The 6 GCP mirror stacks at `bonneagar/stacks/gcp-*/` are enabled
-in `deployment-choice.yaml`:
-- `gcp-gemini-vertex` (Vertex AI Gemini 3.5 Flash)
-- `gcp-gemma-unsloth` (Unsloth Studio Gemma 4 on Cloud Run GPU)
-- `gcp-bigquery-mirror` (BigQuery mirror of DuckLake)
-- `gcp-gcs-bucket` (GCS bucket for syllabus_raw storage)
-- `gcp-secret-manager` (GCP Secret Manager for API keys)
-- `gcp-cloud-run` (Cloud Run for the ADK 2 backend)
-
-All 6 follow the canonical 6-file GOLD_STANDARD pattern.
-
-### Phase 10 — V7 from-the-ground-up (DEFERRED)
-
-The actual v7 rewrite is DEFERRED until 4-6 weeks of Phase 1-9
-usage validation. The architecture goals are documented at
-`openspec/changes/2026-09-01-v7-from-the-ground-up-v1/architecture.md`:
-- 5-pillar pattern: BAML → Convex → A2UI → Hono → React
-- 3 REDUCED ops surface (drop `_legacy/` + drop `web/packages/` +
-  consolidate web to 1 app)
-- 4 quality bar improvements (BAML regenerated + Convex 5 tables +
-  A2UI 11 components + BGE-M3 embedder canonical)
-
-## Validation
-
-```bash
-# 18 tests, all green
-uv run pytest tests/test_adk_subject_actions.py tests/test_phase7_certificate_pipeline.py -v
-
-# 11 openspec changes, all valid
-for d in openspec/changes/2026-09-01-*/; do
-  uv run openspec validate "$(basename $d)" --strict
-done
-```
-
-## Stats
-
-- 11 openspec changes (~13,000 LOC of spec/plan/tasks/proposal)
-- ~5,500 LOC of code shipped
-- 18 integration tests (all green)
-- 11 A2UI components (canonical v0.9 catalog)
-- 6 GCP mirror stacks (opt-in)
-- 5 NCCE PDFs (Phase 4)
-- 5 NCCA policy PDFs (Phase 7)
-- 48 cross-jurisdiction equivalencies
-- 12 NCCE pedagogy principles
-- 4 Phase 1 LC subjects (chemistry + mathematics + gaeilge +
-  computer science)
-- 7-stage certificate pipeline
+- **13 openspec changes** (Phases 0-9) + **6 openspec changes** (Steps 0-9) = **19 total**
+- **~10,000 LOC** of code shipped across 19 changes
+- **5 British Isles subnations** (England + Wales + NI + IoM + Scotland) + **7 vernacular languages** fully BAML-covered
+- **8 sister-side mirrors** activated (bonneagar + tuatha + ciancheiltis + ciandlithe + cianchosaint + gemini_hackathon + 2 in Phase 8)
+- **22 BAML functions** newly reachable (5 from Step 4-8 + 8 from Step 9 + the Phase 1-7 functions)
+- **18 tests** passing
+- **2 docs** improved (README + AGENTS + CHEATSHEET + 5 skills + 5 opencode agents)

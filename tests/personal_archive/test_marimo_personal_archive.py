@@ -10,14 +10,14 @@ down the parseability contract.
 """
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import ast
 
 
-_NOTEBOOK = Path(
-    "/Users/cianmacandeisigh/dev/kings_college_galway/notebooks/15_personal_archive.py"
-)
+_CIANFHOGHLAIM_ROOT = Path(os.environ.get("CIANFHOGHLAIM_ROOT", os.path.expanduser("~/dev/cianfhoghlaim")))
+_NOTEBOOK = _CIANFHOGHLAIM_ROOT / "notebooks/15_personal_archive.py"
 
 
 def test_personal_archive_notebook_parses_as_valid_python() -> None:

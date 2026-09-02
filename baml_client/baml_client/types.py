@@ -37,7 +37,7 @@ def get_checks(checks: typing.Dict[CheckName, Check]) -> typing.List[Check]:
 def all_succeeded(checks: typing.Dict[CheckName, Check]) -> bool:
     return all(check.status == "succeeded" for check in get_checks(checks))
 # #########################################################################
-# Generated enums (288)
+# Generated enums (320)
 # #########################################################################
 
 class ALevelAQASubject(str, Enum):
@@ -235,6 +235,19 @@ class ALevelSubjectSlug(str, Enum):
     POLITICS = "POLITICS"
     SOCIOLOGY = "SOCIOLOGY"
 
+class AccountingCommonMistake(str, Enum):
+    TOPIC_MISUNDERSTANDING = "TOPIC_MISUNDERSTANDING"
+    CALCULATION_ERROR = "CALCULATION_ERROR"
+    METHOD_INCOMPLETE = "METHOD_INCOMPLETE"
+
+class AccountingQuestionType(str, Enum):
+    SHORT_ANSWER = "SHORT_ANSWER"
+    EXTENDED_RESPONSE = "EXTENDED_RESPONSE"
+    CALCULATION = "CALCULATION"
+    DATA_ANALYSIS = "DATA_ANALYSIS"
+    ESSAY = "ESSAY"
+    DIAGRAM_BASED = "DIAGRAM_BASED"
+
 class AchievementLevel(str, Enum):
     Exceptional = "Exceptional"
     AboveExpectations = "AboveExpectations"
@@ -307,6 +320,35 @@ class AnamSource(str, Enum):
     Comic = "Comic"
     Gba = "Gba"
     Manual = "Manual"
+
+class AppliedMathsCommonMistake(str, Enum):
+    ALGEBRAIC_ERROR = "ALGEBRAIC_ERROR"
+    UNIT_MISMATCH = "UNIT_MISMATCH"
+    ASSUMPTION_UNSTATED = "ASSUMPTION_UNSTATED"
+    METHOD_INCOMPLETE = "METHOD_INCOMPLETE"
+    ROUNDING_ERROR = "ROUNDING_ERROR"
+    CONCEPT_CONFUSION = "CONCEPT_CONFUSION"
+
+class AppliedMathsQuestionType(str, Enum):
+    SHORT_ANSWER = "SHORT_ANSWER"
+    EXTENDED_RESPONSE = "EXTENDED_RESPONSE"
+    CALCULATION = "CALCULATION"
+    PROOF = "PROOF"
+    APPLIED = "APPLIED"
+    DIAGRAM_BASED = "DIAGRAM_BASED"
+
+class ArtCommonMistake(str, Enum):
+    TOPIC_MISUNDERSTANDING = "TOPIC_MISUNDERSTANDING"
+    CALCULATION_ERROR = "CALCULATION_ERROR"
+    METHOD_INCOMPLETE = "METHOD_INCOMPLETE"
+
+class ArtQuestionType(str, Enum):
+    SHORT_ANSWER = "SHORT_ANSWER"
+    EXTENDED_RESPONSE = "EXTENDED_RESPONSE"
+    CALCULATION = "CALCULATION"
+    DATA_ANALYSIS = "DATA_ANALYSIS"
+    ESSAY = "ESSAY"
+    DIAGRAM_BASED = "DIAGRAM_BASED"
 
 class ArtStyle(str, Enum):
     ABSTRACT = "ABSTRACT"
@@ -458,6 +500,19 @@ class BoonTier(str, Enum):
     Heroic = "Heroic"
     Legendary = "Legendary"
     Duo = "Duo"
+
+class BusinessCommonMistake(str, Enum):
+    TOPIC_MISUNDERSTANDING = "TOPIC_MISUNDERSTANDING"
+    CALCULATION_ERROR = "CALCULATION_ERROR"
+    METHOD_INCOMPLETE = "METHOD_INCOMPLETE"
+
+class BusinessQuestionType(str, Enum):
+    SHORT_ANSWER = "SHORT_ANSWER"
+    EXTENDED_RESPONSE = "EXTENDED_RESPONSE"
+    CALCULATION = "CALCULATION"
+    DATA_ANALYSIS = "DATA_ANALYSIS"
+    ESSAY = "ESSAY"
+    DIAGRAM_BASED = "DIAGRAM_BASED"
 
 class CAOField(str, Enum):
     ARTS_HUMANITIES = "ARTS_HUMANITIES"
@@ -927,6 +982,27 @@ class DuchasCollection(str, Enum):
     CBEG = "CBEG"
     CBED = "CBED"
 
+class ENAwardDescriptor(str, Enum):
+    EXCEPTIONAL = "EXCEPTIONAL"
+    ABOVE_EXPECTATIONS = "ABOVE_EXPECTATIONS"
+    IN_LINE_WITH_EXPECTATIONS = "IN_LINE_WITH_EXPECTATIONS"
+    BELOW_EXPECTATIONS = "BELOW_EXPECTATIONS"
+    FAR_BELOW_EXPECTATIONS = "FAR_BELOW_EXPECTATIONS"
+
+class ENKeyCompetency(str, Enum):
+    COMMUNICATING = "COMMUNICATING"
+    INFORMATION_PROCESSING = "INFORMATION_PROCESSING"
+    CRITICAL_AND_CREATIVE_THINKING = "CRITICAL_AND_CREATIVE_THINKING"
+    PERSONAL_EFFECTIVENESS = "PERSONAL_EFFECTIVENESS"
+    WORKING_WITH_OTHERS = "WORKING_WITH_OTHERS"
+
+class ENStage(str, Enum):
+    AISTEAR = "AISTEAR"
+    PRIMARY = "PRIMARY"
+    JUNIOR_CYCLE = "JUNIOR_CYCLE"
+    LEAVING_CERT = "LEAVING_CERT"
+    UNIVERSITY = "UNIVERSITY"
+
 class EQFLevel(str, Enum):
     EQF_3 = "EQF_3"
     EQF_4 = "EQF_4"
@@ -1207,6 +1283,19 @@ class FolkloreTopic(str, Enum):
     MEDICINE = "MEDICINE"
     DEATH_BURIAL = "DEATH_BURIAL"
     SUPERNATURAL = "SUPERNATURAL"
+
+class FrenchCommonMistake(str, Enum):
+    TOPIC_MISUNDERSTANDING = "TOPIC_MISUNDERSTANDING"
+    CALCULATION_ERROR = "CALCULATION_ERROR"
+    METHOD_INCOMPLETE = "METHOD_INCOMPLETE"
+
+class FrenchQuestionType(str, Enum):
+    SHORT_ANSWER = "SHORT_ANSWER"
+    EXTENDED_RESPONSE = "EXTENDED_RESPONSE"
+    CALCULATION = "CALCULATION"
+    DATA_ANALYSIS = "DATA_ANALYSIS"
+    ESSAY = "ESSAY"
+    DIAGRAM_BASED = "DIAGRAM_BASED"
 
 class GCSEAOLevel(str, Enum):
     AO1 = "AO1"
@@ -1614,6 +1703,40 @@ class HandbookTopicCode(str, Enum):
     L = "L"
     M = "M"
     N = "N"
+
+class HistoryCommonMistake(str, Enum):
+    TOPIC_MISUNDERSTANDING = "TOPIC_MISUNDERSTANDING"
+    CALCULATION_ERROR = "CALCULATION_ERROR"
+    METHOD_INCOMPLETE = "METHOD_INCOMPLETE"
+
+class HistoryQuestionType(str, Enum):
+    SHORT_ANSWER = "SHORT_ANSWER"
+    EXTENDED_RESPONSE = "EXTENDED_RESPONSE"
+    CALCULATION = "CALCULATION"
+    DATA_ANALYSIS = "DATA_ANALYSIS"
+    ESSAY = "ESSAY"
+    DIAGRAM_BASED = "DIAGRAM_BASED"
+
+class IMAwardDescriptor(str, Enum):
+    EXCEPTIONAL = "EXCEPTIONAL"
+    ABOVE_EXPECTATIONS = "ABOVE_EXPECTATIONS"
+    IN_LINE_WITH_EXPECTATIONS = "IN_LINE_WITH_EXPECTATIONS"
+    BELOW_EXPECTATIONS = "BELOW_EXPECTATIONS"
+    FAR_BELOW_EXPECTATIONS = "FAR_BELOW_EXPECTATIONS"
+
+class IMKeyCompetency(str, Enum):
+    COMMUNICATING = "COMMUNICATING"
+    INFORMATION_PROCESSING = "INFORMATION_PROCESSING"
+    CRITICAL_AND_CREATIVE_THINKING = "CRITICAL_AND_CREATIVE_THINKING"
+    PERSONAL_EFFECTIVENESS = "PERSONAL_EFFECTIVENESS"
+    WORKING_WITH_OTHERS = "WORKING_WITH_OTHERS"
+
+class IMStage(str, Enum):
+    AISTEAR = "AISTEAR"
+    PRIMARY = "PRIMARY"
+    JUNIOR_CYCLE = "JUNIOR_CYCLE"
+    LEAVING_CERT = "LEAVING_CERT"
+    UNIVERSITY = "UNIVERSITY"
 
 class ImagePurpose(str, Enum):
     STUDY_CARD = "STUDY_CARD"
@@ -2242,6 +2365,11 @@ class MoodCategory(str, Enum):
     NOSTALGIC = "NOSTALGIC"
     ETHEREAL = "ETHEREAL"
 
+class MusicCommonMistake(str, Enum):
+    TOPIC_MISUNDERSTANDING = "TOPIC_MISUNDERSTANDING"
+    CALCULATION_ERROR = "CALCULATION_ERROR"
+    METHOD_INCOMPLETE = "METHOD_INCOMPLETE"
+
 class MusicGenre(str, Enum):
     ELECTRONIC = "ELECTRONIC"
     AMBIENT = "AMBIENT"
@@ -2284,6 +2412,14 @@ class MusicGenrePortfolio(str, Enum):
     SOUNDTRACK = "SOUNDTRACK"
     CELTIC = "CELTIC"
     OTHER = "OTHER"
+
+class MusicQuestionType(str, Enum):
+    SHORT_ANSWER = "SHORT_ANSWER"
+    EXTENDED_RESPONSE = "EXTENDED_RESPONSE"
+    CALCULATION = "CALCULATION"
+    DATA_ANALYSIS = "DATA_ANALYSIS"
+    ESSAY = "ESSAY"
+    DIAGRAM_BASED = "DIAGRAM_BASED"
 
 class MutationType(str, Enum):
     LEN = "LEN"
@@ -2358,6 +2494,27 @@ class NFQLevel(str, Enum):
     NFQ_8 = "NFQ_8"
     NFQ_9 = "NFQ_9"
     NFQ_10 = "NFQ_10"
+
+class NIAwardDescriptor(str, Enum):
+    EXCEPTIONAL = "EXCEPTIONAL"
+    ABOVE_EXPECTATIONS = "ABOVE_EXPECTATIONS"
+    IN_LINE_WITH_EXPECTATIONS = "IN_LINE_WITH_EXPECTATIONS"
+    BELOW_EXPECTATIONS = "BELOW_EXPECTATIONS"
+    FAR_BELOW_EXPECTATIONS = "FAR_BELOW_EXPECTATIONS"
+
+class NIKeyCompetency(str, Enum):
+    COMMUNICATING = "COMMUNICATING"
+    INFORMATION_PROCESSING = "INFORMATION_PROCESSING"
+    CRITICAL_AND_CREATIVE_THINKING = "CRITICAL_AND_CREATIVE_THINKING"
+    PERSONAL_EFFECTIVENESS = "PERSONAL_EFFECTIVENESS"
+    WORKING_WITH_OTHERS = "WORKING_WITH_OTHERS"
+
+class NIStage(str, Enum):
+    AISTEAR = "AISTEAR"
+    PRIMARY = "PRIMARY"
+    JUNIOR_CYCLE = "JUNIOR_CYCLE"
+    LEAVING_CERT = "LEAVING_CERT"
+    UNIVERSITY = "UNIVERSITY"
 
 class Nation(str, Enum):
     IRELAND = "IRELAND"
@@ -2545,6 +2702,22 @@ class PartOfSpeechArchive(str, Enum):
     PUNCT = "PUNCT"
     SYM = "SYM"
     X = "X"
+
+class PhysicsCommonMistake(str, Enum):
+    ALGEBRAIC_ERROR = "ALGEBRAIC_ERROR"
+    UNIT_MISMATCH = "UNIT_MISMATCH"
+    ASSUMPTION_UNSTATED = "ASSUMPTION_UNSTATED"
+    METHOD_INCOMPLETE = "METHOD_INCOMPLETE"
+    ROUNDING_ERROR = "ROUNDING_ERROR"
+    CONCEPT_CONFUSION = "CONCEPT_CONFUSION"
+
+class PhysicsQuestionType(str, Enum):
+    SHORT_ANSWER = "SHORT_ANSWER"
+    EXTENDED_RESPONSE = "EXTENDED_RESPONSE"
+    CALCULATION = "CALCULATION"
+    PROOF = "PROOF"
+    APPLIED = "APPLIED"
+    DIAGRAM_BASED = "DIAGRAM_BASED"
 
 class PlatformType(str, Enum):
     GITHUB = "GITHUB"
@@ -2840,6 +3013,20 @@ class RubricStyle(str, Enum):
     RUBRIC_PCLM_IRISH = "RUBRIC_PCLM_IRISH"
     LINGUISTIC_PRINCIPLES = "LINGUISTIC_PRINCIPLES"
 
+class SCAwardDescriptor(str, Enum):
+    EXCEPTIONAL = "EXCEPTIONAL"
+    ABOVE_EXPECTATIONS = "ABOVE_EXPECTATIONS"
+    IN_LINE_WITH_EXPECTATIONS = "IN_LINE_WITH_EXPECTATIONS"
+    BELOW_EXPECTATIONS = "BELOW_EXPECTATIONS"
+    FAR_BELOW_EXPECTATIONS = "FAR_BELOW_EXPECTATIONS"
+
+class SCKeyCompetency(str, Enum):
+    COMMUNICATING = "COMMUNICATING"
+    INFORMATION_PROCESSING = "INFORMATION_PROCESSING"
+    CRITICAL_AND_CREATIVE_THINKING = "CRITICAL_AND_CREATIVE_THINKING"
+    PERSONAL_EFFECTIVENESS = "PERSONAL_EFFECTIVENESS"
+    WORKING_WITH_OTHERS = "WORKING_WITH_OTHERS"
+
 class SCQFLevel(str, Enum):
     NATIONAL_5 = "NATIONAL_5"
     HIGHER = "HIGHER"
@@ -2890,6 +3077,13 @@ class SCQFSubject(str, Enum):
     EARLY_YEARS_AND_CHILDCARE = "EARLY_YEARS_AND_CHILDCARE"
     CHILD_CARE_AND_DEVELOPMENT = "CHILD_CARE_AND_DEVELOPMENT"
     OTHER = "OTHER"
+
+class SCStage(str, Enum):
+    AISTEAR = "AISTEAR"
+    PRIMARY = "PRIMARY"
+    JUNIOR_CYCLE = "JUNIOR_CYCLE"
+    LEAVING_CERT = "LEAVING_CERT"
+    UNIVERSITY = "UNIVERSITY"
 
 class SOLASPath(str, Enum):
     PLC = "PLC"
@@ -3263,6 +3457,16 @@ class VerbTense(str, Enum):
     COND = "COND"
     HAB = "HAB"
 
+class VernacularLanguage(str, Enum):
+    CY = "CY"
+    GD = "GD"
+    BR = "BR"
+    KW = "KW"
+    GV = "GV"
+    FR_JE = "FR_JE"
+    FR_GG = "FR_GG"
+    SCO = "SCO"
+
 class VisualStyle(str, Enum):
     EDUCATIONAL_DIAGRAM = "EDUCATIONAL_DIAGRAM"
     ILLUSTRATION = "ILLUSTRATION"
@@ -3319,8 +3523,29 @@ class WJECSubject(str, Enum):
     TEXTILES = "TEXTILES"
     OTHER = "OTHER"
 
+class WLAwardDescriptor(str, Enum):
+    EXCEPTIONAL = "EXCEPTIONAL"
+    ABOVE_EXPECTATIONS = "ABOVE_EXPECTATIONS"
+    IN_LINE_WITH_EXPECTATIONS = "IN_LINE_WITH_EXPECTATIONS"
+    BELOW_EXPECTATIONS = "BELOW_EXPECTATIONS"
+    FAR_BELOW_EXPECTATIONS = "FAR_BELOW_EXPECTATIONS"
+
+class WLKeyCompetency(str, Enum):
+    COMMUNICATING = "COMMUNICATING"
+    INFORMATION_PROCESSING = "INFORMATION_PROCESSING"
+    CRITICAL_AND_CREATIVE_THINKING = "CRITICAL_AND_CREATIVE_THINKING"
+    PERSONAL_EFFECTIVENESS = "PERSONAL_EFFECTIVENESS"
+    WORKING_WITH_OTHERS = "WORKING_WITH_OTHERS"
+
+class WLStage(str, Enum):
+    AISTEAR = "AISTEAR"
+    PRIMARY = "PRIMARY"
+    JUNIOR_CYCLE = "JUNIOR_CYCLE"
+    LEAVING_CERT = "LEAVING_CERT"
+    UNIVERSITY = "UNIVERSITY"
+
 # #########################################################################
-# Generated classes (908)
+# Generated classes (934)
 # #########################################################################
 
 class ALevelAreaTopic(BaseModel):
@@ -3536,6 +3761,24 @@ class AcademicModuleDescriptor(BaseModel):
     ects: typing.Optional[int] = Field(default=None, description='ECTS credit value')
     source_url: typing.Optional[str] = Field(default=None, description='URL the descriptor was extracted from')
     confidence: float = Field(description='Overall extraction confidence 0.0-1.0')
+
+class AccountingMarkingScheme(BaseModel):
+    subject: str = Field(description='Always \'accounting\'')
+    scheme_code: str
+    language: str = Field(description='EN (taught in English)')
+    level: str = Field(description='HL / OL')
+    year: int
+    source_pdf: str
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: "AccountingSubjectDiscriminator"
+    total_marks: int
+    total_questions: int
+
+class AccountingSubjectDiscriminator(BaseModel):
+    primary_topic: str = Field(description='Main  topic tested')
+    dominant_question_types: typing.List[AccountingQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: AccountingCommonMistake
 
 class AdaptiveAssessment(BaseModel):
     assessment_id: str
@@ -3767,6 +4010,24 @@ class ApplicationTimeline(BaseModel):
     offer_round_2: typing.Optional[str] = None
     registration_open: str
 
+class AppliedMathsMarkingScheme(BaseModel):
+    subject: str = Field(description='Always \'applied_mathematics\'')
+    scheme_code: str
+    language: str = Field(description='EN (taught in English)')
+    level: str = Field(description='HL / OL')
+    year: int
+    source_pdf: str
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: "AppliedMathsSubjectDiscriminator"
+    total_marks: int
+    total_questions: int
+
+class AppliedMathsSubjectDiscriminator(BaseModel):
+    primary_topic: str = Field(description='Main  topic tested')
+    dominant_question_types: typing.List[AppliedMathsQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: AppliedMathsCommonMistake
+
 class Apprenticeship(BaseModel):
     programme_code: str
     title_en: str
@@ -3798,6 +4059,24 @@ class ArmourOfClochur(BaseModel):
     rationale_en: str = Field(description='Why this treasure maps to History')
     rationale_ga: typing.Optional[str] = Field(default=None, description='Irish-language rationale; null if unattested')
     mmo_signal: str = Field(description='How the Cianfhoghlaim Educational MMO lights this up')
+
+class ArtMarkingScheme(BaseModel):
+    subject: str = Field(description='Always \'art\'')
+    scheme_code: str
+    language: str = Field(description='EN (taught in English)')
+    level: str = Field(description='HL / OL')
+    year: int
+    source_pdf: str
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: "ArtSubjectDiscriminator"
+    total_marks: int
+    total_questions: int
+
+class ArtSubjectDiscriminator(BaseModel):
+    primary_topic: str = Field(description='Main  topic tested')
+    dominant_question_types: typing.List[ArtQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: ArtCommonMistake
 
 class ArtworkAnalysis(BaseModel):
     description: str = Field(description='2-3 sentence description of the artwork')
@@ -4177,6 +4456,24 @@ class BulgariaSubjectCurriculum(BaseModel):
     exam_board: typing.Optional[str] = Field(default=None, description='Awarding body / ministry (e.g. MŠMT, MŠMTŠ, OH, NÚCEM)')
     source_url: str
     content_hash: typing.Optional[str] = None
+
+class BusinessMarkingScheme(BaseModel):
+    subject: str = Field(description='Always \'business\'')
+    scheme_code: str
+    language: str = Field(description='EN (taught in English)')
+    level: str = Field(description='HL / OL')
+    year: int
+    source_pdf: str
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: "BusinessSubjectDiscriminator"
+    total_marks: int
+    total_questions: int
+
+class BusinessSubjectDiscriminator(BaseModel):
+    primary_topic: str = Field(description='Main  topic tested')
+    dominant_question_types: typing.List[BusinessQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: BusinessCommonMistake
 
 class CBATask(BaseModel):
     name_en: str
@@ -5588,6 +5885,21 @@ class EMAMedicine(BaseModel):
     source_url: str
     content_hash: typing.Optional[str] = None
 
+class ENSubjectSpec(BaseModel):
+    stage: ENStage
+    subject_slug: str
+    display_name: str
+    display_name_ga: str
+    display_name_local: str
+    award_descriptor: ENAwardDescriptor
+    descriptor_vocabulary: typing.List[ENAwardDescriptor]
+    key_competencies: typing.List[ENKeyCompetency]
+    source_pdf: str
+    source_url: str
+    language: str
+    year: int
+    page: int
+
 class EUDocument(BaseModel):
     document_id: str = Field(description='The institution-specific document id (CELEX, case id, dataset id, publication id, ...)')
     institution: EUInstitution = Field(description='The EU institution that published the document')
@@ -6354,6 +6666,24 @@ class FranceMedicineDocument(BaseModel):
     source_url: str
     content_hash: typing.Optional[str] = None
 
+class FrenchMarkingScheme(BaseModel):
+    subject: str = Field(description='Always \'french\'')
+    scheme_code: str
+    language: str = Field(description='EN (taught in English)')
+    level: str = Field(description='HL / OL')
+    year: int
+    source_pdf: str
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: "FrenchSubjectDiscriminator"
+    total_marks: int
+    total_questions: int
+
+class FrenchSubjectDiscriminator(BaseModel):
+    primary_topic: str = Field(description='Main  topic tested')
+    dominant_question_types: typing.List[FrenchQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: FrenchCommonMistake
+
 class GCSEAreaTopic(BaseModel):
     topic_id: str = Field(description='Awarding-body topic code (e.g. \'GCSE-MATH-TOPIC-001\')')
     topic_name: str
@@ -6590,6 +6920,10 @@ class GaelSubjectDiscriminator(BaseModel):
     composition_word_count_min: typing.Optional[int] = Field(default=None, description='Min words for composition (e.g. 400 for HL)')
     most_common_mistake: GaelCommonMistake
     text_ga_primary: bool = Field(description='Always true — primary content is in Irish')
+
+class GaeltachtOverlay(BaseModel):
+    gaeltacht_school: bool
+    irish_medium_stream: bool
 
 class GameGenre(BaseModel):
     rogue_like: str
@@ -7209,6 +7543,24 @@ class HiddenHeritagesTale(BaseModel):
     related_tales: typing.Optional[typing.List[str]] = Field(default=None, description='IDs of related tales')
     same_informant_tales: typing.Optional[typing.List[str]] = Field(default=None, description='Other tales from same informant')
 
+class HistoryMarkingScheme(BaseModel):
+    subject: str = Field(description='Always \'history\'')
+    scheme_code: str
+    language: str = Field(description='EN (taught in English)')
+    level: str = Field(description='HL / OL')
+    year: int
+    source_pdf: str
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: "HistorySubjectDiscriminator"
+    total_marks: int
+    total_questions: int
+
+class HistorySubjectDiscriminator(BaseModel):
+    primary_topic: str = Field(description='Main  topic tested')
+    dominant_question_types: typing.List[HistoryQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: HistoryCommonMistake
+
 class HungaryHealthGuidance(BaseModel):
     agency: str = Field(description='The publishing agency (e.g. NIPH, EODY, NIJZ)')
     advisory_id: str = Field(description='The canonical advisory id')
@@ -7258,6 +7610,21 @@ class HybridProfile(BaseModel):
     creativeWorks: typing.List["Project"] = Field(description='Other creative works')
     socialLinks: typing.List["SocialLink"] = Field(description='All social/platform links')
     languages: typing.List[str] = Field(description='Languages spoken')
+
+class IMSubjectSpec(BaseModel):
+    stage: IMStage
+    subject_slug: str
+    display_name: str
+    display_name_ga: str
+    display_name_local: str
+    award_descriptor: IMAwardDescriptor
+    descriptor_vocabulary: typing.List[IMAwardDescriptor]
+    key_competencies: typing.List[IMKeyCompetency]
+    source_pdf: str
+    source_url: str
+    language: str
+    year: int
+    page: int
 
 class ITTerm(BaseModel):
     term_id: int = Field(description='Tearma ID')
@@ -8375,6 +8742,10 @@ class MaltaSubjectCurriculum(BaseModel):
     source_url: str
     content_hash: typing.Optional[str] = None
 
+class ManxOverlay(BaseModel):
+    manx_medium: bool
+    bunscoill_gaelgagh: bool
+
 class MarkingAnnotation(BaseModel):
     annotation: str = Field(description='e.g. \'M1\', \'A1\', \'B2\', \'E1\', \'R\', \'FT\'')
     description_en: str = Field(description='English description')
@@ -8819,6 +9190,19 @@ class MotifOccurrence(BaseModel):
     occurrence_count: int = Field(description='How many tales contain it')
     occurrence_rate: float = Field(description='Percentage of tales')
 
+class MusicMarkingScheme(BaseModel):
+    subject: str = Field(description='Always \'music\'')
+    scheme_code: str
+    language: str = Field(description='EN (taught in English)')
+    level: str = Field(description='HL / OL')
+    year: int
+    source_pdf: str
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: "MusicSubjectDiscriminator"
+    total_marks: int
+    total_questions: int
+
 class MusicProducerProfile(BaseModel):
     name: str = Field(description='Real name')
     stageName: str = Field(description='Stage/artist name')
@@ -8851,6 +9235,11 @@ class MusicRelease(BaseModel):
     artwork: typing.Optional[str] = Field(default=None, description='Cover artwork URL')
     label: typing.Optional[str] = Field(default=None, description='Record label if any')
     type: str = Field(description='Album, EP, Single, etc.')
+
+class MusicSubjectDiscriminator(BaseModel):
+    primary_topic: str = Field(description='Main  topic tested')
+    dominant_question_types: typing.List[MusicQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: MusicCommonMistake
 
 class MusicTrack(BaseModel):
     title: str = Field(description='Track title')
@@ -8927,6 +9316,21 @@ class NCCAPolicyCriteria(BaseModel):
     descriptor_vocabulary: typing.List[NCCAAwardDescriptor]
     key_competencies: typing.List[NCCAKeyCompetency]
     policy_citations: typing.List["CertificationCitation"]
+
+class NISubjectSpec(BaseModel):
+    stage: NIStage
+    subject_slug: str
+    display_name: str
+    display_name_ga: str
+    display_name_local: str
+    award_descriptor: NIAwardDescriptor
+    descriptor_vocabulary: typing.List[NIAwardDescriptor]
+    key_competencies: typing.List[NIKeyCompetency]
+    source_pdf: str
+    source_url: str
+    language: str
+    year: int
+    page: int
 
 class NPC(BaseModel):
     id: str
@@ -9596,6 +10000,24 @@ class PhoneticFeature(BaseModel):
     examples: typing.List[str] = Field(description='Examples from the recording')
     typical_of: typing.List[IrishDialect] = Field(description='Which dialects show this feature')
 
+class PhysicsMarkingScheme(BaseModel):
+    subject: str = Field(description='Always \'physics\'')
+    scheme_code: str
+    language: str = Field(description='EN (taught in English)')
+    level: str = Field(description='HL / OL')
+    year: int
+    source_pdf: str
+    grade_descriptors: typing.List["LCGradeDescriptor"]
+    mark_allocations: typing.List["LCMarkAllocation"]
+    subject_specific: "PhysicsSubjectDiscriminator"
+    total_marks: int
+    total_questions: int
+
+class PhysicsSubjectDiscriminator(BaseModel):
+    primary_topic: str = Field(description='Main  topic tested')
+    dominant_question_types: typing.List[PhysicsQuestionType] = Field(description='Mix in this paper')
+    most_common_mistake: PhysicsCommonMistake
+
 class PigSkinBagOfHealingWell(BaseModel):
     treasure_id: str = Field(description='Canonical ID, e.g. \'eiraic_11_pigskin_bag_healing\'')
     title: "EiraicTitle" = Field(description='Mála Craicinn Muice Tobair Sláine / Pigskin bag of the healing well')
@@ -10258,6 +10680,21 @@ class RubricScore(BaseModel):
     reviewer_notes_en: str
     reviewer_notes_ga: typing.Optional[str] = None
 
+class SCSubjectSpec(BaseModel):
+    stage: SCStage
+    subject_slug: str
+    display_name: str
+    display_name_ga: str
+    display_name_local: str
+    award_descriptor: SCAwardDescriptor
+    descriptor_vocabulary: typing.List[SCAwardDescriptor]
+    key_competencies: typing.List[SCKeyCompetency]
+    source_pdf: str
+    source_url: str
+    language: str
+    year: int
+    page: int
+
 class SOLASCourse(BaseModel):
     course_code: str = Field(description='SOLAS / fetchcourses.ie course code, e.g. \'PLC-DIT-CS-2025\'')
     etb_slug: str = Field(description='The 16 ETBs slug, e.g. \'cavan-monaghan\', \'city-of-dublin\', \'galway-roscommon\'')
@@ -10353,6 +10790,10 @@ class ScotlandTopic(BaseModel):
     strand: str = Field(description='The topic strand (e.g. \'Algebra\', \'Calculus\', \'Cell Biology\')')
     learning_outcomes: typing.List[str]
     weighting_pct: int
+
+class ScottishGaelicOverlay(BaseModel):
+    gaelic_medium: bool
+    cfe_gaelic: bool
 
 class ScrapingSession(BaseModel):
     session_id: str = Field(description='Unique session identifier')
@@ -11336,7 +11777,7 @@ class Transferability(BaseModel):
     particle_effect: typing.Optional[str] = None
 
 class TranslationRequest(BaseModel):
-    source_language: str = Field(description='en, ga, cy, gd, gv')
+    source_language: str = Field(description='en, ga, cy, gd, gv, br, kw, gv-IM, fr-je, fr-gg, sco')
     target_language: str
     source_text: str
     context: str = Field(description='curriculum, assessment, resource')
@@ -11870,6 +12311,20 @@ class VerificationSummary(BaseModel):
     totalExpired: int
     lastUpdated: str
 
+class VernacularSubjectSpec(BaseModel):
+    language: VernacularLanguage
+    jurisdiction_code: str = Field(description='WL/SC/IM/JE/GG/NI')
+    subject_slug: str
+    stage: str
+    display_name: str = Field(description='Subject name in the vernacular language')
+    display_name_en: str = Field(description='English translation')
+    display_name_ga: str = Field(description='Irish (Gaeilge) translation')
+    award_descriptor: str
+    source_pdf: str
+    source_url: str
+    page: int
+    year: int
+
 class VfxVocabulary(BaseModel):
     particle_class: "ParticleClass"
     density: "Density"
@@ -11940,6 +12395,21 @@ class VolumeSummary(BaseModel):
     townlands_mentioned: typing.List[str] = Field(description='Townlands referenced in stories')
     neighboring_schools: typing.Optional[typing.List[str]] = Field(default=None, description='Related school volumes')
 
+class WLSubjectSpec(BaseModel):
+    stage: WLStage
+    subject_slug: str
+    display_name: str
+    display_name_ga: str
+    display_name_local: str
+    award_descriptor: WLAwardDescriptor
+    descriptor_vocabulary: typing.List[WLAwardDescriptor]
+    key_competencies: typing.List[WLKeyCompetency]
+    source_pdf: str
+    source_url: str
+    language: str
+    year: int
+    page: int
+
 class WalesAssessmentObjective(BaseModel):
     ao_id: str
     ao_label: str
@@ -12003,6 +12473,10 @@ class WalesTopic(BaseModel):
     strand: str = Field(description='e.g. \'Algebra\', \'Calculus\', \'Cell Biology\'')
     learning_outcomes: typing.List[str]
     weighting_pct: int
+
+class WelshMediumOverlay(BaseModel):
+    welsh_medium: bool
+    school_language: str
 
 class WheelOfTimeMediaDescriptor(BaseModel):
     work: str
@@ -12168,7 +12642,7 @@ TopicExtraction: typing_extensions.TypeAlias = "LCTopicExtraction"
 
 
 # #########################################################################
-# Model rebuilds (902)
+# Model rebuilds (928)
 # #########################################################################
 # Resolve string forward references now that every model above is defined so
 # class declaration order never breaks Pydantic construction (issue #793).
@@ -12193,6 +12667,8 @@ AQAMarkingScheme.model_rebuild()
 AQAQualSpec.model_rebuild()
 AcademicHistorySnapshot.model_rebuild()
 AcademicModuleDescriptor.model_rebuild()
+AccountingMarkingScheme.model_rebuild()
+AccountingSubjectDiscriminator.model_rebuild()
 AdaptiveAssessment.model_rebuild()
 AdaptiveQuestion.model_rebuild()
 AdjectiveComparison.model_rebuild()
@@ -12218,9 +12694,13 @@ AnimationVfxVocabulary.model_rebuild()
 AnimationVisualGrammar.model_rebuild()
 ApiChange.model_rebuild()
 ApplicationTimeline.model_rebuild()
+AppliedMathsMarkingScheme.model_rebuild()
+AppliedMathsSubjectDiscriminator.model_rebuild()
 Apprenticeship.model_rebuild()
 AreaRanking.model_rebuild()
 ArmourOfClochur.model_rebuild()
+ArtMarkingScheme.model_rebuild()
+ArtSubjectDiscriminator.model_rebuild()
 ArtworkAnalysis.model_rebuild()
 AssessmentBreakdown.model_rebuild()
 AssessmentComponent.model_rebuild()
@@ -12264,6 +12744,8 @@ BridgeEdge.model_rebuild()
 BulgariaHealthGuidance.model_rebuild()
 BulgariaStatute.model_rebuild()
 BulgariaSubjectCurriculum.model_rebuild()
+BusinessMarkingScheme.model_rebuild()
+BusinessSubjectDiscriminator.model_rebuild()
 CBATask.model_rebuild()
 CaliforniaOChoice.model_rebuild()
 CaliforniaOCourse.model_rebuild()
@@ -12410,6 +12892,7 @@ DuchasTranscriptionLine.model_rebuild()
 DuchasXMLRecord.model_rebuild()
 ECDCSurveillance.model_rebuild()
 EMAMedicine.model_rebuild()
+ENSubjectSpec.model_rebuild()
 EUDocument.model_rebuild()
 EUExtractableBilingualDocument.model_rebuild()
 EUMultilingualText.model_rebuild()
@@ -12481,6 +12964,8 @@ Foundation.model_rebuild()
 FranceEducationDocument.model_rebuild()
 FranceLawDocument.model_rebuild()
 FranceMedicineDocument.model_rebuild()
+FrenchMarkingScheme.model_rebuild()
+FrenchSubjectDiscriminator.model_rebuild()
 GCSEAreaTopic.model_rebuild()
 GCSEAssessmentObjective.model_rebuild()
 GCSEBilingualText.model_rebuild()
@@ -12507,6 +12992,7 @@ GaeilgeWebExamPaperDiscussionResponse.model_rebuild()
 GaeilgeWebMarkingSchemeExplanationResponse.model_rebuild()
 GaeilgeWebStudyPlanResponse.model_rebuild()
 GaelSubjectDiscriminator.model_rebuild()
+GaeltachtOverlay.model_rebuild()
 GameGenre.model_rebuild()
 GameItem.model_rebuild()
 GameLocation.model_rebuild()
@@ -12574,10 +13060,13 @@ HandwrittenEquation.model_rebuild()
 HeaderElement.model_rebuild()
 HeiferSkinOfDobar.model_rebuild()
 HiddenHeritagesTale.model_rebuild()
+HistoryMarkingScheme.model_rebuild()
+HistorySubjectDiscriminator.model_rebuild()
 HungaryHealthGuidance.model_rebuild()
 HungaryStatute.model_rebuild()
 HungarySubjectCurriculum.model_rebuild()
 HybridProfile.model_rebuild()
+IMSubjectSpec.model_rebuild()
 ITTerm.model_rebuild()
 IcelandHealthGuidance.model_rebuild()
 IcelandStatute.model_rebuild()
@@ -12695,6 +13184,7 @@ LuxembourgSubjectCurriculum.model_rebuild()
 MaltaHealthGuidance.model_rebuild()
 MaltaStatute.model_rebuild()
 MaltaSubjectCurriculum.model_rebuild()
+ManxOverlay.model_rebuild()
 MarkingAnnotation.model_rebuild()
 MarkingBandDescriptor.model_rebuild()
 MarkingCriteria.model_rebuild()
@@ -12744,9 +13234,11 @@ MorphologicalFeature.model_rebuild()
 MorphologicalFeatures.model_rebuild()
 MotifAnalysis.model_rebuild()
 MotifOccurrence.model_rebuild()
+MusicMarkingScheme.model_rebuild()
 MusicProducerProfile.model_rebuild()
 MusicProfile.model_rebuild()
 MusicRelease.model_rebuild()
+MusicSubjectDiscriminator.model_rebuild()
 MusicTrack.model_rebuild()
 MutationTriggerPattern.model_rebuild()
 MythologicalCharacter.model_rebuild()
@@ -12754,6 +13246,7 @@ MythologicalLocation.model_rebuild()
 MythologicalStory.model_rebuild()
 NCCAKeyCompetencyRootPdf.model_rebuild()
 NCCAPolicyCriteria.model_rebuild()
+NISubjectSpec.model_rebuild()
 NPC.model_rebuild()
 NPCDialogue.model_rebuild()
 NPCGreeting.model_rebuild()
@@ -12823,6 +13316,8 @@ PedagogyPrincipleDetail.model_rebuild()
 PedagogySet.model_rebuild()
 PersonEntity.model_rebuild()
 PhoneticFeature.model_rebuild()
+PhysicsMarkingScheme.model_rebuild()
+PhysicsSubjectDiscriminator.model_rebuild()
 PigSkinBagOfHealingWell.model_rebuild()
 PigSkinOfDobar.model_rebuild()
 PlaceEntity.model_rebuild()
@@ -12889,6 +13384,7 @@ RomaniaStatute.model_rebuild()
 RomaniaSubjectCurriculum.model_rebuild()
 RubricDescriptor.model_rebuild()
 RubricScore.model_rebuild()
+SCSubjectSpec.model_rebuild()
 SOLASCourse.model_rebuild()
 SamildanachOfLugh.model_rebuild()
 ScaleTier.model_rebuild()
@@ -12898,6 +13394,7 @@ ScotlandLawDocument.model_rebuild()
 ScotlandMedicineDocument.model_rebuild()
 ScotlandSyllabusSpec.model_rebuild()
 ScotlandTopic.model_rebuild()
+ScottishGaelicOverlay.model_rebuild()
 ScrapingSession.model_rebuild()
 ScriptStep.model_rebuild()
 SearchFilter.model_rebuild()
@@ -13049,6 +13546,7 @@ VenezuelaMedicineDocument.model_rebuild()
 VerbConjugation.model_rebuild()
 VerbForm.model_rebuild()
 VerificationSummary.model_rebuild()
+VernacularSubjectSpec.model_rebuild()
 VfxVocabulary.model_rebuild()
 VisualGrammar.model_rebuild()
 VisualScene.model_rebuild()
@@ -13058,12 +13556,14 @@ VocabularyNotePlayer.model_rebuild()
 VocabularyProgress.model_rebuild()
 VocabularySet.model_rebuild()
 VolumeSummary.model_rebuild()
+WLSubjectSpec.model_rebuild()
 WalesAssessmentObjective.model_rebuild()
 WalesEducationDocument.model_rebuild()
 WalesLawDocument.model_rebuild()
 WalesMedicineDocument.model_rebuild()
 WalesSyllabusSpec.model_rebuild()
 WalesTopic.model_rebuild()
+WelshMediumOverlay.model_rebuild()
 WheelOfTimeMediaDescriptor.model_rebuild()
 WheelOfTimeNarrativeBeat.model_rebuild()
 WheelOfTimePowerEvent.model_rebuild()

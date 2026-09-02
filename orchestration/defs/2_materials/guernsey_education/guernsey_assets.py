@@ -49,7 +49,7 @@ GUERNSEY_SUBJECTS: tuple[str, ...] = (
     automation_condition=make_yearly_education_automation(),
 )
 def guernsey_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]:
-    from dlt_sources.british_isles.guernsey.education.guernsey_jurisdiction_pipeline import (
+    from dlt_sources.education.guernsey.british_isles.education.guernsey_jurisdiction_pipeline import (
         guernsey_jurisdiction_pipeline,
     )
     load_info = guernsey_jurisdiction_pipeline.run()

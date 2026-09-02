@@ -26,7 +26,7 @@ def test_dlt_source_yields_skipped_fixture_rows(monkeypatch, uog_fixture_modules
     sentinel) depending on whether the user passed explicit
     `modules=` or is relying on the auto-discovered whitelist.
     """
-    from dlt_sources.british_isles.ireland.education.university.exam_papers import (
+    from dlt_sources.education.ireland.british_isles.university.exam_papers import (
         uog_exam_papers_source,
     )
 
@@ -50,7 +50,7 @@ def test_msc_ai_source_with_no_credentials_yields_fixture_rows(monkeypatch):
     """The M.Sc. AI convenience source resolves fixture mode without
     raising. The actual rows are status="scraped" (the
     `_fixture_material` helper from the scraper)."""
-    from dlt_sources.british_isles.ireland.education.university.exam_papers import (
+    from dlt_sources.education.ireland.british_isles.university.exam_papers import (
         msc_ai_source,
     )
 
@@ -73,7 +73,7 @@ def test_msc_ai_source_with_no_credentials_yields_fixture_rows(monkeypatch):
 
 def test_v1_school_whitelist_is_explicit():
     """The v1 source only touches the 6 whitelisted schools."""
-    from dlt_sources.british_isles.ireland.education.university.exam_papers import (
+    from dlt_sources.education.ireland.british_isles.university.exam_papers import (
         V1_SCHOOL_WHITELIST,
     )
 

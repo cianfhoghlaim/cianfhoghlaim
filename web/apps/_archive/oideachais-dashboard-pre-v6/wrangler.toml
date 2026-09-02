@@ -1,0 +1,46 @@
+# Cloudflare Workers deployment for Oideachais Dashboard (operator + BIEP v3)
+#
+# Per the 2026-08-24-wave-6-frontend-tanstack-modernisation-v1 change.
+# Hosts BIEP v3 dashboards + A2UI surfaces + AG-UI consumer +
+# the umbrella Convex deployment at apps/oideachais-dashboard/convex/.
+
+name = "oideachais-dashboard"
+compatibility_date = "2025-08-01"
+compatibility_flags = ["nodejs_compat"]
+main = "./.output/server/index.mjs"
+
+[assets]
+directory = "./.output/public"
+binding = "ASSETS"
+
+[vars]
+NODE_ENV = "production"
+PUBLIC_APP_NAME = "oideachais-dashboard"
+PUBLIC_APP_TYPE = "operator"
+PUBLIC_AUTH_URL = "https://auth.cianfhoghlaim.ie"
+
+[env.preview]
+name = "oideachais-dashboard-preview"
+vars = { NODE_ENV = "preview", PUBLIC_APP_NAME = "oideachais-dashboard", PUBLIC_APP_TYPE = "operator", PUBLIC_AUTH_URL = "https://preview-auth.cianfhoghlaim.ie" }
+routes = [ "preview-dashboard.oideachais.cianfhoghlaim.ie" ]
+
+[env.production]
+name = "oideachais-dashboard-production"
+vars = { NODE_ENV = "production", PUBLIC_APP_NAME = "oideachais-dashboard", PUBLIC_APP_TYPE = "operator", PUBLIC_AUTH_URL = "https://auth.cianfhoghlaim.ie" }
+routes = [ "dashboard.oideachais.ie", "bi.cianfhoghlaim.ie" ]
+
+[[d1_databases]]
+binding = "DASHBOARD_DB"
+database_name = "oideachais-dashboard"
+database_id = "REPLACE_WITH_D1_ID"
+migrations_dir = "drizzle"
+
+[[r2_buckets]]
+binding = "DASHBOARD_BUCKET"
+bucket_name = "oideachais-dashboard"
+preview_bucket_name = "oideachais-dashboard-preview"
+
+# Vectorize for semantic search across dashboards
+[[vectorize]]
+binding = "DASHBOARD_VECTORS"
+index_name = "oideachais-dashboard-embeddings"

@@ -16,7 +16,7 @@ This file reads the canonical registry
   - 50 SCQF subjects × 3 qualification levels (National 5 + Higher +
     Advanced Higher) × 1 language (en) = 150 cohorts
 
-## KCG patterns used
+## Cianfhoghlaim patterns used
 - ibis (per `.agents/skills/ibis/SKILL.md`) — every query uses
   ``ibis.duckdb.connect()`` (NO raw ``duckdb.connect``).
 - dlt (per `.agents/skills/dlt/SKILL.md`) — the canonical destination

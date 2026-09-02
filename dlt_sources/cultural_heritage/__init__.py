@@ -1,56 +1,46 @@
-"""dlt_sources.cultural_heritage — backward-compat re-export shim.
+"""dlt_sources.cultural_heritage — Irish-language + Celtic cultural-heritage sources.
 
-Per the 2026-09-25-ciancheiltis-init-v1 openspec change + the parent change
-`2026-08-24-dlt-sources-to-multi-repo-scaffold-v1` §21.3 (the Phase 4 carve-out
-hand-off), the `language/`, `cultural_heritage/`, and `lexicographic/`
-subtrees have moved from Cianfhoghlaim to the new Ciancheiltis sister repo.
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change (master plan §3.2, §7.1). This package replaces the previous
+`dlt_sources/language/` grab-bag. Each module is a single DLT source
+that produces rows for one of the canonical Celtic / Irish cultural
+heritage databases:
 
-This module is the backward-compatibility shim that lives at the OLD path in
-Cianfhoghlaim. New code SHOULD import directly from the Ciancheiltis sister
-repo: `from ciancheiltis.dlt_sources.cultural_heritage import <symbol>`.
+| Module | Source name | Database |
+|:--|:--|:--|
+| `celtic_mythology.py` | `celtic_mythology_source` | Celtic mythology corpus (Mythological Cycle, Ulster Cycle, etc.) |
+| `duchas_corpus.py` | `duchas_images_source` | Dúchas manuscript images + transcriptions (IIIF + TEI-XML) |
+| `heritage.py` | `heritage_source` | Heritage Council of Ireland — sites & monuments |
+| `hidden_heritages.py` | `hidden_heritages_source` | Hidden Heritages folklore archive |
+| `local_documents_by_subject.py` | `local_documents_by_subject_source` | Local archive (subject-bucketed) |
+| `local_education_documents.py` | `local_education_documents_source` | Local archive (education-bucketed) |
 
-Emits a `DeprecationWarning` on import. Per the v2 plan §F + the openspec
-bidirectional cascade contract #1, the Ciancheiltis sister repo mirrors
-changes back into Cianfhoghlaim via the per-PR reciprocal PR + the
-nightly mirror-merge sensor.
+The 2 helpers (`_duchas_corpus_helpers.py`, `_local_documents_helpers.py`)
+are co-located with their primary sources per the master plan §1.3
+convention.
+
+> **Note on the Duchas split** (per master plan §1.4): the original
+> `language/duchas.py` (the lexicon — Schools' Collection terminology)
+> moved to `dlt_sources.lexicographic/duchas.py` with source name
+> `duchas_folklore`. The `language/duchas_images.py` (the folklore
+> corpus — manuscript images + transcriptions) moved to
+> `dlt_sources.cultural_heritage/duchas_corpus.py` with source name
+> `duchas_images_source`. Both keep their original source names so
+> existing registry lookups work.
+
+Reference:
+- Master plan §3.2 ("Themed sub-trees")
+- Master plan §7.1 ("dlt_sources/ migrations — cultural_heritage")
+- `dlt_sources.AGENTS.md` §"Themed sub-trees"
 """
 from __future__ import annotations
 
-import warnings as _warnings
-
-_warnings.warn(
-    "dlt_sources.cultural_heritage has moved to the ciancheiltis sister repo. "
-    "Update your imports to `from ciancheiltis.dlt_sources.cultural_heritage "
-    "import <symbol>`. See openspec/changes/2026-09-25-ciancheiltis-init-v1/"
-    "proposal.md for the carve-out plan + the bilingual educational carve rule.",
-    DeprecationWarning,
-    stacklevel=2,
-)
-
-
-def __getattr__(name: str):
-    """Lazy re-export — Ciancheiltis must be installed for the carved
-    `cultural_heritage` symbols. Phase 3+ will wire the [tool.uv.sources]
-    workspace declaration so the re-export resolves transparently."""
-    try:
-        from ciancheiltis.dlt_sources import cultural_heritage as _ch
-    except ImportError as exc:
-        raise ImportError(
-            "dlt_sources.cultural_heritage.* requires ciancheiltis to be "
-            "installed (the carve-out target per the 2026-09-25-ciancheiltis-"
-            "init-v1 openspec change). Install via `uv pip install -e "
-            "../ciancheiltis` or wire the [tool.uv.sources] workspace "
-            "declaration in Phase 3+."
-        ) from exc
-    return getattr(_ch, name)
-
-
+# Re-export the canonical source modules for convenience.
 __all__ = [
     "celtic_mythology",
-    "duchas",
-    "duchas_images",
-    "gaois",
-    "gaois_combined",
+    "duchas_corpus",
     "heritage",
     "hidden_heritages",
+    "local_documents_by_subject",
+    "local_education_documents",
 ]

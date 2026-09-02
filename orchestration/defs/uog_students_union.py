@@ -1,75 +1,31 @@
-"""orchestration.defs.uog_students_union — the 2-asset group for the
-UoG Students' Union pipeline.
+"""orchestration.defs.uog_students_union — DEPRECATION SHIM.
 
-Mounts 2 assets:
-  - `uog_su_stage0_audit`       (sensor)
-  - `uog_su_collect`            (scrape + DuckLake)
+This module has been moved to `orchestration.pipelines.education.tertiary.uog.students_union` as part of
+Wave 2 of the 2026-08-24 master refactor (per the canonical
+`dagster-pipeline-components` spec).
+
+It re-exports the original `__all__` from the new location for
+backward compatibility with downstream consumers that haven't yet
+migrated. New code SHOULD import from the canonical destination
+path; this shim will be removed in a future release.
+
+Reference: openspec/changes/2026-08-24-master-refactor-v1/specs/dagster-pipeline-components/spec.md
 """
+from __future__ import annotations
 
-from dagster import AssetKey, MaterializeResult, asset
+import warnings
 
-_DEFAULT_DESTINATION = "local"
+_ORIGINAL_MODULE = 'orchestration.defs.uog_students_union'
+_DESTINATION_MODULE = 'orchestration.pipelines.education.tertiary.uog.students_union'
 
-
-@asset(
-    key=["uog_students_union", "stage0_audit"],
-    group_name="uog_students_union",
-    compute_kind="sensor",
-    description=(
-        "Stage 0 — Firecrawl `/agent` audit of `su.universityofgalway.ie`. "
-        "Discovers the canonical URLs for the 5 canonical SU documents."
-    ),
+_DEPRECATION_MSG = (
+    f"`{_ORIGINAL_MODULE}` is deprecated as of Wave 2 of the 2026-08-24 master refactor; "
+    f"import from `{_DESTINATION_MODULE}` instead. The legacy module will be "
+    "removed in a future release."
 )
-def uog_su_stage0_audit(context) -> MaterializeResult:
-    from dlt_sources.british_isles.ireland.education.university.official_docs import (
-        uog_students_union_source,
-    )
+warnings.warn(_DEPRECATION_MSG, DeprecationWarning, stacklevel=2)
 
-    rows = list(
-        uog_students_union_source(destination=_DEFAULT_DESTINATION)
-        .selected_resources["students_union_documents"]()
-    )
-    return MaterializeResult(
-        metadata={
-            "su_documents_seeded": len(rows),
-            "ducklake_table": "cianfhoghlaim.education.ie.uog_students_union_documents",
-        }
-    )
+# Re-export every public symbol from the canonical destination module.
+from orchestration.pipelines.education.tertiary.uog.students_union import *  # noqa: E402, F401, F403
 
-
-@asset(
-    key=["uog_students_union", "collect"],
-    group_name="uog_students_union",
-    compute_kind="scrape",
-    description=(
-        "Stage 1 — bulk_scrape the SU policies + class-rep handbooks. "
-        "Drops the rows into DuckLake."
-    ),
-    deps=[AssetKey(["uog_students_union", "stage0_audit"])],
-)
-def uog_su_collect(context) -> MaterializeResult:
-    from dlt_sources.british_isles.ireland.education.university.official_docs import (
-        uog_students_union_source,
-    )
-
-    rows = list(
-        uog_students_union_source(destination=_DEFAULT_DESTINATION)
-        .selected_resources["students_union_documents"]()
-    )
-    return MaterializeResult(
-        metadata={
-            "rows_collected": len(rows),
-            "class_rep_handbooks": len(
-                list(
-                    uog_students_union_source(destination=_DEFAULT_DESTINATION)
-                    .selected_resources["class_rep_handbooks"]()
-                )
-            ),
-        }
-    )
-
-
-__all__ = [
-    "uog_su_collect",
-    "uog_su_stage0_audit",
-]
+__all__ = ['uog_su_collect', 'uog_su_stage0_audit']

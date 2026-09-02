@@ -24,7 +24,7 @@ for Welsh; the same awarding body publishes under the brand
 editions of the same syllabuses.
 
 Usage:
-    from dlt_sources.british_isles.wales.education.wjec.syllabus_source import (
+    from dlt_sources.education.wales.british_isles.education.wjec.syllabus_source import (
         wjec_syllabus_source,
     )
 """

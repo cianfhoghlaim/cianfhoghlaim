@@ -81,7 +81,7 @@ class CelticIngestionComponent(Component, Resolvable):
             local filesystem (per the DefsStateConfigArgs.default).
         dlt_source: Dotted "module.path.function_name" pointing at the
             @dlt.source-decorated callable to run (e.g.
-            "dlt_sources.british_isles.ireland.education.law.piab.piab_source").
+            "dlt_sources.education.ireland.british_isles.education.law.piab.piab_source").
             Resolved via importlib at asset-execution time. Optional —
             state-backed sources that resolve their own source at
             materialisation time may omit it.

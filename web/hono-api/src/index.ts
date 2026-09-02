@@ -7,6 +7,11 @@ import lineageBySubject from "./routes/lineage/[subject]";
 import pdfWildcard from "./routes/pdf/[...r2-key]";
 import imageGeneration from "./routes/copilotkit/image-generation";
 import copilotkitRegistry from "./routes/copilotkit/registry";
+import chemistryApp from "./routes/copilotkit/lc/chemistry";
+import mathematicsApp from "./routes/copilotkit/lc/mathematics";
+import gaeilgeApp from "./routes/copilotkit/lc/gaeilge";
+import computerScienceApp from "./routes/copilotkit/lc/computer_science";
+import aguiApp from "./routes/agui";
 
 const app = new Hono();
 
@@ -101,6 +106,19 @@ app.route("/api/copilotkit/image-gen", imageGeneration);
 // JSON config / AG-UI events / agent names. This is the bridge between
 // the Python agent registry and the TanStack Start front-end.
 app.route("/api/copilotkit/registry", copilotkitRegistry);
+
+// Phase 1 study-plan routes (the 4 subjects) — mounted per
+// the 2026-09-01-cianfhoghlaim-nua-web-consolidation-v1 change
+// (Phase 3 §C-D completion). These power the Phase 1
+// useStudyPlan hook in the consolidated cianfhoghlaim-nua app.
+app.route("/api/copilotkit/lc/chemistry", chemistryApp);
+app.route("/api/copilotkit/lc/mathematics", mathematicsApp);
+app.route("/api/copilotkit/lc/gaeilge", gaeilgeApp);
+app.route("/api/copilotkit/lc/computer_science", computerScienceApp);
+
+// AG-UI SSE bridge (Phase 3 §B.9 + the 2026-09-01
+// cianfhoghlaim-nua-oral-study-plans-v1 change for Phase 6)
+app.route("/api/agui", aguiApp);
 
 const port = parseInt(process.env.PORT ?? "4000", 10);
 console.log(`[croilar-hono-api] Listening on port ${port}`);

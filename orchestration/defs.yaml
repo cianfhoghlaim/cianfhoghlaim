@@ -11,13 +11,13 @@
 #   4_asset_generation/, 5_agent_ops/) — the 833 DAG asset definitions
 # - The orchestration/sensors/ Python module (the 11 sensors re-exported
 #   via orchestration/sensors/__init__.py)
-# - The 5 KCG Components (auto-discovered via [tool.dg] registry_modules
+# - The 5 Cianfhoghlaim Components (auto-discovered via [tool.dg] registry_modules
 #   = ['orchestration.components'] in pyproject.toml)
 #
 # Historical note: An earlier version of this file (per the 2026-06-30
 # change) had a `post_processing` block that tagged the legacy 3
-# KCG components (celtic_dlt_source + celtic_lancedb_hnsw +
-# celtic_cocoindex_v1). The post-v7 update expanded to 5 KCG Components
+# Cianfhoghlaim components (celtic_dlt_source + celtic_lancedb_hnsw +
+# celtic_cocoindex_v1). The post-v7 update expanded to 5 Cianfhoghlaim Components
 # (CelticIngestionComponent + CelticMaterialsComponent +
 # CelticModelLifecycleComponent + CelticAssetGenerationComponent +
 # CelticAgentOpsComponent) and removed the post_processing block — the

@@ -3,7 +3,7 @@
 Runs 4 paths in parallel for any incoming PDF:
   Path 1 (BAML):    Docling-serve -> text -> BAML function
   Path 2 (Unstract): Docling-serve -> Unstract workflow -> JSON
-  Path 3 (qwen3-vl): qwen3-vl-8b page-level image -> JSON
+  Path 3 (qwen3-vl): gemma-4-26B-A4B-vision page-level image -> JSON
   Path 4 (gemma4):  gemma-4-26B-A4B page-level image -> JSON
 
 Each path output lands in its own per-jurisdiction DuckLake table.
@@ -52,7 +52,7 @@ from typing import Any, Literal
 
 logger = logging.getLogger(__name__)
 
-PathName = Literal["baml", "unstract", "qwen3_vl", "gemma4"]
+PathName = Literal["baml", "unstract", "gemma4_vision", "gemma4"]
 
 
 @dataclass
@@ -134,7 +134,7 @@ class EnsembledExtractor:
         The per-doc-type Unstract workflow ID (e.g. `aqa_gcse_spec`,
         `ncca_jc_cba`, `sec_lc_marking`). If None, falls back to BAML-only.
     qwen3_vl_endpoint : str
-        The LiteLLM gateway endpoint for `qwen3-vl-8b` (the workhorse VLM).
+        The LiteLLM gateway endpoint for `gemma-4-26B-A4B-vision` (the workhorse VLM).
     gemma4_endpoint : str
         The llama-swap endpoint for `gemma-4-26B-A4B` (the M4 default MoE).
     ragas_threshold : float
@@ -393,7 +393,7 @@ class EnsembledExtractor:
             return f'[UNSTRACT_PATH] error={e}'
 
     async def _run_path_qwen3_vl(self, pdf_path: Path) -> str:
-        """Path 3: qwen3-vl-8b page-level image -> JSON."""
+        """Path 3: gemma-4-26B-A4B-vision page-level image -> JSON."""
         try:
             return await _call_qwen3_vl(pdf_path, self.qwen3_vl_endpoint)
         except Exception as e:
@@ -433,7 +433,7 @@ class EnsembledExtractor:
         import dlt
 
         from dlt_sources.common.destinations_cianfhoghlaim import (
-            get_dlt_destination,
+            get_ducklake_destination,
         )
 
         rows: list[dict[str, Any]] = []
@@ -487,7 +487,7 @@ class EnsembledExtractor:
 
         pipeline = dlt.pipeline(
             pipeline_name="biiep_ocr_ensemble",
-            destination=get_dlt_destination(),
+            destination=get_ducklake_destination(),
             dataset_name="ocr_ensemble",
             dev_mode=False,
         )
@@ -792,7 +792,7 @@ async def _call_unstract(pdf_path: Path, unstract_url: str, workflow_id: str) ->
 
 
 async def _call_qwen3_vl(pdf_path: Path, endpoint: str) -> str:
-    """Call the qwen3-vl-8b VLM via LiteLLM and return the JSON response.
+    """Call the gemma-4-26B-A4B-vision VLM via LiteLLM and return the JSON response.
 
     Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this used
     to send `"content": f"Extract ... at {pdf_path}"` -- a plain text
@@ -834,7 +834,7 @@ async def _call_qwen3_vl(pdf_path: Path, endpoint: str) -> str:
             resp = await client.post(
                 f"{endpoint.rstrip('/')}/v1/chat/completions",
                 json={
-                    "model": "local/vision/qwen3-vl-8b",
+                    "model": "local/vision/gemma-4-26B-A4B-vision",
                     "messages": [{"role": "user", "content": content}],
                     "max_tokens": 4096,
                 },
@@ -845,11 +845,11 @@ async def _call_qwen3_vl(pdf_path: Path, endpoint: str) -> str:
     except ImportError:
         try:
             size = pdf_path.stat().st_size
-            return f'[{{"vlm":"qwen3-vl-8b","file_size":{size}}}]'
+            return f'[{{"vlm":"gemma-4-26B-A4B-vision","file_size":{size}}}]'
         except Exception:
-            return '[{"vlm":"qwen3-vl-8b","stub":true}]'
+            return '[{"vlm":"gemma-4-26B-A4B-vision","stub":true}]'
     except Exception as e:
-        return f'[{{"vlm":"qwen3-vl-8b","error":"{type(e).__name__}: {e}","fallback":"stub"}}]'
+        return f'[{{"vlm":"gemma-4-26B-A4B-vision","error":"{type(e).__name__}: {e}","fallback":"stub"}}]'
 
 
 async def _call_gemma4(pdf_path: Path, endpoint: str) -> str:
@@ -920,9 +920,11 @@ async def _call_gemma4(pdf_path: Path, endpoint: str) -> str:
 #   forms | layout | tables+latex | doctags | gaelic | english
 _PATH_TO_BACKEND: dict[str, tuple[str, str]] = {
     # path -> (backend_used, model)
+    # 2026-08-31: qwen3_vl path replaced with gemma4_vision (per the
+    # 2026-08-31-cianfhoghlaim-v5-opencode-model-priority-v1 change).
     "baml": ("docling-serve", "docling-serve"),
     "unstract": ("llama-swap", "unstract-v1"),
-    "qwen3_vl": ("llama-swap", "qwen3-vl-8b"),
+    "gemma4_vision": ("llama-swap", "gemma-4-26B-A4B-vision"),
     "gemma4": ("llama-swap", "gemma-4-26B-A4B"),
 }
 

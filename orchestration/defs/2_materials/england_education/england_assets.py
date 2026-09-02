@@ -30,12 +30,12 @@ except ImportError:
     asset = lambda *a, **kw: lambda f: f  # noqa: E731
     asset_check = lambda *a, **kw: lambda f: f  # noqa: E731
 
-from dlt_sources.british_isles.england.education.gcse.england_gcse_sources import (
+from dlt_sources.education.england.british_isles.education.gcse.england_gcse_sources import (
     gcse_aqa_subjects,
     gcse_ocr_subjects,
     gcse_edexcel_subjects,
 )
-from dlt_sources.british_isles.england.education.a_level.england_a_level_sources import (
+from dlt_sources.education.england.british_isles.education.a_level.england_a_level_sources import (
     a_level_aqa_subjects,
     a_level_ocr_subjects,
     a_level_edexcel_subjects,

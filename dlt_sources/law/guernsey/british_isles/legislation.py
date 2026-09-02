@@ -5,7 +5,7 @@ Guernsey legal resources portal) and the official Guernsey
 Government legislation pages.
 
 Per
-https://github.com/cianfhoghlaim/kings_college_galway/issues/19
+https://github.com/cianfhoghlaim/cianfhoghlaim/issues/19
 (closed 2026-06-15) the lateralise change wired this as one of the
 6 crown-dependencies (IOM/JEY/GGY) medicine + law DLT sources.
 """

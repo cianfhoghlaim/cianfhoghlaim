@@ -39,7 +39,7 @@ The 1 monthly MotherDuck Flight:
 
 YEARLY + MONTHLY automation per the BIEP v3 scheduling policy.
 
-## KCG patterns used
+## Cianfhoghlaim patterns used
 - ibis (per `.agents/skills/ibis/SKILL.md`) — every query uses
   ``ibis.duckdb.connect()``.
 - dagster (per `.agents/skills/dagster/SKILL.md`) — 5-layer group_name

@@ -1,5 +1,5 @@
 """
-cianfhoghlaim.orchestration.components — the 5 KCG-specific Dagster Components
+cianfhoghlaim.orchestration.components — the 5 Cianfhoghlaim-specific Dagster Components
 (5-Layer Component architecture, see openspec/changes/2026-06-30-dagster-ground-up-rewrite-5-layer-component-architecture).
 
 The 5 Components, one per layer:

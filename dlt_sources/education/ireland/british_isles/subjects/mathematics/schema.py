@@ -18,7 +18,7 @@ The mirror is now unnecessary because the generated BAML Python
 client (``baml_client/baml_client/types.py``) is the runtime type
 source. This module is retained as a back-compat shim — direct
 imports from
-``dlt_sources.british_isles.ireland.education.subjects.mathematics.schema``
+``dlt_sources.education.ireland.british_isles.education.subjects.mathematics.schema``
 continue to resolve via re-export.
 
 Per the ``centralized-schema-registry`` capability (2026-08-15).

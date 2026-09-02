@@ -45,7 +45,7 @@ REPORT_PATH = Path("/var/log/hf-watchdog/report.json")
 def check_model(model_id: str, timeout: float = HF_HUB_TIMEOUT) -> dict[str, object]:
     """Check if a HF model_id is live."""
     url = HF_HUB_API.format(model_id=model_id)
-    req = urllib.request.Request(url, headers={"User-Agent": "kcg-ocr-hf-watchdog/1.0"})
+    req = urllib.request.Request(url, headers={"User-Agent": "cianfhoghlaim-ocr-hf-watchdog/1.0"})
     start = time.time()
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:

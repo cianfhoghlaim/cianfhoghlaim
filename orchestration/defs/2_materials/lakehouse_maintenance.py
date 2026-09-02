@@ -19,7 +19,7 @@ needs:
    the canonical BIEP `SORTED BY (jurisdiction, stage, subject)`
    rewrite (the §7.2 axis).
 
-## KCG conventions used
+## Cianfhoghlaim conventions used
 
 - 5-layer Dagster group_name convention
   (`5_agent_ops_lakehouse_maintenance`; see

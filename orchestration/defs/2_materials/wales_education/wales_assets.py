@@ -76,7 +76,7 @@ WALES_SUBJECTS: tuple[str, ...] = (
 )
 def wales_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]:
     """Layer 1 — DLT ingestion of all Wales cohorts (160 rows)."""
-    from dlt_sources.british_isles.wales.education.wales_jurisdiction_pipeline import (
+    from dlt_sources.education.wales.british_isles.education.wales_jurisdiction_pipeline import (
         wales_jurisdiction_pipeline,
     )
 

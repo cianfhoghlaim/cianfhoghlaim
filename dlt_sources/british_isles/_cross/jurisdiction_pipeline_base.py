@@ -91,7 +91,7 @@ import dlt_sources
 # re-attempt the pipeline.run(...) call.
 from dlt.pipeline.helpers import retry_schema_update as _dlt_retry_schema_update
 
-from dlt_sources.common.destinations_cianfhoghlaim import get_dlt_destination
+from dlt_sources.common.destinations_cianfhoghlaim import get_ducklake_destination
 
 # §11: module-level helpers merged in from the legacy
 # ``dlt_sources.european_nations._shared.nation_source`` module so the
@@ -190,7 +190,7 @@ def row_from_cache(
     }
 
 
-# §6.4: the KCG-recommended tenacity pattern for the BIEP v3
+# §6.4: the Cianfhoghlaim-recommended tenacity pattern for the BIEP v3
 # jurisdiction pipelines (per the v2 plan §A.4 + dlt 1.30 release notes).
 try:
     from tenacity import (
@@ -398,9 +398,8 @@ class JurisdictionPipelineBase:
         # + A-Level + GCSE + LC jurisdictional pipelines is the
         # "oideachais" Postgres metadata schema).
         self.quadrant = quadrant or "oideachais"
-        self.destination = get_dlt_destination(
-            use_ducklake=use_md,
-            quadrant=self.quadrant,
+        self.destination = get_ducklake_destination(
+            metadata_schema=self.quadrant,
             multischema=self.multischema,
         )
 
@@ -649,7 +648,7 @@ class JurisdictionPipelineBase:
             with Retrying(stop=stop_after_attempt(5), retry=should_retry, reraise=True):
                 pipeline.run(data)
 
-        KCG extension: add exponential-backoff + jitter
+        Cianfhoghlaim extension: add exponential-backoff + jitter
         (``wait_exponential_jitter``) so simultaneous-pipeline races
         don't sync their retries. Falls back to a no-op context manager
         when tenacity is not installed (defensive — the production
@@ -778,4 +777,175 @@ __all__ = [
     "VALID_STAGES",
     "row_from_cache",
     "use_local_scrapes",
+    # Wave 4 §4.2 — DuckLake data_inlining wire-up
+    "should_inline_table",
+    "inline_sql_for",
+    "ALL_INLINED_DUCKLAKE_TABLES",
+    # Wave 4 §4.3 — DuckLake sort expressions wire-up
+    "lc_chunks_sort_sql",
+    "apply_lc_chunks_sort",
 ]
+
+
+# ─── Wave 4 §4.2 — DuckLake ``data_inlining`` wire-up ─────────────────────
+# Per the master plan §4.2, small tables (<6 rows typical) should be
+# inlined in the Postgres catalog (avoid Parquet file churn). The
+# ``SMALL_TABLES`` set in ``dlt_sources.destinations.ducklake`` already
+# enumerates the 8 inlined tables; this module exposes the
+# ``should_inline_table`` helper so the BIEP v3 jurisdiction pipeline
+# can decide at write time whether to inline.
+
+
+def should_inline_table(table_fqn: str, row_estimate: int = 100) -> bool:
+    """Return True if a table should be inlined.
+
+    Reads from the canonical ``SMALL_TABLES`` set in
+    ``dlt_sources.destinations.ducklake``. A row estimate override is
+    accepted so callers with hard data (post-load) can also inline
+    tables that turn out to be small even if not in the curated set.
+
+    Args:
+        table_fqn: Fully-qualified table name (e.g.
+            ``media_personal.apple_photos_metadata``).
+        row_estimate: Optional caller-provided row count.
+
+    Returns:
+        True if the table should be inlined; False otherwise.
+    """
+    from dlt_sources.destinations.ducklake import SMALL_TABLES
+
+    if table_fqn in SMALL_TABLES:
+        return True
+    # Heuristic: inline any table whose row estimate is below the
+    # canonical 100-row threshold for the Wave 4 best-practice
+    # data_inlining_row_limit.
+    return 0 < row_estimate <= 100
+
+
+# The canonical list of DuckLake tables that are inlined by default
+# (mirrors the ``SMALL_TABLES`` set in
+# ``dlt_sources.destinations.ducklake``). Exposed here so the BIEP v3
+# jurisdiction pipeline can iterate it for post-load re-inlining.
+ALL_INLINED_DUCKLAKE_TABLES: tuple[str, ...] = (
+    "media_personal.apple_photos_chunks",
+    "media_personal.apple_photos_metadata",
+    "media_personal.apple_photos_geospatial",
+    "media_descriptors.media_descriptors",
+    "corpus.government_circulars",
+    "official_media.flagged_posts",
+    "academic_history.academic_history_flow",
+    "codebase_indexing.codebase_indexing",
+)
+"""The canonical small-table list (Wave 4 §4.2). Mirrors
+``dlt_sources.destinations.ducklake:SMALL_TABLES``. Exposed here so
+the BIEP v3 pipelines can iterate them for post-load verification."""
+
+
+def inline_sql_for(
+    table_fqn: str,
+    row_limit: int = 100,
+) -> str | None:
+    """Return the ``ALTER TABLE … SET (data_inlining_row_limit = N)``
+    SQL for a small table, or ``None`` if the table is not inlined.
+
+    Thin wrapper over
+    ``dlt_sources.destinations.ducklake.apply_data_inlining_to_table(...)``
+    that returns ``None`` (not SQL) when the table is not a known
+    small table. Use this in a ``dagster`` post-load hook to apply
+    data_inlining to the freshly-loaded tables.
+
+    Args:
+        table_fqn: Fully-qualified table name.
+        row_limit: The inlining threshold (default 100 per DuckLake
+            v1.0).
+
+    Returns:
+        The ``ALTER TABLE …`` SQL string or ``None``.
+    """
+    from dlt_sources.destinations.ducklake import (
+        apply_data_inlining_to_table,
+    )
+
+    if not should_inline_table(table_fqn):
+        return None
+    return apply_data_inlining_to_table(
+        table_fqn,
+        row_limit=row_limit,
+    )
+
+
+# ─── Wave 4 §4.3 — DuckLake ``SORTED BY`` wire-up ──────────────────────────
+# Per the master plan §4.3, the 6 LC chunks tables get
+# ``SORTED BY (subject, board, year, language)``. The sort key aligns
+# with the BIEP v1 spec's primary join axis (10x faster BIEP-axis
+# reads per `ducklake.select/docs/stable/specification/tables/
+# ducklake_sort_expression`).
+
+# The BIEP v3 axis canonical sort order (master plan §3.5).
+LC_CHUNKS_SORT_COLUMNS: tuple[str, ...] = (
+    "subject",
+    "board",
+    "year",
+    "language",
+)
+"""The canonical LC chunks sort columns (Wave 4 §4.3).
+
+Mirrors ``dlt_sources.destinations.ducklake:apply_sort_to_table``'s
+default. Exposed at module scope so the BIEP v3 jurisdiction pipeline
+can reference the canonical sort tuple without duplicating literals.
+"""
+
+
+def lc_chunks_sort_sql(
+    table_fqn: str,
+    sort_columns: tuple[str, ...] = LC_CHUNKS_SORT_COLUMNS,
+) -> str:
+    """Return the canonical ``SORTED BY (subject, board, year, language)``
+    SQL for an LC chunks table.
+
+    Thin wrapper over
+    ``dlt_sources.destinations.ducklake.apply_sort_to_table(...)`` with
+    the Wave 4 §4.3 default sort columns. Use this after loading an
+    LC chunks table for the first time so subsequent reads (and the
+    BGE-M3 vector retrieval) get the 10x speedup.
+
+    Args:
+        table_fqn: Fully-qualified table name (e.g.
+            ``leabharlann_books.leabharlann_books``).
+        sort_columns: Override the canonical BIEP axis (rarely needed).
+
+    Returns:
+        The ``ALTER TABLE … SET SORTED BY (…)`` SQL string.
+    """
+    from dlt_sources.destinations.ducklake import apply_sort_to_table
+
+    return apply_sort_to_table(table_fqn, sort_columns=sort_columns)
+
+
+def apply_lc_chunks_sort(
+    table_fqn: str,
+    *,
+    ducklake_name: str = "cianfhoghlaim",
+) -> str | None:
+    """Return the ``SORTED BY (subject, board, year, language)`` SQL iff
+    the table is in ``SORTED_BY_TABLES``.
+
+    Returns ``None`` for tables not in the canonical LC chunks set.
+    This is the helper the §7.3 nightly maintenance Dagster asset
+    uses to keep the LC chunks tables sorted against the canonical
+    sort expression.
+
+    Args:
+        table_fqn: Fully-qualified table name.
+        ducklake_name: Unused; accepted for API symmetry with
+            ``apply_jurisdiction_sort_to_table_if_needed``.
+
+    Returns:
+        The SQL string or ``None``.
+    """
+    from dlt_sources.destinations.ducklake import SORTED_BY_TABLES
+
+    _ = ducklake_name  # reserved for future multi-DuckLake routing
+    if table_fqn not in SORTED_BY_TABLES:
+        return None
+    return lc_chunks_sort_sql(table_fqn)

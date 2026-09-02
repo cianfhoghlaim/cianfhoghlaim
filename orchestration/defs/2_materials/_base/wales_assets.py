@@ -15,7 +15,7 @@ from .jurisdiction_assets_base import make_jurisdiction_assets
 
 def _pipeline_factory():
     """Lazy-imported factory for the Wales jurisdiction pipeline."""
-    from dlt_sources.british_isles.wales.education.wales_jurisdiction_pipeline import (
+    from dlt_sources.education.wales.british_isles.education.wales_jurisdiction_pipeline import (
         wales_jurisdiction_pipeline,
     )
     return wales_jurisdiction_pipeline()

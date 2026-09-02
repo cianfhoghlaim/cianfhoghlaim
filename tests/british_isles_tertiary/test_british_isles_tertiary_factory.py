@@ -6,7 +6,7 @@ import pytest
 
 
 def test_bitertiary_config_validates_paths_starting_with_slash():
-    from dlt_sources.british_isles.university.british_isles_tertiary_factory import (
+    from dlt_sources.education.university.british_isles.university.british_isles_tertiary_factory import (
         BINation,
         BITertiaryDeepExtractionConfig,
     )
@@ -22,7 +22,7 @@ def test_bitertiary_config_validates_paths_starting_with_slash():
 
 
 def test_bitertiary_factory_emits_5_resources_for_public_only():
-    from dlt_sources.british_isles.university.british_isles_tertiary_factory import (
+    from dlt_sources.education.university.british_isles.university.british_isles_tertiary_factory import (
         BINation,
         BITertiaryDeepExtractionConfig,
         bitertiary_universities_factory,
@@ -49,7 +49,7 @@ def test_bitertiary_factory_emits_5_resources_for_public_only():
 
 
 def test_bitertiary_qub_source_offers_sso():
-    from dlt_sources.british_isles.university.british_isles_tertiary_factory import (
+    from dlt_sources.education.university.british_isles.university.british_isles_tertiary_factory import (
         bitertiary_qub_source,
     )
 
@@ -62,7 +62,7 @@ def test_bitertiary_qub_source_offers_sso():
 
 
 def test_bitertiary_ulster_source_offers_no_sso():
-    from dlt_sources.british_isles.university.british_isles_tertiary_factory import (
+    from dlt_sources.education.university.british_isles.university.british_isles_tertiary_factory import (
         bitertiary_ulster_source,
     )
 
@@ -74,7 +74,7 @@ def test_bitertiary_ulster_source_offers_no_sso():
 
 
 def test_bitertiary_level_system_autosets_from_nation():
-    from dlt_sources.british_isles.university.british_isles_tertiary_factory import (
+    from dlt_sources.education.university.british_isles.university.british_isles_tertiary_factory import (
         BINation,
         BITertiaryDeepExtractionConfig,
     )
@@ -97,7 +97,7 @@ def test_bitertiary_level_system_autosets_from_nation():
 
 
 def test_bitertiary_factory_idempotent():
-    from dlt_sources.british_isles.university.british_isles_tertiary_factory import (
+    from dlt_sources.education.university.british_isles.university.british_isles_tertiary_factory import (
         BINation,
         BITertiaryDeepExtractionConfig,
         bitertiary_universities_factory,

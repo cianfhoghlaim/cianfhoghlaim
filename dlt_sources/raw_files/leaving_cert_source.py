@@ -427,11 +427,11 @@ def main() -> int:
     Scans all 13 subjects with a real local PDF corpus (LC_ALL_SUBJECTS),
     not just the original LC6.
     """
-    from dlt_sources.common.destinations_cianfhoghlaim import get_dlt_destination
+    from dlt_sources.common.destinations_cianfhoghlaim import get_ducklake_destination
 
     pipeline = dlt.pipeline(
         pipeline_name="lc_leaving_cert",
-        destination=get_dlt_destination(use_ducklake=True),
+        destination=get_ducklake_destination(),
         dataset_name="cianfhoghlaim.bronze.ireland_leaving_cert",
     )
     load_info = pipeline.run(lc5_documents(subjects=LC_ALL_SUBJECTS))

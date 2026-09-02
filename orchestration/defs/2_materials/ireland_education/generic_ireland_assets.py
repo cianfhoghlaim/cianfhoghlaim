@@ -21,7 +21,7 @@ computer_science) × 2 languages = 12 cohorts. The 12 cohorts are
 materialised by the 3 generic assets and the 12 per-subject backfill
 jobs.
 
-## KCG patterns used
+## Cianfhoghlaim patterns used
 - ibis (per `.agents/skills/ibis/SKILL.md`) — every query uses
   ``ibis.duckdb.connect()`` (NO raw ``duckdb.connect``).
 - dagster (per `.agents/skills/dagster/SKILL.md`) — the 5-layer
@@ -133,7 +133,7 @@ IRELAND_LC_COHORTS = [
 )
 def ireland_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]:
     """Layer 1 — DLT ingestion of all Ireland cohorts (544+ rows)."""
-    from dlt_sources.british_isles.ireland.education.ireland_jurisdiction_pipeline import (
+    from dlt_sources.education.ireland.british_isles.education.ireland_jurisdiction_pipeline import (
         ireland_jurisdiction_pipeline,
     )
 

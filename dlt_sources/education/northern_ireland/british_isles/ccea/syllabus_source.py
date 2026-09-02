@@ -25,7 +25,7 @@ language code ``ga`` is shared with the Irish Republic
 NCCA Gaeltacht-school syllabuses on the same topics.
 
 Usage:
-    from dlt_sources.british_isles.northern_ireland.education.ccea.syllabus_source import (
+    from dlt_sources.education.northern_ireland.british_isles.education.ccea.syllabus_source import (
         ccea_syllabus_source,
     )
 """

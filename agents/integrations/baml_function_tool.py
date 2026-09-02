@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 
 # Lazy imports — Google ADK and BAML are optional deps at type-check
-# time but always available at runtime in the KCG agent surface.
+# time but always available at runtime in the Cianfhoghlaim agent surface.
 try:
     from google.adk.tools import FunctionTool, ToolContext
     from google.adk.tools.agent_tool import AgentTool

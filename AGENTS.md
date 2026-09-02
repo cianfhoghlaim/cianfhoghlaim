@@ -56,16 +56,16 @@ uv run python -c "from pathlib import Path; from dlt_sources.filesystem.uog_pers
 ```
 
 
-## New in 2026-09-01 (Cianfhoghlaim-Nua V6 Era) — What shipped
+## New in 2026-09-01 (Cianfhoghlaim-Nua V6 Era + 10 follow-on Steps) — What shipped
 
-The V6 era (2026-09-01) shipped 11 openspec changes + ~5,500 LOC that
-lift the GCP-first `gemini_hackathon/` sister-repo learnings into the
-canonical OSS-first `cianfhoghlaim/` substrate. The 5-pillar pattern:
-**BAML → Convex → A2UI → Hono → React**.
+The V6 era (2026-09-01) shipped **19 openspec changes** + **~10,000 LOC**
+that lift the GCP-first `gemini_hackathon/` sister-repo learnings
+into the canonical OSS-first `cianfhoghlaim/` substrate. The
+5-pillar pattern: **BAML → Convex → A2UI → Hono → React**.
 
-### 11 openspec changes (in openspec/changes/)
+### 19 openspec changes (in openspec/changes/)
 
-| # | Phase | Change |
+| # | Phase/Step | Change |
 |--:|--|--|
 | 0 | Phase 1 umbrella | `2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1/` |
 | 0.1 | Sister-side mirrors (6) | `2026-09-01-{bonneagar,tuatha,ciancheiltis,ciandlithe,cianchosaint,gemini-hackathon}-sister-umbrella-mirror-v1/` |
@@ -73,6 +73,7 @@ canonical OSS-first `cianfhoghlaim/` substrate. The 5-pillar pattern:
 | 1 | End-to-end showcase (4 subjects) | `2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1/` |
 | 2 | A2UI v0.9 catalog (11 components) | `2026-09-01-cianfhoghlaim-nua-a2ui-catalog-v1/` |
 | 3 | Web consolidation (5 apps → 1) | `2026-09-01-cianfhoghlaim-nua-web-consolidation-v1/` |
+| 3.2 | Web consolidation completion | `2026-09-01-cianfhoghlaim-nua-web-consolidation-completion-v1/` |
 | 4 | NCCE showcase | `2026-09-01-cianfhoghlaim-nua-biep-ncce-showcase-v1/` |
 | 5 | BAML/CocoIndex/DLT hardening | (partial) FTS index added |
 | 6 | Oral study plans | `2026-09-01-cianfhoghlaim-nua-oral-study-plans-v1/` |
@@ -80,6 +81,12 @@ canonical OSS-first `cianfhoghlaim/` substrate. The 5-pillar pattern:
 | 8 | Sister-side mirrors activation | `2026-09-01-sister-side-mirrors-v1/` |
 | 9 | GCP opt-in completion | `2026-09-01-gcp-opt-in-completion-v1/` |
 | 10 | V7 from-the-ground-up (DEFERRED) | `2026-09-01-v7-from-the-ground-up-v1/` |
+| S0 | Phase 3 web consolidation fix | `2026-09-01-cianfhoghlaim-nua-web-consolidation-completion-v1/` |
+| S1 | DLT path drift fix | `2026-09-01-dlt-path-drift-fix-v1/` |
+| S2 | Ireland LC completion | `2026-09-01-cianfhoghlaim-nua-ireland-lc-completion-v1/` |
+| S3 | Firecrawl England source discovery | `2026-09-01-firecrawl-england-source-discovery-v1/` |
+| S4-S8 | 5-jurisdiction completion (EN+WL+NI+IM+SC) | `2026-09-01-cianfhoghlaim-nua-5-jurisdiction-completion-v1/` |
+| S9 | Vernacular language pipelines (7 langs) | `2026-09-01-cianfhoghlaim-nua-v7-vernaculars-v1/` |
 
 ### Key file paths
 
@@ -90,6 +97,7 @@ canonical OSS-first `cianfhoghlaim/` substrate. The 5-pillar pattern:
 | Phase 1 planner | `agents/adk/subjects/lc/planner.py` |
 | Phase 2 A2UI catalog | `web/packages/a2ui/src/catalog.tsx` + `web/packages/a2ui/src/components/` |
 | Phase 3 consolidated app | `web/apps/cianfhoghlaim-nua/` |
+| Phase 3 web completion | `web/apps/cianfhoghlaim-nua/routes/__root.tsx` + `app.config.ts` + `src/convex/{schema,auth}.ts` |
 | Phase 4 NCCE BAML | `baml_src/british_isles/uk_ncce/learning_graph.baml` |
 | Phase 4 NCCE equivalencies | `baml_src/british_isles/uk_ncce/equivalencies.baml` |
 | Phase 4 CocoIndex flow | `cocoindex_flows/uk_ncce/learning_graphs_app.py` |
@@ -100,6 +108,12 @@ canonical OSS-first `cianfhoghlaim/` substrate. The 5-pillar pattern:
 | Phase 7 certificate types | `meaisinfhoghlaim/certificate/types.py` |
 | Phase 7 certificate pipeline | `meaisinfhoghlaim/certificate/pipeline.py` |
 | Phase 7 certification BAML | `baml_src/british_isles/ireland/education/certification.baml` |
+| S2 Ireland NCCA-adjacent marking | `baml_src/british_isles/ireland/education/marking/{accounting,business,french,history,art,music,applied_mathematics,physics}_marking.baml` |
+| S2 Ireland Convex LC tables | `web/apps/cianfhoghlaim-nua/convex/lc/` (16 files: 8 ts + 8 types.ts) |
+| S2 Ireland early-years CocoIndex | `cocoindex_flows/british_isles/ireland/education/{aistear,primary}_embedding.py` |
+| S3 England DLT scaffold | `dlt_sources/education/england/british_isles/england_gov_sources.py` |
+| S4-S8 jurisdiction BAMLs | `baml_src/british_isles/{en,wl,ni,im,sc}/education/{en,wl,ni,im,sc}_extraction.baml` (5 files) |
+| S9 vernacular BAML | `baml_src/british_isles/_cross/vernacular_languages.baml` (VernacularLanguage enum + VernacularSubjectSpec class + 8 extraction functions) |
 | Tests | `tests/test_adk_subject_actions.py` (11) + `tests/test_phase7_certificate_pipeline.py` (7) |
 
 ### Phase 7 quick-start

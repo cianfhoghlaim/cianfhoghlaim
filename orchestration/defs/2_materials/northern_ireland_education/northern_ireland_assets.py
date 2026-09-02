@@ -52,7 +52,7 @@ NORTHERN_IRELAND_SUBJECTS: tuple[str, ...] = (
     automation_condition=make_yearly_education_automation(),
 )
 def northern_ireland_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]:
-    from dlt_sources.british_isles.northern_ireland.education.northern_ireland_jurisdiction_pipeline import (
+    from dlt_sources.education.northern_ireland.british_isles.education.northern_ireland_jurisdiction_pipeline import (
         northern_ireland_jurisdiction_pipeline,
     )
     load_info = northern_ireland_jurisdiction_pipeline.run()

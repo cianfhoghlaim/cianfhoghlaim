@@ -87,7 +87,7 @@ MODEL_COSTS = {
     "claude-sonnet": {"input": 0.003, "output": 0.015},
     "claude-haiku": {"input": 0.00025, "output": 0.00125},
     "gpt-4o": {"input": 0.005, "output": 0.015},
-    "qwen3-vl": {"input": 0.0, "output": 0.0},  # Local model
+    "gemma-4-e4b-vision": {"input": 0.0, "output": 0.0},  # Local model
     "olmocr2": {"input": 0.0, "output": 0.0},  # Local model
 }
 
@@ -105,7 +105,7 @@ class LangfuseTrainingCallback(TrainerCallback):
 
     def __init__(
         self,
-        model_name: str = "qwen3-vl",
+        model_name: str = "gemma-4-e4b-vision",
         project_name: str = "oideachas-training",
         log_every_n_steps: int = 100,
         log_generations: bool = True,

@@ -20,7 +20,7 @@ The Irish-medium (Gaeltacht) overlay is flagged via the language field
 and can be loaded separately via the `baml_function` field of the
 registry.
 
-## KCG patterns used
+## Cianfhoghlaim patterns used
 - ibis (per `.agents/skills/ibis/SKILL.md`) — every query uses
   ``ibis.duckdb.connect()`` (NO raw ``duckdb.connect``).
 - dlt (per `.agents/skills/dlt/SKILL.md`) — the canonical destination

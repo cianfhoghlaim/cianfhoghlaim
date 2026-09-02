@@ -11,7 +11,7 @@ the DuckDB tables:
 Phases 2-5 will call this loader for their respective jurisdictions
 (Phase 2 = Ireland, Phase 3 = England, etc.).
 
-## KCG patterns used
+## Cianfhoghlaim patterns used
 - ibis (per `.agents/skills/ibis/SKILL.md`) — every write uses
   ``ibis.duckdb.connect(write=True)``.
 - python (per the BIEP v3 spec) — pure-Python public API.

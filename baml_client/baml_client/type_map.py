@@ -73,6 +73,12 @@ type_map = {
     "types.AcademicModuleDescriptor": types.AcademicModuleDescriptor,
     "stream_types.AcademicModuleDescriptor": stream_types.AcademicModuleDescriptor,
 
+    "types.AccountingMarkingScheme": types.AccountingMarkingScheme,
+    "stream_types.AccountingMarkingScheme": stream_types.AccountingMarkingScheme,
+
+    "types.AccountingSubjectDiscriminator": types.AccountingSubjectDiscriminator,
+    "stream_types.AccountingSubjectDiscriminator": stream_types.AccountingSubjectDiscriminator,
+
     "types.AdaptiveAssessment": types.AdaptiveAssessment,
     "stream_types.AdaptiveAssessment": stream_types.AdaptiveAssessment,
 
@@ -148,6 +154,12 @@ type_map = {
     "types.ApplicationTimeline": types.ApplicationTimeline,
     "stream_types.ApplicationTimeline": stream_types.ApplicationTimeline,
 
+    "types.AppliedMathsMarkingScheme": types.AppliedMathsMarkingScheme,
+    "stream_types.AppliedMathsMarkingScheme": stream_types.AppliedMathsMarkingScheme,
+
+    "types.AppliedMathsSubjectDiscriminator": types.AppliedMathsSubjectDiscriminator,
+    "stream_types.AppliedMathsSubjectDiscriminator": stream_types.AppliedMathsSubjectDiscriminator,
+
     "types.Apprenticeship": types.Apprenticeship,
     "stream_types.Apprenticeship": stream_types.Apprenticeship,
 
@@ -156,6 +168,12 @@ type_map = {
 
     "types.ArmourOfClochur": types.ArmourOfClochur,
     "stream_types.ArmourOfClochur": stream_types.ArmourOfClochur,
+
+    "types.ArtMarkingScheme": types.ArtMarkingScheme,
+    "stream_types.ArtMarkingScheme": stream_types.ArtMarkingScheme,
+
+    "types.ArtSubjectDiscriminator": types.ArtSubjectDiscriminator,
+    "stream_types.ArtSubjectDiscriminator": stream_types.ArtSubjectDiscriminator,
 
     "types.ArtworkAnalysis": types.ArtworkAnalysis,
     "stream_types.ArtworkAnalysis": stream_types.ArtworkAnalysis,
@@ -285,6 +303,12 @@ type_map = {
 
     "types.BulgariaSubjectCurriculum": types.BulgariaSubjectCurriculum,
     "stream_types.BulgariaSubjectCurriculum": stream_types.BulgariaSubjectCurriculum,
+
+    "types.BusinessMarkingScheme": types.BusinessMarkingScheme,
+    "stream_types.BusinessMarkingScheme": stream_types.BusinessMarkingScheme,
+
+    "types.BusinessSubjectDiscriminator": types.BusinessSubjectDiscriminator,
+    "stream_types.BusinessSubjectDiscriminator": stream_types.BusinessSubjectDiscriminator,
 
     "types.CBATask": types.CBATask,
     "stream_types.CBATask": stream_types.CBATask,
@@ -724,6 +748,9 @@ type_map = {
     "types.EMAMedicine": types.EMAMedicine,
     "stream_types.EMAMedicine": stream_types.EMAMedicine,
 
+    "types.ENSubjectSpec": types.ENSubjectSpec,
+    "stream_types.ENSubjectSpec": stream_types.ENSubjectSpec,
+
     "types.EUDocument": types.EUDocument,
     "stream_types.EUDocument": stream_types.EUDocument,
 
@@ -952,6 +979,12 @@ type_map = {
     "types.FranceMedicineDocument": types.FranceMedicineDocument,
     "stream_types.FranceMedicineDocument": stream_types.FranceMedicineDocument,
 
+    "types.FrenchMarkingScheme": types.FrenchMarkingScheme,
+    "stream_types.FrenchMarkingScheme": stream_types.FrenchMarkingScheme,
+
+    "types.FrenchSubjectDiscriminator": types.FrenchSubjectDiscriminator,
+    "stream_types.FrenchSubjectDiscriminator": stream_types.FrenchSubjectDiscriminator,
+
     "types.GCSEAreaTopic": types.GCSEAreaTopic,
     "stream_types.GCSEAreaTopic": stream_types.GCSEAreaTopic,
 
@@ -1029,6 +1062,9 @@ type_map = {
 
     "types.GaelSubjectDiscriminator": types.GaelSubjectDiscriminator,
     "stream_types.GaelSubjectDiscriminator": stream_types.GaelSubjectDiscriminator,
+
+    "types.GaeltachtOverlay": types.GaeltachtOverlay,
+    "stream_types.GaeltachtOverlay": stream_types.GaeltachtOverlay,
 
     "types.GameGenre": types.GameGenre,
     "stream_types.GameGenre": stream_types.GameGenre,
@@ -1231,6 +1267,12 @@ type_map = {
     "types.HiddenHeritagesTale": types.HiddenHeritagesTale,
     "stream_types.HiddenHeritagesTale": stream_types.HiddenHeritagesTale,
 
+    "types.HistoryMarkingScheme": types.HistoryMarkingScheme,
+    "stream_types.HistoryMarkingScheme": stream_types.HistoryMarkingScheme,
+
+    "types.HistorySubjectDiscriminator": types.HistorySubjectDiscriminator,
+    "stream_types.HistorySubjectDiscriminator": stream_types.HistorySubjectDiscriminator,
+
     "types.HungaryHealthGuidance": types.HungaryHealthGuidance,
     "stream_types.HungaryHealthGuidance": stream_types.HungaryHealthGuidance,
 
@@ -1242,6 +1284,9 @@ type_map = {
 
     "types.HybridProfile": types.HybridProfile,
     "stream_types.HybridProfile": stream_types.HybridProfile,
+
+    "types.IMSubjectSpec": types.IMSubjectSpec,
+    "stream_types.IMSubjectSpec": stream_types.IMSubjectSpec,
 
     "types.ITTerm": types.ITTerm,
     "stream_types.ITTerm": stream_types.ITTerm,
@@ -1594,6 +1639,9 @@ type_map = {
     "types.MaltaSubjectCurriculum": types.MaltaSubjectCurriculum,
     "stream_types.MaltaSubjectCurriculum": stream_types.MaltaSubjectCurriculum,
 
+    "types.ManxOverlay": types.ManxOverlay,
+    "stream_types.ManxOverlay": stream_types.ManxOverlay,
+
     "types.MarkingAnnotation": types.MarkingAnnotation,
     "stream_types.MarkingAnnotation": stream_types.MarkingAnnotation,
 
@@ -1741,6 +1789,9 @@ type_map = {
     "types.MotifOccurrence": types.MotifOccurrence,
     "stream_types.MotifOccurrence": stream_types.MotifOccurrence,
 
+    "types.MusicMarkingScheme": types.MusicMarkingScheme,
+    "stream_types.MusicMarkingScheme": stream_types.MusicMarkingScheme,
+
     "types.MusicProducerProfile": types.MusicProducerProfile,
     "stream_types.MusicProducerProfile": stream_types.MusicProducerProfile,
 
@@ -1749,6 +1800,9 @@ type_map = {
 
     "types.MusicRelease": types.MusicRelease,
     "stream_types.MusicRelease": stream_types.MusicRelease,
+
+    "types.MusicSubjectDiscriminator": types.MusicSubjectDiscriminator,
+    "stream_types.MusicSubjectDiscriminator": stream_types.MusicSubjectDiscriminator,
 
     "types.MusicTrack": types.MusicTrack,
     "stream_types.MusicTrack": stream_types.MusicTrack,
@@ -1770,6 +1824,9 @@ type_map = {
 
     "types.NCCAPolicyCriteria": types.NCCAPolicyCriteria,
     "stream_types.NCCAPolicyCriteria": stream_types.NCCAPolicyCriteria,
+
+    "types.NISubjectSpec": types.NISubjectSpec,
+    "stream_types.NISubjectSpec": stream_types.NISubjectSpec,
 
     "types.NPC": types.NPC,
     "stream_types.NPC": stream_types.NPC,
@@ -1978,6 +2035,12 @@ type_map = {
     "types.PhoneticFeature": types.PhoneticFeature,
     "stream_types.PhoneticFeature": stream_types.PhoneticFeature,
 
+    "types.PhysicsMarkingScheme": types.PhysicsMarkingScheme,
+    "stream_types.PhysicsMarkingScheme": stream_types.PhysicsMarkingScheme,
+
+    "types.PhysicsSubjectDiscriminator": types.PhysicsSubjectDiscriminator,
+    "stream_types.PhysicsSubjectDiscriminator": stream_types.PhysicsSubjectDiscriminator,
+
     "types.PigSkinBagOfHealingWell": types.PigSkinBagOfHealingWell,
     "stream_types.PigSkinBagOfHealingWell": stream_types.PigSkinBagOfHealingWell,
 
@@ -2176,6 +2239,9 @@ type_map = {
     "types.RubricScore": types.RubricScore,
     "stream_types.RubricScore": stream_types.RubricScore,
 
+    "types.SCSubjectSpec": types.SCSubjectSpec,
+    "stream_types.SCSubjectSpec": stream_types.SCSubjectSpec,
+
     "types.SOLASCourse": types.SOLASCourse,
     "stream_types.SOLASCourse": stream_types.SOLASCourse,
 
@@ -2202,6 +2268,9 @@ type_map = {
 
     "types.ScotlandTopic": types.ScotlandTopic,
     "stream_types.ScotlandTopic": stream_types.ScotlandTopic,
+
+    "types.ScottishGaelicOverlay": types.ScottishGaelicOverlay,
+    "stream_types.ScottishGaelicOverlay": stream_types.ScottishGaelicOverlay,
 
     "types.ScrapingSession": types.ScrapingSession,
     "stream_types.ScrapingSession": stream_types.ScrapingSession,
@@ -2659,6 +2728,9 @@ type_map = {
     "types.VerificationSummary": types.VerificationSummary,
     "stream_types.VerificationSummary": stream_types.VerificationSummary,
 
+    "types.VernacularSubjectSpec": types.VernacularSubjectSpec,
+    "stream_types.VernacularSubjectSpec": stream_types.VernacularSubjectSpec,
+
     "types.VfxVocabulary": types.VfxVocabulary,
     "stream_types.VfxVocabulary": stream_types.VfxVocabulary,
 
@@ -2686,6 +2758,9 @@ type_map = {
     "types.VolumeSummary": types.VolumeSummary,
     "stream_types.VolumeSummary": stream_types.VolumeSummary,
 
+    "types.WLSubjectSpec": types.WLSubjectSpec,
+    "stream_types.WLSubjectSpec": stream_types.WLSubjectSpec,
+
     "types.WalesAssessmentObjective": types.WalesAssessmentObjective,
     "stream_types.WalesAssessmentObjective": stream_types.WalesAssessmentObjective,
 
@@ -2703,6 +2778,9 @@ type_map = {
 
     "types.WalesTopic": types.WalesTopic,
     "stream_types.WalesTopic": stream_types.WalesTopic,
+
+    "types.WelshMediumOverlay": types.WelshMediumOverlay,
+    "stream_types.WelshMediumOverlay": stream_types.WelshMediumOverlay,
 
     "types.WheelOfTimeMediaDescriptor": types.WheelOfTimeMediaDescriptor,
     "stream_types.WheelOfTimeMediaDescriptor": stream_types.WheelOfTimeMediaDescriptor,
@@ -2757,6 +2835,10 @@ type_map = {
 
     "types.ALevelSubjectSlug": types.ALevelSubjectSlug,
 
+    "types.AccountingCommonMistake": types.AccountingCommonMistake,
+
+    "types.AccountingQuestionType": types.AccountingQuestionType,
+
     "types.AchievementLevel": types.AchievementLevel,
 
     "types.AdminUnitCategory": types.AdminUnitCategory,
@@ -2776,6 +2858,14 @@ type_map = {
     "types.AlignmentType": types.AlignmentType,
 
     "types.AnamSource": types.AnamSource,
+
+    "types.AppliedMathsCommonMistake": types.AppliedMathsCommonMistake,
+
+    "types.AppliedMathsQuestionType": types.AppliedMathsQuestionType,
+
+    "types.ArtCommonMistake": types.ArtCommonMistake,
+
+    "types.ArtQuestionType": types.ArtQuestionType,
 
     "types.ArtStyle": types.ArtStyle,
 
@@ -2806,6 +2896,10 @@ type_map = {
     "types.BoonSlot": types.BoonSlot,
 
     "types.BoonTier": types.BoonTier,
+
+    "types.BusinessCommonMistake": types.BusinessCommonMistake,
+
+    "types.BusinessQuestionType": types.BusinessQuestionType,
 
     "types.CAOField": types.CAOField,
 
@@ -2895,6 +2989,12 @@ type_map = {
 
     "types.DuchasCollection": types.DuchasCollection,
 
+    "types.ENAwardDescriptor": types.ENAwardDescriptor,
+
+    "types.ENKeyCompetency": types.ENKeyCompetency,
+
+    "types.ENStage": types.ENStage,
+
     "types.EQFLevel": types.EQFLevel,
 
     "types.EUInstitution": types.EUInstitution,
@@ -2948,6 +3048,10 @@ type_map = {
     "types.FolkloreSource": types.FolkloreSource,
 
     "types.FolkloreTopic": types.FolkloreTopic,
+
+    "types.FrenchCommonMistake": types.FrenchCommonMistake,
+
+    "types.FrenchQuestionType": types.FrenchQuestionType,
 
     "types.GCSEAOLevel": types.GCSEAOLevel,
 
@@ -3018,6 +3122,16 @@ type_map = {
     "types.HTRBackend": types.HTRBackend,
 
     "types.HandbookTopicCode": types.HandbookTopicCode,
+
+    "types.HistoryCommonMistake": types.HistoryCommonMistake,
+
+    "types.HistoryQuestionType": types.HistoryQuestionType,
+
+    "types.IMAwardDescriptor": types.IMAwardDescriptor,
+
+    "types.IMKeyCompetency": types.IMKeyCompetency,
+
+    "types.IMStage": types.IMStage,
 
     "types.ImagePurpose": types.ImagePurpose,
 
@@ -3125,11 +3239,15 @@ type_map = {
 
     "types.MoodCategory": types.MoodCategory,
 
+    "types.MusicCommonMistake": types.MusicCommonMistake,
+
     "types.MusicGenre": types.MusicGenre,
 
     "types.MusicGenreArtwork": types.MusicGenreArtwork,
 
     "types.MusicGenrePortfolio": types.MusicGenrePortfolio,
+
+    "types.MusicQuestionType": types.MusicQuestionType,
 
     "types.MutationType": types.MutationType,
 
@@ -3144,6 +3262,12 @@ type_map = {
     "types.NCCASubjectSlug": types.NCCASubjectSlug,
 
     "types.NFQLevel": types.NFQLevel,
+
+    "types.NIAwardDescriptor": types.NIAwardDescriptor,
+
+    "types.NIKeyCompetency": types.NIKeyCompetency,
+
+    "types.NIStage": types.NIStage,
 
     "types.Nation": types.Nation,
 
@@ -3172,6 +3296,10 @@ type_map = {
     "types.PartOfSpeech": types.PartOfSpeech,
 
     "types.PartOfSpeechArchive": types.PartOfSpeechArchive,
+
+    "types.PhysicsCommonMistake": types.PhysicsCommonMistake,
+
+    "types.PhysicsQuestionType": types.PhysicsQuestionType,
 
     "types.PlatformType": types.PlatformType,
 
@@ -3237,9 +3365,15 @@ type_map = {
 
     "types.RubricStyle": types.RubricStyle,
 
+    "types.SCAwardDescriptor": types.SCAwardDescriptor,
+
+    "types.SCKeyCompetency": types.SCKeyCompetency,
+
     "types.SCQFLevel": types.SCQFLevel,
 
     "types.SCQFSubject": types.SCQFSubject,
+
+    "types.SCStage": types.SCStage,
 
     "types.SOLASPath": types.SOLASPath,
 
@@ -3311,10 +3445,18 @@ type_map = {
 
     "types.VerbTense": types.VerbTense,
 
+    "types.VernacularLanguage": types.VernacularLanguage,
+
     "types.VisualStyle": types.VisualStyle,
 
     "types.WJECLevel": types.WJECLevel,
 
     "types.WJECSubject": types.WJECSubject,
+
+    "types.WLAwardDescriptor": types.WLAwardDescriptor,
+
+    "types.WLKeyCompetency": types.WLKeyCompetency,
+
+    "types.WLStage": types.WLStage,
 
 }

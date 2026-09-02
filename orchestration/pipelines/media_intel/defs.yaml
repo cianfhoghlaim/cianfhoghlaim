@@ -1,37 +1,21 @@
 # orchestration/pipelines/media_intel/defs.yaml
 #
-# L3 PipelineFactoryComponent for the cross-medium media intel pipeline
-# (compares animation + comics + games + celtic_history_research).
+# Per-pipeline Component (Wave 2 of the 2026-08-24 master refactor).
 #
-# Pipeline kind: media — codec probe + thumbnail + embeddings across
-# multiple media sources.
+# Migrated from the legacy `PipelineFactoryComponent` to the canonical
+# `dagster_dlt.DltLoadCollectionComponent` per master plan §3.3 + the
+# canonical `dagster-pipeline-components` spec. The Cianfhoghlaim customisation
+# (the canonical group_name + tags + the StateBackedComponent pattern)
+# is wired via the shared helpers at
+# `orchestration.pipelines._shared.dagster_dlt_integration` +
+# `orchestration.pipelines._shared.state_helpers`.
 #
-# Reference: openspec/changes/2026-08-24-wave-2-orchestration-vertical-pipelines-v1/
-type: orchestration.components.PipelineFactoryComponent
+# Mirrors the `dlt_sources.media_intel` source.
+# Pipeline kind: media
+# Group name: 1_ingestion_media_intel_cross_media
+type: dagster_dlt.DltLoadCollectionComponent
 attributes:
-  dlt_source: dlt_sources.media_intel
-  pipeline_kind: media
-  embedding_model: BAAI/bge-large-en-v1.5
-  hnsw_index: true
-  conformance_required: true
-  destinations:
-    - ducklake_cianfhoghlaim
-  processing:
-    - baml_extraction
-    - cocoindex_live_update
-    - marimo_dashboard
-  schedules:
-    - cron: "0 14 * * 0"
-      timezone: UTC
-  sensors:
-    - upstream_change
-  tags:
-    - media_intel
-    - cross_medium
-    - comparison
-  metadata:
-    openspec_change: 2026-08-24-wave-2-orchestration-vertical-pipelines-v1
-    spec: orchestration-vertical-pipelines
-    kind: media
-    legacy_files:
-      - orchestration/defs/media_intel.py
+  loads:
+    - pipeline: orchestration.pipelines._shared.dagster_dlt_integration:build_dlt_pipeline|dlt_sources.media_intel
+      source: dlt_sources.media_intel
+      translation: orchestration.pipelines._shared.dagster_dlt_integration.kcg_default_translation

@@ -14,7 +14,7 @@
 # The factory module:
 #   cocoindex_flows/european_nations/_factory.py
 # exports 40 CocoIndex Apps at module import time (one per nation
-# in NATION_CONFIG). The Apps are loaded by the KCG Component
+# in NATION_CONFIG). The Apps are loaded by the Cianfhoghlaim Component
 # (CelticModelLifecycleComponent) via the standard `apps:` list below.
 #
 # Reference:

@@ -31,11 +31,11 @@ logger = structlog.get_logger(__name__)
 # the file remains a valid standalone target for tests that don't
 # need sruth_browser on sys.path.
 try:
-    from dlt_sources.british_isles.ireland.education.university.exam_papers.uog_exam_vlm import (  # type: ignore
+    from dlt_sources.education.ireland.british_isles.university.exam_papers.uog_exam_vlm import (  # type: ignore
         UOG_VLM_MODEL_REGISTRY,
         pdf_to_images,
     )
-    from dlt_sources.british_isles.ireland.education.university.exam_papers.uog_exam_vlm import (
+    from dlt_sources.education.ireland.british_isles.university.exam_papers.uog_exam_vlm import (
         run_vlm_eval as run_exam_vlm_eval,
     )
 except ImportError:  # pragma: no cover

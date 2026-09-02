@@ -148,7 +148,7 @@ class CelticMaterialsComponent(Component, Resolvable):
         # installed Dagster 1.13 — this same rename is needed in the other 4
         # layer*.py Components (layer1/3/4/5) but those are outside this
         # plan's Ireland/England/lc_extraction scope, left for the separate
-        # KCG refactor roadmap.
+        # Cianfhoghlaim refactor roadmap.
         if self.automation == "eager":
             automation_condition = dg.AutomationCondition.eager()
         else:

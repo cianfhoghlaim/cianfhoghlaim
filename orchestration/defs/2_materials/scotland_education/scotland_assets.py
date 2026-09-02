@@ -15,7 +15,7 @@ follow the same pattern as the Ireland + England assets
 YEARLY automation (1st September 00:00 UTC) per the BIEP v3 scheduling
 policy.
 
-## KCG patterns used
+## Cianfhoghlaim patterns used
 - ibis (per `.agents/skills/ibis/SKILL.md`) — every query uses
   ``ibis.duckdb.connect()``.
 - dagster (per `.agents/skills/dagster/SKILL.md`) — 5-layer group_name
@@ -91,7 +91,7 @@ SCOTLAND_SUBJECTS: tuple[str, ...] = (
 )
 def scotland_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]:
     """Layer 1 — DLT ingestion of all Scotland cohorts (150 rows)."""
-    from dlt_sources.british_isles.scotland.education.scotland_jurisdiction_pipeline import (
+    from dlt_sources.education.scotland.british_isles.education.scotland_jurisdiction_pipeline import (
         scotland_jurisdiction_pipeline,
     )
 

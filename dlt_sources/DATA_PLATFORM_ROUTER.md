@@ -24,7 +24,7 @@ entrypoint that:
 | `dlt_sources/` | [`./AGENTS.md`](AGENTS.md) | 251 lines | 1,957 `.py` files, 928 `@dlt.source`, 15 sub-trees (BIEP focus: 8 British Isles nations × 5 stages + 40 European nations + 6 Commonwealth + 4 Americas + 1 Cross-British Isles), the BIEP v3 generic pipeline pattern |
 | `baml_src/` | [`../baml_src/AGENTS.md`](../baml_src/AGENTS.md) | — | 319 `.baml` files, 5 canonical `lc6` extraction functions (`ExtractCurriculumSyllabus`, `ExtractExamPaperLayout`, `ExtractMarkingSchemeGuideline`, `ExtractCrossLinguisticConcept`, `ExtractSyllabusDiagram`), 3 clients (`ExtractEn`, `ExtractEnStrong`, `LocalVision`) |
 | `cocoindex/` | [`../cocoindex/AGENTS.md`](../cocoindex/AGENTS.md) | 214 lines | 94 explicit `coco.App(...)` instances + 378 factory Apps, 190 `.py` files, 9 sub-trees, the R1-R4 conformance contract, shared `_lifespan.py` (the `BAAI/bge-m3` 1024-d embedder) |
-| `orchestration/` | [`../orchestration/AGENTS.md`](../orchestration/AGENTS.md) | — | ~833 Dagster assets, 5-layer KCG Component architecture (Ingestion / Materials / Model Lifecycle / Asset Generation / Agent Operations), 6 jurisdictions (`ireland`, `england`, `scotland`, `wales`, `ni`, `isle_of_man`), the `JurisdictionAssetsBase` pattern |
+| `orchestration/` | [`../orchestration/AGENTS.md`](../orchestration/AGENTS.md) | — | ~833 Dagster assets, 5-layer Cianfhoghlaim Component architecture (Ingestion / Materials / Model Lifecycle / Asset Generation / Agent Operations), 6 jurisdictions (`ireland`, `england`, `scotland`, `wales`, `ni`, `isle_of_man`), the `JurisdictionAssetsBase` pattern |
 | `meaisinfhoghlaim/` | [`../meaisinfhoghlaim/README.md`](../meaisinfhoghlaim/README.md) | — | 22 VISION_MODELS (subset view of `ocr_vision` family), 6 CLASSICAL_OCR backends, BIEP v2 4-path ensemble (`EnsembledExtractor`), 7 PDF converters, 4 alignment methods, Irish HTR dataset, M4-Max dispatch helper |
 
 ## The 6 critical conventions
@@ -201,7 +201,7 @@ To add a new jurisdiction: append a `NationConfig` row to
 
 - [`british-isles-education-pipeline`](../openspec/specs/british-isles-education-pipeline/spec.md) — the flagship (6 Irish LC subjects + gov.ie circulars)
 - [`centralized-model-registry`](../openspec/specs/centralized-model-registry/spec.md) — the model registry contract (with §11 OCR/VLM delta from `2026-08-13-skill-consolidation-and-extension-v1`)
-- [`dagster-5-layer-component-architecture`](../openspec/specs/dagster-5-layer-component-architecture/spec.md) — the 5-layer KCG Component architecture
+- [`dagster-5-layer-component-architecture`](../openspec/specs/dagster-5-layer-component-architecture/spec.md) — the 5-layer Cianfhoghlaim Component architecture
 - [`indexing-and-cognition`](../openspec/specs/indexing-and-cognition/spec.md) — CCC + Cognee + OpenCode registry
 
 ### Mise tasks (the developer shortcuts)
@@ -258,3 +258,86 @@ mise run notebook:control-panel    # open the 5-tab marimo control panel
 ### Post-audit deployment
 
 The Phase C (TG4 + Foghlaim), Phase B (Tuatha), Phase D (Apple Photos), Phase E (Hackathon) tangents all use this dlt_sources tree as their foundation. Per-corpus DuckLake schema isolation is deferred to per-tangent work (each tangent owns its own schema).
+---
+
+## Wave 1 themed sub-trees — appended 2026-08-24
+
+Per the **2026-08-24-wave-1-dlt-sources-domain-restructure-v1** openspec
+change (master plan §3.2, §7.1), the canonical `dlt_sources/` surface
+gained 3 new themed sub-trees (`lexicographic/`, `cultural_heritage/`,
+`language_models/`) + the layer-grouped top-level `destinations/`
+package. The old `language/` grab-bag was deprecated into a re-export
+shim.
+
+### The 3 new themed sub-trees
+
+| Sub-tree | Files | Concern | Cadence | Destination | Embedding strategy |
+|:--|--:|:--|:--|:--|:--|
+| `lexicographic/` | 11 sources + 3 helpers | Word-form + translation + definition — the *lexicon* | Monthly | Typed DuckLake tables | Keyword sparse |
+| `cultural_heritage/` | 6 sources + 2 helpers | Folklore + monuments + archival — the *narrative corpus* | Archival | Fulltext + BAML | BGE-M3 dense |
+| `language_models/` | 1 source | Treebanks — a *training corpus* for ML, not a heritage source | Snapshot releases | Arrow IPC for training | Syntax-aware |
+
+Each sub-tree has a self-contained `AGENTS.md` (added per master plan
+§1.5). The canonical import surface:
+
+```python
+from dlt_sources.lexicographic import ainm, canuint, tearma, duchas, logainm, gaois
+from dlt_sources.cultural_heritage import celtic_mythology, duchas_corpus, heritage, hidden_heritages
+from dlt_sources.language_models import universal_dependencies
+```
+
+Legacy `language/` import paths continue to work via the
+`dlt_sources/language/__init__.py` re-export shim for at least one
+release cycle per the `LEGACY_ALIASES.md` precedent.
+
+### The layer-grouped destinations package
+
+The previous 3-way split (`common/destinations_cianfhoghlaim.py` +
+`common/destinations_tuatha.py` + `lakehouse/destinations.py`) was
+consolidated into a single layer-grouped package at the TOP LEVEL of
+`dlt_sources/`:
+
+```python
+from dlt_sources.destinations import named_destinations
+
+# The single consolidated DuckLake namespace
+con = named_destinations("ducklake_cianfhoghlaim")
+
+# Per-quadrant Postgres metadata schemas
+con = named_destinations("ducklake_oideachais_quadrant")
+con = named_destinations("ducklake_tuatha_quadrant")
+con = named_destinations("ducklake_croilar_quadrant")
+con = named_destinations("ducklake_agents_quadrant")
+con = named_destinations("ducklake_media_quadrant")
+
+# MotherDuck + filesystem + Iceberg
+con = named_destinations("motherduck")
+con = named_destinations("filesystem_local")
+con = named_destinations("iceberg_rest")
+```
+
+Legacy import paths continue to work via deprecation shims:
+
+```python
+# All 3 of these resolve to the same factory:
+from dlt_sources.destinations import named_destinations
+from dlt_sources.common.destinations import named_destinations
+from dlt_sources.common.destinations_cianfhoghlaim import named_destinations
+```
+
+### Sister-repo carve (INVARIANT 1)
+
+The UD corpora (`language_models/universal_dependencies.py`) are
+owned by the `ciancheiltis` sister repo per the bilingual carve rule
+(master plan INVARIANT 1). Pinned cross-repo reference:
+`ciar://ciancheiltis/datasets/ud_<lang>@v<N>`. The
+`language_models/universal_dependencies.py` source is the
+`cianfhoghlaim` mirror that re-publishes the corpora into the
+consolidated `ducklake_cianfhoghlaim` DuckLake namespace.
+
+### CI gate — `mise run lint:dlt-paths`
+
+The `lint:dlt-paths` mise task (added per master plan §1.10) fails
+the build if any source `.py` file exists in the deprecated
+`dlt_sources/language/` directory (other than the `__init__.py` shim).
+Run with `mise run lint:dlt-paths` (added 2026-08-24).

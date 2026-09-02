@@ -97,7 +97,7 @@ def _classify_pdf(pdf_path: Path) -> tuple[str, str, str]:
     elif "dual" in name:
         jurisdiction = "CROSS_BORDER"
     else:
-        jurisdiction = "IRELAND"  # default for the KCG (Gemini defaults to IE)
+        jurisdiction = "IRELAND"  # default for the Cianfhoghlaim (Gemini defaults to IE)
 
     # Category heuristics
     category = "OTHER"

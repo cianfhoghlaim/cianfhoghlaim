@@ -1,0 +1,48 @@
+# Cloudflare Workers deployment for Oideachais (curriculum content app)
+#
+# Per the 2026-08-24-wave-6-frontend-tanstack-modernisation-v1 change.
+# TanStack Start 1.0+ outputs a Workers-compatible bundle via
+# `vite build` → wrangler deploy.
+#
+# 5 consolidated web apps deploy in parallel (oideachais,
+# oideachais-dashboard, cianfhoghlaim, croilar-web, tuatha-ui).
+
+name = "oideachais"
+compatibility_date = "2025-08-01"
+compatibility_flags = ["nodejs_compat"]
+main = "./.output/server/index.mjs"
+
+# Persistent assets shipped from Vite's build output
+[assets]
+directory = "./.output/public"
+binding = "ASSETS"
+
+# Environment variables (server-side; NON_PUBLIC_* env vars from app config)
+[vars]
+NODE_ENV = "production"
+PUBLIC_APP_NAME = "oideachais"
+PUBLIC_APP_TYPE = "content"
+PUBLIC_AUTH_URL = "https://auth.cianfhoghlaim.ie"
+
+# Preview environment
+[env.preview]
+name = "oideachais-preview"
+vars = { NODE_ENV = "preview", PUBLIC_APP_NAME = "oideachais", PUBLIC_APP_TYPE = "content", PUBLIC_AUTH_URL = "https://preview-auth.cianfhoghlaim.ie" }
+routes = [ "preview.oideachais.cianfhoghlaim.ie" ]
+
+# Production environment
+[env.production]
+name = "oideachais-production"
+vars = { NODE_ENV = "production", PUBLIC_APP_NAME = "oideachais", PUBLIC_APP_TYPE = "content", PUBLIC_AUTH_URL = "https://auth.cianfhoghlaim.ie" }
+routes = [ "oideachais.cianfhoghlaim.ie", "www.oideachais.ie", "oideachais.ie" ]
+
+# R2 binding — per-subject media
+[[r2_buckets]]
+binding = "LC_MEDIA_BUCKET"
+bucket_name = "oideachais-lc-media"
+preview_bucket_name = "oideachais-lc-media-preview"
+
+[[r2_buckets]]
+binding = "SYLLABUS_BUCKET"
+bucket_name = "oideachais-syllabus"
+preview_bucket_name = "oideachais-syllabus-preview"

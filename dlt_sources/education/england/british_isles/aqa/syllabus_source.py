@@ -24,7 +24,7 @@ Edexcel + WJEC Eduqas); the 5-nation matrix documents each board
 in its own scaffolded source.
 
 Usage:
-    from dlt_sources.british_isles.england.education.aqa.syllabus_source import (
+    from dlt_sources.education.england.british_isles.education.aqa.syllabus_source import (
         aqa_syllabus_source,
     )
 """

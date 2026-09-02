@@ -144,9 +144,12 @@ class LanceDBResource(ConfigurableResource):
 class IcebergCatalogResource(ConfigurableResource):
     """PyIceberg REST catalog resource for the BIEP v3 lakehouse.
 
-    Wraps `pyiceberg.catalog.load_catalog("kcg", type="rest", uri=...)` at
-    `http://lakehouse-lakekeeper:8181`. The catalog name is `kcg` per the
-    iceberg-lakekeeper skill. The catalog is backed by the lakehouse-postgres
+    Wraps `pyiceberg.catalog.load_catalog("cianfhoghlaim", type="rest", uri=...)`
+    at `http://lakehouse-lakekeeper:8181`. The catalog name is `cianfhoghlaim`
+    per the iceberg-lakekeeper skill (renamed from the legacy `kcg` label on
+    2026-08-27; the name is a client-side label only — the server-side catalog
+    is selected by `uri` + `warehouse`, so no Lakekeeper migration is required).
+    The catalog is backed by the lakehouse-postgres
     (`ducklake_oideachais` database) and the Garage S3 bucket
     `s3://iceberg/<warehouse>/`.
 
@@ -157,7 +160,7 @@ class IcebergCatalogResource(ConfigurableResource):
     Per the 2026-08-13-biep-v3-systematic-download-ireland-england-v1 change.
     """
 
-    catalog_name: str = "kcg"
+    catalog_name: str = "cianfhoghlaim"
     catalog_uri: str = "http://lakehouse-lakekeeper:8181"
     warehouse: str = "s3://iceberg/"
     s3_endpoint: str = "http://localhost:3900"
@@ -438,31 +441,66 @@ class CogneeMemoryResource(ConfigurableResource):
 class DuckLakeResource(ConfigurableResource):
     """DuckLake ACID lakehouse for training datasets.
 
-    Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: the
-    top-level `storage.ducklake_client` module this used to import never
-    actually existed in the repo (a `ModuleNotFoundError` waiting to
-    happen for any asset that called `get_client()`), and 3 other
-    divergent DuckLake client implementations existed elsewhere
-    (`orchestration/storage/ducklake_client.py`,
-    `sruth/oideachais/storage/{ducklake_client,ducklake,config}.py`)
-    disagreeing on catalog backend / env var names. The canonical
-    implementation is now `dlt_sources.common.destinations_cianfhoghlaim`
-    — it's the only one using dlt's first-party `DuckLakeCredentials`
-    config object instead of hand-rolled `ATTACH` SQL strings.
+    Per the 2026-08-08-lakehouse-extensive-hydration-v1 change +
+    Wave 4 §4.9 of the 2026-08-24 master refactor plan: the canonical
+    DuckLake implementation is now
+    `dlt_sources.destinations.ducklake` — the only module using dlt's
+    first-party `DuckLakeCredentials` config object (vs. hand-rolled
+    `ATTACH` SQL strings) + the Wave 4 v1.0 best practices
+    (`data_inlining`, `sort expressions`, change feed, encryption,
+    snapshot expiry, Iceberg REST interop).
     """
 
     storage_path: str = str(DUCKLAKE_PATH)
-    namespace: str = "cianfhoghlaim"
+    namespace: str = "ducklake_cianfhoghlaim"
 
-    def get_dlt_destination(self, use_ducklake: bool | None = None):
+    def get_dlt_destination(
+        self,
+        *,
+        use_ducklake: bool | None = None,
+        metadata_schema: str | None = None,
+    ):
         """Return a dlt destination for this resource's namespace.
 
         Use this from any Dagster asset that wants to write via a dlt
         pipeline: ``dlt.pipeline(destination=resource.get_dlt_destination())``.
-        """
-        from dlt_sources.common.destinations_cianfhoghlaim import get_dlt_destination
 
-        return get_dlt_destination(use_ducklake=use_ducklake, namespace=self.namespace)
+        Args:
+            use_ducklake: Legacy parameter (preserved for back-compat).
+                When ``True``, the DuckLake destination is returned;
+                when ``False``, the MotherDuck destination is returned.
+            metadata_schema: Optional per-quadrant Postgres metadata
+                schema name (per the Wave 1 §7.1 layer-grouped
+                destinations). Default: ``None`` → the consolidated
+                ``DUCKLAKE_NAMESPACE`` schema.
+
+        Returns:
+            The dlt-destination for the resource's namespace.
+        """
+        from dlt_sources.destinations.ducklake import get_ducklake_destination
+        from dlt_sources.destinations.motherduck import (
+            get_motherduck_destination,
+        )
+
+        # The legacy `use_ducklake=False` path falls back to MotherDuck
+        # for callers that need the SaaS-managed DuckLake.
+        if use_ducklake is False:
+            return get_motherduck_destination()
+        return get_ducklake_destination(
+            metadata_schema=metadata_schema,
+        )
+
+    def get_namespace(self) -> str:
+        """Return the canonical Wave 4 §4.1 namespace name.
+
+        Convenience accessor for code that wants the
+        ``ducklake_cianfhoghlaim`` literal without re-implementing the
+        consolidation logic. Delegates to
+        ``dlt_sources.destinations.ducklake.get_ducklake_namespace()``.
+        """
+        from dlt_sources.destinations.ducklake import get_ducklake_namespace
+
+        return get_ducklake_namespace()
 
     def get_client(self):
         """Return a raw DuckDB connection attached to the DuckLake catalog.
@@ -574,7 +612,7 @@ class AgenticCrawlerResource(ConfigurableResource):
         bb_proj = self.browserbase_project_id or os.getenv("BROWSERBASE_PROJECT_ID", "")
         if not fc_key or not bb_key or not bb_proj:
             raise ValueError("Crawler API keys not fully configured")
-        from dlt_sources.british_isles.ireland.education.agentic_discovery import AgenticCrawler
+        from dlt_sources.education.ireland.british_isles.education.agentic_discovery import AgenticCrawler
         return AgenticCrawler(
             firecrawl_api_key=fc_key,
             browserbase_api_key=bb_key,
@@ -830,6 +868,78 @@ litellm_resource = LiteLLMResource()
 
 
 # ============================================================================
+# British Isles State Resource (Wave 2)
+# ============================================================================
+#
+# The canonical Cianfhoghlaim state-backed ConfigurableResource for the 5 high-churn
+# British Isles sources (NCCA + SEC + CCEA + SQA + WJEC). Per the
+# canonical `dagster-pipeline-components` spec, every per-pipeline
+# Component with downstream BIEP consumers uses the `StateBackedComponent`
+# pattern (Dagster 1.13+ state-backed components). The 5 high-churn
+# sources default to `LOCAL_FILESYSTEM` state (per master plan §3.3) —
+# this resource is the canonical Cianfhoghlaim entry point for that state
+# backend.
+#
+# Sister repos (ciancheiltis + cianchosaint + ciandlíthe + cianchosaint)
+# can import this resource directly:
+#
+#   from cianfhoghlaim.orchestration.resources import british_isles_state_resource
+#
+# (per the `cianfhoghlaim>=1.0,<2.0` workspace pin documented in the
+# 2026-08-25-master-refactor-v1 proposal §"Sister-repo export surface").
+
+
+class BritishIslesStateResource(ConfigurableResource):
+    """The canonical Cianfhoghlaim state-backed resource for the 5 high-churn British Isles sources.
+
+    Per master plan §3.3, the 5 high-churn sources (NCCA + SEC + CCEA +
+    SQA + WJEC) default to `LOCAL_FILESYSTEM` state. The state files are
+    written to `.local_defs_state/` at the repo root (per
+    `orchestration.pipelines._shared.state_helpers.local_defs_state_root()`).
+
+    The resource is the canonical `ConfigurableResource` representation
+    of the state backend — it's injected into every per-pipeline
+    Component's `build_defs_from_state()` method via the canonical
+    `context.resources.british_isles_state` lookup.
+
+    Args:
+        root: The on-disk root for the `LOCAL_FILESYSTEM` state files.
+            Defaults to `~/.local_defs_state/` (the canonical Cianfhoghlaim
+            convention; the actual default at runtime is the repo root's
+            `.local_defs_state/` directory).
+        management_type: The state-management strategy. Defaults to
+            `LOCAL_FILESYSTEM` (the canonical Cianfhoghlaim default for the 5
+            high-churn sources).
+    """
+
+    root: str = ".local_defs_state"
+    management_type: str = "LOCAL_FILESYSTEM"
+
+    def state_path_for(self, source_module: str) -> str:
+        """Compute the canonical `LOCAL_FILESYSTEM` state file path for
+        a given `dlt_sources.<...>` module path.
+
+        Args:
+            source_module: The `dlt_sources.<...>` Python module path.
+
+        Returns:
+            The on-disk path where the state file lives (relative to
+            `self.root`).
+        """
+        # The state file is named after the leaf component of the
+        # module path (the canonical Cianfhoghlaim convention).
+        leaf = source_module.rsplit(".", 1)[-1]
+        for suffix in ("_source", "_pipeline"):
+            if leaf.endswith(suffix):
+                leaf = leaf[: -len(suffix)]
+                break
+        return f"{self.root}/{leaf}.json"
+
+
+british_isles_state_resource = BritishIslesStateResource()
+
+
+# ============================================================================
 # All Resources Dictionary
 # ============================================================================
 
@@ -865,4 +975,7 @@ all_resources = {
     "litellm": litellm_resource,
     # Observability
     "progress_tracker": progress_tracker_resource,
+    # Wave 2 — the canonical Cianfhoghlaim state-backed resource for the 5 British Isles
+    # high-churn sources (NCCA + SEC + CCEA + SQA + WJEC). Per master plan §3.3.
+    "british_isles_state": british_isles_state_resource,
 }

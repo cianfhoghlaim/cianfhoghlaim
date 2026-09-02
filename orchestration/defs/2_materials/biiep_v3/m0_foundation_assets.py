@@ -18,7 +18,7 @@ these sit in Layer 5 (Agent Operations) — they are the BIEP v3
 foundation gates that all downstream assets (L1 ingestion + L2
 extraction + L3 embedding) depend on.
 
-## KCG patterns used
+## Cianfhoghlaim patterns used
 - ibis (per `.agents/skills/ibis/SKILL.md`) — `ibis.duckdb.connect()`
 - Dagster declarative Automation — `AutomationCondition.eager()`
 - httpx for HTTP health checks (per `.agents/skills/cloudflare/timeout.md`)

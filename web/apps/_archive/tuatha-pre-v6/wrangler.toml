@@ -1,0 +1,41 @@
+# Cloudflare Workers deployment for Túatha (educational Celtic MMO front-end)
+#
+# Per the 2026-08-24-wave-6-frontend-tanstack-modernisation-v1 change.
+# TanStack Start 1.0+ deploys Babylon.js + SpacetimeDB MMO client.
+
+name = "tuatha-ui"
+compatibility_date = "2025-08-01"
+compatibility_flags = ["nodejs_compat"]
+main = "./.output/server/index.mjs"
+
+[assets]
+directory = "./.output/public"
+binding = "ASSETS"
+
+[vars]
+NODE_ENV = "production"
+PUBLIC_APP_NAME = "tuatha-ui"
+PUBLIC_APP_TYPE = "mmo"
+PUBLIC_AUTH_URL = "https://auth.tuatha.cianfhoghlaim.ie"
+
+[env.preview]
+name = "tuatha-ui-preview"
+vars = { NODE_ENV = "preview", PUBLIC_APP_NAME = "tuatha-ui", PUBLIC_APP_TYPE = "mmo", PUBLIC_AUTH_URL = "https://preview-auth.tuatha.cianfhoghlaim.ie" }
+routes = [ "preview.tuatha.cianfhoghlaim.ie" ]
+
+[env.production]
+name = "tuatha-ui-production"
+vars = { NODE_ENV = "production", PUBLIC_APP_NAME = "tuatha-ui", PUBLIC_APP_TYPE = "mmo", PUBLIC_AUTH_URL = "https://auth.tuatha.cianfhoghlaim.ie" }
+routes = [ "tuatha.cianfhoghlaim.ie", "www.tuatha.ie" ]
+
+# MMO assets (3D models, textures)
+[[r2_buckets]]
+binding = "MMO_ASSETS"
+bucket_name = "tuatha-mmo-assets"
+preview_bucket_name = "tuatha-mmo-assets-preview"
+
+# D1 for game state shards
+[[d1_databases]]
+binding = "MMO_DB"
+database_name = "tuatha-mmo"
+database_id = "REPLACE_WITH_D1_ID"

@@ -1,0 +1,39 @@
+# Cloudflare Workers deployment for Cianfhoghlaim (central homepage + chat)
+#
+# Per the 2026-08-24-wave-6-frontend-tanstack-modernisation-v1 change.
+# The central homepage runs CopilotKit v2 chat + AG-UI stream consumer.
+
+name = "cianfhoghlaim"
+compatibility_date = "2025-08-01"
+compatibility_flags = ["nodejs_compat"]
+main = "./.output/server/index.mjs"
+
+[assets]
+directory = "./.output/public"
+binding = "ASSETS"
+
+[vars]
+NODE_ENV = "production"
+PUBLIC_APP_NAME = "cianfhoghlaim"
+PUBLIC_APP_TYPE = "homepage"
+PUBLIC_AUTH_URL = "https://auth.cianfhoghlaim.ie"
+PUBLIC_COPILOTKIT_PUBLIC_LICENSE_KEY = "REPLACE_WITH_PUBLIC_LICENSE_KEY"
+
+[env.preview]
+name = "cianfhoghlaim-preview"
+vars = { NODE_ENV = "preview", PUBLIC_APP_NAME = "cianfhoghlaim", PUBLIC_APP_TYPE = "homepage", PUBLIC_AUTH_URL = "https://preview-auth.cianfhoghlaim.ie" }
+routes = [ "preview.cianfhoghlaim.ie" ]
+
+[env.production]
+name = "cianfhoghlaim-production"
+vars = { NODE_ENV = "production", PUBLIC_APP_NAME = "cianfhoghlaim", PUBLIC_APP_TYPE = "homepage", PUBLIC_AUTH_URL = "https://auth.cianfhoghlaim.ie" }
+routes = [ "cianfhoghlaim.ie", "www.cianfhoghlaim.ie" ]
+
+[[r2_buckets]]
+binding = "HOMEPAGE_MEDIA"
+bucket_name = "cianfhoghlaim-media"
+preview_bucket_name = "cianfhoghlaim-media-preview"
+
+[[vectorize]]
+binding = "HOMEPAGE_VECTORS"
+index_name = "cianfhoghlaim-embeddings"
