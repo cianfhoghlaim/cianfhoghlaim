@@ -4,6 +4,21 @@
  * Per the 2026-09-01-cianfhoghlaim-nua-ireland-lc-completion-v1 change
  * (Step 2 of the cianfhoghlaim-nua v6 era plan). Includes the 14
  * NCCA LC subject tables (8 priority + 6 NCCA-adjacent).
+ *
+ * Phase 11 (the 2026-09-XX-orchestration-integration-v1 change) adds
+ * the 5 per-jurisdiction subject_spec tables:
+ * - england_subject_specs
+ * - wales_subject_specs
+ * - scotland_subject_specs
+ * - northern_ireland_subject_specs
+ * - isle_of_man_subject_specs
+ *
+ * Combined surface (18 tables):
+ * 1-4. Root tables: users, study_plans, oral_study_plans, ncce_learning_graphs
+ * 5-12. 8 per-subject tables: accounting, business, french, history, art,
+ *      music, applied_mathematics, physics
+ * 13-17. 5 jurisdiction subject_spec tables (Phase 11)
+ * 18. Total Phase 11 schema (the canonical 18-table BIEP v3 schema)
  */
 
 import { defineSchema, defineTable } from "convex/server";
@@ -21,7 +36,16 @@ export {
   physics,
 } from "./lc";
 
-// The 7 existing tables (from web/packages/db/convex/schema.ts)
+// Re-export the 5 Phase 11 jurisdiction subject_spec tables
+export {
+  england_subject_specs,
+  wales_subject_specs,
+  scotland_subject_specs,
+  northern_ireland_subject_specs,
+  isle_of_man_subject_specs,
+} from "./jurisdictions";
+
+// The 4 root tables (from web/packages/db/convex/schema.ts)
 const users = defineTable({
   better_auth_id: v.string(),
   email: v.string(),
@@ -111,4 +135,10 @@ export default defineSchema({
   music,
   applied_mathematics,
   physics,
+  // Phase 11 — the 5 jurisdiction subject_spec tables
+  england_subject_specs,
+  wales_subject_specs,
+  scotland_subject_specs,
+  northern_ireland_subject_specs,
+  isle_of_man_subject_specs,
 });

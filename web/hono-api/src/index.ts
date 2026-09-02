@@ -11,6 +11,15 @@ import chemistryApp from "./routes/copilotkit/lc/chemistry";
 import mathematicsApp from "./routes/copilotkit/lc/mathematics";
 import gaeilgeApp from "./routes/copilotkit/lc/gaeilge";
 import computerScienceApp from "./routes/copilotkit/lc/computer_science";
+// Phase 14 — the 8 British Isles vernacular Hono apps (7 + Ulster Scots).
+import welshVernacularApp from "./routes/copilotkit/vernacular/welsh";
+import scottishGaelicVernacularApp from "./routes/copilotkit/vernacular/scottish_gaelic";
+import bretonVernacularApp from "./routes/copilotkit/vernacular/breton";
+import cornishVernacularApp from "./routes/copilotkit/vernacular/cornish";
+import manxVernacularApp from "./routes/copilotkit/vernacular/manx";
+import jerseyFrenchVernacularApp from "./routes/copilotkit/vernacular/jersey_french";
+import guernseyFrenchVernacularApp from "./routes/copilotkit/vernacular/guernsey_french";
+import ulsterScotsVernacularApp from "./routes/copilotkit/vernacular/ulster_scots";
 import aguiApp from "./routes/agui";
 
 const app = new Hono();
@@ -115,6 +124,18 @@ app.route("/api/copilotkit/lc/chemistry", chemistryApp);
 app.route("/api/copilotkit/lc/mathematics", mathematicsApp);
 app.route("/api/copilotkit/lc/gaeilge", gaeilgeApp);
 app.route("/api/copilotkit/lc/computer_science", computerScienceApp);
+
+// Phase 14 — the 8 vernacular Hono apps.
+// Per the 2026-09-01-cianfhoghlaim-nua-v7-vernaculars-pipelines-v1
+// change (Phase 14 of the cianfhoghlaim-nua v6 era plan).
+app.route("/api/copilotkit/vernacular/welsh", welshVernacularApp);
+app.route("/api/copilotkit/vernacular/scottish_gaelic", scottishGaelicVernacularApp);
+app.route("/api/copilotkit/vernacular/breton", bretonVernacularApp);
+app.route("/api/copilotkit/vernacular/cornish", cornishVernacularApp);
+app.route("/api/copilotkit/vernacular/manx", manxVernacularApp);
+app.route("/api/copilotkit/vernacular/jersey_french", jerseyFrenchVernacularApp);
+app.route("/api/copilotkit/vernacular/guernsey_french", guernseyFrenchVernacularApp);
+app.route("/api/copilotkit/vernacular/ulster_scots", ulsterScotsVernacularApp);
 
 // AG-UI SSE bridge (Phase 3 §B.9 + the 2026-09-01
 // cianfhoghlaim-nua-oral-study-plans-v1 change for Phase 6)

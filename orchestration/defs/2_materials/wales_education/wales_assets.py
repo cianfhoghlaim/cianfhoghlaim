@@ -6,6 +6,14 @@ Per the 2026-07-30-biep-v3-sct-wls-ni-v1 change +
 The canonical generic Wales Dagster assets. 160 Wales cohorts
 (80 WJEC subjects × 2 qualification levels × 1 Welsh language).
 
+Phase 11 (the 2026-09-XX-orchestration-integration-v1 change) replaces
+the previous ``getattr(b, baml_fn_name, None)`` fallback with the
+canonical ``b.ExtractWalesSubjectSpec(...)`` invocation defined in
+``baml_src/british_isles/wl/education/wl_extraction.baml``. Each Wales
+cohort has its canonical PDF fed through the BAML extractor and the
+resulting ``WLSubjectSpec`` is materialised to Convex's
+``wales_subject_specs`` table.
+
 YEARLY automation (1st September 00:00 UTC) per the BIEP v3 scheduling.
 """
 import logging
@@ -29,6 +37,21 @@ try:
 except ImportError:
     BAML_AVAILABLE = False
     b = None  # type: ignore[assignment]
+
+
+def _get_jurisdiction_extractor():
+    """Lazy-importer for the shared Phase 11 helper.
+
+    Leading-digit directory name (``2_materials``) makes a static
+    ``from orchestration.defs.2_materials... import`` illegal Python
+    syntax — this is the same workaround
+    ``orchestration/defs/2_materials/lc_extraction/lc5_assets.py`` uses.
+    """
+    import importlib
+    return importlib.import_module(
+        "orchestration.defs.2_materials._base.jurisdiction_baml_extractor"
+    )
+
 
 logger = logging.getLogger(__name__)
 
@@ -99,31 +122,58 @@ def wales_documents_ingested(context: AssetExecutionContext) -> dict[str, Any]:
     group_name=WALES_EXTRACTION_GROUP,
     description=(
         "Generic Wales BAML extraction (BIEP v3). "
+        "Phase 11: invokes b.ExtractWalesSubjectSpec for each cohort's "
+        "canonical PDF (vs the prior getattr fallback). "
         "Triggers YEARLY (1st September 00:00 UTC)."
     ),
     automation_condition=make_yearly_education_automation(),
 )
 def wales_extractions(context: AssetExecutionContext) -> dict[str, Any]:
-    """Layer 2 — BAML extraction for all Wales cohorts."""
+    """Layer 2 — BAML extraction for all Wales cohorts.
+
+    Phase 11 replaces the Phase 9 ``getattr(b, baml_fn_name, None)``
+    fallback with the canonical ``b.ExtractWalesSubjectSpec(...)``
+    invocation (defined in
+    ``baml_src/british_isles/wl/education/wl_extraction.baml``). The
+    BAML call is wrapped in ``invoke_jurisdiction_extractor`` which
+    (a) reads the canonical PDF via pypdf, (b) invokes the function,
+    (c) materialises the result to Convex's ``wales_subject_specs``
+    table.
+    """
     if not BAML_AVAILABLE:
-        return {"rows_extracted": 0, "ragas_scores": {}}
+        context.log.warning("BAML not available; returning stub")
+        return {"rows_extracted": 0, "ragas_scores": {}, "convex_written": 0}
 
     from dlt_sources.british_isles._cross.registry_api import query_by_jurisdiction
 
     subjects = query_by_jurisdiction("wales")
     counts: dict[str, int] = {}
     ragas_scores: dict[str, float] = {}
+    convex_written = 0
+    _extractor_module = _get_jurisdiction_extractor()
     for row in subjects:
-        baml_fn_name = row.baml_function.removeprefix("b.")
-        fn = getattr(b, baml_fn_name, None)
-        if fn is None:
+        result = _extractor_module.invoke_jurisdiction_extractor(
+            jurisdiction="wales",
+            pdf_path=getattr(row, "source_url", "") or "",
+            subject_slug=row.subject_slug,
+            source_url=getattr(row, "source_url", None),
+            stage="LEAVING_CERT",
+        )
+        if not result["extracted"]:
+            context.log.warning(
+                "wales_extractions: %s — %s",
+                row.subject_slug, result.get("reason"),
+            )
             continue
         counts[row.subject_slug] = counts.get(row.subject_slug, 0) + 1
         ragas_scores[row.subject_slug] = 0.85
+        if result["convex_written"]:
+            convex_written += 1
     return {
         "rows_extracted": sum(counts.values()),
         "ragas_scores": ragas_scores,
         "counts": counts,
+        "convex_written": convex_written,
     }
 
 

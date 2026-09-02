@@ -8,11 +8,16 @@
  *
  * Per openspec/changes/2026-08-13-web-monorepo-consolidation-and-agent-integration-v1/
  * specs/per-subject-coverage/spec.md.
+ *
+ * Updated by the 2026-09-XX-orchestration-integration-v1 change
+ * (Phase 11 §1): the /get_study_plan handler now delegates to the
+ * canonical Python planner subprocess via buildStudyPlanHandler.
+ * Gaeilge threads the Irish dialect through (Phase 6 wires the oral plan).
  */
 
 import { Hono } from "hono";
 
-import { studyPlanStubResponse } from "./_study_plan_stub";
+import { buildStudyPlanHandler } from "./_study_plan_stub";
 
 const gaeilgeApp = new Hono()
   .get("/health", (c) =>
@@ -25,25 +30,7 @@ const gaeilgeApp = new Hono()
     }),
   )
   .post("/get_syllabus_topics", (c) => c.json({ stub: true }))
-  .post("/get_study_plan", async (c) => {
-    // Per the 2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1 change
-    // (Phase 1, §3.2 of tasks.md). Threads the Irish dialect through
-    // the stub; Phase 6 wires the oral-plan companion call.
-    const body = (await c.req.json().catch(() => ({}))) as Record<string, unknown>;
-    return c.json(
-      studyPlanStubResponse("gaeilge", {
-        user_id: typeof body.user_id === "string" ? body.user_id : undefined,
-        trace_id: typeof body.trace_id === "string" ? body.trace_id : undefined,
-        lo_codes: Array.isArray(body.lo_codes) ? (body.lo_codes as string[]) : undefined,
-        target_date:
-          typeof body.target_date === "string" ? body.target_date : undefined,
-        duration_weeks:
-          typeof body.duration_weeks === "number" ? body.duration_weeks : 16,
-        dialect: typeof body.dialect === "string" ? body.dialect : "standard",
-        language: typeof body.language === "string" ? body.language : "en_and_ga",
-      }),
-    );
-  })
+  .post("/get_study_plan", buildStudyPlanHandler("gaeilge", 16, "en_and_ga"))
   // (13 actions per the canonical CopilotKit action surface)
   ;
 
