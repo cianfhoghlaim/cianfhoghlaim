@@ -1,0 +1,16 @@
+# defs.yaml — Pick-8 IE/law L1 (Ingestion) component for the PIAB source.
+#
+# CelticIngestionComponent that wires the PIAB DLT source to Dagster.
+# Uses the canonical group_name 1_ingestion/law/ie/piab + a daily
+# 0 5 * * * cron (matches the absorbed proposal's schedule).
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.law.piab
+  domain: law
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 5 * * *"
+  dlt_source: dlt_sources.british_isles.ireland.education.law.piab.piab_source
+  destination_table: cianfhoghlaim.law.ie.piab_pages
+  fallback_resources:
+    - stedding/ingest_queue/injuries.ie/

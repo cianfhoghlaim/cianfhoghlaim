@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# .githooks/pre-push
+#
+# Final defence: refuse the push if any commit in the pushed range still
+# carries a Claude/Anthropic co-author trailer. Catches edge cases where
+# someone bypassed `prepare-commit-msg` with `--no-verify` or a custom
+# editor that injected the trailer.
+#
+# Called by git with three positional args:
+#   $1 = remote name (e.g. "origin")
+#   $2 = remote URL (e.g. "https://github.com/cianfhoghlaim/cianfhoghlaim.git")
+#
+# Per-pushed-ref metadata arrives on stdin, one ref per line, four fields:
+#   <local-ref> <local-sha> <remote-ref> <remote-sha>
+
+set -uo pipefail
+
+REMOTE="$1"
+URL="$2"
+
+exit_code=0
+while read -r local_ref local_sha remote_ref remote_sha; do
+  # Skip deletes (zero-sha).
+  if [[ "$local_sha" == "0000000000000000000000000000000000000000" ]]; then
+    continue
+  fi
+
+  # Range: from remote (or empty if new branch) to local.
+  if [[ "$remote_sha" == "0000000000000000000000000000000000000000" ]]; then
+    range="$local_sha"
+  else
+    range="$remote_sha..$local_sha"
+  fi
+
+  while read -r sha; do
+    [[ -z "$sha" ]] && continue
+    body=$(git show -s --format='%B' "$sha")
+    if printf '%s' "$body" | grep -qiE '^[Cc]o-[Aa]uthored-[Bb]y:.*(Claude|anthropic\.com)'; then
+      short=$(git rev-parse --short "$sha")
+      echo "❌ pre-push: refusing $local_ref → $URL" >&2
+      echo "   commit $short still has a Claude/Anthropic co-author trailer:" >&2
+      printf '%s\n' "$body" | sed 's/^/     /' >&2
+      echo "" >&2
+      echo "   Strip it with: git rebase -i $sha~1  (reword)  OR  git commit --amend" >&2
+      exit_code=1
+    fi
+  done < <(git rev-list "$range" 2>/dev/null)
+done
+
+exit "$exit_code"

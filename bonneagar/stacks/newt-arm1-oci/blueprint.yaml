@@ -1,0 +1,13 @@
+# =============================================================================
+# NEWT (arm1-oci) — Pangolin Blueprint
+# =============================================================================
+# The Pangolin blueprint for the newt-arm1-oci site. Since newt is an
+# outbound-only client (no inbound Traefik routes), this blueprint
+# declares no public or private resources.
+#
+# ADDED 2026-08-15 (per the 2026-08-15-bonneagar-infra-remediation-v2
+# openspec change). The blueprint is intentionally a no-op to satisfy
+# the 6-file GOLD_STANDARD pattern.
+# =============================================================================
+
+# No resources — newt is an outbound-only client.

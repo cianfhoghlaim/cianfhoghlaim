@@ -1,0 +1,106 @@
+# Reusable Hugging Face Spaces sync workflow
+
+name: Spaces sync
+
+on:
+  workflow_call:
+    inputs:
+      space_dir:
+        description: "Subdir to push (e.g. spaces/an_scrudu)"
+        required: true
+        type: string
+      target_space:
+        description: "HF Space slug (e.g. cianfhoghlaim/an-scrudu)"
+        required: true
+        type: string
+      static_space:
+        description: "If set, push the dashboard/ subdir to this second space via git subtree split"
+        required: false
+        type: string
+        default: ""
+      hf_token:
+        description: "Hugging Face PAT from secrets.HF_TOKEN"
+        required: true
+        type: string
+      hf_username:
+        description: "HF org/user from vars.HF_USERNAME"
+        required: true
+        type: string
+      sdk:
+        description: "HF Space SDK"
+        required: false
+        type: choice
+        default: "gradio"
+        options:
+          - gradio
+          - docker
+          - static
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    name: Sync ${{ inputs.space_dir }} -> ${{ inputs.target_space }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Resolve HF username + token
+        id: resolve
+        run: |
+          echo "username=${{ inputs.hf_username }}" >> "$GITHUB_OUTPUT"
+          echo "space=${{ inputs.target_space }}" >> "$GITHUB_OUTPUT"
+          if [ -z "${{ inputs.hf_token }}" ]; then
+            echo "::error::HF_TOKEN is required (set secrets.HF_TOKEN)"
+            exit 1
+          fi
+
+      - name: Install huggingface_hub
+        run: pip install --upgrade "huggingface_hub[cli]"
+
+      # ─── Gradio SDK: upload the directory directly ────────────────────────
+      - name: Sync Gradio Space
+        if: inputs.sdk == 'gradio'
+        env:
+          HF_TOKEN: ${{ inputs.hf_token }}
+        run: |
+          python -c "
+          from huggingface_hub import HfApi
+          api = HfApi(token='$HF_TOKEN')
+          api.upload_folder(
+              folder_path='${{ inputs.space_dir }}',
+              repo_id='${{ steps.resolve.outputs.username }}/${{ steps.resolve.outputs.space }}',
+              repo_type='space',
+              commit_message='Sync from ${{ github.repository }}@${{ github.sha }}',
+          )
+          print('OK: Space ${{ steps.resolve.outputs.username }}/${{ steps.resolve.outputs.space }} updated')
+          "
+
+      # ─── Static SDK: git subtree split + force-push to a "static" space ─
+      - name: Sync static dashboard (subtree split)
+        if: inputs.sdk == 'static'
+        env:
+          HF_TOKEN: ${{ inputs.hf_token }}
+        run: |
+          if [ -z "${{ inputs.static_space }}" ]; then
+            echo "::error::static_space input is required when sdk=static"
+            exit 1
+          fi
+          set -e
+          git remote add hf-static "https://${{ inputs.hf_token }}@huggingface.co/spaces/${{ inputs.hf_username }}/${{ inputs.static_space }}.git" 2>/dev/null || true
+          SUBTREE_REF=$(git subtree split --prefix ${{ inputs.space_dir }}/dashboard main)
+          echo "Subtree ref: $SUBTREE_REF"
+          git push -f https://${{ inputs.hf_token }}@huggingface.co/spaces/${{ inputs.hf_username }}/${{ inputs.static_space }} "$SUBTREE_REF:main" --force
+          echo "OK: static Space ${{ inputs.hf_username }}/${{ inputs.static_space }} updated"
+
+      # ─── Docker SDK: deferred (documented in openspec/specs/spaces-cicd-pipeline/spec.md) ──
+      - name: Docker SDK support
+        if: inputs.sdk == 'docker'
+        run: |
+          echo "::error::Docker SDK support is documented in openspec/specs/spaces-cicd-pipeline/spec.md but the implementation is deferred to a follow-up commit. Use sdk=gradio or sdk=static for now."
+          exit 1

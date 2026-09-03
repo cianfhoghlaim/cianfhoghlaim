@@ -1,0 +1,42 @@
+# defs.yaml — BIEP v2 OCR ensemble orchestrator asset
+#
+# Per the 2026-07-22-biep-v2-ocr-vlm-pipeline-convergence-v1 change.
+#
+# This asset is the orchestrator that runs the 4-path ensemble
+# (BAML + Unstract + qwen3-vl-8b + gemma-4-26B-A4B + RAGAS vote)
+# for any incoming PDF in the BIEP v2 jurisdiction pipelines.
+#
+# The asset is invoked by the 72 JC + 81 England Dagster assets.
+# Each call writes the 4-path DuckLake rows + the voted canonical.
+
+type: orchestration.components.BIEPOCREnsembleComponent
+
+attributes:
+  asset_key: biiep_ocr_ensemble
+  ensemble_extractor_class: cianfhoghlaim.meaisinfhoghlaim.ocr.ensemble.ensembled_extractor.EnsembledExtractor
+  ragas_metric_class: cianfhoghlaim.meaisinfhoghlaim.evaluation.ragas_biiep_ensemble.evaluate_ensemble
+  unstract_workflows:
+    - name: aqa_gcse_spec
+      file: bonneagar/stacks/unstract/workflow_data/aqa_gcse_spec.json
+      jurisdictions: [england]
+      boards: [aqa, ocr, edexcel]
+      qualification_levels: [gcse]
+    - name: aqa_a_level_spec
+      file: bonneagar/stacks/unstract/workflow_data/aqa_a_level_spec.json
+      jurisdictions: [england]
+      boards: [aqa, ocr, edexcel]
+      qualification_levels: [a_level]
+    - name: ncca_jc_cba
+      file: bonneagar/stacks/unstract/workflow_data/ncca_jc_cba.json
+      jurisdictions: [ireland]
+      scopes: [cbas]
+    - name: sec_lc_marking
+      file: bonneagar/stacks/unstract/workflow_data/sec_lc_marking.json
+      jurisdictions: [ireland]
+      qualification_levels: [lc]
+  ragas_threshold: 0.70
+  mlflow_experiment: biiep_v2
+  asset_check_kind: ragas_score
+  assertion: ragas_score >= 0.70
+  automation_cron: "0 */6 * * *"  # Every 6 hours (or triggered by Change 5 sensor)
+  grouping: 2_materials.curriculum.biiep_ocr_ensemble

@@ -1,0 +1,24 @@
+# defs.yaml — Senior Cycle cognify (per the 2026-08-10-knowledge-graph-population-v1 change)
+#
+# Wires the senior_cycle_cognify.py adapter into Dagster.
+#
+# Adapter: scripts/graph_storage/cognify/cognee_integration/senior_cycle_cognify.py
+# Edge types: 1800 SCLearningOutcome-BELONGS_TO->LCSubject + ASSESSED_BY + STAGE_OF + STRAND_OF + BUILDS_ON + DEVELOPS + HAS_LEVEL
+# Dataset: cianfhoghlaim.education.senior_cycle
+type: orchestration.components.KCGCognifyComponent
+attributes:
+  stage: senior_cycle
+  dataset: cianfhoghlaim.education.senior_cycle
+  edge_types:
+    - BELONGS_TO
+    - ASSESSED_BY
+    - STAGE_OF
+    - STRAND_OF
+    - BUILDS_ON
+    - DEVELOPS
+    - HAS_LEVEL
+  source_adapter: scripts.graph_storage.cognify.cognee_integration.senior_cycle_cognify
+  asset_check_kind: edges_count
+  assertion: edges_count >= 50
+  automation_cron: "0 3 * * *"
+  grouping: 3_model_lifecycle.cognify.senior_cycle

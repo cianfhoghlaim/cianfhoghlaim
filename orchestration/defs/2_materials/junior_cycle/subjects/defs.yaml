@@ -1,0 +1,29 @@
+# defs.yaml — Per-subject JC Dagster assets
+#
+# Per the 2026-07-20-biep-v2-junior-cycle-extraction-v1 change.
+#
+# 18 subjects × 4 layers = 72 per-subject Dagster assets.
+# Each subject has its own `defs.yaml` in this directory with the canonical
+# 5-layer group_name convention.
+
+type: orchestration.components.JuniorCycleSubjectComponent
+
+# The 4 layers per subject:
+#   Layer 1 (Ingestion):  jc_<subject>_ingested
+#   Layer 2 (Materials):  jc_<subject>_curriculum_extracted (BAML ExtractJCCurriculum)
+#   Layer 3 (Embedding):  jc_<subject>_embedding_flow (CocoIndex v1)
+#   Layer 4 (Cognify):    jc_<subject>_cognified (Cognee)
+#
+# BAML function is the canonical BIEP v2 extractor:
+#   b.ExtractJCCurriculum(subject, language, year, text) -> JCCurriculumSpec
+
+attributes:
+  baml_function: ExtractJCCurriculum
+  source_asset: 1_ingestion_curriculum_jc/ireland/education/junior_cycle_subjects
+  partition_strategy: by_subject
+  asset_check_kind: row_count
+  namespace_pattern: "cianfhoghlaim.education.british_isles.ireland.junior_cycle.{subject}.{lang}"
+  cocoindex_app: junior_cycle_embedding
+  cognify_dataset: cianfhoghlaim_ireland_junior_cycle
+  cross_subject_graphiti: ireland.junior_cycle.cross_subject_graphiti_stream
+  automation_cron: "0 6 * * *"

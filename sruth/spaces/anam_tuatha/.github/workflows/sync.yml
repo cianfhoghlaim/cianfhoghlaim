@@ -1,0 +1,19 @@
+name: Sync anam_tuatha to HF
+
+on:
+  push:
+    branches: [feat/celtic-data-engineering-artefacts, feat/spaces-patterns-and-marimo, main]
+    paths:
+      - 'spaces/anam_tuatha/**'
+      - 'spaces/_common/**'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    uses: ./.github/workflows/spaces-sync.yml
+    with:
+      space_dir: spaces/anam_tuatha
+      target_space: cianfhoghlaim/anam-tuatha
+      hf_token: ${{ secrets.HF_TOKEN }}
+      hf_username: ${{ vars.HF_USERNAME }}
+      sdk: gradio

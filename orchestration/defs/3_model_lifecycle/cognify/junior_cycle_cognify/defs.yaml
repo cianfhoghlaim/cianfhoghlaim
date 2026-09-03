@@ -1,0 +1,23 @@
+# defs.yaml — Junior Cycle cognify (per the 2026-08-10-knowledge-graph-population-v1 change)
+#
+# Wires the junior_cycle_cognify.py adapter into Dagster.
+#
+# Adapter: scripts/graph_storage/cognify/cognee_integration/junior_cycle_cognify.py
+# Edge types: 1200 JCLearningOutcome-BELONGS_TO->JCSubject + CONTRIBUTES_TO + STAGE_OF + STRAND_OF + ASSESSED_VIA + PREPARES_FOR
+# Dataset: cianfhoghlaim.education.junior_cycle
+type: orchestration.components.KCGCognifyComponent
+attributes:
+  stage: junior_cycle
+  dataset: cianfhoghlaim.education.junior_cycle
+  edge_types:
+    - BELONGS_TO
+    - CONTRIBUTES_TO
+    - STAGE_OF
+    - STRAND_OF
+    - ASSESSED_VIA
+    - PREPARES_FOR
+  source_adapter: scripts.graph_storage.cognify.cognee_integration.junior_cycle_cognify
+  asset_check_kind: edges_count
+  assertion: edges_count >= 50
+  automation_cron: "0 3 * * *"
+  grouping: 3_model_lifecycle.cognify.junior_cycle

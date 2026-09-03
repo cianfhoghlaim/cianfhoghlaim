@@ -1,0 +1,60 @@
+name: skill-refs-check
+on: [pull_request]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: fail on sruth/ PATH references
+        run: |
+          # The P3 sruth/ migration (closes #97) is complete. The only
+          # remaining `sruth/` strings are INTENTIONAL historical mentions
+          # in 3 documents that document the migration / the legacy paths:
+          #   - docs/audits/2026-07-06-drift-audit.md (the original audit)
+          #   - docs/p3-skill-mcp-migration-status.md (the migration status)
+          #   - docs/biiep-v3/post-iac-namespace-rename-secrets.md (the secrets rename runbook — quotes the legacy .infisical.env lines from pre-v7)
+          # Plus 3 benign mentions that don't look like paths:
+          #   - `.agents/skills/INDEXING_AND_COGNITION.md` references
+          #     `sruth-subagents` (the subagent naming convention)
+          #   - `.agents/skills/browser-tools/SKILL.md` references
+          #     `sruth_browser` (the pre-v4 module name)
+          #
+          # The strict regex below is calibrated to catch REAL path references
+          # (e.g. `sruth/cianfhoghlaim/dlt_sources/`) while excluding the 3
+          # docs that intentionally quote legacy paths.
+          EXCLUDES="docs/audits/2026-07-06-drift-audit.md docs/p3-skill-mcp-migration-status.md docs/biiep-v3/post-iac-namespace-rename-secrets.md"
+          HIT=0
+          for f in $(find .agents/skills docs -type f \( -name "*.md" -o -name "SKILL.md" \) 2>/dev/null); do
+            skip=0
+            for ex in $EXCLUDES; do
+              if [ "$f" = "$ex" ]; then skip=1; break; fi
+            done
+            if [ "$skip" = "1" ]; then continue; fi
+            if grep -E "sruth/(cianfhoghlaim|meaisinfhoghlaim|tuatha|croilar|oideachais)/" "$f" >/dev/null 2>&1; then
+              echo "ERROR: legacy sruth/ PATH reference in $f"
+              grep -nE "sruth/(cianfhoghlaim|meaisinfhoghlaim|tuatha|croilar|oideachais)/" "$f"
+              HIT=1
+            fi
+          done
+          if [ "$HIT" = "1" ]; then
+            echo ""
+            echo "Run the P3 sed migration from openspec/changes/2026-08-04-skill-and-mcp-migration-v1/proposal.md"
+            exit 1
+          fi
+          echo "OK: no legacy sruth/ PATH references in skills/docs"
+
+      - name: croilar-devtools lives at canonical path
+        run: |
+          # The P3 croilar-devtools migration (closes #96) is complete.
+          # The MCP server is at agents/api/_croilar_convex/devtools.ts.
+          if [ ! -f "agents/api/_croilar_convex/devtools.ts" ]; then
+            echo "ERROR: croilar-devtools not at canonical path agents/api/_croilar_convex/devtools.ts"
+            exit 1
+          fi
+          if [ -d "agents/_croilar" ]; then
+            echo "ERROR: agents/_croilar/ legacy directory still exists — should be deleted"
+            exit 1
+          fi
+          echo "OK: croilar-devtools at canonical path agents/api/_croilar_convex/devtools.ts"

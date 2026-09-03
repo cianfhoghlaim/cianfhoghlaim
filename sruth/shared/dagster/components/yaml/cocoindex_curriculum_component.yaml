@@ -1,0 +1,210 @@
+# CocoIndex + DSPy Curriculum Extraction Component
+# Uses CocoIndex flows with DSPy for structured curriculum extraction
+
+component: sruth.shared.dagster.components.CocoIndexFlowComponent
+attributes:
+  # Dagster asset configuration
+  asset_key: ["curriculum", "structured_extraction"]
+  group_name: "curriculum"
+  flow_name: "curriculum_extraction_flow"
+
+  # Data source: S3 bucket with curriculum PDFs
+  sources:
+    - type: "s3"
+      bucket: "${CURRICULUM_BUCKET:-curriculum-pdfs}"
+      prefix: "${CURRICULUM_PREFIX:-ncca/}"
+      included_patterns: ["*.pdf"]
+      binary: true
+
+  # Transformations: DSPy extraction
+  transformations:
+    - type: "dspy"
+      module: "sruth.shared.extraction.dspy_modules"
+      class_name: "CurriculumExtractor"
+      model: "${OPENAI_MODEL:-openai/gpt-4o}"
+
+    - type: "split"
+      chunk_size: 1000
+      chunk_overlap: 200
+
+    - type: "embed"
+      embedding_model: "${EMBEDDING_MODEL:-BAAI/bge-small-en-v1.5}"
+      batch_size: 100
+      dimension: 384
+
+  # Export targets
+  exports:
+    - type: "postgres"
+      table: "curriculum_structured"
+      namespace: "curriculum"
+      primary_key: "id"
+
+    - type: "lancedb"
+      namespace: "curriculum_embeddings"
+      metric: "cosine"
+
+  # Scheduling
+  schedule_cron: "0 2 * * *"  # Daily at 2 AM
+  schedule_timezone: "Europe/Dublin"
+
+# ============================================================================
+# USAGE EXAMPLES
+# ============================================================================
+#
+# 1. In Dagster definitions.py:
+#    ```python
+#    from sruth.shared.dagster.components.loader import load_components_from_yaml
+#
+#    defs = load_components_from_yaml("cocoindex_curriculum_component.yaml")
+#    ```
+#
+# 2. Using in a flow:
+#    ```python
+#    import cocoindex
+#    from sruth.shared.extraction import CurriculumExtractor
+#    from sruth.shared.storage import create_planetscale_target
+#
+#    @cocoindex.flow_def(name="curriculum_extraction")
+#    def curriculum_flow(flow_builder, data_scope):
+#        # S3 source
+#        data_scope["pdfs"] = flow_builder.add_source(
+#            cocoindex.sources.AmazonS3(
+#                bucket="curriculum-pdfs",
+#                prefix="ncca/",
+#                included_patterns=["*.pdf"],
+#            )
+#        )
+#
+#        # Collector for results
+#        curriculum_index = data_scope.add_collector()
+#
+#        # Process each PDF
+#        with data_scope["pdfs"].row() as pdf:
+#            # Extract using DSPy
+#            extractor = CurriculumExtractor()
+#            pdf["curriculum"] = pdf["content"].transform(extractor)
+#
+#            # Collect results
+#            curriculum_index.collect(
+#                filename=pdf["filename"],
+#                curriculum_data=pdf["curriculum"],
+#            )
+#
+#        # Export to PostgreSQL
+#        curriculum_index.export(
+#            "curriculum_structured",
+#            create_planetscale_target(table="curriculum_structured"),
+#        )
+#    ```
+#
+# ============================================================================
+# ENVIRONMENT VARIABLES
+# ============================================================================
+#
+# S3 Source:
+#   AWS_ACCESS_KEY_ID     - S3 access key
+#   AWS_SECRET_ACCESS_KEY - S3 secret key
+#   CURRICULUM_BUCKET      - S3 bucket name
+#   CURRICULUM_PREFIX      - S3 prefix/folder
+#
+# DSPy Extraction:
+#   OPENAI_API_KEY         - OpenAI API key (or other LLM provider)
+#   OPENAI_MODEL           - Model to use (default: gpt-4o)
+#
+# Embeddings:
+#   EMBEDDING_MODEL        - Sentence transformer model
+#
+# PostgreSQL Export:
+#   PLANETSCALE_HOST       - PostgreSQL host
+#   PLANETSCALE_DATABASE   - Database name
+#   PLANETSCALE_USER       - Username
+#   PLANETSCALE_PASSWORD   - Password
+#
+# LanceDB Export:
+#   LANCEDB_URI            - LanceDB connection string
+#   LANCEDB_API_KEY        - LanceDB API key (if using cloud)
+#
+# ============================================================================
+# COMPONENT ARCHITECTURE
+# ============================================================================
+#
+# ┌────────────────────────────────────────────────────────────────────┐
+# │                        S3 Source (PDFs)                           │
+# │  curriculum-pdfs/ncca/*.pdf                                       │
+# └────────────────────────────┬─────────────────────────────────────┘
+#                              │
+#                              ▼
+# ┌────────────────────────────────────────────────────────────────────┐
+# │                    DSPy Extraction                               │
+# │  CurriculumExtractor -> CurriculumEntity                          │
+# │  - title, subject, level, strand                                  │
+# │  - learning_outcomes                                               │
+# └────────────────────────────┬─────────────────────────────────────┘
+#                              │
+#                              ▼
+# ┌────────────────────────────────────────────────────────────────────┐
+# │                    Text Splitting                                 │
+# │  SplitRecursively(chunk_size=1000, overlap=200)                   │
+# └────────────────────────────┬─────────────────────────────────────┘
+#                              │
+#                              ▼
+# ┌────────────────────────────────────────────────────────────────────┐
+# │                    Embedding Generation                          │
+# │  SentenceTransformerEmbed(BAAI/bge-small-en-v1.5)                 │
+# └────────────────────────────┬─────────────────────────────────────┘
+#                              │
+#               ┌──────────────┴──────────────┐
+#               ▼                             ▼
+# ┌──────────────────────────┐    ┌──────────────────────────┐
+# │   PostgreSQL Export      │    │    LanceDB Export        │
+# │   (PlanetScale)           │    │    (Vector Search)       │
+# │   - curriculum_structured │    │    - curriculum_embeddings│
+# └──────────────────────────┘    └──────────────────────────┘
+#           (OLTP)                          (Vector)
+#
+# ============================================================================
+# DSPy MODULES AVAILABLE
+# ============================================================================
+#
+# From sruth.shared.extraction:
+#
+# 1. CurriculumExtractor
+#    - Extracts curriculum data from documents
+#    - Returns: CurriculumEntity with strand, strand_unit, learning_outcomes
+#
+# 2. ExamExtractor
+#    - Extracts exam metadata from SEC papers
+#    - Returns: ExamPaper with year, subject, level, questions
+#
+# 3. StructuredExtractor
+#    - Generic extractor with configurable Pydantic schema
+#    - Use for custom data models
+#
+# 4. VisionExtractor
+#    - Multi-modal extraction from images/PDFs
+#    - Uses vision models for document understanding
+#
+# ============================================================================
+# CUSTOMIZATION
+# ============================================================================
+#
+# To customize for different data sources:
+#
+# 1. Change source configuration:
+#    sources:
+#      - type: "local"
+#        path: "./data/exams"
+#        included_patterns: ["*.pdf"]
+#
+# 2. Change extraction module:
+#    transformations:
+#      - type: "dspy"
+#        module: "sruth.shared.extraction.dspy_modules"
+#        class_name: "ExamExtractor"
+#
+# 3. Add more export targets:
+#    exports:
+#      - type: "postgres"
+#        table: "exam_papers"
+#      - type: "motherduck"
+#        table: "exam_analytics"

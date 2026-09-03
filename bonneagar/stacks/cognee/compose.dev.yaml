@@ -1,0 +1,72 @@
+# Cognee — local dev override
+# ----------------------------------------------------------------------------
+# Mirrors the litellm/cognee dev override pattern:
+#   1. No-op locket sidecar (alpine) so `depends_on: locket: service_healthy`
+#      resolves without booting the real Infisical-injection sidecar.
+#   2. `env_file: .env.dev` (this stack) provides all the dev secrets
+#      pointing at the lakehouse-postgres (db=cognee_cianfhoghlaim) +
+#      lakehouse-lance-namespace (the 6 Cognee datasets use pgvector +
+#      lance-namespace for hybrid storage).
+#   3. The image is `cognee/cognee:1.2.2` (public Docker Hub).
+#
+# Usage:
+#   docker compose \
+#     -f stacks/cognee/compose.yaml \
+#     -f stacks/cognee/sidecar.yaml \
+#     -f stacks/cognee/compose.dev.yaml \
+#     up -d
+# ----------------------------------------------------------------------------
+
+services:
+  locket:
+    image: alpine:3.20
+    container_name: cognee-locket-dev
+    restart: "no"
+    command:
+      - sh
+      - -c
+      - "echo '[dev] no-op cognee locket — secrets from .env.dev'; sleep infinity"
+    healthcheck:
+      test: ["CMD-SHELL", "true"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - lakehouse
+
+  cognee:
+    depends_on:
+      locket:
+        condition: service_started
+    env_file:
+      - .env.dev
+    # Note: in production the cognee service joins the shared
+    # `cianfhoghlaim` network (created by the logfire stack at first
+    # deploy). In dev mode we don't depend on that — the cognee
+    # service can reach the lakehouse services via the `lakehouse`
+    # network alone.
+    networks:
+      - lakehouse
+
+  # Remove the dedicated cognee-postgres (it still works but the
+  # dev overlay uses the shared lakehouse-postgres instead).
+  # (The base compose's cognee-postgres service is kept; in dev
+  #  mode the cognee service is configured to use lakehouse-postgres
+  #  via the COGNEE_POSTGRES_HOST/COGNEE_POSTGRES_PASSWORD env vars.)
+
+# Top-level secrets: block from sidecar.yaml references the production
+# Infisical secret file (../../infisical_secret). Override with /dev/null
+# so the locket sidecar doesn't fail to mount a missing file.
+secrets:
+  infisical_secret:
+    file: /dev/null
+
+# Top-level networks: block in the base compose declares `cianfhoghlaim`
+# as external, but the network is only created by the logfire stack.
+# In dev mode we don't run logfire, so the network is missing. Override
+# the external declaration to a local bridge network.
+networks:
+  cianfhoghlaim:
+    external: false
+    driver: bridge

@@ -1,0 +1,93 @@
+# =============================================================================
+# BUNCHLOCH RESOURCE SYNC
+# =============================================================================
+# GitOps configuration for ALL workload-plane resources on the
+# bunchloch host (MacBook M4 Max — the data plane + dev host).
+# Komodo auto-pulls this file every 60s and reconciles Komodo
+# state with the TOMLs declared in resource_path.
+#
+# Scope (data plane + dev):
+#   - cianfhoghlaim + meaisinfhoghlaim + croílár  (BIEP + agent + portfolio)
+#   - litellm + langfuse + mlflow + logfire     (LLM gateway + observability)
+#   - dagster + lakehouse                       (unified lakehouse + graph DB)
+#                                                 (the cognee + graphiti + falkordb +
+#                                                  memgraph + lancedb stacks were
+#                                                  consolidated into lakehouse by
+#                                                  the 2026-08-15-lakehouse-unified-data-plane-v1
+#                                                  change — see the lakehouse stack
+#                                                  compose.yaml for the 16 services)
+#   - hermes + openclaw + openchamber           (autonomous agent runtime + UI surfaces)
+#   - mailcow + browser + media                 (daily-driver stacks)
+#   - newt (Pangolin client) + komodo-periphery (operator-laptop site infrastructure)
+#
+# Per the bonneagar-v5 drift refactor:
+#   - 60s interval (sub-minute convergence)
+#   - on_pull=true (Komodo proactively pulls on the schedule)
+#   - delete=false (safety — a typo in TOML never deletes live resources)
+#   - managed=true (Komodo owns the resource state, not the IaC scripts)
+#
+# server_id convention:
+#   This sync pulls every procedure under `komodo/procedures/*.toml`,
+#   but Komodo Core filters the per-host UI + REST API to procedures
+#   whose `server_id` field matches that host. Procedures without
+#   a `server_id` field appear in BOTH hosts (back-compat). The
+#   convention is documented in `komodo/procedures/server_id_legend.md`.
+# =============================================================================
+
+[[resource_sync]]
+name = "bunchloch"
+description = "Workload-plane stack + procedure declarations for bunchloch (data plane + dev)"
+
+[resource_sync.config]
+# Repository configuration - Forgejo at git.cianfhoghlaim.ie
+# Same repo + branch as the arm1-oci + storage-infrastructure syncs.
+repo = "cianfhoghlaim/bonneagar"
+git_account = "forgejo"
+branch = "main"
+
+# Resource paths under <repo-root>/<branch>/ :
+#   - stacks:     bunchloch-prefixed per-stack registrations
+#   - procedures: shared with arm1-oci (procedures/*.toml is host-agnostic;
+#                 Komodo Core filters by `server_id` field)
+#   - builds:     per-build registrations (code-owned Docker images)
+#   - servers:    shared Periphery registrations
+# Per the 2-host topology (no 3rd host), no per-host procedure split.
+# REMOVED 2026-08-15-lakehouse-unified-data-plane-v1:
+#   - cognee-bunchloch.toml         (now in lakehouse)
+#   - falkordb-bunchloch.toml       (now in lakehouse)
+#   - graphiti-bunchloch.toml       (now in lakehouse)
+#   - memgraph-bunchloch.toml       (now in lakehouse)
+#   - lancedb-bunchloch.toml        (now in lakehouse)
+# The single lakehouse-bunchloch.toml entry covers all 16 unified services.
+resource_path = [
+  "bonneagar/komodo/stacks/bunchloch-analytics.toml",
+  "bonneagar/komodo/stacks/bunchloch-media.toml",
+  "bonneagar/komodo/stacks/bunchloch-support.toml",
+  "bonneagar/komodo/stacks/croilar-bunchloch.toml",
+  "bonneagar/komodo/stacks/hermes-bunchloch.toml",
+  "bonneagar/komodo/stacks/mailcow-dockerized-bunchloch.toml",
+  "bonneagar/komodo/stacks/cianfhoghlaim-bunchloch.toml",
+  "bonneagar/komodo/stacks/newt-bunchloch.toml",
+  "bonneagar/komodo/stacks/unsloth-serve-bunchloch.toml",
+  "bonneagar/komodo/builds/openchamber-arm1-oci.toml",
+  "bonneagar/komodo/builds/openclaw-arm1-oci.toml",
+  "bonneagar/komodo/builds/hermes-arm1-oci.toml",
+  "bonneagar/komodo/procedures/*.toml",
+  "bonneagar/komodo/servers/*.toml",
+]
+
+# 60s poll interval — Komodo pulls the repo on this cadence.
+interval = "60s"
+
+# Managed mode - Komodo owns these resources.
+managed = true
+
+# Safety: don't delete resources that aren't in this list of files.
+delete = false
+
+# Git provider for webhook + clone semantics.
+git_provider = "git.cianfhoghlaim.ie"
+
+# Sync triggers
+on_sync = true
+on_pull = true

@@ -1,0 +1,95 @@
+# =============================================================================
+# OCR-ROUTER - OCR / VLM Capability Gateway
+# =============================================================================
+# Single FastAPI service that maps a `requested capability` to the
+# best-fit backend. Replaces the operator-decision model (where the
+# BIEP v3 pipeline had to choose backend per-document manually) with
+# an explicit router.
+#
+# Dispatch matrix (see README.md for full table):
+#   - forms            → paddleocr (:8000)
+#   - layout           → mlx-omni (:10240)
+#   - tables+latex     → olmocr (:8003)
+#   - doctags          → docling-serve (:5001)
+#   - gaelic / english → llama-swap (:8080)
+#   - tesseract-fallback → dots-ocr (:8001)
+#
+# Webhook: on every successful OCR completion, POSTs the completion
+# envelope to OCR_WEBHOOK_URL (canonical convention per spec delta on
+# `british-isles-education-pipeline-v3`).
+#
+# Image: ghcr.io/cianfhoghlaim/ocr-router:v0.1.0 (built from
+# bonneaagr/stacks/ocr-router/Dockerfile.ocr-router at deploy time).
+#
+# USAGE:
+#   Production:  docker compose -f compose.yaml -f sidecar.yaml up -d
+#   Development: docker compose -f compose.yaml -f compose.dev.yaml \
+#                  -f sidecar.yaml up -d
+# =============================================================================
+
+services:
+  ocr-router:
+    image: ghcr.io/cianfhoghlaim/ocr-router:v0.1.0
+    container_name: ocr-router
+    restart: unless-stopped
+    ports:
+      # 127.0.0.1 binding — public access is via the Pangolin private route
+      # `ocr-router.cianfhoghlaim.ie` (see pangolin.yaml + blueprint.yaml).
+      - "127.0.0.1:${OCR_ROUTER_PORT:-8090}:8090"
+    environment:
+      # API key for the router itself (clients send `Authorization: Bearer
+      # $OCR_ROUTER_API_KEY`).
+      OCR_ROUTER_API_KEY: ${OCR_ROUTER_API_KEY:-not-needed-in-dev}
+      # OCR completion webhook (per spec delta on BIEP v3). Empty =
+      # graceful skip (no emission).
+      OCR_WEBHOOK_URL: ${OCR_WEBHOOK_URL:-}
+      OCR_WEBHOOK_TOKEN: ${OCR_WEBHOOK_TOKEN:-}
+      # Backend endpoint URLs (no-secrets; resolved by Docker DNS on the
+      # cianfhoghlaim network).
+      OCR_PADDLEOCR_URL: ${OCR_PADDLEOCR_URL:-http://paddleocr:8000/v1}
+      OCR_MLX_OMNI_URL: ${OCR_MLX_OMNI_URL:-http://mlx-omni:10240/v1}
+      OCR_OLMOCR_URL: ${OCR_OLMOCR_URL:-http://olmocr:8003/v1}
+      OCR_DOCLING_SERVE_URL: ${OCR_DOCLING_SERVE_URL:-http://docling-serve:5001/v1}
+      OCR_LLAMA_SWAP_URL: ${OCR_LLAMA_SWAP_URL:-http://llama-swap:8080/v1}
+      OCR_DOTS_OCR_URL: ${OCR_DOTS_OCR_URL:-http://dots-ocr:8001/v1}
+      # Unsloth Studio (per the 2026-08-21 change). The 6 unsloth VLMs
+      # (qwen3-vl-8b-instruct + qwen3-vl-32b-instruct + glm-4.6v-flash +
+      # deepseek-ocr-2 + qwen3-vl-30b-a3b + qwen3-vl-235b-a22b) route
+      # through this URL when the dispatch matrix resolves the
+      # `vlm_strong` / `vlm_fast` / `vlm_ocr` / `vlm_default` /
+      # `vlm_heavy` / `vlm_reasoning` capability classes.
+      OCR_UNSLOTH_URL: ${OCR_UNSLOTH_URL:-http://unsloth:8889/v1}
+      # Per-request timeout (ms).
+      OCR_ROUTER_TIMEOUT_MS: ${OCR_ROUTER_TIMEOUT_MS:-30000}
+      # Observability (per Change 1 of the env-contract-and-observability-fanout
+      # trilogy — every backend emits OTLP traces via the logfire collector,
+      # which fans out to BOTH logfire cloud AND langfuse).
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_SERVICE_NAME: ocr-router
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+    # depends_on: # locket sidecar is injected at deploy time via -f sidecar.yaml
+    # (no other dependencies)
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+
+networks:
+  cianfhoghlaim:
+    name: cianfhoghlaim
+    external: true
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true

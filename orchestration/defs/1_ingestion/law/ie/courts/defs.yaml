@@ -1,0 +1,14 @@
+# defs.yaml — Pick-8 IE/law L1 (Ingestion) component for the Courts source.
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.law.courts
+  domain: law
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 5 * * *"
+  dlt_source: dlt_sources.british_isles.ireland.education.law.courts.courts_source
+  destination_tables:
+    - cianfhoghlaim.law.ie.courts_forms
+    - cianfhoghlaim.law.ie.court_fees
+  fallback_resources:
+    - stedding/ingest_queue/courts.ie/

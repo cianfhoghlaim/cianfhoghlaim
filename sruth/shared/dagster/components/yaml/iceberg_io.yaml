@@ -1,0 +1,59 @@
+# Iceberg I/O Manager Component
+# Provides Iceberg table storage via Lakekeeper REST catalog
+
+component: sruth.shared.dagster.components.IcebergIOComponent
+
+attributes:
+  # Resource name
+  name: "iceberg_io"
+
+  # Lakekeeper catalog configuration
+  catalog_uri: "${LAKEKEEPER_CATALOG_URI:-http://lakekeeper:8181}"
+  warehouse: "${ICEBERG_WAREHOUSE:-s3://garage/warehouse}"
+  namespace: "curriculum"
+
+  # S3/Garage configuration for object storage
+  s3_endpoint: "${GARAGE_ENDPOINT_URL:-http://garage:3900}"
+  s3_access_key: "${GARAGE_ACCESS_KEY:-garage_key}"
+  s3_secret_key: "${GARAGE_SECRET_KEY:-garage_secret}"
+  s3_region: "${AWS_REGION:-garage}"
+  s3_use_ssl: false
+
+  # I/O manager configuration
+  compute_kind: "polars"  # polars, pandas, pyarrow, daft
+
+  # Iceberg table properties (optimization)
+  table_properties:
+    # File format
+    write.format.default: "parquet"
+    write.compression-codec: "zstd"
+    write.compression-level: "9"
+
+    # Parquet page size
+    write.parquet.page-size-bytes: "2097152"  # 2MB
+
+    # Statistics collection
+    write.metadata.compression-codec: "zstd"
+
+    # Schema evolution
+    write.schema.auto-evolution: "true"
+
+# Environment-specific configurations
+environments:
+  local:
+    catalog_uri: "sqlite:///data/catalog.db"
+    warehouse: "s3://localhost:9000/warehouse"
+    s3_endpoint: "http://localhost:9000"
+    namespace: "dev"
+
+  staging:
+    catalog_uri: "${STAGING_LAKEKEEPER_URI:-http://lakekeeper.staging:8181}"
+    warehouse: "${STAGING_ICEBERG_WAREHOUSE:-s3://garage-staging/warehouse}"
+    namespace: "staging"
+
+  production:
+    catalog_uri: "${LAKEKEEPER_CATALOG_URI}"
+    warehouse: "${ICEBERG_WAREHOUSE}"
+    s3_endpoint: "${GARAGE_ENDPOINT_URL}"
+    s3_use_ssl: true
+    namespace: "production"

@@ -1,0 +1,277 @@
+# =============================================================================
+# CONTROL-PLANE STACK — Bundled 5-service setup for arm1-oci
+# =============================================================================
+# The 5 control-plane services (Komodo + Infisical + Pangolin + Pocket ID +
+# Tinyauth + Locket) bundled into a single docker-compose stack. Each
+# service has a Locket sidecar that materializes secrets from Infisical
+# via the canonical infisical:// URI syntax.
+#
+# Companion: openspec/changes/2026-07-15-iac-ify-arm1-oci-control-plane-v1
+# =============================================================================
+
+name: control-plane
+
+# =============================================================================
+# LOCKET SIDECAR (shared config — used by every service)
+# =============================================================================
+# Locket resolves the {{ infisical:///SECRET }} refs in each service's
+# secrets.env into /run/secrets/locket/secrets.env at container startup.
+x-locket-common: &locket-common
+  image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+  user: "1000:1000"
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  restart: unless-stopped
+  init: true
+  environment:
+    INFISICAL_URL: ${INFISICAL_URL}
+    INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
+    INFISICAL_CLIENT_SECRET_FILE: /run/secrets/infisical/client_secret
+    INFISICAL_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+    INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_DEFAULT_ENVIRONMENT:-dev}
+    INFISICAL_DEFAULT_PATH: /
+    LOCKET_MODE: ${LOCKET_MODE:-watch}
+  volumes:
+    - ./secrets.env:/templates/secrets.env:ro
+    - locket-out:/run/secrets/locket
+
+services:
+  # ---------------------------------------------------------------------------
+  # INFISICAL — secrets vault (the source of truth)
+  # ---------------------------------------------------------------------------
+  infisical-db:
+    image: postgres:16-alpine
+    container_name: control-plane-infisical-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: infisical
+      POSTGRES_PASSWORD: ${INFISICAL_POSTGRES_PASSWORD}
+      POSTGRES_DB: infisical
+    volumes:
+      - infisical-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U infisical -d infisical"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - control-plane-net
+
+  infisical-redis:
+    image: redis:7-alpine
+    container_name: control-plane-infisical-redis
+    restart: unless-stopped
+    networks:
+      - control-plane-net
+
+  infisical:
+    image: infisical/infisical:latest
+    container_name: control-plane-infisical
+    restart: unless-stopped
+    depends_on:
+      infisical-db:
+        condition: service_healthy
+      infisical-redis:
+        condition: service_started
+    environment:
+      ENCRYPTION_KEY: ${INFISICAL_ENCRYPTION_KEY}
+      AUTH_SECRET: ${INFISICAL_AUTH_SECRET}
+      DB_CONNECTION_URI: postgresql://infisical:${INFISICAL_POSTGRES_PASSWORD}@infisical-db:5432/infisical
+      REDIS_URL: redis://infisical-redis:6379
+      SITE_URL: ${INFISICAL_URL}
+      INVITE_ONLY_SIGNUP: "false"
+    networks:
+      - control-plane-net
+    labels:
+      bons-iac-control-plane: "true"
+      bons-iac-component: "secrets-vault"
+
+  # ---------------------------------------------------------------------------
+  # POCKET ID — OIDC identity provider
+  # ---------------------------------------------------------------------------
+  pocket-id:
+    image: ghcr.io/pocket-id/pocket-id:latest
+    container_name: control-plane-pocket-id
+    restart: unless-stopped
+    <<: *locket-common
+    environment:
+      APP_URL: ${POCKETID_URL}
+      TRUST_PROXY: "true"
+      PUID: "1000"
+      PGID: "1000"
+    networks:
+      - control-plane-net
+    labels:
+      bons-iac-control-plane: "true"
+      bons-iac-component: "oidc-idp"
+
+  # ---------------------------------------------------------------------------
+  # PANGOLIN — reverse proxy + WireGuard tunnel manager
+  # ---------------------------------------------------------------------------
+  pangolin:
+    image: fosrl/pangolin:ee-latest
+    container_name: control-plane-pangolin
+    restart: unless-stopped
+    <<: *locket-common
+    environment:
+      # Pangolin Enterprise config (env-driven; locket materializes the values)
+      PANGOLIN_DB_URI: postgresql://pangolin:${PANGOLIN_POSTGRES_PASSWORD}@pangolin-db:5432/pangolin
+      PANGOLIN_SIGNING_KEY: ${PANGOLIN_SIGNING_KEY}
+      PANGOLIN_LICENCE: ${PANGOLIN_LICENCE}
+      # OIDC
+      PANGOLIN_OIDC_CLIENT_ID: ${POCKETID_KOMODO_CLIENT_ID}
+      PANGOLIN_OIDC_CLIENT_SECRET: ${POCKETID_KOMODO_CLIENT_SECRET}
+    depends_on:
+      - pangolin-db
+      - pocket-id
+    networks:
+      - control-plane-net
+    labels:
+      bons-iac-control-plane: "true"
+      bons-iac-component: "reverse-proxy"
+
+  pangolin-db:
+    image: postgres:17
+    container_name: control-plane-pangolin-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: pangolin
+      POSTGRES_PASSWORD: ${PANGOLIN_POSTGRES_PASSWORD}
+      POSTGRES_DB: pangolin
+    volumes:
+      - pangolin-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pangolin -d pangolin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - control-plane-net
+
+  # ---------------------------------------------------------------------------
+  # KOMODO — orchestration (Core + FerretDB + Postgres)
+  # ---------------------------------------------------------------------------
+  komodo-ferretdb:
+    image: ghcr.io/ferretdb/ferretdb:2
+    container_name: control-plane-komodo-ferretdb
+    restart: unless-stopped
+    environment:
+      FERRETDB_MONGO_DSN: postgres://komodo:${KOMODO_POSTGRES_PASSWORD}@komodo-postgres:5432/ferretdb
+    depends_on:
+      komodo-postgres:
+        condition: service_healthy
+    networks:
+      - control-plane-net
+
+  komodo-postgres:
+    image: ghcr.io/ferretdb/postgres-documentdb:17
+    container_name: control-plane-komodo-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: komodo
+      POSTGRES_PASSWORD: ${KOMODO_POSTGRES_PASSWORD}
+      POSTGRES_DB: ferretdb
+    volumes:
+      - komodo-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U komodo -d ferretdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - control-plane-net
+
+  komodo:
+    image: ghcr.io/moghtech/komodo-core:2
+    container_name: control-plane-komodo
+    restart: unless-stopped
+    <<: *locket-common
+    depends_on:
+      - komodo-ferretdb
+      - komodo-postgres
+    environment:
+      KOMODO_HOST: ${KOMODO_URL}
+      KOMODO_OIDC_ENABLED: "true"
+      KOMODO_OIDC_PROVIDER: ${POCKETID_URL}
+      KOMODO_OIDC_CLIENT_ID: ${POCKETID_KOMODO_CLIENT_ID}
+      KOMODO_OIDC_CLIENT_SECRET: ${POCKETID_KOMODO_CLIENT_SECRET}
+      KOMODO_OIDC_USE_FULL_EMAIL: "true"
+      KOMODO_INIT_ADMIN_USERNAME: ${KOMODO_ADMIN_USERNAME}
+      KOMODO_INIT_ADMIN_PASSWORD: ${KOMODO_ADMIN_PASSWORD}
+    ports:
+      - "9120:9120"  # Komodo Core UI
+    networks:
+      - control-plane-net
+    labels:
+      bons-iac-control-plane: "true"
+      bons-iac-component: "orchestrator"
+
+  # ---------------------------------------------------------------------------
+  # TINYAUTH — ForwardAuth middleware (in front of Pangolin)
+  # ---------------------------------------------------------------------------
+  tinyauth:
+    image: ghcr.io/steveiliop56/tinyauth:v4
+    container_name: control-plane-tinyauth
+    restart: unless-stopped
+    <<: *locket-common
+    environment:
+      APP_URL: ${TINYAUTH_URL}
+      SECURE_COOKIE: "true"
+      SESSION_EXPIRY: "86400"
+      DISABLE_ANALYTICS: "true"
+      PORT: "3000"
+      ADDRESS: "0.0.0.0"
+      PROVIDERS_POCKETID_NAME: "Pocket ID"
+      PROVIDERS_POCKETID_CLIENT_ID: ${POCKETID_TINYAUTH_CLIENT_ID}
+      PROVIDERS_POCKETID_CLIENT_SECRET: ${POCKETID_TINYAUTH_CLIENT_SECRET}
+      PROVIDERS_POCKETID_AUTH_URL: ${POCKETID_URL}/authorize
+      PROVIDERS_POCKETID_TOKEN_URL: ${POCKETID_URL}/api/oidc/token
+      PROVIDERS_POCKETID_USER_INFO_URL: ${POCKETID_URL}/api/oidc/userinfo
+      PROVIDERS_POCKETID_REDIRECT_URL: ${TINYAUTH_URL}/api/oauth/callback/pocketid
+      PROVIDERS_POCKETID_SCOPES: "openid email profile groups"
+    ports:
+      - "3000:3000"  # Tinyauth UI
+    networks:
+      - control-plane-net
+    labels:
+      bons-iac-control-plane: "true"
+      bons-iac-component: "forward-auth"
+
+  # ---------------------------------------------------------------------------
+  # TRAEFIK — TLS terminator + reverse proxy for the public services
+  # ---------------------------------------------------------------------------
+  traefik:
+    image: traefik:v3.6.0
+    container_name: control-plane-traefik
+    restart: unless-stopped
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.http.tls=true"
+      - "--entrypoints.websecure.http.tls.certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--entrypoints.websecure.http.tls.certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}"
+      - "--entrypoints.websecure.http.tls.certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-letsencrypt:/letsencrypt
+    networks:
+      - control-plane-net
+
+volumes:
+  locket-out:
+  infisical-db-data:
+  pangolin-db-data:
+  komodo-postgres-data:
+  traefik-letsencrypt:
+
+networks:
+  control-plane-net:
+    driver: bridge

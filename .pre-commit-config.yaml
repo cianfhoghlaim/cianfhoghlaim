@@ -1,0 +1,26 @@
+# Pre-commit configuration for the cianfhoghlaim monorepo.
+# Blocks commits that introduce hardcoded model strings (the
+# centralized-model-registry capability). Per the
+# 2026-08-15-cascading-registry-integration-v3 spec delta on
+# centralized-model-registry.
+#
+# Install: pre-commit install
+# Run manually: pre-commit run --all-files
+# Skip (rare): git commit --no-verify
+repos:
+  - repo: local
+    hooks:
+      - id: lint-registry
+        name: lint:registry — block hardcoded model strings
+        entry: bash -c 'mise run lint:registry'
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
+        description: |
+          Runs `mise run lint:registry` which invokes
+          scripts/registry_audit.py to detect hardcoded model names /
+          model IDs in agents/, baml_src/, notebooks/, web/,
+          orchestration/, spaces/, and meaisinfhoghlaim/ that are NOT
+          routed through MODEL_REGISTRY. Exits non-zero if any
+          hardcoded string is found.

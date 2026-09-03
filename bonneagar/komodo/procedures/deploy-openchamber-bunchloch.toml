@@ -1,0 +1,130 @@
+# =============================================================================
+# DEPLOY OPENCHAMBER-BUNCHLOCH PROCEDURE
+# =============================================================================
+# Deploys the Cianfhoghlaim openchamber OpenCode UI to bunchloch
+# (MacBook M4) — the canonical workload-host target for the
+# `agent-platform-cluster` spec (per the v5 host-convergence model).
+#
+# The arm1-oci variant of this procedure (deploy-openchamber-arm1-oci.toml)
+# remains the GitOps deploy target for arm1-oci; this bunchloch variant
+# is the development + cluster-bring-up target.
+#
+# Architecture:
+#   bunchloch (MacBook M4) — openchamber (:3000 host → :3000 container,
+#                            UI + WebSocket terminal + bundled opencode-ai)
+#                            openchamber-locket (Infisical secret injection)
+#   litellm (:4000, bunchloch) — M3 LLM chokepoint; openchamber's
+#                                OPENAI_BASE_URL points at it
+#   langfuse (:3000, bunchloch) — LLM observability (OTLP/HTTP trace export)
+#   Routed through Pangolin on arm1-oci:
+#     openchamber.cianfhoghlaim.ie → bunchloch:openchamber:3000
+#     (Pocket ID SSO + OPENCHAMBER_UI_PASSWORD as 2nd factor)
+#
+# Provider config (canonical — matches the agent-platform-cluster spec
+# §"LiteLLM is the M3 chokepoint"; OpenChamber picks the model at runtime
+# from the LiteLLM model registry, with `minimax-m3` as the canonical alias):
+#   provider.name:        litellm
+#   provider.base_url:    http://litellm:4000/v1   (env: OPENAI_BASE_URL,
+#                                                  Locket-resolved from
+#                                                  dev-baile/openchamber/
+#                                                  openai_base_url)
+#   provider.model:       minimax-m3              (default model, selected
+#                                                  in the OpenChamber UI
+#                                                  model picker; resolves
+#                                                  to minimax-m2.5 per
+#                                                  litellm/config/config.yaml)
+#   provider.api_key_env: OPENAI_API_KEY          (LITELLM_MASTER_KEY,
+#                                                  Locket-resolved from
+#                                                  dev-baile/openchamber/
+#                                                  openai_api_key)
+#
+# Secrets injected via Locket + Infisical vault (dev-baile). 4 total
+# Infisical items (ui_password + openai_api_key + openai_base_url +
+# otel_exporter_otlp_endpoint).
+#
+# Usage:
+#   km run procedure deploy-openchamber-bunchloch
+#   km run procedure deploy-openchamber-bunchloch -- --skip=dependency-services
+# =============================================================================
+
+[[procedure]]
+name = "deploy-openchamber-bunchloch"
+server_id = "bunchloch"
+description = "Deploy OpenChamber OpenCode UI to bunchloch — prereqs → litellm + langfuse → openchamber → pangolin routes → health checks"
+
+# =============================================================================
+# STAGE 0: Prerequisite docker resources
+# =============================================================================
+# The openchamber locket sidecar requires the openchamber_stack-secrets
+# external tmpfs volume. Created idempotently by the locket sidecar on
+# first boot.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "prerequisites"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "openchamber-ensure-locket-volume" } }
+
+# =============================================================================
+# STAGE 1: Dependency Services (bunchloch)
+# =============================================================================
+# OpenChamber depends on:
+#   - litellm (LLM gateway, port 4000) — the M3 chokepoint; openchamber's
+#     OPENAI_BASE_URL is `http://litellm:4000/v1` (resolved at runtime by
+#     Locket from dev-baile/openchamber/openai_base_url). The bundled
+#     opencode-ai runtime fetches the model list from this URL.
+#   - langfuse (LLM observability, port 3000) — openchamber's OTel exporter
+#     targets langfuse's OTLP/HTTP endpoint (env: OTEL_EXPORTER_OTLP_ENDPOINT)
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "dependency-services"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-litellm-bunchloch" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-langfuse-bunchloch" } }
+
+# =============================================================================
+# STAGE 2: OpenChamber (bunchloch)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "openchamber-stack"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "openchamber-bunchloch" } }
+
+# =============================================================================
+# STAGE 3: Pangolin Routes (arm1-oci)
+# =============================================================================
+# Apply the openchamber routing blueprint via Pangolin Integration API.
+# Registers:
+#   - openchamber.cianfhoghlaim.ie → bunchloch:openchamber:3000
+#     (Pocket ID SSO)
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "pangolin-routes"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "apply-openchamber-routes" } }
+
+# =============================================================================
+# STAGE 4: Health Verification (bunchloch)
+# =============================================================================
+# Verify openchamber is healthy and responding to /api/health.
+# Verify the LiteLLM chokepoint: openchamber's bundled opencode-ai runtime
+# can list models from `http://litellm:4000/v1/v1/models` (smoke test).
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "openchamber-health-check" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "openchamber-litellm-chokepoint-check" } }

@@ -1,0 +1,10 @@
+# Pangolin auto-discovery labels for Sunshine
+# Note: Sunshine uses network_mode: host for game streaming
+# Web interface is on port 47990
+services:
+  sunshine:
+    labels:
+      - "pangolin.resource.name=Sunshine"
+      - "pangolin.resource.domain=sunshine.cianfhoghlaim.ie"
+      - "pangolin.resource.target=https://sunshine:47990"
+      - "pangolin.resource.middlewares=tinyauth"

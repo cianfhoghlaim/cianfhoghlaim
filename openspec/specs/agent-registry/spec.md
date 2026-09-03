@@ -1,0 +1,337 @@
+# agent-registry Specification
+
+## Purpose
+
+`agent-registry` is a capability of the Cianfhoghlaim platform. It
+defines the contract that the OpenCode agent + skill + MCP registry
+(`opencode.json`) must satisfy to align with the v4
+`cianfhoghlaim/` package layout.
+
+The OpenCode agent + skill + MCP registry is the surface that every
+subagent reads on startup from `opencode.json`. The registry
+currently exposes:
+
+- 7 agents (`build`, `plan`, `data-platform`, `infrastructure`,
+  `agent-platform`, `frontend-apps`, `research`).
+- 9 MCP servers (`browserbase`, `firecrawl`, `infisical`,
+  `motherduck`, `chrome`, `cocoindex-code`, `cognee`, `graphiti`,
+  `langfuse`).
+- 4 functional + 1 research subagents opt in to a `skill_filter`
+  (`data-platform=15`, `infrastructure=15`, `agent-platform=23`,
+  `frontend-apps=20`, `research=11` skills).
+
+The canonical operator-facing usage docs are at
+[`.agents/skills/INDEXING_AND_COGNITION.md`](../../.agents/skills/INDEXING_AND_COGNITION.md)
+(see §8 of that file for the registry surface).
+## Requirements
+### Requirement: Functional subagent coverage of the v4 package
+
+The `opencode.json` `agent` registry SHALL define exactly **four
+functional subagents** (`data-platform`, `infrastructure`,
+`agent-platform`, `frontend-apps`) whose prompts and
+`skill_filter` arrays cover every top-level subpackage of the
+consolidated `cianfhoghlaim/` Python package. The system SHALL NOT
+define subagents named `oideachais`, `meaisinfhoghlaim`, `croilar`,
+or `tuatha` (those names reference the deleted `sruth/<quadrant>/`
+quadrants).
+
+#### Scenario: Every cianfhoghlaim subpackage is routable
+
+- **GIVEN** the consolidated `cianfhoghlaim/` package at the repo
+  root with subpackages `dlt_sources/`, `baml_src/`, `dagster_defs/`,
+  `notebooks/`, `agents/meaisinfhoghlaim/`, `web/`, `stacks/`,
+  `libraries/`, `cognify/`
+- **WHEN** a build agent reads `opencode.json` and dispatches a
+  `task` tool call
+- **THEN** at least one of the 4 functional subagents can accept
+  the dispatch and route to the relevant subpackage
+- **AND** no `task` tool call needs to use one of the deleted
+  sruth subagent names
+
+#### Scenario: data-platform covers the data layer
+
+- **GIVEN** the `data-platform` subagent is defined in
+  `opencode.json`
+- **WHEN** a task targets the data plane (DLT sources, BAML
+  schemas, Dagster assets, Marimo notebooks, DuckLake / DuckDB /
+  MotherDuck storage)
+- **THEN** the subagent prompt references the `cianfhoghlaim/`
+  paths for those targets
+- **AND** the `skill_filter` includes the 6 data-layer skills
+  (`dlt`, `dagster`, `baml`, `motherduck`, `duckdb`, `ducklake`)
+
+#### Scenario: infrastructure covers the stacks layer
+
+- **GIVEN** the `infrastructure` subagent is defined in
+  `opencode.json`
+- **WHEN** a task targets the Docker Compose stacks under
+  `cianfhoghlaim/stacks/*/`, or Komodo / Pangolin / Locket /
+  Infisical operations
+- **THEN** the subagent prompt references the `cianfhoghlaim/stacks/`
+  paths
+- **AND** the `skill_filter` includes the 6 infrastructure skills
+  (`komodo`, `pangolin`, `locket`, `infisical`, `pulumi`,
+  `dagger-pipelines`)
+
+#### Scenario: agent-platform covers the AI/ML layer
+
+- **GIVEN** the `agent-platform` subagent is defined in
+  `opencode.json`
+- **WHEN** a task targets the agent layer
+  (`cianfhoghlaim/agents/meaisinfhoghlaim/`), BAML extraction,
+  OCR / HTR, LLM routing, Langfuse / MLflow / RAGAS observability,
+  or Graphiti / Cognee memory
+- **THEN** the subagent prompt references the
+  `cianfhoghlaim/agents/meaisinfhoghlaim/` path
+- **AND** the `skill_filter` includes the 6 core agent skills
+  (`baml`, `litellm`, `langfuse`, `mlflow`, `ragas`, `cognee`,
+  `graphiti-core`)
+
+#### Scenario: frontend-apps covers the web layer
+
+- **GIVEN** the `frontend-apps` subagent is defined in
+  `opencode.json`
+- **WHEN** a task targets the web layer
+  (`cianfhoghlaim/web/apps/*/`), Convex backends, Babylon.js
+  scenes, Hono / oRPC / CopilotKit / TanStack Start, or stacks/croilar /
+  stacks/tuatha
+- **THEN** the subagent prompt references the `cianfhoghlaim/web/`
+  paths
+- **AND** the `skill_filter` includes the 6 frontend-layer skills
+  (`tanstack-start`, `copilotkit-develop`, `convex`, `hono`,
+  `orpc`, `babylonjs`)
+
+### Requirement: Dedicated research subagent for browser-driven investigation
+
+The `opencode.json` `agent` registry SHALL define a dedicated
+`research` subagent whose `skill_filter` includes the browser-
+and search-driven top-level skills needed for autonomous web
+investigation. The 11 skills SHALL be drawn from the union of
+the top-level `.agents/skills/` directories that specialise in
+browser automation, scraping, observability, and change detection
+— e.g. `browserbase`, `firecrawl`, `ccc`, `cognee`,
+`change-detection`, `agent-observability`, `crawl4ai`, `langfuse`,
+`mlflow`, `baml`, `cocoindex` (the exact set is recorded in
+`opencode.json` and may evolve as new top-level skills land;
+sub-skills nested under `browserbase/` such as `agent-experience`,
+`company-research`, `event-prospecting`, `search`, and `fetch` are
+accessible transitively through the `browserbase` entry and need
+not appear verbatim in the array). The `research` subagent is
+the primary executor for the 43-prompt BrowserBase credit program
+documented in
+`openspec/research/2026-06-28-browserbase-credit-program/`.
+
+#### Scenario: research subagent is dispatchable
+
+- **GIVEN** a build agent dispatches a `task` tool call with
+  `subagent_type: "research"`
+- **WHEN** the dispatch executes
+- **THEN** opencode resolves the subagent to the `research` entry
+  in `opencode.json`
+- **AND** the `research` subagent has access to the 11 skills
+  listed in its `skill_filter`
+- **AND** the `research` subagent prompt instructs the agent to
+  emit one Markdown file per prompt into
+  `openspec/research/2026-06-28-browserbase-credit-program/phase-*/`
+
+#### Scenario: research subagent skill_filter excludes unresolvable skills
+
+- **GIVEN** the `research` subagent `skill_filter` array
+- **WHEN** opencode validates the array against the directories
+  under `.agents/skills/`
+- **THEN** every entry resolves to an existing directory
+- **AND** the `indexing-and-cognition` and `competitor-analysis`
+  skills are NOT in the array (both are documented in `.md` files
+  or sub-paths that do not satisfy the directory-based skill
+  filter contract)
+
+### Requirement: Broken MCP entries are removed
+
+The `opencode.json` `mcp` registry SHALL NOT define any MCP server
+whose `command` or `url` points at a non-existent path or URL.
+Specifically, the `croilar-devtools` MCP server (which pointed at
+`cianfhoghlaim/mcp/devtools/index.ts` before the v4 consolidation)
+SHALL be removed.
+
+#### Scenario: croilar-devtools MCP is gone
+
+- **GIVEN** the v4 consolidation deleted the `cianfhoghlaim/`
+  directory tree
+- **WHEN** a build agent reads `opencode.json` `mcp` keys
+- **THEN** the `croilar-devtools` key is not present
+- **AND** the total MCP count is 9 (was 10 before the v4
+  consolidation; was 11 before the croilar-devtools removal)
+
+#### Scenario: All MCP commands resolve
+
+- **GIVEN** the 9 MCP servers defined in `opencode.json`
+- **WHEN** opencode validates each `command` (for stdio MCPs) or
+  `url` (for HTTP MCPs) on startup
+- **THEN** every entry resolves to an existing file (stdio) or a
+  reachable URL (HTTP)
+- **AND** `mise run lint:skills` (or equivalent MCP validation)
+  emits no broken-path warnings
+
+#### Scenario: croilar-devtools functionality is tracked separately
+
+- **GIVEN** the `croilar-devtools` MCP removal may break
+  downstream consumers of stagehand / firecrawl / codex-cli / E2B
+- **WHEN** the build agent finishes the rewrite
+- **THEN** a follow-up GitHub issue is opened titled
+  "Migrate croilar-devtools MCP server code to
+  `cianfhoghlaim/agents/api/_croilar_convex/devtools.ts`"
+- **AND** the issue body references
+  `openspec/specs/croilar-devtools-hub/spec.md` as the
+  temporarily un-implementable spec
+
+### Requirement: INDEXING path references are migrated
+
+The `.agents/skills/INDEXING_AND_COGNITION.md` document SHALL NOT
+contain any path reference to the deleted `sruth/<quadrant>/`
+quadrants or the old `bonneagar/stacks/<name>/` locations.
+Every reference SHALL point at the v4 `cianfhoghlaim/` equivalent.
+
+#### Scenario: No stale path refs in INDEXING_AND_COGNITION.md
+
+- **GIVEN** the INDEXING document at
+  `.agents/skills/INDEXING_AND_COGNITION.md`
+- **WHEN** the build agent greps for `sruth/`,
+  `bonneagar/stacks/`, `croilar-devtools`, or
+  `infrastructure/scripts/` substrings
+- **THEN** zero matches are returned (matches inside §9's
+  intentional migration table are excepted as they document the
+  FROM paths for reference)
+- **AND** every path reference resolves to an existing path under
+  `cianfhoghlaim/`
+
+#### Scenario: §8.1 lists the new subagent names
+
+- **GIVEN** §8.1 of the INDEXING document ("OpenCode agent + skill
+  + MCP registry")
+- **WHEN** a reader consults the dispatch instructions
+- **THEN** the listed `subagent_type` values are exactly
+  `data-platform`, `infrastructure`, `agent-platform`,
+  `frontend-apps`, `research`
+- **AND** the §9 appendix documents the migration from
+  `oideachais`, `infrastructure` (legacy), `meaisinfhoghlaim`,
+  `croilar`, `tuatha`
+
+#### Scenario: §8.4 health checks emit the expected counts
+
+- **GIVEN** the §8.4 health check Python one-liners
+- **WHEN** the build agent runs them against the post-rewrite
+  `opencode.json`
+- **THEN** `python3 -c "import json; cfg=json.load(open('opencode.json')); print('MCPs:', len(cfg['mcp']), 'Agents:', len(cfg['agent']))"`
+  prints `MCPs: 9  Agents: 7`
+- **AND** the per-subagent skill counts match `build=0, plan=0,
+  data-platform=15, infrastructure=15, agent-platform=23,
+  frontend-apps=20, research=11`
+
+### Requirement: Build agent prompt references the new subagent set
+
+The `opencode.json` `agent.build.prompt` field SHALL reference the
+new subagent names (`data-platform`, `infrastructure`,
+`agent-platform`, `frontend-apps`, `research`) and the new v4
+paths (`cianfhoghlaim/`), and SHALL NOT reference the deleted
+`sruth/<quadrant>/` quadrants. The prompt SHALL enumerate the
+total skill count across all 5 functional + research subagents.
+
+#### Scenario: Build agent prompt lists the 5 new subagents
+
+- **GIVEN** the `build` agent prompt in `opencode.json`
+- **WHEN** a reader consults the prompt for the workflow section
+- **THEN** the prompt enumerates `data-platform`,
+  `infrastructure`, `agent-platform`, `frontend-apps`, `research`
+  as the 5 dispatchable subagent types
+- **AND** the prompt does NOT reference `oideachais`,
+  `meaisinfhoghlaim`, `croilar`, or `tuatha` as subagent names
+
+#### Scenario: Build agent prompt cites v4 paths
+
+- **GIVEN** the `build` agent prompt in `opencode.json`
+- **WHEN** a reader consults the prompt for code-search and
+  package references
+- **THEN** path references resolve under `cianfhoghlaim/` (or its
+  subpackages `dlt_sources/`, `baml_src/`, `dagster_defs/`,
+  `notebooks/`, `agents/meaisinfhoghlaim/`, `web/`, `stacks/`,
+  `libraries/`, `cognify/`)
+- **AND** no path reference points at `sruth/<quadrant>/`
+
+#### Scenario: Build agent prompt enumerates skill count
+
+- **GIVEN** the `build` agent prompt in `opencode.json`
+- **WHEN** the prompt enumerates the agent's skill inventory
+- **THEN** the prompt states the current top-level skill count
+  (53 in the post-`skill_filter`-audit layout) and notes that the
+  per-subagent `skill_filter` arrays are restricted to entries
+  that resolve to existing top-level directories under
+  `.agents/skills/`
+- **AND** the prompt references the per-subagent skill counts as
+  listed in §8.4 of the INDEXING document (`build=0, plan=0,
+  data-platform=15, infrastructure=15, agent-platform=23,
+  frontend-apps=20, research=11`)
+
+### Requirement: PlanetScale Postgres Centralisation (agent-registry)
+
+The system SHALL migrate the 12-agent registry's observability substrate (logfire + langfuse) to PlanetScale PostgreSQL per `openspec/specs/planetscale-postgres-data-strategy/spec.md` R7 (rows 5 + 28).
+
+#### Scenario: A consumer reads the registry
+
+- **GIVEN** the registry spec is opened
+- **WHEN** they look at the per-agent metadata
+- **THEN** the `system_prompt` reference SHALL be preserved
+- **AND** the observability substrate for the registry's traces SHALL point at PlanetScale PG (logfire database)
+
+### Requirement: 12-agent fleet consumes MODEL_REGISTRY.resolve() for litellm_routing_key
+
+The system SHALL update `agents/agent_registry.py:39-184` so that
+each agent's `litellm_routing_key` resolves through
+`MODEL_REGISTRY.resolve("text_llm", role=<agent_key>)`. The 32
+hardcoded `gemini-2.0-flash` sites in `agents/adk/*` SHALL be replaced
+with `MODEL_REGISTRY.resolve(...)` calls.
+
+#### Scenario: Each agent's litellm_routing_key resolves through the registry
+
+- **GIVEN** the `MODEL_REGISTRY` populated with the `text_llm` family
+- **WHEN** the operator runs
+  `python3 -c "from agents.agent_registry import AGENT_REGISTRY; from meaisinfhoghlaim.models.registry import MODEL_REGISTRY; [print(k, MODEL_REGISTRY.resolve('text_llm', role=k)) for k in AGENT_REGISTRY]"`
+- **THEN** the output prints every agent's resolved model key
+- **AND** no hardcoded `gemini-2.0-flash` strings remain in
+  `agents/adk/*.py`
+
+#### Scenario: google-adk/SKILL.md drift signal is resolved
+
+- **GIVEN** the drift signal at `google-adk/SKILL.md:403-419`
+  ("32 LlmAgent(model=config.model_name) constructors hardcode
+  gemini-2.0-flash ... BYPASSING the KCG minimax 7-tier LiteLLM
+  fallback alias")
+- **WHEN** the operator runs `mise run lint:registry`
+- **THEN** the output contains `Found 0 hardcoded model strings in audited files`
+- **AND** the drift signal is removed from `google-adk/SKILL.md`
+
+### Requirement: 12-agent fleet MUST consume MODEL_REGISTRY.resolve() for litellm_routing_key
+
+The system SHALL update `agents/agent_registry.py:39-184` so that
+each agent's `litellm_routing_key` resolves through
+`MODEL_REGISTRY.resolve("text_llm", role=<key>)`. The 12 agents in
+the `AGENT_REGISTRY` are: `root_agent`, `curriculum_agent`,
+`translation_agent`, `corpus_agent`, `research_agent`,
+`education_research_agent`, `bunchloch_research_agent`, `geospatial_agent`,
+`statistics_agent`, `curriculum_comparison_agent`,
+`agui_curriculum_agent`, `mcp_curriculum_agent`.
+
+#### Scenario: Each agent's litellm_routing_key resolves through the registry
+
+- **GIVEN** the `MODEL_REGISTRY` populated with the `text_llm` family (13 entries)
+- **WHEN** the operator reads `agents/agent_registry.py:39-184`
+- **THEN** each agent's `litellm_routing_key` resolves via
+  `MODEL_REGISTRY.resolve("text_llm", role=<agent_name>)`
+- **AND** the resolved model key is one of the canonical 13 entries (minimax-m3, qwen3.6-27b-mtp, etc.)
+
+#### Scenario: 12-agent fleet connects to the deployment control panel
+
+- **GIVEN** the 5-tab marimo control panel at `notebooks/00_control_panel.py`
+- **WHEN** an operator toggles an agent's `litellm_routing_key` off
+- **THEN** `deployment-choice.yaml:enabled_models[<agent_key>]` is set to `false`
+- **AND** the agent's `make_litellm_agent()` call falls back to the fallback model
+

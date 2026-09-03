@@ -1,0 +1,8 @@
+{
+  "run_id": "20251201_223504",
+  "run_name": "full run - 350",
+  "timestamp": "2025-12-01T22:35:04.087848",
+  "total_receipts": 350,
+  "data_directory": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/presentation",
+  "results_directory": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/results/20251201_223504"
+}

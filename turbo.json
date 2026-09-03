@@ -1,0 +1,77 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "globalDependencies": [
+    ".env",
+    ".env.locket",
+    ".infisical.env",
+    "mise.toml",
+    "pyproject.toml"
+  ],
+  "globalEnv": [
+    "INFISICAL_*",
+    "BROWSERBASE_*",
+    "FIRECRAWL_*",
+    "MOTHERDUCK_*",
+    "GOOGLE_VERTEX_*",
+    "GEMINI_*",
+    "DAGSTER_HOME",
+    "LOCKET_*",
+    "KOMODO_*",
+    "PANGOLIN_*",
+    "PATH"
+  ],
+  "tasks": {
+    "postinstall": {
+      "cache": false
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".output/**", "build/**", ".vinxi/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^build"]
+    },
+    "typecheck": {
+      "outputs": []
+    },
+    "lint": {
+      "outputs": []
+    },
+    "format": {
+      "outputs": [],
+      "cache": false
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "clean": {
+      "cache": false
+    },
+    "ccc:index": {
+      "cache": false
+    },
+    "spec:validate": {
+      "outputs": []
+    },
+    "validate-stacks": {
+      "cache": false,
+      "outputs": []
+    },
+    "validate:tenants": {
+      "cache": false,
+      "outputs": []
+    },
+    "doctor": {
+      "cache": false,
+      "outputs": []
+    },
+    "croilar:export:wasm": {
+      "cache": false,
+      "outputs": ["web/apps/croilar-portal/public/wasm/**"]
+    }
+  },
+  "ui": "tui"
+}

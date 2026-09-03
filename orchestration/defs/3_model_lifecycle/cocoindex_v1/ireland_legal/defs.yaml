@@ -1,0 +1,16 @@
+# defs/3_model_lifecycle/cocoindex_v1/ireland_legal/defs.yaml
+#
+# L3 CelticModelLifecycleComponent for the IrelandLegalEmbedding v1 App.
+#
+# Per the cianfhoghlaim-cocoindex-v1 skill, the R1–R4 conformance contract
+# is enforced at build_defs time by the Component. is_virtual=True so
+# the LanceDB table mirrors its L1 + L2 upstream automatically.
+#
+# Per openspec/changes/2026-07-06-ireland-legal-pipeline/.
+type: orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_name: IrelandLegalEmbedding
+  module: cianfhoghlaim.cocoindex.ireland_legal_embedding
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true

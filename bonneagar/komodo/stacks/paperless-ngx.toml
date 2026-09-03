@@ -1,0 +1,14 @@
+[[stack]]
+name = "paperless-ngx"
+description = "Paperless-ngx — document management + OCR ingest (port 8000)"
+tags = ["host:arm1-oci","tier:production","type:tool","domain:paperless.cianfhoghlaim.ie"]
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/sruth/team-workflow-stack/paperless-ngx"
+file_paths = ["compose.yaml","sidecar.yaml","pangolin.yaml","blueprint.yaml"]
+environment = """
+PAPERLESS_URL=https://paperless.cianfhoghlaim.ie
+PAPERLESS_TIME_ZONE=Europe/Dublin
+INFISICAL_HOST=http://infisical-backend:8080
+LOCKET_MODE=watch
+"""

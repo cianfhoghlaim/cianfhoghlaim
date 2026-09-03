@@ -1,0 +1,90 @@
+[project]
+name = "aleyum-portfolio"
+version = "0.1.0"
+description = "Aleyum Portfolio - Music Producer & Software Developer"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "Conor Hynes", email = "aleyummusic@example.com" }
+]
+keywords = ["portfolio", "music", "data-engineering", "dlt", "marimo"]
+
+dependencies = [
+    # Shared utilities (disabled - package doesn't exist yet)
+    # "sruth-shared>=0.1.0",
+    # Orchestration
+    "dagster>=1.9.0",
+    "dagster-webserver>=1.9.0",
+    "dagster-dlt>=0.26.0",
+    # DLT & Data Pipeline
+    "dlt[duckdb,lancedb,parquet]>=1.18.0",
+    "pyarrow>=17.0.0",
+    "pendulum>=3.0.0",
+
+    # Web Scraping (crawl4ai removed - future scraping via sruth/browser)
+    "beautifulsoup4>=4.12.0",
+    "yt-dlp>=2024.0.0",
+
+    # Cloud Storage
+    "boto3>=1.34.0",
+
+    # Notebooks & Visualization
+    "marimo>=0.17.0",
+    "altair>=5.3.0",
+
+    # Utilities
+    "pyyaml>=6.0.0",
+    "python-dotenv>=1.0.0",
+    "requests>=2.31.0",
+    "httpx>=0.27.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.4.0",
+    "mypy>=1.10.0",
+]
+analytics = [
+    # Heavy analytics dependencies - install with: pip install aleyum-portfolio[analytics]
+    "ibis-framework[duckdb]>=11.0.0",
+    "polars>=1.0.0",
+    "vegafusion[embed]>=1.6.0",
+]
+
+# [tool.uv.sources]
+# sruth-shared = { path = "../shared", editable = true }  # Disabled until package exists
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["pipelines", "notebooks"]
+
+# dg workspace configuration - enables unified workspace loading via dg.toml
+[tool.dg]
+directory_type = "project"
+
+[tool.dg.project]
+root_module = "dagster_assets"
+code_location_target_module = "dagster_assets.definitions"
+code_location_name = "aleyum"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

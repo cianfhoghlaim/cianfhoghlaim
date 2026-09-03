@@ -1,0 +1,102 @@
+"""
+Routing Keywords for the 12-agent fleet.
+
+This module is the canonical home for the L5 `ROUTING_KEYWORDS` dict
+used by `CelticAgentOpsComponent` to verify each agent is routable
+in the root_agent.
+
+Moved out of `adk/root_agent.py` so it can be imported independently
+of the ADK dependency (which may not be installed in every env).
+The seed values mirror the agent-fleet-orchestration skill's
+"12-bucket" map. The L5 Components append at scaffold time
+(CelticAgentOpsComponent._append_routing_keywords) so a new agent
+becomes routable without touching this file.
+
+The canonical 12-agent fleet (per the agent-fleet-orchestration skill):
+- root_agent (custom)
+- 8 ADK agents: curriculum, translation, corpus, research, geospatial,
+  statistics, curriculum_comparison, mcp_curriculum
+- 3 Agno agents: education_research, bunchloch_research, agui_curriculum
+(Voice agent / pipecat is deferred to a follow-on change.)
+
+T4 (2026-07-09) added seed entries for the 8 NCCA subject agents
+(gael_agent / math_agent / appm_agent / chem_agent / comp_agent /
+engl_agent / geog_agent / hist_agent) — these are mounted under
+`defs/5_agent_ops/adk/<slug>_agent/defs.yaml` and the full bucket
+is appended by `CelticAgentOpsComponent._append_routing_keywords`
+at scaffold time.
+"""
+from __future__ import annotations
+
+# The seed values. L5 Components extend this dict at build time.
+ROUTING_KEYWORDS: dict[str, list[str]] = {
+    "root_agent": [],
+    "curriculum_agent": [
+        "curriculum", "spec", "learning outcome", "ncca", "cfe", "cfw",
+        "ccea", "sqa", "leaving cert", "gcse", "a-level",
+    ],
+    "translation_agent": [
+        "translate", "gaeilge", "irish", "scottish gaelic", "welsh",
+        "cymraeg", "brezhoneg", "cornish", "manx",
+    ],
+    "corpus_agent": [
+        "corpus", "duchas", "gaois", "tearma", "logainm", "canuint",
+        "foclóir",
+    ],
+    "research_agent": ["research", "paper", "cite", "doi", "arxiv"],
+    "education_research_agent": [
+        "policy", "report", "oecd", "european commission", "unesco",
+    ],
+    "bunchloch_research_agent": [
+        "m4", "macbook", "local model", "federated", "on-device",
+    ],
+    "geospatial_agent": [
+        "geospatial", "lsoa", "data zone", "map", "school location",
+    ],
+    "statistics_agent": [
+        "statistics", "metric", "benchmark", "performance", "kpi",
+    ],
+    "curriculum_comparison_agent": [
+        "compare", "cross-nation", "side-by-side", "uk vs ireland",
+    ],
+    "agui_curriculum_agent": ["ag-ui", "streaming", "copilot", "react"],
+    "mcp_curriculum_agent": ["mcp", "model context protocol", "tool"],
+    # T4 (2026-07-09) — the 8 NCCA subject agents from
+    # `cianfhoghlaim/agents/tuatha/<slug>_agent.py`. The full keyword
+    # bucket is appended by `CelticAgentOpsComponent._append_routing_keywords`
+    # at scaffold time; this seed contains only the cross-subject
+    # canonical name(s) so the root_agent can route to the right
+    # specialist before scaffold runs.
+    "gael_agent": ["gaeilge", "irish", "gaelic"],
+    "math_agent": ["mathematics", "maths", "lc maths"],
+    "appm_agent": ["applied mathematics", "applied maths"],
+    "chem_agent": ["chemistry"],
+    "comp_agent": ["computer science", "lc cs", "lc computing"],
+    "engl_agent": ["english"],
+    "geog_agent": ["geography"],
+    "hist_agent": ["history", "irish history"],
+    # T5 (2026-07-11) — the 13th bucket for the academic-history agent
+    # introduced by openspec/changes/2026-07-11-uog-math-statistics-academic-history-v1/.
+    # Routes queries like "summarise my degree", "what should I revise",
+    # "show me my stats modules", "mo chuid cuntas", etc. before the
+    # generic statistics_agent bucket.
+    "academic_history_agent": [
+        "my history", "my notes", "my modules", "my assignments",
+        "my exam history", "my answers", "my progress", "my timeline",
+        "what have i done", "what did i cover", "how am i doing",
+        "summarise my degree", "summarise my year",
+        "what should i revise", "next step",
+        "academic record", "transcript", "study history",
+        "stair acadúil", "mo chuid cuntas", "mo nótaí",
+        "mo shonraí", "mo mhodúil", "mo scrúduithe",
+        "mo chuid oibre", "my work", "my essays",
+        "what have i submitted", "my last attempt",
+        "my strengths", "my weaknesses",
+        "st311", "st312", "ma335", "ma347", "ma410",
+        "ms421", "st412", "st419", "cs402",
+        "numerical analysis", "nonlinear systems",
+    ],
+}
+
+
+__all__ = ["ROUTING_KEYWORDS"]

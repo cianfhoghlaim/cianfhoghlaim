@@ -1,0 +1,47 @@
+name: lint-drift-docs
+
+# Per the 2026-07-29-repo-hygiene-agent-routing-and-sync-wiring-v1 change
+# (the `centralize-cross-cutting-docs` spec). Validates every AGENTS.md
+# number claim against ground truth. Fails the PR on any drift.
+
+on:
+  pull_request:
+    paths:
+      - "AGENTS.md"
+      - "openspec/AGENTS.md"
+      - "openspec/specs/**/AGENTS.md"
+      - "scripts/lint_drift_docs.py"
+      - ".github/workflows/lint-drift-docs.yaml"
+      - "mise.toml"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup mise
+        uses: jdx/mise-action@v3
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.0
+
+      # lint_drift_docs.py is stdlib-only — run via the system python
+      # (the .venv path is broken in CI because pyproject.toml's forced
+      # include for .archive/meaisinfhoghlaim/legacy_model_registry.py
+      # fails uv sync; the linter itself doesn't need the venv).
+      - name: Validate AGENTS.md number claims
+        run: mise exec -- python3 scripts/lint_drift_docs.py
+
+      - name: Validate openspec change (strict)
+        # The change under review (if any) MUST validate --strict
+        run: |
+          for change in openspec/changes/*/; do
+            if [ -d "$change" ] && [ -f "$change/proposal.md" ]; then
+              id=$(basename "$change")
+              echo "Validating $id..."
+              bunx --yes @fission-ai/openspec@latest validate "$id" --type change --strict
+            fi
+          done

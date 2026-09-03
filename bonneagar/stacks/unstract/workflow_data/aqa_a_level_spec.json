@@ -1,0 +1,43 @@
+{
+  "$schema": "https://unstract.com/schemas/workflow/v1.json",
+  "name": "aqa_a_level_spec",
+  "version": "1.0.0",
+  "description": "AQA A-Level specification extraction workflow (BIEP v2 / Change 3 — Path 2 of the 4-path ensemble).",
+  "trigger": {
+    "type": "manual_upload",
+    "file_patterns": ["*.pdf"],
+    "expected_mime_types": ["application/pdf"]
+  },
+  "prompt_template": {
+    "system": "You are an AQA A-Level qualification specification extractor. Given the text of an AQA A-Level PDF, extract the structured qualification record.",
+    "user": [
+      "Subject: {{ subject }}",
+      "Qualification Level: a_level",
+      "",
+      "Text:",
+      "{{ pdf_text }}"
+    ]
+  },
+  "json_schema": {
+    "title": "AQAQualSpec_ALevel",
+    "type": "object",
+    "properties": {
+      "board": { "const": "AQA" },
+      "qualification_level": { "const": "a_level" },
+      "subject": { "type": "string" },
+      "specification_code": { "type": "string" },
+      "title": { "type": "string" },
+      "version": { "type": "string" },
+      "first_teaching_year": { "type": ["integer", "null"] },
+      "last_certification_year": { "type": ["integer", "null"] },
+      "total_marks": { "type": "integer" },
+      "assessment_objectives": { "type": "array" },
+      "component_papers": { "type": "integer" }
+    }
+  },
+  "output_settings": {
+    "format": "json",
+    "destination": "duckdb",
+    "ducklake_namespace": "cianfhoghlaim.education.british_isles.england.aqa.{subject}.a_level.unstract_json"
+  }
+}

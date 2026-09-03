@@ -1,0 +1,121 @@
+# =============================================================================
+# TINYAUTH - Self-hosted ForwardAuth middleware (Tinyauth v4 + Locket sidecar)
+# =============================================================================
+# Bridges Pangolin + Pocket ID: Tinyauth sits between Traefik and the
+# services behind it; when a request comes in, Tinyauth validates the
+# session cookie (issued via Pocket ID OIDC) and either forwards the
+# request to the upstream service (if authenticated) or redirects to
+# Pocket ID for login.
+#
+# This stack was added in 2026-07-14 (the tightly-knit-auth-stack
+# openspec change) to fix the persistent crash loop caused by the
+# missing Locket sidecar (Tinyauth v4 entrypoint sources
+# /run/secrets/locket/secrets.env on startup, which is empty without
+# Locket → crash loop).
+#
+# 6-file GOLD_STANDARD contract:
+#   - compose.yaml  (Tinyauth + Locket sidecar, 2 services)
+#   - sidecar.yaml  (Locket Infisical provider config)
+#   - secrets.env   (Pocket ID OIDC client refs + APP_URL etc.)
+#   - pangolin.yaml (Private resource: https://tinyauth.cianfhoghlaim.ie)
+#   - .env.example  (Local dev defaults)
+#   - README.md     (Operator runbook)
+# =============================================================================
+
+name: tinyauth
+
+services:
+  # ---------------------------------------------------------------------------
+  # LOCKET - Secrets management sidecar (Infisical → tmpfs → Tinyauth)
+  # ---------------------------------------------------------------------------
+  # Watches Infisical at the path below; materializes the resolved secrets
+  # to /run/secrets/locket/secrets.env. Tinyauth's entrypoint sources that
+  # file on startup, so without Locket running + healthy, Tinyauth
+  # cannot start.
+  # ---------------------------------------------------------------------------
+  locket:
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    container_name: tinyauth-locket
+    restart: unless-stopped
+    user: "65532:65532"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    secrets:
+      - infisical_secret
+    command:
+      - "--provider=infisical"
+      - "--infisical-url=${INFISICAL_URL:-https://infisical.cianfhoghlaim.ie}"
+      - "--infisical-client-id=$${INFISICAL_CLIENT_ID}"
+      - "--infisical-client-secret=file:/run/secrets/infisical_secret"
+      - "--infisical-default-environment=${INFISICAL_ENVIRONMENT:-dev}"
+      - "--infisical-default-project-id=${INFISICAL_PROJECT_ID:-f3cff583-b74b-4804-b9d3-db8b68885236}"
+      - "--map=/templates:/run/secrets/locket"
+      - "--mode=${LOCKET_MODE:-watch}"
+    volumes:
+      - ./secrets.env:/templates/secrets.env:ro
+      - stack-secrets:/run/secrets/locket
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/locket", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - stack
+
+  # ---------------------------------------------------------------------------
+  # TINYAUTH - ForwardAuth middleware (Tinyauth v4)
+  # ---------------------------------------------------------------------------
+  tinyauth:
+    image: ghcr.io/steveiliop56/tinyauth:v4
+    container_name: tinyauth
+    restart: unless-stopped
+    depends_on:
+      locket:
+        condition: service_healthy
+    environment:
+      APP_URL: ${APP_URL:-https://tinyauth.cianfhoghlaim.ie}
+      SECURE_COOKIE: "true"
+      SESSION_EXPIRY: "86400"
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      DISABLE_ANALYTICS: "true"
+      PORT: "10000"
+      ADDRESS: "0.0.0.0"
+      PROVIDERS_POCKETID_NAME: "Pocket ID"
+      PROVIDERS_POCKETID_CLIENT_ID: ${PROVIDERS_POCKETID_CLIENT_ID}
+      PROVIDERS_POCKETID_CLIENT_SECRET: ${PROVIDERS_POCKETID_CLIENT_SECRET}
+      PROVIDERS_POCKETID_AUTH_URL: ${PROVIDERS_POCKETID_AUTH_URL:-https://auth.cianfhoghlaim.ie/authorize}
+      PROVIDERS_POCKETID_TOKEN_URL: ${PROVIDERS_POCKETID_TOKEN_URL:-https://auth.cianfhoghlaim.ie/api/oidc/token}
+      PROVIDERS_POCKETID_USER_INFO_URL: ${PROVIDERS_POCKETID_USER_INFO_URL:-https://auth.cianfhoghlaim.ie/api/oidc/userinfo}
+      PROVIDERS_POCKETID_REDIRECT_URL: ${PROVIDERS_POCKETID_REDIRECT_URL:-https://tinyauth.cianfhoghlaim.ie/api/oauth/callback/pocketid}
+      PROVIDERS_POCKETID_SCOPES: "openid email profile groups"
+    env_file:
+      - /run/secrets/locket/secrets.env
+    volumes:
+      - tinyauth-data:/data
+    networks:
+      - stack
+
+# =============================================================================
+# SECRETS (Infisical machine identity)
+# =============================================================================
+secrets:
+  infisical_secret:
+    file: ${INFISICAL_SECRET_FILE:-./secrets/infisical_secret}
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  stack-secrets:
+  tinyauth-data:
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  stack:
+    driver: bridge

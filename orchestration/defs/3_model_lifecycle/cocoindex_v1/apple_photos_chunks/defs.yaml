@@ -1,0 +1,15 @@
+# defs/3_model_lifecycle/cocoindex_v1/apple_photos_chunks/defs.yaml
+#
+# L3 CelticModelLifecycleComponent for the ApplePhotosChunks v1 App.
+# Per the apple-photos-ingestion spec — `Apple Photos OCR chunks embedding`
+# Requirement. The R1–R4 conformance contract is enforced at build_defs
+# time by the Component. is_virtual=True so the LanceDB table mirrors its
+# L1 upstream automatically.
+type: orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_name: ApplePhotosChunks
+  module: cianfhoghlaim.cocoindex.apple_photos_chunks
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  privacy_gate: LEABHARLANN_PHOTOS_INCLUDE_GPS

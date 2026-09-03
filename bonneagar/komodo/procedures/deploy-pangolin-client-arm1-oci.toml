@@ -1,0 +1,42 @@
+# =============================================================================
+# deploy-pangolin-client-arm1-oci — Idempotent Pangolin client bootstrap for arm1-oci
+# =============================================================================
+# ADDED 2026-08-15 (per the 2026-08-15-bonneagar-infra-remediation-v2
+# openspec change). The single command that:
+#   1. Calls bun run iac:bootstrap-pangolin-client --host=arm1-oci --type=machine
+#      (mints the Pangolin machine client + writes the credentials to .env
+#       + Infisical + renders the newt docker-compose.yaml)
+#   2. Executes the rendered newt-arm1-oci docker compose up -d
+#   3. Verifies the newt container is healthy + the Pangolin mesh sees it
+#
+# Run via:
+#   km run procedure deploy-pangolin-client-arm1-oci
+# =============================================================================
+
+[procedure]
+name = "deploy-pangolin-client-arm1-oci"
+description = "Idempotent: mint a Pangolin machine client for arm1-oci + deploy the newt tunnel container (per the 2026-08-15 openspec change)"
+stage = "production"
+
+[[procedure.stages.stage]]
+name = "iac-bootstrap"
+description = "Call iac:bootstrap-pangolin-client to mint the Pangolin client + render the newt compose"
+cmd = "bun run iac:bootstrap-pangolin-client --host=arm1-oci --type=machine"
+
+[[procedure.stages.stage]]
+name = "render-compose"
+description = "Verify the rendered newt compose exists + has the expected services"
+cmd = "test -f /etc/komodo/sruth/bonneagar/stacks/newt-arm1-oci/docker-compose.yaml && docker compose -f /etc/komodo/sruth/bonneagar/stacks/newt-arm1-oci/docker-compose.yaml config --quiet"
+
+[[procedure.stages.stage]]
+name = "deploy-newt"
+description = "Bring up the newt container on arm1-oci (the WireGuard tunnel client)"
+cmd = "cd /etc/komodo/sruth/bonneagar/stacks/newt-arm1-oci && docker compose up -d"
+
+[[procedure.stages.stage]]
+name = "health-verify"
+description = "Wait for the newt container to be healthy + verify the Pangolin mesh sees it"
+cmd = "sleep 10 && docker ps --filter name=newt-arm1-oci --format '{{.Names}} {{.Status}}'"
+
+[procedure.config]
+server_id = "arm1-oci"

@@ -1,0 +1,159 @@
+[project]
+name = "cianfhoghlaim"
+version = "0.4.0"
+description = "Cianfhoghlaim application monorepo — Celtic education platform, AI research laboratory, multi-persona portfolio, AND the GitOps infrastructure fleet (the bonneagar/ subdirectory holds 88 Docker Compose stacks + Komodo resource-syncs + the unified IaC). Companion to cianfhoghlaim/leabharlann (digital library), which is the only remaining separately-managed repo."
+readme = "README.md"
+requires-python = ">=3.13,<3.15"
+license = { text = "BUSL-1.1" }
+authors = [{ name = "Cianfhoghlaim Team" }]
+keywords = ["monorepo", "uv-workspace", "celtech", "dagster", "dlt", "baml", "irish", "celtic"]
+
+dependencies = [
+    "agno>=2.6.11",
+    "anthropic>=0.106.0",
+    "baml-py>=0.222.0",
+    "beautifulsoup4>=4.12",
+    # CocoIndex bumped to >=1.0.20 (from historical >=1.0.14) by the
+    # 2026-08-17-hygiene-drift-cleanup-v1 change (P2.1). v1.0.15-v1.0.20
+    # are additive: BigQuery/Snowflake/Valkey target connectors,
+    # LiveMap, rate limiting, batched target writes, zvec FTS fields,
+    # preserve target invalidation, the `deps=` parameter on
+    # `@coco.fn` for memoization (cocoindex-io/cocoindex#1836).
+    "cocoindex>=1.0.20,<2.0.0",
+    "dagster>=1.13",
+    "dagster-dbt>=0.29",
+    "dagster-dlt>=0.29",
+    "dlt[duckdb,motherduck,filesystem]>=1.28.1",
+    "duckdb>=1.4",
+    "fastapi>=0.115.0,<0.140",
+    "firecrawl>=4.28.2",
+    "google-adk>=1.17.0",
+    "google-genai>=1.73.1",
+    "groq>=1.4.0",
+    "httpx>=0.27,<1.0",
+    "ibis-framework[duckdb]>=10",
+    "lancedb>=0.15",
+    "litellm>=1.97.0",
+    "logfire>=4.15.1",
+    "marimo>=0.23.10",
+    "openai>=2.32.0",
+    "pydantic-settings>=2",
+    "pyiceberg>=0.10",
+    "pymupdf>=1.24",
+    "structlog>=25",
+    "tenacity>=8.2,<9.0",
+    "uvicorn>=0.32.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# =============================================================================
+# Wheel packaging — v7 flattened layout
+# =============================================================================
+# The cianfhoghlaim package root IS the repository root. Hatch packages the
+# repo with `packages = ["."]` + a broad `include` pattern (catches all
+# sub-packages in the flat layout) + an `exclude` that strips the
+# data caches.
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+include = [
+    "*.py",
+    "**/*.py",
+    "**/__init__.py",
+]
+exclude = [
+    "stedding/**",
+    ".agents/**",
+    ".claude/**",
+    "bonneagar/stacks/**",
+    "docs/**",
+    ".venv/**",
+    "node_modules/**",
+    "__pycache__/**",
+    "**/*.pyc",
+    ".git/**",
+    ".gitignore",
+    ".DS_Store",
+    "dlthub/**",
+    ".cocoindex_code/**",
+    "instagram_output/**",
+    "web/**",
+    "spaces/**",
+    "**/*.bak",
+    "tests/**",
+    "**/test_*.py",
+    "**/*_test.py",
+]
+
+[tool.uv]
+managed = true
+package = true
+
+# =============================================================================
+# Shared dev tooling
+# =============================================================================
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+extend-exclude = [
+    ".venv",
+    "node_modules",
+    "docs",
+    "stedding",
+    ".cocoindex_code",
+    "instagram_output",
+    "dlthub",
+    "**/notebooks/*.py",
+]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["cianfhoghlaim"]
+
+[tool.mypy]
+python_version = "3.13"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+exclude = ["docs/", "stedding/", "instagram_output/", "dlthub/", ".venv/"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_functions = ["test_*"]
+addopts = "-ra -q"
+
+# =============================================================================
+# Workspace-level DAGSTER / DLT defaults
+# =============================================================================
+
+# Dagster Components (1.13+) — auto-discover the 5 KCG Components from
+# orchestration/components/. Without this section, `dg list components`
+# returns 0 (was the failure mode for the entire 5-layer DAG system).
+# The canonical home is orchestration.components.* (post-v7 flattened).
+[tool.dg]
+registry_modules = ["orchestration.components"]
+
+[tool.dlt]
+destination = "duckdb"
+
+[tool.dlt.sources.geospatial]
+dataset_name = "geospatial"
+
+[tool.dlt.sources.education]
+dataset_name = "education"
+
+[tool.dlt.sources.celtic]
+dataset_name = "celtic"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "pytest-asyncio>=1.4.0",
+]

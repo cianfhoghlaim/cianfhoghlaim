@@ -1,0 +1,9 @@
+# Pangolin auto-discovery labels for ChartDB
+# Include with: docker compose -f chartdb.compose.yaml -f chartdb.pangolin.yaml up -d
+services:
+  chartdb:
+    labels:
+      - "pangolin.resource.name=ChartDB"
+      - "pangolin.resource.domain=chartdb.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://chartdb:80"
+      - "pangolin.resource.middlewares=tinyauth"

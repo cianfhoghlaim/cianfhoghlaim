@@ -1,0 +1,1121 @@
+{
+  "generated_at": "2026-08-15T21:19:45.118481+00:00",
+  "per_change": "2026-08-13-web-monorepo-consolidation-and-agent-integration-v1",
+  "phase_3": "OCR/VLM 4-path ensemble processing manifest",
+  "pipeline_stages": [
+    "Path 1: Docling-serve to text to BAML function (typed Pydantic row)",
+    "Path 2: Docling-serve to Unstract workflow to JSON",
+    "Path 3: qwen3-vl-8b page-level image to JSON",
+    "Path 4: gemma-4-26B-A4B page-level image to JSON",
+    "RAGAS consensus to canonical row to BIEP DuckLake table"
+  ],
+  "subjects": {
+    "mathematics": {
+      "subject": "mathematics",
+      "ncca_code": "LC-MATHEMATICS-LO",
+      "languages": [
+        "en",
+        "ga"
+      ],
+      "level": [
+        "hl",
+        "ol"
+      ],
+      "pdfs": [
+        {
+          "path": "mathematics/en/LC003ALP100EV.pdf",
+          "size_bytes": 594422,
+          "sha256": "02988125c4daf498f8a0b90f5b51c53df2b7ce1b89a64c64f84028435c668820",
+          "language": "en"
+        },
+        {
+          "path": "mathematics/en/LC003ALP200EV.pdf",
+          "size_bytes": 542917,
+          "sha256": "15dc629eb04c0b751e218b5dfa8324eab688fc75ae4d804cc414dfb241b90dba",
+          "language": "en"
+        },
+        {
+          "path": "mathematics/en/LC003BLP000EV.pdf",
+          "size_bytes": 656846,
+          "sha256": "b4c21ebd58e6cea814ea3005dde000bf420020a0b051ba5c130938977cfb9a0f",
+          "language": "en"
+        },
+        {
+          "path": "mathematics/en/LC003GLP100EV.pdf",
+          "size_bytes": 598060,
+          "sha256": "654bc1d7c23510347caed2216feb32859bc621cedee7d4e22400b927d17d2178",
+          "language": "en"
+        },
+        {
+          "path": "mathematics/en/LC003GLP200EV.pdf",
+          "size_bytes": 582474,
+          "sha256": "e069a3f0153e768707271a20a5202730a111eb7f28e75b95da0abfa2378a2f7e",
+          "language": "en"
+        },
+        {
+          "path": "mathematics/en/SCSEC25_Maths_syllabus_examination-2015_English.pdf",
+          "size_bytes": 928039,
+          "sha256": "135b38917e1834cf4229eb6ec8bfc197fed48b0549c8b4435efbed505505c400",
+          "language": "en"
+        },
+        {
+          "path": "mathematics/en/SCSEC25_Maths_syllabus_examination-2015_English_2026-06-30.pdf",
+          "size_bytes": 928039,
+          "sha256": "135b38917e1834cf4229eb6ec8bfc197fed48b0549c8b4435efbed505505c400",
+          "language": "en"
+        },
+        {
+          "path": "mathematics/ga/LC003ALP100IV.pdf",
+          "size_bytes": 573889,
+          "sha256": "0a3d26b5adafd2e6a2ddc9a529dd3b84191b611345fc621d60b04abd91669bc1",
+          "language": "ga"
+        },
+        {
+          "path": "mathematics/ga/LC003ALP200IV.pdf",
+          "size_bytes": 505101,
+          "sha256": "1abcda78a8c85ab45149da210e16dc49643784744ba5b84f8e2b65ab73704555",
+          "language": "ga"
+        },
+        {
+          "path": "mathematics/ga/LC003BLP000IV.pdf",
+          "size_bytes": 605716,
+          "sha256": "1a87639321de72954c02ed11ae4a5cad287d51dd6f2a0066596a21d16996343b",
+          "language": "ga"
+        },
+        {
+          "path": "mathematics/ga/LC003GLP100IV.pdf",
+          "size_bytes": 562369,
+          "sha256": "92b366b5014b3e260f3653eb1f5e3f14869e30dc70b11524348e87c40cb7315c",
+          "language": "ga"
+        },
+        {
+          "path": "mathematics/ga/LC003GLP200IV.pdf",
+          "size_bytes": 548808,
+          "sha256": "95626993ba62987e2835f4d2a28a133f0abe253b92a67b043c287596836021ce",
+          "language": "ga"
+        },
+        {
+          "path": "mathematics/ga/SCSEC25_Maths_syllabus_examination2015_gaeilge.pdf",
+          "size_bytes": 779702,
+          "sha256": "4eacaa1a94b22c643e705a4e35507d9ddd590a1fbab6114714d243c5719cb4de",
+          "language": "ga"
+        },
+        {
+          "path": "mathematics/ga/SCSEC25_Maths_syllabus_examination2015_gaeilge_2026-06-30.pdf",
+          "size_bytes": 779702,
+          "sha256": "4eacaa1a94b22c643e705a4e35507d9ddd590a1fbab6114714d243c5719cb4de",
+          "language": "ga"
+        },
+        {
+          "path": "mathematics/ga/SCSEC25_Maths_syllabus_exmaintion-in-2014_gaeilge.pdf",
+          "size_bytes": 3126559,
+          "sha256": "13fbeeca43e509d4384a490a92a69a658d8e948351d09d4b519aebb2d114ca46",
+          "language": "ga"
+        },
+        {
+          "path": "mathematics/ga/SCSEC25_Maths_syllabus_exmaintion-in-2014_gaeilge_2026-06-30.pdf",
+          "size_bytes": 3126559,
+          "sha256": "13fbeeca43e509d4384a490a92a69a658d8e948351d09d4b519aebb2d114ca46",
+          "language": "ga"
+        }
+      ],
+      "extraction_status": "pending",
+      "ingested_at": null,
+      "extracted_at": null,
+      "ragas_consensus_score": null,
+      "pdf_count": 16,
+      "total_size_bytes": 15439202
+    },
+    "applied_mathematics": {
+      "subject": "applied_mathematics",
+      "ncca_code": "LC-APPLIED-MATHEMATICS-LO",
+      "languages": [
+        "en",
+        "ga"
+      ],
+      "level": [
+        "hl",
+        "ol"
+      ],
+      "pdfs": [
+        {
+          "path": "applied_mathematics/en/LC020ALP000EV.pdf",
+          "size_bytes": 676825,
+          "sha256": "892ba8fa21c61c94bead0fef2ed8e184c3e283cf967ca3809dd5805ef3f4cc6c",
+          "language": "en"
+        },
+        {
+          "path": "applied_mathematics/en/LC020GLP000EV.pdf",
+          "size_bytes": 834071,
+          "sha256": "427aea301bdab3225c74ff4bf7dba7f15dc4fcccda2894bb0eb983a81b227c21",
+          "language": "en"
+        },
+        {
+          "path": "applied_mathematics/en/Leaving-Certificate-Specification-Applied-Mathematics_EN_1.pdf",
+          "size_bytes": 964939,
+          "sha256": "0e83c24b6fe8623788a60adde578568523a03349fd195f1bc274a27ef7d776f6",
+          "language": "en"
+        },
+        {
+          "path": "applied_mathematics/en/Leaving-Certificate-Specification-Applied-Mathematics_EN_1_2026-06-30.pdf",
+          "size_bytes": 964939,
+          "sha256": "0e83c24b6fe8623788a60adde578568523a03349fd195f1bc274a27ef7d776f6",
+          "language": "en"
+        },
+        {
+          "path": "applied_mathematics/ga/LC020ALP000IV.pdf",
+          "size_bytes": 619607,
+          "sha256": "9a69bb61cec50569a6b78eb290015cef8439164f46fd98df485902ac7b6fd534",
+          "language": "ga"
+        },
+        {
+          "path": "applied_mathematics/ga/LC020GLP000IV.pdf",
+          "size_bytes": 791419,
+          "sha256": "6c0f7a9fd863ba4ad3e195db4ce4354d2aa8b2de436418d21ec3950a778b064a",
+          "language": "ga"
+        },
+        {
+          "path": "applied_mathematics/ga/Leaving-Certificate-Specification-Applied-Mathematics_GA.pdf",
+          "size_bytes": 800591,
+          "sha256": "8fa28772e8515a3f05b69e0a553356af6cc38d96536d6af230d6f4f4df6bf126",
+          "language": "ga"
+        }
+      ],
+      "extraction_status": "pending",
+      "ingested_at": null,
+      "extracted_at": null,
+      "ragas_consensus_score": null,
+      "pdf_count": 7,
+      "total_size_bytes": 5652391
+    },
+    "chemistry": {
+      "subject": "chemistry",
+      "ncca_code": "LC-CHEMISTRY-LO",
+      "languages": [
+        "en",
+        "ga"
+      ],
+      "level": [
+        "hl",
+        "ol"
+      ],
+      "pdfs": [
+        {
+          "path": "chemistry/en/LC022ALP000EV.pdf",
+          "size_bytes": 1077751,
+          "sha256": "e742e6451ed964efae02e4c8d0c24c4b43eab3eb3f2f469e1b6c1a95c7431725",
+          "language": "en"
+        },
+        {
+          "path": "chemistry/en/LC022GLP000EV.pdf",
+          "size_bytes": 933471,
+          "sha256": "e7ed2310ccecdc9338199142306f2076c6998d70393164dcfb7a079e35deaaaa",
+          "language": "en"
+        },
+        {
+          "path": "chemistry/en/SC-Chemistry-Specification-EN.pdf",
+          "size_bytes": 1361783,
+          "sha256": "f3c4a42ce703fd4649a37b6158edd24304dff2b4b02faae254674241863ae80e",
+          "language": "en"
+        },
+        {
+          "path": "chemistry/en/SC-Chemistry-Specification-EN_2026-06-30.pdf",
+          "size_bytes": 1361783,
+          "sha256": "f3c4a42ce703fd4649a37b6158edd24304dff2b4b02faae254674241863ae80e",
+          "language": "en"
+        },
+        {
+          "path": "chemistry/en/SCSEC09_Chemistry_syllabus_Eng.pdf",
+          "size_bytes": 479356,
+          "sha256": "54b295b296ef92772da0c121781e5dd02860d1b8cfe27bbe541c3be2792d66ed",
+          "language": "en"
+        },
+        {
+          "path": "chemistry/en/SCSEC09_Chemistry_syllabus_Eng_2026-06-30.pdf",
+          "size_bytes": 479356,
+          "sha256": "54b295b296ef92772da0c121781e5dd02860d1b8cfe27bbe541c3be2792d66ed",
+          "language": "en"
+        },
+        {
+          "path": "chemistry/en/SCSEC09_guideline_material_eng.pdf",
+          "size_bytes": 93229,
+          "sha256": "9aba5939ec4db90dd590956bdafeee5a9fa3edb84d4c70157297966d0940791e",
+          "language": "en"
+        },
+        {
+          "path": "chemistry/en/SCSEC09_guideline_material_eng_2026-06-30.pdf",
+          "size_bytes": 93229,
+          "sha256": "9aba5939ec4db90dd590956bdafeee5a9fa3edb84d4c70157297966d0940791e",
+          "language": "en"
+        },
+        {
+          "path": "chemistry/ga/LC022ALP000IV.pdf",
+          "size_bytes": 1087769,
+          "sha256": "170207897c695b23fb1ec110ac555869b34f84ec95144d4d5f0997c140fc8449",
+          "language": "ga"
+        },
+        {
+          "path": "chemistry/ga/LC022GLP000IV.pdf",
+          "size_bytes": 950195,
+          "sha256": "87608c17751e4d04470ab6a02d0eb2c58f7335190fdbe183eb8d70ce9123f13a",
+          "language": "ga"
+        },
+        {
+          "path": "chemistry/ga/SC-Chemistry-Specification-GA.pdf",
+          "size_bytes": 1326776,
+          "sha256": "4c6acb2faa4c69810bcf1054bc863c7de5d3fdd2fd4a30219cb0c5bfa79b61e6",
+          "language": "ga"
+        },
+        {
+          "path": "chemistry/ga/SC-Chemistry-Specification-GA_2026-06-30.pdf",
+          "size_bytes": 1326776,
+          "sha256": "4c6acb2faa4c69810bcf1054bc863c7de5d3fdd2fd4a30219cb0c5bfa79b61e6",
+          "language": "ga"
+        },
+        {
+          "path": "chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge.pdf",
+          "size_bytes": 336399,
+          "sha256": "11f9413d86e2275887a80025518a6fe7d41b9171bbfdbb606699d31b24874227",
+          "language": "ga"
+        },
+        {
+          "path": "chemistry/ga/SCSEC09_Chemistry_syllabus_Gaeilge_2026-06-30.pdf",
+          "size_bytes": 336399,
+          "sha256": "11f9413d86e2275887a80025518a6fe7d41b9171bbfdbb606699d31b24874227",
+          "language": "ga"
+        },
+        {
+          "path": "chemistry/ga/SCSEC09_guideline_material_eng-Word_GA.pdf",
+          "size_bytes": 235069,
+          "sha256": "7a8855ba7ac3439cea98f7c9f40ac1c8d912f662344169ee75f3bcce51c391ce",
+          "language": "ga"
+        },
+        {
+          "path": "chemistry/ga/SCSEC09_guideline_material_eng-Word_GA_2026-06-30.pdf",
+          "size_bytes": 235069,
+          "sha256": "7a8855ba7ac3439cea98f7c9f40ac1c8d912f662344169ee75f3bcce51c391ce",
+          "language": "ga"
+        }
+      ],
+      "extraction_status": "pending",
+      "ingested_at": null,
+      "extracted_at": null,
+      "ragas_consensus_score": null,
+      "pdf_count": 16,
+      "total_size_bytes": 11714410
+    },
+    "physics": {
+      "subject": "physics",
+      "ncca_code": "LC-PHYSICS-LO",
+      "languages": [
+        "en",
+        "ga"
+      ],
+      "level": [
+        "hl",
+        "ol"
+      ],
+      "pdfs": [
+        {
+          "path": "physics/en/LC_Physics_Syllabus_EN.pdf",
+          "size_bytes": 440880,
+          "sha256": "1bbfd4ef4d1376947ff55a7607d1f9cd58604b9940d8367688635590097d5962",
+          "language": "en"
+        }
+      ],
+      "extraction_status": "pending",
+      "ingested_at": null,
+      "extracted_at": null,
+      "ragas_consensus_score": null,
+      "pdf_count": 1,
+      "total_size_bytes": 440880
+    },
+    "biology": {
+      "subject": "biology",
+      "ncca_code": "LC-BIOLOGY-LO",
+      "languages": [
+        "en",
+        "ga"
+      ],
+      "level": [
+        "hl",
+        "ol"
+      ],
+      "pdfs": [
+        {
+          "path": "biology/en/LC025ALP038EV.pdf",
+          "size_bytes": 1855085,
+          "sha256": "1c3aa8ed6f7543e9ee2ced1f749ccdf8f85c708317bd243d51c2d4d8503dfa51",
+          "language": "en"
+        },
+        {
+          "path": "biology/en/LC025ALP040EV.pdf",
+          "size_bytes": 1359733,
+          "sha256": "c86209f155cfce3e0a9ddbd23567c5029b2ae59e8f631b56e951adf911966c24",
+          "language": "en"
+        },
+        {
+          "path": "biology/en/LC025GLP038EV.pdf",
+          "size_bytes": 1973272,
+          "sha256": "446438a5c540b061f7aadd5a5ee8db45dd353cfda06481c80c93771baf573000",
+          "language": "en"
+        },
+        {
+          "path": "biology/en/LC025GLP040EV.pdf",
+          "size_bytes": 1776955,
+          "sha256": "b245a4e4d0ca2038953407442a1cd61c4b8adddffb36fcd1edfc1bc9bff309d1",
+          "language": "en"
+        },
+        {
+          "path": "biology/en/SC-BIOLOGY-Spec-ENG.pdf",
+          "size_bytes": 1425756,
+          "sha256": "37ed8a62b22f5a3cdd804bcc9c7ba9073cd1a26578567cba8144fc222e621e7b",
+          "language": "en"
+        },
+        {
+          "path": "biology/en/SCSEC07_Biology_Syllabus_Eng.pdf",
+          "size_bytes": 292578,
+          "sha256": "969068e1f08288efbeb3852a7cb6d479b9dff54086977374684615b3067fc0d8",
+          "language": "en"
+        },
+        {
+          "path": "biology/ga/LC025ALP038IV.pdf",
+          "size_bytes": 1707380,
+          "sha256": "0f19aac9759597faa76f9c138776d41c4218c63b7840142ceca66de82d2dfbf4",
+          "language": "ga"
+        },
+        {
+          "path": "biology/ga/LC025ALP040IV.pdf",
+          "size_bytes": 1399980,
+          "sha256": "2543dde8a77936d514890006ad7f463f796f12017b8e62947ebbad2333ad3747",
+          "language": "ga"
+        },
+        {
+          "path": "biology/ga/LC025GLP038IV.pdf",
+          "size_bytes": 1933498,
+          "sha256": "289d05e8d4e7719ad875d06521ab6e7109d54e0cea3b28bbd8a2be8aa03ea541",
+          "language": "ga"
+        },
+        {
+          "path": "biology/ga/LC025GLP040IV.pdf",
+          "size_bytes": 1754930,
+          "sha256": "5a9e66535f949a7bda0051622733f9482dcb7bb2c1375b45368bd1e98f6eb94d",
+          "language": "ga"
+        },
+        {
+          "path": "biology/ga/SC-BIOLOGY-Spec-GA.pdf",
+          "size_bytes": 1824970,
+          "sha256": "3482ed8f8815186fa4592cb54526077725427b42f0e7a1efe956ab40a17d1174",
+          "language": "ga"
+        },
+        {
+          "path": "biology/ga/SCSEC07_Biology_Syllabus_Gaeilge.pdf",
+          "size_bytes": 269496,
+          "sha256": "c9af1194cbba5693af54fb7be101c299603460afa5d5a37db9dd55ddc89ea554",
+          "language": "ga"
+        }
+      ],
+      "extraction_status": "pending",
+      "ingested_at": null,
+      "extracted_at": null,
+      "ragas_consensus_score": null,
+      "pdf_count": 12,
+      "total_size_bytes": 17573633
+    },
+    "geography": {
+      "subject": "geography",
+      "ncca_code": "LC-GEOGRAPHY-LO",
+      "languages": [
+        "en",
+        "ga"
+      ],
+      "level": [
+        "hl",
+        "ol"
+      ],
+      "pdfs": [
+        {
+          "path": "geography/en/LC005ALP042EV.pdf",
+          "size_bytes": 14862721,
+          "sha256": "17101329779d754034316d0fa788fa39615a0dfd04e083af713938a806e76450",
+          "language": "en"
+        },
+        {
+          "path": "geography/en/LC005ALP043EV.pdf",
+          "size_bytes": 6478560,
+          "sha256": "39d533e2187d84b96e60fd8e9858a2bfb0231efef9575990a69544171226d7d4",
+          "language": "en"
+        },
+        {
+          "path": "geography/en/LC005CLP003EV.pdf",
+          "size_bytes": 12880588,
+          "sha256": "c85370b476bdbe49d644384087b3285c949bd48cd6dd136ac8de281663a4f9ed",
+          "language": "en"
+        },
+        {
+          "path": "geography/en/LC005GLP042EV.pdf",
+          "size_bytes": 6521540,
+          "sha256": "9f924481009cfbeeb41f3338de08b7da6f8a78d3779c3c58de41a0247814a836",
+          "language": "en"
+        },
+        {
+          "path": "geography/en/LC005GLP043EV.pdf",
+          "size_bytes": 4047293,
+          "sha256": "6bbf2d3317a632301b92f2cc82ff4cc63d7c32bd7fd018f3da81eaf86854bba7",
+          "language": "en"
+        },
+        {
+          "path": "geography/en/SC-Geography-Spec-ENG-INT.pdf",
+          "size_bytes": 1558836,
+          "sha256": "1553f1572c5ec3231aab7635fc5d04fc51dd39ff14f79845310ba89f6b530762",
+          "language": "en"
+        },
+        {
+          "path": "geography/en/SC-Geography-Spec-ENG-INT_2026-06-30.pdf",
+          "size_bytes": 1558836,
+          "sha256": "1553f1572c5ec3231aab7635fc5d04fc51dd39ff14f79845310ba89f6b530762",
+          "language": "en"
+        },
+        {
+          "path": "geography/en/SCSEC17_Geography_syllabus_eng.pdf",
+          "size_bytes": 240692,
+          "sha256": "400d7308446465c08ed63f080b3a6917a9c1fe500328000224e4de4f7ec814f0",
+          "language": "en"
+        },
+        {
+          "path": "geography/en/SCSEC17_Geography_syllabus_eng_2026-06-30.pdf",
+          "size_bytes": 240692,
+          "sha256": "400d7308446465c08ed63f080b3a6917a9c1fe500328000224e4de4f7ec814f0",
+          "language": "en"
+        },
+        {
+          "path": "geography/ga/LC-Geography-specification-GA.pdf",
+          "size_bytes": 1533828,
+          "sha256": "60546b463916721bfae1d52ef66f0c2613a7fbc9b40b4b345ff6a3cdfa876667",
+          "language": "ga"
+        },
+        {
+          "path": "geography/ga/LC-Geography-specification-GA_2026-06-30.pdf",
+          "size_bytes": 1533828,
+          "sha256": "60546b463916721bfae1d52ef66f0c2613a7fbc9b40b4b345ff6a3cdfa876667",
+          "language": "ga"
+        },
+        {
+          "path": "geography/ga/LC005ALP042IV.pdf",
+          "size_bytes": 14817546,
+          "sha256": "ac3dca7497e239d611ce0480d65ad211a4fed6076090050659382d1848e9431f",
+          "language": "ga"
+        },
+        {
+          "path": "geography/ga/LC005ALP043IV.pdf",
+          "size_bytes": 6481750,
+          "sha256": "26562be969a2b7a7dbabb66260e33d8c6a4b1cb01f4fa45a2b5666c8e93a8df9",
+          "language": "ga"
+        },
+        {
+          "path": "geography/ga/LC005CLPC00EV.pdf",
+          "size_bytes": 4131805,
+          "sha256": "19206e65d97a44922be08077be0d38e84641994fc6f8c77861a1fe8aafe9dd8d",
+          "language": "ga"
+        },
+        {
+          "path": "geography/ga/LC005GLP042IV.pdf",
+          "size_bytes": 7440565,
+          "sha256": "d50695519ead0e83dbedca660b71ac1425b13d884f54eead2ded1d9b4582b857",
+          "language": "ga"
+        },
+        {
+          "path": "geography/ga/LC005GLP043IV.pdf",
+          "size_bytes": 4023576,
+          "sha256": "e81dca475d9be44a8c9ddefefedc09ed565cc44f5dcdeaae9aa94e978315efab",
+          "language": "ga"
+        },
+        {
+          "path": "geography/ga/SCSEC17_Geography_Syllabus_gaeilge.pdf",
+          "size_bytes": 260658,
+          "sha256": "ef71be92c0ea4923a8bfac35dae54576072d237fbea7aa6d35b315e43c27d7e3",
+          "language": "ga"
+        },
+        {
+          "path": "geography/ga/SCSEC17_Geography_Syllabus_gaeilge_2026-06-30.pdf",
+          "size_bytes": 260658,
+          "sha256": "ef71be92c0ea4923a8bfac35dae54576072d237fbea7aa6d35b315e43c27d7e3",
+          "language": "ga"
+        }
+      ],
+      "extraction_status": "pending",
+      "ingested_at": null,
+      "extracted_at": null,
+      "ragas_consensus_score": null,
+      "pdf_count": 18,
+      "total_size_bytes": 88873972
+    },
+    "gaeilge": {
+      "subject": "gaeilge",
+      "ncca_code": "LC-GAEILGE-LO",
+      "languages": [
+        "en",
+        "ga"
+      ],
+      "level": [
+        "hl",
+        "ol"
+      ],
+      "pdfs": [
+        {
+          "path": "gaeilge/LC001ALP100IV.pdf",
+          "size_bytes": 460936,
+          "sha256": "d98a6d047a8fa5e9382e99acfa0f8f8ae7de1cd227b6da976c9f17cb47075378",
+          "language": "LC001ALP100IV.pdf"
+        },
+        {
+          "path": "gaeilge/LC001ALP200IV.pdf",
+          "size_bytes": 941508,
+          "sha256": "ff6eb26cf2cfc63093ef0e1863a83848a20cbe4c36542bc5d0bd4793bdf1294e",
+          "language": "LC001ALP200IV.pdf"
+        },
+        {
+          "path": "gaeilge/LC001BLP100IV.pdf",
+          "size_bytes": 2918231,
+          "sha256": "f2a1105cfe9c5db4a43bd095177aa862ba941bc667aaf5dffe35281da7c472b4",
+          "language": "LC001BLP100IV.pdf"
+        },
+        {
+          "path": "gaeilge/LC001GLP100IV.pdf",
+          "size_bytes": 446370,
+          "sha256": "a8daeeef20366ea4ab134dd62f9e327ddb0301035e0d9f5b540e484ce839f820",
+          "language": "LC001GLP100IV.pdf"
+        },
+        {
+          "path": "gaeilge/LC001GLP200IV.pdf",
+          "size_bytes": 1595665,
+          "sha256": "b0b8d3471daf6e303a387d7f7b3b9ec0114cd7702f0693a2c13d26c462724033",
+          "language": "LC001GLP200IV.pdf"
+        },
+        {
+          "path": "gaeilge/SCSEC16_Gaeilge_guidelines.pdf",
+          "size_bytes": 1504045,
+          "sha256": "379070fd0f02b178eb8250491fe91653f2dc4aed4c46d5b46a944718b3b64ae8",
+          "language": "SCSEC16_Gaeilge_guidelines.pdf"
+        },
+        {
+          "path": "gaeilge/SCSEC16_Gaeilge_guidelines_2026-06-30.pdf",
+          "size_bytes": 1504045,
+          "sha256": "379070fd0f02b178eb8250491fe91653f2dc4aed4c46d5b46a944718b3b64ae8",
+          "language": "SCSEC16_Gaeilge_guidelines_2026-06-30.pdf"
+        },
+        {
+          "path": "gaeilge/Siollabais-Nuashonraithe-na-hArdteistimeireachta_1.pdf",
+          "size_bytes": 356362,
+          "sha256": "a81912faf7526f96cef85ccb9a941674595a5b9cee4ca68932393a381ea917f3",
+          "language": "Siollabais-Nuashonraithe-na-hArdteistimeireachta_1.pdf"
+        },
+        {
+          "path": "gaeilge/Siollabais-Nuashonraithe-na-hArdteistimeireachta_1_2026-06-30.pdf",
+          "size_bytes": 356362,
+          "sha256": "a81912faf7526f96cef85ccb9a941674595a5b9cee4ca68932393a381ea917f3",
+          "language": "Siollabais-Nuashonraithe-na-hArdteistimeireachta_1_2026-06-30.pdf"
+        },
+        {
+          "path": "gaeilge/lc_irish_foundation.pdf",
+          "size_bytes": 61823,
+          "sha256": "eb163fc3baba7441575170902b261d898e122ef7642c9a41f7610c39663c18e6",
+          "language": "lc_irish_foundation.pdf"
+        },
+        {
+          "path": "gaeilge/lc_irish_foundation_2026-06-30.pdf",
+          "size_bytes": 61823,
+          "sha256": "eb163fc3baba7441575170902b261d898e122ef7642c9a41f7610c39663c18e6",
+          "language": "lc_irish_foundation_2026-06-30.pdf"
+        }
+      ],
+      "extraction_status": "pending",
+      "ingested_at": null,
+      "extracted_at": null,
+      "ragas_consensus_score": null,
+      "pdf_count": 11,
+      "total_size_bytes": 10207170
+    },
+    "english": {
+      "subject": "english",
+      "ncca_code": "LC-ENGLISH-LO",
+      "languages": [
+        "en",
+        "ga"
+      ],
+      "level": [
+        "hl",
+        "ol"
+      ],
+      "pdfs": [
+        {
+          "path": "english/LC002ALP100EV.pdf",
+          "size_bytes": 2332924,
+          "sha256": "a108374f484d7deda095887052d133756c1f3e59bb9c1362af9cbfe201eef670",
+          "language": "LC002ALP100EV.pdf"
+        },
+        {
+          "path": "english/LC002ALP200EV.pdf",
+          "size_bytes": 461761,
+          "sha256": "7641ee94370e9e7df43c921b86676c51c7ed1688682ee24829d34663c3d36e95",
+          "language": "LC002ALP200EV.pdf"
+        },
+        {
+          "path": "english/LC002GLP100EV.pdf",
+          "size_bytes": 1759734,
+          "sha256": "6ea7d3c61a54f96fc42167a093df4fc7142a2558ca1fd18ca9a09ac942b554c3",
+          "language": "LC002GLP100EV.pdf"
+        },
+        {
+          "path": "english/LC002GLP200EV.pdf",
+          "size_bytes": 749823,
+          "sha256": "0ac7854cff28e4d151a95117fc14351de16ffe334ad4213dd226c0ea0e6badc6",
+          "language": "LC002GLP200EV.pdf"
+        },
+        {
+          "path": "english/SC-English-Spec-ENG-INT.pdf",
+          "size_bytes": 1561980,
+          "sha256": "d0598ed089941709da377eadf9b229e97e8c1b188b846d0ece54c0e1fb1b75af",
+          "language": "SC-English-Spec-ENG-INT.pdf"
+        },
+        {
+          "path": "english/SC-English-Spec-ENG-INT_2026-06-30.pdf",
+          "size_bytes": 1561980,
+          "sha256": "d0598ed089941709da377eadf9b229e97e8c1b188b846d0ece54c0e1fb1b75af",
+          "language": "SC-English-Spec-ENG-INT_2026-06-30.pdf"
+        },
+        {
+          "path": "english/SCSEC14_English_Syllabus.pdf",
+          "size_bytes": 211080,
+          "sha256": "481f9719c50e2af75d7b1023f2a0f6c85e99b83424484ef601147e8e7392dc11",
+          "language": "SCSEC14_English_Syllabus.pdf"
+        },
+        {
+          "path": "english/SCSEC14_English_Syllabus_2026-06-30.pdf",
+          "size_bytes": 211080,
+          "sha256": "481f9719c50e2af75d7b1023f2a0f6c85e99b83424484ef601147e8e7392dc11",
+          "language": "SCSEC14_English_Syllabus_2026-06-30.pdf"
+        }
+      ],
+      "extraction_status": "pending",
+      "ingested_at": null,
+      "extracted_at": null,
+      "ragas_consensus_score": null,
+      "pdf_count": 8,
+      "total_size_bytes": 8850362
+    },
+    "french": {
+      "subject": "french",
+      "ncca_code": "LC-FRENCH-LO",
+      "languages": [
+        "en",
+        "ga"
+      ],
+      "level": [
+        "hl",
+        "ol"
+      ],
+      "pdfs": [
+        {
+          "path": "french/LC010ALP000BV.pdf",
+          "size_bytes": 1215672,
+          "sha256": "75ac17b71dd805f7667b389a6d65c89ff3c68bacdf2b10abd07c790f6c87e768",
+          "language": "LC010ALP000BV.pdf"
+        },
+        {
+          "path": "french/LC010ALPA00BV.pdf",
+          "size_bytes": 488672,
+          "sha256": "3e770a350b68af6d8acddc6a78c792977480898f9c5139967ae2faf20fa6af44",
+          "language": "LC010ALPA00BV.pdf"
+        },
+        {
+          "path": "french/LC010GLP000BV.pdf",
+          "size_bytes": 1643797,
+          "sha256": "ede242e0aa983f8784877602a8a9fa151f165a1d88daa76b15dc98d436a84fb4",
+          "language": "LC010GLP000BV.pdf"
+        },
+        {
+          "path": "french/LC010GLPA00BV.pdf",
+          "size_bytes": 531357,
+          "sha256": "6d08136546aec6b0a46166110b2fd37fc24342625ed48cf03bf9f8adee95a9d9",
+          "language": "LC010GLPA00BV.pdf"
+        },
+        {
+          "path": "french/SCSEC15_French_guidelines_Gaeilge.pdf",
+          "size_bytes": 5594617,
+          "sha256": "942bfb44a37a8709028a1eca76719bf543aefd7d12797acde3c74228a4e0925a",
+          "language": "SCSEC15_French_guidelines_Gaeilge.pdf"
+        },
+        {
+          "path": "french/SCSEC15_French_syllabus_Gaeilge.pdf",
+          "size_bytes": 885460,
+          "sha256": "12401660470755d195dd486ac8024e60be1b215bd6af0479f83a44bc30b20301",
+          "language": "SCSEC15_French_syllabus_Gaeilge.pdf"
+        },
+        {
+          "path": "french/SCSEC15_French_syllabus_eng.pdf",
+          "size_bytes": 90001,
+          "sha256": "471da1ac84142666b47ef5fdf53c887695f01b057cd8910e970c7212de5358bb",
+          "language": "SCSEC15_French_syllabus_eng.pdf"
+        }
+      ],
+      "extraction_status": "pending",
+      "ingested_at": null,
+      "extracted_at": null,
+      "ragas_consensus_score": null,
+      "pdf_count": 7,
+      "total_size_bytes": 10449576
+    },
+    "history": {
+      "subject": "history",
+      "ncca_code": "LC-HISTORY-LO",
+      "languages": [
+        "en",
+        "ga"
+      ],
+      "level": [
+        "hl",
+        "ol"
+      ],
+      "pdfs": [
+        {
+          "path": "history/en/LC004ALP000EV.pdf",
+          "size_bytes": 970449,
+          "sha256": "4d7b43fc83bc4c9a6b2fb785a43f4ef0aeba8b4bdb6bc95c018ef4aa80ebb230",
+          "language": "en"
+        },
+        {
+          "path": "history/en/LC004GLP000EV.pdf",
+          "size_bytes": 1122309,
+          "sha256": "37d47be8e720225acf5dda5847058087f6cd784c5e086b39faa46a668b5a36c9",
+          "language": "en"
+        },
+        {
+          "path": "history/en/SCSEC20_History-guidelines_eng.pdf",
+          "size_bytes": 559342,
+          "sha256": "163b0671bb063c863662a46e5c93e479834803df22f8bdaf6ec534540241bd42",
+          "language": "en"
+        },
+        {
+          "path": "history/en/SCSEC20_History-guidelines_eng_2026-06-30.pdf",
+          "size_bytes": 559342,
+          "sha256": "163b0671bb063c863662a46e5c93e479834803df22f8bdaf6ec534540241bd42",
+          "language": "en"
+        },
+        {
+          "path": "history/en/SCSEC20_History_syllabus_eng.pdf",
+          "size_bytes": 283180,
+          "sha256": "db4eb96ced985e3f1a2cd553c22ad94124b57de35f3b63ca8e87e203a6af1de1",
+          "language": "en"
+        },
+        {
+          "path": "history/en/SCSEC20_History_syllabus_eng_2026-06-30.pdf",
+          "size_bytes": 283180,
+          "sha256": "db4eb96ced985e3f1a2cd553c22ad94124b57de35f3b63ca8e87e203a6af1de1",
+          "language": "en"
+        },
+        {
+          "path": "history/ga/LC004ALP000IV.pdf",
+          "size_bytes": 914551,
+          "sha256": "ef0befa5ede552a28238cc2263227dada6fadfc6327b97ceb51360395cb57fc6",
+          "language": "ga"
+        },
+        {
+          "path": "history/ga/LC004GLP000IV.pdf",
+          "size_bytes": 1125133,
+          "sha256": "4132289babaa8f891f739631ea02fbfe1fafba8b61125f30f52df9ba64c2a631",
+          "language": "ga"
+        },
+        {
+          "path": "history/ga/SCSEC20_History_syllabus_Gaeilge.pdf",
+          "size_bytes": 535611,
+          "sha256": "87914b89cb6d4865ded92ba5dae0749fc881b46d2077cf800eebe661ed8947cf",
+          "language": "ga"
+        },
+        {
+          "path": "history/ga/SCSEC20_History_syllabus_Gaeilge_2026-06-30.pdf",
+          "size_bytes": 535611,
+          "sha256": "87914b89cb6d4865ded92ba5dae0749fc881b46d2077cf800eebe661ed8947cf",
+          "language": "ga"
+        },
+        {
+          "path": "history/ga/SCSEC20_history_guidelines_gaeilge.pdf",
+          "size_bytes": 4448763,
+          "sha256": "f46cf7bc82c8f435320766be4a11e2bb488a5bfbc90f89779fff687d4982cfaf",
+          "language": "ga"
+        },
+        {
+          "path": "history/ga/SCSEC20_history_guidelines_gaeilge_2026-06-30.pdf",
+          "size_bytes": 4448763,
+          "sha256": "f46cf7bc82c8f435320766be4a11e2bb488a5bfbc90f89779fff687d4982cfaf",
+          "language": "ga"
+        }
+      ],
+      "extraction_status": "pending",
+      "ingested_at": null,
+      "extracted_at": null,
+      "ragas_consensus_score": null,
+      "pdf_count": 12,
+      "total_size_bytes": 15786234
+    },
+    "business": {
+      "subject": "business",
+      "ncca_code": "LC-BUSINESS-LO",
+      "languages": [
+        "en",
+        "ga"
+      ],
+      "level": [
+        "hl",
+        "ol"
+      ],
+      "pdfs": [
+        {
+          "path": "business/en/LC033ALP032EV.pdf",
+          "size_bytes": 513286,
+          "sha256": "eac5b0df6e55e6c7725f43e722d55a39acb41bae2f6ee6ee19fe55bdc83f6115",
+          "language": "en"
+        },
+        {
+          "path": "business/en/LC033ALP041EV.pdf",
+          "size_bytes": 1047553,
+          "sha256": "e5c1c56f6cde1eee3e26f35c3dd366d6380c70f915f28441363bf4bd9f903692",
+          "language": "en"
+        },
+        {
+          "path": "business/en/LC033GLP032EV.pdf",
+          "size_bytes": 819231,
+          "sha256": "4cc29d7db75d26320677973881f4be0579b78536675119f58638fe2b831956f7",
+          "language": "en"
+        },
+        {
+          "path": "business/en/LC033GLP033EV.pdf",
+          "size_bytes": 2364833,
+          "sha256": "f44120330248befe42137e821af262a5121c9693a4cc7778f6c93d83dfe24c8e",
+          "language": "en"
+        },
+        {
+          "path": "business/en/SC-Business-Spec-ENG.pdf",
+          "size_bytes": 1132867,
+          "sha256": "ff26f040d645945378c1c88e732ad2880dc0ce711ff6aff236b08c133c6f9ea6",
+          "language": "en"
+        },
+        {
+          "path": "business/en/SCSEC08_Business_syllabus_Eng.pdf",
+          "size_bytes": 48790,
+          "sha256": "f85a70b8f1174bf65c7bbb48ef971f322624210ccc3283db71c5f88ce63b1134",
+          "language": "en"
+        },
+        {
+          "path": "business/ga/LC033ALP032IV.pdf",
+          "size_bytes": 487762,
+          "sha256": "24de083f9efc02b4576442abe52df30571a996ab2ea3ff65d7c84c5082a2a17b",
+          "language": "ga"
+        },
+        {
+          "path": "business/ga/LC033ALP041IV.pdf",
+          "size_bytes": 1105940,
+          "sha256": "ac2a999374f8c8b27fc70abc5f036967382b6a7ced9db5658dcd501af2a87b20",
+          "language": "ga"
+        },
+        {
+          "path": "business/ga/LC033GLP032IV.pdf",
+          "size_bytes": 736094,
+          "sha256": "33a38c9e473b230dea73b6abf2ddd68604354eb5101589460887d93f308c3b03",
+          "language": "ga"
+        },
+        {
+          "path": "business/ga/LC033GLP033IV.pdf",
+          "size_bytes": 2549741,
+          "sha256": "fefb7087a8f8578b3f4354a0ac23e5555f2e3499734af76fabe711147b66771f",
+          "language": "ga"
+        },
+        {
+          "path": "business/ga/SC-Business-Spec-GA-1.pdf",
+          "size_bytes": 1206175,
+          "sha256": "c1eb8a8e37227fadbc32af7e7adfb5657c3f3445084e6441bd7fe721c5403948",
+          "language": "ga"
+        },
+        {
+          "path": "business/ga/SCSEC08_Business_Syllabus_Gaeilge.pdf",
+          "size_bytes": 496861,
+          "sha256": "2e10490b6411ee9e72125c57d1b4f3d9e69c10c8467d29a71a8397cbf93e1ce8",
+          "language": "ga"
+        }
+      ],
+      "extraction_status": "pending",
+      "ingested_at": null,
+      "extracted_at": null,
+      "ragas_consensus_score": null,
+      "pdf_count": 12,
+      "total_size_bytes": 12509133
+    },
+    "accounting": {
+      "subject": "accounting",
+      "ncca_code": "LC-ACCOUNTING-LO",
+      "languages": [
+        "en",
+        "ga"
+      ],
+      "level": [
+        "hl",
+        "ol"
+      ],
+      "pdfs": [
+        {
+          "path": "accounting/en/LC_Accounting_Syllabus_EN.pdf",
+          "size_bytes": 74325,
+          "sha256": "d5d121dcdea16e05601279631d64874abbe61c6006165cc844140a796da85399",
+          "language": "en"
+        }
+      ],
+      "extraction_status": "pending",
+      "ingested_at": null,
+      "extracted_at": null,
+      "ragas_consensus_score": null,
+      "pdf_count": 1,
+      "total_size_bytes": 74325
+    },
+    "art": {
+      "subject": "art",
+      "ncca_code": "LC-ART-LO",
+      "languages": [
+        "en",
+        "ga"
+      ],
+      "level": [
+        "hl",
+        "ol"
+      ],
+      "pdfs": [
+        {
+          "path": "art/en/Leaving-Certificate-Art-Specification_EN.pdf",
+          "size_bytes": 877401,
+          "sha256": "795d319b84952e12cf2fe6eb4baddf042a4c53124ed0832d8bb3408186067da5",
+          "language": "en"
+        }
+      ],
+      "extraction_status": "pending",
+      "ingested_at": null,
+      "extracted_at": null,
+      "ragas_consensus_score": null,
+      "pdf_count": 1,
+      "total_size_bytes": 877401
+    },
+    "music": {
+      "subject": "music",
+      "ncca_code": "LC-MUSIC-LO",
+      "languages": [
+        "en",
+        "ga"
+      ],
+      "level": [
+        "hl",
+        "ol"
+      ],
+      "pdfs": [
+        {
+          "path": "music/en/LC_Music_Syllabus_EN.pdf",
+          "size_bytes": 150864,
+          "sha256": "d0a75f911c7a3a81480459ec0ab1b9d220935490bb9741749455326155df9e08",
+          "language": "en"
+        }
+      ],
+      "extraction_status": "pending",
+      "ingested_at": null,
+      "extracted_at": null,
+      "ragas_consensus_score": null,
+      "pdf_count": 1,
+      "total_size_bytes": 150864
+    },
+    "computer_science": {
+      "subject": "computer_science",
+      "ncca_code": "LC-COMPUTER-SCIENCE-LO",
+      "languages": [
+        "en",
+        "ga"
+      ],
+      "level": [
+        "hl",
+        "ol"
+      ],
+      "pdfs": [
+        {
+          "path": "computer_science/en/LC-Computer-Science-specification-updated.pdf",
+          "size_bytes": 1286193,
+          "sha256": "53d7cac7bb650bae819ecbf928e97a47f9e7ac66f085b00ccc48fdcd3cda5df8",
+          "language": "en"
+        },
+        {
+          "path": "computer_science/en/LC-Computer-Science-specification-updated_2026-06-30.pdf",
+          "size_bytes": 1286193,
+          "sha256": "53d7cac7bb650bae819ecbf928e97a47f9e7ac66f085b00ccc48fdcd3cda5df8",
+          "language": "en"
+        },
+        {
+          "path": "computer_science/en/LC219ALP038EV.pdf",
+          "size_bytes": 1365420,
+          "sha256": "e277c7f103ca9bf75fd6a0248b742d0fefe68b12288013edf02e66b3491f4448",
+          "language": "en"
+        },
+        {
+          "path": "computer_science/en/LC219ALP040EV.pdf",
+          "size_bytes": 920877,
+          "sha256": "7cee749c81dfa5edd4901414be2f270de0d6dd32b719876e20f8b289518db902",
+          "language": "en"
+        },
+        {
+          "path": "computer_science/en/LC219GLP038EV.pdf",
+          "size_bytes": 1824147,
+          "sha256": "70a88f622fa517820e6f0b518aa3f8cdb18721ff50ee20f1cfd08f1e50d661b5",
+          "language": "en"
+        },
+        {
+          "path": "computer_science/en/LC219GLP040EV.pdf",
+          "size_bytes": 918372,
+          "sha256": "092496611e02a49270687083212e48f214ac86ad7cd53d32e214c3b1a2375ec5",
+          "language": "en"
+        },
+        {
+          "path": "computer_science/ga/LC-Computer-Science-specification-updated-as-Gaeilge.pdf",
+          "size_bytes": 1304466,
+          "sha256": "2d2bf08a340bdf2d014ac8c1dc2fa7720bdb6f8843671705440642ba54fd134d",
+          "language": "ga"
+        },
+        {
+          "path": "computer_science/ga/LC219ALP038IV.pdf",
+          "size_bytes": 1320674,
+          "sha256": "e0b86afda8af99d5139f1a5648b08dab09a5d89eee247b39a995a45aa0a48cb0",
+          "language": "ga"
+        },
+        {
+          "path": "computer_science/ga/LC219ALP040IV.pdf",
+          "size_bytes": 920859,
+          "sha256": "6c00cf6db94676a4046eafacec47bfdae70a7b79b0c429d371d34def0972db78",
+          "language": "ga"
+        },
+        {
+          "path": "computer_science/ga/LC219GLP038IV.pdf",
+          "size_bytes": 1601123,
+          "sha256": "925228fed616e46594d857826f1260a201d7c4d2ffae4459e0b889845f5baf16",
+          "language": "ga"
+        },
+        {
+          "path": "computer_science/ga/LC219GLP040IV.pdf",
+          "size_bytes": 855078,
+          "sha256": "4f54ac0f10ccc1a10eb0719cf37166ed7ec73ad0199995c5585b0a41f4e7f752",
+          "language": "ga"
+        }
+      ],
+      "extraction_status": "pending",
+      "ingested_at": null,
+      "extracted_at": null,
+      "ragas_consensus_score": null,
+      "pdf_count": 11,
+      "total_size_bytes": 13603402
+    }
+  },
+  "total_subjects": 15,
+  "total_pdfs": 134,
+  "total_size_bytes": 212202955
+}

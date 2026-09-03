@@ -1,0 +1,59 @@
+{
+  "$schema": "https://unstract.com/schemas/workflow/v1.json",
+  "name": "aqa_gcse_spec",
+  "version": "1.0.0",
+  "description": "AQA GCSE specification extraction workflow (BIEP v2 / Change 3 — Path 2 of the 4-path ensemble).",
+  "trigger": {
+    "type": "manual_upload",
+    "file_patterns": ["*.pdf"],
+    "expected_mime_types": ["application/pdf"]
+  },
+  "prompt_template": {
+    "system": "You are an AQA GCSE qualification specification extractor. Given the text of an AQA GCSE specification PDF (e.g. GCSE Mathematics 8035), extract the structured qualification record.",
+    "user": [
+      "Subject: {{ subject }}",
+      "Qualification Level: {{ qualification_level }}",
+      "",
+      "Text:",
+      "{{ pdf_text }}"
+    ]
+  },
+  "json_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "AQAQualSpec",
+    "type": "object",
+    "properties": {
+      "board": { "const": "AQA" },
+      "qualification_level": { "type": "string", "enum": ["gcse", "a_level", "as_level", "gcse_short", "btec"] },
+      "subject": { "type": "string" },
+      "specification_code": { "type": "string", "description": "AQA spec code, e.g. '8035'" },
+      "title": { "type": "string" },
+      "version": { "type": "string" },
+      "first_teaching_year": { "type": ["integer", "null"] },
+      "last_certification_year": { "type": ["integer", "null"] },
+      "total_marks": { "type": "integer" },
+      "assessment_objectives": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "ao_id": { "type": "string" },
+            "title": { "type": "string" },
+            "description": { "type": "string" },
+            "weighting_pct": { "type": "integer" }
+          },
+          "required": ["ao_id", "title", "description", "weighting_pct"]
+        }
+      },
+      "component_papers": { "type": "integer" },
+      "source_pdf": { "type": "string" },
+      "source_pages": { "type": "integer" }
+    },
+    "required": ["board", "qualification_level", "subject", "specification_code", "title", "version", "total_marks"]
+  },
+  "output_settings": {
+    "format": "json",
+    "destination": "duckdb",
+    "ducklake_namespace": "cianfhoghlaim.education.british_isles.england.aqa.{subject}.{qualification_level}.unstract_json"
+  }
+}

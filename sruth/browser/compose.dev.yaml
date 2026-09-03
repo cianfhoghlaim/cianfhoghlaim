@@ -1,0 +1,224 @@
+# =============================================================================
+# BROWSER - Development Environment
+# =============================================================================
+# Extends compose.yaml for local browser automation development with hot-reload.
+#
+# USAGE:
+#   Development:  docker compose -f compose.yaml -f docker-compose.dev.yml up
+# =============================================================================
+#
+# This dev overlay adds:
+#   - Source code volume mounts for hot-reload
+#   - Development command overrides
+#   - Debug logging enabled
+#   - Resource limits removed
+#   - Connection to shared bonneagar infrastructure
+# =============================================================================
+
+services:
+  # ===========================================================================
+  # BROWSER GRID - Development Mode with Extended Capabilities
+  # ===========================================================================
+  browser-grid:
+    ports:
+      # Expose CDP externally for debugging
+      - "9222:9222"
+    environment:
+      # Enable verbose logging
+      CHROME_FLAGS: "--disable-gpu --no-sandbox --disable-dev-shm-usage --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222"
+    volumes:
+      # Mount custom browser profiles
+      - ./browser-grid/profiles:/opt/browser/profiles:ro
+    deploy:
+      resources: {}
+
+  # ===========================================================================
+  # SKYVERN - Development Mode
+  # ===========================================================================
+  skyvern:
+    environment:
+      # Development logging
+      LOG_LEVEL: DEBUG
+      # Enable all LLM providers for testing
+      ENABLE_OPENAI: "true"
+      ENABLE_ANTHROPIC: "true"
+      ENABLE_CODE_BLOCK: "true"
+      # Connect to shared infrastructure
+      BROWSER_TYPE: cdp-connect
+      BROWSER_REMOTE_DEBUGGING_URL: ws://browser-grid:9222/
+    deploy:
+      resources: {}
+
+  # ===========================================================================
+  # SKYVERN UI - Development Mode
+  # ===========================================================================
+  skyvern-ui:
+    environment:
+      # Development URLs
+      VITE_WSS_BASE_URL: ws://localhost:8001/api/v1
+      VITE_API_BASE_URL: http://localhost:8001/api/v1
+      VITE_ARTIFACT_API_BASE_URL: http://localhost:9090
+
+  # ===========================================================================
+  # CRAWL4AI - Development Mode
+  # ===========================================================================
+  crawl4ai:
+    environment:
+      # Verbose logging
+      LOG_LEVEL: DEBUG
+      MAX_CONCURRENT_TASKS: ${MAX_CONCURRENT_TASKS:-2}
+      CDP_URL: ws://browser-grid:9222
+      SOLVER_API_URL: http://solver-service:5000/turnstile
+    volumes:
+      # Mount custom extraction scripts
+      - ./crawl4ai-scripts:/app/custom-scripts:ro
+    deploy:
+      resources: {}
+
+  # ===========================================================================
+  # STAGEHAND LOCAL - Development Mode
+  # ===========================================================================
+  stagehand-local:
+    environment:
+      PORT: "3100"
+      HEADLESS: "${STAGEHAND_HEADLESS:-false}"  # Show browser for debugging
+      MAX_SESSIONS: "${STAGEHAND_MAX_SESSIONS:-5}"
+      SESSION_TTL_MS: "${STAGEHAND_SESSION_TTL:-600000}"
+      LOG_LEVEL: DEBUG
+      # Development models (faster, cheaper)
+      DEFAULT_MODEL: "${STAGEHAND_MODEL:-glm-4.6}"
+      VISION_MODEL: "${STAGEHAND_VISION_MODEL:-glm-4.6v}"
+      AGENT_MODEL: "${STAGEHAND_AGENT_MODEL:-google/gemini-3-flash-preview}"
+      # All API keys enabled for testing
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ZAI_API_KEY: ${ZAI_API_KEY:-}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      LLM_PROVIDER: ${LLM_PROVIDER:-anthropic}
+      # Browserbase fallback
+      BROWSERBASE_API_KEY: ${BROWSERBASE_API_KEY:-}
+      BROWSERBASE_PROJECT_ID: ${BROWSERBASE_PROJECT_ID:-}
+    volumes:
+      # Mount custom Stagehand actions
+      - ./stagehand-actions:/app/custom-actions:ro
+    deploy:
+      resources: {}
+
+  # ===========================================================================
+  # API - Development Mode with Hot Reload
+  # ===========================================================================
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder  # Use builder stage for dev
+    volumes:
+      # Mount source code for hot-reload
+      - ./api:/app/api:ro
+      - ./storage:/app/storage
+      # Persist data locally
+      - ./storage/data:/app/storage/data
+      - ./storage/screenshots:/app/storage/screenshots
+    environment:
+      ENVIRONMENT: development
+      LOG_LEVEL: DEBUG
+      # Storage paths
+      DUCKDB_PATH: /app/storage/data/browser.duckdb
+      LANCEDB_PATH: /app/storage/data/scraped_vectors.lance
+      # Browser backend URLs
+      BROWSER_CDP_URL: ws://browser-grid:9222
+      BROWSER_SKYVERN_API_URL: http://skyvern:8000/api/v1
+      BROWSER_CRAWL4AI_URL: http://crawl4ai:11235
+      BROWSER_STAGEHAND_URL: http://stagehand-local:3100
+      BROWSER_SOLVER_URL: http://solver-service:5000/turnstile
+      # All providers enabled for testing
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ZAI_API_KEY: ${ZAI_API_KEY:-}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      LLM_PROVIDER: ${LLM_PROVIDER:-anthropic}
+      DEFAULT_BACKEND: ${DEFAULT_BACKEND:-crawl4ai}
+      FALLBACK_STRATEGY: ${FALLBACK_STRATEGY:-cost}
+      # Observability
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
+    command: ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    # Remove resource limits for dev
+    deploy:
+      resources: {}
+
+  # ===========================================================================
+  # MCP SERVER - Development Mode
+  # ===========================================================================
+  mcp-server:
+    environment:
+      MCP_TRANSPORT: stdio
+      LOG_LEVEL: DEBUG
+      # Browser backends
+      BROWSER_CDP_URL: ws://browser-grid:9222
+      BROWSER_SKYVERN_API_URL: http://skyvern:8000/api/v1
+      BROWSER_CRAWL4AI_URL: http://crawl4ai:11235
+      BROWSER_STAGEHAND_URL: http://stagehand-local:3100
+    volumes:
+      - ./storage/data:/app/storage/data
+      - ./storage/screenshots:/app/storage/screenshots
+
+  # ===========================================================================
+  # GARAGE - Development Mode
+  # ===========================================================================
+  garage:
+    ports:
+      # S3 API
+      - "${GARAGE_S3_PORT:-3900}:3900"
+      # Web UI
+      - "${GARAGE_WEB_PORT:-3902}:3902"
+      # Admin API (for debugging)
+      - "3903:3903"
+    environment:
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:-}
+      GARAGE_RPC_BIND_ADDR: "[::]:3901"
+      GARAGE_S3_API_BIND_ADDR: "[::]:3900"
+      GARAGE_S3_REGION: garage
+      GARAGE_ADMIN_API_BIND_ADDR: "[::]:3903"
+      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN:-admin_token}
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+# Connect to bonneagar shared infrastructure network for:
+#   - Other sruth services
+#   - Langfuse (LLM observability at http://langfuse:3000)
+# =============================================================================
+networks:
+  browser-net:
+    external: true
+    name: bonneagar_default
+
+# =============================================================================
+# DEVELOPMENT NOTES
+# =============================================================================
+#
+# Shared Infrastructure (via bonneagar_default network):
+#   - Langfuse:         http://langfuse:3000 (LLM observability)
+#   - Other sruth APIs: See respective PORTS.md mappings
+#
+# Service Endpoints:
+#   - Browser Grid CDP: localhost:9222
+#   - Skyvern API:      localhost:8001
+#   - Skyvern UI:       localhost:8080
+#   - Stagehand:        localhost:3100
+#   - API:              localhost:8003
+#   - Garage S3:        localhost:3900
+#   - Garage Web UI:    localhost:3902
+#
+# Browser Testing:
+#   1. Access CDP at chrome://inspect or http://localhost:9222/json
+#   2. Use Skyvern UI at http://localhost:8080 for visual task creation
+#   3. API docs at http://localhost:8003/docs
+#
+# Performance Tuning:
+#   - Reduce MAX_CONCURRENT_TASKS for slower machines
+#   - Set STAGEHAND_HEADLESS=true for headless operation
+#   - Adjust resource limits in deploy section if needed
+#

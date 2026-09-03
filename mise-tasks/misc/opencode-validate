@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+#MISE description="OpenCode JSON config validation (schema + agent structure)"
+set -euo pipefail
+
+python3 -c "
+import json, sys
+cfg = json.load(open('opencode.json'))
+agents = cfg.get('agent', {})
+print(f'OpenCode config: {len(agents)} agents')
+for name, body in agents.items():
+    mode = body.get('mode', 'subagent')
+    hidden = body.get('hidden', False)
+    prompt = body.get('prompt', '')
+    ptype = 'file' if prompt.startswith('{file:') else ('inline' if prompt else 'none')
+    print(f'  {name:20s} mode={mode:10s} hidden={str(hidden):5s} prompt={ptype}')
+# Validate no deprecated tools field
+deprecated = []
+for name, body in agents.items():
+    if 'tools' in body and isinstance(body['tools'], dict):
+        deprecated.append(name)
+if deprecated:
+    print(f'ERROR: deprecated tools field used by: {deprecated}', file=sys.stderr)
+    sys.exit(1)
+print('OpenCode config: VALID (no deprecated tools field)')
+"

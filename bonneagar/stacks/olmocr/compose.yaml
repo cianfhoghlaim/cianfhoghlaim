@@ -1,0 +1,34 @@
+name: olmocr
+services:
+  olmocr:
+    # Pinned + fixed registry path 2026-07-02 (was `allenai/olmocr:latest` — that image
+    # does NOT exist on Docker Hub; the actual upstream registry namespace is
+    # `alleninstituteforai/olmocr`; current stable = 0.4.27, released 2026-03-12).
+    image: alleninstituteforai/olmocr:0.4.27
+    container_name: olmocr
+    restart: unless-stopped
+    ports: ["8003:8003"]
+    environment:
+      - HF_HOME=/stedding/huggingface
+      - HF_HUB_CACHE=/stedding/huggingface/hub
+      - OLMA_API_KEY=${OLMA_API_KEY:-not-needed}
+      # OpenTelemetry fan-out (per env-contract-and-observability-fanout-v1)
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://logfire-otel:4317
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_SERVICE_NAME=olmocr
+    volumes:
+      - ../../stedding/huggingface:/stedding/huggingface:ro
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8003/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits: {memory: 16G, cpus: '4'}
+    networks: [cianfhoghlaim, lakehouse]
+volumes: {}
+networks:
+  cianfhoghlaim: {driver: bridge}
+  lakehouse: {name: lakehouse_lakehouse, external: true}

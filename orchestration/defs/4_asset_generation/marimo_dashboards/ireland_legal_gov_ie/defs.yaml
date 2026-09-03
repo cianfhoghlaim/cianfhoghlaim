@@ -1,0 +1,16 @@
+# defs/4_asset_generation/marimo_dashboards/ireland_legal_gov_ie/defs.yaml
+#
+# L4 CelticAssetGenerationComponent for the gov.ie ALL sub-departments
+# archive marimo notebook.
+#
+# Per openspec/changes/2026-07-06-ireland-legal-pipeline/.
+type: orchestration.components.CelticAssetGenerationComponent
+attributes:
+  dashboard_kind: marimo
+  dashboard_path: cianfhoghlaim/notebooks/12_ireland_law/05_gov_ie_law_corpus.py
+  upstream_assets:
+    - 2_materials/legal_research/ireland_legal_extraction
+    - 3_model_lifecycle/cocoindex_v1/ireland_legal
+  refresh_on:
+    - "0 6 * * *"
+  slug: ireland_legal_gov_ie

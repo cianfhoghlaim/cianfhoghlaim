@@ -1,0 +1,55 @@
+# =============================================================================
+# LAKEHOUSE — Unified Pangolin Traefik Routing Overlay (lakehouse-unified-data-plane 2026-08-15)
+# =============================================================================
+# Routes every private-resource declared in blueprint.yaml through the
+# unified lakehouse stack. The 4 graph DB routes added 2026-08-15 join
+# the existing 7 lakehouse routes (lakehouse → lakekeeper, lance-api,
+# nimtable, olake, lance-viewer, lakehouse-admin).
+#
+# TinyAuth (Pocket ID OIDC) + secure-headers are applied at the Traefik
+# layer for every route; the Pangolin blueprint (blueprint.yaml) declares
+# RBAC roles only.
+# =============================================================================
+
+pangolin:
+  private-resources:
+    lakehouse:
+      name: lakehouse
+      mode: http
+      full-domain: lakehouse.cianfhoghlaim.ie
+      destination-port: 8181
+      protocol: http
+      roles[0]: tinyauth@file
+
+    # Graph DB backends (added 2026-08-15)
+    cognee:
+      name: cognee
+      mode: http
+      full-domain: cognee.cianfhoghlaim.ie
+      destination-port: 8000
+      protocol: http
+      roles[0]: tinyauth@file
+
+    graphiti:
+      name: graphiti
+      mode: http
+      full-domain: graphiti.cianfhoghlaim.ie
+      destination-port: 8001
+      protocol: http
+      roles[0]: tinyauth@file
+
+    falkordb-browser:
+      name: falkordb-browser
+      mode: http
+      full-domain: falkordb.cianfhoghlaim.ie
+      destination-port: 3000
+      protocol: http
+      roles[0]: tinyauth@file
+
+    memgraph-lab:
+      name: memgraph-lab
+      mode: http
+      full-domain: memgraph.cianfhoghlaim.ie
+      destination-port: 3001
+      protocol: http
+      roles[0]: tinyauth@file

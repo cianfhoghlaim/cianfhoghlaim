@@ -1,0 +1,16 @@
+# defs/3_model_lifecycle/cocoindex_v1/history_embedding/defs.yaml
+#
+# L3 CelticModelLifecycleComponent for the HistoryEmbedding v1 App.
+# Per the british-isles-education-pipeline spec — `Leaving Certificate
+# History syllabuses + exam papers + marking schemes` Requirement.
+# LanceDB table: `cianfhoghlaim.lc.history.<level>_<language>`.
+type: orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_name: HistoryEmbedding
+  module: cianfhoghlaim.cocoindex.history_embedding
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  table_name_pattern: cianfhoghlaim.lc.history.<level>_<language>
+  subjects:
+    - history

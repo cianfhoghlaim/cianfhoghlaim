@@ -1,0 +1,8 @@
+# Pangolin auto-discovery labels for Komga
+services:
+  komga:
+    labels:
+      - "pangolin.resource.name=Komga"
+      - "pangolin.resource.domain=komga.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://komga:25600"
+      - "pangolin.resource.middlewares=tinyauth"

@@ -1,0 +1,27 @@
+name: state-exams-ie-blueprint
+
+# =============================================================================
+# STATE-EXAMS-IE — Komodo blueprint
+# =============================================================================
+# Per the 6-file GOLD_STANDARD pattern. The blueprint declares the
+# stack's commands (up / down / health / refresh) + the per-procedure
+# vault unlock (the 1-time manual login at the operator terminal).
+# =============================================================================
+
+procedures:
+  deploy-state-exams-ie:
+    description: "Deploy the state-exams-ie persistent profile vault"
+    command: "docker compose -f compose.yaml -f sidecar.yaml up -d"
+    health_check: "curl -f http://localhost:8765/health"
+  teardown-state-exams-ie:
+    description: "Tear down the state-exams-ie vault"
+    command: "docker compose -f compose.yaml -f sidecar.yaml down"
+  unlock-state-exams-ie-profile:
+    description: "1-time manual login at the operator terminal — runs the SEC login via the FirecrawlMCPClient.interact prompt, then saves the cookies to the persistent profile"
+    command: "python -m state_exams_ie_vault.cli unlock --profile state-exams-ie"
+    manual: true
+labels:
+  - "firecrawl"
+  - "persistent-profile"
+  - "examinations-ie"
+  - "lc-exams"

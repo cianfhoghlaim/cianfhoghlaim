@@ -1,0 +1,27 @@
+# defs/2_materials/grading/gaeilge.yaml
+#
+# L2 CelticMaterialsComponent for the per-subject interactive Gaeilge
+# grading (BIEP v1 Phase 2). Uses the `irish_fada` asset_check to
+# assert Irish-language responses preserve the síneadh fada.
+#
+# Per the openspec change
+# 2026-07-16-biiep-v1-lc-per-subject-marking-grading-v1.
+type: orchestration.components.CelticMaterialsComponent
+attributes:
+  baml_function: b.GradeGaeilgeResponse
+  baml_explain_function: b.ExplainGaeilgeMarkingScheme
+  source_asset: 1_ingestion/marking/ie/education
+  partition_strategy: by_subject
+  asset_check_kind: irish_fada
+  subject: gaeilge
+  language: ga
+  automation_cron: "0 6 * * 0"  # weekly Sunday 06:00 UTC
+  metadata:
+    openspec_change: 2026-07-16-biiep-v1-lc-per-subject-marking-grading-v1
+    spec: british-isles-education-pipeline
+    feedback_channel: gael_tutor
+    text_ga_primary: true
+    detector_mistakes:
+      - sineadh_fada_missing
+      - verbal_noun_misuse
+      - genitive_wrong

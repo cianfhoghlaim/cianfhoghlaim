@@ -1,0 +1,20 @@
+# defs/5_agent_ops/agno/education_research_agent/defs.yaml
+#
+# L5 CelticAgentOpsComponent for the education_research_agent (agno) agent.
+# The Component emits 5 Dagster assets:
+# - agent_health_education_research_agent
+# - agent_routing_education_research_agent
+# - agent_memory_education_research_agent
+# - agent_event_education_research_agent
+# - agent_trace_education_research_agent
+type: orchestration.components.CelticAgentOpsComponent
+attributes:
+  agent_name: education_research_agent
+  framework: agno
+  tools: ['policy_search_tool', 'report_search_tool', 'oecd_lookup_tool']
+  memory_backend: letta
+  event_stream: risingwave
+  event_stream_endpoint: risingwave.cianfhoghlaim.ie:4566
+  langfuse_trace_tag: agent.education_research
+  langfuse_drop_smoke_spans: true
+  routing_keywords: ['policy', 'report', 'oecd', 'european commission', 'unesco']

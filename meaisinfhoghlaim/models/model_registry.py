@@ -1,0 +1,1401 @@
+"""
+Unified model registry for the Cianfhoghlaim platform (post-`centralized-model-registry` change, 2026-08-15).
+
+The single source of truth for **all** AI / agentic / LLM / VLM / OCR /
+embedder / reranker / image-gen / voice / translation model choices
+across the platform. This module extends the existing 22-entry
+`VISION_MODELS` (in `meaisinfhoghlaim.models.registry`) to cover the
+other 4 model families:
+
+1. ``ocr_vision`` — the existing 22-entry ``VISION_MODELS`` (subset view)
+2. ``text_llm`` — the 9 LiteLLM M3 chokepoint aliases + agent defaults
+3. ``embedder`` — the 3 sentence-transformer models (BGE-M3 + BGE-large + MiniLM)
+4. ``rerank`` — the 3 rerank providers (Jina + Cohere + Aliyun)
+5. ``image_gen`` — the 5 image-gen models (flux2-dev + z-image-turbo + qwen-image + sdxl + fibo)
+6. ``voice`` — the 5 voice/ASR/TTS models (whisper-large + wav2vec2-irish + chatterbox + aba-tts)
+7. ``translation`` — the 3 translation models (opus-mt + m2m100 + nllb)
+
+The canonical API is the 2-axis key (family, role). Consumers resolve
+a specific model via:
+
+    MODEL_REGISTRY.resolve("text_llm", "default")           # -> "minimax-m3"
+    MODEL_REGISTRY.resolve("ocr_vision", "diagram")         # -> "molmo2-8b"
+    MODEL_REGISTRY.resolve("voice", "tts")                 # -> "ResembleAI/chatterbox"
+    MODEL_REGISTRY.filter(family="embedder")                # -> list of 3 entries
+
+This module is the canonical home for the
+`centralized-model-registry` openspec capability. The legacy
+``meaisinfhoghlaim.models.registry.VISION_MODELS`` remains a subset
+view via ``MODEL_REGISTRY.filter(family="ocr_vision")`` — no
+breaking change.
+
+Reference: openspec/changes/2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1/
+"""
+
+from __future__ import annotations
+
+import os
+from dataclasses import dataclass, field
+from typing import Any, Iterable, Literal
+
+# Re-export the existing 22-entry VISION_MODELS so they remain
+# importable from this module too (the canonical home for the unified
+# MODEL_REGISTRY).
+from meaisinfhoghlaim.models.registry import (
+    CLASSICAL_OCR,
+    TEXT_MODELS,
+    VISION_MODELS,
+    ModelBackend,
+    OCRModel,
+)
+
+# ─── Model families + roles ────────────────────────────────────────────────
+
+
+ModelFamily = Literal[
+    "ocr_vision",
+    "text_llm",
+    "embedder",
+    "rerank",
+    "image_gen",
+    "voice",
+    "translation",
+]
+
+
+ModelRole = str  # Free-form within each family (e.g. "default", "diagram",
+                 # "tts", "strong", "fast"). Each family has its own
+                 # canonical role vocabulary documented in the family
+                 # section below.
+
+
+# ─── The unified entry dataclass ───────────────────────────────────────────
+
+
+@dataclass
+class ModelRegistryEntry:
+    """A single entry in the unified `MODEL_REGISTRY`.
+
+    Attributes:
+        key: Canonical model identifier (e.g. ``"minimax-m3"``,
+            ``"BAAI/bge-m3"``, ``"qwen3-vl-8b"``). Unique within the
+            registry.
+        family: One of the 7 ``ModelFamily`` literals.
+        role: Free-form string within the family
+            (e.g. ``"default"``, ``"diagram"``, ``"tts"``).
+        display_name: Human-readable name for UI surfaces.
+        unsloth_id: The Unsloth GGUF ID if available (None otherwise).
+        mlx_id: The MLX-community GGUF ID if available.
+        upstream_id: The canonical upstream HF ID.
+        backend: The runtime backend
+            (LITELLM / MLX / TRANSFORMERS / LLAMASWAP / DOCLING /
+            UNSTRACT for OCR; HF / OPENAI / LOCAL for text_llm; etc.).
+        available: Whether the model is currently available in this
+            deployment. False for deprecated entries
+            (e.g. ``uccix-llama2-13b``).
+        litellm_alias: The LiteLLM alias for this model
+            (e.g. ``"minimax-m3"``, ``"local/vision/qwen3-vl-8b"``).
+            None if not routed via LiteLLM.
+        env_var: Environment variable name to override the model name
+            at runtime (e.g. ``"OPENCODE_GO_MODEL"``).
+        notes: Free-form documentation.
+        languages: Languages this model is specialized for (None =
+            language-agnostic).
+    """
+
+    key: str
+    family: ModelFamily
+    role: str
+    display_name: str
+    unsloth_id: str | None
+    mlx_id: str | None
+    upstream_id: str
+    backend: str
+    available: bool
+    litellm_alias: str | None = None
+    env_var: str | None = None
+    notes: str = ""
+    languages: list[str] | None = None
+
+
+# ─── The 5 model families ──────────────────────────────────────────────────
+
+
+# 1. ocr_vision — pull from the existing VISION_MODELS dict
+def _ocr_vision_entries() -> dict[str, ModelRegistryEntry]:
+    """Project the 22-entry VISION_MODELS into ModelRegistryEntry form.
+
+    Each VISION_MODELS key maps to one entry with role derived from the
+    existing `role: ModelRole` field on OCRModel
+    (tier1_heavy | tier2_medium | tier3_light | specialist | legacy).
+    """
+    entries: dict[str, ModelRegistryEntry] = {}
+    for vkey, vmodel in VISION_MODELS.items():
+        # vmodel.role is a Literal[...] string (not an enum), so we
+        # read it as a plain string.
+        role_str = getattr(vmodel, "role", "specialist")
+        if hasattr(role_str, "value"):  # backwards-compat if it's an enum
+            role_str = role_str.value
+        # Map the tier to a (family, role) pair
+        role_map = {
+            "tier1_heavy": "primary",
+            "tier2_medium": "default",
+            "tier3_light": "lightweight",
+            "specialist": "specialist",
+            "legacy": "legacy",
+        }
+        role = role_map.get(role_str, role_str)
+        # vmodel.backend is a ModelBackend enum OR a string
+        backend_raw = getattr(vmodel, "backend", "unknown")
+        backend_val = backend_raw.value if hasattr(backend_raw, "value") else str(backend_raw)
+        entries[vkey] = ModelRegistryEntry(
+            key=vkey,
+            family="ocr_vision",
+            role=role,
+            display_name=getattr(vmodel, "name", vkey),
+            unsloth_id=getattr(vmodel, "unsloth_id", None),
+            mlx_id=getattr(vmodel, "mlx_id", None),
+            upstream_id=getattr(vmodel, "upstream_id", vkey),
+            backend=backend_val,
+            available=getattr(vmodel, "available", True),
+            litellm_alias=f"local/vision/{vkey}" if getattr(vmodel, "available", True) else None,
+            notes=getattr(vmodel, "notes", ""),
+        )
+    return entries
+
+
+# 2. text_llm — the LiteLLM M3 chokepoint + agent defaults + text-only
+#    re-exports of VISION_MODELS
+def _text_llm_entries() -> dict[str, ModelRegistryEntry]:
+    entries: dict[str, ModelRegistryEntry] = {
+        # The 5 M3 chokepoint keywords
+        "kimi-k2.6": ModelRegistryEntry(
+            key="kimi-k2.6",
+            family="text_llm",
+            role="kimi",
+            display_name="Kimi K2.6 (M3 chokepoint)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="kimi-k2.6",
+            backend="opencode_go",
+            available=True,
+            litellm_alias="kimi/k2",
+            env_var="KIMI_K2_MODEL",
+            notes="M3 chokepoint: Kimi K2.6 via OpenCode Go API.",
+        ),
+        "glm-5.1": ModelRegistryEntry(
+            key="glm-5.1",
+            family="text_llm",
+            role="glm",
+            display_name="GLM 5.1 (M3 chokepoint)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="glm-5.1",
+            backend="opencode_go",
+            available=True,
+            litellm_alias="glm/5.1",
+            env_var="GLM_5_MODEL",
+            notes="M3 chokepoint: GLM 5.1 via OpenCode Go API.",
+        ),
+        "minimax-m2.5": ModelRegistryEntry(
+            key="minimax-m2.5",
+            family="text_llm",
+            role="m2",
+            display_name="minimax M2.5 (M3 chokepoint)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="minimax-m2.5",
+            backend="opencode_go",
+            available=True,
+            litellm_alias="minimax/m2.5",
+            env_var="MINIMAX_M2_MODEL",
+            notes="M3 chokepoint: minimax M2.5 via OpenCode Go API.",
+        ),
+        "mimo-v2.5": ModelRegistryEntry(
+            key="mimo-v2.5",
+            family="text_llm",
+            role="mimo",
+            display_name="MiMo v2.5 (M3 chokepoint)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="mimo-v2.5",
+            backend="opencode_go",
+            available=True,
+            litellm_alias="mimo/2.5",
+            env_var="MIMO_MODEL",
+            notes="M3 chokepoint: MiMo v2.5 via OpenCode Go API.",
+        ),
+        "deepseek-v4-flash": ModelRegistryEntry(
+            key="deepseek-v4-flash",
+            family="text_llm",
+            role="deepseek",
+            display_name="DeepSeek V4 Flash (M3 chokepoint)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="deepseek-v4-flash",
+            backend="opencode_go",
+            available=True,
+            litellm_alias="deepseek/flash",
+            env_var="DEEPSEEK_MODEL",
+            notes="M3 chokepoint: DeepSeek V4 Flash via OpenCode Go API.",
+        ),
+        "minimax-m3": ModelRegistryEntry(
+            key="minimax-m3",
+            family="text_llm",
+            role="default",
+            display_name="minimax M3 (canonical plan alias)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="minimax-m3",
+            backend="opencode_go",
+            available=True,
+            litellm_alias="minimax-m3",
+            env_var="MINIMAX_BASE_URL",
+            notes=(
+                "Canonical M3 plan alias used by openclaw/openchamber/hermes. "
+                "This is the default model for the 12-agent fleet (the "
+                "12 agents in agents/agent_registry.py)."
+            ),
+        ),
+        # ── Qwen token plan (Qwen Cloud, served via DashScope) ──
+        # Per openspec/changes/2026-08-06-token-plan-apis-lc-doc-pipeline-
+        # and-edge-tls-remediation-v1/specs/centralized-model-registry/spec.md.
+        # backend="dashscope" is a direct hosted-API call to DashScope's
+        # OpenAI-compatible endpoint (mirrors the "anthropic" / "openai" /
+        # "google" hosted-API backend convention used below) — NOT
+        # "opencode_go" (that's the OpenCode Zen gateway used by minimax-m3
+        # and the M3 chokepoint keywords) and NOT "llama-swap" (that's the
+        # local GGUF path used by qwen3.6-27b-mtp just below). The base URL
+        # is env-driven via DASHSCOPE_BASE_URL — never hardcoded here.
+        "qwen3.7-plus": ModelRegistryEntry(
+            key="qwen3.7-plus",
+            family="text_llm",
+            role="token_plan_primary",
+            display_name="Qwen 3.7 Plus (DashScope token plan, primary)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="qwen/qwen3.7-plus",
+            backend="dashscope",
+            available=True,
+            litellm_alias="dashscope/qwen3.7-plus",
+            env_var="DASHSCOPE_API_KEY",
+            notes=(
+                "Qwen Cloud token-plan primary text model, served via "
+                "DashScope's OpenAI-compatible endpoint "
+                "({DASHSCOPE_BASE_URL}, currently "
+                "https://coding.dashscope.aliyuncs.com/v1). Used as the "
+                "secondary cross-check client (alongside minimax-m3) for "
+                "the lc6 BAML extraction functions "
+                "(ExtractCurriculumSyllabus, ExtractExamPaperLayout, "
+                "ExtractMarkingSchemeGuideline, ExtractCrossLinguisticConcept). "
+                "See baml_src/clients.baml `ExtractQwenCrossCheck`."
+            ),
+        ),
+        "qwen3-coder-next": ModelRegistryEntry(
+            key="qwen3-coder-next",
+            family="text_llm",
+            role="token_plan_coding",
+            display_name="Qwen3 Coder Next (DashScope token plan, coding)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="qwen/qwen3-coder-next",
+            backend="dashscope",
+            available=True,
+            litellm_alias="dashscope/qwen3-coder-next",
+            env_var="DASHSCOPE_API_KEY",
+            notes=(
+                "Qwen Cloud token-plan coding model, served via DashScope's "
+                "OpenAI-compatible endpoint ({DASHSCOPE_BASE_URL}). Used by "
+                "the opencode `qwen` provider (opencode.json) for coding-"
+                "agent tasks; not currently wired into a BAML client."
+            ),
+        ),
+        "qwen3.6-27b-mtp": ModelRegistryEntry(
+            key="qwen3.6-27b-mtp",
+            family="text_llm",
+            role="strong",
+            display_name="Qwen 3.6 27B MTP (local GGUF)",
+            unsloth_id="unsloth/Qwen3.6-27B-MTP-GGUF",
+            mlx_id=None,
+            upstream_id="Qwen/Qwen3.6-27B",
+            backend="llama-swap",
+            available=True,
+            litellm_alias="local/vision/qwen3.6-27b-mtp",
+            env_var=None,
+            notes=(
+                "Local GGUF served via llama-swap. Used by LlamaSwapReasoningClient "
+                "(qwen3.6-27b-mtp) in baml_src/clients_llama_swap.baml. Also "
+                "doubles as the 'strong' text-only model on the agent fleet."
+            ),
+        ),
+        "uccix-mistral-24b": ModelRegistryEntry(
+            key="uccix-mistral-24b",
+            family="text_llm",
+            role="irish",
+            display_name="UCCIX Mistral 24B (Modern Irish path)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="ReliableAI/UCCIX-Mistral-24B",
+            backend="transformers",
+            available=True,
+            litellm_alias=None,
+            env_var=None,
+            languages=["ga"],
+            notes=(
+                "Modern Irish-language text model (transformers-backed). "
+                "Used by the agent fleet when language='ga' (replaces the "
+                "deprecated uccix-llama2-13b)."
+            ),
+        ),
+        "uccix-llama-3.1-8b": ModelRegistryEntry(
+            key="uccix-llama-3.1-8b",
+            family="text_llm",
+            role="irish_fast",
+            display_name="UCCIX Llama 3.1 8B (Irish fast path)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="ReliableAI/UCCIX-Llama-3.1-8B",
+            backend="transformers",
+            available=True,
+            litellm_alias=None,
+            env_var=None,
+            languages=["ga"],
+            notes=(
+                "Fast Irish-language text model (transformers-backed). "
+                "Used when language='ga' and a faster response is needed."
+            ),
+        ),
+        "uccix-llama2-13b": ModelRegistryEntry(
+            key="uccix-llama2-13b",
+            family="text_llm",
+            role="irish_legacy",
+            display_name="UCCIX Llama2 13B (DEPRECATED)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="ReliableAI/UCCIX-Llama2-13B-Instruct",
+            backend="litellm",
+            available=False,
+            litellm_alias=None,
+            env_var=None,
+            languages=["ga"],
+            notes=(
+                "DEPRECATED 2026-08-15. Was in agents/adk/tuatha_config.py:25 "
+                "but the canonical registry marks it available=False. "
+                "Migrate to uccix-mistral-24b or uccix-llama-3.1-8b."
+            ),
+        ),
+        "claude-sonnet-4-20250514": ModelRegistryEntry(
+            key="claude-sonnet-4-20250514",
+            family="text_llm",
+            role="long_context",
+            display_name="Claude Sonnet 4 (long-context)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="anthropic/claude-sonnet-4-20250514",
+            backend="anthropic",
+            available=True,
+            litellm_alias="anthropic/claude-sonnet-4-20250514",
+            env_var="ANTHROPIC_API_KEY",
+            notes=(
+                "Long-context Anthropic model used by agents/letta_client.py. "
+                "Requires ANTHROPIC_API_KEY in .infisical.env."
+            ),
+        ),
+        "gpt-4o-mini": ModelRegistryEntry(
+            key="gpt-4o-mini",
+            family="text_llm",
+            role="fast",
+            display_name="GPT-4o-mini (fast)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="openai/gpt-4o-mini",
+            backend="openai",
+            available=True,
+            litellm_alias="openai/gpt-4o-mini",
+            env_var="OPENAI_API_KEY",
+            notes=(
+                "Fast OpenAI model used by the HITL agent. Requires "
+                "OPENAI_API_KEY in .infisical.env."
+            ),
+        ),
+        "gemini-2.5-pro": ModelRegistryEntry(
+            key="gemini-2.5-pro",
+            family="text_llm",
+            role="strong_hosted",
+            display_name="Gemini 2.5 Pro (Google ADK strong)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="google/gemini-2.5-pro",
+            backend="google",
+            available=True,
+            litellm_alias="gemini/gemini-2.5-pro",
+            env_var="GOOGLE_API_KEY",
+            notes=(
+                "Strong Google model used by the email_triage_agent. "
+                "Requires GOOGLE_API_KEY in .infisical.env. Role was "
+                "originally 'strong', duplicating qwen3.6-27b-mtp's role — "
+                "since resolve() is a first-match linear scan, that made "
+                "this entry permanently unreachable via resolve('text_llm', "
+                "'strong'), which always returned qwen3.6-27b-mtp instead "
+                "(that entry's own notes confirm this was the intended "
+                "'strong' default for the agent fleet, so it keeps the "
+                "role). Renamed to 'strong_hosted' (2026-08-07) so this "
+                "entry is independently resolvable for callers who "
+                "specifically want a hosted API model with no local-GGUF "
+                "dependency, without changing existing resolve('text_llm', "
+                "'strong') behavior."
+            ),
+        ),
+        "email_triage_gemini_2_5_pro": ModelRegistryEntry(
+            key="email_triage_gemini_2_5_pro",
+            family="text_llm",
+            role="email_triage_strong",
+            display_name="Gemini 2.5 Pro (disambiguated email_triage_strong)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="google/gemini-2.5-pro",
+            backend="google",
+            available=True,
+            litellm_alias="gemini/gemini-2.5-pro",
+            env_var="EMAIL_TRIAGE_MODEL",
+            notes=(
+                "Disambiguated lookup for the email_triage_agent "
+                "(`agents/adk/email_triage_agent.py:_email_triage_model`). "
+                "The 2-key disambiguation was needed because the "
+                "existing `text_llm/strong` role is the local Qwen "
+                "3.6 27B MTP path (no Google API key required); the "
+                "email_triage agent needs the Google path explicitly."
+            ),
+        ),
+        "unsloth/gemma-3-4b-it-GGUF": ModelRegistryEntry(
+            key="unsloth/gemma-3-4b-it-GGUF",
+            family="text_llm",
+            role="pdf_review_suggestion",
+            display_name="Gemma 3 4B (Unsloth GGUF, pdf-review ZeroGPU)",
+            unsloth_id="unsloth/gemma-3-4b-it-GGUF",
+            mlx_id=None,
+            upstream_id="google/gemma-3-4b-it",
+            backend="transformers",
+            available=True,
+            litellm_alias=None,
+            env_var="SUGGESTION_MODEL",
+            notes=(
+                "ZeroGPU inference for the pdf-review Space "
+                "(`spaces/oideachais-pdf-review/app.py:39`). 4 GB GGUF; "
+                "runs inside the @spaces.GPU worker boundary."
+            ),
+        ),
+        "unsloth/gemma-4-26B-A4B-it-GGUF": ModelRegistryEntry(
+            key="unsloth/gemma-4-26B-A4B-it-GGUF",
+            family="text_llm",
+            role="pdf_review_explanation",
+            display_name="Gemma 4 26B-A4B (Unsloth GGUF, pdf-review ZeroGPU)",
+            unsloth_id="unsloth/gemma-4-26B-A4B-it-GGUF",
+            mlx_id=None,
+            upstream_id="google/gemma-4-26B-A4B-it",
+            backend="transformers",
+            available=True,
+            litellm_alias=None,
+            env_var="EXPLANATION_MODEL",
+            notes=(
+                "ZeroGPU inference for the pdf-review Space "
+                "(`spaces/oideachais-pdf-review/app.py:40`). 14 GB MoE; "
+                "requires ZeroGPU large sizing per HuggingFace Spaces spec."
+            ),
+        ),
+        # The 3 hackathon fallback roles — used by the hand-rolled HF
+        # Inference chain in `spaces/_common/baml_client.py:69-71` when
+        # the LiteLLM gateway is unreachable. Historical hardcoded HF
+        # IDs preserved verbatim; consumers should migrate to the
+        # canonical LiteLLM path in production.
+        "Qwen/Qwen2.5-7B-Instruct": ModelRegistryEntry(
+            key="Qwen/Qwen2.5-7B-Instruct",
+            family="text_llm",
+            role="hackathon_primary",
+            display_name="Qwen 2.5 7B (hackathon HF primary)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="Qwen/Qwen2.5-7B-Instruct",
+            backend="hf_inference",
+            available=True,
+            litellm_alias=None,
+            env_var="HACKATHON_PRIMARY_MODEL",
+            notes=(
+                "Hand-rolled HF Inference primary in the 2026-06 hackathon "
+                "chain (`spaces/_common/baml_client.py:69`). "
+                "Used only when the LiteLLM gateway is unreachable."
+            ),
+        ),
+        "meta-llama/Llama-3.1-8B-Instruct": ModelRegistryEntry(
+            key="meta-llama/Llama-3.1-8B-Instruct",
+            family="text_llm",
+            role="hackathon_fallback_1",
+            display_name="Llama 3.1 8B (hackathon HF fallback 1)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="meta-llama/Llama-3.1-8B-Instruct",
+            backend="hf_inference",
+            available=True,
+            litellm_alias=None,
+            env_var="HACKATHON_FALLBACK_1_MODEL",
+            notes=(
+                "Hand-rolled HF Inference fallback 1 in the 2026-06 hackathon "
+                "chain (`spaces/_common/baml_client.py:70`)."
+            ),
+        ),
+        "google/gemma-2-9b-it": ModelRegistryEntry(
+            key="google/gemma-2-9b-it",
+            family="text_llm",
+            role="hackathon_fallback_2",
+            display_name="Gemma 2 9B IT (hackathon HF fallback 2)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="google/gemma-2-9b-it",
+            backend="hf_inference",
+            available=True,
+            litellm_alias=None,
+            env_var="HACKATHON_FALLBACK_2_MODEL",
+            notes=(
+                "Hand-rolled HF Inference fallback 2 in the 2026-06 hackathon "
+                "chain (`spaces/_common/baml_client.py:71`)."
+            ),
+        ),
+        # ── v6 (Unsloth v5 integration) — 10 new text_llm entries (2026-08-21) ──
+        # All served via the unsloth-serve stack at :8889 (Unsloth Studio
+        # headless OpenAI/Anthropic-compatible endpoint). All entries use
+        # backend="unsloth" and litellm_alias="local/unsloth/<key>".
+        "qwen3.8-27b": ModelRegistryEntry(
+            key="qwen3.8-27b",
+            family="text_llm",
+            role="unsloth_fallback",
+            display_name="Qwen 3.8 27B (Unsloth Studio, local coding fallback)",
+            unsloth_id="unsloth/Qwen3.8-27B-GGUF",
+            mlx_id=None,
+            upstream_id="Qwen/Qwen3.8-27B",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/qwen3.8-27b",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Qwen 3.8 27B Dynamic 3.0 GGUF, the new Unsloth flagship "
+                "(5.1M downloads in 5 days post-launch). Served via "
+                "unsloth-serve. Primary local fallback when the M3 plan "
+                "Kimi-K2.6 / GLM-5.1 / minimax-M2.5 quota is exhausted. "
+                "Reportedly rivals the U.S. frontier coding models on "
+                "agentic benchmarks. 21.8 GB Q4_K_M."
+            ),
+        ),
+        "qwen3.8-2.4t-a95b": ModelRegistryEntry(
+            key="qwen3.8-2.4t-a95b",
+            family="text_llm",
+            role="unsloth_heavy",
+            display_name="Qwen 3.8 2.4T-A95B (Unsloth Studio, MoE)",
+            unsloth_id="unsloth/Qwen3.8-2.4T-A95B-GGUF",
+            mlx_id=None,
+            upstream_id="Qwen/Qwen3.8-2.4T-A95B",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/qwen3.8-2.4t-a95b",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Qwen 3.8 2.4T-A95B MoE (2.4T total / 95B active). "
+                "Heavy reasoning tier. Served via unsloth-serve on arm1-oci."
+            ),
+        ),
+        "deepseek-v4-pro": ModelRegistryEntry(
+            key="deepseek-v4-pro",
+            family="text_llm",
+            role="unsloth_reasoning",
+            display_name="DeepSeek V4 Pro (Unsloth Studio, local reasoning)",
+            unsloth_id="unsloth/DeepSeek-V4-Pro-0813-GGUF",
+            mlx_id=None,
+            upstream_id="deepseek-ai/DeepSeek-V4-Pro-0813",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/deepseek-v4-pro",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "DeepSeek V4 Pro 0813 (deepseek-ai, 2026-08). Reasoning "
+                "specialist. Served via unsloth-serve. Local fallback "
+                "for the M3 chokepoint deepseek-v4-flash."
+            ),
+        ),
+        "deepseek-v4-flash": ModelRegistryEntry(
+            key="deepseek-v4-flash",
+            family="text_llm",
+            role="unsloth_fast",
+            display_name="DeepSeek V4 Flash (Unsloth Studio, local fast)",
+            unsloth_id="unsloth/DeepSeek-V4-Flash-0731",
+            mlx_id=None,
+            upstream_id="deepseek-ai/DeepSeek-V4-Flash-0731",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/deepseek-v4-flash",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "DeepSeek V4 Flash 0731 (deepseek-ai, 2026-07). "
+                "Fast reasoning tier. Served via unsloth-serve."
+            ),
+        ),
+        "kimi-k2.7-code": ModelRegistryEntry(
+            key="kimi-k2.7-code",
+            family="text_llm",
+            role="unsloth_coding",
+            display_name="Kimi K2.7 Code (Unsloth Studio, coding)",
+            unsloth_id="unsloth/Kimi-K2.7-Code-GGUF",
+            mlx_id=None,
+            upstream_id="moonshotai/Kimi-K2.7-Code",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/kimi-k2.7-code",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Kimi K2.7 Code (moonshotai, 2026-08). Coding specialist. "
+                "Served via unsloth-serve. Local fallback for the coding "
+                "agent when opencode-go Kimi-K2.6 quota is exhausted."
+            ),
+        ),
+        "kimi-k3": ModelRegistryEntry(
+            key="kimi-k3",
+            family="text_llm",
+            role="unsloth_kimi",
+            display_name="Kimi K3 (Unsloth Studio)",
+            unsloth_id="unsloth/Kimi-K3-GGUF",
+            mlx_id=None,
+            upstream_id="moonshotai/Kimi-K3",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/kimi-k3",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Kimi K3 (moonshotai, 2026-08). Served via unsloth-serve. "
+                "Latest moonshotai flagship."
+            ),
+        ),
+        "nemotron-3.5-lightning-30b-a3b": ModelRegistryEntry(
+            key="nemotron-3.5-lightning-30b-a3b",
+            family="text_llm",
+            role="unsloth_nemotron",
+            display_name="NVIDIA Nemotron 3.5 Lightning 30B-A3B (Unsloth Studio)",
+            unsloth_id="unsloth/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF",
+            mlx_id=None,
+            upstream_id="nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/nemotron-3.5-lightning-30b-a3b",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "NVIDIA Nemotron 3.5 Lightning 30B-A3B MoE (2026-08). "
+                "Served via unsloth-serve."
+            ),
+        ),
+        "muse-glimmer-30b": ModelRegistryEntry(
+            key="muse-glimmer-30b",
+            family="text_llm",
+            role="unsloth_muse",
+            display_name="Muse Glimmer 30B (Unsloth Studio, Meta)",
+            unsloth_id="unsloth/Muse-Glimmer-30B-GGUF",
+            mlx_id=None,
+            upstream_id="meta-muse/Muse-Glimmer-30B",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/muse-glimmer-30b",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Muse Glimmer 30B (Meta Muse, 2026-08). Served via "
+                "unsloth-serve. Open-source Muse-Glimmer variant."
+            ),
+        ),
+        "minimax-m2.5": ModelRegistryEntry(
+            key="minimax-m2.5",
+            family="text_llm",
+            role="unsloth_local_minimax",
+            display_name="minimax M2.5 (Unsloth Studio, local)",
+            unsloth_id="unsloth/MiniMax-M2.5-GGUF",
+            mlx_id=None,
+            upstream_id="MiniMaxAI/MiniMax-M2.5",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/minimax-m2.5",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "minimax M2.5 (MiniMax, 2026-08). Served via unsloth-serve. "
+                "Local fallback for the M3 plan minimax-m3 chokepoint."
+            ),
+        ),
+        "magistral-small-2509": ModelRegistryEntry(
+            key="magistral-small-2509",
+            family="text_llm",
+            role="unsloth_magistral",
+            display_name="Magistral Small 2509 (Unsloth Studio, reasoning)",
+            unsloth_id="unsloth/Magistral-Small-2509-GGUF",
+            mlx_id=None,
+            upstream_id="mistralai/Magistral-Small-2509",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/magistral-small-2509",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Magistral Small 2509 (mistralai, 2026-09). Reasoning "
+                "specialist. Served via unsloth-serve."
+            ),
+        ),
+    }
+    return entries
+
+
+# 3. embedder — the 3 sentence-transformer models
+def _embedder_entries() -> dict[str, ModelRegistryEntry]:
+    return {
+        "BAAI/bge-m3": ModelRegistryEntry(
+            key="BAAI/bge-m3",
+            family="embedder",
+            role="default",
+            display_name="BGE-M3 (1024-d, canonical embedder)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="BAAI/bge-m3",
+            backend="sentence-transformers",
+            available=True,
+            litellm_alias="embedding-bge-m3",
+            env_var="CIANFHOGHLAIM_EMBED_MODEL",
+            notes=(
+                "Canonical 1024-d embedder. Used by cocoindex_flows/_shared/_lifespan.py "
+                "and shared across all CocoIndex v1 Apps. Default."
+            ),
+        ),
+        "BAAI/bge-large-en-v1.5": ModelRegistryEntry(
+            key="BAAI/bge-large-en-v1.5",
+            family="embedder",
+            role="english_only",
+            display_name="BGE-large-en-v1.5 (1024-d, English only)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="BAAI/bge-large-en-v1.5",
+            backend="sentence-transformers",
+            available=True,
+            litellm_alias=None,
+            env_var=None,
+            notes=(
+                "English-only embedder. Optional choice for English-only corpora. "
+                "Listed in notebooks/10_biep_pipeline_lakehouse_semantic_01_search.py "
+                "embedder dropdown."
+            ),
+        ),
+        "all-MiniLM-L6-v2": ModelRegistryEntry(
+            key="all-MiniLM-L6-v2",
+            family="embedder",
+            role="lightweight",
+            display_name="MiniLM-L6-v2 (384-d, lightweight)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="sentence-transformers/all-MiniLM-L6-v2",
+            backend="sentence-transformers",
+            available=True,
+            litellm_alias=None,
+            env_var=None,
+            notes=(
+                "Lightweight 384-d embedder. Faster inference than BGE-M3. "
+                "Listed in notebooks/16_speedrun_mmo_01_mission_control.py "
+                "embedder dropdown."
+            ),
+        ),
+        # ── v6 (Unsloth v5 integration) — 2 new embedder entries (2026-08-21) ──
+        "qwen3-embedding-4b": ModelRegistryEntry(
+            key="qwen3-embedding-4b",
+            family="embedder",
+            role="unsloth_emb_qwen",
+            display_name="Qwen 3 Embedding 4B (Unsloth Studio)",
+            unsloth_id="unsloth/Qwen3-Embedding-4B-unsloth-bnb-4bit",
+            mlx_id=None,
+            upstream_id="Qwen/Qwen3-Embedding-4B",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/qwen3-embedding-4b",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Qwen 3 Embedding 4B (Qwen, 2026-08). Unsloth BnB-4bit "
+                "fine-tuning-ready. Served via unsloth-serve. Local "
+                "embedder alternative to BGE-M3."
+            ),
+        ),
+        "embeddinggemma-300m": ModelRegistryEntry(
+            key="embeddinggemma-300m",
+            family="embedder",
+            role="unsloth_emb_gemma",
+            display_name="EmbeddingGemma 300M (Unsloth Studio)",
+            unsloth_id="unsloth/EmbeddingGemma-300M",
+            mlx_id=None,
+            upstream_id="google/embeddinggemma-300m",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/embeddinggemma-300m",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "EmbeddingGemma 300M (Google, 2026-08). Lightweight "
+                "embedder. Served via unsloth-serve."
+            ),
+        ),
+    }
+
+
+# 4. rerank — the 3 rerank providers
+def _rerank_entries() -> dict[str, ModelRegistryEntry]:
+    return {
+        "jina-reranker-v2-base-multilingual": ModelRegistryEntry(
+            key="jina-reranker-v2-base-multilingual",
+            family="rerank",
+            role="default",
+            display_name="Jina Reranker v2 (multilingual)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="jinaai/jina-reranker-v2-base-multilingual",
+            backend="jina",
+            available=True,
+            litellm_alias=None,
+            env_var="RERANK_PROVIDER",
+            notes=(
+                "Canonical rerank provider (default). Configurable via "
+                "RERANK_PROVIDER env var (jina | cohere | aliyun)."
+            ),
+        ),
+        "rerank-v3.5": ModelRegistryEntry(
+            key="rerank-v3.5",
+            family="rerank",
+            role="cohere",
+            display_name="Cohere Rerank v3.5",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="cohere/rerank-v3.5",
+            backend="cohere",
+            available=True,
+            litellm_alias=None,
+            env_var="RERANK_PROVIDER",
+            notes="Cohere rerank provider (alternative to Jina).",
+        ),
+        "gte-rerank-v2": ModelRegistryEntry(
+            key="gte-rerank-v2",
+            family="rerank",
+            role="aliyun",
+            display_name="Aliyun GTE Rerank v2",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="Alibaba-NLP/gte-rerank-v2",
+            backend="aliyun",
+            available=True,
+            litellm_alias=None,
+            env_var="RERANK_PROVIDER",
+            notes="Aliyun GTE rerank provider (alternative to Jina).",
+        ),
+    }
+
+
+# 5. image_gen — the 5 image-gen models
+def _image_gen_entries() -> dict[str, ModelRegistryEntry]:
+    return {
+        "local/image/flux2-dev": ModelRegistryEntry(
+            key="local/image/flux2-dev",
+            family="image_gen",
+            role="flux",
+            display_name="Flux2-Dev (local image gen)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="black-forest-labs/FLUX.2-dev",
+            backend="local",
+            available=True,
+            litellm_alias="local/image/flux2-dev",
+            env_var=None,
+            notes="Flux2-Dev local image generation.",
+        ),
+        "local/image/z-image-turbo": ModelRegistryEntry(
+            key="local/image/z-image-turbo",
+            family="image_gen",
+            role="z_image",
+            display_name="Z-Image-Turbo (local image gen)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="stabilityai/z-image-turbo",
+            backend="local",
+            available=True,
+            litellm_alias="local/image/z-image-turbo",
+            env_var=None,
+            notes="Z-Image-Turbo local image generation (fast variant).",
+        ),
+        "local/image/qwen-image": ModelRegistryEntry(
+            key="local/image/qwen-image",
+            family="image_gen",
+            role="qwen",
+            display_name="Qwen-Image (local image gen)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="Qwen/Qwen-Image",
+            backend="local",
+            available=True,
+            litellm_alias="local/image/qwen-image",
+            env_var=None,
+            notes="Qwen-Image local image generation.",
+        ),
+        "local/image/sdxl": ModelRegistryEntry(
+            key="local/image/sdxl",
+            family="image_gen",
+            role="sdxl",
+            display_name="SDXL (local image gen)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="stabilityai/stable-diffusion-xl-base-1.0",
+            backend="local",
+            available=True,
+            litellm_alias="local/image/sdxl",
+            env_var=None,
+            notes="SDXL local image generation (legacy).",
+        ),
+        "local/image/fibo": ModelRegistryEntry(
+            key="local/image/fibo",
+            family="image_gen",
+            role="fibo",
+            display_name="FIBO (local image gen)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="fibonet/fibo",
+            backend="local",
+            available=True,
+            litellm_alias="local/image/fibo",
+            env_var=None,
+            notes="FIBO local image generation (legacy curriculum asset).",
+        ),
+        # ── v6 (Unsloth v5 integration) — 2 new image_gen entries (2026-08-21) ──
+        "local/image/diffusiongemma-26b-a4b": ModelRegistryEntry(
+            key="local/image/diffusiongemma-26b-a4b",
+            family="image_gen",
+            role="unsloth_diffusion",
+            display_name="DiffusionGemma 26B-A4B (Unsloth Studio)",
+            unsloth_id="unsloth/diffusiongemma-26B-A4B-it-GGUF",
+            mlx_id=None,
+            upstream_id="google/diffusiongemma-26B-A4B-it",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/diffusiongemma-26b-a4b",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "DiffusionGemma 26B-A4B MoE (Google, 2026-08). "
+                "Served via unsloth-serve. The new diffusion flagship."
+            ),
+        ),
+        "local/image/qwen-image-2512": ModelRegistryEntry(
+            key="local/image/qwen-image-2512",
+            family="image_gen",
+            role="unsloth_qwen_image",
+            display_name="Qwen-Image 2512 (Unsloth Studio)",
+            unsloth_id="unsloth/Qwen-Image-2512-GGUF",
+            mlx_id=None,
+            upstream_id="Qwen/Qwen-Image-2512",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/qwen-image-2512",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Qwen-Image 2512 (Qwen, 2026-08). Served via unsloth-serve. "
+                "Updated Qwen-Image model."
+            ),
+        ),
+    }
+
+
+# 6. voice — the 5 voice/ASR/TTS models
+def _voice_entries() -> dict[str, ModelRegistryEntry]:
+    return {
+        "whisper-large": ModelRegistryEntry(
+            key="whisper-large",
+            family="voice",
+            role="asr",
+            display_name="Whisper Large (ASR, multilingual)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="openai/whisper-large-v3",
+            backend="transformers",
+            available=True,
+            litellm_alias=None,
+            env_var=None,
+            notes="Whisper Large ASR for English + 99 langs.",
+        ),
+        "wav2vec2-irish": ModelRegistryEntry(
+            key="wav2vec2-irish",
+            family="voice",
+            role="asr_irish",
+            display_name="wav2vec2-Irish (ASR, ga)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="cianchek/wav2vec2-large-xlsr-irish",
+            backend="transformers",
+            available=True,
+            litellm_alias=None,
+            env_var=None,
+            languages=["ga"],
+            notes="wav2vec2-Irish ASR specialist (Celtic-language path).",
+        ),
+        "chatterbox": ModelRegistryEntry(
+            key="chatterbox",
+            family="voice",
+            role="tts",
+            display_name="Chatterbox (TTS)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="ResembleAI/chatterbox",
+            backend="local",
+            available=True,
+            litellm_alias=None,
+            env_var=None,
+            notes=(
+                "Chatterbox TTS. Default for Irish + English voice synthesis. "
+                "Used by agents/api/_oideachais_api/services/chatterbox.py."
+            ),
+        ),
+        "aba-tts": ModelRegistryEntry(
+            key="aba-tts",
+            family="voice",
+            role="tts_irish",
+            display_name="ABA-TTS (Irish TTS)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="cianchek/aba-tts",
+            backend="local",
+            available=True,
+            litellm_alias=None,
+            env_var=None,
+            languages=["ga"],
+            notes="ABA-TTS specialist for high-quality Irish TTS.",
+        ),
+        "ResembleAI/chatterbox": ModelRegistryEntry(
+            key="ResembleAI/chatterbox",
+            family="voice",
+            role="tts_legacy",
+            display_name="Chatterbox (legacy full path)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="ResembleAI/chatterbox",
+            backend="local",
+            available=True,
+            litellm_alias=None,
+            env_var=None,
+            notes=(
+                "DEPRECATED 2026-08-15: legacy full-path HF ID. Migrated "
+                "consumers to the short key `chatterbox`."
+            ),
+        ),
+        # ── v6 (Unsloth v5 integration) — 2 new voice entries (2026-08-21) ──
+        "orpheus-tts-3b": ModelRegistryEntry(
+            key="orpheus-tts-3b",
+            family="voice",
+            role="unsloth_tts",
+            display_name="Orpheus TTS 3B (Unsloth Studio)",
+            unsloth_id="unsloth/orpheus-3b-0.1-ft-unsloth-bnb-4bit",
+            mlx_id=None,
+            upstream_id="canopyai/orpheus-3b-0.1-ft",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/orpheus-3b-0.1-ft",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Orpheus TTS 3B (canopyai, 2026). Served via unsloth-serve. "
+                "Open-source TTS alternative to Chatterbox."
+            ),
+        ),
+        "sesame-csm-1b": ModelRegistryEntry(
+            key="sesame-csm-1b",
+            family="voice",
+            role="unsloth_tts_csm",
+            display_name="Sesame CSM 1B (Unsloth Studio)",
+            unsloth_id="unsloth/Sesame-CSM-1B",
+            mlx_id=None,
+            upstream_id="sesame/csm-1b",
+            backend="unsloth",
+            available=True,
+            litellm_alias="local/unsloth/sesame-csm-1b",
+            env_var="UNSLOTH_API_KEY",
+            notes=(
+                "Sesame CSM 1B (sesame, 2026). Served via unsloth-serve. "
+                "Conversational Speech Model."
+            ),
+        ),
+    }
+
+
+# 7. translation — the 3 translation models
+def _translation_entries() -> dict[str, ModelRegistryEntry]:
+    return {
+        "opus-mt": ModelRegistryEntry(
+            key="opus-mt",
+            family="translation",
+            role="default",
+            display_name="Helsinki-NLP/OPUS-MT (per-pair template)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="Helsinki-NLP/opus-mt-{src}-{tgt}",
+            backend="transformers",
+            available=True,
+            litellm_alias=None,
+            env_var=None,
+            notes=(
+                "Per-language-pair translation template. Interpolates "
+                "src + tgt into the model ID at runtime."
+            ),
+        ),
+        "m2m100": ModelRegistryEntry(
+            key="m2m100",
+            family="translation",
+            role="multilingual",
+            display_name="M2M-100 (multilingual)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="facebook/m2m100_418M",
+            backend="transformers",
+            available=True,
+            litellm_alias=None,
+            env_var=None,
+            notes="M2M-100 multilingual translation.",
+        ),
+        "nllb": ModelRegistryEntry(
+            key="nllb",
+            family="translation",
+            role="strong_multilingual",
+            display_name="NLLB-200 (strong multilingual)",
+            unsloth_id=None,
+            mlx_id=None,
+            upstream_id="facebook/nllb-200-distilled-600M",
+            backend="transformers",
+            available=True,
+            litellm_alias=None,
+            env_var=None,
+            notes="NLLB-200 distilled multilingual translation (strong).",
+        ),
+    }
+
+
+# ─── The unified registry ──────────────────────────────────────────────────
+
+
+class _ModelRegistry:
+    """The unified model registry.
+
+    Holds all 5 model families (~70 entries) keyed by ``ModelRegistryEntry.key``.
+    Provides the canonical `resolve(family, role)` + `filter(family)` API.
+    """
+
+    def __init__(self) -> None:
+        self._entries: dict[str, ModelRegistryEntry] = {}
+        # Populate from each family's contribution
+        for fam in (
+            _ocr_vision_entries(),
+            _text_llm_entries(),
+            _embedder_entries(),
+            _rerank_entries(),
+            _image_gen_entries(),
+            _voice_entries(),
+            _translation_entries(),
+        ):
+            self._entries.update(fam)
+        self._warn_on_duplicate_roles()
+
+    def _warn_on_duplicate_roles(self) -> None:
+        """Log a warning for any (family, role) claimed by >1 entry.
+
+        `resolve()` is a first-match linear scan over insertion order, so a
+        silent duplicate makes one entry permanently unreachable via
+        `resolve()` (it's still reachable by key). This doesn't raise —
+        some duplication may be intentional (e.g. a deprecated entry kept
+        for `filter()` visibility) — but it makes the collision visible
+        instead of a mystery, unlike the `strong` role duplicate found
+        2026-08-07 (qwen3.6-27b-mtp vs. gemini-2.5-pro) that shadowed
+        gemini-2.5-pro from every `resolve("text_llm", "strong")` caller
+        with no warning at all.
+        """
+        import logging
+
+        seen: dict[tuple[str, str], str] = {}
+        for entry in self._entries.values():
+            fr = (entry.family, entry.role)
+            if fr in seen:
+                logging.getLogger(__name__).warning(
+                    "model_registry_duplicate_role",
+                    extra={
+                        "family": entry.family,
+                        "role": entry.role,
+                        "shadowed_key": seen[fr],
+                        "winning_key": entry.key,
+                    },
+                )
+            else:
+                seen[fr] = entry.key
+
+    # ── Iteration / inspection ──
+
+    def __len__(self) -> int:
+        return len(self._entries)
+
+    def __iter__(self):
+        return iter(self._entries.values())
+
+    def __contains__(self, key: str) -> bool:
+        return key in self._entries
+
+    def __getitem__(self, key: str) -> ModelRegistryEntry:
+        return self._entries[key]
+
+    def get(self, key: str, default: Any = None) -> ModelRegistryEntry | None:
+        return self._entries.get(key, default)
+
+    def entries(self) -> list[ModelRegistryEntry]:
+        """Return all entries as a list."""
+        return list(self._entries.values())
+
+    def keys(self) -> Iterable[str]:
+        return self._entries.keys()
+
+    def values(self) -> Iterable[ModelRegistryEntry]:
+        return self._entries.values()
+
+    def items(self):
+        return self._entries.items()
+
+    # ── Family/role queries ──
+
+    def filter(
+        self,
+        family: ModelFamily | None = None,
+        *,
+        role: str | None = None,
+        available: bool | None = None,
+    ) -> list[ModelRegistryEntry]:
+        """Filter entries by family + role + availability.
+
+        Examples:
+            MODEL_REGISTRY.filter(family="embedder")
+            MODEL_REGISTRY.filter(family="text_llm", role="strong")
+            MODEL_REGISTRY.filter(family="ocr_vision", available=True)
+        """
+        results: list[ModelRegistryEntry] = []
+        for entry in self._entries.values():
+            if family is not None and entry.family != family:
+                continue
+            if role is not None and entry.role != role:
+                continue
+            if available is not None and entry.available != available:
+                continue
+            results.append(entry)
+        return sorted(results, key=lambda e: (e.family, e.role, e.key))
+
+    def resolve(
+        self,
+        family: ModelFamily,
+        role: str,
+        *,
+        language: str | None = None,
+    ) -> str:
+        """Resolve a single model key for the given (family, role).
+
+        Args:
+            family: One of the 7 ModelFamily literals.
+            role: Free-form role string within the family.
+            language: Optional 2-letter language code (e.g. ``"ga"``).
+                If supplied and a language-specialized entry exists,
+                returns the language-specialized model. Otherwise
+                returns the language-agnostic entry.
+
+        Returns:
+            The canonical model key (e.g. ``"minimax-m3"``,
+            ``"molmo2-8b"``, ``"ResembleAI/chatterbox"``).
+
+        Raises:
+            KeyError: if no entry matches the (family, role) tuple.
+        """
+        # First try: language-specialized match
+        if language is not None:
+            for entry in self._entries.values():
+                if (
+                    entry.family == family
+                    and entry.role == role
+                    and entry.languages is not None
+                    and language in entry.languages
+                ):
+                    return entry.key
+
+        # Second try: language-agnostic match
+        for entry in self._entries.values():
+            if (
+                entry.family == family
+                and entry.role == role
+                and (entry.languages is None or language is None)
+            ):
+                return entry.key
+
+        raise KeyError(
+            f"No entry in MODEL_REGISTRY matches (family={family!r}, "
+            f"role={role!r}, language={language!r}). Available roles "
+            f"for family={family!r}: "
+            f"{sorted({e.role for e in self.filter(family=family)})}"
+        )
+
+    # ── Pretty-printing for the control-panel notebook + CLI ──
+
+    def summary(self) -> dict[str, Any]:
+        """Return a summary dict for dashboards (by-family counts)."""
+        counts: dict[str, int] = {}
+        for entry in self._entries.values():
+            counts[entry.family] = counts.get(entry.family, 0) + 1
+        return {
+            "total": len(self._entries),
+            "by_family": counts,
+            "available": sum(1 for e in self._entries.values() if e.available),
+            "deprecated": sum(1 for e in self._entries.values() if not e.available),
+        }
+
+
+# ─── Singleton + module-level API ──────────────────────────────────────────
+
+MODEL_REGISTRY = _ModelRegistry()
+
+
+# Module-level helpers (so consumers can do `model_for(...)` rather than
+# `MODEL_REGISTRY.resolve(...)`).
+def model_for(
+    family: ModelFamily,
+    role: str,
+    *,
+    language: str | None = None,
+) -> str:
+    """Resolve a single model key for the given (family, role).
+
+    Convenience wrapper around ``MODEL_REGISTRY.resolve(...)``.
+    Returns the canonical model key as a string.
+    """
+    return MODEL_REGISTRY.resolve(family, role, language=language)
+
+
+def filter_models(
+    family: ModelFamily | None = None,
+    *,
+    role: str | None = None,
+    available: bool | None = None,
+) -> list[ModelRegistryEntry]:
+    """Filter entries by family + role + availability.
+
+    Convenience wrapper around ``MODEL_REGISTRY.filter(...)``.
+    """
+    return MODEL_REGISTRY.filter(family, role=role, available=available)
+
+
+# ─── Legacy back-compat ────────────────────────────────────────────────────
+
+# Re-export the legacy VISION_MODELS so existing imports continue
+# to work. New code should use MODEL_REGISTRY.filter(family="ocr_vision").
+__all__ = [
+    "MODEL_REGISTRY",
+    "ModelRegistryEntry",
+    "ModelFamily",
+    "ModelRole",
+    "filter_models",
+    "model_for",
+    "VISION_MODELS",
+    "TEXT_MODELS",
+    "CLASSICAL_OCR",
+]

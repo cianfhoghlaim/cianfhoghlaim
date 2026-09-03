@@ -1,0 +1,466 @@
+{
+  "sources": {
+    "ncca": {
+      "base_url": "https://ncca.ie",
+      "languages": {
+        "en": "",
+        "ga": "/ga"
+      },
+      "description": "National Council for Curriculum and Assessment"
+    },
+    "sec": {
+      "base_url": "https://www.examinations.ie",
+      "languages": {
+        "en": "",
+        "ga": "/ga"
+      },
+      "description": "State Examinations Commission"
+    },
+    "curriculumonline": {
+      "base_url": "https://curriculumonline.ie",
+      "languages": {
+        "en": "",
+        "ga": "/ga"
+      },
+      "description": "Curriculum Online Portal"
+    }
+  },
+  "cycles": {
+    "early_childhood": {
+      "name": {"en": "Early Childhood", "ga": "Luath-Óige"},
+      "age_range": "0-6",
+      "description": {"en": "Aistear and Síolta frameworks", "ga": "Creataí Aistear agus Síolta"}
+    },
+    "primary": {
+      "name": {"en": "Primary", "ga": "Bunscoil"},
+      "age_range": "4-12",
+      "years": 8,
+      "description": {"en": "Primary School Curriculum", "ga": "Curaclam na Bunscoile"}
+    },
+    "junior_cycle": {
+      "name": {"en": "Junior Cycle", "ga": "Sraith Shóisearach"},
+      "age_range": "12-15",
+      "years": 3,
+      "certification": "Junior Certificate",
+      "description": {"en": "Junior Cycle Framework", "ga": "Creatlach na Sraithe Sóisearaí"}
+    },
+    "senior_cycle": {
+      "name": {"en": "Senior Cycle", "ga": "Ardteistiméireacht"},
+      "age_range": "15-18",
+      "years": 2,
+      "certification": "Leaving Certificate",
+      "description": {"en": "Leaving Certificate Programme", "ga": "Clár na hArdteistiméireachta"}
+    }
+  },
+  "subjects": [
+    {
+      "slug": "aistear",
+      "name": {"en": "Aistear", "ga": "Aistear"},
+      "cycles": ["early_childhood"],
+      "urls": {"ncca": "/early-childhood/aistear"}
+    },
+    {
+      "slug": "siolta",
+      "name": {"en": "Síolta", "ga": "Síolta"},
+      "cycles": ["early_childhood"],
+      "urls": {"ncca": "/early-childhood/siolta"}
+    },
+    {
+      "slug": "irish",
+      "name": {"en": "Irish", "ga": "Gaeilge"},
+      "cycles": ["primary", "junior_cycle", "senior_cycle"],
+      "urls": {
+        "ncca": "/curriculum/irish",
+        "curriculumonline": "/irish",
+        "sec": "/exammaterialarchive/irish"
+      }
+    },
+    {
+      "slug": "gaeilge",
+      "name": {"en": "Irish", "ga": "Gaeilge"},
+      "cycles": ["primary", "junior_cycle", "senior_cycle"],
+      "urls": {
+        "ncca": "/curriculum/gaeilge",
+        "curriculumonline": "/gaeilge",
+        "sec": "/exammaterialarchive/irish"
+      }
+    },
+    {
+      "slug": "english",
+      "name": {"en": "English", "ga": "Béarla"},
+      "cycles": ["primary", "junior_cycle", "senior_cycle"],
+      "urls": {
+        "ncca": "/curriculum/english",
+        "curriculumonline": "/english",
+        "sec": "/exammaterialarchive/english"
+      }
+    },
+    {
+      "slug": "mathematics",
+      "name": {"en": "Mathematics", "ga": "Matamaitic"},
+      "cycles": ["primary", "junior_cycle", "senior_cycle"],
+      "urls": {
+        "ncca": "/curriculum/mathematics",
+        "curriculumonline": "/mathematics",
+        "sec": "/exammaterialarchive/mathematics"
+      }
+    },
+    {
+      "slug": "sese",
+      "name": {"en": "Social, Environmental and Scientific Education", "ga": "Oideachas Sóisialta, Comhshaoil agus Eolaíochta"},
+      "cycles": ["primary"],
+      "urls": {
+        "ncca": "/curriculum/sese",
+        "curriculumonline": "/sese"
+      }
+    },
+    {
+      "slug": "sphe",
+      "name": {"en": "Social Personal and Health Education", "ga": "Oideachas Sóisialta, Pearsanta agus Sláinte"},
+      "cycles": ["primary", "junior_cycle"],
+      "urls": {
+        "ncca": "/curriculum/sphe",
+        "curriculumonline": "/sphe"
+      }
+    },
+    {
+      "slug": "arts",
+      "name": {"en": "Arts Education", "ga": "Oideachas Ealaíon"},
+      "cycles": ["primary"],
+      "urls": {
+        "ncca": "/curriculum/arts",
+        "curriculumonline": "/arts"
+      }
+    },
+    {
+      "slug": "pe",
+      "name": {"en": "Physical Education", "ga": "Corpoideachas"},
+      "cycles": ["primary", "junior_cycle"],
+      "urls": {
+        "ncca": "/curriculum/pe",
+        "curriculumonline": "/pe"
+      }
+    },
+    {
+      "slug": "science",
+      "name": {"en": "Science", "ga": "Eolaíocht"},
+      "cycles": ["junior_cycle"],
+      "urls": {
+        "ncca": "/junior-cycle/science",
+        "curriculumonline": "/science"
+      }
+    },
+    {
+      "slug": "history",
+      "name": {"en": "History", "ga": "Stair"},
+      "cycles": ["junior_cycle", "senior_cycle"],
+      "urls": {
+        "ncca": "/curriculum/history",
+        "curriculumonline": "/history",
+        "sec": "/exammaterialarchive/history"
+      }
+    },
+    {
+      "slug": "geography",
+      "name": {"en": "Geography", "ga": "Tíreolaíocht"},
+      "cycles": ["junior_cycle", "senior_cycle"],
+      "urls": {
+        "ncca": "/curriculum/geography",
+        "curriculumonline": "/geography",
+        "sec": "/exammaterialarchive/geography"
+      }
+    },
+    {
+      "slug": "business-studies",
+      "name": {"en": "Business Studies", "ga": "Staidéar Gnó"},
+      "cycles": ["junior_cycle"],
+      "urls": {
+        "ncca": "/junior-cycle/business-studies",
+        "curriculumonline": "/business-studies"
+      }
+    },
+    {
+      "slug": "music",
+      "name": {"en": "Music", "ga": "Ceol"},
+      "cycles": ["junior_cycle", "senior_cycle"],
+      "urls": {
+        "ncca": "/curriculum/music",
+        "curriculumonline": "/music",
+        "sec": "/exammaterialarchive/music"
+      }
+    },
+    {
+      "slug": "visual-art",
+      "name": {"en": "Visual Art", "ga": "Ealaín Amhairc"},
+      "cycles": ["junior_cycle"],
+      "urls": {
+        "ncca": "/junior-cycle/visual-art",
+        "curriculumonline": "/visual-art"
+      }
+    },
+    {
+      "slug": "modern-foreign-languages",
+      "name": {"en": "Modern Foreign Languages", "ga": "Nuatheangacha Iasachta"},
+      "cycles": ["junior_cycle"],
+      "urls": {
+        "ncca": "/junior-cycle/modern-languages",
+        "curriculumonline": "/modern-languages"
+      }
+    },
+    {
+      "slug": "applied-technology",
+      "name": {"en": "Applied Technology", "ga": "Teicneolaíocht Fheidhmeach"},
+      "cycles": ["junior_cycle"],
+      "urls": {
+        "ncca": "/junior-cycle/applied-technology"
+      }
+    },
+    {
+      "slug": "classics",
+      "name": {"en": "Classics", "ga": "Clasaicí"},
+      "cycles": ["junior_cycle"],
+      "urls": {
+        "ncca": "/junior-cycle/classics"
+      }
+    },
+    {
+      "slug": "engineering",
+      "name": {"en": "Engineering", "ga": "Innealtóireacht"},
+      "cycles": ["junior_cycle", "senior_cycle"],
+      "urls": {
+        "ncca": "/curriculum/engineering",
+        "sec": "/exammaterialarchive/engineering"
+      }
+    },
+    {
+      "slug": "graphics",
+      "name": {"en": "Graphics", "ga": "Grafaicí"},
+      "cycles": ["junior_cycle"],
+      "urls": {
+        "ncca": "/junior-cycle/graphics"
+      }
+    },
+    {
+      "slug": "home-economics",
+      "name": {"en": "Home Economics", "ga": "Eacnamaíocht Bhaile"},
+      "cycles": ["junior_cycle", "senior_cycle"],
+      "urls": {
+        "ncca": "/curriculum/home-economics",
+        "sec": "/exammaterialarchive/home-economics"
+      }
+    },
+    {
+      "slug": "religious-education",
+      "name": {"en": "Religious Education", "ga": "Oideachas Reiligiúnach"},
+      "cycles": ["junior_cycle"],
+      "urls": {
+        "ncca": "/junior-cycle/religious-education"
+      }
+    },
+    {
+      "slug": "wood-technology",
+      "name": {"en": "Wood Technology", "ga": "Teicneolaíocht Adhmaid"},
+      "cycles": ["junior_cycle"],
+      "urls": {
+        "ncca": "/junior-cycle/wood-technology"
+      }
+    },
+    {
+      "slug": "physical-education",
+      "name": {"en": "Physical Education", "ga": "Corpoideachas"},
+      "cycles": ["junior_cycle", "senior_cycle"],
+      "urls": {
+        "ncca": "/curriculum/physical-education",
+        "sec": "/exammaterialarchive/physical-education"
+      }
+    },
+    {
+      "slug": "chemistry",
+      "name": {"en": "Chemistry", "ga": "Ceimic"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/chemistry",
+        "sec": "/exammaterialarchive/chemistry"
+      }
+    },
+    {
+      "slug": "biology",
+      "name": {"en": "Biology", "ga": "Bitheolaíocht"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/biology",
+        "sec": "/exammaterialarchive/biology"
+      }
+    },
+    {
+      "slug": "physics",
+      "name": {"en": "Physics", "ga": "Fisic"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/physics",
+        "sec": "/exammaterialarchive/physics"
+      }
+    },
+    {
+      "slug": "accounting",
+      "name": {"en": "Accounting", "ga": "Cuntasaíocht"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/accounting",
+        "sec": "/exammaterialarchive/accounting"
+      }
+    },
+    {
+      "slug": "agricultural-science",
+      "name": {"en": "Agricultural Science", "ga": "Eolaíocht Talmhaíochta"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/agricultural-science",
+        "sec": "/exammaterialarchive/agricultural-science"
+      }
+    },
+    {
+      "slug": "applied-mathematics",
+      "name": {"en": "Applied Mathematics", "ga": "Matamaitic Fheidhmeach"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/applied-mathematics",
+        "sec": "/exammaterialarchive/applied-mathematics"
+      }
+    },
+    {
+      "slug": "art",
+      "name": {"en": "Art", "ga": "Ealaín"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/art",
+        "sec": "/exammaterialarchive/art"
+      }
+    },
+    {
+      "slug": "business",
+      "name": {"en": "Business", "ga": "Gnó"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/business",
+        "sec": "/exammaterialarchive/business"
+      }
+    },
+    {
+      "slug": "classical-studies",
+      "name": {"en": "Classical Studies", "ga": "Staidéar Clasaiceach"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/classical-studies",
+        "sec": "/exammaterialarchive/classical-studies"
+      }
+    },
+    {
+      "slug": "computer-science",
+      "name": {"en": "Computer Science", "ga": "Ríomheolaíocht"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/computer-science",
+        "sec": "/exammaterialarchive/computer-science"
+      }
+    },
+    {
+      "slug": "construction-studies",
+      "name": {"en": "Construction Studies", "ga": "Staidéar Foirgníochta"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/construction-studies",
+        "sec": "/exammaterialarchive/construction-studies"
+      }
+    },
+    {
+      "slug": "design-and-communication-graphics",
+      "name": {"en": "Design and Communication Graphics", "ga": "Grafaicí Deartha agus Cumarsáide"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/dcg",
+        "sec": "/exammaterialarchive/dcg"
+      }
+    },
+    {
+      "slug": "economics",
+      "name": {"en": "Economics", "ga": "Eacnamaíocht"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/economics",
+        "sec": "/exammaterialarchive/economics"
+      }
+    },
+    {
+      "slug": "french",
+      "name": {"en": "French", "ga": "Fraincis"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/french",
+        "sec": "/exammaterialarchive/french"
+      }
+    },
+    {
+      "slug": "german",
+      "name": {"en": "German", "ga": "Gearmáinis"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/german",
+        "sec": "/exammaterialarchive/german"
+      }
+    },
+    {
+      "slug": "italian",
+      "name": {"en": "Italian", "ga": "Iodáilis"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/italian",
+        "sec": "/exammaterialarchive/italian"
+      }
+    },
+    {
+      "slug": "spanish",
+      "name": {"en": "Spanish", "ga": "Spáinnis"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/spanish",
+        "sec": "/exammaterialarchive/spanish"
+      }
+    },
+    {
+      "slug": "arabic",
+      "name": {"en": "Arabic", "ga": "Araibis"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/arabic",
+        "sec": "/exammaterialarchive/arabic"
+      }
+    },
+    {
+      "slug": "japanese",
+      "name": {"en": "Japanese", "ga": "Seapáinis"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/japanese",
+        "sec": "/exammaterialarchive/japanese"
+      }
+    },
+    {
+      "slug": "russian",
+      "name": {"en": "Russian", "ga": "Rúisis"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "sec": "/exammaterialarchive/russian"
+      }
+    },
+    {
+      "slug": "politics-and-society",
+      "name": {"en": "Politics and Society", "ga": "Polaitíocht agus Sochaí"},
+      "cycles": ["senior_cycle"],
+      "urls": {
+        "ncca": "/senior-cycle/politics-and-society",
+        "sec": "/exammaterialarchive/politics-and-society"
+      }
+    }
+  ]
+}

@@ -1,0 +1,359 @@
+# Celtic Language ML Models Registry
+# Generated: 2025-12-17
+# Comprehensive catalog of ML models for Celtic languages
+
+metadata:
+  title: "Celtic Language ML Models"
+  version: "1.0.0"
+  generated: "2025-12-17"
+  total_models: 25
+  languages:
+    - ga  # Irish
+    - gd  # Scottish Gaelic
+    - cy  # Welsh
+    - br  # Breton
+    - kw  # Cornish
+    - gv  # Manx
+
+# =============================================================================
+# LARGE LANGUAGE MODELS
+# =============================================================================
+large_language_models:
+  multilingual:
+    - id: eurollm_22b
+      name: "EuroLLM-22B-Instruct"
+      url: "https://huggingface.co/utter-project/EuroLLM-22B-Instruct-2512"
+      provider: "UTTER Project (EU)"
+      parameters: "22.6B"
+      celtic_languages: ["ga"]
+      all_languages: ["bg", "hr", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "hu", "ga", "it", "lv", "lt", "mt", "pl", "pt", "ro", "sk", "sl", "es", "sv"]
+      training_tokens: "4T"
+      architecture:
+        type: "Dense Transformer"
+        layers: 56
+        embedding_size: 6144
+        attention: "GQA"
+        context_length: 32768
+      license: "Apache 2.0"
+      use_cases:
+        - "Instruction following"
+        - "Translation (EU languages)"
+        - "Multilingual generation"
+      released: "2025-12-14"
+
+    - id: caernarfon_3b
+      name: "BritLLM Caernarfon 3B"
+      url: "https://huggingface.co/britllm/britllm-3b-v0.1"
+      provider: "UCL NLP"
+      parameters: "3B"
+      celtic_languages: ["ga", "gd", "cy"]
+      other_languages: ["en", "sco"]
+      training_tokens: "1.4T"
+      training_data:
+        english: "SlimPajama (627B) + synthetic QA/MC"
+        celtic: "Wikipedia + NLLB parallel data (~1B unique tokens)"
+      benchmarks:
+        briteval_irish:
+          mean: 46.2
+          arc_e: 40.8
+          piqa: 60.1
+          xnli: 37.7
+        briteval_welsh:
+          mean: 55.2
+          arc_e: 56.7
+          piqa: 65.0
+          xnli: 43.9
+        briteval_scottish_gaelic:
+          mean: 42.1
+          arc_e: 32.0
+          piqa: 55.9
+          xnli: 38.3
+      license: "ODC-By 1.0"
+      use_cases:
+        - "General Celtic language tasks"
+        - "British Isles multilingual applications"
+
+  irish_specific:
+    - id: uccix_llama2_13b
+      name: "UCCIX-Llama2-13B"
+      url: "https://huggingface.co/UCC-NLP/UCCIX-Llama2-13B"
+      provider: "UCC NLP"
+      parameters: "13B"
+      base_model: "Llama 2 13B"
+      language: "ga"
+      training_method: "Continued pre-training + instruction tuning"
+      key_features:
+        - "Irish-enhanced vocabulary"
+        - "Strong Irish generation"
+      research_paper: "Reasoning Transfer for Extremely Low-Resource Languages"
+
+    - id: qomhra
+      name: "Qomhrá-Mistral-7B"
+      url: "https://huggingface.co/Qomhraiche/Qomhra-Mistral-7B"
+      provider: "Qomhraiche"
+      parameters: "7B"
+      base_model: "Mistral 7B"
+      language: "ga"
+      training_dataset: "Qomhrá 30K (synthetic instruction pairs)"
+      training_time: "88 GPU hours (2x H100)"
+      use_cases:
+        - "Irish conversational AI"
+        - "Irish instruction following"
+
+    - id: salamandra_2b_irish
+      name: "Salamandra 2B Irish"
+      url: "https://huggingface.co/BSC-LT/salamandra-2b"
+      provider: "Barcelona Supercomputing Center"
+      parameters: "2B"
+      celtic_languages: ["ga"]
+      notes: "Multilingual model with Irish support"
+
+# =============================================================================
+# ENCODER MODELS (BERT-style)
+# =============================================================================
+encoder_models:
+  irish:
+    - id: gabert
+      name: "gaBERT"
+      url: "https://huggingface.co/DCU-NLP/bert-base-irish-cased-v1"
+      provider: "DCU-NLP"
+      parameters: "110M"
+      architecture: "BERT Base"
+      language: "ga"
+      training_data: "Irish Wikipedia + web crawl"
+      use_cases:
+        - "Named Entity Recognition"
+        - "Part-of-speech tagging"
+        - "Text classification"
+
+    - id: ga_electra
+      name: "Irish ELECTRA"
+      url: "https://huggingface.co/DCU-NLP"
+      provider: "DCU-NLP"
+      architecture: "ELECTRA"
+      language: "ga"
+      use_cases:
+        - "Efficient Irish NLU"
+        - "Token classification"
+
+  welsh:
+    - id: welsh_bert
+      name: "Welsh BERT"
+      url: "https://huggingface.co/Portalingual/Welsh-BERT"
+      provider: "Portalingual"
+      architecture: "BERT"
+      language: "cy"
+      training_data: "Welsh Wikipedia + CorCenCC"
+
+# =============================================================================
+# SPEECH MODELS (ASR/TTS)
+# =============================================================================
+speech_models:
+  irish:
+    - id: abair_tts
+      name: "ABAIR TTS"
+      url: "https://www.abair.ie"
+      provider: "Trinity College Dublin"
+      type: "Text-to-Speech"
+      dialects:
+        - name: "Connacht"
+          voices: ["male", "female"]
+        - name: "Munster"
+          voices: ["male", "female"]
+        - name: "Ulster"
+          voices: ["male", "female"]
+      features:
+        - "High-quality synthesis"
+        - "Dialect support"
+        - "API access"
+
+    - id: abair_asr
+      name: "ABAIR ASR"
+      url: "https://www.abair.ie/recognition"
+      provider: "Trinity College Dublin"
+      type: "Automatic Speech Recognition"
+      accuracy: "Varies by dialect/speaker"
+
+  scottish_gaelic:
+    - id: eist_asr
+      name: "ÈIST ASR"
+      url: "https://blogs.ed.ac.uk/garg/2025/06/04/gaelic-in-the-digital-age-inside-the-eist-project/"
+      provider: "University of Edinburgh / GARG"
+      type: "Automatic Speech Recognition"
+      accuracy: "~90% for broadcast content"
+      training_data:
+        - "BBC ALBA broadcasts"
+        - "Radio nan Gàidheal"
+        - "Tobar an Dualchais folklore"
+      features:
+        - "Code-switching (Gaelic-English)"
+        - "Subtitle generation"
+        - "Multiple speaker types"
+      api_status: "Coming Autumn 2025"
+      funding:
+        - "Scottish Government"
+        - "Bòrd na Gàidhlig"
+      partners:
+        - "NVIDIA"
+        - "BBC ALBA"
+        - "University of Glasgow"
+      pi: "Prof William Lamb"
+
+  welsh:
+    - id: macsen_asr
+      name: "Macsen ASR"
+      url: "https://techiaith.cymru/products/macsen/?lang=en"
+      provider: "Techiaith / Bangor University"
+      type: "Voice Assistant ASR"
+      features:
+        - "Local processing"
+        - "Open source"
+
+    - id: trawsgrifiwr
+      name: "Trawsgrifiwr"
+      url: "https://trawsgrifiwr.techiaith.cymru/"
+      provider: "Techiaith"
+      type: "Speech transcription"
+
+  breton:
+    - id: breton_tts
+      name: "Breton TTS Corpus Model"
+      url: "https://hal.science/hal-03944464"
+      provider: "Academic research"
+      type: "Text-to-Speech"
+      training_data: "20 hours read speech"
+      speakers: 2
+
+  manx:
+    - id: manx_asr
+      name: "Manx ASR (Research)"
+      url: "https://arxiv.org/html/2510.04832v1"
+      provider: "Academic research"
+      type: "ASR research"
+      finding: "40 minutes of pronunciation data produces usable ASR"
+      significance: "Demonstrates viability of ASR for extremely low-resource languages"
+
+# =============================================================================
+# TRANSLATION MODELS
+# =============================================================================
+translation_models:
+  - id: seamless_m4t
+    name: "Seamless Communication (Meta)"
+    url: "https://ai.meta.com/research/seamless-communication/"
+    provider: "Meta AI"
+    type: "Multilingual translation + S2T"
+    celtic_languages: ["ga", "cy"]
+    features:
+      - "Speech-to-text"
+      - "Text-to-text translation"
+
+  - id: nllb
+    name: "NLLB (No Language Left Behind)"
+    url: "https://huggingface.co/facebook/nllb-200-distilled-600M"
+    provider: "Meta AI"
+    celtic_languages: ["ga", "gd", "cy", "br"]
+    notes: "200 language translation model"
+
+  - id: intergaelic
+    name: "Intergaelic"
+    url: "http://www.intergaelic.com/gd-ga/trans/"
+    provider: "Kevin Scannell"
+    type: "Rule-based + statistical"
+    language_pairs:
+      - ["ga", "gd"]
+      - ["ga", "gv"]
+      - ["gd", "gv"]
+
+# =============================================================================
+# BENCHMARKS AND DATASETS
+# =============================================================================
+benchmarks:
+  - id: irish_blimp
+    name: "Irish-BLiMP"
+    description: "Benchmark of Linguistic Minimal Pairs for Irish"
+    url: "Research paper"
+    size: "1020 minimal pairs"
+    features: 11
+    categories:
+      - "Agreement (subject-verb, noun-adjective)"
+      - "Mutation (lenition, eclipsis)"
+      - "Case (genitive, dative)"
+      - "Definiteness"
+    results:
+      human_baseline: 90.1
+      gpt5: 73.5
+      llama3_70b: 67.8
+    significance: "Reveals LLMs rely on pattern matching rather than grammatical understanding"
+
+  - id: lc2024
+    name: "LC2024"
+    description: "First Irish mathematical reasoning benchmark"
+    source: "Leaving Certificate exam questions"
+    size: 55
+    topics:
+      - "Algebra"
+      - "Geometry"
+      - "Trigonometry"
+      - "Statistics"
+    use: "Evaluating mathematical reasoning in Irish"
+
+  - id: briteval
+    name: "BritEval"
+    description: "Benchmark for British Isles languages"
+    url: "https://llm.org.uk/"
+    provider: "BritLLM/UCL"
+    languages: ["ga", "gd", "cy", "sco"]
+    components:
+      - name: "ARC-e"
+        type: "Grade-school science (translated)"
+      - name: "PIQA"
+        type: "Physical commonsense reasoning"
+      - name: "XNLI"
+        type: "Natural language inference"
+
+datasets:
+  - id: culturax_ga
+    name: "CulturaX-ga"
+    description: "Large-scale Irish web crawl"
+    use: "Pre-training Irish LLMs"
+
+  - id: qomhra_30k
+    name: "Qomhrá 30K"
+    description: "Synthetic Irish instruction pairs"
+    size: 30000
+    use: "Instruction tuning"
+
+  - id: arcosg
+    name: "ARCOSG"
+    description: "Annotated Reference Corpus of Scottish Gaelic"
+    url: "https://github.com/Gaelic-Algorithmic-Research-Group/ARCOSG"
+    format: "CoNLL, XML"
+    tokens: "100000+"
+
+  - id: corcencc
+    name: "CorCenCC"
+    description: "National Corpus of Contemporary Welsh"
+    url: "https://corcencc.org/"
+    size: "13.5M tokens"
+    features: ["Written", "Spoken", "POS-tagged"]
+
+# =============================================================================
+# UPCOMING / ANNOUNCED
+# =============================================================================
+upcoming:
+  - id: uk_llm
+    name: "UK-LLM"
+    url: "https://www.genai.ac.uk/"
+    status: "In development"
+    description: "UK sovereign AI with Celtic language support"
+    base: "NVIDIA Nemotron"
+    languages: ["cy", "ga", "gd", "kw"]
+    partners:
+      - "Bangor University"
+      - "NVIDIA"
+
+  - id: eist_api
+    name: "ÈIST Public API"
+    status: "Expected Autumn 2025"
+    description: "Public API for Scottish Gaelic ASR"
+    provider: "University of Edinburgh"

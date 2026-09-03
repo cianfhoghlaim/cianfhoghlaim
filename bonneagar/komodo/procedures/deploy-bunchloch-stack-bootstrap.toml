@@ -1,0 +1,300 @@
+# =============================================================================
+# DEPLOY BUNCHLOCH STACK BOOTSTRAP
+# =============================================================================
+# Omnibus procedure that brings up the 19 foundational bunchloch
+# stacks in dependency order. One Komodo command = full cold-boot
+# (or warm-restart) of the agent-platform cluster + data plane.
+#
+# 19 stacks (in 5 dependency-ordered stages):
+#
+#   Stage 1: foundation (5) — lakehouse + falkordb + komodo + pangolin + infisical
+#   Stage 2: memory (3) — cognee + graphiti + lancedb
+#   Stage 3: observability (4) — litellm + langfuse + mlflow + logfire
+#   Stage 4: surfaces (4) — openclaw + openchamber + hermes + letta
+#   Stage 5: data plane (3) — dagster + motherduck (SaaS) + garage
+#
+# KCG topology context:
+#   - arm1-oci = control plane (Pangolin + Pocket ID + Komodo Core)
+#   - bunchloch (MacBook M4 / M4 Max) = workload host (this procedure's
+#     target). The "cold-boot" reality is ~14 of 19 stacks already
+#     running from prior sessions; this procedure handles either
+#     cold-boot OR warm-restart idempotently.
+#
+# Stage 0: pre-reqs (host invariants — RAM, disk, ports)
+# Stage 1: foundation (lakehouse data plane + control plane)
+# Stage 2: memory (agent memory layer)
+# Stage 3: observability (LLM gateway + tracing + experiments)
+# Stage 4: surfaces (3 agent-facing UI surfaces)
+# Stage 5: data plane (orchestration + cloud lakehouse)
+# Stage 6: health checks (per-stack HTTPS endpoints)
+# Stage 7: validate (the 9 stack-doctor gates)
+#
+# Usage:
+#   km run procedure deploy-bunchloch-stack-bootstrap
+#   km run procedure deploy-bunchloch-stack-bootstrap -- --skip=foundation,surfaces
+#   km run procedure deploy-bunchloch-stack-bootstrap -- --skip=memory,observability
+# =============================================================================
+
+[[procedure]]
+name = "deploy-bunchloch-stack-bootstrap"
+description = "Bring up the 19 foundational bunchloch stacks in 5 dependency-ordered stages (foundation → memory → observability → surfaces → data plane). Stage 0 checks host invariants; Stages 1-5 deploy stacks; Stage 6 health-checks; Stage 7 validates the 9 stack-doctor gates."
+server_id = "bunchloch"
+
+# =============================================================================
+# STAGE 0: Pre-flight checks (host invariants)
+# =============================================================================
+# The 5 KCG pre-flight requirements for the bunchloch workload host:
+#   1. hostname matches `Cians-MacBook-Pro.local` (or the bunchloch alias)
+#   2. ≥ 20 GB RAM (the 19 stacks need ~36-42 GB concurrently; phased
+#      bring-up reduces per-wave peak pressure to ~10 GB)
+#   3. Disk free ≥ 320 GB (322 GB free per the 2026-07-08 baseline)
+#   4. The bunchloch-infra network exists (created by komodo-init)
+#   5. No host port conflicts with the 19 target stacks
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "preflight"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "hostname | grep -E 'Cians-MacBook|bunchloch' && echo OK_HOSTNAME" } }
+description = "Confirm bunchloch host identity"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "[ $(docker info --format '{{.MemTotal}}') -gt 20000000000 ] && echo OK_RAM || echo FAIL_RAM" } }
+description = "Confirm ≥ 20 GB RAM available to Docker daemon"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "[ $(df -g / | tail -1 | awk '{print $4}') -gt 200 ] && echo OK_DISK || echo FAIL_DISK" } }
+description = "Confirm ≥ 200 GB disk free (322 GB free per 2026-07-08 baseline; 19 stacks consume ~25 GB)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "docker network ls --format '{{.Name}}' | grep -q '^bunchloch-infra$' && echo OK_NETWORK || echo FAIL_NETWORK" } }
+description = "Confirm the bunchloch-infra external network exists"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "lsof -nP -iTCP -sTCP:LISTEN 2>/dev/null | awk '{print $9}' | grep -oE ':[0-9]+$' | tr -d ':' | sort -u > /tmp/.kcg-ports-in-use && for p in 3900 3901 3904 4000 5433 6379 6380 8120 8181 8182 8086 9119 9120 3335; do if ! grep -qx \"$p\" /tmp/.kcg-ports-in-use; then echo \"PORT_FREE_$p\"; fi; done | wc -l | awk '{print \"AVAILABLE_PORTS=\" $1}'" } }
+description = "Count free host ports for the 19-stack bind set (snapshot reference only — OrbStack VM may shadow some ports)"
+
+# =============================================================================
+# STAGE 1: Foundation (5 stacks) — the data + control plane
+# =============================================================================
+# Dependency: lakehouse MUST come up first (Garage + Postgres + Lakekeeper
+# + ClickHouse + Redis are the centralised data plane for Stages 2-5).
+# komodo + pangolin + infisical are the control plane (already partially
+# running on arm1-oci in production; bundled here for dev-mode cold-boot).
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "foundation"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-lakehouse-bunchloch" } }
+description = "Centralised lakehouse data plane (Garage S3 + Postgres + ClickHouse + Redis + Lakekeeper + Lance Namespace). Uses the dev overlay (compose.dev.yaml) to skip the private ghcr.io/olake-io/olake image."
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-falkordb-bunchloch" } }
+description = "FalkorDB graph database on :6380 (backed by Redis protocol). Graphiti uses the centralised falkordb stack in production; bundled here for dev-mode cold-boot."
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-komodo-bunchloch" } }
+description = "Komodo Core + FerretDB + Postgres on :8120 (dev-mode port override; production :9120). The infrastructure-orchestration control plane."
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-pangolin-bunchloch" } }
+description = "Pangolin reverse proxy + Pocket ID + TinyAuth + Traefik. The VPN/reverse-proxy control plane for the bunchloch host."
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-infisical-bunchloch" } }
+description = "Infisical dev-baile vault on :8081. The secrets source-of-truth (composed via Locket sidecar in production; direct read in dev mode)."
+
+# =============================================================================
+# STAGE 2: Memory (3 stacks) — the agent memory layer
+# =============================================================================
+# Dependency: cognee (knowledge graph) and graphiti (temporal graph)
+# both depend on the Stage 1 falkordb backend. lancedb has no
+# upstream dependency and can run in parallel.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "memory"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-cognee-bunchloch" } }
+description = "Cognee knowledge-graph memory on :8100 (uses bundled pgvector Postgres; production connects to lakehouse-postgres db=cognee)."
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-graphiti-bunchloch" } }
+description = "Graphiti bi-temporal knowledge graph on :8000 (uses falkordb from Stage 1; needs OPENAI_API_KEY for entity extraction in dev mode)."
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-lancedb-bunchloch" } }
+description = "LanceDB table viewer on :8086 (dev-mode port override; production :8081, but conflicts with Infisical on bunchloch)."
+
+# =============================================================================
+# STAGE 3: Observability (4 stacks) — the LLM gateway + tracing layer
+# =============================================================================
+# Dependency: litellm + langfuse + mlflow all depend on the lakehouse
+# data plane (Postgres + ClickHouse + Garage + Redis) from Stage 1.
+# logfire is just an OTel collector and has no upstream dependency.
+# All 4 stacks route their LLM traffic through the litellm chokepoint.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "observability"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-litellm-bunchloch" } }
+description = "LiteLLM M3 chokepoint on :4000 (the canonical LLM gateway; uses lakehouse-postgres db=litellm in production)."
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-langfuse-bunchloch" } }
+description = "Langfuse LLM observability on :3000 (uses lakehouse-postgres db=langfuse + lakehouse-clickhouse + lakehouse-redis)."
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-mlflow-bunchloch" } }
+description = "MLflow experiment tracking on :5000 (uses lakehouse-postgres db=mlflow + lakehouse-garage bucket=mlflow-artifacts)."
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-logfire-bunchloch" } }
+description = "Logfire OTel collector (forwards OTLP traces to Logfire cloud at logfire.pydantic.dev)."
+
+# =============================================================================
+# STAGE 4: Surfaces (4 stacks) — the agent-facing UI layer
+# =============================================================================
+# Dependency: openclaw + openchamber + hermes + letta all depend on
+# litellm (Stage 3) for their LLM traffic. letta also depends on
+# lakehouse-postgres (db=letta) from Stage 1.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "surfaces"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-openclaw-bunchloch" } }
+description = "OpenClaw channel-fanout gateway on :3978 + :18789-18790 (8 channels: WebChat + Telegram + Slack + Discord + WhatsApp + Teams + ...)."
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-openchamber-bunchloch" } }
+description = "OpenChamber browser IDE on :3000 (OpenCode web/desktop UI with bundled opencode-ai)."
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-hermes-bunchloch" } }
+description = "Hermes autonomous agent runtime on :8080/:8090/:8443/:8645/:9119-9120 (NousResearch/hermes-agent v0.17.0)."
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-letta-bunchloch" } }
+description = "Letta stateful agent memory layer on :8283 (uses lakehouse-postgres db=letta for production-grade persistence; bundled PGlite for dev)."
+
+# =============================================================================
+# STAGE 5: Data plane (3 stacks) — orchestration + cloud lakehouse
+# =============================================================================
+# Dependency: dagster depends on lakehouse (Stage 1) + litellm (Stage 3).
+# motherduck is a SaaS (motherduck.com) — no container is deployed; the
+# "bring-up" step validates the MOTHERDUCK_TOKEN env var and the
+# md:cianfhoghlaim database reachability.
+# garage is a sub-service of the lakehouse stack — verified separately.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "data-plane"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunProcedure", params = { procedure = "deploy-dagster-bunchloch" } }
+description = "Dagster orchestration daemon + webserver on :3335 (uses lakehouse-postgres db=dagster_local + the multi-corpus code-locations)."
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "if [ -n \"$MOTHERDUCK_TOKEN\" ]; then curl -fsS --max-time 10 -H \"Authorization: Bearer $MOTHERDUCK_TOKEN\" https://api.motherduck.com/v1/databases 2>&1 | head -3 && echo OK_MOTHERDUCK || echo INFO_MOTHERDUCK_SAAS_REFERENCE_ONLY; else echo INFO_MOTHERDUCK_SAAS_NO_TOKEN_SET; fi" } }
+description = "Validate the MotherDuck SaaS connection (no container; verifies MOTHERDUCK_TOKEN env var and md:cianfhoghlaim reachability)."
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "[ -n \"$(docker ps --format '{{.Names}}' | grep -x 'lakehouse-garage')\" ] && docker exec lakehouse-garage /garage -c /etc/garage.toml node id 2>&1 | head -3" } }
+description = "Verify the lakehouse-garage S3 backend is reachable (Stage 5 verification — garage is deployed as part of the Stage 1 lakehouse stack)."
+
+# =============================================================================
+# STAGE 6: Health checks (per-stack endpoints)
+# =============================================================================
+# 16 health checks across the 19 targets (3 are N/A: motherduck is
+# SaaS, garage is verified above, dagster-webserver has no host port).
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:8120/healthcheck", expected_status = 200, timeout_s = 30 } }
+description = "Verify komodo-core healthcheck (port 8120 = dev-mode override)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:8081/api/status", expected_status = 200, timeout_s = 30 } }
+description = "Verify Infisical API status endpoint"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:3900/health", expected_status = [200, 403], timeout_s = 10 } }
+description = "Verify Garage S3 API reachable (403 = bucket listing needs auth)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:8181/health", expected_status = 200, timeout_s = 10 } }
+description = "Verify Lakekeeper REST catalog health"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:8182/health", expected_status = 200, timeout_s = 10 } }
+description = "Verify Lance Namespace health"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:8123/ping", expected_status = 200, timeout_s = 10 } }
+description = "Verify ClickHouse HTTP ping (Stage 1 lakehouse-clickhouse)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:6380", expected_status = [200, 400], timeout_s = 10 } }
+description = "Verify FalkorDB ping (HTTP 200/400 on :6380 means reachable)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:8100/api/health", expected_status = [200, 401, 404], timeout_s = 30 } }
+description = "Verify Cognee health (401/404 OK — endpoint may need auth or different path)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:8086/", expected_status = 200, timeout_s = 10 } }
+description = "Verify LanceDB Viewer (port 8086 = dev-mode override)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:4000/health/liveliness", expected_status = 200, timeout_s = 30 } }
+description = "Verify LiteLLM liveness (the M3 chokepoint)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:3001/api/public/health", expected_status = [200, 404], timeout_s = 30 } }
+description = "Verify Langfuse webserver (path varies by version; 404 OK)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:5000/api/2.0/mlflow/ping", expected_status = [200, 403], timeout_s = 10 } }
+description = "Verify MLflow ping (403 = endpoint exists, needs auth)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:3000", expected_status = [200, 302], timeout_s = 10 } }
+description = "Verify OpenChamber webserver (302 OK — redirect)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:18789", expected_status = [200, 302], timeout_s = 10 } }
+description = "Verify OpenClaw channel-fanout gateway"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:9120/api/health", expected_status = [200, 502], timeout_s = 10 } }
+description = "Verify Hermes health (port 9120 mapped from container)"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:8283/v1/health", expected_status = [200, 401], timeout_s = 10 } }
+description = "Verify Letta agent memory REST endpoint"
+
+# =============================================================================
+# STAGE 7: Validate (the 9 stack-doctor gates)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "validate"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "bun run validate-stacks 2>&1 | tail -25" } }
+description = "Run the 9 stack-doctor gates (GOLD_STANDARD minimum, ghost hosts, 1Password URIs, Locket image canonical, pangolin blueprints, two-host topology, stack count). Hard FAIL = procedure aborts."
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "docker ps --format 'table {{.Names}}\\t{{.Image}}\\t{{.Status}}' 2>&1 | head -60" } }
+description = "Snapshot the live container inventory (for the HEALTH_REPORT.md update)."

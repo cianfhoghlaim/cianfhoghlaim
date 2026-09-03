@@ -1,0 +1,202 @@
+{
+  "$schema": "./SCHEMA.json",
+  "version": "1.0.0",
+  "generated_at": "2025-01-05",
+  "jurisdiction": "isle_of_man",
+
+  "sources": {
+    "desc": {
+      "base_url": "https://desc.gov.im",
+      "languages": {"en": ""}
+    },
+    "culture_vannin": {
+      "base_url": "https://culturevannin.im",
+      "languages": {"en": ""}
+    },
+    "learn_manx": {
+      "base_url": "https://www.learnmanx.com",
+      "languages": {"en": ""}
+    },
+    "manx_music": {
+      "base_url": "https://www.manxmusic.com",
+      "languages": {"en": ""}
+    }
+  },
+
+  "key_stages": {
+    "foundation": {
+      "name": {"en": "Foundation Stage", "gv": "Bun-toshee"},
+      "age_range": "4-6",
+      "years": 2
+    },
+    "primary": {
+      "name": {"en": "Primary", "gv": "Bun-scoill"},
+      "age_range": "6-11",
+      "years": 6
+    },
+    "secondary": {
+      "name": {"en": "Secondary", "gv": "Yn-scoill"},
+      "age_range": "11-16",
+      "years": 5
+    },
+    "higher": {
+      "name": {"en": "Higher Education", "gv": "Ynsagh"
+    }
+  },
+
+  "manx_qualifications": {
+    "teisht_vunneydagh": {
+      "name": {"en": "Teisht Vunneydagh", "gv": "Teisht Vunneydagh"},
+      "level": "CEFR A0",
+      "description": "Basic Manx certificate"
+    },
+    "general_certificate": {
+      "name": {"en": "General Certificate", "gv": "Teisht Chaayrjagh"},
+      "level": "GCSE-equivalent",
+      "description": "Two-year course"
+    },
+    "a_level": {
+      "name": {"en": "A-Level equivalent", "gv": "A-level cochiarp"},
+      "level": "A-Level equivalent",
+      "description": "Two-year course"
+    },
+    "full_course": {
+      "name": {"en": "Full Course", "gv": "Coorse slane"},
+      "level": "18 units",
+      "description": "Comprehensive Manx language course"
+    }
+  },
+
+  "subjects": [
+    {
+      "slug": "manx",
+      "name": {"en": "Manx", "gv": "Gaelg"},
+      "key_stages": ["primary", "secondary"],
+      "qualification_type": "teisht_vunneydagh",
+      "urls": {
+        "learn_manx": "/learning/",
+        "culture_vannin": "/manxlanguage/",
+        "manx_music": "/schools/"
+      }
+    },
+    {
+      "slug": "mathematics",
+      "name": {"en": "Mathematics", "gv": "Matemataght"},
+      "key_stages": ["primary", "secondary"],
+      "urls": {}
+    },
+    {
+      "slug": "english",
+      "name": {"en": "English", "gv": "Baarle"},
+      "key_stages": ["primary", "secondary"],
+      "urls": {}
+    },
+    {
+      "slug": "science",
+      "name": {"en": "Science", "gv": "Sheanse"},
+      "key_stages": ["primary", "secondary"],
+      "urls": {}
+    },
+    {
+      "slug": "history",
+      "name": {"en": "History", "gv": "Shennaghys"},
+      "key_stages": ["primary", "secondary"],
+      "urls": {}
+    },
+    {
+      "slug": "geography",
+      "name": {"en": "Geography", "gv": "Ellanlieynneyderys"},
+      "key_stages": ["primary", "secondary"],
+      "urls": {}
+    },
+    {
+      "slug": "religious_education",
+      "name": {"en": "Religious Education", "gv": "Ynsagh Creestey"},
+      "key_stages": ["primary", "secondary"],
+      "urls": {}
+    },
+    {
+      "slug": "physical_education",
+      "name": {"en": "Physical Education", "gv": "Ynsagh Chorpaid"},
+      "key_stages": ["primary", "secondary"],
+      "urls": {}
+    },
+    {
+      "slug": "music",
+      "name": {"en": "Music", "gv": "Cloieder"},
+      "key_stages": ["primary", "secondary"],
+      "urls": {
+        "manx_music": "/schools/"
+      }
+    },
+    {
+      "slug": "art_and_design",
+      "name": {"en": "Art and Design", "gv": "Ellynyn as Dellal"},
+      "key_stages": ["primary", "secondary"],
+      "urls": {}
+    },
+    {
+      "slug": "ict_computing",
+      "name": {"en": "ICT/Computing", "gv": "CSP/Rheynnaydys"},
+      "key_stages": ["primary", "secondary"],
+      "urls": {}
+    },
+    {
+      "slug": "manx_studies",
+      "name": {"en": "Manx Studies", "gv": "Studeyrys Manninagh"},
+      "key_stages": ["primary", "secondary"],
+      "urls": {
+        "culture_vannin": "/schools/",
+        "desc": "/education/education/manx-studies-in-schools/"
+      }
+    },
+    {
+      "slug": "celtic_studies",
+      "name": {"en": "Celtic Studies", "gv": "Studeyrys Kelteeagh"},
+      "key_stages": ["primary", "secondary"],
+      "urls": {}
+    }
+  ],
+
+  "cultural_context": {
+    "manx_language_strategy": {
+      "name": "Manx Language Strategy 2022-2032",
+      "goal": "Double the number of Manx speakers by 2032"
+    },
+    "yorshire_network": {
+      "name": "Jeebin Network",
+      "description": "Community Manx language support network"
+    },
+    "coonceil_ny_gaelgey": {
+      "name": "Coonceil ny Gaelgey",
+      "description": "Manx Language Advisory Council"
+    }
+  },
+
+  "learning_resources": {
+    "beginner": {
+      "urls": ["learnmanx.com/aboutus/downloads/"],
+      "materials": ["PDF downloads", "MP3 audio", "apps"]
+    },
+    "intermediate": {
+      "urls": ["learnmanx.com/learning/texts/material-for-intermediate-learners/"],
+      "materials": ["Skeeal Zen 1 Aashagh", "MP3 audio"]
+    },
+    "pronunciation": {
+      "urls": ["manxmusic.com/school-resources/"],
+      "materials": ["Songs", "rhymes", "pronunciation guides"]
+    },
+    "cultural": {
+      "urls": ["culturevannin.im/manxlanguage/"],
+      "materials": ["Customs", "traditions", "cultural materials"]
+    }
+  },
+
+  "document_types": {
+    "learning_material": "Manx language learning resource",
+    "audio_resource": "MP3 audio file for pronunciation",
+    "cultural_material": "Information about Manx culture and traditions",
+    "teaching_resource": "Materials for teaching Manx in schools",
+    "dictionary": "Manx-English vocabulary resource"
+  }
+}

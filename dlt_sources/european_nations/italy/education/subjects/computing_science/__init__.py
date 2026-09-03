@@ -1,0 +1,4 @@
+"""Re-export the Italy Computing Science per-subject DLT source."""
+from dlt_sources.european_nations.ita.education.subjects.computing_science import ita_computing_science  # noqa: F401
+
+__all__ = ["ita_computing_science"]

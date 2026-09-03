@@ -1,0 +1,85 @@
+# =============================================================================
+# DEPRECATED 2026-08-15: This stack has been consolidated into
+# `bonneagar/stacks/lakehouse/compose.yaml` per the
+# 2026-08-15-lakehouse-unified-data-plane-v1 change. The standalone
+# files (compose.yaml / sidecar.yaml / secrets.env / blueprint.yaml /
+# pangolin.yaml / README.md) are kept as readable shadow stacks for
+# one release cycle; they will be deleted in
+# 2026-XX-XX-delete-deprecated-graph-db-stacks.
+# DO NOT DEPLOY THIS STACK — deploy the unified lakehouse instead
+# (it brings up the falkordb service with AOF persistence + production
+# args + the vector.so hybrid capability on port 6379).
+# =============================================================================
+
+# =============================================================================
+# FALKORDB - Redis-based Graph Database
+# =============================================================================
+# High-performance graph database with Redis protocol compatibility.
+#
+# Updated for the 2026-08-15-lakehouse-memory-stack-deep-integration-v1
+# change (Phase C — image pinning + vector.so loadmodule):
+# - Image pinned from `:latest` to `v4.18.11` (the upstream stable verified
+#   2026-06-29 by the falkordb skill).
+# - Added `--loadmodule /etc/falkordb/vector.so` to the container command
+#   so the vector-search capability is enabled (closes the open production
+#   drift alert flagged by the falkordb skill since Wave 1).
+#
+# USAGE:
+#   Development:  docker compose --env-file ../../.env.local up -d
+#   Production:   locket exec --env-file secrets.env -- docker compose up -d
+#   Standalone:   docker compose up -d  (uses defaults)
+# =============================================================================
+
+name: falkordb
+
+services:
+  # ---------------------------------------------------------------------------
+  # FALKORDB - Graph Database
+  # ---------------------------------------------------------------------------
+  falkordb:
+    # Pinned 2026-08-15 (was :latest; v4.18.11 = upstream stable verified by
+    # the falkordb skill). Floats on `:latest` risk silent image drift +
+    # module incompatibility.
+    image: falkordb/falkordb:v4.18.11
+    container_name: falkordb
+    restart: unless-stopped
+    # --loadmodule /etc/falkordb/vector.so enables FalkorDB's vector-search
+    # capability (the `db.idx.vector.queryNodes` procedure used by Graphiti's
+    # hybrid queries). The .so is bundled inside the v4.18.11 image.
+    command: ["falkordb", "--loadmodule", "/etc/falkordb/vector.so", "--requirepass", "${FALKORDB_PASSWORD:?FALKORDB_PASSWORD must be set}"]
+    ports:
+      - "${FALKORDB_PORT:-6379}:6379"
+      - "${FALKORDB_UI_PORT:-3000}:3000"
+    environment:
+      FALKORDB_PASSWORD: ${FALKORDB_PASSWORD:?FALKORDB_PASSWORD must be set via Locket/Infisical}
+      BROWSER: ${FALKORDB_BROWSER:-1}
+    volumes:
+      - falkordb-data:/data
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - -p
+        - "6379"
+        - -a
+        - "${FALKORDB_PASSWORD}"
+        - --no-auth-warning
+        - ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - falkordb
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+
+volumes:
+  falkordb-data:
+
+networks:
+  falkordb:
+    driver: bridge

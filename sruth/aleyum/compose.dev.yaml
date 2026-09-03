@@ -1,0 +1,130 @@
+# =============================================================================
+# ALEYUM - Development Environment
+# =============================================================================
+# Extends compose.yaml for local music pipeline development with hot-reload.
+#
+# USAGE:
+#   Development only:  docker compose -f compose.yaml -f docker-compose.dev.yml up
+#   With Dagster:      docker compose -f compose.yaml -f docker-compose.dev.yml --profile dagster up
+# =============================================================================
+#
+# This dev overlay adds:
+#   - Source code volume mounts for hot-reload
+#   - Development command overrides
+#   - Debug logging enabled
+#   - Resource limits removed
+#   - Connection to shared bonneagar infrastructure
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # Dagster Webserver - Development Mode
+  # ---------------------------------------------------------------------------
+  dagster-webserver:
+    volumes:
+      # Mount source code for hot-reload
+      - .:/opt/dagster/app:ro
+      - ./dagster_assets:/opt/dagster/app/dagster_assets:ro
+      # Persist Dagster home locally
+      - ./dagster_home:/opt/dagster/dagster_home
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+      PYTHONPATH: /opt/dagster/app
+      # Development settings
+      LOG_LEVEL: DEBUG
+      # Storage paths
+      DUCKDB_PATH: /data/aleyum.duckdb
+      LANCEDB_PATH: /data/music_vectors.lance
+      # Music APIs (use .env file for credentials)
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID:-}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET:-}
+      # Cloud Storage (connects to bonneagar/garage)
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID:-}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY:-}
+      R2_ENDPOINT: http://garage:3900
+      # GitHub
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+    command: ["dagster-webserver", "-h", "0.0.0.0", "-p", "3000", "-w", "/opt/dagster/app", "--reload"]
+    # Remove resource limits for dev
+    deploy:
+      resources: {}
+
+  # ---------------------------------------------------------------------------
+  # Dagster Daemon - Development Mode
+  # ---------------------------------------------------------------------------
+  dagster-daemon:
+    volumes:
+      # Mount source code for hot-reload
+      - .:/opt/dagster/app:ro
+      - ./dagster_assets:/opt/dagster/app/dagster_assets:ro
+      # Persist Dagster home locally
+      - ./dagster_home:/opt/dagster/dagster_home
+    environment:
+      DAGSTER_HOME: /opt/dagster/dagster_home
+      PYTHONPATH: /opt/dagster/app
+      LOG_LEVEL: DEBUG
+      # Storage paths
+      DUCKDB_PATH: /data/aleyum.duckdb
+      LANCEDB_PATH: /data/music_vectors.lance
+      # Music APIs
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID:-}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET:-}
+      # Cloud Storage
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID:-}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY:-}
+      R2_ENDPOINT: http://garage:3900
+      # GitHub
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+    # Remove resource limits for dev
+    deploy:
+      resources: {}
+
+  # ---------------------------------------------------------------------------
+  # DragonflyDB - Development Mode
+  # ---------------------------------------------------------------------------
+  dragonfly:
+    ports:
+      # Expose externally for Redis Insight debugging
+      - "${REDIS_PORT:-6381}:6379"
+    environment:
+      # Enable verbose logging for development
+      DRAGONFLY_LOG_LEVEL: verbose
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+# Connect to bonneagar shared infrastructure network for:
+#   - garage (S3-compatible storage at http://garage:3900)
+#   - lakekeeper (Iceberg catalog)
+#   - lakefs (Git-like data versioning)
+# =============================================================================
+networks:
+  aleyum:
+    external: true
+    name: bonneagar_default
+
+# =============================================================================
+# DEVELOPMENT NOTES
+# =============================================================================
+#
+# Shared Infrastructure (via bonneagar_default network):
+#   - Garage S3:        http://garage:3900 (artifact storage)
+#   - Lakekeeper:       http://lakekeeper:8181 (Iceberg REST catalog)
+#   - LakeFS:           http://lakefs:8000 (data version control)
+#
+# To start shared services:
+#   cd bonneagar/storage/garage && docker compose up -d
+#   cd bonneagar/storage/lakekeeper && docker compose up -d
+#
+# Environment setup:
+#   1. Copy .env.example to .env
+#   2. Add your Spotify API credentials
+#   3. Add your R2 credentials (or use local Garage)
+#   4. Run: docker compose -f compose.yaml -f docker-compose.dev.yml --profile dagster up
+#
+# Dagster UI:
+#   http://localhost:3106
+#
+# DragonflyDB (Redis):
+#   Connect with Redis Insight to localhost:6381
+#

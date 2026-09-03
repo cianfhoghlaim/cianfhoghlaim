@@ -1,0 +1,16 @@
+# defs/5_agent_ops/defs.yaml — Layer 5 Agent Operations root mount.
+#
+# Per the dagster-5-layer-component-architecture spec, Layer 5 wraps
+# one agent from the 12-agent fleet as 5 Dagster assets (health,
+# routing, memory, event, trace) via `CelticAgentOpsComponent`. The
+# voice agent (pipecat framework) is intentionally deferred to a
+# follow-on change (per user direction).
+#
+# The 12 agents:
+# - 1 custom (root_agent)
+# - 8 ADK (curriculum, translation, corpus, research, geospatial,
+#   statistics, curriculum_comparison, mcp_curriculum)
+# - 3 Agno (education_research, bunchloch_research, agui_curriculum)
+---
+type: dagster.DefsFolderComponent
+attributes: {}

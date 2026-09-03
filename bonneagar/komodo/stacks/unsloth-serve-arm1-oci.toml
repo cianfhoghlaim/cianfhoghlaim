@@ -1,0 +1,51 @@
+# =============================================================================
+# UNSLOTH-SERVE — Komodo-Orchestrated Stack (arm1-oci, GPU-backed, public)
+# =============================================================================
+# Added by the 2026-08-21-unsloth-v5-integration-v1 change.
+# Public-facing GPU-backed inference server. The base compose.yaml is shared;
+# the override file `compose.arm1-oci.yaml` flips image + ngl + memory limits
+# + GPU passthrough.
+#
+# Architecture:
+#   arm1-oci — unsloth-serve (:8888 host → :8888 container, Studio UI)
+#              unsloth-serve (:8889 host → :8889 container, OpenAI/Anthropic API)
+#              unsloth-serve-locket (Infisical secret injection)
+#   Routed through Pangolin:
+#     unsloth.cianfhoghlaim.ie        → arm1-oci:unsloth-serve:8888 (Pocket ID SSO)
+#     unsloth-api.cianfhoghlaim.ie   → arm1-oci:unsloth-serve:8889 (Pocket ID SSO)
+#
+# Secrets injected via Locket + Infisical vault (dev-baile). 1 shared secret
+# `infisical://dev-baile/unsloth/api_key` consumed by the 5 agent stacks
+# (hermes, openclaw, openchamber, cianfhoghlaim, openclaw-arm1-oci).
+#
+# Usage:
+#   km deploy stack unsloth-serve
+# =============================================================================
+
+[[stack]]
+name = "unsloth-serve"
+description = "Unsloth Studio headless inference server — Qwen3.8-27B GGUF (arm1-oci, GPU, ports 8888 + 8889, unsloth.cianfhoghlaim.ie)"
+tags = ["host:arm1-oci", "tier:agent-platform", "type:inference-server", "domain:unsloth.cianfhoghlaim.ie", "stack:unsloth-serve"]
+
+[stack.config]
+server_id = "arm1-oci"
+run_directory = "/etc/komodo/sruth/bonneagar/stacks/unsloth-serve"
+file_paths = [
+  "compose.yaml",
+  "compose.arm1-oci.yaml",
+  "sidecar.yaml",
+  "pangolin.yaml",
+  "blueprint.yaml",
+]
+
+[stack.config.environment]
+LOCKET_MODE = "watch"
+INFISICAL_CLIENT_ID = "${INFISICAL_CLIENT_ID}"
+INFISICAL_SECRET_FILE = "${INFISICAL_SECRET_FILE}"
+# GPU base image (CUDA); full GPU offload; 12 GB memory limit
+UNSLOTH_IMAGE = "unsloth/unsloth:cuda-latest"
+# The arm1-oci compose override reads LLAMA_ARG_NGL=99 from this value
+LLAMA_ARG_NGL = "99"
+LLAMA_ARG_CTX_SIZE = "32768"
+NVIDIA_VISIBLE_DEVICES = "all"
+NVIDIA_DRIVER_CAPABILITIES = "compute,utility"

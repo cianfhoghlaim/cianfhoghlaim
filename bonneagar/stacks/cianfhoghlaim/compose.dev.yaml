@@ -1,0 +1,56 @@
+# Oideachais — local dev override
+# ----------------------------------------------------------------------------
+# Strips the Locket Infisical sidecar from the dependency graph by adding a
+# no-op `locket` container so `depends_on: locket: service_started` blocks
+# expected by app images resolve without booting the real Infisical-injection
+# sidecar. The mise-hydrated local `.env` is mounted via `env_file` so secrets
+# (MotherDuck token, R2 keys, etc.) reach the containers directly.
+#
+# Production-only env vars (DAGSTER_DEPLOYMENT=production, etc.) are
+# overridden to dev values.
+#
+# Usage:
+#   docker compose -f compose.yaml -f compose.dev.yaml up -d
+# ----------------------------------------------------------------------------
+
+services:
+  locket:
+    image: alpine:3.20
+    container_name: cianfhoghlaim-cianfhoghlaim-locket-dev
+    restart: "no"
+    command: ["sh", "-c", "echo '[dev] no-op locket — secrets come from local .env via env_file'; sleep infinity"]
+    networks:
+      - cianfhoghlaim
+
+  dagster:
+    depends_on:
+      locket:
+        condition: service_started
+    env_file:
+      - ../../../../.env
+    environment:
+      DAGSTER_DEPLOYMENT: development
+      USE_DUCKLAKE: "true"
+      MOTHERDUCK_ENABLED: "false"
+
+  api:
+    depends_on:
+      locket:
+        condition: service_started
+    env_file:
+      - ../../../../.env
+    environment:
+      DAGSTER_DEPLOYMENT: development
+      USE_DUCKLAKE: "true"
+      MOTHERDUCK_ENABLED: "false"
+
+  frontend:
+    depends_on:
+      locket:
+        condition: service_started
+    env_file:
+      - ../../../../.env
+    environment:
+      VITE_API_URL: http://localhost:8000
+      VITE_CONVEX_URL: http://localhost:3210
+      VITE_BETTER_AUTH_URL: http://localhost:3002

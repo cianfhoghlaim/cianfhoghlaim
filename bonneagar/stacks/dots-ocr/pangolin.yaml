@@ -1,0 +1,24 @@
+# =============================================================================
+# dots-ocr - Pangolin auto-discovery labels
+# =============================================================================
+# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
+#
+# UPDATED 2026-07-31 (env-contract-and-observability-fanout-v1 was
+# the URI grammar; this update is from the
+# 2026-07-31-agentic-mesh-and-ocr-pipeline-coherence-v1 change).
+#
+# Was previously `noop: true` because the comment said "non-web-facing".
+# Now: the blueprint.yaml declares `dotsocr.cianfhoghlaim.ie` and the
+# ocr-router (per the agent-mesh change) calls dots-ocr in-network as
+# the Tesseract-fallback capability (per spec delta on agent-platform-cluster).
+# The Pangolin route is for operator debugging; it requires Pocket ID
+# passkey via TinyAuth + the secure-headers middleware.
+# =============================================================================
+
+services:
+  dots-ocr:
+    labels:
+      - "pangolin.resource.name=Dots OCR"
+      - "pangolin.resource.domain=dotsocr.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://dots-ocr:8001"
+      - "pangolin.resource.middlewares=tinyauth,secure-headers"

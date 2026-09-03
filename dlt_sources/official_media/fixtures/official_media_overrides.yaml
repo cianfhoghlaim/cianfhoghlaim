@@ -1,0 +1,149 @@
+# oideachais/dlt_sources/official_media/fixtures/official_media_overrides.yaml
+#
+# Hard-coded authoritative URLs for the 4 seed intelligence agencies.
+# The SourceResolver short-circuits all 4 network lookups when the
+# candidate matches one of these — no Wikipedia, no Companies House,
+# no Mastodon, no Bluesky.
+#
+# These overrides exist because:
+#   1. The agencies' public-facing websites rarely link to the
+#      agencies' own social channels from a "Contact" page; Wikipedia
+#      footers and the "About" sidebar are the only reliable
+#      cross-references.
+#   2. HMGCC posts 12-week co-creation project calls under
+#      /co-creation/** — a path the firecrawl crawl in
+#      sources.yaml mirrors for the monthly marimo sentinel.
+
+version: 1
+description: >-
+  Hand-curated authoritative overrides for the 4 intelligence agencies
+  in PR 1. The MI5 / MI6 / GCHQ / HMGCC Instagram handles, their
+  official websites, and (where available) their fediverse presences.
+
+overrides:
+  - ig_username: mi5official
+    category: intelligence
+    official_website: "https://www.mi5.gov.uk"
+    wikipedia_url: "https://en.wikipedia.org/wiki/MI5"
+    wikipedia_extract: >-
+      The Security Service, commonly known as MI5, is the United
+      Kingdom's domestic counter-intelligence and security agency.
+    companies_house_id: null
+    cro_number: null
+    mastodon_handle: null
+    bluesky_handle: null
+    resolver_notes: "MI5 is a Crown body; not registered with Companies House."
+
+  - ig_username: mi6official
+    category: intelligence
+    official_website: "https://www.sis.gov.uk"
+    wikipedia_url: "https://en.wikipedia.org/wiki/Secret_Intelligence_Service"
+    wikipedia_extract: >-
+      The Secret Intelligence Service (SIS), commonly known as MI6,
+      is the foreign intelligence service of the United Kingdom.
+    companies_house_id: null
+    cro_number: null
+    mastodon_handle: null
+    bluesky_handle: null
+    resolver_notes: "SIS is a Crown body; not registered with Companies House."
+
+  - ig_username: gchq
+    category: intelligence
+    official_website: "https://www.gchq.gov.uk"
+    wikipedia_url: "https://en.wikipedia.org/wiki/GCHQ"
+    wikipedia_extract: >-
+      The Government Communications Headquarters (GCHQ) is an
+      intelligence and security organisation responsible for
+      providing signals intelligence (SIGINT) and information
+      assurance to the UK government and the armed forces.
+    companies_house_id: null
+    cro_number: null
+    mastodon_handle: null
+    bluesky_handle: null
+    resolver_notes: "GCHQ is a Crown body; not registered with Companies House."
+
+  - ig_username: hmgcc
+    category: intelligence
+    official_website: "https://www.hmgcc.gov.uk"
+    wikipedia_url: "https://en.wikipedia.org/wiki/HMGCC"
+    wikipedia_extract: >-
+      His Majesty's Government Communications Centre (HMGCC) is an
+      engineering organisation that designs and builds electronic
+      equipment and software for the UK government, particularly
+      GCHQ and the wider intelligence community. HMGCC runs
+      12-week co-creation projects through its Co-Creation programme.
+    companies_house_id: null
+    cro_number: null
+    mastodon_handle: null
+    bluesky_handle: null
+    co_creation_url: "https://www.hmgcc.gov.uk/co-creation/"
+    resolver_notes: >-
+      HMGCC Co-Creation runs 12-week funded projects; see
+      /co-creation/ for the current call list. Marimo dashboard
+      surfaces the last 12 weeks of co-creation project calls.
+
+  - ig_username: smouhi
+    category: college
+    official_website: "https://www.smo.uhi.ac.uk"
+    wikipedia_url: "https://en.wikipedia.org/wiki/Sabhal_M%C3%B2r_Ostaig"
+    wikipedia_extract: >-
+      Sabhal Mòr Ostaig is Scotland's only Gaelic-medium higher
+      education college, located on the Isle of Skye. The college is
+      the principal inter-Celtic pedagogical hub for Irish speakers
+      seeking Scottish Gaelic fluency.
+    resolver_notes: >-
+      Sabhal Mòr Ostaig is the only full-immersion Gaelic-medium HE
+      college in the world; the marimo dashboard surfaces its
+      annual Open Day (Latha Fosgailte) and the 7-week summer school
+      (An Cùrsa Drochaid).
+
+  - ig_username: lewscastleuhi
+    category: college
+    official_website: "https://www.nwh.uhi.ac.uk"
+    wikipedia_url: "https://en.wikipedia.org/wiki/Lews_Castle_College"
+    wikipedia_extract: >-
+      Lews Castle College is a campus of the University of the
+      Highlands and Islands (UHI) in Stornoway on the Isle of Lewis.
+      It offers further education and degree programmes in the
+      Outer Hebrides.
+    resolver_notes: >-
+      UHI Outer Hebrides — strategic for the Manx + Scottish
+      Gaelic pathway via the inter-Celtic ferry network.
+
+  - ig_username: truroandpenwith
+    category: college
+    official_website: "https://www.truro-penwith.ac.uk"
+    wikipedia_url: "https://en.wikipedia.org/wiki/Truro_and_Penwith_College"
+    wikipedia_extract: >-
+      Truro and Penwith College is a further education college in
+      Cornwall offering Beginners Cornish courses as part of the
+      Cornish language revival.
+    resolver_notes: >-
+      Cornwall's primary Cornish language provider — strategic
+      for the Brythonic branch of the Celtic language family.
+
+  - ig_username: bunscoillghaelgagh
+    category: school
+    official_website: "https://www.gov.im"
+    wikipedia_url: "https://en.wikipedia.org/wiki/Bunscoill_Ghaelgagh"
+    wikipedia_extract: >-
+      Bunscoill Ghaelgagh is the Manx-medium primary school in
+      St John's, Isle of Man, established in 2001 and operated
+      directly by the Isle of Man Department of Education, Sport
+      and Culture.
+    resolver_notes: >-
+      The only Manx-medium primary school — the keystone of
+      Manx Gaelic language revitalisation.
+
+  - ig_username: colaistefeirste
+    category: school
+    official_website: "https://www.colaistefeirste.net"
+    wikipedia_url: "https://en.wikipedia.org/wiki/Col%C3%A1iste_Feirste"
+    wikipedia_extract: >-
+      Coláiste Feirste is an Irish-medium post-primary school in
+      West Belfast, Northern Ireland. It is the preeminent
+      Irish-medium secondary school in the north of Ireland.
+    resolver_notes: >-
+      The preeminent Irish-medium post-primary school in
+      West Belfast — strategic for the East Belfast → West
+      Belfast Irish-medium pathway the user described.

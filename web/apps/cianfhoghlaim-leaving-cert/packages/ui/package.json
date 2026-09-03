@@ -1,0 +1,41 @@
+{
+  "name": "@cianfhoghlaim/ui",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./lore/*": "./src/lore/*.tsx",
+    "./map/*": "./src/map/*.tsx",
+    "./*": "./src/*.tsx"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "clsx": "^2.1.0",
+    "tailwind-merge": "^3.0.0",
+    "lucide-react": "^0.544.0",
+    "framer-motion": "^11.0.0",
+    "react-rnd": "^10.4.0",
+    "reactflow": "^11.10.0",
+    "d3": "^7.8.5",
+    "@dagrejs/dagre": "^1.1.0",
+    "@google/model-viewer": "^3.5.0",
+    "@babylonjs/core": "^6.0.0",
+    "@babylonjs/loaders": "^6.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/d3": "^7.4.0"
+  }
+}

@@ -1,0 +1,6 @@
+# orchestration/defs/1_ingestion/law/_layer/defs.yaml
+#
+# L1 Law sub-mount (added by the 2026-08-15-dagster-load-path-repair
+# change). Walks into law/ie/{piab,court_rules,legal_aid,courts,judgements}.
+type: dagster.DefsFolderComponent
+attributes: {}

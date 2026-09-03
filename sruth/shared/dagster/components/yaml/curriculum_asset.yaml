@@ -1,0 +1,69 @@
+# Irish Curriculum Asset Component
+# Ingests curriculum data from NCCA (National Council for Curriculum and Assessment)
+
+component: sruth.shared.dagster.components.DLTAssetComponent
+
+attributes:
+  # Asset definition
+  asset_key: ["ireland", "curriculum", "pages"]
+  asset_name: "curriculum_pages"
+  group_name: "curriculum"
+  description: "Irish curriculum pages from NCCA (Junior and Senior Cycle)"
+
+  # DLT source configuration
+  source_module: "sruth.oideachais.dlt_sources.curriculum_source"
+  source_function: "curriculum_source"
+  pipeline_name: "curriculum_pipeline"
+  dataset_name: "curriculum"
+  write_disposition: "merge"
+  primary_key: "url"
+
+  # Multi-dimensional partitioning
+  # Creates assets for each combination of cycle x subject x language
+  partitions:
+    cycle:
+      type: "static"
+      values:
+        - "junior_cycle"
+        - "senior_cycle"
+        - "lca"  # Leaving Certificate Applied
+    subject:
+      type: "static"
+      values:
+        - "mathematics"
+        - "english"
+        - "irish"
+        - "science"
+        - "history"
+        - "geography"
+        - "business"
+        - "languages"
+        - "arts"
+    language:
+      type: "static"
+      values:
+        - "en"
+        - "ga"
+
+  # Retry policy for network failures
+  max_retries: 3
+  retry_delay: 30
+
+  # Observability integration
+  enable_langfuse: true
+  enable_mlflow: false
+
+# Environment-specific overrides
+environments:
+  development:
+    partitions:
+      cycle:
+        values: ["junior_cycle"]  # Single cycle for dev
+      subject:
+        values: ["mathematics"]   # Single subject for dev
+      language:
+        values: ["en"]
+
+  production:
+    enable_langfuse: true
+    enable_mlflow: true

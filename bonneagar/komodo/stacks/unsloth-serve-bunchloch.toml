@@ -1,0 +1,26 @@
+# Komodo stack registration: unsloth-serve (bunchloch)
+# Per the 2026-08-21-unsloth-v5-integration-v1 change.
+# The CPU/MPS variant for dev mode + the marimo 10-way comparison notebook
+# + the Studio UI. The base compose.yaml is shared; the override file
+# `compose.bunchloch.yaml` flips image + ngl + memory limits.
+[[stack]]
+name = "unsloth-serve"
+server_id = "bunchloch"
+run_directory = "/etc/komodo/sruth/bonneagar/stacks/unsloth-serve"
+file_paths = [
+  "compose.yaml",
+  "compose.bunchloch.yaml",
+  "sidecar.yaml",
+  "pangolin.yaml",
+  "blueprint.yaml",
+]
+tags = ["host:bunchloch", "tier:agent-platform", "type:inference-server", "domain:unsloth.cianfhoghlaim.ie", "stack:unsloth-serve"]
+
+[stack.environment]
+LOCKET_MODE = "watch"
+INFISICAL_CLIENT_ID = "${INFISICAL_CLIENT_ID}"
+INFISICAL_SECRET_FILE = "${INFISICAL_SECRET_FILE}"
+# The base image override (defaults to unsloth/unsloth:latest; explicit for clarity)
+UNSLOTH_IMAGE = "unsloth/unsloth:latest"
+# Mac platform flag (the unsloth CLI detects Mac and uses MLX under the hood)
+UNSLOTH_PLATFORM = "macos"

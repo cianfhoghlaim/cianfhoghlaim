@@ -1,0 +1,32 @@
+# Pangolin private-resource blueprint for Tuath (generated from pangolin.yaml label form)
+# See: https://docs.pangolin.net/manage/blueprints
+#
+# Tuatha is the only public-facing stack in the platform — three named routes
+# are exposed, two TinyAuth-gated and one public (rate-limited):
+#
+#   - tuath-api.cianfhoghlaim.ie    → api:8000        (TinyAuth passkey)
+#   - tuath-ui.cianfhoghlaim.ie     → ui:3000         (TinyAuth passkey)
+#   - tuath.cianfhoghlaim.ie        → game:8080       (public, rate-limited)
+#
+# Dagster is intentionally NOT exposed via Pangolin (operator-only, port-forward).
+
+private-resources:
+  tuath-api:
+    name: "Tuatha API Server"
+    mode: "http"
+    destination: "tuath-api"
+    destination-port: 8000
+    full-domain: "tuath-api.cianfhoghlaim.ie"
+    protocol: "https"
+    roles:
+      - "Member"
+
+  tuath-ui:
+    name: "Tuatha TanStack Dashboard"
+    mode: "http"
+    destination: "tuath-ui"
+    destination-port: 3000
+    full-domain: "tuath-ui.cianfhoghlaim.ie"
+    protocol: "https"
+    roles:
+      - "Member"

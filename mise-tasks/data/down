@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="DATA teardown — the unified 16-service lakehouse stack"
+set -euo pipefail
+
+bash scripts/lakehouse_unified_down.sh "$@"

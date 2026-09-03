@@ -1,0 +1,99 @@
+services:
+  locket:
+    # NOTE: replaced locket v0.17.3 with ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    # because locket v0.17.3 has a bug where it sends API requests with
+    # snake_case query params (project_id, secret_path) but Infisical
+    # v0.161+ requires camelCase (projectId, secretPath). Every locket
+    # call returned 422, locket fell back to passthrough mode, and the
+    # raw {{ infisical://... }} template was written to disk instead of
+    # the resolved secrets.
+    #
+    # The ghcr.io/cianfhoghlaim/locket-shim is a Python-based drop-in replacement that
+    # uses the CORRECT camelCase field names. It's a temporary fix until
+    # locket v0.18+ ships with the fix in source (already in the
+    # upstream repo at stedding/locket v0.18.0-rc.1).
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    container_name: openclaw-locket
+    restart: unless-stopped
+    user: "65532:65532"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    # The 5 runtime-configurable values (INFISICAL_URL, INFISICAL_CLIENT_ID,
+    # INFISICAL_DEFAULT_PROJECT_ID, INFISICAL_DEFAULT_ENVIRONMENT,
+    # INFISICAL_DEFAULT_PATH) are passed via `environment:` below so the
+    # shim picks them up from the container env. The client_secret is
+    # mounted via Docker's `secrets:` directive.
+    environment:
+      INFISICAL_URL: ${INFISICAL_URL}
+      INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
+      INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+      INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_ENV}
+      INFISICAL_DEFAULT_PATH: /openclaw
+      LOCKET_MODE: ${LOCKET_MODE:-watch}
+      LOCKET_SRC: /templates/secrets.env
+      LOCKET_DST: /run/secrets/locket
+    secrets:
+      - infisical_secret
+    volumes:
+      - ./secrets.env:/templates/secrets.env:ro
+      - stack-secrets:/run/secrets/locket
+    # The shim has no "healthcheck" subcommand; the default mode
+    # is to write the resolved file. The liveness probe is a
+    # quick re-run that reads the env vars and checks the output.
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "python3 /app/locket-shim.py --mode one-shot 2>&1 | grep -q 'resolved' || exit 1"
+      interval: 30s
+      timeout: 15s
+      retries: 3
+      start_period: 5s
+    networks:
+      - cianfhoghlaim
+
+  openclaw:
+    depends_on:
+      locket:
+        condition: service_healthy
+    # No user: override — the upstream Dockerfile sets USER 1000:1000.
+    # Overriding to 65532:65532 (nobody) breaks Docker's tmpfs mode:1777
+    # security policy under no-new-privileges (docker daemon refuses
+    # the world-writable tmpfs for an unprivileged user). The tmpfs
+    # mode:1777 is required by the openclaw binary for its /tmp scratch
+    # space. The locket stack-secrets volume is world-readable (mode
+    # 755 in the volumes: driver_opts below) so user 1000 can still
+    # read /run/secrets/locket/secrets.env.
+    volumes:
+      - stack-secrets:/run/secrets/locket:ro
+    # The /run/secrets/locket/secrets.env file is materialized by the locket
+    # sidecar at container start. We source it via a shell wrapper around the
+    # upstream `node openclaw.mjs gateway` CMD (Dockerfile line 67-68). This
+    # sidesteps docker compose's parse-time env_file validation (which would
+    # reject /run/secrets/* even though it's a runtime path).
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -a
+        . /run/secrets/locket/secrets.env
+        set +a
+        exec node openclaw.mjs gateway --allow-unconfigured
+
+secrets:
+  infisical_secret:
+    file: ${INFISICAL_SECRET_FILE:-/Users/cianmacandeisigh/.locket/infisical_secret}
+
+volumes:
+  stack-secrets:
+    driver: local
+    driver_opts:
+      # mode 755 (not 700) so the openclaw container (uid 1000) can read
+      # /run/secrets/locket/secrets.env. The locket sidecar (uid 65532)
+      # is the only writer; the openclaw container mounts the volume
+      # read-only.
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=755

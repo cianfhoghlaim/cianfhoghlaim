@@ -1,0 +1,153 @@
+# Oideachais Stack
+
+The Celtic Education Lakehouse Engine — the production deployment
+of the `cianfhoghlaim/` uv workspace member. This stack wires the
+5 application services (Dagster, FastAPI, TanStack Start, Agno
+AgentOS, Google ADK) to the shared LLM gateway (LiteLLM), the
+lakehouse (Garage S3 + Postgres + Lakekeeper + Lance Namespace),
+and the LLM observability sink (Langfuse).
+
+## Architecture
+
+```
+bunchloch (MacBook M4 Max)
+├── dagster      :3335 → :3000   Dagster webserver + daemon
+├── api          :8000            FastAPI AG-UI streaming backend
+├── frontend     :3080 → :3000   TanStack Start dev server
+├── agent_os     :7777            Agno AgentOS (multi-agent runtime)
+├── adk_agents   :7778            Google ADK (ADK agents)
+└── locket       (sidecar)       Infisical → secrets.env injector
+```
+
+| Service | Container | Host port | Internal port | Healthcheck |
+|---|--:|--:|--:|---|
+| `dagster` | `cianfhoghlaim-cianfhoghlaim-dagster` | 3335 | 3000 | `/server_info` |
+| `api` | `cianfhoghlaim-cianfhoghlaim-api` | 8000 | 8000 | `/health` |
+| `frontend` | `cianfhoghlaim-cianfhoghlaim-frontend` | **3080** | 3000 | `/` |
+| `agent_os` | `cianfhoghlaim-cianfhoghlaim-agent-os` | 7777 | 7777 | `/health` |
+| `adk_agents` | `cianfhoghlaim-cianfhoghlaim-adk-agents` | 7778 | 7778 | `/health` |
+| `locket` | `cianfhoghlaim-cianfhoghlaim-locket` | (no host port) | (no container port) | `/run/secrets/locket/secrets.env` |
+
+## Networks
+
+| Network | Type | Used for |
+|---|---|---|
+| `cianfhoghlaim` | external | Primary dev/control plane (shared with 94 other stacks) |
+| `lakehouse_lakehouse` | external | Data plane (Garage S3, Postgres, Lakekeeper, Lance NS, LiteLLM) |
+
+## Dependencies (sibling stacks)
+
+The 3 app services consume:
+
+- **`infrastructure/stacks/lakehouse/`** — Garage S3
+  (`http://lakehouse-garage:3900`), Postgres
+  (`lakehouse-postgres:5432`), Lakekeeper Iceberg catalog
+  (`http://lakehouse-lakekeeper:8181`), Lance Namespace
+  (`http://lakehouse-lance-namespace:8182`).
+  See `blueprint.yaml` `depends_on: [lakehouse]`.
+- **`infrastructure/stacks/litellm/`** — LLM proxy gateway at
+  `http://litellm:4000/v1` (all `LLM_*` env vars point here).
+  See `blueprint.yaml` `depends_on: [litellm]`.
+- **`infrastructure/stacks/langfuse/`** — LLM observability at
+  `http://langfuse:3000` (Langfuse SDK config in `api` env).
+  See `blueprint.yaml` `depends_on: [langfuse]` (optional).
+- **`infrastructure/stacks/lancedb/`** — Optional LanceDB
+  viewer (the data is on the lakehouse stack).
+
+## Files
+
+| File | Purpose |
+|---|---|
+| `compose.yaml` | Canonical 5 app services (dagster/api/frontend/agent_os/adk_agents) + 1 locket sidecar + named volumes + external networks |
+| `compose.dev.yaml` | Dev override: no-op `alpine:3.20 locket` shim, `env_file: ../../../../.env` |
+| `sidecar.yaml` | Production override: real `locket:1.2.3` sidecar with `infisical://dev-baile/...` secrets |
+| `pangolin.yaml` | Traefik routing for 5 web-facing services (`*.cianfhoghlaim.cianfhoghlaim.ie` + `agent.os.cianfhoghlaim.ie` + `adk.cianfhoghlaim.ie`) |
+| `secrets.env` | Infisical URI references (zero plaintext; mounted at `/etc/locket/secrets.env`) |
+| `.env.example` | Dev-only placeholder env vars (committed for onboarding) |
+| `blueprint.yaml` | Komodo stack metadata (name, ports, depends_on) |
+| `README.md` | This file |
+
+## Commands
+
+### Local development
+
+```bash
+# 1. Hydrate the local .env via mise
+cd /Users/cianmacandeisigh/dev/kings_college_galway
+mise trust  # accept mise.toml
+
+# 2. Start the stack
+cd bonneagar/stacks/cianfhoghlaim
+docker compose -f compose.yaml -f compose.dev.yaml up -d
+
+# 3. Open Dagster at http://localhost:3335
+# 4. Open the FastAPI at http://localhost:8000/health
+# 5. Open the TanStack Start at http://localhost:3080
+```
+
+### Production (via Komodo)
+
+```bash
+# The 5-stage deploy procedure is at:
+#   infrastructure/komodo/procedures/deploy-cianfhoghlaim-bunchloch.toml
+# It deploys lakehouse + litellm + langfuse + lancedb (stage 1),
+# then cianfhoghlaim (stage 2), then pangolin routes (stage 3),
+# then health checks (stage 4).
+#
+# Trigger via Komodo UI or API:
+curl -X POST https://komodo.cianfhoghlaim.ie/api/procedure/run \
+  -H "Authorization: Bearer $KOMODO_API_KEY" \
+  -d '{"name": "deploy-cianfhoghlaim-bunchloch"}'
+```
+
+## Port Allocation (per `kcg-convergence` skill)
+
+| Port | Range category | Reserved? |
+|---|---:|:--:|
+| 3000 | User apps | **YES** (Forgejo + langfuse) |
+| 3080 | User apps | NO — used by `frontend` |
+| 3335 | Dagster | NO — used by `dagster` |
+| 7777 | AI/ML | NO — used by `agent_os` (Agno AgentOS) |
+| 7778 | AI/ML | NO — used by `adk_agents` (Google ADK) |
+| 8000 | MMO | NO — used by `api` (drift; should be 3500 per kcg-convergence, but kept for backward compat) |
+
+## Image Tags
+
+| Image | Tag | Reason |
+|---|---|---|
+| `cianfhoghlaim-dev-dagster:latest` | `latest` | Local build artifact, `pull_policy: never` |
+| `cianfhoghlaim-dev-api:latest` | `latest` | Local build artifact, `pull_policy: never` |
+| `cianfhoghlaim-dev-frontend:latest` | `latest` | Local build artifact, `pull_policy: never` |
+| `ghcr.io/bpbradley/locket:infisical` | **pinned** | Upstream image from https://github.com/bpbradley/locket; `:infisical` is the canonical tag (no `:latest`; future change may pin `@sha256:` once bpbradley publishes digest-stable builds) |
+
+## Health Checks
+
+```bash
+# Dagster webserver
+curl -s http://localhost:3335/server_info | jq
+
+# FastAPI
+curl -s http://localhost:8000/health | jq
+
+# Frontend (TanStack Start)
+curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3080
+
+# Agno AgentOS
+curl -s http://localhost:7777/health | jq
+
+# Google ADK agents
+curl -s http://localhost:7778/health | jq
+
+# Locket secrets file (inside the locket container)
+docker exec cianfhoghlaim-cianfhoghlaim-locket \
+  test -f /run/secrets/locket/secrets.env && echo OK
+```
+
+## Cross-References
+
+- [`../../AGENTS.md`](../../AGENTS.md) — root agent instructions
+- [`../../../openspec/changes/cianfhoghlaim-stack-polish/`](../../../openspec/changes/cianfhoghlaim-stack-polish/) — this stack's polish change
+- [`../komodo/procedures/deploy-cianfhoghlaim-bunchloch.toml`](../../komodo/procedures/deploy-cianfhoghlaim-bunchloch.toml) — 5-stage deploy procedure
+- [`../pangolin.yaml`](../../pangolin.yaml) — Pangolin (Traefik) routing
+- [`.agents/skills/kcg-convergence/SKILL.md`](../../../.agents/skills/kcg-convergence/SKILL.md) — stack inventory + port allocation
+- [`../../../cianfhoghlaim/STATUS.md`](../../../cianfhoghlaim/STATUS.md) — pipeline state

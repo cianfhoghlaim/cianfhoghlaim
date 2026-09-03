@@ -1,0 +1,60 @@
+# =============================================================================
+# Oideachais — Locket sidecar (MERGED canonical)
+# =============================================================================
+# Injects secrets from Infisical dev-baile vault at runtime.
+#
+# compose.yaml declares the three app services (dagster, api, frontend)
+# with their canonical depends_on: locket: condition: service_healthy,
+# env_file, and volume mounts (per GOLD_STANDARD §1). This sidecar
+# file adds:
+#   1. The `locket` sidecar service itself (the locket image is
+#      pinned to a specific version, NOT :latest, per GOLD_STANDARD
+#      "Forbidden patterns").
+#   2. The shared `locket_secrets` tmpfs volume declaration.
+#   3. The `locket_secrets` and `cianfhoghlaim` external networks.
+#
+# The 3 app services (dagster, api, frontend) in compose.yaml declare
+# their own depends_on: locket: condition: service_healthy; this
+# file does NOT re-declare them (which would shadow the canonical
+# ones). The 3 services are extended here only with their
+# locket-specific env_file and volume (which are stacked on top of
+# the canonical definitions in compose.yaml).
+#
+# In production the full chain is:
+#   docker compose -f compose.yaml -f sidecar.yaml -f pangolin.yaml up -d
+
+services:
+  locket:
+    # Pin to a specific version (NOT :latest, per GOLD_STANDARD
+    # "Forbidden patterns"). The image is published from the
+    # `locket` repo at https://github.com/cianfhoghlaim/locket
+    # (private). Update this tag when a new release is published.
+    image: ghcr.io/bpbradley/locket:infisical
+    container_name: cianfhoghlaim-cianfhoghlaim-locket
+    restart: unless-stopped
+    env_file:
+      - ./secrets.env
+    environment:
+      INFISICAL_PROJECT_ID: ${INFISICAL_PROJECT_ID:-dev-baile}
+      TEMPLATE_PATH: /etc/locket/secrets.env
+      OUTPUT_PATH: /run/secrets/locket/secrets.env
+    volumes:
+      - ./secrets.env:/etc/locket/secrets.env:ro
+      - locket_secrets:/run/secrets/locket:rw
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /run/secrets/locket/secrets.env"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  locket_secrets:
+    external: true
+    name: cianfhoghlaim_locket_secrets
+
+networks:
+  cianfhoghlaim:
+    external: true

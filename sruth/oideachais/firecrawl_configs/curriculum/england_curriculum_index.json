@@ -1,0 +1,383 @@
+{
+  "$schema": "./SCHEMA.json",
+  "version": "1.0.0",
+  "generated_at": "2025-01-05",
+  "jurisdiction": "england",
+
+  "sources": {
+    "gov_uk": {
+      "base_url": "https://www.gov.uk",
+      "languages": {"en": ""}
+    },
+    "aqa": {
+      "base_url": "https://www.aqa.org.uk",
+      "languages": {"en": ""}
+    },
+    "ocr": {
+      "base_url": "https://www.ocr.org.uk",
+      "languages": {"en": ""}
+    },
+    "edexcel": {
+      "base_url": "https://qualifications.pearson.com",
+      "languages": {"en": ""}
+    },
+    "department_for_education": {
+      "base_url": "https://www.gov.uk/government/organisations/department-for-education",
+      "languages": {"en": ""}
+    },
+    "ofqual": {
+      "base_url": "https://www.ofqual.gov.uk",
+      "languages": {"en": ""}
+    }
+  },
+
+  "key_stages": {
+    "ks1": {
+      "name": "Key Stage 1",
+      "age_range": "5-7",
+      "years": 2,
+      "year_groups": ["Year 1", "Year 2"]
+    },
+    "ks2": {
+      "name": "Key Stage 2",
+      "age_range": "7-11",
+      "years": 4,
+      "year_groups": ["Year 3", "Year 4", "Year 5", "Year 6"]
+    },
+    "ks3": {
+      "name": "Key Stage 3",
+      "age_range": "11-14",
+      "years": 3,
+      "year_groups": ["Year 7", "Year 8", "Year 9"]
+    },
+    "ks4": {
+      "name": "Key Stage 4",
+      "age_range": "14-16",
+      "years": 2,
+      "certification": "GCSE",
+      "year_groups": ["Year 10", "Year 11"]
+    },
+    "ks5": {
+      "name": "Key Stage 5",
+      "age_range": "16-18",
+      "years": 2,
+      "certification": "A-Level",
+      "year_groups": ["Year 12", "Year 13"]
+    }
+  },
+
+  "qualifications": {
+    "gcse": {
+      "name": "General Certificate of Secondary Education",
+      "age": "16",
+      "levels": ["9", "8", "7", "6", "5", "4", "3", "2", "1", "U"],
+      "exam_boards": ["aqa", "ocr", "edexcel"],
+      "equivalent": ["junior_cert", "national_5"]
+    },
+    "a_level": {
+      "name": "GCE Advanced Level",
+      "age": "18",
+      "levels": ["A*", "A", "B", "C", "D", "E"],
+      "exam_boards": ["aqa", "ocr", "edexcel"],
+      "equivalent": ["leaving_cert", "higher", "advanced_higher"]
+    },
+    "as_level": {
+      "name": "Advanced Subsidiary Level",
+      "age": 17",
+      "levels": ["A", "B", "C", "D", "E"],
+      "exam_boards": ["aqa", "ocr", "edexcel"]
+    }
+  },
+
+  "subjects": [
+    {
+      "slug": "mathematics",
+      "name": "Mathematics",
+      "key_stages": ["ks1", "ks2", "ks3", "ks4", "ks5"],
+      "qualification_type": ["gcse", "a_level"],
+      "urls": {
+        "aqa_gcse": "/qualifications/mathematics/gcse/",
+        "aqa_a_level": "/qualifications/mathematics/a-level/",
+        "ocr_gcse": "/qualifications/gcse/mathematics-a/",
+        "edexcel_gcse": "/qualifications/edexcel-gcses-mathematics-2016/",
+        "edexcel_a_level": "/qualifications/edexcel-a-levels/mathematics-2017/"
+      }
+    },
+    {
+      "slug": "english_language",
+      "name": "English Language",
+      "key_stages": ["ks1", "ks2", "ks3", "ks4", "ks5"],
+      "qualification_type": ["gcse", "a_level"],
+      "urls": {
+        "aqa_gcse": "/qualifications/english-language/gcse/",
+        "aqa_a_level": "/qualifications/english-language/a-level/",
+        "ocr_gcse": "/qualifications/gcse/english-j970/",
+        "edexcel_gcse": "/qualifications/edexcel-gcses-english-language-2015/"
+      }
+    },
+    {
+      "slug": "english_literature",
+      "name": "English Literature",
+      "key_stages": ["ks3", "ks4", "ks5"],
+      "qualification_type": ["gcse", "a_level"],
+      "urls": {
+        "aqa_gcse": "/qualifications/english-literature/gcse/",
+        "aqa_a_level": "/qualifications/english-literature/a-level/",
+        "edexcel_gcse": "/qualifications/edexcel-gcses-english-literature-2015/"
+      }
+    },
+    {
+      "slug": "science",
+      "name": "Science",
+      "key_stages": ["ks1", "ks2", "ks3", "ks4"],
+      "qualification_type": ["gcse"],
+      "urls": {
+        "aqa_gcse": "/qualifications/science/gcse/",
+        "aqa_triple": "/qualifications/science-trilogy/",
+        "ocr_gcse": "/qualifications/gcse/combined-science-j250/",
+        "edexcel_gcse": "/qualifications/edexcel-gcses-combined-science-2016/"
+      }
+    },
+    {
+      "slug": "biology",
+      "name": "Biology",
+      "key_stages": ["ks4", "ks5"],
+      "qualification_type": ["gcse", "a_level"],
+      "urls": {
+        "aqa_gcse": "/qualifications/biology/gcse/",
+        "aqa_a_level": "/qualifications/biology/a-level/",
+        "ocr_gcse": "/qualifications/gcse/biology-j247/",
+        "ocr_a_level": "/qualifications/a-level/biology-h420/",
+        "edexcel_gcse": "/qualifications/edexcel-gcses-biology-2016/",
+        "edexcel_a_level": "/qualifications/edexcel-a-levels/biology-2015/"
+      }
+    },
+    {
+      "slug": "chemistry",
+      "name": "Chemistry",
+      "key_stages": ["ks4", "ks5"],
+      "qualification_type": ["gcse", "a_level"],
+      "urls": {
+        "aqa_gcse": "/qualifications/chemistry/gcse/",
+        "aqa_a_level": "/qualifications/chemistry/a-level/",
+        "ocr_gcse": "/qualifications/gcse/chemistry-j248/",
+        "ocr_a_level": "/qualifications/a-level/chemistry-h432/",
+        "edexcel_gcse": "/qualifications/edexcel-gcses-chemistry-2016/",
+        "edexcel_a_level": "/qualifications/edexcel-a-levels/chemistry-2017/"
+      }
+    },
+    {
+      "slug": "physics",
+      "name": "Physics",
+      "key_stages": ["ks4", "ks5"],
+      "qualification_type": ["gcse", "a_level"],
+      "urls": {
+        "aqa_gcse": "/qualifications/physics/gcse/",
+        "aqa_a_level": "/qualifications/physics/a-level/",
+        "ocr_gcse": "/qualifications/gcse/physics-j249/",
+        "ocr_a_level": "/qualifications/a-level/physics-h556/",
+        "edexcel_gcse": "/qualifications/edexcel-gcses-physics-2016/",
+        "edexcel_a_level": "/qualifications/edexcel-a-levels/physics-2015/"
+      }
+    },
+    {
+      "slug": "history",
+      "name": "History",
+      "key_stages": ["ks1", "ks2", "ks3", "ks4", "ks5"],
+      "qualification_type": ["gcse", "a_level"],
+      "urls": {
+        "aqa_gcse": "/qualifications/history/gcse/",
+        "aqa_a_level": "/qualifications/history/a-level/",
+        "edexcel_gcse": "/qualifications/edexcel-gcses-history-2016/"
+      }
+    },
+    {
+      "slug": "geography",
+      "name": "Geography",
+      "key_stages": ["ks1", "ks2", "ks3", "ks4", "ks5"],
+      "qualification_type": ["gcse", "a_level"],
+      "urls": {
+        "aqa_gcse": "/qualifications/geography/gcse/",
+        "aqa_a_level": "/qualifications/geography/a-level/",
+        "edexcel_gcse": "/qualifications/edexcel-gcses-geography-b-2016/"
+      }
+    },
+    {
+      "slug": "religious_studies",
+      "name": "Religious Studies",
+      "key_stages": ["ks1", "ks2", "ks3", "ks4"],
+      "qualification_type": ["gcse", "a_level"],
+      "urls": {
+        "aqa_gcse": "/qualifications/religious-studies-a/",
+        "aqa_a_level": "/qualifications/religious-studies-a-level/"
+      }
+    },
+    {
+      "slug": "computer_science",
+      "name": "Computer Science",
+      "key_stages": ["ks3", "ks4", "ks5"],
+      "qualification_type": ["gcse", "a_level"],
+      "urls": {
+        "aqa_gcse": "/qualifications/computer-science/gcse/",
+        "aqa_a_level": "/qualifications/computer-science-a-level/",
+        "ocr_gcse": "/qualifications/gcse/computer-science-j276/",
+        "ocr_a_level": "/qualifications/a-level/computer-science-h446/"
+      }
+    },
+    {
+      "slug": "physical_education",
+      "name": "Physical Education",
+      "key_stages": ["ks1", "ks2", "ks3", "ks4"],
+      "urls": {}
+    },
+    {
+      "slug": "art_and_design",
+      "name": "Art and Design",
+      "key_stages": ["ks3", "ks4"],
+      "qualification_type": ["gcse", "a_level"],
+      "urls": {
+        "aqa_gcse": "/qualifications/art-and-design/gcse/",
+        "edexcel_gcse": "/qualifications/art-and-design-gcse-2016/"
+      }
+    },
+    {
+      "slug": "music",
+      "name": "Music",
+      "key_stages": ["ks3", "ks4"],
+      "qualification_type": ["gcse", "a_level"],
+      "urls": {
+        "aqa_gcse": "/qualifications/music/gcse/",
+        "aqa_a_level": "/qualifications/music/a-level/"
+      }
+    },
+    {
+      "slug": "drama",
+      "name": "Drama",
+      "key_stages": ["ks3", "ks4"],
+      "qualification_type": ["gcse", "a_level"],
+      "urls": {
+        "aqa_gcse": "/qualifications/drama-and-performing-arts/gcse/"
+      }
+    },
+    {
+      "slug": "design_technology",
+      "name": "Design and Technology",
+      "key_stages": ["ks3", "ks4"],
+      "qualification_type": ["gcse", "a_level"],
+      "urls": {
+        "aqa_gcse": "/qualifications/design-and-technology/gcse/",
+        "aqa_a_level": "/qualifications/design-and-technology-product-design/",
+        "ocr_gcse": "/qualifications/design-and-technology-j310/",
+        "ocr_gcse_food": "/qualifications/design-and-technology-food-nutrition/",
+        "aqa_food": "/qualifications/design-and-technology-food-technology/"
+      }
+    },
+    {
+      "slug": "business_studies",
+      "name": "Business Studies",
+      "key_stages": ["ks4", "ks5"],
+      "qualification_type": ["gcse", "a_level"],
+      "urls": {
+        "aqa_gcse": "/qualifications/business-studies/gcse/",
+        "aqa_a_level": "/qualifications/business-studies-a-level/",
+        "edexcel_gcse": "/qualifications/edexcel-gcses-business-2017/"
+      }
+    },
+    {
+      "slug": "economics",
+      "name": "Economics",
+      "key_stages": ["ks4", "ks5"],
+      "qualification_type": ["a_level"],
+      "urls": {
+        "aqa_a_level": "/qualifications/economics/a-level/",
+        "edexcel_a_level": "/qualifications/edexcel-a-levels/economics-a-2015/"
+      }
+    },
+    {
+      "slug": "modern_foreign_languages",
+      "name": "Modern Foreign Languages",
+      "key_stages": ["ks3", "ks4", "ks5"],
+      "qualification_type": ["gcse", "a_level"],
+      "urls": {
+        "french_aqa": "/qualifications/languages/french/gcse/",
+        "french_aqa_a": "/qualifications/languages/french/a-level/",
+        "german_aqa": "/qualifications/languages/german/gcse/",
+        "german_aqa_a": "/qualifications/languages/german/a-level/",
+        "spanish_aqa": "/qualifications/languages/spanish/gcse/",
+        "spanish_aqa_a": "/qualifications/languages/spanish/a-level/"
+      }
+    },
+    {
+      "slug": "statistics",
+      "name": "Statistics",
+      "key_stages": ["ks4", "ks5"],
+      "qualification_type": ["a_level"],
+      "urls": {
+        "aqa_a_level": "/qualifications/mathematics/statistics-a-level/"
+      }
+    },
+    {
+      "slug": "psychology",
+      "name": "Psychology",
+      "key_stages": ["ks4", "ks5"],
+      "qualification_type": ["a_level"],
+      "urls": {
+        "aqa_a_level": "/qualifications/psychology-a-level/",
+        "ocr_a_level": "/qualifications/psychology-h167/",
+        "edexcel_a_level": "/qualifications/edexcel-a-levels/psychology-2015/"
+      }
+    },
+    {
+      "slug": "sociology",
+      "name": "Sociology",
+      "key_stages": ["ks4", "ks5"],
+      "qualification_type": ["a_level"],
+      "urls": {
+        "aqa_a_level": "/qualifications/sociology-a-level/",
+        "ocr_a_level": "/qualifications/sociology-h580/"
+      }
+    },
+    {
+      "slug": "politics",
+      "name": "Politics",
+      "key_stages": ["ks4", "ks5"],
+      "qualification_type": ["a_level"],
+      "urls": {
+        "aqa_a_level": "/qualifications/government-and-politics/a-level/"
+      }
+    },
+    {
+      "slug": "media_studies",
+      "name": "Media Studies",
+      "key_stages": ["ks4", "ks5"],
+      "qualification_type": ["a_level"],
+      "urls": {
+        "aqa_a_level": "/qualifications/media-studies/a-level/",
+        "edexcel_a_level": "/qualifications/edexcel-a-levels/media-studies-2017/"
+      }
+    },
+    {
+      "slug": "physical_education_sport",
+     name": "Physical Education/Sport",
+      "key_stages": ["ks4", "ks5"],
+      "qualification_type": ["a_level", "btec"],
+      "urls": {}
+    }
+  ],
+
+  "national_curriculum_subjects": {
+    "core": ["english", "mathematics", "science"],
+    "foundation": ["art_and_design", "citizenship", "computing", "design_technology", "geography", "history", "languages", "music", "physical_education"],
+    "ks3_optional": ["ancient_languages", "modern_foreign_languages"],
+    "ks4_optional": ["ancient_history", "classical_civilisation", "business_studies", "design_technology", "drama", "geography", "history", "media_studies", "music", "physical_education", "statistics"]
+  },
+
+  "document_types": {
+    "specification": "Exam board qualification specification",
+    "past_paper": "Past examination paper",
+    "mark_scheme": "Marking scheme",
+    "examiner_report": "Examiner report",
+    "subject_content": "DfE subject content guidelines",
+    "curriculum_framework": "National Curriculum framework document"
+  }
+}

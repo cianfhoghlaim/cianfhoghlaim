@@ -1,0 +1,16 @@
+# defs/3_model_lifecycle/cocoindex_v1/ocr_aware_flow/defs.yaml
+#
+# L3 CelticModelLifecycleComponent for the OCRAwareFlow v1 App.
+# Per the meaisinfhoghlaim-ocr-htr spec — `OCR-aware syllabus pipeline`
+# Requirement. Walks the 5 educational stages (early_childhood, primary,
+# junior_cycle, senior_cycle, leaving_cert) and selects an OCR backend
+# per file from the 11 vision + 4 classical OCR registry.
+type: orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_name: IrelandSyllabusOCRFflow
+  module: cianfhoghlaim.cocoindex.ocr_aware_flow
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  table_name: ireland_syllabus_chunks
+  ocr_registry: cianfhoghlaim.ocr.models.registry.OCR_VISION_REGISTRY

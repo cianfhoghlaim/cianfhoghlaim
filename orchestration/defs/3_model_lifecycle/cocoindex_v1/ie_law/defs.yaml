@@ -1,0 +1,33 @@
+# defs.yaml — Pick-8 IE/law L3 (Model Lifecycle / CocoIndex v1) component.
+#
+# 5 separate CocoIndex v1 Apps (one per source), all R1-R4 conformant.
+# Each App reads from its source's L2 DuckLake tables and writes to
+# its source's LanceDB table.
+type: orchestration.components.CelticModelLifecycleComponent
+attributes:
+  apps:
+    - app_name: PIABEmbedding
+      module: cianfhoghlaim.cocoindex.ie_law_piab
+      source: piab
+      lance_table: cianfhoghlaim.law.ie.piab_chunks
+    - app_name: CourtsEmbedding
+      module: cianfhoghlaim.cocoindex.ie_law_courts
+      source: courts
+      lance_table: cianfhoghlaim.law.ie.courts_chunks
+    - app_name: JudgementsEmbedding
+      module: cianfhoghlaim.cocoindex.ie_law_judgements
+      source: judgements
+      lance_table: cianfhoghlaim.law.ie.judgements_chunks
+    - app_name: CourtRulesEmbedding
+      module: cianfhoghlaim.cocoindex.ie_law_court_rules
+      source: court_rules
+      lance_table: cianfhoghlaim.law.ie.court_rules_chunks
+    - app_name: LegalAidEmbedding
+      module: cianfhoghlaim.cocoindex.ie_law_legal_aid
+      source: legal_aid
+      lance_table: cianfhoghlaim.law.ie.legal_aid_chunks
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  automation: on_cron
+  automation_cron: "0 7 * * *"

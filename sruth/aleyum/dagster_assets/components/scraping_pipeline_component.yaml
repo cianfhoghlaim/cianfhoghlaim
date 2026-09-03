@@ -1,0 +1,485 @@
+# Aleyum Web Scraping Pipeline Component
+# Scrapes music metadata and artwork from streaming platforms
+
+component: sruth.shared.dagster.components.PipelineComponent
+attributes:
+  # Pipeline metadata
+  name: "aleyum_scraping_pipeline"
+  description: "Music platform web scraping with artwork embeddings"
+  version: "1.0.0"
+  group_name: "aleyum"
+
+  # ========================================================================
+  # PARTITIONS: Platform-based partitioning
+  # ========================================================================
+  partitions:
+    platform:
+      type: "static"
+      values: ["spotify", "soundcloud", "bandcamp", "musicbrainz", "labels"]
+
+    content_type:
+      type: "static"
+      values: ["tracks", "albums", "artists", "playlists", "labels"]
+
+  # ========================================================================
+  # SOURCES: Web scraping configurations
+  # ========================================================================
+  sources:
+    # Spotify Web Scraping
+    - name: "spotify"
+      type: "browser"
+      base_url: "https://open.spotify.com"
+      backend: "stagehand"  # Preferred backend for JavaScript sites
+      headless: true
+      max_pages: 1000
+
+      # Extraction instructions for Stagehand
+      extract_instruction: |
+        Extract music metadata including:
+        - Track name, artist, album, duration
+        - Release date, popularity, genre
+        - Audio preview URL
+        - Album artwork URLs (all sizes)
+
+      # Navigation patterns
+      navigation:
+        - type: "search"
+          url_pattern: "/search/{query}"
+          params:
+            type: "tracks"  # tracks, albums, artists, playlists
+
+        - type: "browse"
+          url_patterns:
+            - "/playlist/{playlist_id}"
+            - "/album/{album_id}"
+            - "/artist/{artist_id}"
+
+      # Rate limiting
+      rate_limit:
+        requests_per_minute: 30
+        random_delay: true
+
+    # SoundCloud Web Scraping
+    - name: "soundcloud"
+      type: "browser"
+      base_url: "https://soundcloud.com"
+      backend: "stagehand"
+      headless: true
+      max_pages: 500
+
+      extract_instruction: |
+        Extract music metadata including:
+        - Track title, artist, duration, plays, likes
+        - Description, tags, genre
+        - Download URL (if available)
+        - Artwork URL
+
+      navigation:
+        - type: "search"
+          url_pattern: "/search?q={query}"
+
+        - type: "browse"
+          url_patterns:
+            - "/{artist_name}"
+            - "/{artist_name}/tracks"
+            - "/{artist_name}/albums"
+
+      rate_limit:
+        requests_per_minute: 20
+
+    # Bandcamp Web Scraping
+    - name: "bandcamp"
+      type: "browser"
+      base_url: "https://bandcamp.com"
+      backend: "stagehand"
+      headless: true
+      max_pages: 300
+
+      extract_instruction: |
+        Extract music metadata including:
+        - Album name, artist, release date
+        - Track list with durations
+        - Genre, tags, location
+        - Album art (original size)
+        - Price, "name your price" availability
+
+      navigation:
+        - type: "search"
+          url_pattern: "/search?q={query}"
+
+        - type: "browse"
+          url_patterns:
+            - "/artist/{artist_name}"
+            - "/album/{album_name}"
+
+    # MusicBrainz API
+    - name: "musicbrainz"
+      type: "rest"
+      base_url: "https://musicbrainz.org/ws/2"
+      headers:
+        User-Agent: "Aleyum/1.0 (contact@example.com)"
+      endpoints:
+        - name: "artist"
+          path: "/artist/{mbid}"
+          method: "GET"
+          params:
+            inc: "releases+url-rels+artist-rels"
+
+        - name: "release_group"
+          path: "/release-group/{mbid}"
+          method: "GET"
+          params:
+            inc: "artist-credits+media+releases"
+
+      rate_limit:
+        requests_per_second: 1
+
+    # Label Websites
+    - name: "labels"
+      type: "browser"
+      base_url: "${LABEL_BASE_URL}"  # Multiple label sites
+      backend: "stagehand"
+      headless: true
+
+      extract_instruction: |
+        Extract label catalog information:
+        - Artist name, album title, release date
+        - Catalog number, format (vinyl, CD, digital)
+        - Price, buy links
+        - Album artwork, audio samples
+
+      navigation:
+        - type: "sitemap"
+          follow_patterns:
+            - "/release/*"
+            - "/artist/*"
+            - "/catalog/*"
+
+  # ========================================================================
+  # TRANSFORMATIONS: Processing stages
+  # ========================================================================
+  transformations:
+    # Stage 1: Normalize scraped data
+    - name: "normalize_music_data"
+      type: "normalize"
+      input: "sources"
+      output_table: "music_raw"
+      column_mapping:
+        platform: "source_platform"
+        scraped_at: "ingested_at"
+
+      # Quality filters
+      filters:
+        - column: "title"
+          condition: "not_null"
+        - column: "artist"
+          condition: "not_null"
+
+    # Stage 2: DSPy music metadata extraction
+    - name: "extract_music_structure"
+      type: "dspy"
+      input: "normalize_music_data"
+      module: "sruth.shared.extraction.dspy_modules"
+      class_name: "StructuredExtractor"
+      model: "${OPENAI_MODEL:-openai/gpt-4o}"
+      prompt: "Extract structured music metadata from scraped content"
+
+      schema:
+        - title
+        - artist
+        - album
+        - genre: list[str]
+        - mood: list[str]
+        - instruments: list[str]
+        - tempo: str
+        - key: str
+        - language: str
+
+      output_table: "music_structured"
+
+    # Stage 3: Artwork download and processing
+    - name: "process_artwork"
+      type: "download"
+      input: "normalize_music_data"
+      source_column: "artwork_url"
+
+      destination:
+        type: "s3"
+        bucket: "${ARTWORK_BUCKET:-music-artwork}"
+        prefix: "aleyum/{platform}/{year}/{month}/"
+        content_type: "image/jpeg"
+
+      # Image processing
+      processing:
+        resize: [512, 512]
+        quality: 90
+        format: "jpeg"
+        generate_thumbnails: true
+        thumbnail_sizes: [128, 256, 512]
+
+      output_table: "artwork_processed"
+      output_columns:
+        - source_url
+        - s3_key
+        - s3_url
+        - width
+        - height
+        - format
+        - file_size
+        - color_palette
+        - dominant_color
+
+    # Stage 4: CLIP embeddings for artwork
+    - name: "artwork_embeddings"
+      type: "embed"
+      input: "process_artwork"
+      model: "${CLIP_MODEL:-openai/clip-vit-large-patch14}"
+      modality: "image"
+      dimension: 768
+      batch_size: 50  # Lower for image embeddings
+      normalize: true
+
+      output_table: "artwork_embeddings"
+
+    # Stage 5: Text embeddings for metadata
+    - name: "metadata_embeddings"
+      type: "embed"
+      input: "extract_music_structure"
+      model: "${EMBEDDING_MODEL:-BAAI/bge-m3}"
+      dimension: 1024
+      batch_size: 100
+      text_columns: ["title", "artist", "album", "genre", "description"]
+
+      output_table: "metadata_embeddings"
+
+  # ========================================================================
+  # EXPORTS: Storage destinations
+  # ========================================================================
+  exports:
+    # Export 1: DuckLake (Primary - Production)
+    - name: "ducklake_aleyum"
+      type: "ducklake"
+      catalog_uri: "${LAKEKEEPER_CATALOG_URI:-http://lakekeeper:8181}"
+      warehouse: "${ICEBERG_WAREHOUSE:-s3://garage/warehouse}"
+      namespace: "aleyum"
+
+      tables:
+        # Raw scraped data
+        - name: "music_raw"
+          format: "parquet"
+          compression: "zstd"
+          partition_by: ["platform", "content_type", "date"]
+
+        # Structured music data
+        - name: "music_structured"
+          format: "parquet"
+          compression: "zstd"
+          partition_by: ["platform", "genre"]
+
+        # Artwork metadata
+        - name: "artwork_processed"
+          format: "parquet"
+          compression: "zstd"
+          partition_by: ["platform", "year", "month"]
+
+        # CLIP embeddings
+        - name: "artwork_embeddings"
+          format: "lance"
+          location: "s3://lance/aleyum/artwork_embeddings.lance"
+          properties:
+            table_type: "lance"
+            dimension: "768"
+            metric: "cosine"
+            modality: "image"
+
+        # Metadata embeddings
+        - name: "metadata_embeddings"
+          format: "lance"
+          location: "s3://lance/aleyum/metadata_embeddings.lance"
+          properties:
+            table_type: "lance"
+            dimension: "1024"
+            metric: "cosine"
+
+    # Export 2: MotherDuck (Analytics)
+    - name: "motherduck_analytics"
+      type: "motherduck"
+      database: "${MOTHERDUCK_DATABASE:-sruth}"
+      schemas:
+        - "aleyum_raw"
+        - "aleyum_structured"
+        - "aleyum_analytics"
+        - "music_catalog"
+
+    # Export 3: PostgreSQL (Operational catalog)
+    - name: "postgres_catalog"
+      type: "postgres"
+      connection: "${POSTGRES_URL:-postgresql://postgres:postgres@postgres:5432/aleyum}"
+      tables:
+        - name: "tracks"
+          primary_key: ["platform", "track_id"]
+          upsert: true
+
+        - name: "albums"
+          primary_key: ["platform", "album_id"]
+          upsert: true
+
+        - name: "artists"
+          primary_key: ["platform", "artist_id"]
+          upsert: true
+
+        - name: "artwork_index"
+          primary_key: ["source_url"]
+          upsert: true
+
+  # ========================================================================
+  # OBSERVABILITY: Monitoring and tracking
+  # ========================================================================
+  observability:
+    # Langfuse for LLM calls
+    langfuse:
+      enabled: true
+      public_key: "${LANGFUSE_PUBLIC_KEY}"
+      secret_key: "${LANGFUSE_SECRET_KEY}"
+
+    # MLflow for experiment tracking
+    mlflow:
+      enabled: true
+      tracking_uri: "${MLFLOW_TRACKING_URI:-http://mlflow:5000}"
+      experiment_name: "aleyum_music_scraping"
+
+    # Asset checks
+    asset_checks:
+      - name: "scraping_success_rate_check"
+        description: "Ensure scraping success rate >80%"
+        severity: "WARN"
+        lower_bound: 0.8
+
+      - name: "artwork_coverage_check"
+        description: "Verify artwork coverage >70%"
+        severity: "WARN"
+        lower_bound: 0.7
+
+      - name: "clip_dimension_check"
+        description: "Verify CLIP embeddings have correct dimension"
+        severity: "ERROR"
+        expected_dimension: 768
+
+  # ========================================================================
+  # SCHEDULING
+  # ========================================================================
+  schedule:
+    # Full scrape: weekly
+    full_scrape:
+      cron: "0 3 * * 0"  # Sunday at 3 AM
+      timezone: "Europe/Dublin"
+
+    # Incremental: daily
+    incremental:
+      cron: "0 3 * * *"  # Daily at 3 AM
+      timezone: "Europe/Dublin"
+
+  # ========================================================================
+  # RESOURCE CONFIGURATION
+  # ========================================================================
+  resources:
+    cpu_limit: "4"
+    memory_limit: "16Gi"
+
+    # Browser configuration
+    browser:
+      headless: true
+      timeout_seconds: 30
+      viewport_width: 1920
+      viewport_height: 1080
+
+    # Concurrency
+    max_concurrent_browsers: 3
+    max_concurrent_downloads: 10
+
+# ============================================================================
+# ENVIRONMENT VARIABLES
+# ============================================================================
+#
+# S3/Garage Storage:
+#   ARTWORK_BUCKET           - S3 bucket for artwork images
+#   GARAGE_ENDPOINT_URL      - Garage S3 endpoint
+#   GARAGE_ACCESS_KEY        - S3 access key
+#   GARAGE_SECRET_KEY        - S3 secret key
+#
+# Lakekeeper/Iceberg:
+#   LAKEKEEPER_CATALOG_URI   - REST catalog URI
+#   ICEBERG_WAREHOUSE        - S3 warehouse location
+#
+# MotherDuck:
+#   MOTHERDUCK_TOKEN         - MotherDuck API token
+#   MOTHERDUCK_DATABASE      - Database name (default: sruth)
+#
+# PostgreSQL:
+#   POSTGRES_URL             - PostgreSQL connection string
+#
+# LanceDB:
+#   LANCEDB_URI              - LanceDB connection string
+#   LANCEDB_S3_BUCKET        - S3 bucket for Lance data
+#
+# Browser Backends:
+#   STAGEHAND_API_KEY        - Stagehand API key (if using cloud)
+#   BROWSERBASE_API_KEY      - BrowserBase API key (if using)
+#
+# LLM Extraction:
+#   OPENAI_API_KEY           - OpenAI API key (or compatible)
+#   OPENAI_MODEL             - Model for DSPy extraction
+#
+# Embeddings:
+#   CLIP_MODEL               - CLIP model (default: openai/clip-vit-large-patch14)
+#   EMBEDDING_MODEL          - Text embedding model (default: BAAI/bge-m3)
+#   HF_TOKEN                 - HuggingFace token
+#
+# Observability:
+#   LANGFUSE_PUBLIC_KEY      - Langfuse public key
+#   LANGFUSE_SECRET_KEY      - Langfuse secret key
+#   MLFLOW_TRACKING_URI      - MLflow server URI
+#
+# ============================================================================
+# PIPELINE ARCHITECTURE
+# ============================================================================
+#
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │                          SOURCE LAYER                                   │
+# │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                  │
+# │  │ Spotify      │  │ SoundCloud   │  │ Bandcamp     │                  │
+# │  │ (Stagehand)  │  │ (Stagehand)  │  │ (Stagehand)  │                  │
+# │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘                  │
+# │         │                 │                 │                          │
+# │  ┌──────┴───────┐  ┌──────┴───────┐  ┌──────┴───────┐                  │
+# │  │ MusicBrainz  │  │ Label Sites  │  │              │                  │
+# │  │ (REST API)   │  │ (Stagehand)  │  │              │                  │
+# │  └──────────────┘  └──────────────┘  └──────────────┘                  │
+# └─────────┼─────────────────┼─────────────────┼──────────────────────────┘
+#           │                 │                 │
+#           ▼                 ▼                 ▼
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │                      NORMALIZATION                                     │
+# │  Standardize platform formats → music_raw table                       │
+# └─────────────────────────────┬───────────────────────────────────────────┘
+#                               │
+#               ┌───────────────┼───────────────┐
+#               ▼               ▼               ▼
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │                    TRANSFORMATIONS                                     │
+# │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                  │
+# │  │ DSPy Music   │  │ Artwork      │  │ CLIP + Text  │                  │
+# │  │ Extraction   │  │ Download     │  │ Embeddings   │                  │
+# │  └──────────────┘  └──────────────┘  └──────────────┘                  │
+# └─────────────────────────────┬───────────────────────────────────────────┘
+#                               │
+#               ┌───────────────┼───────────────┐
+#               ▼               ▼               ▼
+# ┌──────────────────┐ ┌──────────────┐ ┌──────────────┐
+# │   DuckLake       │ │ MotherDuck   │ │ PostgreSQL   │
+# │ (Hot/Warm/Cold)  │ │ (Analytics)  │ │ (Catalog)    │
+# │  + Lakekeeper    │ │              │ │              │
+# └──────────────────┘ └──────────────┘ └──────────────┘
+#       + R2 storage
+#
+# ============================================================================

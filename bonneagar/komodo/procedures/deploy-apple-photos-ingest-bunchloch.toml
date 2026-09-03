@@ -1,0 +1,74 @@
+# Komodo procedure: deploy apple-photos-ingest (bunchloch)
+# Per the apple-photos-ingest Komodo procedure spec
+
+# Stage 0: pre-reqs
+[[stage.action]]
+type = "CheckFileExists"
+name = "check-leabharlann-photos-exists"
+path = "/Users/cian/Code/kings_college_galway/leabharlann/photos"
+description = "Verify the osxphotos export directory exists"
+
+[[stage.action]]
+type = "CheckEnvVar"
+name = "check-prereqs"
+vars = ["PAPERLESS_CONSUMER_TOKEN", "DOCLING_SERVE_URL", "PADDLEOCR_URL", "DOTS_OCR_URL"]
+
+# Stage 1: dlt run
+[[stage.action]]
+type = "RunShellCommand"
+name = "dlt-run-apple-photos"
+server_id = "bunchloch"
+command = "uv run dlt run apple_photos_source"
+timeout_s = 3600
+description = "Populate the apple_photos DuckLake table from the export"
+
+# Stage 2: cocoindex update (the 3 v1 Apps)
+[[stage.action]]
+type = "RunShellCommand"
+name = "cocoindex-update-apple-photos-metadata"
+server_id = "bunchloch"
+command = "mise run cocoindex:update-apple_photos_metadata"
+timeout_s = 3600
+
+[[stage.action]]
+type = "RunShellCommand"
+name = "cocoindex-update-apple-photos-chunks"
+server_id = "bunchloch"
+command = "mise run cocoindex:update-apple_photos_chunks"
+timeout_s = 3600
+
+[[stage.action]]
+type = "RunShellCommand"
+name = "cocoindex-update-apple-photos-geospatial"
+server_id = "bunchloch"
+command = "mise run cocoindex:update-apple_photos_geospatial"
+timeout_s = 3600
+condition = "LEABHARLANN_PHOTOS_INCLUDE_GPS == 'true'"
+
+# Stage 3: smoke route (1 sample document scan + 1 sample vehicle photo)
+[[stage.action]]
+type = "RunDagsterJob"
+name = "smoke-route-document-scan"
+job_name = "apple_photos_document_scan_route_job"
+description = "Route 1 sample document scan to paperless-ngx as a smoke test"
+
+[[stage.action]]
+type = "RunDagsterJob"
+name = "smoke-route-vehicle-photo"
+job_name = "apple_photos_vehicle_route_job"
+description = "Route 1 sample vehicle photo to vehicle_observations as a smoke test"
+
+# Stage 4: register + schedule
+[[stage.action]]
+type = "RegisterDagsterSchedule"
+name = "register-apple-photos-weekly-recompute"
+schedule_name = "apple_photos_weekly_recompute"
+cron_schedule = "0 4 * * 1"
+description = "Weekly recompute of the apple_photos_assets (Mondays 04:00 UTC)"
+
+[[stage.action]]
+type = "RegisterDagsterSchedule"
+name = "register-apple-photos-cross-frame"
+schedule_name = "apple_photos_vehicle_cross_frame_weekly"
+cron_schedule = "0 4 * * 0"
+description = "Weekly cross-frame velocity inference (Sundays 04:00 UTC)"

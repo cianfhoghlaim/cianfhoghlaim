@@ -1,0 +1,145 @@
+# MotherDuck + PlanetScale Hybrid Storage Component
+# Configures MotherDuck for OLAP analytics with optional PlanetScale attachment for OLTP
+
+component: sruth.shared.dagster.components.MotherDuckComponent
+attributes:
+  # Resource name
+  name: "motherduck_io"
+
+  # MotherDuck configuration
+  token: "${MOTHERDUCK_TOKEN}"
+  database: "${MOTHERDUCK_DATABASE:-sruth_analytics}"
+
+  # Schemas to create
+  schemas:
+    - "curriculum"
+    - "exam_materials"
+    - "embeddings"
+    - "analytics"
+
+  # PlanetScale integration for hybrid OLTP/OLAP
+  # When attached, you can query PlanetScale tables from MotherDuck using 'pscale.' prefix
+  planetscale_host: "${PLANETSCALE_HOST}"
+  planetscale_database: "${PLANETSCALE_DATABASE}"
+  planetscale_user: "${PLANETSCALE_USER}"
+  planetscale_password: "${PLANETSCALE_PASSWORD}"
+
+  # Auto-initialize schemas on component load
+  init_schemas: true
+
+# ============================================================================
+# USAGE EXAMPLES
+# ============================================================================
+#
+# 1. In Dagster definitions.py:
+#    ```python
+#    from sruth.shared.dagster.components.loader import load_components_from_yaml
+#
+#    defs = load_components_from_yaml("motherduck_component.yaml")
+#    ```
+#
+# 2. Using MotherDuck resource in assets:
+#    ```python
+#    @asset(resource_defs={"motherduck": motherduck})
+#    def curriculum_analytics(motherduck):
+#         # Query MotherDuck for analytics
+#         result = motherduck.query("""
+#             SELECT subject, COUNT(*) as doc_count
+#             FROM curriculum.pages
+#             GROUP BY subject
+#         """)
+#         return result.fetchdf()
+#    ```
+#
+# 3. Hybrid query (MotherDuck + PlanetScale):
+#    ```python
+#    @asset(resource_defs={"motherduck": motherduck})
+#    def combined_analytics(motherduck):
+#         # Join data from MotherDuck (analytics) and PlanetScale (transactional)
+#         result = motherduck.query("""
+#             SELECT
+#                 p.subject,
+#                 p.progress,
+#                 a.doc_count
+#             FROM pscale.user_progress p
+#             LEFT JOIN curriculum.page_counts a ON p.subject = a.subject
+#         """)
+#         return result.fetchdf()
+#    ```
+#
+# 4. Sync PlanetScale to MotherDuck:
+#    ```python
+#    @asset(resource_defs={"motherduck": motherduck})
+#    def sync_progress(motherduck):
+#         # Copy PlanetScale table to MotherDuck for analytics
+#         motherduck.sync_from_planetscale(
+#             pg_table="user_progress",
+#             md_schema="analytics",
+#             md_table="user_progress_snapshot"
+#         )
+#    ```
+#
+# ============================================================================
+# ENVIRONMENT VARIABLES
+# ============================================================================
+#
+# MotherDuck:
+#   MOTHERDUCK_TOKEN      - Service account token (required)
+#   MOTHERDUCK_DATABASE   - Database name (default: sruth_analytics)
+#
+# PlanetScale (optional - for hybrid OLTP/OLAP):
+#   PLANETSCALE_HOST      - Database host (e.g., xxx.us-east-1.psdb.cloud)
+#   PLANETSCALE_DATABASE  - Database name
+#   PLANETSCALE_USER      - Username
+#   PLANETSCALE_PASSWORD  - Password or password token
+#
+# ============================================================================
+# ARCHITECTURE
+# ============================================================================
+#
+# ┌─────────────────────────────────────────────────────────────────────┐
+# │                         Dagster Assets                             │
+# ├─────────────────────────────────────────────────────────────────────┤
+# │  ┌──────────────────┐         ┌──────────────────┐                │
+# │  │  OLTP Workloads  │         │  OLAP Workloads  │                │
+# │  │  (transactions)  │         │  (analytics)     │                │
+# │  └────────┬─────────┘         └────────┬─────────┘                │
+# │           │                              │                           │
+# │           ▼                              ▼                           │
+# │  ┌──────────────────┐         ┌──────────────────┐                │
+# │  │   PlanetScale    │────────▶│   MotherDuck     │                │
+# │  │   PostgreSQL     │  attach │   DuckDB Cloud  │                │
+# │  └──────────────────┘         └──────────────────┘                │
+# │            ▲                                                    │   │
+# │            │ (sync)                                             │   │
+# │            │                                                    │   │
+# │  ┌─────────┴─────────┐                                        │   │
+# │  │  Transaction Log  │                                        │   │
+# │  └───────────────────┘                                        │   │
+# └─────────────────────────────────────────────────────────────────────┘
+#
+# Benefits:
+# - PlanetScale: Strong consistency, row-level locking, foreign keys
+# - MotherDuck: Columnar storage, vectorized execution, parallel queries
+# - Hybrid: Query PlanetScale data from MotherDuck via pg_duckdb
+#
+# ============================================================================
+# HYBRID QUERY PATTERNS
+# ============================================================================
+#
+# 1. Direct PlanetScale query (OLTP):
+#    - Use for: single-row lookups, transactions, writes
+#    - Connect directly to PlanetScale via PostgreSQL client
+#
+# 2. Direct MotherDuck query (OLAP):
+#    - Use for: aggregations, analytics, large scans
+#    - Connect via MotherDuck resource
+#
+# 3. Hybrid query (JOIN):
+#    - Use for: combining transactional + analytical data
+#    - Run in MotherDuck, JOIN with pscale.* tables
+#
+# 4. Sync pattern:
+#    - Schedule regular sync from PlanetScale to MotherDuck
+#    - Enables fast analytics on recent transactional data
+#    - Reduces load on PlanetScale for analytical queries

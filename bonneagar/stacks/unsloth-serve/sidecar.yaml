@@ -1,0 +1,84 @@
+services:
+  locket:
+    # NOTE: same shim pattern as hermes/openclaw (the upstream
+    # `bpbradley/locket:infisical` has a camelCase bug — we ship
+    # `ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0` which uses
+    # the correct camelCase field names for Infisical v0.161+).
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    container_name: unsloth-serve-locket
+    restart: unless-stopped
+    user: "65532:65532"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: false
+    environment:
+      INFISICAL_URL: ${INFISICAL_URL}
+      INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
+      INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+      INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_ENV}
+      INFISICAL_DEFAULT_PATH: /unsloth
+      LOCKET_MODE: ${LOCKET_MODE:-watch}
+      LOCKET_SRC: /templates/secrets.env
+      LOCKET_DST: /run/secrets/locket
+    secrets:
+      - infisical_secret
+    volumes:
+      - ./secrets.env:/templates/secrets.env:ro
+      - stack-secrets:/run/secrets/locket
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "python3 /app/locket-shim.py --mode one-shot 2>&1 | grep -q 'resolved' || exit 1"
+      interval: 30s
+      timeout: 15s
+      retries: 3
+      start_period: 5s
+    networks:
+      - cianfhoghlaim
+
+  unsloth-serve:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - stack-secrets:/run/secrets/locket:ro
+
+  # Locket chmod init — belt-and-braces (the shim writes mode 644 but
+  # the unsloth container's entrypoint runs as root 0:0 so the chmod
+  # is just a safety net).
+  unsloth-serve-chmod-init:
+    image: alpine:3.20
+    user: "0:0"
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - stack-secrets:/run/secrets/locket
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        if [ -f /run/secrets/locket/secrets.env ]; then
+          chmod 644 /run/secrets/locket/secrets.env
+          echo "OK: /run/secrets/locket/secrets.env chmod'd to 644"
+        else
+          echo "ERROR: /run/secrets/locket/secrets.env not found"
+          exit 1
+        fi
+    restart: "no"
+    networks:
+      - cianfhoghlaim
+
+secrets:
+  infisical_secret:
+    file: ${INFISICAL_SECRET_FILE:-/Users/cianmacandeisigh/.locket/infisical_secret}
+
+volumes:
+  stack-secrets:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=755

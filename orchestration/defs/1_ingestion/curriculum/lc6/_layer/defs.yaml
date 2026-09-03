@@ -1,0 +1,13 @@
+# orchestration/defs/1_ingestion/curriculum/lc6/_layer/defs.yaml
+#
+# L1 LC6 subject sub-mount (added by the 2026-08-15-dagster-load-path-repair
+# change). Walks into the 6 LC6 subject sources (each renamed
+# `<subject>.yaml` → `defs.yaml` per the file-naming contract):
+#   - english/          (CelticIngestionComponent for LC English)
+#   - geography/        (LC Geography)
+#   - chemistry/        (LC Chemistry)
+#   - gaeilge/          (LC Gaeilge — Irish-medium variant)
+#   - mathematics/      (LC Mathematics)
+#   - computer_science/ (LC Computer Science)
+type: dagster.DefsFolderComponent
+attributes: {}

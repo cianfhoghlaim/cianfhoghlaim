@@ -1,0 +1,25 @@
+# defs.yaml — England AQA ↔ OCR ↔ Edexcel comparator assets (BIEP v2)
+#
+# 3 cross-board comparator assets that join the 3 awarding bodies for the
+# same (subject, qualification_level) and surface spec differences.
+#
+# Per the 2026-07-21-biep-v2-england-aqa-ocr-baml-pipeline-v1 change.
+
+type: orchestration.components.EnglandCrossBoardComparatorComponent
+
+attributes:
+  baml_function: ExtractAQAExamPaper
+  source_assets:
+    - 2_materials_curriculum_eng_aqa
+    - 2_materials_curriculum_eng_ocr
+    - 2_materials_curriculum_eng_edexcel
+  partition_strategy: by_subject
+  asset_check_kind: row_count
+  namespace_pattern: "cianfhoghlaim.education.british_isles.england.cross_board.{subject}.{qualification_level}"
+  dagster_group_name_prefix: "2_materials_curriculum_eng_comparators"
+  join_strategy: left_outer_join_on_subject_and_level
+  diff_strategy: spec_version_diff
+  # Oldest vs newest spec version comparison
+  show_history: true
+  years_comparison_window: 5
+  automation_cron: "0 7 * * 1"

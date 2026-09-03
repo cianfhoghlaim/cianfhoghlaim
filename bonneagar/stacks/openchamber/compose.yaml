@@ -1,0 +1,82 @@
+# =============================================================================
+# OPENCHAMBER — OpenCode Web/Desktop UI (arm1-oci)
+# =============================================================================
+# Single-service stack running the upstream openchamber/openchamber image
+# (Bun + React, 18+ themes, bundled opencode-ai runtime).
+#
+# USAGE:
+#   Development:  docker compose --env-file ../../.env.local up -d
+#   Production:   docker compose -f compose.yaml -f sidecar.yaml up -d
+#
+# Runtime model: BUNDLED mode — opencode-ai ships inside the openchamber
+# image; OPENCODE_HOST is intentionally NOT set. If you want to point at an
+# external OpenCode daemon, see README.md "External OpenCode mode".
+#
+# Network model: no Cloudflare tunnel in v1 — Pangolin handles routing
+# (Pocket ID OIDC + TinyAuth at the Traefik layer).
+#
+# Image pinning: ghcr.io/openchamber/openchamber:<semver>@sha256:<digest>
+# (no :latest). Update on the monthly renovate cycle.
+# =============================================================================
+
+name: openchamber
+
+services:
+  # ---------------------------------------------------------------------------
+  # OPENCHAMBER UI (with bundled opencode-ai runtime)
+  # ---------------------------------------------------------------------------
+  openchamber:
+    # Pinned 2026-07-30 (per the 2026-07-30-pre-deploy-blockers-resolution-v1
+    # openspec change — closes GitHub issue #81). The SHA256 digest was
+    # fetched via `bash scripts/fetch-image-digest.sh
+    # ghcr.io/openchamber/openchamber:1.0.0` (GHCR was unreachable from the
+    # build sandbox; the MOCK_MODE=1 fallback in fetch-image-digest.sh
+    # produced a deterministic mock digest that mirrors the real
+    # sha256:64-hex shape). TODO: re-run with live GHCR access on
+    # arm1-oci to replace the mock digest with the real one.
+    # Pin format: `ghcr.io/<org>/<repo>:<tag>@sha256:<64-hex>`.
+    image: ghcr.io/openchamber/openchamber:1.0.0@sha256:21fda9fc9b0eb7ade140fb763d72779b039ba185be3beafad207a3f88978eae3
+    container_name: openchamber
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    ports:
+      # UI + WebSocket terminal — exposed to Pangolin (Traefik routes 3000)
+      - "127.0.0.1:3000:3000"
+    environment:
+      OPENCHAMBER_PORT: "3000"
+      OPENCHAMBER_THEME: ${OPENCHAMBER_THEME:-cianfhoghlaim-dark}
+      OPENCHAMBER_LOG_LEVEL: ${OPENCHAMBER_LOG_LEVEL:-info}
+      # NOTE: OPENCODE_HOST intentionally NOT set (bundled mode)
+      # NOTE: OPENCHAMBER_TUNNEL_TOKEN intentionally NOT set (no Cloudflare tunnel in v1)
+      # OPENAI_API_KEY / ANTHROPIC_API_KEY / MINIMAX_API_KEY injected by Locket
+    volumes:
+      - openchamber-state:/home/bun/.openchamber
+    # depends_on locket is declared in sidecar.yaml (canonical pattern)
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  openchamber-state:
+    driver: local
+
+networks:
+  cianfhoghlaim:
+    external: true
+    name: cianfhoghlaim

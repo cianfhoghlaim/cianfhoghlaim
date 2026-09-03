@@ -1,0 +1,12 @@
+# defs/3_model_lifecycle/cross_archive/edges/defs.yaml
+#
+# L3 cross-archive edges placeholder. The 3 cross-archive FalkorDB
+# edge types (celtic-tutor → mythology, research → statistics, etc.)
+# are computed at L2 time and persisted to FalkorDB. This L3
+# placeholder exists for lineage visibility.
+#
+# Per the 2026-07-04 fix, this file is now a DefinitionsFolderComponent
+# (no attributes) — the previous `type: dagster.AssetSpec` was an
+# ABCMeta placeholder that the Component loader rejected.
+type: dagster.DefsFolderComponent
+attributes: {}

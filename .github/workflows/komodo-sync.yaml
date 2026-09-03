@@ -1,0 +1,29 @@
+name: Komodo Stack Sync (Dagger)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "infrastructure/komodo/**"
+      - "infrastructure/stacks/**"
+  workflow_dispatch:
+
+jobs:
+  komodo-sync:
+    name: dagger deploy-komodo-stacks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install mise + Dagger
+        run: |
+          curl -fsSL https://mise.jdx.dev/install.sh | sh
+          curl -fsSL https://dl.dagger.io/dagger/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - run: mise install
+      - name: Sync Komodo stacks to arm1-oci
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          cd infrastructure/dagger
+          dagger call deploy --source ../.. --environment=staging

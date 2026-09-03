@@ -1,0 +1,67 @@
+name: llama-swap
+
+services:
+  llama-swap:
+    # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: `v166`
+    # does not exist in the GHCR registry (confirmed live: "not found") --
+    # this repo's config was pinned to a tag that was never real/was
+    # since removed. Also, `deploy.resources.reservations.devices:
+    # driver: metal` below is not a real Docker feature -- Docker
+    # Desktop on macOS runs containers in a Linux VM with no Metal GPU
+    # passthrough of any kind, so this config could never have actually
+    # gotten GPU acceleration regardless of image tag. Switched to the
+    # real `:cpu` backend tag (confirmed live, pulls successfully) and
+    # LLAMA_ARG_NGL=0 (0 GPU layers, matching CPU-only reality) --
+    # CPU inference on an 8B VLM is slow but genuinely works, which is
+    # what this environment can actually deliver. A real GPU-accelerated
+    # deployment needs a host with actual GPU passthrough (Linux+CUDA/
+    # ROCm, or llama-swap run natively on macOS outside Docker for
+    # real Metal access), flagged as separate follow-up.
+    image: ghcr.io/mostlygeek/llama-swap:cpu
+    container_name: llama-swap
+    restart: unless-stopped
+    command:
+      - "-config"
+      - "/etc/llama-swap/config.yaml"
+      - "-listen"
+      - ":8080"
+    ports:
+      - "8080:8080"
+    volumes:
+      # Symlink to the v4 config
+      - ./config.yaml:/etc/llama-swap/config.yaml:ro
+      # GGUF cache — populated by the Dagster `model_conversion` asset
+      # Per the 2026-08-08-lakehouse-extensive-hydration-v1 change: this
+      # was `../../stedding/...` (2 levels up), which resolves to
+      # `bonneagar/stedding/...` -- a real but EMPTY directory
+      # (confirmed live: `find` returns nothing under it) that is NOT
+      # where GGUF weights actually get downloaded to
+      # (`<repo-root>/stedding/huggingface/gguf/`, 3 levels up from
+      # this file's directory). The identical `../../stedding/...`
+      # pattern in `bonneagar/stacks/litellm/compose.yaml` has the same
+      # off-by-one bug -- flagged there too, not fixed (litellm doesn't
+      # hard-require its HF cache mount to be non-empty to run, so it
+      # wasn't blocking; this one is load-bearing for actually finding
+      # the model weights).
+      - ../../../stedding/huggingface/gguf:/models/gguf:ro
+      - ../../../stedding/huggingface/unsloth:/models/unsloth:ro
+      - ../../../stedding/huggingface/mlx-community:/models/mlx-community:ro
+    environment:
+      # CPU-only (no Metal passthrough in Docker Desktop on macOS — see
+      # note above); 0 GPU layers offloaded.
+      - LLAMA_ARG_NGL=0
+      - LLAMA_ARG_CTX_SIZE=32768
+      # OpenTelemetry fan-out (per env-contract-and-observability-fanout-v1)
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://logfire-otel:4317
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_SERVICE_NAME=llama-swap
+    networks:
+      - cianfhoghlaim
+      - lakehouse
+
+networks:
+  cianfhoghlaim:
+    driver: bridge
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true

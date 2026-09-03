@@ -1,0 +1,13 @@
+# defs/3_model_lifecycle/cocoindex_v1/root_pdfs_embedding/defs.yaml
+#
+# L3 CelticModelLifecycleComponent for the RootPdfsEmbedding v1 App.
+# Per the cianfhoghlaim-pipeline spec — `NCCA + SEC + DES root PDFs embedding`
+# Requirement. Embeds the root-level PDF corpus (the canonical syllabus
+# source documents) into LanceDB.
+type: orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_name: RootPdfsEmbedding
+  module: cianfhoghlaim.cocoindex.root_pdfs_embedding
+  embedding_model: BAAI/bge-large-en-v1.5
+  hnsw_index: true
+  conformance_required: true

@@ -1,0 +1,47 @@
+[package]
+name = "tuath-game-client"
+description = "Godot GDExtension for Tuath Celtic MMO - SpacetimeDB integration"
+version = "0.1.0"
+edition = "2021"
+license = "AGPL-3.0-or-later"
+authors = ["Brian Bradley <brian.bradley.p@gmail.com>"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+# Godot GDExtension bindings
+godot = { version = "0.5", features = ["experimental-threads"] }
+
+# SpacetimeDB client SDK
+spacetimedb-sdk = "1.11"
+
+# Async runtime (for SpacetimeDB callbacks)
+tokio = { version = "1.45", features = ["rt", "sync", "macros"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Error handling
+thiserror = "2.0"
+anyhow = "1.0"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Shared types from SpacetimeDB module
+# cianfhoghlaim-shared-types = { path = "../../../crates/stdb-modules/shared-types" }
+
+[features]
+default = []
+# Enable hot-reload support for development
+hot-reload = []
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+
+[profile.dev]
+opt-level = 1

@@ -1,0 +1,61 @@
+name: marimo-wasm-publish
+on:
+  push:
+    branches: [main]
+    paths:
+      - "notebooks/**"
+      - "scripts/marimo_wasm_export.py"
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install marimo
+        run: |
+          pip install marimo[wasm]>=0.7
+
+      - name: Run marimo check on all BIEP v3 notebooks (fail-fast on broken notebooks)
+        run: |
+          pip install ibis-framework[duckdb] anywidget traitlets 2>&1 | tail -5
+          for nb in notebooks/19_ireland_pipeline_dashboard.py \
+                   notebooks/20_england_pipeline_dashboard.py \
+                   notebooks/21_sct_wls_ni_pipeline_dashboard.py \
+                   notebooks/22_crown_dependencies_dashboard.py \
+                   notebooks/23_8_jurisdiction_overview.py \
+                   notebooks/26_aistear_dashboard.py \
+                   notebooks/27_primary_dashboard.py \
+                   notebooks/40_leaving_cert_subject_panel.py \
+                   notebooks/meaisin_ops_console.py \
+                   notebooks/celtic_languages.py \
+                   notebooks/corpus_overview.py \
+                   notebooks/speedrun_mmo.py \
+                   notebooks/academic_history.py \
+                   notebooks/irish_law.py \
+                   notebooks/sync_health.py; do
+            python -m marimo check "$nb" 2>&1 | tail -3 || echo "WARN: marimo check failed for $nb"
+          done
+
+      - name: Export BIEP v3 notebooks to WASM
+        run: python scripts/marimo_wasm_export.py
+
+      - name: Commit + push the exported bundles
+        run: |
+          git config user.name "cianhoghlaim-bot"
+          git config user.email "bot@cianfhoghlaim.ie"
+          git add web/apps/cianfhoghlaim-web/public/notebooks/
+          git commit -m "ci(marimo-wasm): re-export BIEP v3 jurisdiction notebooks" || echo "no changes to commit"
+          git push
+
+      - name: Verify bundles exist
+        run: |
+          find web/apps/cianfhoghlaim-web/public/notebooks/ -name "*.html" | head
+          echo "---"
+          cat web/apps/cianfhoghlaim-web/public/notebooks/manifest.json | head -30

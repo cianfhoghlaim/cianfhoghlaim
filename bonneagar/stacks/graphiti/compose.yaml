@@ -1,0 +1,126 @@
+# =============================================================================
+# DEPRECATED 2026-08-15: This stack has been consolidated into
+# `bonneagar/stacks/lakehouse/compose.yaml` per the
+# 2026-08-15-lakehouse-unified-data-plane-v1 change. The standalone
+# files (compose.yaml / sidecar.yaml / secrets.env / blueprint.yaml /
+# pangolin.yaml / README.md) are kept as readable shadow stacks for
+# one release cycle; they will be deleted in
+# 2026-XX-XX-delete-deprecated-graph-db-stacks.
+# DO NOT DEPLOY THIS STACK — deploy the unified lakehouse instead
+# (it brings up the graphiti + falkordb services on the shared
+# lakehouse_lakehouse network).
+# =============================================================================
+
+# =============================================================================
+# GRAPHITI - Temporal Knowledge Graph (FalkorDB backend)
+# =============================================================================
+# Updated for the `centralise-data-plane` rewrite (2026-07-30):
+# - The Neo4j backend profile was REMOVED. No Neo4j stack exists in KCG
+#   and the previous `graph` + `neo4j` service combo was broken (no
+#   container actually deployed Neo4j).
+# - Graphiti now uses the SHARED `falkordb` stack (which lives in its
+#   own `bonneagar/stacks/falkordb/` directory) as its sole graph backend.
+# - Service renamed from `graph` to `graphiti` so the Docker service name
+#   matches the stack name.
+# - Stack dependency: graphiti-bunchloch MUST come up after
+#   falkordb-bunchloch (the upstream stack).
+#
+# USAGE:
+#   docker compose -f compose.yaml -f sidecar.yaml up -d
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # GRAPHITI - bi-temporal knowledge graph API
+  # ---------------------------------------------------------------------------
+  graphiti:
+    build:
+      context: .
+    image: graphiti:local
+    container_name: graphiti
+    restart: unless-stopped
+    ports:
+      - "${GRAPHITI_PORT:-8000}:8000"
+    depends_on:
+      falkordb:
+        condition: service_healthy
+    environment:
+      # FalkorDB backend (shared with the falkordb stack)
+      FALKORDB_HOST: falkordb
+      FALKORDB_PORT: 6379
+      FALKORDB_DATABASE: ${FALKORDB_GRAPHITI_DB:-default_db}
+      FALKORDB_PASSWORD: ${FALKORDB_PASSWORD:?must be set}
+      GRAPHITI_BACKEND: falkordb
+      PORT: 8000
+      db_backend: falkordb
+      # LLM API key for entity extraction (the LLM provider is the
+      # canonical Bolmo / Molmo2 / Qwen3-VL via LiteLLM).
+      OPENAI_API_KEY: ${OPENAI_API_KEY:?must be set}
+      # OpenTelemetry → logfire collector (the collector fans out to BOTH
+      # logfire cloud AND langfuse per spec delta on `agent-observability`).
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_SERVICE_NAME: graphiti
+      # Langfuse SDK-side traces (cost + prompt metadata).
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthcheck')"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    networks:
+      - falkordb
+      - cianfhoghlaim
+
+  # ---------------------------------------------------------------------------
+  # FALKORDB - shared with the falkordb stack
+  # ---------------------------------------------------------------------------
+  # When this stack is deployed standalone (Komodo single-stack deploy),
+  # graphiti brings up its own falkordb container via an external reference
+  # to the network. When deployed as part of the cluster, the `external`
+  # flag is set to true and we share the cluster's falkordb.
+  # For Komodo: this stack has `deploy-falkordb-bunchloch` as a stack
+  # dependency (see bonneagar/komodo/procedures/deploy-graphiti-bunchloch.toml).
+  # ---------------------------------------------------------------------------
+  falkordb:
+    # Pinned 2026-08-15 (was v1.1.2 — centralise-data-plane; now v4.18.11 to
+    # match the canonical falkordb stack pin and unlock vector-search via
+    # vector.so per the 2026-08-15-lakehouse-memory-stack change Phase C).
+    image: falkordb/falkordb:v4.18.11
+    container_name: graphiti-falkordb-local
+    restart: unless-stopped
+    # Load vector.so so Graphiti's hybrid queries (vector + graph) work in
+    # the standalone-deploy path. Closes the open prod-drift alert.
+    command: ["falkordb", "--loadmodule", "/etc/falkordb/vector.so", "--port", "6379", "--cluster-enabled", "no"]
+    ports:
+      - "127.0.0.1:6380:6379"
+    volumes:
+      - falkordb_graphiti_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "6379", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - falkordb
+
+volumes:
+  falkordb_graphiti_data:
+
+networks:
+  falkordb:
+    driver: bridge
+  cianfhoghlaim:
+    external: true

@@ -1,0 +1,8 @@
+{
+  "run_id": "20251107_124617",
+  "run_name": "100, retry logic and both discounts",
+  "timestamp": "2025-11-07T12:46:17.255717",
+  "total_receipts": 100,
+  "data_directory": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/data/cord-v2/images_and_metadata/train_100",
+  "results_directory": "/Users/kevingregory/Desktop/development/python/ai-that-works/2025-12-02-multimodal-evals/results/20251107_124617"
+}

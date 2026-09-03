@@ -1,0 +1,92 @@
+# =============================================================================
+# DEPRECATED 2026-08-15: This stack has been consolidated into
+# `bonneagar/stacks/lakehouse/compose.yaml` per the
+# 2026-08-15-lakehouse-unified-data-plane-v1 change. The standalone
+# files (compose.yaml / sidecar.yaml / secrets.env / blueprint.yaml /
+# pangolin.yaml / README.md) are kept as readable shadow stacks for
+# one release cycle; they will be deleted in
+# 2026-XX-XX-delete-deprecated-graph-db-stacks.
+# DO NOT DEPLOY THIS STACK — deploy the unified lakehouse instead
+# (it brings up memgraph + memgraph-lab on the shared
+# lakehouse_lakehouse network).
+# =============================================================================
+
+# =============================================================================
+# MEMGRAPH - In-Memory Graph Database
+# =============================================================================
+# High-performance graph database with MAGE algorithms and Lab UI.
+#
+# Updated for the 2026-08-15-lakehouse-memory-stack-deep-integration-v1
+# change (Phase C — image pinning):
+# - `memgraph-mage` pinned from `:latest` to `3.6.0` (the canonical 3.x
+#   release line per the memgraph skill; verified 2026-08-15).
+# - `memgraph-lab` pinned from `:latest` to `3.6.0` (matches memgraph).
+#
+# USAGE:
+#   Development:  docker compose --env-file ../../.env.local up -d
+#   Production:   locket exec --env-file secrets.env -- docker compose up -d
+#   Standalone:   docker compose up -d  (uses defaults)
+# =============================================================================
+
+name: memgraph
+
+services:
+  # ---------------------------------------------------------------------------
+  # MEMGRAPH - Graph Database with MAGE Algorithms
+  # ---------------------------------------------------------------------------
+  memgraph:
+    image: memgraph/memgraph-mage:3.6.0
+    container_name: memgraph
+    restart: unless-stopped
+    ports:
+      - "${MEMGRAPH_BOLT_PORT:-7687}:7687"
+      - "${MEMGRAPH_HTTP_PORT:-7444}:7444"
+    environment:
+      MEMGRAPH_USER: ${MEMGRAPH_USER:-memgraph}
+      MEMGRAPH_PASSWORD: ${MEMGRAPH_PASSWORD:-devpassword}
+      # Enterprise license path (optional — only required for Enterprise
+      # features like multi-state replication; CE works without it).
+      # Resolved from the dev-baile Infisical vault per the
+      # 2026-08-15-lakehouse-memory-stack change (Phase B).
+      MEMGRAPH_LICENSE_FILE_PATH: ${MEMGRAPH_LICENSE_FILE_PATH:-}
+      # OpenTelemetry fan-out (added Phase B so memgraph queries can be
+      # traced via the otelcol → logfire cloud + langfuse path).
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
+    volumes:
+      - memgraph-lib:/var/lib/memgraph
+      - memgraph-log:/var/log/memgraph
+    command: ["--log-level=${MEMGRAPH_LOG_LEVEL:-WARNING}"]
+    healthcheck:
+      test: ["CMD", "echo", ">", "/dev/tcp/localhost/7687"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - memgraph
+
+  # ---------------------------------------------------------------------------
+  # MEMGRAPH LAB - Web UI
+  # ---------------------------------------------------------------------------
+  memgraph-lab:
+    image: memgraph/lab:3.6.0
+    container_name: memgraph-lab
+    restart: unless-stopped
+    ports:
+      - "${MEMGRAPH_LAB_PORT:-3000}:3000"
+    environment:
+      QUICK_CONNECT_MG_HOST: memgraph
+      QUICK_CONNECT_MG_PORT: "7687"
+    depends_on:
+      memgraph:
+        condition: service_started
+    networks:
+      - memgraph
+
+volumes:
+  memgraph-lib:
+  memgraph-log:
+
+networks:
+  memgraph:
+    driver: bridge

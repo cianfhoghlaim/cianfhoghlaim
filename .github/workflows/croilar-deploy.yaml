@@ -1,0 +1,43 @@
+name: Deploy Croilar (Production)
+
+on:
+  workflow_dispatch:
+    inputs:
+      stack:
+        description: "Single stack to deploy (empty = full gitops chain)"
+        required: false
+        default: ""
+
+jobs:
+  deploy:
+    name: deploy (croilar)
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.0"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Install Dagger
+        run: curl -fsSL https://dl.dagger.io/dagger/install.sh | sh
+      - name: dagger deploy
+        env:
+          KOMODO_API_KEY: ${{ secrets.KOMODO_API_KEY }}
+          PANGOLIN_API_KEY: ${{ secrets.PANGOLIN_API_KEY }}
+        run: |
+          if [ -n "${{ inputs.stack }}" ]; then
+            dagger call \
+              --mod infrastructure/dagger \
+              croilar deploy-komodo \
+              --stack "${{ inputs.stack }}" \
+              --approved true \
+              --source .
+          else
+            dagger call \
+              --mod infrastructure/dagger \
+              croilar gitops-fullstack \
+              --approved true \
+              --source .
+          fi

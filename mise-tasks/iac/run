@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+#MISE description="IaC lifecycle (bootstrap + plan + health + bootstrap-pangolin-client + deploy + teardown)"
+#MISE alias=["iac:bootstrap","iac:plan","iac:health","iac:bootstrap-pangolin-client","iac:deploy","iac:teardown"]
+set -euo pipefail
+
+ACTION="${1:-bootstrap}"
+shift || true
+
+case "$ACTION" in
+  bootstrap)
+    bun run --cwd bonneagar iac:bootstrap "$@"
+    ;;
+  bootstrap-pangolin-client)
+    bun run --cwd bonneagar iac:bootstrap-pangolin-client "$@"
+    ;;
+  plan)
+    bun run --cwd bonneagar iac:plan "$@"
+    ;;
+  health)
+    bun run --cwd bonneagar iac:health "$@"
+    ;;
+  deploy)
+    bun run --cwd bonneagar iac:deploy "$@"
+    ;;
+  teardown)
+    bun run --cwd bonneagar iac:teardown "$@"
+    ;;
+  *)
+    echo "Unknown IaC action: $ACTION" >&2
+    echo "Usage: mise run iac [bootstrap|plan|health|bootstrap-pangolin-client|deploy|teardown]" >&2
+    exit 1
+    ;;
+esac

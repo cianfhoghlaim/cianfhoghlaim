@@ -1,0 +1,98 @@
+# =============================================================================
+# DEPLOY NEWT-BUNCHLOCH PROCEDURE
+# =============================================================================
+# Brings up the newt (Pangolin client) + locket (secrets) +
+# komodo-periphery (Komodo agent) + beszel-agent (monitoring) on this
+# Mac. Bridges bunchloch into the Pangolin mesh on arm1-oci so services
+# on arm1-oci (hermes + openclaw + openchamber) are reachable from a
+# browser on this Mac via `https://*.cianfhoghlaim.ie`.
+#
+# Architecture:
+#   bunchloch (this Mac) — bunchloch-locket (Infisical secret injection)
+#                          bunchloch-newt (WireGuard tunnel to arm1-oci)
+#                          bunchloch-periphery (Komodo agent)
+#                          bunchloch-beszel-agent (host monitoring)
+#
+# Usage:
+#   km run procedure deploy-newt-bunchloch
+#   km run procedure deploy-newt-bunchloch -- --skip=verify
+# =============================================================================
+
+[[procedure.config]]
+name = "deploy-newt-bunchloch"
+description = "Deploy newt (Pangolin client) + locket + komodo-periphery + beszel-agent on bunchloch — preflight → StackUp → WireGuard tunnel check → Komodo periphery registration → health"
+server_id = "bunchloch"
+
+# =============================================================================
+# STAGE 0: Pre-flight
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "preflight"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "command -v docker && docker ps --format '{{.Names}}' | grep -c -E 'bunchloch-(locket|newt|periphery|beszel-agent)' || true", timeout_s = 30, description = "Verify docker is available + count existing bunchloch-site containers" } }
+
+# =============================================================================
+# STAGE 1: StackUp
+# =============================================================================
+# Brings up the 4-service stack from the hand-curated compose file at
+# `bonneagar/stacks/newt/docker-compose.yaml`. Uses `docker compose up -d`
+# directly (not `km run stack up`) because of the `komodo.skip=true`
+# label — Komodo doesn't manage this container.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "stackup"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "cd /Users/cianmacandeisigh/.local/newt && docker compose -f /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar/stacks/newt/docker-compose.yaml up -d", timeout_s = 120, description = "docker compose up -d for the 4 bunchloch-site services" } }
+
+# =============================================================================
+# STAGE 2: WireGuard tunnel check
+# =============================================================================
+# Verify the newt client has established a WireGuard tunnel to arm1-oci.
+# The newt image prints 'tunnel established' to logs on successful
+# handshake; we wait up to 60s for that to appear.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "wireguard-tunnel"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "for i in {1..12}; do docker logs bunchloch-newt --tail 30 2>&1 | grep -q 'tunnel established' && break; sleep 5; done; docker logs bunchloch-newt --tail 10 | grep -E '(tunnel|handshake|listening)' | tail -5", timeout_s = 90, description = "Wait up to 60s for the newt WireGuard tunnel to establish" } }
+
+# =============================================================================
+# STAGE 3: Komodo periphery registration
+# =============================================================================
+# Verify the komodo-periphery container is registered with komodo-core
+# (on arm1-oci). The periphery prints 'registered as bunchloch' on
+# successful registration.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "periphery-registration"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "for i in {1..12}; do docker logs bunchloch-periphery --tail 30 2>&1 | grep -q 'registered as bunchloch' && break; sleep 5; done; docker logs bunchloch-periphery --tail 10 | grep -E '(registered|connected|periphery)' | tail -5", timeout_s = 90, description = "Wait up to 60s for the komodo-periphery to register with komodo-core" } }
+
+# =============================================================================
+# STAGE 4: Health verification
+# =============================================================================
+# All 4 services are healthy + Locket has resolved the 3 secrets.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker ps --filter 'name=bunchloch-' --format '{{.Names}}\t{{.Status}}'", timeout_s = 15, name = "4-services-up", description = "All 4 bunchloch-site services are Up" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker logs bunchloch-locket --tail 20 2>&1 | grep -E 'secrets resolved' | tail -1", timeout_s = 15, name = "locket-secrets-resolved", description = "Locket has resolved 3 secrets (NEWT_ID, NEWT_SECRET, PERIPHERY_ONBOARDING_KEY)" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker exec bunchloch-newt -- newt --version 2>&1 | head -3", timeout_s = 10, name = "newt-version", description = "Verify the newt binary is at v1.14.0" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://komodo.cianfhoghlaim.ie/api/health", expected_status = 200, timeout_s = 30, name = "komodo-core-reachable" } }

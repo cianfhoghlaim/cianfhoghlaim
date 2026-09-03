@@ -1,0 +1,25 @@
+# defs/2_materials/grading/mathematics.yaml
+#
+# L2 CelticMaterialsComponent for the per-subject interactive Mathematics
+# grading (BIEP v1 Phase 2). Wires the Grade<Subject>Response +
+# Explain<Subject>MarkingScheme functions for the math tutor agent.
+#
+# Per the openspec change
+# 2026-07-16-biiep-v1-lc-per-subject-marking-grading-v1.
+type: orchestration.components.CelticMaterialsComponent
+attributes:
+  baml_function: b.GradeMathematicsResponse
+  baml_explain_function: b.ExplainMathematicsMarkingScheme
+  source_asset: 1_ingestion/marking/ie/education
+  partition_strategy: by_subject
+  asset_check_kind: baml_fidelity
+  subject: mathematics
+  language: en
+  automation_cron: "0 6 * * 0"  # weekly Sunday 06:00 UTC
+  metadata:
+    openspec_change: 2026-07-16-biiep-v1-lc-per-subject-marking-grading-v1
+    spec: british-isles-education-pipeline
+    feedback_channel: math_tutor
+    answer_marks: 12
+    step_min: 1
+    step_max: 8

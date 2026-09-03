@@ -1,0 +1,286 @@
+{
+  "$schema": "./SCHEMA.json",
+  "version": "1.0.0",
+  "generated_at": "2025-01-05",
+  "jurisdiction": "northern_ireland",
+
+  "sources": {
+    "ccea": {
+      "base_url": "https://ccea.org.uk",
+      "languages": {"en": ""}
+    },
+    "education_ni": {
+      "base_url": "https://www.education-ni.gov.uk",
+      "languages": {"en": ""}
+    },
+    "gaeloideachas": {
+      "base_url": "https://ccea.org.uk/gaeloideachas",
+      "languages": {"en": "", "ga": "/ga"}
+    }
+  },
+
+  "key_stages": {
+    "foundation": {
+      "name": {"en": "Foundation Stage", "ga": "Céim Bunscoile"},
+      "age_range": "4-6",
+      "years": 2
+    },
+    "ks1": {
+      "name": {"en": "Key Stage 1", "ga": "Céim 1"},
+      "age_range": "6-8",
+      "years": 2
+    },
+    "ks2": {
+      "name": {"en": "Key Stage 2", "ga": "Céim 2"},
+      "age_range": "8-11",
+      "years": 3
+    },
+    "ks3": {
+      "name": {"en": "Key Stage 3", "ga": "Céim 3"},
+      "age_range": "11-14",
+      "years": 3
+    },
+    "ks4": {
+      "name": {"en": "Key Stage 4", "ga": "Céim 4"},
+      "age_range": "14-16",
+      "years": 2,
+      "certification": "GCSE"
+    }
+  },
+
+  "qualifications": {
+    "gcse": {
+      "name": {"en": "General Certificate of Secondary Education", "ga": "Teastásc Ginearálta i Scoileanna Tríú-leibhéal"},
+      "age": "16",
+      "levels": ["foundation", "higher"],
+      "equivalent": ["junior_cert", "national_5"]
+    },
+    "a_level": {
+      "name": {"en": "GCE Advanced Level", "ga": "GCE Ardleibhéal"},
+      "age": "18",
+      "levels": ["A", "B", "C", "D", "E"],
+      "equivalent": ["leaving_cert", "higher", "advanced_higher"]
+    }
+  },
+
+  "subjects": [
+    {
+      "slug": "mathematics",
+      "name": {"en": "Mathematics", "ga": "Matamaitic"},
+      "key_stages": ["ks1", "ks2", "ks3", "ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "ccea": "/key-stage-4/gcse/subjects/mathematics/",
+        "ccea_a_level": "/post-16/gce/subjects/gce-mathematics/"
+      }
+    },
+    {
+      "slug": "english",
+      "name": {"en": "English", "ga": "Béarla"},
+      "key_stages": ["ks1", "ks2", "ks3", "ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "ccea": "/key-stage-4/gcse/subjects/english/",
+        "ccea_a_level": "/post-16/gce/subjects/gce-english/"
+      }
+    },
+    {
+      "slug": "irish",
+      "name": {"en": "Irish", "ga": "Gaeilge"},
+      "key_stages": ["ks3", "ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "ccea": "/key-stage-4/gcse/subjects/gcse-irish-2017/",
+        "gaeloideachas": "/key-stage-4/gcse/subjects/gcse-irish-2017/"
+      }
+    },
+    {
+      "slug": "science",
+      "name": {"en": "Science", "ga": "Eolaíocht"},
+      "key_stages": ["ks1", "ks2", "ks3", "ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "ccea": "/key-stage-4/gcse/subjects/science/"
+      }
+    },
+    {
+      "slug": "biology",
+      "name": {"en": "Biology", "ga": "Bitheolaíocht"},
+      "key_stages": ["ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "ccea": "/key-stage-4/gcse/subjects/biology/",
+        "ccea_a_level": "/post-16/gce/subjects/gce-biology/"
+      }
+    },
+    {
+      "slug": "chemistry",
+      "name": {"en": "Chemistry", "ga": "Ceimic"},
+      "key_stages": ["ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "ccea": "/key-stage-4/gcse/subjects/chemistry/",
+        "ccea_a_level": "/post-16/gce/subjects/gce-chemistry/"
+      }
+    },
+    {
+      "slug": "physics",
+      "name": {"en": "Physics", "ga": "Fisic"},
+      "key_stages": ["ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "ccea": "/key-stage-4/gcse/subjects/physics/",
+        "ccea_a_level": "/post-16/gce/subjects/gce-physics/"
+      }
+    },
+    {
+      "slug": "double_award_science",
+      "name": {"en": "Double Award Science", "ga": "Dúbhonncéim Eolaíochta"},
+      "key_stages": ["ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "ccea": "/key-stage-4/gcse/subjects/science-double-award/"
+      }
+    },
+    {
+      "slug": "history",
+      "name": {"en": "History", "ga": "Stair"},
+      "key_stages": ["ks1", "ks2", "ks3", "ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "ccea": "/key-stage-4/gcse/subjects/history/",
+        "ccea_a_level": "/post-16/gce/subjects/gce-history/"
+      }
+    },
+    {
+      "slug": "geography",
+      "name": {"en": "Geography", "ga": "Tíreolaíocht"},
+      "key_stages": ["ks1", "ks2", "ks3", "ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "ccea": "/key-stage-4/gcse/subjects/geography/",
+        "ccea_a_level": "/post-16/gce/subjects/gce-geography/"
+      }
+    },
+    {
+      "slug": "religious_studies",
+      "name": {"en": "Religious Studies", "ga": "Staidéar Reiligiúnach"},
+      "key_stages": ["ks1", "ks2", "ks3", "ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "ccea": "/key-stage-4/gcse/subjects/religious-studies/"
+      }
+    },
+    {
+      "slug": "digital_technology",
+      "name": {"en": "Digital Technology", "ga": "Teicneolaíocht Dhigiteach"},
+      "key_stages": ["ks3", "ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "ccea": "/key-stage-4/gcse/subjects/digital-technology/"
+      }
+    },
+    {
+      "slug": "computing",
+      "name": {"en": "Computing", "ga": "Ríomhaireacht"},
+      "key_stages": ["ks3", "ks4"],
+      "urls": {}
+    },
+    {
+      "slug": "physical_education",
+      "name": {"en": "Physical Education", "ga": "Corporoideachas"},
+      "key_stages": ["foundation", "ks1", "ks2", "ks3", "ks4"],
+      "urls": {}
+    },
+    {
+      "slug": "music",
+      "name": {"en": "Music", "ga": "Ceol"},
+      "key_stages": ["ks3", "ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "ccea": "/key-stage-4/gcse/subjects/music/"
+      }
+    },
+    {
+      "slug": "art_and_design",
+      "name": {"en": "Art and Design", "ga": "Ealaín agus Dearadh"},
+      "key_stages": ["ks3", "ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "ccea": "/key-stage-4/gcse/subjects/art-and-design/"
+      }
+    },
+    {
+      "slug": "drama",
+      "name": {"en": "Drama", "ga": "Drámaíocht"},
+      "key_stages": ["ks3", "ks4"],
+      "urls": {}
+    },
+    {
+      "slug": "business_studies",
+      "name": {"en": "Business Studies", "ga": "Staidéar Gnó"},
+      "key_stages": ["ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "ccea": "/key-stage-4/gcse/subjects/business-studies/"
+      }
+    },
+    {
+      "slug": "media_studies",
+      "name": {"en": "Media Studies", "ga": "Meán-Chúrsaí Léirmheasanna"},
+      "key_stages": ["ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "ccea": "/key-stage-4/gcse/subjects/media-studies/"
+      }
+    },
+    {
+      "slug": "modern_languages",
+      "name": {"en": "Modern Languages", "ga": "Nua-Teangacha"},
+      "key_stages": ["ks3", "ks4"],
+      "qualification_type": "gcse",
+      "urls": {
+        "french": "/key-stage-4/gcse/subjects/french/",
+        "german": "/key-stage-4/gcse/subjects/german/",
+        "spanish": "/key-stage-4/gcse/subjects/spanish/"
+      }
+    },
+    {
+      "slug": "learning_for_life_and_work",
+      "name": {"en": "Learning for Life and Work", "ga": "Foghlaim do Shaol agus Obair"},
+      "key_stages": ["ks4"],
+      "urls": {
+        "ccea": "/key-stage-4/gcse/subjects/learning-for-life-and-work/"
+      }
+    },
+    {
+      "slug": "home_economics",
+      "name": {"en": "Home Economics", "ga": "Eacnamaíocht Bhaile"},
+      "key_stages": ["ks3", "ks4"],
+      "urls": {}
+    },
+    {
+      "slug": "technology_and_design",
+      "name": {"en": "Technology and Design", "ga": "Teicneolaíocht agus Dearadh"},
+      "key_stages": ["ks3", "ks4"],
+      "urls": {}
+    }
+  ],
+
+  "areas_of_learning": {
+    "language_literacy": "Language and Literacy",
+    "mathematics_numeracy": "Mathematics and Numeracy",
+    "the_world_around_us": "The World Around Us",
+    "personal_development": "Personal Development and Mutual Understanding",
+    "physical_development": "Physical Development and Movement"
+  },
+
+  "document_types": {
+    "specification": "CCEA qualification specification",
+    "past_paper": "CCEA past examination paper",
+    "mark_scheme": "CCEA marking scheme",
+    "examiner_report": "CCEA examiner report",
+    "guidelines": "Teaching guidelines",
+    "support_materials": "Irish-medium education support materials"
+  }
+}

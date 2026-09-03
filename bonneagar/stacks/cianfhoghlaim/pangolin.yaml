@@ -1,0 +1,124 @@
+# =============================================================================
+# Oideachais — Pangolin Traefik routing (MERGED canonical)
+# =============================================================================
+# Replaces both /cianfhoghlaim/pangolin.yaml and the prior
+# /bonneagar/stacks/cianfhoghlaim/pangolin.yaml.
+#
+# Routes:
+#   cianfhoghlaim.cianfhoghlaim.ie     → frontend (Pocket ID SSO)
+#   api.cianfhoghlaim.cianfhoghlaim.ie → api      (Pocket ID SSO, API key, CORS)
+#   dagster.cianfhoghlaim.cianfhoghlaim.ie → dagster (Pocket ID SSO, VPN-only)
+#   agent.os.cianfhoghlaim.ie      → agent_os (Agno AgentOS, Pocket ID SSO, VPN-only)
+#   adk.cianfhoghlaim.ie           → adk_agents (Google ADK, Pocket ID SSO, VPN-only)
+#
+# This file is consumed by Traefik labels on the production compose. The
+# komodo deploy procedure (deploy-cianfhoghlaim-bunchloch) applies the
+# rich Pocket ID + VPN-only resources via the Pangolin Integration API.
+# =============================================================================
+
+http:
+  routers:
+    # -------------------------------------------------------------------------
+    # PUBLIC — TanStack Start SPA (Pocket ID SSO via TinyAuth)
+    # -------------------------------------------------------------------------
+    cianfhoghlaim-web:
+      entryPoints: [https]
+      rule: "Host(`cianfhoghlaim.cianfhoghlaim.ie`)"
+      service: cianfhoghlaim-web
+      tls: { certResolver: letsencrypt }
+      middlewares: [tinyauth]
+      priority: 100
+
+    # -------------------------------------------------------------------------
+    # PUBLIC — FastAPI AG-UI Streaming Backend (Pocket ID + API key + CORS)
+    # -------------------------------------------------------------------------
+    cianfhoghlaim-api:
+      entryPoints: [https]
+      rule: "Host(`api.cianfhoghlaim.cianfhoghlaim.ie`)"
+      service: cianfhoghlaim-api
+      tls: { certResolver: letsencrypt }
+      middlewares: [tinyauth, api-ratelimit, cianfhoghlaim-cors]
+      priority: 100
+
+    # -------------------------------------------------------------------------
+    # INTERNAL — Dagster UI (Pocket ID SSO, VPN-only)
+    # -------------------------------------------------------------------------
+    cianfhoghlaim-dagster:
+      entryPoints: [https]
+      rule: "Host(`dagster.cianfhoghlaim.cianfhoghlaim.ie`)"
+      service: cianfhoghlaim-dagster
+      tls: { certResolver: letsencrypt }
+      middlewares: [tinyauth, vpn-only]
+      priority: 100
+
+    # -------------------------------------------------------------------------
+    # INTERNAL — Agno AgentOS (Celtic Education agents, VPN-only)
+    # -------------------------------------------------------------------------
+    cianfhoghlaim-agent-os:
+      entryPoints: [https]
+      rule: "Host(`agent.os.cianfhoghlaim.ie`)"
+      service: cianfhoghlaim-agent-os
+      tls: { certResolver: letsencrypt }
+      middlewares: [tinyauth, vpn-only]
+      priority: 100
+
+    # -------------------------------------------------------------------------
+    # INTERNAL — Google ADK agents (Celtic Education multi-agent orchestrator, VPN-only)
+    # -------------------------------------------------------------------------
+    cianfhoghlaim-adk-agents:
+      entryPoints: [https]
+      rule: "Host(`adk.cianfhoghlaim.ie`)"
+      service: cianfhoghlaim-adk-agents
+      tls: { certResolver: letsencrypt }
+      middlewares: [tinyauth, vpn-only]
+      priority: 100
+
+  services:
+    cianfhoghlaim-web:
+      loadBalancer:
+        servers:
+          - url: "http://cianfhoghlaim-cianfhoghlaim-frontend:3000"
+
+    cianfhoghlaim-api:
+      loadBalancer:
+        servers:
+          - url: "http://cianfhoghlaim-cianfhoghlaim-api:8000"
+
+    cianfhoghlaim-dagster:
+      loadBalancer:
+        servers:
+          - url: "http://cianfhoghlaim-cianfhoghlaim-dagster:3000"
+
+    cianfhoghlaim-agent-os:
+      loadBalancer:
+        servers:
+          - url: "http://cianfhoghlaim-cianfhoghlaim-agent-os:7777"
+
+    cianfhoghlaim-adk-agents:
+      loadBalancer:
+        servers:
+          - url: "http://cianfhoghlaim-cianfhoghlaim-adk-agents:7778"
+
+  middlewares:
+    # CORS for the API — lets the frontend at cianfhoghlaim.cianfhoghlaim.ie
+    # call api.cianfhoghlaim.cianfhoghlaim.ie directly.
+    cianfhoghlaim-cors:
+      headers:
+        accessControlAllowMethods:
+          - GET
+          - POST
+          - OPTIONS
+        accessControlAllowOriginList:
+          - "https://cianfhoghlaim.cianfhoghlaim.ie"
+        accessControlAllowHeaders:
+          - Content-Type
+          - Authorization
+          - X-Oideachais-API-Key
+        accessControlMaxAge: 100
+        addVaryHeader: true
+
+    # VPN-only middleware is defined globally in the Pangolin stack at
+    # /bonneagar/stacks/pangolin/. This label is
+    # applied on top to gate dagster.* behind a Pangolin WireGuard peer.
+
+    # api-ratelimit and tinyauth are provided by the pangolin stack too.

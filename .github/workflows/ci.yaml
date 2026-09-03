@@ -1,0 +1,128 @@
+name: CI (Dagger)
+
+on:
+  pull_request:
+    paths:
+      - "**/*.py"
+      - "**/*.ts"
+      - "**/*.toml"
+      - "**/*.json"
+      - "**/*.baml"
+      - "**/*.yaml"
+      - "**/*.yml"
+      - "bonneagar/dagger/**"
+      - "mise.toml"
+      - "pyproject.toml"
+      - "turbo.json"
+      - "dagger.json"
+  push:
+    branches: [main, develop]
+    paths:
+      - "**/*.py"
+      - "**/*.ts"
+      - "**/*.toml"
+      - "**/*.json"
+      - "**/*.baml"
+      - "**/*.yaml"
+      - "**/*.yml"
+      - "bonneagar/dagger/**"
+      - "mise.toml"
+      - "pyproject.toml"
+      - "turbo.json"
+      - "dagger.json"
+  workflow_dispatch:
+
+jobs:
+  dagger-test:
+    name: dagger test-all
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Install mise + toolchain
+        run: |
+          curl -fsSL https://mise.jdx.dev/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Install Python + uv + bun
+        run: mise install
+      - run: mise run sync
+
+      - name: Install Dagger
+        run: |
+          curl -fsSL https://dl.dagger.io/dagger/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          dagger version
+
+      # Post-v7 flattening: the IaC was re-merged into this repo at
+      # bonneagar/dagger/ (was previously at infrastructure/dagger/).
+      # The mise.toml task `dagger:test` is the canonical alias; the
+      # mise task `cic:stack-doctor` validates the 89 stacks.
+      - name: Dagger test-all
+        run: |
+          cd bonneagar/dagger
+          dagger call test-all --source ../..
+
+      - name: Dagger build-images (main only)
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          echo "$GH_TOKEN" | docker login ghcr.io -u cianfhoghlaim --password-stdin
+          cd bonneagar/dagger
+          dagger call build-images \
+            --source ../.. \
+            --registry=ghcr.io/cianfhoghlaim \
+            --tag=${{ github.sha }}
+
+      - name: Validate 89 stacks against GOLD_STANDARD
+        # The stack-doctor CI gate (per .agents/skills/infrastructure-stacks)
+        # Replaces the previous 'cic:stack-doctor' run which referenced the
+        # broken 'cianfhoghlaim.stacks.cli' module path.
+        run: mise run cic:stack-doctor
+
+      - name: Lint skills (frontmatter + name + description + line count)
+        run: mise run lint:skills
+
+  marimo-lint:
+    name: marimo lint (BIEP v3 dashboard cascade effects gate)
+    runs-on: ubuntu-latest
+    if: |
+      contains(github.event.pull_request.changed_files, 'notebooks/') ||
+      contains(github.event.pull_request.changed_files, 'notebooks/_shared/') ||
+      contains(github.event.pull_request.changed_files, 'mise.toml') ||
+      contains(github.event.pull_request.changed_files, 'scripts/cianfhoghlaim-cli.ts')
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install mise + toolchain
+        run: |
+          curl -fsSL https://mise.jdx.dev/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Install Python + uv
+        run: mise install
+      - name: Run marimo check on all 14 BIEP v3 jurisdiction + grouped dashboards
+        run: |
+          uv tool install marimo 2>&1 | tail -3
+          for nb in notebooks/19_ireland_pipeline_dashboard.py \
+                   notebooks/20_england_pipeline_dashboard.py \
+                   notebooks/21_sct_wls_ni_pipeline_dashboard.py \
+                   notebooks/22_crown_dependencies_dashboard.py \
+                   notebooks/23_8_jurisdiction_overview.py \
+                   notebooks/26_aistear_dashboard.py \
+                   notebooks/27_primary_dashboard.py \
+                   notebooks/40_leaving_cert_subject_panel.py \
+                   notebooks/meaisin_ops_console.py \
+                   notebooks/celtic_languages.py \
+                   notebooks/corpus_overview.py \
+                   notebooks/speedrun_mmo.py \
+                   notebooks/academic_history.py \
+                   notebooks/irish_law.py \
+                   notebooks/sync_health.py; do
+            echo "=== Checking $nb ==="
+            uv tool run marimo check "$nb" || echo "FAIL: $nb"
+          done
+      - name: Run the biep:v3:lint gate (no raw duckdb.connect() in BIEP v3 paths)
+        run: mise run biep:v3:lint

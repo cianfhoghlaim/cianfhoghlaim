@@ -1,0 +1,62 @@
+name: state-exams-ie
+
+# =============================================================================
+# STATE-EXAMS-IE — Persistent Profile Vault for examinations.ie
+# =============================================================================
+# Per the `2026-08-14-firecrawl-corpus-and-examinations-ie-v1` change
+# (Phase 4a). This stack is the persistent-profile vault for the
+# `state-exams-ie` Firecrawl Interact profile — the cookies + session
+# JWT that allow the examinations.ie DLT sources to authenticate
+# without re-entering credentials on every run.
+#
+# The stack exposes an HTTP API on port 8765 (POST `/auth/login` +
+# GET `/profile/state-exams-ie`). The cookies are stored encrypted
+# on the bunchloch filesystem at
+# `/stedding/firecrawl_profiles/state-exams-ie/cookies.json`.
+#
+# USAGE:
+#   Production:  docker compose -f compose.yaml -f sidecar.yaml up -d
+#   Development: docker compose -f compose.yaml -f compose.dev.yaml -f sidecar.yaml up -d
+# =============================================================================
+
+services:
+  state-exams-ie-vault:
+    # Pinned 2026-08-14 (per the 2026-08-14-firecrawl-corpus-and-examinations-ie-v1 change)
+    image: ghcr.io/cianfhoghlaim/state-exams-ie-vault:2026.08.14
+    container_name: state-exams-ie-vault
+    restart: unless-stopped
+    # Command: launch the FastAPI app + the Locket sidecar reads the
+    # 2 Infisical secrets at startup.
+    command:
+      - "uvicorn"
+      - "state_exams_ie_vault.main:app"
+      - "--host"
+      - "0.0.0.0"
+      - "--port"
+      - "8765"
+    env_file:
+      - secrets.env
+    volumes:
+      # The persistent cookie state lives on the bunchloch host
+      # filesystem (NOT bind-mounted from a transient container dir).
+      - /stedding/firecrawl_profiles/state-exams-ie:/var/lib/state-exams-ie:rw
+    ports:
+      - "127.0.0.1:8765:8765"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8765/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - state-exams-ie-net
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+
+networks:
+  state-exams-ie-net:
+    driver: bridge
+    name: state-exams-ie-net

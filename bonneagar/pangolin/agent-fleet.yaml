@@ -1,0 +1,151 @@
+# Agent-Fleet Pangolin private resource definitions
+#
+# Defines the 12-agent fleet + 8 NCCA subject specialists + 3
+# educational agents as Pangolin private resources on the
+# `*.cianfhoghlaim.ie` mesh. Mounted at /api/agent/<slug>.
+#
+# Reference: openspec/changes/2026-08-14-agents-firing-parity-v1
+
+pangolin.private-resources.agent-fleet.curriculum_agent:
+  subdomain: curriculum.cianfhoghlaim.ie
+  target: hermes:8001
+  auth: pocket-id-sso
+  labels:
+    - "komodo.skip=true"
+    - "host:bunchloch"
+    - "tier:control-plane"
+    - "type:agent-runtime"
+    - "domain:curriculum.cianfhoghlaim.ie"
+    - "agent:curriculum"
+
+pangolin.private-resources.agent-fleet.translation_agent:
+  subdomain: translation.cianfhoghlaim.ie
+  target: hermes:8002
+  auth: pocket-id-sso
+  labels:
+    - "komodo.skip=true"
+    - "host:bunchloch"
+    - "tier:control-plane"
+    - "type:agent-runtime"
+    - "domain:translation.cianfhoghlaim.ie"
+    - "agent:translation"
+
+pangolin.private-resources.agent-fleet.corpus_agent:
+  subdomain: corpus.cianfhoghlaim.ie
+  target: hermes:8003
+  auth: pocket-id-sso
+  labels:
+    - "komodo.skip=true"
+    - "host:bunchloch"
+    - "tier:control-plane"
+    - "type:agent-runtime"
+    - "domain:corpus.cianfhoghlaim.ie"
+    - "agent:corpus"
+
+pangolin.private-resources.agent-fleet.research_agent:
+  subdomain: research.cianfhoghlaim.ie
+  target: hermes:8004
+  auth: pocket-id-sso
+  labels:
+    - "komodo.skip=true"
+    - "host:bunchloch"
+    - "tier:control-plane"
+    - "type:agent-runtime"
+    - "domain:research.cianfhoghlaim.ie"
+    - "agent:research"
+
+pangolin.private-resources.agent-fleet.geospatial_agent:
+  subdomain: geospatial.cianfhoghlaim.ie
+  target: hermes:8005
+  auth: pocket-id-sso
+  labels:
+    - "komodo.skip=true"
+    - "host:bunchloch"
+    - "tier:control-plane"
+    - "type:agent-runtime"
+    - "domain:geospatial.cianfhoghlaim.ie"
+    - "agent:geospatial"
+
+pangolin.private-resources.agent-fleet.statistics_agent:
+  subdomain: statistics.cianfhoghlaim.ie
+  target: hermes:8006
+  auth: pocket-id-sso
+  labels:
+    - "komodo.skip=true"
+    - "host:bunchloch"
+    - "tier:control-plane"
+    - "type:agent-runtime"
+    - "domain:statistics.cianfhoghlaim.ie"
+    - "agent:statistics"
+
+pangolin.private-resources.agent-fleet.curriculum_comparison_agent:
+  subdomain: curriculum-comparison.cianfhoghlaim.ie
+  target: hermes:8007
+  auth: pocket-id-sso
+  labels:
+    - "komodo.skip=true"
+    - "host:bunchloch"
+    - "tier:control-plane"
+    - "type:agent-runtime"
+    - "domain:curriculum-comparison.cianfhoghlaim.ie"
+    - "agent:curriculum_comparison"
+
+pangolin.private-resources.agent-fleet.mcp_curriculum_agent:
+  subdomain: mcp-curriculum.cianfhoghlaim.ie
+  target: hermes:8008
+  auth: pocket-id-sso
+  labels:
+    - "komodo.skip=true"
+    - "host:bunchloch"
+    - "tier:control-plane"
+    - "type:agent-runtime"
+    - "domain:mcp-curriculum.cianfhoghlaim.ie"
+    - "agent:mcp_curriculum"
+
+pangolin.private-resources.agent-fleet.agui_curriculum_agent:
+  subdomain: agui-curriculum.cianfhoghlaim.ie
+  target: openclaw:8009
+  auth: pocket-id-sso
+  labels:
+    - "komodo.skip=true"
+    - "host:bunchloch"
+    - "tier:control-plane"
+    - "type:agent-runtime"
+    - "domain:agui-curriculum.cianfhoghlaim.ie"
+    - "agent:agui_curriculum"
+
+pangolin.private-resources.agent-fleet.education_research_agent:
+  subdomain: education-research.cianfhoghlaim.ie
+  target: openclaw:8010
+  auth: pocket-id-sso
+  labels:
+    - "komodo.skip=true"
+    - "host:bunchloch"
+    - "tier:control-plane"
+    - "type:agent-runtime"
+    - "domain:education-research.cianfhoghlaim.ie"
+    - "agent:education_research"
+
+pangolin.private-resources.agent-fleet.bunchloch_research_agent:
+  subdomain: bunchloch-research.cianfhoghlaim.ie
+  target: openclaw:8011
+  auth: pocket-id-sso
+  labels:
+    - "komodo.skip=true"
+    - "host:bunchloch"
+    - "tier:control-plane"
+    - "type:agent-runtime"
+    - "domain:bunchloch-research.cianfhoghlaim.ie"
+    - "agent:bunchloch_research"
+
+pangolin.private-resources.agent-fleet.root_agent:
+  subdomain: root.cianfhoghlaim.ie
+  target: openclaw:8012
+  auth: pocket-id-sso
+  labels:
+    - "komodo.skip=true"
+    - "host:bunchloch"
+    - "tier:control-plane"
+    - "type:agent-runtime"
+    - "domain:root.cianfhoghlaim.ie"
+    - "agent:root"

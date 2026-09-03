@@ -1,0 +1,22 @@
+# defs/2_materials/lc_extraction/defs.yaml
+#
+# L2 CelticMaterialsComponent for the BAML extraction of the LC5
+# syllabi + exam papers + marking schemes + cross-linguistic concepts.
+#
+# The 5 BAML functions used:
+#   - b.ExtractCurriculumSyllabus    (per-subject syllabus)
+#   - b.ExtractExamPaperLayout       (per-subject exam paper)
+#   - b.ExtractMarkingSchemeGuideline(per-subject marking scheme)
+#   - b.ExtractCrossLinguisticConcept(EN ↔ GA topic mapping)
+#   - b.ExtractSyllabusDiagram       (NEW 2026-07-03; molmo2-8b pointing)
+#
+# Per openspec/changes/2026-07-03-leaving-cert-5-subject-pipeline-with-diagrams/
+type: orchestration.components.CelticMaterialsComponent
+attributes:
+  baml_function: b.ExtractCurriculumSyllabus
+  source_asset: 1_ingestion/curriculum/ie/lc5
+  partition_strategy: by_subject
+  asset_check_kind: baml_fidelity
+  subject: lc5_all                  # Applies to all 5 LC subjects
+  language: en_and_ga
+  automation_cron: "0 4 * * *"

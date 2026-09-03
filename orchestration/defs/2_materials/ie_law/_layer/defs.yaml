@@ -1,0 +1,33 @@
+# defs.yaml — Pick-8 Ireland/law L2 (Materials) component.
+#
+# CelticMaterialsComponent that wires the 7 BAML extraction assets
+# (1 per BAML fn, scoped to the 5 Pick-8 IE/law sources) + the
+# cross-source statute linkage asset to Dagster.
+#
+# Reference: openspec/changes/archive/2026-07-07-finalize-v4-landing/
+#            absorbed/2026-07-06-ireland-legal-pipeline/proposal.md
+#            (Pick-8 scoped reimplementation)
+type: orchestration.components.CelticMaterialsComponent
+attributes:
+  subject: ie_law
+  language: en
+  partition_strategy: by_nation
+  asset_check_kind: row_count
+  baml_functions:
+    - b.ExtractPIABPage
+    - b.ExtractCourtForm
+    - b.ExtractCourtFee
+    - b.ExtractJudgement
+    - b.ExtractCourtRule
+    - b.ExtractLegalAidPage
+  source_assets:
+    - 1_ingestion/law/ie/piab
+    - 1_ingestion/law/ie/courts
+    - 1_ingestion/law/ie/judgements
+    - 1_ingestion/law/ie/court_rules
+    - 1_ingestion/law/ie/legal_aid
+  cross_source_linkage:
+    target_table: cianfhoghlaim.education.ie.irish_statute_book.acts
+    asset: ie_law_statute_linkage
+  automation: on_cron
+  automation_cron: "0 6 * * *"

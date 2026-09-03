@@ -1,0 +1,20 @@
+# defs/2_materials/eu_multilingual/defs.yaml
+#
+# L2 multilingual monitoring + alignment assets (added by 2026-07-15-eu-multilingual-irish-english-v1).
+#
+# Reference: openspec/changes/2026-07-15-eu-multilingual-irish-english-v1/
+type: orchestration.components.CelticMaterialsComponent
+attributes:
+  baml_function: b.ExtractEUDocumentBilingualEnGa
+  source_asset: 2_materials/eu_multilingual/eu_english_coverage
+  subject: eu_multilingual
+  partition_strategy: by_institution
+  asset_check_kind: row_count
+  automation_cron: "0 5 * * *"
+  automation: on_cron
+  language: en
+  metadata:
+    openspec_change: 2026-07-15-eu-multilingual-irish-english-v1
+    spec: european-union-official-language-pipeline
+    language_pair: en_ga
+    purpose: cross_jurisdiction_alignment

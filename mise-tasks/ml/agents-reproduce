@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="ML agents reproduce — 12-agent fleet + 8 NCCA subject specialists + 3 educational agents cold→green reproducer"
+set -euo pipefail
+
+bash scripts/reproducers/agents-fleet-reproducer.sh "$@"

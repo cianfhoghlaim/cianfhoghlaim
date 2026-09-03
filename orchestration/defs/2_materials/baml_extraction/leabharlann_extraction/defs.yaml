@@ -1,0 +1,21 @@
+# defs/2_materials/baml_extraction/leabharlann/defs.yaml
+#
+# L2 CelticMaterialsComponent for the Leabharlann corpus BAML extraction
+# (ExtractLeabharlannDoc). Partitioned by subject (the 6 Plan 1 sub-corpora:
+# aigne | gaeilge | gemini_deep_research | mata | ollscoil_na_gaillimhe
+# | zotero). The asset_check_kind=lang_detect verifies that the
+# doc_language returned by ExtractLeabharlannDoc matches the partition's
+# expected language (gaeilge → ga; gemini_deep_research/mata/uog/zotero
+# → en; aigne → en).
+#
+# Per openspec/changes/2026-07-15-cianfhoghlaim-leabharlann-v1/specs/
+# cianfhoghlaim-leabharlann/spec.md — the Phase 1 wrap-up requirement.
+type: orchestration.components.CelticMaterialsComponent
+attributes:
+  baml_function: b.ExtractLeabharlannDoc
+  source_asset: 1_ingestion/filesystem/leabharlann_books
+  partition_strategy: by_subject
+  asset_check_kind: lang_detect
+  subject: leabharlann
+  language: en
+  automation_cron: "0 5 * * *"

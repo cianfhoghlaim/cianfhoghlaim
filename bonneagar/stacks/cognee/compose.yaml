@@ -1,0 +1,147 @@
+# =============================================================================
+# DEPRECATED 2026-08-15: This stack has been consolidated into
+# `bonneagar/stacks/lakehouse/compose.yaml` per the
+# 2026-08-15-lakehouse-unified-data-plane-v1 change. The standalone
+# files (compose.yaml / sidecar.yaml / secrets.env / blueprint.yaml /
+# pangolin.yaml / README.md) are kept as readable shadow stacks for
+# one release cycle; they will be deleted in
+# 2026-XX-XX-delete-deprecated-graph-db-stacks.
+# DO NOT DEPLOY THIS STACK — deploy the unified lakehouse instead
+# (it brings up the cognee service + the shared lakehouse-postgres
+# at the cognee_cianfhoghlaim database).
+# =============================================================================
+
+# Cognee knowledge graph stack for Cianfhoghlaim Oideachais.
+# Serves 6 Cognee datasets (aistear, primary, junior_cycle, senior_cycle, tertiary, cross_stage)
+# via the REST API on port 8000. Joins the lakehouse_lakehouse external network.
+#
+# LLM is provided by the LiteLLM proxy (bonneagar/stacks/litellm).
+# Default model: deepseek/deepseek-chat (works around the Gemini 403 block).
+# Override with LLM_MODEL=local/irish/uccix to use the local Irish GGUF.
+#
+# To start (prod):  docker compose -f compose.yaml -f sidecar.yaml up -d
+# To start (dev):   docker compose -f compose.yaml -f sidecar.yaml -f compose.dev.yaml up -d
+#
+# Note: The Locket sidecar service is defined in sidecar.yaml; both files must
+# be passed to `docker compose up` together (Docker Compose does not auto-merge
+# service definitions from sibling files).
+
+services:
+  cognee:
+    image: cognee/cognee:1.2.2  # pinned 2026-07-02 (was :latest; 1.2.2 = current Docker Hub stable, released 2026-06-26)
+    container_name: cianfhoghlaim-cognee
+    restart: unless-stopped
+    ports:
+      - "8100:8000"
+    environment:
+      # The cognee LLM client adds `Authorization: Bearer <LLM_API_KEY>` to
+      # every request. If LLM_API_KEY is the LiteLLM master key, litellm
+      # forwards it as the upstream DeepSeek key (which DeepSeek rejects).
+      # Solution: set LLM_API_KEY to a placeholder so litellm falls back to
+      # its own configured DEEPSEEK_API_KEY env var.
+      LLM_API_KEY: no-key-needed
+      LLM_PROVIDER: openai
+      LLM_BASE_URL: http://litellm:4000/v1
+      LLM_MODEL: ${COGNEE_LLM_MODEL:-deepseek/deepseek-chat}
+      EMBEDDING_API_KEY: no-key-needed
+      EMBEDDING_PROVIDER: openai
+      EMBEDDING_BASE_URL: http://litellm:4000/v1
+      # Use the full litellm model path so tiktoken can auto-detect the
+      # tokenizer (cognee validates EMBEDDING_MODEL against tiktoken at
+      # startup; litellm alias names like "embedding" or "embedding-curriculum"
+      # are not tiktoken-recognizable).
+      EMBEDDING_MODEL: ${COGNEE_EMBEDDING_MODEL:-openai/text-embedding-3-small}
+      COGNEE_DATABASES: cianfhoghlaim.education.aistear,cianfhoghlaim.education.primary,cianfhoghlaim.education.junior_cycle,cianfhoghlaim.education.senior_cycle,cianfhoghlaim.education.tertiary,cianfhoghlaim.education.cross_stage
+      COGNEE_STORAGE: postgresql
+      COGNEE_POSTGRES_HOST: cognee-postgres
+      COGNEE_POSTGRES_PORT: "5432"
+      COGNEE_POSTGRES_USER: cognee
+      COGNEE_POSTGRES_PASSWORD: ${COGNEE_POSTGRES_PASSWORD:-devpassword}
+      COGNEE_POSTGRES_DB: cognee_cianfhoghlaim
+      VECTOR_DB_PROVIDER: pgvector
+      # Unified provider uses the same Postgres for both relational and graph
+      # (avoids the need for a separate Neo4j / FalkorDB instance).
+      USE_UNIFIED_PROVIDER: pghybrid
+      DB_PROVIDER: postgres
+      DB_HOST: cognee-postgres
+      DB_PORT: "5432"
+      DB_NAME: cognee_cianfhoghlaim
+      DB_USERNAME: cognee
+      DB_PASSWORD: ${COGNEE_POSTGRES_PASSWORD:-devpassword}
+      GRAPH_DATABASE_PROVIDER: postgres
+      LANCEDB_URI: rest://lakehouse-lance-namespace:8182
+      LANCEDB_API_KEY: ${LANCEDB_API_KEY:-devtoken}
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # Disable authentication in dev (set both to true in production
+      # behind Pocket ID SSO on the Pangolin route).
+      REQUIRE_AUTHENTICATION: ${REQUIRE_AUTHENTICATION:-false}
+      ENABLE_BACKEND_ACCESS_CONTROL: ${ENABLE_BACKEND_ACCESS_CONTROL:-false}
+      # OpenTelemetry → logfire collector (fans out to BOTH logfire cloud AND
+      # langfuse). See spec delta on `agent-observability` for the rationale.
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://logfire-otel:4317}
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_SERVICE_NAME: cognee
+      # Langfuse SDK-side traces (cost + prompt metadata for cognify() LLM calls).
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse:3000}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      # PlanetScale PG override (added 2026-08-15-lakehouse-memory-stack
+      # Phase C; when set, the local cognee-postgres container is bypassed).
+      PLANETSCALE_DATABASE_URL: ${PLANETSCALE_DATABASE_URL:-}
+      # Galileo AI observability (added Phase C; optional token-pricing +
+      # drift alerts). Resolved from dev-baile/cognee/galileo_api_key.
+      GALILEO_API_KEY: ${GALILEO_API_KEY:-}
+      # Lance Namespace 0.9 contract token (added Phase C; the v0.9
+      # `header.<name>` context-header prefix replaces the pre-v0.9
+      # `x-lance-ctx-<name>` convention).
+      LANCEDB_NAMESPACE_TOKEN: ${LANCEDB_NAMESPACE_TOKEN:-}
+    healthcheck:
+      # Note: healthcheck runs INSIDE the container on port 8000 (not the
+      # host-mapped 8100).
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: "4"
+          memory: 8G
+    depends_on:
+      cognee-postgres:
+        condition: service_healthy
+      # locket: # sidecar-injected at deploy time via -f sidecar.yaml
+    networks:
+      - lakehouse
+      - cianfhoghlaim
+
+  cognee-postgres:
+    image: pgvector/pgvector:pg17
+    container_name: cianfhoghlaim-cognee-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cognee
+      POSTGRES_PASSWORD: ${COGNEE_POSTGRES_PASSWORD:-devpassword}
+      POSTGRES_DB: cognee_cianfhoghlaim
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "cognee", "-d", "cognee_cianfhoghlaim"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - cognee-postgres-data:/var/lib/postgresql/data
+    networks:
+      - lakehouse
+
+volumes:
+  cognee-postgres-data:
+
+networks:
+  lakehouse:
+    name: lakehouse_lakehouse
+    external: true
+  cianfhoghlaim:
+    name: cianfhoghlaim
+    external: true

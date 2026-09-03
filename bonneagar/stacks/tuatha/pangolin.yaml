@@ -1,0 +1,36 @@
+# Pangolin auto-discovery labels for Tuatha
+# Include with: docker compose -f docker-compose.yaml -f pangolin.yaml up -d
+#
+# Three named routes (two TinyAuth-gated, one public):
+#   - tuath-api.cianfhoghlaim.ie    (TinyAuth passkey)
+#   - tuath-ui.cianfhoghlaim.ie     (TinyAuth passkey)
+#   - tuath.cianfhoghlaim.ie        (public, rate-limited)
+#
+# Dagster is intentionally NOT routed through Pangolin.
+services:
+  # API server - protected with TinyAuth + rate limiting
+  api:
+    labels:
+      - "pangolin.resource.name=Tuatha API"
+      - "pangolin.resource.domain=tuath-api.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://tuath-api:8000"
+      - "pangolin.resource.middlewares=tinyauth,rate-limit-api"
+
+  # Game UI - public access with rate limiting
+  game:
+    labels:
+      - "pangolin.public-resources.tuath-game.name=Tuatha Game"
+      - "pangolin.public-resources.tuath-game.full-domain=tuath.cianfhoghlaim.ie"
+      - "pangolin.public-resources.tuath-game.protocol=http"
+      - "pangolin.public-resources.tuath-game.targets[0].method=http"
+      - "pangolin.public-resources.tuath-game.targets[0].port=8080"
+
+  # TanStack UI - protected with TinyAuth
+  ui:
+    labels:
+      - "pangolin.resource.name=Tuatha UI"
+      - "pangolin.resource.domain=tuath-ui.cianfhoghlaim.ie"
+      - "pangolin.resource.target=http://tuath-ui:3000"
+      - "pangolin.resource.middlewares=tinyauth"
+
+  # Dagster webserver is intentionally NOT routed through Pangolin (operator-only).

@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://cianfhoghlaim.ie/schemas/tenant-config.json",
+  "title": "Cianfhoghlaim Tenant Config",
+  "description": "Schema for croilar/apps/portal/config/tenants/*.yaml",
+  "type": "object",
+  "required": ["tenant", "owner", "theme", "routes", "features", "languages", "seo"],
+  "additionalProperties": true,
+  "properties": {
+    "tenant": {
+      "type": "object",
+      "required": ["id", "name", "displayName", "type", "tagline"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "name": { "type": "string", "minLength": 1 },
+        "displayName": { "type": "string", "minLength": 1 },
+        "domains": { "type": "array", "items": { "type": "string" } },
+        "type": {
+          "type": "string",
+          "enum": ["education", "portfolio", "admin", "collaboration", "music"]
+        },
+        "description": { "type": "string" },
+        "tagline": { "type": "string" }
+      }
+    },
+    "owner": {
+      "type": "object",
+      "required": ["name", "title", "email"],
+      "properties": {
+        "name": { "type": "string" },
+        "title": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "github": { "type": "string" },
+        "linkedin": { "type": "string" },
+        "spotify": { "type": "string" },
+        "soundcloud": { "type": "string" },
+        "youtube": { "type": "string" }
+      }
+    },
+    "theme": {
+      "type": "object",
+      "required": ["primaryColor", "secondaryColor", "accentColor", "backgroundColor", "foregroundColor", "fontFamily", "fontHeading", "borderRadius", "assets"],
+      "properties": {
+        "primaryColor": { "type": "string" },
+        "secondaryColor": { "type": "string" },
+        "accentColor": { "type": "string" },
+        "backgroundColor": { "type": "string" },
+        "foregroundColor": { "type": "string" },
+        "logo": { "type": "string" },
+        "favicon": { "type": "string" },
+        "fontFamily": { "type": "string" },
+        "fontHeading": { "type": "string" },
+        "borderRadius": { "type": "string" },
+        "assets": {
+          "type": "object",
+          "required": ["style"],
+          "properties": {
+            "style": {
+              "type": "string",
+              "enum": ["celtic", "modern", "music", "terminal", "portfolio"]
+            },
+            "patterns": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "routes": {
+      "type": "object",
+      "required": ["enabled", "disabled"],
+      "properties": {
+        "enabled": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "component", "title"],
+            "properties": {
+              "path": { "type": "string", "pattern": "^/" },
+              "component": { "type": "string" },
+              "title": { "type": "string" }
+            }
+          }
+        },
+        "disabled": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "features": {
+      "type": "object",
+      "required": ["aiChat", "examPrep", "musicPlayer", "portfolioMode", "gameShowcase"],
+      "properties": {
+        "curriculumBrowser": { "type": "boolean" },
+        "translationTool": { "type": "boolean" },
+        "aiChat": { "type": "boolean" },
+        "resourceLibrary": { "type": "boolean" },
+        "vocabularyTracker": { "type": "boolean" },
+        "examPrep": { "type": "boolean" },
+        "musicPlayer": { "type": "boolean" },
+        "portfolioMode": { "type": "boolean" },
+        "gameShowcase": { "type": "boolean" }
+      }
+    },
+    "navigation": {
+      "type": "object",
+      "properties": {
+        "primary": { "type": "array" },
+        "footer": { "type": "array" }
+      }
+    },
+    "languages": {
+      "type": "object",
+      "required": ["primary", "supported"],
+      "properties": {
+        "primary": { "type": "string", "enum": ["en", "ga"] },
+        "supported": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["code", "name", "nativeName"],
+            "properties": {
+              "code": { "type": "string" },
+              "name": { "type": "string" },
+              "nativeName": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "seo": {
+      "type": "object",
+      "required": ["title", "description"],
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "keywords": { "type": "array", "items": { "type": "string" } },
+        "ogImage": { "type": "string" },
+        "twitterHandle": { "type": "string" }
+      }
+    }
+  }
+}

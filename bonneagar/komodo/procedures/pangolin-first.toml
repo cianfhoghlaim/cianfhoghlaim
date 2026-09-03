@@ -1,0 +1,41 @@
+# =============================================================================
+# PANGLIN-FIRST PROCEDURE
+# =============================================================================
+# Host-agnostic prerequisite for the per-host syncs (bunchloch + arm1-oci).
+# Verifies the Pangolin mesh is up + Pocket ID OIDC is ready before any
+# other procedure fires.
+#
+# This procedure runs on every host that joins the mesh. The
+# `komodo/resource-syncs/cross-cutting.toml` pulls it via the procedures
+# glob; Komodo Core dispatches it to whichever host the procedure declares
+# in its `server_id` field.
+#
+# Usage:
+#   km run procedure pangolin-first
+# =============================================================================
+
+[[procedure.config]]
+name = "pangolin-first"
+description = "Cross-cutting prerequisite: verify Pangolin mesh + Pocket ID OIDC is ready before any other procedure fires"
+# Host-agnostic (runs on whatever host Komodo Core is on — usually arm1-oci
+# for the production mesh, but the check itself is from any node that can
+# reach the Pangolin URL).
+server_id = "arm1-oci"
+
+[[procedure.config.stages]]
+name = "ssh-arm1-oci"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "ssh -o ConnectTimeout=5 -o BatchMode=yes arm1-oci 'true' || (echo 'ERROR: cannot reach arm1-oci' && exit 1)", timeout_s = 15, description = "Verify passwordless SSH to arm1-oci" } }
+
+[[procedure.config.stages]]
+name = "pangolin-health"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://pangolin.cianfhoghlaim.ie/api/v1/", expected_status = 200, timeout_s = 30, name = "pangolin-api-reachable" } }
+
+[[procedure.config.stages]]
+name = "pocket-id-oidc"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://pangolin.cianfhoghlaim.ie/.well-known/openid-configuration", expected_status = 200, timeout_s = 30, name = "pocket-id-discovery-doc" } }

@@ -1,0 +1,46 @@
+[project]
+name = "sruth-shared"
+version = "0.1.0"
+description = "Shared utilities for sruth data flows - AgentOS, middleware, A2A communication"
+requires-python = ">=3.11"
+dependencies = [
+    # Web framework
+    "fastapi>=0.115.0",
+    "uvicorn>=0.32.0",
+
+    # Agent framework
+    "agno>=1.4.6",
+
+    # AI providers
+    "openai>=1.58.0",
+    "anthropic>=0.40.0",
+
+    # HTTP & Auth
+    "httpx>=0.28.0",
+    "PyJWT>=2.10.0",
+
+    # Data validation
+    "pydantic>=2.10.0",
+]
+
+[project.optional-dependencies]
+browser = [
+    "playwright>=1.49.0",
+    "duckduckgo-search>=6.0.0",
+    "newspaper4k>=0.9.0",
+]
+x402 = [
+    "web3>=7.0.0",
+    "eth-account>=0.13.0",
+]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["agent_os"]

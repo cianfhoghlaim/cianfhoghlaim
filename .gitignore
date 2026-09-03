@@ -1,0 +1,366 @@
+gaeilge/found_in_downloads/abhar_breise_don_cheardlann.7z
+oideachas/lesson_plans/teaching_practice_2/1_administration_management/school_policies/school_rules.pdf
+
+/Users/cianmacandeisigh/dev/kings_college_galway/storage
+# Phase 2B (2026-06-25): legacy top-level `storage/` dir is now removed (migrated
+# to `core/storage/`). The `storage/` pattern above is too broad — it also
+# matches the new canonical `core/storage/` and the `tests/storage/` test dir.
+# Use the explicit allow-negation patterns below to keep the legacy pattern
+# scoped to top-level only.
+!/sruth/oideachais/core/storage/
+!/sruth/oideachais/core/storage/**
+!/sruth/oideachais/tests/storage/
+!/sruth/oideachais/tests/storage/**
+# Node Modules
+node_modules/
+instagram_output/
+stedding/
+.dlt
+infisical_secret
+dlthub
+.gemini
+.DS_Store
+
+dlthub
+.local
+
+# NEW 2026-07-06: allow the .agents/skills/dlthub/ skill frontmatter to be
+# committed (it was previously caught by the over-broad `dlthub` rule above).
+# See openspec/changes/2026-07-06-wire-dlthub-platform-toolkits-and-deployment/.
+!.agents/skills/dlthub/
+!.agents/skills/dlthub/SKILL.md
+
+# NEW 2026-07-06: per-developer dlthub ai init artifacts. Re-installed on
+# fresh clone via the openspec change Phase 2 commands (run from inside
+# cianfhoghlaim/, the workspace root). See docs/agents/dlthub-run-vs-serve.md.
+/.claude/
+/.claudeignore
+/.mcp.json
+/cianfhoghlaim/.claude/
+/cianfhoghlaim/.claudeignore
+/cianfhoghlaim/.mcp.json
+
+# =============================================================================
+# CIANFHOGHLAIM MONOREPO - GITIGNORE
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# PYTHON
+# -----------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+/lib/
+/lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# -----------------------------------------------------------------------------
+# NODE.JS / TYPESCRIPT
+# -----------------------------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.tsbuildinfo
+.turbo/
+
+# -----------------------------------------------------------------------------
+# RUST
+# -----------------------------------------------------------------------------
+target/
+Cargo.lock
+**/*.rs.bk
+
+# -----------------------------------------------------------------------------
+# DAGGER
+# -----------------------------------------------------------------------------
+.dagger/
+
+# -----------------------------------------------------------------------------
+# DLT / DATA PIPELINES
+# -----------------------------------------------------------------------------
+.dlt/secrets.toml
+*.duckdb
+*.duckdb.wal
+*.duckdb-journal
+pipeline_data/
+
+# -----------------------------------------------------------------------------
+# DAGSTER
+# -----------------------------------------------------------------------------
+.dagster/
+
+# -----------------------------------------------------------------------------
+# DUCKLAKE
+# -----------------------------------------------------------------------------
+ducklake.files/
+
+# -----------------------------------------------------------------------------
+# LANCEDB / VECTOR STORAGE
+# -----------------------------------------------------------------------------
+*.lancedb/
+.lancedb/
+
+# -----------------------------------------------------------------------------
+# DATA DIRECTORIES
+# -----------------------------------------------------------------------------
+# Only the repo-root data/ directory (runtime data, not source code).
+# Source code paths like croilar/src/pages/data/ are NOT ignored.
+/data/
+!**/data/.gitkeep
+
+# Stale scratch directory deleted by openspec/changes/datasets-cleanup.
+# The canonical sample-data location is oideachais/samplaí/.
+oideachais/datasets/
+
+# -----------------------------------------------------------------------------
+# BAML
+# -----------------------------------------------------------------------------
+baml_client/
+baml_client_tests/
+.baml_events/
+# baml_src is a regen-time symlink that points at baml/ (so the BAML CLI,
+# which hardcodes baml_src/ as the source directory, can discover the new
+# 3-cluster taxonomy). It is NOT a runtime dependency — consumers import
+# from cianfhoghlaim.baml_client, not from cianfhoghlaim.baml_src.
+/cianfhoghlaim/baml_src
+/cianfhoghlaim/baml_client_tests/
+
+# -----------------------------------------------------------------------------
+# IDE & EDITORS
+# -----------------------------------------------------------------------------
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+*.sublime-*
+.project
+.settings/
+
+# -----------------------------------------------------------------------------
+# MARIMO / JUPYTER
+# -----------------------------------------------------------------------------
+*.marimo/
+.ipynb_checkpoints/
+
+# -----------------------------------------------------------------------------
+# ENVIRONMENT & SECRETS
+# -----------------------------------------------------------------------------
+.env
+.env.local
+.env.*.local
+*.env.local
+!.env.example
+!.env.template
+!.env.op
+
+# 1Password injection lock files
+.env.lock
+.env.lock.pid
+
+# Operator audit handoff file (auto-regenerated; never committed)
+.audit.local.md
+
+# Ansible vault passwords
+.vaultpass
+**/ansible/.env
+
+# 1Password credentials (never commit)
+1password-credentials.json
+**/op_token
+**/connect_token
+!**/connect_token.example
+
+# -----------------------------------------------------------------------------
+# PANGOLIN SECRETS — moved to bonneagar.
+# See cianfhoghlaim/bonneagar/.gitignore (the bonneagar worktree's own
+# gitignore covers pangolin/api_key, secrets.env, db, openapi, etc.).
+# -----------------------------------------------------------------------------
+
+# SSH keys
+*.pem
+*.key
+id_*
+!id_*.pub
+
+# -----------------------------------------------------------------------------
+# LOGS
+# -----------------------------------------------------------------------------
+*.log
+logs/
+!**/logs/.gitkeep
+
+# -----------------------------------------------------------------------------
+# INFRASTRUCTURE / DOCKER
+# -----------------------------------------------------------------------------
+# Let's Encrypt certificates (auto-generated)
+**/letsencrypt/acme*.json
+!**/letsencrypt/.gitkeep
+
+# Docker volumes data
+**/postgres-data/
+**/redis-data/
+
+# Traefik logs (auto-generated)
+**/traefik/logs/*.log
+
+# -----------------------------------------------------------------------------
+# MLX / ML MODELS
+# -----------------------------------------------------------------------------
+*.gguf
+*.safetensors
+*.bin
+*.onnx
+!**/models/.gitkeep
+mlx_models/
+
+
+# -----------------------------------------------------------------------------
+# OS FILES
+# -----------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# -----------------------------------------------------------------------------
+# TEMPORARY FILES
+# -----------------------------------------------------------------------------
+*.tmp
+*.temp
+*.bak
+*.orig
+# Cloud credentials setup guides (contain secrets) — moved to bonneagar
+.DS_Store
+
+
+
+# Completely ignore all nested dataset contents
+
+# =============================================================================
+# GITHUB FILE SIZE LIMIT EXCLUSIONS (>100MB)
+# =============================================================================
+# The following specific files are excluded because they exceed GitHub's 100MB 
+# strict file size limit. We preserve the parent directories for dlt ingestion 
+# and orchestration, but these massive CSV/JSON/pack files must remain local or 
+# be synced via MotherDuck/Cloudflare R2 to prevent 'git push' timeouts.
+stedding/site_scrape_samples/curriculumonline/www.curriculumonline.ie_getmedia_175e5aeb-a604-42c5-83eb-847ce8da7a2e_STUDENT_04_High_res.pdf.json
+oideachais/data_platform/datasets/uk/ucas/eoc_provider_2023/*main scheme applications acceptances.csv
+oideachais/data_platform/datasets/uk/ucas/eoc_2023/*acceptance route.csv
+oideachais/data_platform/datasets/uk/dfe/key-stage-4-performance_2023-24/data/202324_subject_school_all_exam_entriesgrades_final.csv
+oideachais/data_platform/datasets/uk/dfe/a-level-and-other-16-to-18-results_2023-24/data/all_inst_data.csv
+hackathons/gsoc/beagle/docs.beagleboard.io/.git_disabled/objects/pack/*.pack
+university_of_galway/mata/modelling_2/exam_papers/Past/SinéadNotes (1).pdf
+# CocoIndex Code (ccc)
+/.cocoindex_code/
+
+# -----------------------------------------------------------------------------
+# VENDORED MCP SERVERS (use the PyPI package instead)
+# -----------------------------------------------------------------------------
+# mcpo is a vendored copy of the open-source mcpo project. Use
+# `uv tool install mcpo` or `uvx mcpo` rather than tracking a local copy.
+oideachais/mcp/mcpo/
+croilar/.cache/
+croilar/apps/portal/public/wasm/
+opencode.json
+
+# Marimo runtime session caches (generated by marimo app sessions)
+sruth/oideachais/notebooks/**/__marimo__/session/
+**/__marimo__/session/
+skills2
+
+# .archive/ holds legacy files from old sessions (legacy model registry,
+# llama-swap config, README) — intentionally kept out of version control
+# to avoid history bloat.
+/.archive/
+
+# Local data dirs (CocoIndex v1 LanceDB output, DuckLake data, registry dbs).
+# These are per-machine build outputs — they should never be in git history
+# (regenerated by `bun run ccc:index` + the v1 CocoIndex update commands).
+# The absolute path on line 8 is the legacy per-machine pattern; the relative
+# pattern below is the canonical repo-relative one that survives cloning.
+# Add to .gitignore together with the existing per-machine rule.
+/storage/
+/storage/**
+
+
+cianfhoghlaim/leabharlann/
+
+# Stray uv.lock files moved into cianfhoghlaim during the v4 consolidation — uv.lock
+# is regenerated from pyproject.toml and should never be tracked.
+cianfhoghlaim/*_uv.lock
+*_uv.lock
+leabharlann/
+
+
+# -----------------------------------------------------------------------------
+# v7 (2026-07-17) — bonneagar re-integrated, then flattened to repo root.
+# The `/bonneagar/` worktree ignore is REMOVED — bonneagar is now part of the
+# main repo. The IaC files (iac/, stacks/, komodo/, pangolin/, deploy-runbooks/)
+# live at repo root and ARE tracked.
+# -----------------------------------------------------------------------------
+
+# 1Password credentials (never commit)
+op_token
+connect_token
+1password-credentials.json
+
+# SSH keys
+*.pem
+*.key
+id_*
+!id_*.pub
+
+# Stack runtime data (regenerated by compose) — under bonneagar/ now
+/bonneagar/stacks/*/data/
+/bonneagar/stacks/*/logs/
+
+# Komodo auto-backup snapshots — under bonneagar/
+/bonneagar/komodo/backups/
+
+# Pangolin plaintext/regenerated files (Phase 0 of the v5 drift refactor) — under bonneagar/
+/bonneagar/pangolin/api_key
+/bonneagar/pangolin/secrets.env
+/bonneagar/pangolin/secrets.env.resolved
+/bonneagar/pangolin/config/infisical_secret
+/bonneagar/pangolin/config/db/db.sqlite
+/bonneagar/pangolin/config/openapi.yaml
+/bonneagar/pangolin/config/tinyauth/users
+/bonneagar/pangolin/config/secrets/templates/
+/bonneagar/pangolin/config/traefik/rules/
+
+# Dagger
+.dagger/
+
+# TypeScript build artefacts
+*.tsbuildinfo
+# Scratch directory (session artifacts + filter-repo audit maps)
+.scratch/
+EMAIL-DRAFT-awootank.md.tmp_dagster_home_nhzffdhn/

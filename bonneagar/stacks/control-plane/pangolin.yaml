@@ -1,0 +1,77 @@
+# =============================================================================
+# CONTROL-PLANE STACK — Pangolin Traefik routes
+# =============================================================================
+# Traefik labels for each public service. The bons IaC's `iac:sync:resources`
+# applies this to Pangolin via the Pangolin Integrations API.
+# =============================================================================
+
+# Standard Traefik labels for the public services
+# (each service in compose.yaml also needs the matching label block)
+
+labels:
+  # ----- Pangolin (the reverse proxy) -----
+  traefik.enable: "true"
+  traefik.docker.network: control-plane-net
+  traefik.http.routers.control-plane-pangolin.entrypoints: websecure
+  traefik.http.routers.control-plane-pangolin.tls: "true"
+  traefik.http.routers.control-plane-pangolin.tls.certresolver: letsencrypt
+  traefik.http.routers.control-plane-pangolin.rule: Host(`pangolin.cianfhoghlaim.ie`)
+  traefik.http.services.control-plane-pangolin.loadbalancer.server.port: "3000"
+  traefik.http.routers.control-plane-pangolin-secure.entrypoints: websecure
+  traefik.http.routers.control-plane-pangolin-secure.tls: "true"
+  traefik.http.routers.control-plane-pangolin-secure.tls.certresolver: letsencrypt
+  traefik.http.routers.control-plane-pangolin-secure.rule: Host(`pangolin.cianfhoghlaim.ie`) && PathPrefix(`/v1`)
+  traefik.http.services.control-plane-pangolin-secure.loadbalancer.server.port: "3000"
+  traefik.http.routers.control-plane-pangolin-web.entrypoints: websecure
+  traefik.http.routers.control-plane-pangolin-web.tls: "true"
+  traefik.http.routers.control-plane-pangolin-web.tls.certresolver: letsencrypt
+  traefik.http.routers.control-plane-pangolin-web.rule: Host(`pangolin.cianfhoghlaim.ie`)
+  traefik.http.services.control-plane-pangolin-web.loadbalancer.server.port: "3000"
+
+  # ----- Pocket ID -----
+  traefik.http.routers.control-plane-pocket-id.entrypoints: websecure
+  traefik.http.routers.control-plane-pocket-id.tls: "true"
+  traefik.http.routers.control-plane-pocket-id.tls.certresolver: letsencrypt
+  traefik.http.routers.control-plane-pocket-id.rule: Host(`auth.cianfhoghlaim.ie`)
+  traefik.http.services.control-plane-pocket-id.loadbalancer.server.port: "1411"
+  traefik.http.routers.control-plane-pocket-id-secure.entrypoints: websecure
+  traefik.http.routers.control-plane-pocket-id-secure.tls: "true"
+  traefik.http.routers.control-plane-pocket-id-secure.tls.certresolver: letsencrypt
+  traefik.http.routers.control-plane-pocket-id-secure.rule: Host(`auth.cianfhoghlaim.ie`) && PathPrefix(`/api`)
+  traefik.http.services.control-plane-pocket-id-secure.loadbalancer.server.port: "1411"
+
+  # ----- Komodo -----
+  traefik.http.routers.control-plane-komodo.entrypoints: websecure
+  traefik.http.routers.control-plane-komodo.tls: "true"
+  traefik.http.routers.control-plane-komodo.tls.certresolver: letsencrypt
+  traefik.http.routers.control-plane-komodo.rule: Host(`komodo.cianfhoghlaim.ie`)
+  traefik.http.services.control-plane-komodo.loadbalancer.server.port: "9120"
+  traefik.http.routers.control-plane-komodo-wss.entrypoints: websecure
+  traefik.http.routers.control-plane-komodo-wss.tls: "true"
+  traefik.http.routers.control-plane-komodo-wss.tls.certresolver: letsencrypt
+  traefik.http.routers.control-plane-komodo-wss.rule: Host(`komodo.cianfhoghlaim.ie`) && PathPrefix(`/ws/periphery`)
+  traefik.http.services.control-plane-komodo-wss.loadbalancer.server.port: "9120"
+
+  # ----- Infisical -----
+  traefik.http.routers.control-plane-infisical.entrypoints: websecure
+  traefik.http.routers.control-plane-infisical.tls: "true"
+  traefik.http.routers.control-plane-infisical.tls.certresolver: letsencrypt
+  traefik.http.routers.control-plane-infisical.rule: Host(`infisical.cianfhoghlaim.ie`)
+  traefik.http.services.control-plane-infisical.loadbalancer.server.port: "8080"
+  traefik.http.routers.control-plane-infisical-api.entrypoints: websecure
+  traefik.http.routers.control-plane-infisical-api.tls: "true"
+  traefik.http.routers.control-plane-infisical-api.tls.certresolver: letsencrypt
+  traefik.http.routers.control-plane-infisical-api.rule: Host(`infisical.cianfhoghlaim.ie`) && PathPrefix(`/api`)
+  traefik.http.services.control-plane-infisical-api.loadbalancer.server.port: "8080"
+
+  # ----- Tinyauth -----
+  traefik.http.routers.control-plane-tinyauth.entrypoints: websecure
+  traefik.http.routers.control-plane-tinyauth.tls: "true"
+  traefik.http.routers.control-plane-tinyauth.tls.certresolver: letsencrypt
+  traefik.http.routers.control-plane-tinyauth.rule: Host(`tinyauth.cianfhoghlaim.ie`)
+  traefik.http.services.control-plane-tinyauth.loadbalancer.server.port: "3000"
+  traefik.http.routers.control-plane-tinyauth-api.entrypoints: websecure
+  traefik.http.routers.control-plane-tinyauth-api.tls: "true"
+  traefik.http.routers.control-plane-tinyauth-api.tls.certresolver: letsencrypt
+  traefik.http.routers.control-plane-tinyauth-api.rule: Host(`tinyauth.cianfhoghlaim.ie`) && PathPrefix(`/api`)
+  traefik.http.services.control-plane-tinyauth-api.loadbalancer.server.port: "3000"

@@ -1,0 +1,20 @@
+# defs/5_agent_ops/adk/curriculum_comparison_agent/defs.yaml
+#
+# L5 CelticAgentOpsComponent for the curriculum_comparison_agent (adk) agent.
+# The Component emits 5 Dagster assets:
+# - agent_health_curriculum_comparison_agent
+# - agent_routing_curriculum_comparison_agent
+# - agent_memory_curriculum_comparison_agent
+# - agent_event_curriculum_comparison_agent
+# - agent_trace_curriculum_comparison_agent
+type: orchestration.components.CelticAgentOpsComponent
+attributes:
+  agent_name: curriculum_comparison_agent
+  framework: adk
+  tools: ['compare_curricula_tool', 'cross_nation_lookup_tool']
+  memory_backend: letta
+  event_stream: risingwave
+  event_stream_endpoint: risingwave.cianfhoghlaim.ie:4566
+  langfuse_trace_tag: agent.curriculum_comparison
+  langfuse_drop_smoke_spans: true
+  routing_keywords: ['compare', 'cross-nation', 'side-by-side', 'uk vs ireland']

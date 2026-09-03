@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="ML LiteLLM config regeneration — regenerate litellm/config/config.yaml from MODEL_REGISTRY"
+set -euo pipefail
+
+PYTHONPATH=. python scripts/generate_litellm_config.py > bonneagar/stacks/litellm/config/config.yaml

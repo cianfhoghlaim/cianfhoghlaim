@@ -1,0 +1,20 @@
+# Pangolin auto-discovery labels for Aleyum Music Pipeline
+# Include with: docker compose -f compose.yaml -f pangolin.yaml up -d
+
+services:
+  dagster-webserver:
+    labels:
+      - "pangolin.public-resources.aleyum.name=${ALEYUM_NAME:-Aleyum Music}"
+      - "pangolin.public-resources.aleyum.full-domain=${ALEYUM_DOMAIN:-music.aleyum.com}"
+      - "pangolin.public-resources.aleyum.protocol=http"
+      - "pangolin.public-resources.aleyum.auth.sso-enabled=true"
+      - "pangolin.public-resources.aleyum.auth.sso-roles[0]=Member"
+      - "pangolin.public-resources.aleyum.targets[0].method=http"
+      - "pangolin.public-resources.aleyum.targets[0].port=3000"
+    networks:
+      - pangolin
+
+networks:
+  pangolin:
+    name: pangolin
+    external: true

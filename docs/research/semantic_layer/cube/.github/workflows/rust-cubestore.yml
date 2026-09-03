@@ -1,0 +1,266 @@
+name: Rust
+
+on:
+  push:
+    paths:
+      - '.github/workflows/rust-cubestore.yml'
+      - 'rust/cubestore/**'
+    branches-ignore:
+      - master
+  pull_request:
+    paths:
+      - '.github/workflows/rust-cubestore.yml'
+      - 'rust/cubestore/**'
+
+env:
+  CARGO_INCREMENTAL: 0
+  CARGO_NET_RETRY: 10
+  RUSTUP_MAX_RETRIES: 10
+
+jobs:
+  debian:
+    name: Debian Rust ${{ matrix.rust }}
+    # 22.04 has gcc 11, new binutils (ld)
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        rust: [nightly-2025-08-01]
+    container:
+      image: cubejs/rust-builder:bookworm-llvm-18
+    env:
+      RUST: ${{ matrix.rust }}
+    steps:
+      - name: Prepare directories
+        # See TMPDIR comment below
+        run: mkdir /__w/tmp
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          # override: true # this is by default on
+          rustflags: ""
+          components: rustfmt
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ./rust/cubestore -> target
+          # We should use a separate key for testing to pass disk space limitations
+          shared-key: cubestore-testing
+          key: ubuntu-22.04
+      - name: Run cargo fmt
+        run: cargo fmt --check
+        working-directory: rust/cubestore
+      - name: Run cargo check
+        # Re-using test profile to speedup builds
+        run: cargo check --benches --profile test
+        working-directory: rust/cubestore
+      - name: Run cargo test
+        env:
+          # LocalDirRemoteFs expect that std::env::temp_dir and its local dir is on same FS, to use `rename`
+          # On Unix it's controlled by TMPDIR
+          # When using `container` in GHA checkout will be located in `/__w`, and that's a separate mount from `/tmp`
+          TMPDIR: /__w/tmp
+        run: cargo test -- --test-threads=1
+        working-directory: rust/cubestore
+
+  docker-image-latest:
+    name: Build only :latest image
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+            platforms: linux/amd64
+            build-args: WITH_AVX2=1
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+            platforms: linux/arm64
+            build-args: WITH_AVX2=0
+    timeout-minutes: 60
+    if: github.ref != 'refs/heads/master'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build only
+        uses: docker/build-push-action@v6
+        with:
+          context: ./rust/
+          file: ./rust/cubestore/Dockerfile
+          platforms: ${{ matrix.platforms }}
+          build-args: ${{ matrix.build-args }}
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  cubestore:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    env:
+      RUSTFLAGS: '-Ctarget-feature=+crt-static'
+      OPENSSL_STATIC: 1
+    strategy:
+      matrix:
+        target:
+          - x86_64-pc-windows-msvc
+          - x86_64-apple-darwin
+          - aarch64-apple-darwin
+        include:
+          - os: windows-2022
+            target: x86_64-pc-windows-msvc
+            executable_name: cubestored.exe
+            strip: true
+            # cubestored.exe: CantPackException: superfluous data between sections
+            compress: false
+            # Please use minimal possible version of macOS, because it produces constraint on libstdc++
+          - os: macos-15-intel
+            target: x86_64-apple-darwin
+            executable_name: cubestored
+            # upx has been disabled because it is crashing for macOS Ventura or above! It was disabled on 2024-09-05.
+            strip: false
+            compress: false
+          - os: macos-14
+            target: aarch64-apple-darwin
+            executable_name: cubestored
+            # upx has been disabled because it is crashing for macOS Ventura or above! It was disabled on 2024-09-05.
+            strip: false
+            compress: false
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+      - name: Disable rustup update (issue workaround for Windows)
+        run: rustup set auto-self-update disable
+        if: contains(runner.os, 'windows')
+        shell: bash
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ./rust/cubestore -> target
+          prefix-key: v0-rust-cubestore-cross
+          key: target-${{ matrix.target }}
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: ${{ startsWith(matrix.os, 'windows') }}
+      - name: Install OpenSSL for Windows
+        if: ${{ startsWith(matrix.os, 'windows') }}
+        run: vcpkg integrate install; vcpkg install openssl:x64-windows
+      - name: Instal LLVM for Windows
+        if: ${{ startsWith(matrix.os, 'windows') }}
+        run: choco install -y --force llvm --version 18.1.6
+      - name: Set Env Variables for Windows
+        uses: allenevans/set-env@v3.0.0
+        if: ${{ startsWith(matrix.os, 'windows') }}
+        with:
+          OPENSSL_DIR: 'C:/vcpkg/packages/openssl_x64-windows'
+          # This paths are required to work with static linking
+          OPENSSL_LIB_DIR: 'C:/vcpkg/packages/openssl_x64-windows/lib'
+          OPENSSL_INCLUDE_DIR: 'C:/vcpkg/packages/openssl_x64-windows/include'
+          LIBCLANG_PATH: 'C:\Program Files\LLVM\bin'
+      - name: Build with Cargo
+        run: |
+          cd rust/cubestore && cargo build --release --target=${{ matrix.target }} -p cubestore
+      - name: Compress binaries
+        uses: svenstaro/upx-action@v2
+        if: ${{ matrix.compress }}
+        with:
+          file: rust/cubestore/target/${{ matrix.target }}/release/${{ matrix.executable_name }}
+          args: --lzma
+          strip: ${{ matrix.strip }}
+      - name: Create folder for archive
+        run: |
+          mkdir cubestore-archive
+          mkdir cubestore-archive/bin
+      - name: Copy/paste OpenSSL to Archive (hotfix for Windows)
+        if: ${{ startsWith(matrix.os, 'windows') }}
+        run: cp C:/vcpkg/packages/openssl_x64-windows/bin/*.dll cubestore-archive/bin
+      - name: Create archive for release
+        run: |
+          mv rust/cubestore/target/${{ matrix.target }}/release/${{ matrix.executable_name }} cubestore-archive/bin/${{ matrix.executable_name }}
+          cd cubestore-archive
+          tar -cvzf cubestored-${{ matrix.target }}.tar.gz ./*
+      - uses: actions/upload-artifact@v4
+        with:
+          path: cubestore-archive/cubestored-${{ matrix.target }}.tar.gz
+          name: cubestored-${{ matrix.target }}.tar.gz
+          retention-days: 1
+
+  cubestore_linux:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    env:
+      OPENSSL_STATIC: 1
+    strategy:
+      matrix:
+        target:
+          - x86_64-unknown-linux-gnu
+          - x86_64-unknown-linux-musl
+          - aarch64-unknown-linux-gnu
+        include:
+          # Please use minimal possible version of ubuntu, because it produces constraint on glibc
+          - os: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            image: cubejs/rust-cross:x86_64-unknown-linux-gnu-15082024
+            executable_name: cubestored
+            strip: true
+            compress: false
+          - os: ubuntu-22.04
+            target: x86_64-unknown-linux-musl
+            image: cubejs/rust-cross:x86_64-unknown-linux-musl-15082024
+            executable_name: cubestored
+            strip: true
+            # cubestored: CantPackException: bad DT_HASH nbucket=0x344  len=0x1890
+            compress: false
+          - os: ubuntu-24.04-arm
+            image: cubejs/rust-builder:bullseye-llvm-18
+            target: aarch64-unknown-linux-gnu
+            executable_name: cubestored
+            # Unable to recognise the format of the input file `rust/cubestore/target/aarch64-unknown-linux-gnu/release/cubestored'
+            strip: false
+            # UPX is broken, issue https://github.com/cube-js/cube/issues/4474
+            compress: false
+      fail-fast: false
+    container:
+      image: ${{ matrix.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Rust toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: nightly-2025-08-01
+          target: ${{ matrix.target }}
+          # override: true # this is by default on
+          rustflags: ""
+          components: rustfmt
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ./rust/cubestore -> target
+          prefix-key: v1-rust-cubestore-cross
+          key: target-${{ matrix.target }}
+      - name: Build with Cargo
+        run: |
+          cd rust/cubestore && cargo build --release --target=${{ matrix.target }} -p cubestore
+      - name: Compress binaries
+        uses: svenstaro/upx-action@v2
+        if: ${{ matrix.compress }}
+        with:
+          file: rust/cubestore/target/${{ matrix.target }}/release/${{ matrix.executable_name }}
+          args: --lzma
+          strip: ${{ matrix.strip }}
+      - name: Create folder for archive
+        run: |
+          mkdir cubestore-archive
+          mkdir cubestore-archive/bin
+      - name: Create archive for release
+        run: |
+          mv rust/cubestore/target/${{ matrix.target }}/release/${{ matrix.executable_name }} cubestore-archive/bin/${{ matrix.executable_name }}
+          cd cubestore-archive
+          tar -cvzf cubestored-${{ matrix.target }}.tar.gz ./*
+      - uses: actions/upload-artifact@v4
+        with:
+          path: cubestore-archive/cubestored-${{ matrix.target }}.tar.gz
+          name: cubestored-${{ matrix.target }}.tar.gz
+          retention-days: 1

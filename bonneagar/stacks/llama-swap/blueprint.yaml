@@ -1,0 +1,29 @@
+# llama-swap stack — v4 OCR/VLM Unsloth GGUFs
+#
+# Serves the 14 v4 Unsloth-backed models + 4 MLX community variants
+# at http://llama-swap:8080/v1/chat/completions.
+# Per openspec/changes/2026-06-29-fix-ocr-vlm-registry-with-unsloth-priority
+#
+# The config is symlinked to cianfhoghlaim/ocr/models/llama_swap_config.yaml
+# (the v4 home). Update the v4 home and regenerate the symlink.
+#
+# Pre-flight:
+#   mise run llama-swap:download-models  # downloads 5-50 GB of GGUFs
+#   mise run llama-swap:up              # starts the service
+#
+# Healthcheck:
+#   curl http://localhost:8080/v1/models
+#
+# Owner: openspec/changes/2026-06-29-fix-ocr-vlm-registry-with-unsloth-priority
+
+name: llm-router-stack
+description: llama-swap v166 — dynamic GGUF model server for the v4 OCR/VLM registry
+
+# 6 private-resources labels (per .agents/skills/stack-ops/ GOLD_STANDARD pattern)
+labels:
+  - private.resources.ciandhoglaim.ie/scope: infra
+  - private.resources.ciandhoglaim.ie/stack: llama-swap
+  - private.resources.ciandhoglaim.ie/category: llm-gateway
+  - private.resources.ciandhoglaim.ie/managed-by: komodo
+  - private.resources.ciandhoglaim.ie/cost-center: ml-inference
+  - private.resources.ciandhoglaim.ie/owner: openspec-2026-06-29-ocr-vlm-registry

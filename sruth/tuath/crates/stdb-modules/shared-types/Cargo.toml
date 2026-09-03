@@ -1,0 +1,18 @@
+[package]
+name = "cianfhoghlaim-shared-types"
+description = "Shared types for SpacetimeDB modules, Solana programs, and Ethereum contracts"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+thiserror = { workspace = true }
+
+# SpacetimeDB types (optional for non-WASM targets)
+spacetimedb = { workspace = true, optional = true }
+
+[features]
+default = []
+spacetimedb = ["dep:spacetimedb"]

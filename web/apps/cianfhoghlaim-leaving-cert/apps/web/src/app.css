@@ -1,0 +1,40 @@
+/* cianfhoghlaim v3 — official design tokens
+   The 8 NCCA subjects × 6 British Isles subnations
+   Self-hostable consolidation of education system resources
+   Reduce barriers to education
+   ────────────────────────────────────────────────────────────
+   Design tokens are imported from styles/tokens.css (the single
+   source of truth, per openspec/changes/2026-07-18-british-isles-portal-activation-v3/
+   R21 + R22). Run `bun run tokens:validate` to confirm drift-free.
+*/
+
+@import "../styles/tokens.css";
+
+html,
+body {
+  background: var(--ci-bg-primary);
+  color: #f1f5f9;
+  font-family: var(--ci-font-body);
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.font-cinzel { font-family: var(--ci-font-display); }
+.font-mono   { font-family: var(--ci-font-mono); }
+
+/* Subnation + subject colour utilities */
+.ci-subnation-eire            { color: var(--ci-subnation-eire); }
+.ci-subnation-northern-ireland { color: var(--ci-subnation-northern-ireland); }
+.ci-subnation-scotland        { color: var(--ci-subnation-scotland); }
+.ci-subnation-england         { color: var(--ci-subnation-england); }
+.ci-subnation-wales           { color: var(--ci-subnation-wales); }
+.ci-subnation-isle-of-man     { color: var(--ci-subnation-isle-of-man); }
+.ci-subject-mathematics        { color: var(--ci-subject-mathematics); }
+.ci-subject-applied_mathematics { color: var(--ci-subject-applied_mathematics); }
+.ci-subject-chemistry          { color: var(--ci-subject-chemistry); }
+.ci-subject-geography          { color: var(--ci-subject-geography); }
+.ci-subject-history            { color: var(--ci-subject-history); }
+.ci-subject-english            { color: var(--ci-subject-english); }
+.ci-subject-gaeilge            { color: var(--ci-subject-gaeilge); }
+.ci-subject-computer_science   { color: var(--ci-subject-computer_science); }

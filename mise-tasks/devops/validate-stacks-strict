@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="DEVOPS validate-stacks:strict — stack-doctor --strict --check-grammar (catches missing infisical:// refs OR mixed bare/Jinja grammar)"
+set -euo pipefail
+
+bash scripts/stack-doctor.sh --strict --check-grammar "$@"

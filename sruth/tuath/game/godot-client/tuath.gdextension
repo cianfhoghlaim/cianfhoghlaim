@@ -1,0 +1,35 @@
+[configuration]
+entry_symbol = "gdext_rust_init"
+compatibility_minimum = 4.2
+reloadable = true
+
+[libraries]
+; macOS
+macos.debug = "res://rust/target/debug/libtuath_game_client.dylib"
+macos.release = "res://rust/target/release/libtuath_game_client.dylib"
+
+; Windows
+windows.debug.x86_64 = "res://rust/target/debug/tuath_game_client.dll"
+windows.release.x86_64 = "res://rust/target/release/tuath_game_client.dll"
+
+; Linux
+linux.debug.x86_64 = "res://rust/target/debug/libtuath_game_client.so"
+linux.release.x86_64 = "res://rust/target/release/libtuath_game_client.so"
+
+; iOS (requires Xcode build)
+ios.debug = "res://rust/target/aarch64-apple-ios/debug/libtuath_game_client.a"
+ios.release = "res://rust/target/aarch64-apple-ios/release/libtuath_game_client.a"
+
+; Android (requires NDK build)
+android.debug.arm64 = "res://rust/target/aarch64-linux-android/debug/libtuath_game_client.so"
+android.release.arm64 = "res://rust/target/aarch64-linux-android/release/libtuath_game_client.so"
+
+[icons]
+SpacetimeGameClient = "res://assets/icons/network.svg"
+PlayerController = "res://assets/icons/player.svg"
+NpcController = "res://assets/icons/npc.svg"
+ThirdPersonCamera = "res://assets/icons/camera.svg"
+InputHandler = "res://assets/icons/input.svg"
+GaeltachtZone = "res://assets/icons/gaeltacht.svg"
+AlbaZone = "res://assets/icons/alba.svg"
+CymruZone = "res://assets/icons/cymru.svg"

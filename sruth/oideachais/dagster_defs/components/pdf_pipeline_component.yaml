@@ -1,0 +1,329 @@
+# Oideachais PDF Pipeline Component
+# Processes Irish curriculum PDFs with OCR, text extraction, and embeddings
+
+component: sruth.shared.dagster.components.PipelineComponent
+attributes:
+  # Pipeline metadata
+  name: "oideachais_pdf_pipeline"
+  description: "Irish curriculum PDF processing with OCR and embeddings"
+  version: "1.0.0"
+  group_name: "oideachais"
+
+  # ========================================================================
+  # PARTITIONS: Multi-dimensional partitioning for parallel processing
+  # ========================================================================
+  partitions:
+    cycle:
+      type: "static"
+      values: ["junior_cycle", "senior_cycle", "primary", "transition_year"]
+    subject:
+      type: "static"
+      values: ["mathematics", "english", "irish", "science", "history", "geography"]
+    language:
+      type: "static"
+      values: ["en", "ga"]
+
+  # ========================================================================
+  # SOURCES: Curriculum document sources
+  # ========================================================================
+  sources:
+    # NCCA Curriculum Online
+    - name: "ncca_curriculum"
+      type: "rest"
+      base_url: "https://curriculumonline.ie"
+      endpoints:
+        - path: "/getcurriculumdocuments/{subject}/{cycle}"
+          method: "GET"
+          paginator:
+            type: "none"
+      headers:
+        Accept: "application/json"
+
+    # SEC Exam Papers
+    - name: "sec_exampapers"
+      type: "rest"
+      base_url: "https://examinations.ie"
+      endpoints:
+        - path: "/exam-papers/{year}/{level}/{subject}"
+          method: "GET"
+          paginator:
+            type: "link"
+            link_header: "next"
+
+    # Department of Education Circulars
+    - name: "education_circulars"
+      type: "browser"
+      base_url: "https://www.gov.ie/en/circulars/"
+      backend: "stagehand"
+      extract_instruction: "Extract all education circulars with PDF links"
+
+  # ========================================================================
+  # TRANSFORMATIONS: Processing stages
+  # ========================================================================
+  transformations:
+    # Stage 1: PDF Download
+    - name: "download_pdfs"
+      type: "download"
+      source: "curriculum_pdfs"
+      destination:
+        type: "s3"
+        bucket: "${CURRICULUM_BUCKET:-curriculum-pdfs}"
+        prefix: "oideachais/{cycle}/{subject}/"
+        content_type: "application/pdf"
+      retry:
+        max_attempts: 3
+        backoff: "exponential"
+
+    # Stage 2: OCR Text Extraction
+    - name: "extract_text"
+      type: "ocr"
+      input: "download_pdfs"
+      backend: "${OCR_BACKEND:-docling}"  # docling, paddleocr, dots
+      languages: ["en", "ga"]
+      output_table: "pdf_extracted_text"
+      output_columns:
+        - source_url
+        - cycle
+        - subject
+        - language
+        - page_count
+        - extracted_text
+        - extraction_timestamp
+
+    # Stage 3: DSPy Structured Extraction
+    - name: "extract_curriculum_structure"
+      type: "dspy"
+      input: "extract_text"
+      module: "sruth.shared.extraction.dspy_modules"
+      class_name: "CurriculumExtractor"
+      model: "${OPENAI_MODEL:-openai/gpt-4o}"
+      output_schema:
+        - title
+        - strand
+        - strand_unit
+        - learning_outcomes
+        - skills
+        - keywords
+
+    # Stage 4: Text Chunking
+    - name: "chunk_text"
+      type: "split"
+      input: "extract_curriculum_structure"
+      strategy: "recursive"
+      chunk_size: 1000
+      chunk_overlap: 200
+      separator: "\n\n"
+      preserve_metadata: true
+
+    # Stage 5: Embedding Generation
+    - name: "generate_embeddings"
+      type: "embed"
+      input: "chunk_text"
+      model: "${EMBEDDING_MODEL:-BAAI/bge-m3}"
+      dimension: 1024
+      batch_size: 100  # Mandatory for performance
+      normalize: true
+      show_progress: true
+
+  # ========================================================================
+  # EXPORTS: Storage destinations
+  # ========================================================================
+  exports:
+    # Export 1: DuckLake (Primary - Production)
+    - name: "ducklake_curriculum"
+      type: "ducklake"
+      catalog_uri: "${LAKEKEEPER_CATALOG_URI:-http://lakekeeper:8181}"
+      warehouse: "${ICEBERG_WAREHOUSE:-s3://garage/warehouse}"
+      namespace: "oideachas"
+
+      tables:
+        # Raw extracted text
+        - name: "pdf_extracted_text"
+          format: "parquet"
+          compression: "zstd"
+          partition_by: ["cycle", "subject", "language"]
+          properties:
+            write.parquet.page-size-bytes: "2097152"
+
+        # Structured curriculum data
+        - name: "curriculum_structured"
+          format: "parquet"
+          compression: "zstd"
+          partition_by: ["cycle", "subject"]
+          properties:
+            write.parquet.page-size-bytes: "2097152"
+
+        # Embeddings (via Lance "trojan horse" pattern)
+        - name: "curriculum_embeddings"
+          format: "lance"
+          location: "s3://lance/oideachas/curriculum_embeddings.lance"
+          properties:
+            table_type: "lance"
+            dimension: "1024"
+            metric: "cosine"
+
+    # Export 2: MotherDuck (Analytics)
+    - name: "motherduck_analytics"
+      type: "motherduck"
+      database: "${MOTHERDUCK_DATABASE:-sruth}"
+      schemas:
+        - "oideachas_raw"
+        - "oideachas_structured"
+        - "oideachas_analytics"
+      enable_planetscale_attach: false
+
+    # Export 3: LanceDB (Vector Search)
+    - name: "lancedb_vectors"
+      type: "lancedb"
+      uri: "${LANCEDB_URI:-s3://lance}"
+      namespace: "oideachas"
+      tables:
+        - name: "curriculum_embeddings"
+          dimension: 1024
+          metric: "cosine"
+          vector_column: "vector"
+          text_column: "text"
+          index_type: "ivf_pq"
+          index_params:
+            nlist: 100
+            m: 16
+
+  # ========================================================================
+  # OBSERVABILITY: Monitoring and tracking
+  # ========================================================================
+  observability:
+    # Langfuse for LLM calls
+    langfuse:
+      enabled: true
+      public_key: "${LANGFUSE_PUBLIC_KEY}"
+      secret_key: "${LANGFUSE_SECRET_KEY}"
+      host: "${LANGFUSE_HOST:-https://cloud.langfuse.com}"
+
+    # MLflow for experiment tracking
+    mlflow:
+      enabled: true
+      tracking_uri: "${MLFLOW_TRACKING_URI:-http://mlflow:5000}"
+      experiment_name: "oideachais_pdf_extraction"
+
+    # Asset checks for quality
+    asset_checks:
+      - name: "pdf_text_coverage_check"
+        description: "Ensure PDFs have >80% text extracted"
+        severity: "WARN"
+        lower_bound: 0.8
+
+      - name: "embedding_dimension_check"
+        description: "Verify all embeddings have correct dimension"
+        severity: "ERROR"
+        expected_dimension: 1024
+
+  # ========================================================================
+  # SCHEDULING
+  # ========================================================================
+  schedule:
+    cron: "0 2 * * *"  # Daily at 2 AM
+    timezone: "Europe/Dublin"
+
+  # ========================================================================
+  # RESOURCE CONFIGURATION
+  # ========================================================================
+  resources:
+    cpu_limit: "4"
+    memory_limit: "16Gi"
+    storage_limit: "100Gi"
+
+    # Concurrency limits
+    max_concurrent_transforms: 5
+    max_concurrent_exports: 3
+
+# ============================================================================
+# ENVIRONMENT VARIABLES
+# ============================================================================
+#
+# S3/Garage Storage:
+#   CURRICULUM_BUCKET      - S3 bucket for PDF storage
+#   GARAGE_ENDPOINT_URL    - Garage S3 endpoint
+#   GARAGE_ACCESS_KEY      - S3 access key
+#   GARAGE_SECRET_KEY      - S3 secret key
+#
+# Lakekeeper/Iceberg:
+#   LAKEKEEPER_CATALOG_URI - REST catalog URI
+#   ICEBERG_WAREHOUSE      - S3 warehouse location
+#
+# MotherDuck:
+#   MOTHERDUCK_TOKEN       - MotherDuck API token
+#   MOTHERDUCK_DATABASE    - Database name (default: sruth)
+#
+# LanceDB:
+#   LANCEDB_URI            - LanceDB connection string
+#   LANCEDB_S3_BUCKET      - S3 bucket for Lance data
+#
+# OCR Processing:
+#   OCR_BACKEND            - OCR backend (docling, paddleocr, dots)
+#
+# LLM Extraction:
+#   OPENAI_API_KEY         - OpenAI API key (or compatible)
+#   OPENAI_MODEL           - Model for DSPy extraction
+#
+# Embeddings:
+#   EMBEDDING_MODEL        - Sentence transformer model
+#   HF_TOKEN               - HuggingFace token (for private models)
+#
+# Observability:
+#   LANGFUSE_PUBLIC_KEY    - Langfuse public key
+#   LANGFUSE_SECRET_KEY    - Langfuse secret key
+#   MLFLOW_TRACKING_URI    - MLflow server URI
+#
+# ============================================================================
+
+# ============================================================================
+# PIPELINE ARCHITECTURE
+# ============================================================================
+#
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │                          SOURCE LAYER                                   │
+# │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                  │
+# │  │ NCCA API     │  │ SEC Exams    │  │ Gov.ie       │                  │
+# │  │ (REST)       │  │ (REST)       │  │ (Browser)    │                  │
+# │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘                  │
+# └─────────┼─────────────────┼─────────────────┼──────────────────────────┘
+#           │                 │                 │
+#           ▼                 ▼                 ▼
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │                        PDF DOWNLOAD                                    │
+# │  S3: s3://curriculum-pdfs/oideachais/{cycle}/{subject}/               │
+# └─────────────────────────────┬───────────────────────────────────────────┘
+#                               │
+#                               ▼
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │                        OCR EXTRACTION                                   │
+# │  Docling/PaddleOCR → pdf_extracted_text table                         │
+# └─────────────────────────────┬───────────────────────────────────────────┘
+#                               │
+#                               ▼
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │                     DSPY STRUCTURED EXTRACTION                          │
+# │  CurriculumExtractor → strands, LOs, skills                           │
+# └─────────────────────────────┬───────────────────────────────────────────┘
+#                               │
+#                               ▼
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │                        TEXT CHUNKING                                    │
+# │  RecursiveCharacterTextSplitter (1000 tokens, 200 overlap)            │
+# └─────────────────────────────┬───────────────────────────────────────────┘
+#                               │
+#                               ▼
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │                     EMBEDDING GENERATION                                │
+# │  BGE-M3 (1024 dims, batch_size=100)                                    │
+# └─────────────────────────────┬───────────────────────────────────────────┘
+#                               │
+#               ┌───────────────┼───────────────┐
+#               ▼               ▼               ▼
+# ┌──────────────────┐ ┌──────────────┐ ┌──────────────┐
+# │   DuckLake       │ │ MotherDuck   │ │  LanceDB     │
+# │ (Hot/Warm/Cold)  │ │ (Analytics)  │ │ (Vector)     │
+# └──────────────────┘ └──────────────┘ └──────────────┘
+#      + Lakekeeper          pg_duckdb         HNSW
+#
+# ============================================================================

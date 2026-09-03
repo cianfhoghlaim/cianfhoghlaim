@@ -1,0 +1,123 @@
+# =============================================================================
+# DEPLOY NEWT-BUNCHLOCH-V2 PROCEDURE (RECOMMENDED)
+# =============================================================================
+# The v2 of the bunchloch newt deploy procedure. Replaces `deploy-newt-bunchloch`
+# (v1, kept as a legacy alias).
+#
+# Differences from v1:
+#   - Stage 1 (iac-provision) calls `bun run iac:sync:sites --target=bunchloch-newt`
+#     to provision the site via the Pangolin Integrations API + write the
+#     returned newtId + newtSecret to .env + Infisical. This is the
+#     missing 3rd layer of the IaC (was a TODO in iac:bootstrap Phase 6).
+#   - Stage 2 (stackup) now runs from the canonical /Users/cianmacandeisigh/.local/newt
+#     (creates the run-directory on first use, so we don't depend on a
+#     pre-existing .local/newt).
+#   - Stage 4 (health-checks) asserts newt version is v1.14.0 (was v1.13.0;
+#     the bump is part of `2026-07-14-bump-newt-v1.14.0-cross-cluster-v1`).
+#   - Stage 5 (tunnel-check) calls `wg show` on the newt container AND
+#     checks the newt logs for the "tunnel established" message.
+#
+# Architecture (unchanged from v1):
+#   bunchloch (this Mac) — bunchloch-locket       (Infisical secret injection)
+#                          bunchloch-newt         (WireGuard tunnel to arm1-oci, v1.14.0)
+#                          bunchloch-periphery    (Komodo agent)
+#                          bunchloch-beszel-agent (host monitoring)
+#
+# Spec: openspec/changes/2026-07-14-deploy-newt-bunchloch-v2-with-iac-sync-v1
+# Companion: openspec/changes/2026-07-14-iac-sync-sites-pangolin-integrations-api-v1
+#
+# Usage:
+#   km run procedure deploy-newt-bunchloch-v2
+#   km run procedure deploy-newt-bunchloch-v2 -- --skip=iac-provision
+# =============================================================================
+
+[[procedure.config]]
+name = "deploy-newt-bunchloch-v2"
+description = "Deploy newt (Pangolin client, v1.14.0) + locket + komodo-periphery + beszel-agent on bunchloch — iac-provision (sync-sites) → stackup → wireguard-tunnel → health-checks"
+server_id = "bunchloch"
+
+# =============================================================================
+# STAGE 0: Pre-flight (5-check safety gate)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "preflight"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "command -v docker && docker --version && docker ps --format '{{.Names}}' | grep -c -E 'bunchloch-(locket|newt|periphery|beszel-agent)' || true", timeout_s = 30, description = "Verify docker is available + count existing bunchloch-site containers" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "CheckEnvVar", params = { vars = ["PANGOLIN_API_KEY", "INFISICAL_PROJECT_ID"], description = "Verify the 2 critical env vars are present (Pangolin API key + Infisical project ID)" } }
+
+# =============================================================================
+# STAGE 1: iac-provision (the missing 3rd layer)
+# =============================================================================
+# Calls `bun run iac:sync:sites` which walks stacks/*/site.yaml, POSTs to
+# the Pangolin Integrations API to provision each site, and writes the
+# returned newtId + newtSecret to local .env (and Infisical if
+# configured). This replaces the v1 manual `infisical secrets create` flow.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "iac-provision"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "cd /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar && bun run iac:sync:sites 2>&1 | tail -20", timeout_s = 60, description = "Provision the bunchloch-newt site via the Pangolin Integrations API + write credentials to .env", require_success = false } }
+
+# =============================================================================
+# STAGE 2: StackUp (4 bunchloch-site services)
+# =============================================================================
+# Brings up the 4-service stack from the hand-curated compose at
+# `bonneagar/stacks/newt/docker-compose.yaml`. Creates the run-directory
+# (/Users/cianmacandeisigh/.local/newt) on first use.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "stackup"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "mkdir -p /Users/cianmacandeisigh/.local/newt /Users/cianmacandeisigh/.local/komodo-periphery/keys /Users/cianmacandeisigh/.local/komodo-periphery/repos && cd /Users/cianmacandeisigh/.local/newt && docker compose -f /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar/stacks/newt/docker-compose.yaml up -d 2>&1 | tail -20", timeout_s = 120, description = "docker compose up -d for the 4 bunchloch-site services (locket, newt, periphery, beszel-agent)", require_success = true } }
+
+# =============================================================================
+# STAGE 3: WireGuard tunnel check
+# =============================================================================
+# Verify the newt v1.14.0 client has established a WireGuard tunnel to
+# gerbil on arm1-oci. Two checks:
+#   3a. docker exec: wg show (returns peer + handshake time)
+#   3b. docker logs: "tunnel established" message
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "wireguard-tunnel"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "for i in {1..12}; do docker logs bunchloch-newt --tail 30 2>&1 | grep -q 'tunnel established' && break; sleep 5; done; docker exec bunchloch-newt -- wg show 2>&1 | head -10", timeout_s = 90, description = "Wait up to 60s for the newt WireGuard tunnel to establish + dump wg show output", require_success = true } }
+
+# =============================================================================
+# STAGE 4: Health checks (5-point verification)
+# =============================================================================
+# Verifies the 5 critical post-conditions:
+#   4a. All 4 bunchloch-site services are Up
+#   4b. Locket has resolved 3 secrets (NEWT_ID, NEWT_SECRET, PERIPHERY_ONBOARDING_KEY)
+#   4c. newt binary version is 1.14.0 (the v1.13.0 → v1.14.0 bump)
+#   4d. newt WireGuard tunnel has a recent handshake (<5 minutes)
+#   4e. komodo-core on arm1-oci is reachable via the Pangolin mesh
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker ps --filter 'name=bunchloch-' --format '{{.Names}}\\t{{.Status}}'", timeout_s = 15, name = "4a-all-services-up", description = "All 4 bunchloch-site services are Up" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker logs bunchloch-locket --tail 20 2>&1 | grep -E 'secrets resolved' | tail -1", timeout_s = 15, name = "4b-locket-secrets-resolved", description = "Locket has resolved 3 secrets (NEWT_ID, NEWT_SECRET, PERIPHERY_ONBOARDING_KEY)" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker exec bunchloch-newt -- newt --version 2>&1 | head -3 | grep -qE '1\\.14\\.0' && echo 'newt version OK' || echo 'newt version MISMATCH (expected 1.14.0)'", timeout_s = 10, name = "4c-newt-version-1.14.0", description = "Assert newt binary is at v1.14.0", require_success = true } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "HANDSHAKE=$(docker exec bunchloch-newt -- wg show 2>&1 | grep 'latest handshake' | head -1); if [ -n \"$HANDSHAKE\" ]; then echo \"tunnel handshake: $HANDSHAKE\"; else echo 'NO HANDSHAKE YET (tunnel not established)'; exit 1; fi", timeout_s = 10, name = "4d-wireguard-handshake", description = "Verify newt has a recent WireGuard handshake", require_success = true } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://komodo.cianfhoghlaim.ie/api/health", expected_status = 200, timeout_s = 30, name = "4e-komodo-core-reachable", description = "Verify komodo-core on arm1-oci is reachable via the Pangolin mesh" } }

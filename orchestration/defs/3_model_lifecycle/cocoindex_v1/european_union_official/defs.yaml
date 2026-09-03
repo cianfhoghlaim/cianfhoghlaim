@@ -1,0 +1,31 @@
+# defs/3_model_lifecycle/cocoindex_v1/european_union_official/defs.yaml
+#
+# L3 CocoIndex v1 App for the EU institutional pipeline. Embeds every
+# EU institutional document into the shared
+# `cianfhoghlaim.eu.official_chunks` LanceDB table using the canonical
+# BGE-M3 1024-d multilingual embedder.
+#
+# Reference: openspec/changes/2026-07-11-european-union-official-language-pipeline-v1/
+type: orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_group: european_union_official
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  apps:
+    - app_name: EuropeanUnionOfficialEmbedding
+      module: cianfhoghlaim.cocoindex.european_union_official_embedding
+      source: european_union
+      lance_table: cianfhoghlaim.eu.official_chunks
+  schedule:
+    cron: "0 5 * * *"
+    timezone: UTC
+  tags:
+    - european_union
+    - multilingual
+    - cocoindex-v1
+    - embedding
+  metadata:
+    openspec_change: 2026-07-11-european-union-official-language-pipeline-v1
+    spec: european-union-official-language-pipeline
+    notes: "Multilingual BGE-M3 embeddings for the 24 EU official languages. Daily 05:00 UTC cron. Honours USE_LOCAL_SCRAPES=true."

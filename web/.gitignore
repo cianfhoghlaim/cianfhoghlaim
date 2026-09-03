@@ -1,0 +1,33 @@
+# Build artifacts
+.next/
+dist/
+build/
+out/
+
+# Dependencies
+node_modules/
+
+# Cache
+.turbo/
+.cache/
+
+# Logs
+*.log
+npm-debug.log*
+bun-debug.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+*.tsbuildinfo
+coverage/

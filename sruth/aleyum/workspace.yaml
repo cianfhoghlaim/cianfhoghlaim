@@ -1,0 +1,5 @@
+# Dagster workspace configuration for Aleyum
+# Tells Dagster where to find code definitions
+
+load_from:
+  - python_file: definitions.py

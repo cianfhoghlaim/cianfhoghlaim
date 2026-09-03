@@ -1,0 +1,96 @@
+# `official-media-marimo` capability spec (delta)
+
+> Three dashboard surfaces for the resolved official-media records:
+> a marimo notebook, a TanStack Start page, and a Cognee knowledge
+> graph dataset. All three carry a strong-stance footer card that
+> links to the proposal — non-dismissible in PR 1.
+
+## ADDED Requirements
+
+### Requirement: OfficialMediaMissionControl
+
+The system SHALL provide a marimo notebook at
+`sruth/oideachais/notebooks/dashboards/official_media.py` that renders the
+resolved official-media records as a single-page mission control.
+
+#### Scenario: Dashboard renders
+
+- **GIVEN** `oideachais.official_media.candidates` has at least 1 row
+- **WHEN** `marimo edit sruth/oideachais/notebooks/dashboards/official_media.py`
+  is run
+- **THEN** the notebook SHALL render with:
+  - a top metric strip (total candidates, total resolved, freshness
+    histogram, category stacked bar)
+  - a filterable table (category × jurisdiction × resolved_at)
+  - a "skimmer" right pane with the last N Wikipedia summary updates
+    (each row has deep-link buttons to the official website, Mastodon,
+    Bluesky, and Companies House filing)
+  - a "HMGCC co-creation" sentinel sub-section that surfaces the last
+    12 weeks of co-creation project calls
+  - a strong-stance footer card reading **"Why we built this →"**
+    linking to `openspec/changes/official-media-pipeline/proposal.md`
+
+#### Scenario: Empty state handled
+
+- **GIVEN** `oideachais.official_media.candidates` is empty
+- **WHEN** the notebook is opened
+- **THEN** it SHALL render an empty-state message: *"No official-media
+  candidates yet. Run `dagster materialise -a official_media_extract`
+  to populate."*
+- **AND** the strong-stance footer SHALL still be visible
+
+### Requirement: OfficialMediaTanStackRoute
+
+The system SHALL provide a TanStack Start route at
+`sruth/oideachais/web/src/routes/official-media/index.tsx` that exposes the
+same data with a card-grid layout grouped by `category`.
+
+#### Scenario: Card grid renders
+
+- **GIVEN** the FastAPI endpoint `GET /api/official-media/candidates`
+  returns at least 1 row
+- **WHEN** the user navigates to `/official-media`
+- **THEN** the page SHALL render a card grid grouped by `category`
+- **AND** each card SHALL have a *"Follow on Fediverse"* button that
+  opens the resolved Mastodon/Bluesky URL
+- **AND** the strong-stance footer SHALL be visible at the bottom of
+  the page
+
+#### Scenario: Upload from Instagram export
+
+- **GIVEN** the user selects a valid Instagram export `.zip` file
+- **WHEN** they click the **"Add from Instagram export"** button
+- **THEN** a `POST /api/official-media/upload` request SHALL be sent
+  with the zip file
+- **AND** a progress indicator SHALL show the job id
+- **AND** the page SHALL poll `GET /api/official-media/jobs/{id}` and
+  re-render the grid when the job completes
+
+### Requirement: OfficialMediaCogneeDataset
+
+The system SHALL register a Cognee dataset named
+`oideachais_official_media` with the following edge types:
+
+- `ig_profile → official_website`
+- `ig_profile → fediverse_account`
+- `ig_profile → companies_house_entity`
+- `official_website → wikipedia_article` (bi-directional)
+
+#### Scenario: Cognify registers the dataset
+
+- **GIVEN** the `official_media_cognify` Dagster asset has been
+  materialised
+- **WHEN** the Cognee web UI is opened at
+  `https://cognee.cianfhoghlaim.ie`
+- **THEN** the dataset `oideachais_official_media` SHALL appear in the
+  dataset list
+- **AND** querying `MATCH (p:ig_profile)-[:has_official_website]->(w:url)
+  RETURN p.ig_username, w.url LIMIT 10` SHALL return at least 1 row
+
+## MODIFIED Requirements
+
+*None — this capability is purely additive.*
+
+## REMOVED Requirements
+
+*None — this capability is purely additive.*

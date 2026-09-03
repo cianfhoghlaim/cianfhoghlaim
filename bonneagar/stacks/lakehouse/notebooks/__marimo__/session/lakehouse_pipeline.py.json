@@ -1,0 +1,107 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.23.13",
+    "script_metadata_hash": "a2cb9f64439ae2a19f143fc09528af3a"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "36e3560788c67c6934f76565dc196be5",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"lakehouse-pipeline-demo-ibis-first-bunchloch-local\">Lakehouse Pipeline Demo (ibis-first, bunchloch-local)</h1>\n<span class=\"paragraph\">The full local data plane, end-to-end, with <strong>ibis</strong> as the\ncanonical entrypoint (per the\n<a href=\".agents/skills/ibis/SKILL.md\">ibis skill</a> \u2014 <em>the KCG-preferred\nanalytics layer</em>).</span>\n<span class=\"paragraph\">The notebook executes in three steps:</span>\n<ol>\n<li><strong>Connect</strong> \u2014 <code>ibis.duckdb.connect()</code> to the local DuckLake catalog\n   on <code>lakehouse-postgres</code>; <code>ibis.lancedb.connect()</code> to the Lance\n   namespace sidecar at <code>rest://lakehouse-lance-namespace:8182</code>.</li>\n<li><strong>Smoke</strong> \u2014 list 6 tables, verify the <code>lakehouse_cianfhoghlaim</code> schema\n   is queryable.</li>\n<li><strong>Preview</strong> \u2014 read the top of the empty BIEP tables.</li>\n</ol></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "7c721ad154f86e09045890a5dc97a21f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='MJUe-0' random-id='c6a9a0d6-7230-45f3-78ed-35b6b01d1411'><marimo-radio data-initial-value='&quot;local&quot;' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eEnvironment&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-options='[&quot;local&quot;,&quot;remote&quot;]' data-inline='false' data-disabled='false'></marimo-radio></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "d1539cf458495071e12443863045f682",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Using Local Development configuration\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "6efc05eb5530cf87e33c81d98ab4c778",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"step-2-list-the-biep-tables-against-the-local-lakekeeper\">Step 2 \u2014 List the BIEP tables (against the local Lakekeeper)</h2>\n<span class=\"paragraph\">The 6 BIEP subject namespaces live in the <code>lakehouse_cianfhoghlaim</code>\nDuckLake catalog and are mirrored as Iceberg tables in Lakekeeper.\nEach subject has 4 tables \u2014 one per (level \u00d7 language).</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "1f19d15ec0acf8ac09a79466992439c4",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "94b74f385fde4115f90a2ee0169e4bcf",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"step-3-verify-the-6-biep-subjects-tables-exist\">Step 3 \u2014 Verify the 6 BIEP subjects' tables exist</h2>\n<span class=\"paragraph\">We pre-create 4 tables per subject in the DuckLake catalog:</span>\n<table>\n<thead>\n<tr>\n<th>Subject</th>\n<th>Tables (level \u00d7 language)</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>mathematics</td>\n<td><code>hl_en</code>, <code>ol_en</code>, <code>hl_ga</code>, <code>ol_ga</code></td>\n</tr>\n<tr>\n<td>chemistry</td>\n<td><code>hl_en</code>, <code>ol_en</code>, <code>hl_ga</code>, <code>ol_ga</code></td>\n</tr>\n<tr>\n<td>geography</td>\n<td><code>hl_en</code>, <code>ol_en</code>, <code>hl_ga</code>, <code>ol_ga</code></td>\n</tr>\n<tr>\n<td>gaeilge</td>\n<td><code>hl_en</code>, <code>ol_en</code>, <code>hl_ga</code>, <code>ol_ga</code></td>\n</tr>\n<tr>\n<td>english</td>\n<td><code>hl_en</code>, <code>ol_en</code>, <code>hl_ga</code>, <code>ol_ga</code></td>\n</tr>\n<tr>\n<td>computer-science</td>\n<td><code>hl_en</code>, <code>ol_en</code>, <code>hl_ga</code>, <code>ol_ga</code></td>\n</tr>\n</tbody>\n</table>\n<span class=\"paragraph\">Total: 24 tables (4 \u00d7 6). The init-db.sql at\n<code>bonneagar/stacks/lakehouse/init-db.sql</code> creates the\n<code>ducklake_&lt;namespace&gt;</code> databases on first boot; the actual\ntables are created by the BAML extraction flow (see\n<code>openspec/changes/2026-07-06-british-isles-education-pipeline-v1</code>).</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "210a8a1a64685a4fed064c388f4b2d19",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"architecture-summary\">Architecture Summary</h2>\n<div class=\"language-scdoc codehilite\"><pre><span></span><code>\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502                  **ibis** \u2014 the KCG entrypoint                \u2502\n\u2502  ibis.duckdb.connect(&quot;ducklake:...&quot;)  +  ibis.lancedb.connect  \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                 \u2502                      \u2502\n          \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2500\u2510        \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n          \u2502  DuckLake   \u2502        \u2502  Lance NS  \u2502\n          \u2502  (SQL)      \u2502        \u2502  (Vector)  \u2502\n          \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2518        \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                 \u2502                      \u2502\n          \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n          \u2502      Lakekeeper (Iceberg REST)      \u2502\n          \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                         \u2502\n          \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n          \u2502  lakehouse-postgres (12 databases)    \u2502\n          \u2502  lakehouse-garage (S3-compatible)     \u2502\n          \u2502  lakehouse-lance-namespace (REST)      \u2502\n          \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n</code></pre></div></span>"
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}

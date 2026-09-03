@@ -1,0 +1,72 @@
+# =============================================================================
+# DEPLOY LOGFIRE-BUNCHLOCH
+# =============================================================================
+# Deploys the Pydantic Logfire OpenTelemetry Collector to bunchloch.
+#
+# Architecture:
+#   bunchloch (MacBook M4) — logfire-otel (otelcol-contrib 0.104.0)
+#     - :4317 — OTLP gRPC receiver (preferred by Python OTEL SDKs)
+#     - :4318 — OTLP HTTP receiver (fallback)
+#     - :8888 — collector health + metrics
+#     - :8889 — Prometheus-format metrics (for future scraping)
+#
+# The collector forwards traces to Logfire cloud (SaaS-only) using
+# the LOGFIRE_TOKEN env var. No self-hosted Logfire UI exists.
+#
+# Usage:
+#   km run procedure deploy-logfire-bunchloch
+# =============================================================================
+
+[[procedure]]
+name = "deploy-logfire-bunchloch"
+description = "Deploy Logfire OTEL Collector to bunchloch — prereqs → logfire → otel health checks"
+
+# =============================================================================
+# STAGE 0: Prerequisites
+# =============================================================================
+# The logfire sidecar requires the cianfhoghlaim_locket_secrets external tmpfs
+# volume. Created idempotently by a build (defined in the locket sidecar).
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "prerequisites"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunBuild", params = { build = "logfire-ensure-locket-volume" } }
+
+# =============================================================================
+# STAGE 1: Logfire OTEL Collector (bunchloch)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "logfire-stack"
+
+[[procedure.config.stages.executions]]
+execution = { type = "DeployStack", params = { stack = "logfire-bunchloch" } }
+
+# =============================================================================
+# STAGE 2: Health Verification (bunchloch)
+# =============================================================================
+# Verify the OTEL collector is healthy and accepting both gRPC + HTTP.
+# Also verify the Logfire token forwarding is configured (the collector
+# starts even without a token; this just checks the env was injected).
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "health-checks"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:8888/", expected_status = 200, timeout_s = 10 } }
+description = "Verify the OTEL collector health endpoint is reachable"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "docker exec logfire-otel wget --no-verbose --spider http://localhost:4318/v1/traces || echo 'OTLP HTTP endpoint not accepting'" } }
+description = "Verify the OTLP HTTP receiver is open"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "docker exec logfire-otel sh -c 'test -n \"$LOGFIRE_TOKEN\" && echo \"LOGFIRE_TOKEN set\" || echo \"LOGFIRE_TOKEN missing — Logfire forwarding disabled\"'" } }
+description = "Verify the Logfire token env was injected by Locket"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { server_id = "bunchloch", command = "docker exec logfire-otel wget --no-verbose --tries=1 --spider https://logfire.pydantic.dev || echo 'Logfire cloud unreachable (network or token issue)'" } }
+description = "Verify the collector can reach the Logfire cloud endpoint"

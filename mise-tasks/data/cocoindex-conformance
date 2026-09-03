@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#MISE description="DATA cocoindex conformance — R1-R4 conformance audit on all 14 v1 CocoIndex Apps"
+set -euo pipefail
+
+.venv/bin/python3 -c '
+import asyncio, sys
+from cocoindex_flows.infrastructure.cocoindex_v1_conformance import run_conformance_check
+report = asyncio.run(run_conformance_check())
+print(report.summary())
+sys.exit(0 if report.all_passed else 1)
+'

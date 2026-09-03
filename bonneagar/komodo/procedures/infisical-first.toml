@@ -1,0 +1,46 @@
+# =============================================================================
+# INFISICAL-FIRST PROCEDURE (HTTP-ONLY — no more ssh arm1-oci)
+# =============================================================================
+# Cross-cutting prerequisite: verify the Infisical vault is reachable,
+# the dev-baile project exists, and all 8 required machine identities
+# are seeded. Every other procedure depends on Infisical (via Locket) for
+# secrets, so this MUST pass first.
+#
+# REWRITTEN 2026-07-12 (per openspec/changes/2026-07-12-iac-ify-infisical-bootstrap-v1):
+# - Removed the `ssh arm1-oci '<curl command>'` operator step
+# - Replaced with HTTP-only checks (the bons IaC does the actual admin
+#   creation + machine identity seeding via `iac:bootstrap-infisical`)
+# - Now runs from any host that can reach https://infisical.cianfhoghlaim.ie
+#
+# Usage:
+#   km run procedure infisical-first
+# =============================================================================
+
+[[procedure.config]]
+name = "infisical-first"
+description = "Cross-cutting prerequisite: HTTP-only checks for Infisical vault + dev-baile project + 8 machine identities (no ssh arm1-oci)"
+server_id = "bunchloch"
+
+[[procedure.config.stages]]
+name = "vault-reachable"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://infisical.cianfhoghlaim.ie/api/status", expected_status = 200, timeout_s = 30, name = "infisical-api-reachable" } }
+
+[[procedure.config.stages]]
+name = "project-exists"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://infisical.cianfhoghlaim.ie/.well-known/jwks.json", expected_status = 200, timeout_s = 30, name = "infisical-jwks-reachable", description = "Infisical JWKS endpoint reachable (proxy for the OIDC discovery)" } }
+
+[[procedure.config.stages]]
+name = "machine-identities-seeded"
+
+# We need the bons-iac machine identity's Universal Auth client_secret to
+# call the machine identities list endpoint. The bons IaC writes it to
+# ~/.env via iac:bootstrap-infisical. If it's not set, we use the
+# admin's session cookie (if available) or just report the missing env.
+# For Komodo procedure simplicity, we accept either auth header.
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "if [ -z \"$INFISICAL_UNIVERSAL_AUTH_CLIENT_ID\" ] || [ -z \"$INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET\" ]; then echo 'ERROR: INFISICAL_UNIVERSAL_AUTH_CLIENT_ID + INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET not in env (run: bun run iac:bootstrap-infisical)'; exit 1; fi; AUTH=$(printf '%s:%s' \"$INFISICAL_UNIVERSAL_AUTH_CLIENT_ID\" \"$INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET\" | base64); for name in bons-iac pocket-id komodo pangolin tinyauth openclaw openchamber hermes; do PRESENT=$(curl -ksS -H \"Authorization: Basic $AUTH\" \"https://infisical.cianfhoghlaim.ie/api/v3/projects/f3cff583-b74b-4804-b9d3-db8b68885236/identity-machine-identities\" 2>/dev/null | python3 -c \"import json,sys; d=json.load(sys.stdin); print(any(i['name']=='$name' for i in d.get('identities', [])))\" 2>/dev/null); if [ \"$PRESENT\" = 'True' ]; then echo \"  OK: $name\"; else echo \"  ERROR: $name not seeded\"; exit 1; fi; done; echo 'OK: all 8 machine identities present'", timeout_s = 60, name = "machine-identities-seeded", description = "Verify the 8 required machine identities (bons-iac, pocket-id, komodo, pangolin, tinyauth, openclaw, openchamber, hermes) are seeded in the dev-baile project" } }

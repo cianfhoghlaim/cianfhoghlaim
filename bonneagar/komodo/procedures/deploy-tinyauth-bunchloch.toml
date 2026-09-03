@@ -1,0 +1,95 @@
+# =============================================================================
+# DEPLOY TINYAUTH-BUNCHLOCH PROCEDURE
+# =============================================================================
+# Deploys Tinyauth v4 (ForwardAuth middleware) on bunchloch.
+# This procedure is the 6th cross-cutting prerequisite (runs AFTER
+# deploy-pocket-id-bunchloch, BEFORE deploy-pangolin-newt-arm1-oci).
+#
+# This procedure FIXES the persistent tinyauth crash loop by ensuring
+# the Locket sidecar is started BEFORE tinyauth (Tinyauth v4's entrypoint
+# sources /run/secrets/locket/secrets.env on startup, which is empty
+# without Locket).
+#
+# 5 stages:
+#   0. preflight  (3 checks: pocket-id up + OIDC client exists + Locket image)
+#   1. stackup    (docker compose -f compose.yaml -f sidecar.yaml up -d)
+#   2. health     (3 verifications: tinyauth container Up + Locket healthy +
+#                 OIDC client credentials resolved from Infisical)
+#   3. probe      (curl Tinyauth health endpoint + verify the cookie flow)
+#   4. finalize   (write a JSON audit record to /tmp)
+#
+# Spec: openspec/changes/2026-07-14-tightly-knit-auth-stack-v1
+# =============================================================================
+
+[[procedure.config]]
+name = "deploy-tinyauth-bunchloch"
+description = "Deploy Tinyauth v4 (ForwardAuth) on bunchloch — preflight (pocket-id up) → stackup (locket+tinyauth) → health → probe → finalize"
+server_id = "bunchloch"
+
+# =============================================================================
+# STAGE 0: Pre-flight
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "preflight"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://auth.cianfhoghlaim.ie/.well-known/openid-configuration", expected_status = 200, timeout_s = 10, name = "pocket-id-healthy", description = "Pocket ID must be reachable + healthy (Tinyauth is its OIDC IdP)" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "command -v docker && docker --version", timeout_s = 10, description = "Verify docker is available" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker volume inspect pangolin_stack-secrets > /dev/null && echo 'locket volume present' || docker volume create pangolin_stack-secrets", timeout_s = 10, description = "Ensure the Locket stack-secrets volume exists" } }
+
+# =============================================================================
+# STAGE 1: StackUp
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "stackup"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "cd /etc/komodo/tinyauth && docker compose -f compose.yaml -f sidecar.yaml up -d 2>&1 | tail -20", timeout_s = 120, description = "Start tinyauth + locket sidecar (the Locket sidecar will materialize Pocket ID OIDC client creds from Infisical)", require_success = true } }
+
+# =============================================================================
+# STAGE 2: Health verification
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "health"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "for i in {1..24}; do docker ps --filter name=tinyauth --format '{{.Status}}' 2>&1 | grep -qE 'Up [0-9]+' && break; sleep 5; done; docker ps --filter name=tinyauth --format 'table {{.Names}}\\t{{.Status}}'", timeout_s = 120, name = "tinyauth-up", description = "Wait up to 2 min for tinyauth to be Up (no longer crash-looping)" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker logs tinyauth-locket --tail 20 2>&1 | grep -E 'secrets resolved' | tail -1", timeout_s = 10, name = "locket-resolved-pocketid-secrets", description = "Locket resolved PROVIDERS_POCKETID_CLIENT_ID + PROVIDERS_POCKETID_CLIENT_SECRET from Infisical" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker exec tinyauth-locket sh -c 'ls -la /run/secrets/locket/' 2>&1 | head -10", timeout_s = 10, name = "locket-tmpfs-mounted", description = "Locket /run/secrets/locket/ tmpfs is mounted + contains the resolved secrets.env" } }
+
+# =============================================================================
+# STAGE 3: Probe (curl the Tinyauth + verify the cookie flow)
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "probe"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "http://localhost:10000/api/health", expected_status = 200, timeout_s = 15, name = "tinyauth-internal-health", description = "Tinyauth internal health endpoint returns 200 (no L7 LB between this Mac and the container)" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://tinyauth.cianfhoghlaim.ie/api/health", expected_status = 200, timeout_s = 15, name = "tinyauth-external-health", description = "Tinyauth external (via Pangolin) health endpoint returns 200" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker logs tinyauth --tail 30 2>&1 | grep -iE 'OIDC|provider|listening' | head -5", timeout_s = 5, name = "oidc-provider-loaded", description = "Tinyauth logs show the Pocket ID OIDC provider loaded successfully" } }
+
+# =============================================================================
+# STAGE 4: Finalize
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "finalize"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "TS=$(date -u +%Y%m%dT%H%M%SZ); cat > /tmp/tinyauth-deploy-$TS.json <<EOF\n{\n  \"ts\": \"$TS\",\n  \"action\": \"deploy-tinyauth-bunchloch\",\n  \"host\": \"bunchloch\",\n  \"stack\": \"tinyauth\",\n  \"image\": \"$(docker inspect tinyauth --format '{{.Config.Image}}' 2>/dev/null)\",\n  \"pocket_id_oidc_url\": \"https://auth.cianfhoghlaim.ie\",\n  \"komodo_procedure\": \"deploy-tinyauth-bunchloch\"\n}\nEOF\necho \"wrote audit record: /tmp/tinyauth-deploy-$TS.json\"", timeout_s = 10, description = "Write a JSON audit record to /tmp for traceability" } }

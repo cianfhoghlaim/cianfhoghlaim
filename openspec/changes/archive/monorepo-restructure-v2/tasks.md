@@ -1,0 +1,22 @@
+# Tasks — Monorepo Restructure v2
+
+- [x] 1. Move `scripts/infisical/{init-vault.ts, create-env.ts}` → `scripts/` and patch `process.cwd()` paths from `../../` to `./`.
+- [x] 2. Delete `scripts/infisical/{package.json, bun.lock}` and the now-empty `scripts/infisical/` directory.
+- [x] 3. Rewrite root `package.json`: add `workspaces: ["sruth/oideachais/web", "sruth/oideachais/mcp/filesystem", "sruth/tuatha/ui"]`, add `setup`, `secrets:env/init/sync`, `komodo:sync`, `pangolin:check`, `locket:exec`, `ccc:init/index/search`, `spec:list/validate/archive`, `mise:run` scripts. Drop the 24 unused runtime deps, the 6 broken `dev:*` scripts (sruth paths), the 3 broken `docs:*` scripts, and the 2 broken `dagger:*` scripts.
+- [x] 4. Rewrite root `pyproject.toml`: remove all `[project.dependencies]` and `[project.scripts]` (workspace shell), add `[tool.uv] package = false`, add `[tool.uv.workspace] members = ["oideachais", "tuatha", "códeolas_codebase_indexing", "infrastructure/browser", "sruth/oideachais/mcp/mcpo"]`, add `[tool.uv.sources]` for ASCII-named package members, add shared `[tool.ruff]`, `[tool.mypy]`, `[tool.pytest.ini_options]`.
+- [x] 5. Patch `sruth/oideachais/pyproject.toml`: change `requires-python` to `>=3.12`, add `[tool.uv] package = true`, add `[tool.uv.sources] sruth-browser = { workspace = true }` and `codeolas = { workspace = true }` (ASCII keys per TOML spec).
+- [x] 6. Patch `sruth/tuatha/pyproject.toml`: change `requires-python` to `>=3.12`, add `[tool.uv] package = true`, add `[tool.uv.sources]` for the workspace members, update ruff/mypy `target-version` to `py312`.
+- [x] 7. Patch `infrastructure/browser/pyproject.toml`: change `requires-python` to `>=3.12`, add `[tool.uv] package = true`, update ruff/mypy `target-version` to `py312`.
+- [x] 8. Rewrite `turbo.json`: full task graph (`postinstall`, `build`, `dev`, `typecheck`, `lint`, `format`, `test`, `clean`, `dagster`, `ccc:index`, `spec:validate`), `globalEnv` for Infisical/Browserbase/Firecrawl/MotherDuck/Vertex/Gemini/Dagster/Locket/Komodo/Pangolin env vars.
+- [x] 9. Patch `mise.toml`: drop every `cd sruth/*` task (replace with `cd oideachais && uv run dagster dev -m …` and `cd tuatha && uv run dagster dev -m …`), add `turbo`, `ccc:init/index/search`, `secrets:env/init/sync`, `locket:exec`, `komodo:sync`, `pangolin:check`, `openspec:list/validate/archive` aliases.
+- [x] 10. Migrate `sruth/bonneagar/stacks/tools/stirling-pdf/` → `infrastructure/stacks/stirling-pdf/` and delete `sruth/`.
+- [x] 11. Patch `AGENTS.md`: add top-level sections "Monorepo Topology (v2 — Polyglot)", "Secrets Bootstrap (do not skip)", "Codebase Indexing & Spec-Driven Development". Update the "Strict Secret Hydration" bullet to point at `bun run scripts/init-vault.ts` instead of `scripts/infisical/init-vault.ts`.
+- [x] 12. Patch `README.md`: add top-level "Quickstart" and "Monorepo Topology (v2 — Polyglot)" sections.
+- [x] 13. Add a real `package.json` to `sruth/tuatha/ui/` (Vinxi + React + Babylon.js UI dependencies), and a `name` field to `sruth/oideachais/mcp/filesystem/package.json`.
+- [x] 14. Run `bun install` to verify all workspaces resolve (790 packages installed, 25 removed).
+- [x] 15. Run `uv lock` and `uv sync` to verify the uv workspace resolves (469 packages, single `uv.lock` at root).
+- [x] 16. Run `bun run doctor` to verify the doctor task sees all tools (Python 3.12.10, uv 0.11.14, Bun 1.3.14, Turbo 2.7.2, Dagger v0.20.8).
+- [x] 17. Run `bun run secrets:init` to verify the relocated script works end-to-end against the live Infisical vault (24 secrets updated, vault successfully synchronized).
+- [x] 18. Run `bunx turbo run build --dry-run=json` to confirm turbo sees all three bun workspaces (`oideachais-mcp-filesystem`, `oideachais-web`, `tuatha-ui`) and the right `globalEnv`.
+- [x] 19. OpenSpec: create `openspec/changes/monorepo-restructure-v2/{proposal.md, tasks.md}` and validate with `openspec validate monorepo-restructure-v2 --strict`.
+- [ ] 20. Git: `git pull --rebase`, `git add -A`, commit, `git push`, verify `git status` shows "up to date with origin".

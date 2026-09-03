@@ -1,0 +1,44 @@
+# =============================================================================
+# STORAGE INFRASTRUCTURE RESOURCE SYNC
+# =============================================================================
+# GitOps configuration for all storage stack resources.
+# Syncs servers, stacks, and procedures from this repository.
+# =============================================================================
+
+[[resource_sync]]
+name = "storage-infrastructure"
+description = "Storage stack infrastructure as code"
+
+[resource_sync.config]
+# Repository configuration - Forgejo at git.cianfhoghlaim.ie
+# Per the 2026-08-13-bonneagar-infra-remediation-v3 change: reconciled
+# from the stale `cliste/bonneagar` (the pre-2026-07-17-v7-flatten
+# GitHub namespace) to match the 3 sibling resource-syncs in this
+# directory. The 2026-07-17 v7 flatten merged the standalone
+# `github.com/cianfhoghlaim/bonneagar` repo into this monorepo; the
+# `cliste/bonneagar` value would have been silently failing or polling
+# a stale fork, masked by Komodo's `delete = false` safety.
+repo = "cianfhoghlaim/bonneagar"
+git_account = "forgejo"
+branch = "main"
+
+# Resource paths to sync
+resource_path = [
+  "bonneagar/komodo/servers/*.toml",
+  "bonneagar/komodo/stacks/*.toml",
+  "bonneagar/komodo/procedures/*.toml",
+  "bonneagar/komodo/actions/*.toml",
+  "bonneagar/komodo/resource-syncs/*.toml"
+]
+
+# Enable managed mode - Komodo owns these resources
+managed = true
+delete = false  # Don't delete resources not in Git (safety)
+
+# Git provider for webhooks (Forgejo uses gitea/github compatible webhooks)
+git_provider = "git.cianfhoghlaim.ie"
+
+# Sync on webhook events
+on_sync = true
+on_pull = true
+

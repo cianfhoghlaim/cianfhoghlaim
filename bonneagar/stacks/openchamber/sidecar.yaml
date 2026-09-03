@@ -1,0 +1,120 @@
+services:
+  locket:
+    # NOTE: replaced locket v0.17.3 with the renamed
+    # `ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0` because locket
+    # v0.17.3 has a bug where it sends API requests with snake_case query
+    # params (project_id, secret_path) but Infisical v0.161+ requires
+    # camelCase (projectId, secretPath). Every locket call returned 422,
+    # locket fell back to passthrough mode, and the raw
+    # {{ infisical://... }} template was written to disk instead of the
+    # resolved secrets.
+    #
+    # The `ghcr.io/cianfhoghlaim/locket-shim` image is a Python-based
+    # drop-in replacement that uses the CORRECT camelCase field names.
+    # It's a temporary fix until upstream locket v0.18+ ships with
+    # the camelCase change in source.
+    # cianfhoghlaim-v1 change. It's a temporary fix until locket v0.18+
+    # ships with the fix in source (already in the upstream repo at
+    # stedding/locket v0.18.0-rc.1).
+    #
+    # Bunchloch-dev alignment: the local Infisical dev project on
+    # bunchloch already uses `ghcr.io/cianfhoghlaim/locket-shim` for
+    # openclaw + litellm + langfuse + mlflow. This image reference keeps
+    # the openchamber arm1-oci sidecar consistent with the bunchloch
+    # local Infisical dev project (per task 5.1 — fixed Locket
+    # injection consistent with local Infisical dev project).
+    image: ghcr.io/cianfhoghlaim/locket-shim:infisical-0.2.0
+    container_name: openchamber-locket
+    restart: unless-stopped
+    user: "65532:65532"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: false
+    environment:
+      INFISICAL_URL: ${INFISICAL_URL}
+      INFISICAL_CLIENT_ID: ${INFISICAL_CLIENT_ID}
+      INFISICAL_DEFAULT_PROJECT_ID: ${INFISICAL_PROJECT_ID}
+      INFISICAL_DEFAULT_ENVIRONMENT: ${INFISICAL_ENV}
+      INFISICAL_DEFAULT_PATH: /openchamber
+      LOCKET_MODE: ${LOCKET_MODE:-watch}
+      LOCKET_SRC: /templates/secrets.env
+      LOCKET_DST: /run/secrets/locket
+    secrets:
+      - infisical_secret
+    volumes:
+      - ./secrets.env:/templates/secrets.env:ro
+      - stack-secrets:/run/secrets/locket
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "python3 /app/locket-shim.py --mode one-shot 2>&1 | grep -q 'resolved' || exit 1"
+      interval: 30s
+      timeout: 15s
+      retries: 3
+      start_period: 5s
+    networks:
+      - cianfhoghlaim
+
+  openchamber:
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - stack-secrets:/run/secrets/locket:ro
+    # The /run/secrets/locket/secrets.env file is materialized by the locket
+    # sidecar at container start. We source it via a shell wrapper around the
+    # upstream entrypoint. This sidesteps docker compose's parse-time
+    # env_file validation (which would reject /run/secrets/* even though
+    # it's a runtime path).
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -a
+        . /run/secrets/locket/secrets.env
+        set +a
+        exec node bin/cli.js serve
+
+  # chmod-init: ensures the locket-written file is world-readable
+  # (locket writes mode 600 by default; openchamber needs mode 644).
+  openchamber-chmod-init:
+    image: alpine:3.20
+    user: "0:0"
+    depends_on:
+      locket:
+        condition: service_healthy
+    volumes:
+      - stack-secrets:/run/secrets/locket
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        if [ -f /run/secrets/locket/secrets.env ]; then
+          chmod 644 /run/secrets/locket/secrets.env
+          echo "OK: /run/secrets/locket/secrets.env chmod'd to 644"
+        else
+          echo "ERROR: /run/secrets/locket/secrets.env not found"
+          exit 1
+        fi
+    restart: "no"
+    networks:
+      - cianfhoghlaim
+
+secrets:
+  infisical_secret:
+    file: ${INFISICAL_SECRET_FILE:-/Users/cianmacandeisigh/.locket/infisical_secret}
+
+volumes:
+  stack-secrets:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: uid=65532,gid=65532,mode=755
+
+networks:
+  cianfhoghlaim:
+    external: true
+    name: cianfhoghlaim

@@ -1,0 +1,142 @@
+# =============================================================================
+# Repository-root Docker ignore
+# =============================================================================
+# Used when building the oideachais Dockerfiles with context=repo-root
+# (required because the oideachais uv workspace depends on sibling members
+# sruth-browser, codeolas, etc. declared at the root pyproject.toml).
+#
+# Anything mounted as a volume at runtime, or fetched at build time, must
+# be excluded here to keep the build context small.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Python
+# -----------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+.eggs/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# -----------------------------------------------------------------------------
+# Node / Bun
+# -----------------------------------------------------------------------------
+node_modules/
+.bun/
+.pnp.*
+
+# -----------------------------------------------------------------------------
+# Large data stores (model weights, scraped corpora, training data)
+# -----------------------------------------------------------------------------
+stedding/
+data/
+oideachais/storage/
+oideachais/data/
+oideachais/data_platform/datasets/
+oideachais/data_platform/curriculum_unified.duckdb
+oideachais/data_platform/.dlt/
+oideachais/data_platform/.dagster/
+oideachais/downloads/
+oideachais/curriculum_*.duckdb
+oideachais/curriculum_unified.duckdb
+oideachais/leaving_cert_timetable.pdf
+instagram_output/
+leabharlann/
+catharnacht/
+dlthub/
+oideachais/curriculum_unified_live.duckdb
+zotero/
+university_of_galway/
+spaces/
+
+# -----------------------------------------------------------------------------
+# IDE / OS
+# -----------------------------------------------------------------------------
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# -----------------------------------------------------------------------------
+# Git
+# -----------------------------------------------------------------------------
+.git/
+.gitignore
+
+# -----------------------------------------------------------------------------
+# Docker / compose (only build Dockerfiles, ignore compose files)
+# -----------------------------------------------------------------------------
+Dockerfile*
+**/compose*.yaml
+**/compose*.yml
+**/docker-compose*
+
+# -----------------------------------------------------------------------------
+# Local data files (mount as volumes instead)
+# -----------------------------------------------------------------------------
+*.duckdb
+*.lance/
+*.parquet
+*.db
+*.sqlite
+
+# -----------------------------------------------------------------------------
+# Testing / coverage
+# -----------------------------------------------------------------------------
+tests/
+.coverage
+htmlcov/
+
+# -----------------------------------------------------------------------------
+# Documentation (read at dev time, not needed in image)
+# -----------------------------------------------------------------------------
+*.md
+docs/
+openspec/
+scripts/
+.agent_docs/
+
+# -----------------------------------------------------------------------------
+# Dagster local state
+# -----------------------------------------------------------------------------
+.dagster/
+.dagster_home/
+.tmp_dagster_home_*/
+
+# -----------------------------------------------------------------------------
+# Frontend (built separately by oideachais/web)
+# -----------------------------------------------------------------------------
+oideachais/web/apps/*/node_modules/
+oideachais/web/apps/*/dist/
+oideachais/web/node_modules/
+oideachais/web/dist/
+oideachais/web/.tanstack/
+
+# -----------------------------------------------------------------------------
+# Development files
+# -----------------------------------------------------------------------------
+.env*
+!.env.example
+*.log
+
+# -----------------------------------------------------------------------------
+# Agent / IDE state
+# -----------------------------------------------------------------------------
+.claude/
+.agents/
+.cocoindex_code/
+.local/
+.chunkhound.json
+.roomodes
+.opencode.yaml
+.opencode.json
+.skills-lock.json

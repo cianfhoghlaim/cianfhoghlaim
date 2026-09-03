@@ -1,0 +1,97 @@
+# Pydantic Logfire — OpenTelemetry collector + Logfire cloud forwarding + Langfuse fan-out.
+# ----------------------------------------------------------------------------
+# Pydantic Logfire is SaaS-only at https://logfire.pydantic.dev (no
+# self-hostable Logfire-server image is published as of 2026-06-26).
+# This stack therefore deploys an OpenTelemetry Collector that:
+#   1. Receives OTLP traces from any KCG service on :4317 (gRPC) / :4318 (HTTP)
+#   2. Forwards them to Logfire cloud using the logfire exporter + LOGFIRE_TOKEN
+#   3. Fans out to Langfuse via OTLP/HTTP at langfuse-web:3000/api/public/otel
+#   4. Optionally buffers to disk for resilience
+#
+# This gives us:
+#   - A real, deployable local service (so the stack is valid 6-file GOLD_STANDARD)
+#   - Self-hosted collection point (privacy-friendly; raw traces never leave
+#     the cluster unless forwarded)
+#   - Logfire UI + SQL querying at https://logfire.pydantic.dev
+#   - Langfuse UI + cost + prompt management at https://langfuse.cianfhoghlaim.ie
+#     (linked from the Pangolin private route langfuse.cianfhoghlaim.ie)
+#
+# Application code has TWO paths to send traces:
+#   - SDK direct:   `logfire.configure(token=...)`              -> HTTPS to Logfire
+#   - OTLP indirect: set `OTEL_EXPORTER_OTLP_ENDPOINT=http://logfire-otel:4317`
+#                   -> local collector -> Logfire cloud + Langfuse (fan-out)
+# Both produce identical data on both dashboards.
+#
+# SECURITY: ports 4317/4318/8888/8889 bind to 127.0.0.1 ONLY (was 0.0.0.0).
+# External access MUST happen via the cianfhoghlaim Docker network. The
+# pre-existing 0.0.0.0 binding accepted unauthenticated OTLP from any
+# reachable host and could be abused to inject garbage traces into
+# Logfire cloud or DoS the collector. Per spec delta on
+# `agent-observability` — see change 2026-07-30-...
+#
+# To start (prod):  docker compose -f compose.yaml -f sidecar.yaml up -d
+# To start (dev):   docker compose -f compose.yaml -f sidecar.yaml -f compose.dev.yaml up -d
+
+services:
+  logfire-otel:
+    image: otel/opentelemetry-collector-contrib:0.104.0
+    container_name: cianfhoghlaim-logfire-otel
+    restart: unless-stopped
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./config/otelcol.yaml:/etc/otelcol/config.yaml:ro
+      - logfire-otel-data:/var/lib/otelcol
+    ports:
+      # OTLP gRPC (preferred by Python OTEL SDKs) — bound to 127.0.0.1 only.
+      # External access MUST happen via the cianfhoghlaim Docker network.
+      - "127.0.0.1:4317:4317"
+      # OTLP HTTP (fallback for services that don't speak gRPC) — same restriction.
+      - "127.0.0.1:4318:4318"
+      # Collector health + metrics — same restriction.
+      - "127.0.0.1:8888:8888"
+      # Prometheus-format metrics (no local Prometheus container; expose
+      # for future scraping by an external observability stack).
+      - "127.0.0.1:8889:8889"
+    environment:
+      # Forwarded to the collector via Locket sidecar (see secrets.env).
+      # The logfire exporter pulls this from the env at runtime; if empty,
+      # the collector starts but exports fail (matching the SaaS-only
+      # graceful-degradation pattern in .observability/logfire_config.py).
+      LOGFIRE_TOKEN: ${LOGFIRE_TOKEN:-}
+      LOGFIRE_PROJECT_NAME: ${LOGFIRE_PROJECT_NAME:-oideachas-celtic-education}
+      LOGFIRE_ENVIRONMENT: ${LOGFIRE_ENVIRONMENT:-production}
+      # Langfuse OTLP fan-out (NEW 2026-07-30).
+      # LANGFUSE_AUTH_HEADER is the base64-encoded "PUBLIC_KEY:SECRET_KEY" pair
+      # constructed at runtime by the Locket sidecar from LANGFUSE_PUBLIC_KEY
+      # + LANGFUSE_SECRET_KEY (the otlphttp exporter in otelcol.yaml uses
+      # this as the HTTP Basic auth header).
+      LANGFUSE_AUTH_HEADER: ${LANGFUSE_AUTH_HEADER:-}
+      # Fallback: if the sidecar doesn't construct LANGFUSE_AUTH_HEADER,
+      # the collector can compose it from the raw PUBLIC_KEY/SECRET_KEY.
+      # (Both paths supported; sidecar-composed header takes precedence.)
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+    healthcheck:
+      # otelcol exposes /health/status on its health_check extension
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8888/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+    # depends_on: # locket sidecar is injected at deploy time via -f sidecar.yaml
+    # (no other dependencies)
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  logfire-otel-data:
+
+networks:
+  cianfhoghlaim:
+    name: cianfhoghlaim
+    external: true

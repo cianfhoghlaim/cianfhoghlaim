@@ -1,0 +1,45 @@
+# SEC Examinations.ie Scraper Component
+# Scrapes exam papers, marking schemes, and examiner reports
+
+component: sruth.shared.dagster.components.BrowserScrapeComponent
+
+attributes:
+  # Asset definition
+  asset_key: ["sec", "exam_materials"]
+  asset_name: "exam_materials"
+  group_name: "scraping"
+  description: "SEC exam materials from examinations.ie archive"
+
+  # URLs to scrape
+  urls:
+    - "https://www.examinations.ie/exammaterialarchive/"
+
+  # Extraction instruction for Stagehand AI
+  extract_instruction: |
+    Extract all exam material links including:
+    - Year (e.g., 2024, 2023)
+    - Subject (e.g., Mathematics, English, Irish)
+    - Level (Leaving Certificate, Junior Cycle)
+    - Material type (Paper, Marking Scheme, Examiner Report)
+    - PDF download URL
+    Return as structured JSON with all fields.
+
+  extract_formats:
+    - "json"
+    - "markdown"
+    - "links"
+
+  # Browser configuration
+  browser_backend: "stagehand"
+  headless: true
+  screenshot: false
+
+  # Rate limiting (government site)
+  rate_limit_seconds: 1.0
+
+  # Partition by year and subject for parallel processing
+  partition_by_url: false
+
+  # Observability
+  enable_langfuse: true
+  enable_mlflow: false

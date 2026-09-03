@@ -1,0 +1,249 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+import groovy.json.JsonSlurper
+
+def safeAppExtGet(prop, fallback) {
+    def appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
+    appProject?.ext?.has(prop) ? appProject.ext.get(prop) : fallback
+}
+
+def reactNativeArchitectures() {
+  def value = project.getProperties().get("reactNativeArchitectures")
+  return value ? value.split(",") : ["armeabi-v7a", "arm64-v8a"]
+}
+
+def resolveBuildType() {
+    Gradle gradle = getGradle()
+    String tskReqStr = gradle.getStartParameter().getTaskRequests()['args'].toString()
+    return tskReqStr.contains('Release') ? 'release' : 'debug'
+}
+
+def resolveReactNativeDirectory() {
+    def reactNativeLocation = safeAppExtGet("REACT_NATIVE_NODE_MODULES_DIR", null)
+    if (reactNativeLocation != null) {
+        return file(reactNativeLocation)
+    }
+
+    // monorepo workaround
+    // react-native can be hoisted or in project's own node_modules
+    def reactNativeFromProjectNodeModules = file("${rootProject.projectDir}/../node_modules/react-native")
+    if (reactNativeFromProjectNodeModules.exists()) {
+        return reactNativeFromProjectNodeModules
+    }
+
+    throw new GradleException(
+            "[RTNGodot] Unable to resolve react-native location in node_modules. You should project extension property (in `app/build.gradle`) `REACT_NATIVE_NODE_MODULES_DIR` with path to react-native."
+    )
+}
+
+def toPlatformFileString(String path) {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        path = path.replace(File.separatorChar, '/' as char)
+    }
+    return path
+}
+
+def isNewArchitectureEnabled() {
+    return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+}
+
+def reactNativeRootDir = resolveReactNativeDirectory()
+
+def reactProperties = new Properties()
+file("$reactNativeRootDir/ReactAndroid/gradle.properties").withInputStream { reactProperties.load(it) }
+
+def REACT_NATIVE_VERSION = reactProperties.getProperty("VERSION_NAME")
+def REACT_NATIVE_MINOR_VERSION = REACT_NATIVE_VERSION.startsWith("0.0.0-") ? 1000 : REACT_NATIVE_VERSION.split("\\.")[1].toInteger()
+
+def prefabHeadersDir = project.file("$buildDir/prefab-headers/rtngodot")
+
+def getPrebuiltLibraryVersion(libName) {
+    // package.json resides at the repository root (one level up from android/)
+    def packageFile = file("$projectDir/../package.json")
+    if (!packageFile.exists()) {
+        throw new GradleException("Unable to locate package.json at ${packageFile}")
+    }
+
+    def json = new JsonSlurper().parse(packageFile)
+
+    def entry = json.prebuiltFiles?.find { it.name == libName }
+
+    if (!entry) {
+        throw new GradleException("Prebuilt entry not found for library '${libName}'. Ensure it exists in package.json.")
+    }
+
+    return entry.version
+}
+
+def libGodotVersion = getPrebuiltLibraryVersion("libgodot-android")
+def godotCppVersion = getPrebuiltLibraryVersion("libgodot-cpp-android")
+
+buildscript {
+  ext.safeExtGet = {prop, fallback ->
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+  }
+  repositories {
+    google()
+    mavenCentral()
+  }
+  dependencies {
+    classpath("com.android.tools.build:gradle:8.2.1")
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+  }
+}
+
+apply plugin: 'com.android.library'
+apply from: "./fix-prefab.gradle"
+apply plugin: 'com.facebook.react'
+apply plugin: "org.jetbrains.kotlin.android"
+
+
+android {
+  compileSdkVersion safeExtGet('compileSdkVersion', 33)
+  namespace "com.rtngodot"
+
+  buildFeatures {
+    prefab true
+    prefabPublishing true
+    buildConfig true
+  }
+
+  // If it doesn't exist
+  if( !prefabHeadersDir.exists() ) {
+    prefabHeadersDir.mkdirs()
+  }
+
+  prefab {
+    rtngodot {
+        headers prefabHeadersDir.absolutePath
+    }
+  }
+
+
+  defaultConfig {
+    minSdkVersion safeExtGet('minSdkVersion', 29)
+    targetSdkVersion safeExtGet('targetSdkVersion', 33)
+    ndkVersion safeExtGet('ndkVersion', "26.1.10909125")
+    buildConfigField("boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString())
+    buildConfigField("String", "FLAVOR", "\"rtngodot\"")  // Just a placeholder value.
+    ndk {
+      // Specifies the ABI configurations of your native
+      // libraries Gradle should build and package with your app.
+      // abiFilters 'x86', 'x86_64', 'armeabi', 'armeabi-v7a', 'arm64-v8a'
+      abiFilters(*reactNativeArchitectures())
+    }
+    externalNativeBuild {
+        cmake {
+            arguments "-DANDROID_STL=c++_shared",
+                    "-DREACT_NATIVE_MINOR_VERSION=${REACT_NATIVE_MINOR_VERSION}",
+                    "-DANDROID_TOOLCHAIN=clang",
+                    "-DREACT_NATIVE_DIR=${toPlatformFileString(reactNativeRootDir.path)}",
+                    "-DIS_NEW_ARCHITECTURE_ENABLED=${isNewArchitectureEnabled().toString()}",
+                    "-DGODOT_CPP_VERSION=${godotCppVersion}"
+        }
+    }
+  }
+
+  sourceSets {
+    main {
+      java.srcDirs += ['src/generated/java']
+    }
+  }
+
+  externalNativeBuild {
+    cmake {
+      path "src/main/cpp/CMakeLists.txt"
+    }
+  }
+
+    packagingOptions {
+        doNotStrip resolveBuildType() == 'debug' ? "**/**/*.so" : ''
+        excludes = [
+                "META-INF",
+                "META-INF/**",
+                "**/libc++_shared.so",
+                "**/libfolly_json.so",
+                "**/libfolly_runtime.so",
+                "**/libglog.so",
+                "**/libjsi.so",
+                "**/libreactnative.so",
+                "**/libreactnativejni.so",
+                "**/libreact_codegen_rncore.so",
+                "**/libreact_cxxreactpackage.so",
+                "**/libreact_debug.so",
+                "**/libreact_nativemodule_core.so",
+                "**/libreact_render_componentregistry.so",
+                "**/libreact_render_core.so",
+                "**/libreact_render_debug.so",
+                "**/libreact_render_graphics.so",
+                "**/libreact_render_imagemanager.so",
+                "**/libreact_render_mapbuffer.so",
+                "**/libreact_render_debug.so",
+                "**/libreact_utils.so",
+                "**/librrc_image.so",
+                "**/librrc_view.so",
+                "**/libreact_newarchdefaults.so",
+                "**/libturbomodulejsijni.so",
+                "**/libyoga.so",
+                "**/libfabricjni.so",
+                "**/libfbjni.so",
+                "**/libhermes.so",
+                "**/libhermes-executor-debug.so",
+                "**/libhermes_executor.so",
+                "**/libjscexecutor.so",
+                "**/libv8executor.so",
+        ]
+    }
+}
+
+/**
+ * Task: registerLibGodotRepo
+ *
+ * Adds a Maven repository named 'libgodot' that points to the locally bundled pre‑built
+ * Godot Android artifacts. The repository URL is relative to this library module:
+ *
+ *   libs/libgodot-android/${libGodotVersion}/
+ *
+ * The task is executed before any compile/assemble tasks so that the consuming app can resolve
+ * `com.migeran.libgodot:godot-dev` (or similar) from the local directory.
+ */
+task registerLibGodotRepo {
+    // Capture the version at configuration time
+    def libVersion = libGodotVersion
+    def repoUrl = uri("$projectDir/libs/libgodot-android/${libVersion}/")
+    rootProject.allprojects { proj ->
+        // Avoid adding the same repo multiple times
+        if (!proj.repositories.any { it instanceof MavenArtifactRepository && it.name == 'libgodot' }) {
+            proj.repositories.maven {
+                name = 'libgodot'
+                url = repoUrl
+            }
+            print("Added local Maven repository 'libgodot' to project ${proj.path}: ${repoUrl}\n")
+        }
+    }
+}
+
+
+repositories {
+  mavenCentral()
+  google()
+}
+
+dependencies {
+  implementation 'com.facebook.react:react-native'
+  implementation project(':react-native-worklets-core')
+  api "com.migeran.libgodot:godot-debug:${libGodotVersion}-SNAPSHOT"
+  implementation('com.jakewharton.threetenabp:threetenabp:1.4.9')
+}
+
+task deleteCmakeCache() {
+  doFirst {
+    delete "${projectDir}/.cxx"
+  }
+}
+
+tasks.configureEach { task ->
+  // C++ clean
+  if (task.name.contains('clean')) {
+    task.dependsOn(deleteCmakeCache)
+  }
+}

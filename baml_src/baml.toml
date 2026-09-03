@@ -1,0 +1,53 @@
+# baml.toml — BAML project config for the cianfhoghlaim package
+# Post-v7 flattened layout: ./baml_src/ is the canonical BAML root
+# (was previously at ./baml/ pre-v7-2026-07-17; the ./baml/ directory is gone).
+#
+# Discovery: BAML CLI looks for `baml.toml` inside the project root
+# passed to `--from`. So `baml-cli generate --from baml_src` reads
+# `./baml_src/baml.toml`.
+#
+# Source layout (post-v7):
+#   ./clients.baml                       # canonical LLM clients (23 active, all routing to minimax-m3)
+#   ./clients_llama_swap.baml            # 4 llama-swap clients (vision + extraction + reasoning)
+#   ./clients_ocr_ensemble.baml         # 2 OCR ensemble clients (Docling + Unstract)
+#   ./clients_biep_v3.py                 # Python-side spec for BIEPV3Extract* + BIEPV3Vision
+#   ./british_isles/                     # CLUSTER 1 — 8 BI nations (103 .baml)
+#   ├── _cross/                          # cross-BI shared types + BIEP v3 canonical
+#   ├── ireland/                         # 71 .baml (5 NCCA stages + 8 NCCA LC subjects + LC extraction)
+#   ├── england/                         # 9 .baml (AQA + OCR + Edexcel per-board)
+#   └── ... (scotland + wales + ni + jersey + guernsey + isle_of_man)
+#   ./european_nations/                  # CLUSTER 2 — 40 EU/EEA nations (122 .baml)
+#   ./european_union/                    # CLUSTER 3 — EU institutional (9 .baml)
+#   ./commonwealth/                      # CLUSTER 4 — 6 Commonwealth nations (24 .baml)
+#   ./american_nations/                  # CLUSTER 5 — 4 Americas nations (15 .baml)
+#   ./celtic/                            # CLUSTER 6 — Celtic / Irish language (11 .baml)
+#   ./processing/                        # CLUSTER 7 — Generic file processing (33 .baml)
+#   └── ./shared/                         # (stale; see "Generated clients" below)
+#
+# Generated clients:
+#   ./../baml_client/                     # Python (Pydantic v2) — at the repo root
+#   ./../baml_client_ts/                  # TypeScript (Zod) — at the repo root
+#
+# output_dir is RELATIVE to this baml.toml — so `../baml_client` writes
+# to `<repo_root>/baml_client/` (the canonical Python client location).
+
+[project]
+name = "cianfhoghlaim-baml"
+version = "0.223.0"
+description = "BAML extraction schemas for the Cianfhoghlaim platform (post-v7 jurisdiction-clustered: british_isles/, european_nations/, european_union/, commonwealth/, american_nations/, celtic/, processing/)"
+
+[generators]
+
+# Python client (Pydantic v2 models — consumed by Dagster + DLT + the agent API)
+[generators.lang_py]
+output_type = "python/pydantic"
+output_dir = "../baml_client"
+version = "0.223.0"
+default_client_mode = "async"
+
+# TypeScript client (Zod-compatible — consumed by TanStack AI + oRPC + croilar-portal UI)
+[generators.lang_ts]
+output_type = "typescript"
+output_dir = "../baml_client_ts"
+version = "0.223.0"
+default_client_mode = "async"

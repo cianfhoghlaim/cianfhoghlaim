@@ -1,0 +1,93 @@
+# =============================================================================
+# DEPLOY-INFISICAL-ARM1-OCI PROCEDURE
+# =============================================================================
+# Replaces the previous undocumented `docker run` deployment of Infisical
+# on arm1-oci (container 3c1be3d92f88, which is now abandoned). This
+# procedure deploys the bons IaC's `stacks/infisical/` stack via Komodo,
+# then invokes the bons IaC's `iac:bootstrap-infisical` to create the
+# first admin + seed the machine identities.
+#
+# Replaces the `ssh arm1-oci` operator step in the original
+# `infisical-first.toml`. The bons IaC does the admin creation via
+# Chrome MCP (no operator click-throughs required).
+#
+# Usage:
+#   km run procedure deploy-infisical-arm1-oci
+#
+# Spec: openspec/changes/2026-07-12-iac-ify-infisical-bootstrap-v1
+# =============================================================================
+
+[[procedure.config]]
+name = "deploy-infisical-arm1-oci"
+description = "Deploy Infisical on arm1-oci via Komodo + invoke iac:bootstrap-infisical (replaces the undocumented docker run)"
+server_id = "arm1-oci"
+
+# -----------------------------------------------------------------------------
+# STAGE 1: Preflight (verify prerequisites + check if already deployed)
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "preflight"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "command -v docker >/dev/null 2>&1 && echo 'docker present' || (echo 'ERROR: docker not present on arm1-oci' && exit 1)", timeout_s = 10, name = "docker-present", description = "Verify docker is installed on arm1-oci" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker manifest inspect infisical/infisical:latest 2>&1 | head -3", timeout_s = 30, name = "image-pullable", description = "Verify the infisical/infisical:latest image is pullable from Docker Hub" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "docker volume inspect infisical_data >/dev/null 2>&1 && echo 'infisical_data volume present (warm deploy — bootstrap will reuse it)' || echo 'no existing volume (cold deploy)'", timeout_s = 10, name = "volume-check", description = "Check if the infisical_data volume already exists (warm vs cold deploy)" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://pangolin.cianfhoghlaim.ie/api/v1/", expected_status = 200, timeout_s = 15, name = "pangolin-reachable", description = "Pangolin must be reachable for the public domain (infisical.cianfhoghlaim.ie routes through it)" } }
+
+[[procedure.config.stages]]
+name = "stack-deploy"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "mkdir -p /etc/komodo/infisical && cd /etc/komodo/infisical && ln -sf /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar/stacks/infisical/* . && ls -la /etc/komodo/infisical/", timeout_s = 10, name = "link-bons-stack", description = "Symlink the bons IaC's stacks/infisical/ into /etc/komodo/infisical (so Komodo's stack runner can find it)" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "cd /etc/komodo/infisical && docker compose pull 2>&1 | tail -10", timeout_s = 180, name = "pull-images", description = "Pull the latest Infisical + Postgres + Redis + Locket images" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "cd /etc/komodo/infisical && docker compose up -d 2>&1 | tail -20", timeout_s = 120, name = "compose-up", description = "Start the Infisical stack (Postgres + Redis + backend + Locket sidecar)", require_success = true } }
+
+# -----------------------------------------------------------------------------
+# STAGE 3: Health check (wait for Infisical to be reachable)
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "health"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "for i in {1..18}; do sleep 5; STATUS=$(curl -ksS -o /dev/null -w '%{http_code}' https://infisical.cianfhoghlaim.ie/api/status 2>&1); if [ \"$STATUS\" = '200' ]; then echo \"OK: infisical /api/status returned 200 after ${i} attempts\"; break; fi; echo \"waiting for infisical... attempt $i (status=$STATUS)\"; done; if [ \"$STATUS\" != '200' ]; then echo 'ERROR: infisical /api/status never returned 200 after 90s'; exit 1; fi", timeout_s = 120, name = "infisical-healthy", description = "Poll https://infisical.cianfhoghlaim.ie/api/status until 200 (max 90s)" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "curl -ksS https://infisical.cianfhoghlaim.ie/api/status | head -c 200", timeout_s = 5, name = "infisical-status-dump", description = "Dump the Infisical /api/status response (for the audit record)" } }
+
+# -----------------------------------------------------------------------------
+# STAGE 4: Bootstrap (invoke iac:bootstrap-infisical)
+# -----------------------------------------------------------------------------
+# This is the IaC-driven first-admin + machine-identity seeding.
+# Chrome MCP handles the /signup/setup wizard if needed (no operator
+# click-throughs required).
+
+[[procedure.config.stages]]
+name = "bootstrap"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "cd /Users/cianmacandeisigh/dev/kings_college_galway/bonneagar && export INFISICAL_URL=https://infisical.cianfhoghlaim.ie && bun run iac:bootstrap-infisical --use-existing-creds 2>&1 | tail -40", timeout_s = 180, name = "bootstrap-infisical", description = "Invoke iac:bootstrap-infisical (creates the first admin via Chrome MCP if needed + seeds all 8 machine identities + writes bons-iac creds to .env)", require_success = false } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "for name in bons-iac pocket-id komodo pangolin tinyauth openclaw openchamber hermes; do ID=$(curl -ksS -H \"X-API-Key: ${INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET:-$(grep INFISICAL_UNIVERSAL_AUTH_CLIENT_SECRET ~/.env | cut -d= -f2 | tr -d '\"')}\" \"https://infisical.cianfhoghlaim.ie/api/v3/projects/${INFISICAL_PROJECT_ID:-f3cff583-b74b-4804-b9d3-db8b68885236}/identity-machine-identities\" 2>/dev/null | python3 -c \"import json,sys; d=json.load(sys.stdin); print(any(i['name']=='$name' for i in d.get('identities', [])))\" 2>/dev/null); echo \"  $name: present=$ID\"; done", timeout_s = 30, name = "verify-identities", description = "Verify all 8 required machine identities are seeded in the dev-baile project" } }
+
+# -----------------------------------------------------------------------------
+# STAGE 5: Audit record
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "audit"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "TS=$(date -u +%Y%m%dT%H%M%SZ); VERSION=$(docker exec infisical-backend /app/infisical version 2>/dev/null || echo 'unknown'); cat > /tmp/infisical-bootstrap-${TS}.json <<EOF\n{\n  \"ts\": \"$TS\",\n  \"action\": \"deploy-infisical-arm1-oci\",\n  \"host\": \"arm1-oci\",\n  \"image\": \"infisical/infisical:latest\",\n  \"version\": \"$VERSION\",\n  \"oidc_issuer\": \"https://infisical.cianfhoghlaim.ie\",\n  \"pangolin_route\": \"infisical.cianfhoghlaim.ie\",\n  \"machine_identity_count\": 8,\n  \"machine_identities_required\": [\"bons-iac\", \"pocket-id\", \"komodo\", \"pangolin\", \"tinyauth\", \"openclaw\", \"openchamber\", \"hermes\"],\n  \"komodo_procedure\": \"deploy-infisical-arm1-oci\",\n  \"bons_iac_change\": \"openspec/changes/2026-07-12-iac-ify-infisical-bootstrap-v1\",\n  \"note\": \"Replaces the previous undocumented container 3c1be3d92f88 (abandoned).\"\n}\nEOF\necho \"wrote audit record: /tmp/infisical-bootstrap-${TS}.json\"", timeout_s = 10, description = "Write a JSON audit record to /tmp/infisical-bootstrap-{ts}.json with image, version, oidc_issuer, machine_identity_count" } }

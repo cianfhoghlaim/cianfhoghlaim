@@ -1,0 +1,20 @@
+# defs.yaml — 16 NCCA JC short-course Dagster assets (BIEP v2)
+#
+# Per the 2026-07-20-biep-v2-junior-cycle-extraction-v1 change.
+#
+# 16 short courses: coding, chinese, japanese, russian, polish, lithuanian,
+# portuguese, arabic, hebrew, philosophy, film_studies, financial_literacy,
+# media_literacy, personal_professional_development, digital_media,
+# athletic_studies.
+
+type: orchestration.components.JuniorCycleShortCourseComponent
+
+attributes:
+  baml_function: ExtractJCShortCourse
+  source_asset: 1_ingestion_curriculum_jc/ireland/education/junior_cycle_short_courses
+  partition_strategy: by_short_course
+  asset_check_kind: row_count
+  namespace_pattern: "cianfhoghlaim.education.british_isles.ireland.junior_cycle.short_courses.{course_slug}"
+  cocoindex_app: junior_cycle_embedding
+  cognify_dataset: cianfhoghlaim_ireland_junior_cycle_short_courses
+  automation_cron: "0 7 * * 0"  # Weekly Sundays

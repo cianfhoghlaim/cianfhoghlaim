@@ -1,0 +1,26 @@
+# defs/2_materials/baml_extraction/uog_math_coursework/defs.yaml
+#
+# L2 CelticMaterialsComponent for the UoG math/statistics coursework
+# BAML extraction. Calls `b.ExtractCourseworkArtifact` (and the
+# supporting `b.ExtractFormulaRecords`, `b.ExtractTheorems`,
+# `b.ExtractStatisticalProcedureRecords`, `b.ExtractNumericalMethodRecords`,
+# `b.ExtractNonlinearSystemRecords`) per row, partitioned on
+# `domain ∈ {mata, past}`.
+#
+# Per openspec/changes/2026-07-11-uog-math-statistics-academic-history-v1/
+type: orchestration.components.CelticMaterialsComponent
+attributes:
+  baml_function: b.ExtractCourseworkArtifact
+  source_asset: 1_ingestion/filesystem/uog_math_coursework
+  partition_strategy: by_subject
+  asset_check_kind: baml_fidelity
+  subject: uog_math_coursework
+  language: en
+  automation_cron: "0 5 * * *"
+  privacy_gate: "INCLUDE_IDENTITY_RECORDS=false"
+  auxiliary_baml_functions:
+    - b.ExtractFormulaRecords
+    - b.ExtractTheorems
+    - b.ExtractStatisticalProcedureRecords
+    - b.ExtractNumericalMethodRecords
+    - b.ExtractNonlinearSystemRecords

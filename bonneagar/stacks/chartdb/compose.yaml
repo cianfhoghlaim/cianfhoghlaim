@@ -1,0 +1,43 @@
+# =============================================================================
+# ChartDB - Database Schema Visualization
+# =============================================================================
+# Visual database schema editor and diagram tool.
+# https://github.com/chartdb/chartdb
+# =============================================================================
+
+name: chartdb
+
+services:
+  chartdb:
+    image: chartdb/chartdb:latest
+    container_name: chartdb
+    restart: unless-stopped
+
+    security_opt:
+      - no-new-privileges:true
+
+    ports:
+      - "${CHARTDB_PORT:-3000}:80"
+
+    environment:
+      - TZ=${TZ:-UTC}
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    networks:
+      - tools
+
+networks:
+  tools:
+    external: true

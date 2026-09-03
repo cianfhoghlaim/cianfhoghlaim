@@ -1,0 +1,179 @@
+// BAML schema: English (Bearla) web backend
+//
+// Per openspec/changes/2026-07-16-biiep-v1-lc-per-subject-web-surface-v1/
+// The per-subject BAML backend that backs the 5 per-subject TanStack
+// routes at apps/.../routes/en/subjects/english/. Exposes 3 web-facing
+// functions consumed by the per-subject Convex actions:
+//
+//   - WebStudyPlan              -> convex/english/generateStudyPlan.ts
+//   - WebExamPaperDiscussion    -> convex/english/discussExamPaper.ts
+//   - WebMarkingSchemeExplanation -> direct read from
+//                                   apps/.../routes/en/subjects/english/marking-schemes
+//
+// The foundation (qpack + syllabus extraction) lives in
+// baml/education/subjects/qpack_english.baml. This file layers the
+// web-facing study-plan + discussion functions on top of that foundation.
+//
+// Usage:
+//   from cianfhoghlaim.baml_client import b
+//   plan = b.WebStudyPlan(subject="english", weeks_until_exam=12,
+//                        target_level="LC_HL", language="en")
+//   discussion = b.WebExamPaperDiscussion(subject="english", paper_year=2024,
+//                                        paper_level="LC_HL", paper_language="en",
+//                                        question_text="...")
+//
+// Re-gen after changes:  cd cianfhoghlaim && uv run baml-cli generate
+
+// ============================================================================
+// Enums
+// ============================================================================
+
+enum EnglishLevel {
+  LC_OL @description("LC_OL English level")
+  LC_HL @description("LC_HL English level")
+}
+
+enum EnglishLanguage {
+  EN @description("English-language English")
+  GA @description("Gaeilge (Bearla) English")
+}
+
+// ============================================================================
+// Output classes
+// ============================================================================
+
+class EnglishWebStudyPlanResponse {
+  title string @description("Title of the English study plan (bilingual EN+GA)")
+  title_ga string @description("Gaeilge title")
+  weeks int @description("Number of weeks in the plan")
+  total_study_hours int @description("Total expected study hours")
+  weeks_plan EnglishStudyWeek[]
+  milestones EnglishStudyMilestone[]
+  recommended_past_papers int[] @description("Past paper years to prioritise, oldest first")
+  trace_id string? @description("Langfuse trace id (populated by the @trace decorator)")
+}
+
+class EnglishStudyWeek {
+  week_number int
+  theme string @description("Week theme in English")
+  theme_ga string @description("Week theme in Gaeilge")
+  syllabus_topics string[] @description("NCCA syllabus topics covered this week")
+  study_hours int
+  past_paper_questions string[] @description("Past paper question ids to attempt this week")
+  marking_scheme_focus string[] @description("PCLM patterns to drill this week")
+  kc_weights EnglishKCWeight[]
+}
+
+class EnglishKCWeight {
+  slug string @description("Key competency slug (one of: communicating, information-processing, critical-creative-thinking, personal-effectiveness, working-with-others)")
+  weight int @description("Weight 0-100")
+}
+
+class EnglishStudyMilestone {
+  week int
+  description string @description("Milestone description in English")
+  description_ga string @description("Milestone description in Gaeilge")
+  assessment_type string @description("Type of assessment: past_paper_full, past_paper_section, mock_orals, lab_practical, essay, ...")
+}
+
+class EnglishWebExamPaperDiscussionResponse {
+  question_summary string @description("Restatement of the question")
+  question_summary_ga string? @description("Gaeilge summary")
+  marking_scheme string @description("The PCLM marking scheme for this question")
+  marking_scheme_ga string? @description("Gaeilge marking scheme")
+  model_answer_outline string[] @description("Step-by-step model answer outline")
+  model_answer_outline_ga string[] @description("Gaeilge outline")
+  common_mistakes string[] @description("Common student mistakes for this question")
+  marks_breakdown EnglishMarksBreakdown[]
+  follow_up_questions string[] @description("Suggested follow-up questions the tutor might ask")
+  trace_id string?
+}
+
+class EnglishMarksBreakdown {
+  part_label string @description("e.g. (a), (b)(i), (c)")
+  part_text string @description("What this part asks for")
+  marks int
+  marking_notes string @description("How marks are awarded for this part")
+}
+
+class EnglishWebMarkingSchemeExplanationResponse {
+  paper_year int
+  paper_level EnglishLevel
+  paper_language EnglishLanguage
+  total_marks int
+  sections EnglishMarkingSection[]
+  pclm_patterns string[] @description("PCLM patterns used throughout the paper")
+  trace_id string?
+}
+
+class EnglishMarkingSection {
+  section_label string @description("e.g. Section A, Section B")
+  total_marks int
+  questions EnglishMarkingQuestion[]
+}
+
+class EnglishMarkingQuestion {
+  question_label string @description("e.g. Q1, Q2(a)(i)")
+  marks int
+  pclm string @description("PCLM rationale for this question")
+}
+
+// ============================================================================
+// Functions
+// ============================================================================
+
+function EnglishWebStudyPlan(
+  subject: string,
+  weeks_until_exam: int,
+  target_level: EnglishLevel,
+  language: EnglishLanguage,
+  focus_topics: string[]
+) -> EnglishWebStudyPlanResponse {  client ExtractEn
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+}
+
+function EnglishWebExamPaperDiscussion(
+  subject: string,
+  paper_year: int,
+  paper_level: EnglishLevel,
+  paper_language: EnglishLanguage,
+  question_text: string
+) -> EnglishWebExamPaperDiscussionResponse {  client ExtractEn
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+}
+
+function EnglishWebMarkingSchemeExplanation(
+  subject: string,
+  paper_year: int,
+  paper_level: EnglishLevel,
+  paper_language: EnglishLanguage
+) -> EnglishWebMarkingSchemeExplanationResponse {  client ExtractEn
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+}

@@ -1,0 +1,30 @@
+{
+  "name": "tuatha-ui",
+  "private": true,
+  "type": "module",
+  "description": "Túatha educational Celtic MMO front-end (TanStack Start + React + Babylon.js).",
+  "scripts": {
+    "dev": "vite dev --port 3004",
+    "build": "vite build",
+    "start": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tanstack/react-router": "1.170.8",
+    "@tanstack/react-router-ssr-query": "1.167.0",
+    "@tanstack/react-start": "1.168.21",
+    "@tanstack/react-query": "5.100.14",
+    "@tanstack/react-router-devtools": "1.167.0",
+    "lucide-react": "^0.544.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "latest",
+    "nitro": "npm:nitro-nightly@latest",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.6"
+  }
+}

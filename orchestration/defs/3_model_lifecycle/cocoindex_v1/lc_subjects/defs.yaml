@@ -1,0 +1,49 @@
+# defs/3_model_lifecycle/cocoindex_v1/lc_subjects/defs.yaml
+#
+# L3 model-lifecycle for the BIEP v1 6 subject CocoIndex v1 Apps.
+#
+# Per the british-isles-education-pipeline spec — `CocoIndex v1
+# embeddings (BGE-M3) into LanceDB` Requirement. The 6 subject
+# Apps share the canonical `_lifespan.py` shared lifespan (R1).
+#
+# Reference: openspec/changes/2026-07-06-british-isles-education-pipeline-v1/
+type: orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_group: lc_subjects
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  subjects:
+    - name: mathematics
+      app_name: MathematicsEmbedding
+      module: cianfhoghlaim.cocoindex.mathematics_embedding
+    - name: chemistry
+      app_name: ChemistryEmbedding
+      module: cianfhoghlaim.cocoindex.chemistry_embedding
+    - name: geography
+      app_name: GeographyEmbedding
+      module: cianfhoghlaim.cocoindex.geography_embedding
+    - name: gaeilge
+      app_name: GaeilgeEmbedding
+      module: cianfhoghlaim.cocoindex.gaeilge_embedding
+      language: ga  # Gaeilge is Irish-only per BIEP v1 spec
+    - name: english
+      app_name: EnglishEmbedding
+      module: cianfhoghlaim.cocoindex.english_embedding
+    - name: computer_science
+      app_name: ComputerScienceEmbedding
+      module: cianfhoghlaim.cocoindex.computer_science_embedding
+  schedules:
+    daily_lc_subject_reindex:
+      cron: "0 3 * * *"
+      timezone: UTC
+  table_name_pattern: cianfhoghlaim.lc.<subject>.<level>_<language>
+  lance_table_format: hnsw_pq
+  tags:
+    - biep
+    - lc6
+    - cocoindex-v1
+    - embedding
+  metadata:
+    openspec_change: 2026-07-06-british-isles-education-pipeline-v1
+    spec: british-isles-education-pipeline

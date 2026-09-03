@@ -1,0 +1,40 @@
+// Bulgaria education extraction BAML schema (EU nations full-depth).
+
+class BulgariaSubjectCurriculum {
+  country_code string @description("ISO 3166-1 alpha-3 (lowercase)")
+  language string @description("The official language of the curriculum row")
+  nation string @description("Country name")
+  subject string @description("Subject slug (mathematics, chemistry, biology, physics, language, computing_science)")
+  grade_level string @description("Educational stage (primary, lower_secondary, upper_secondary)")
+  title string
+  learning_outcomes string @description("Comma-separated canonical learning outcomes")
+  exam_board string? @description("Awarding body / ministry (e.g. MŠMT, MŠMTŠ, OH, NÚCEM)")
+  source_url string
+  content_hash string?
+}
+
+function ExtractBulgariaSubjectCurriculum(
+  nation: string,
+  language: string,
+  subject: string,
+  text: string
+) -> BulgariaSubjectCurriculum {  client ExtractEn
+    prompt #"
+    {{ _.role("user") }}
+    You are an expert extractor. From the input below, extract every field
+    in the return type according to the @description decorators on the
+    class definition. Preserve the canonical field names + types.
+
+    {{ ctx.output_format }}
+
+    {{ input }}
+  "#
+
+  catch_all (err) {
+    BulgariaSubjectCurriculum {
+      title "",
+      source_url "",
+      content_hash null,
+    }
+  }
+}

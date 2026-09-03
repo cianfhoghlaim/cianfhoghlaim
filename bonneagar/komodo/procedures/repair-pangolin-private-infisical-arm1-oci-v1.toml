@@ -1,0 +1,99 @@
+# =============================================================================
+# REPAIR-PANGOLIN-PRIVATE-INFISICAL-ARM1-OCI-V1 PROCEDURE
+# =============================================================================
+# Companion to openspec/changes/2026-07-24-iac-sync-sites-pangolin-private-infisical-repair-v1
+#
+# Repairs the Pangolin private resource for infisical.cianfhoghlaim.ie
+# when it returns HTTP 502 Bad Gateway. The 2-step repair:
+#   1. iac:sync:sites    — re-emit the private resource via the Pangolin
+#                           Integrations API
+#   2. iac:rotate-auth   — mint a fresh bons-iac Universal Auth credential
+#
+# Pre-requisite: the bunchloch local fallback (Change 1) is up so the
+# operator has a working surface during the repair window.
+#
+# Architecture (during the repair):
+#   bunchloch — Change 1's local Infisical vault (port 8081, alive)
+#               Change 1's openclaw + hermes (alive, functoining)
+#   arm1-oci  — Pangolin + Infisical (broken private resource; we repair it)
+#               newt client (alive)
+#
+# Usage:
+#   km run procedure repair-pangolin-private-infisical-arm1-oci-v1
+# =============================================================================
+
+[[procedure.config]]
+name = "repair-pangolin-private-infisical-arm1-oci-v1"
+description = "Repair the Pangolin private Infisical resource on arm1-OCI — preflight -> iac:sync:sites (dry-run + yes) -> poll 200 -> iac:rotate-auth -> smoke-test locket from bunchloch -> audit"
+server_id = "arm1-oci"
+
+# =============================================================================
+# STAGE 0: Preflight
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "preflight"
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://pangolin.cianfhoghlaim.ie/api/v1/", expected_status = 200, timeout_s = 30, name = "pangolin-reachable", description = "Pangolin control plane must be reachable (we need this for iac:sync:sites)" } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "HttpCheck", params = { url = "https://infisical.cianfhoghlaim.ie/api/status", expected_status = 502, timeout_s = 30, name = "infisical-confirmed-502", description = "Confirm infisical is returning 502 (the trigger for this repair; abort if it's already 200)", require_success = false } }
+
+# =============================================================================
+# STAGE 1: iac:sync:sites (dry-run + confirmation + apply)
+# =============================================================================
+# The procedure pauses for human confirmation after the dry-run so the
+# operator can inspect the diff before re-emitting the private resource.
+# -----------------------------------------------------------------------------
+
+[[procedure.config.stages]]
+name = "iac-sync-sites-dry-run"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "bun run --cwd bonneagar iac:sync:sites --dry-run --target=infisical.cianfhoghlaim.ie 2>&1 | tee /tmp/iac-sync-sites-dry-run-$(date -u +%Y%m%dT%H%M%SZ).log | tail -40", timeout_s = 60, description = "Dry-run iac:sync:sites to show the diff for the infisical.cianfhoghlaim.ie private resource", require_success = false } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "echo 'ACTION REQUIRED: review the dry-run diff above. Confirm the change matches expectations (re-emit the 6-label pattern). Type YES to apply or anything else to abort:'; read -r CONFIRM; if [ \"$CONFIRM\" != 'YES' ]; then echo 'ABORT: operator did not confirm'; exit 1; fi; echo 'OK: operator confirmed'", timeout_s = 300, description = "Operator: review dry-run, type YES to apply" } }
+
+[[procedure.config.stages]]
+name = "iac-sync-sites-apply"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "bun run --cwd bonneagar iac:sync:sites --target=infisical.cianfhoghlaim.ie 2>&1 | tee /tmp/iac-sync-sites-apply-$(date -u +%Y%m%dT%H%M%SZ).log | tail -20", timeout_s = 60, description = "Apply iac:sync:sites — re-emit the infisical.cianfhoghlaim.ie private resource", require_success = true } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "for i in {1..12}; do sleep 5; STATUS=$(curl -ksS -o /dev/null -w '%{http_code}' https://infisical.cianfhoghlaim.ie/api/status 2>&1); if [ \"$STATUS\" = '200' ]; then echo \"OK: infisical /api/status returned 200 after ${i} attempts\"; break; fi; echo \"waiting for infisical... attempt $i (status=$STATUS)\"; done; if [ \"$STATUS\" != '200' ]; then echo 'ERROR: infisical never returned 200 after 60s'; exit 1; fi", timeout_s = 90, description = "Poll https://infisical.cianfhoghlaim.ie/api/status until 200 (max 60s)", require_success = true } }
+
+# =============================================================================
+# STAGE 2: iac:rotate-auth
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "iac-rotate-auth"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "bun run --cwd bonneagar iac:rotate-auth --target=bons-iac 2>&1 | tee /tmp/iac-rotate-auth-$(date -u +%Y%m%dT%H%M%SZ).log | tail -20", timeout_s = 120, description = "Mint a fresh bons-iac client_secret + push to Infisical + re-derive /etc/komodo/secrets/infisical_secret", require_success = true } }
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "test -f /etc/komodo/secrets/infisical_secret && test $(stat -f %a /etc/komodo/secrets/infisical_secret) = '600' && echo 'OK: /etc/komodo/secrets/infisical_secret present and mode 0600' && head -1 /etc/komodo/secrets/infisical_secret | grep -q INFISICAL_CLIENT_ID || (echo 'ERROR: infisical_secret missing or malformed'; exit 1)", timeout_s = 10, description = "Verify /etc/komodo/secrets/infisical_secret was rewritten with the new credential" } }
+
+# =============================================================================
+# STAGE 3: Smoke-test locket from bunchloch against the OCI vault
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "smoke-test-from-bunchloch"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "ssh bunchloch 'INFISICAL_URL=https://infisical.cianfhoghlaim.ie /usr/local/bin/locket --provider=infisical --infisical-client-id=$(grep INFISICAL_CLIENT_ID /etc/komodo/secrets/infisical_secret | cut -d= -f2 | tr -d \\\"\\\\n) --infisical-client-secret=file:/etc/komodo/secrets/infisical_secret --map=/tmp/locket-smoke:/tmp/locket-smoke --mode=oneshot healthcheck' 2>&1 | tee /tmp/locket-smoke-bunchloch-$(date -u +%Y%m%dT%H%M%SZ).log | tail -10", timeout_s = 30, description = "Smoke-test: ssh to bunchloch, run locket against the OCI vault, expect >= 16 resolved secrets", require_success = true } }
+
+# =============================================================================
+# STAGE 4: Audit record
+# =============================================================================
+
+[[procedure.config.stages]]
+name = "audit"
+
+[[procedure.config.stages.executions]]
+execution = { type = "RunShellCommand", params = { command = "TS=$(date -u +%Y%m%dT%H%M%SZ); cat > /tmp/infisical-pangolin-private-repair-${TS}.json <<EOF\n{\n  \"ts\": \"$TS\",\n  \"action\": \"repair-pangolin-private-infisical-arm1-oci-v1\",\n  \"host\": \"arm1-oci\",\n  \"target_resource\": \"infisical.cianfhoghlaim.ie\",\n  \"iac_sync_sites_log\": \"$(ls -t /tmp/iac-sync-sites-apply-*.log 2>/dev/null | head -1)\",\n  \"iac_rotate_auth_log\": \"$(ls -t /tmp/iac-rotate-auth-*.log 2>/dev/null | head -1)\",\n  \"locket_smoke_log\": \"$(ls -t /tmp/locket-smoke-bunchloch-*.log 2>/dev/null | head -1)\",\n  \"before_status\": \"502\",\n  \"after_status\": \"200\",\n  \"komodo_procedure\": \"repair-pangolin-private-infisical-arm1-oci-v1\",\n  \"openspec_changes\": [\"2026-07-24-deploy-openclaw-hermes-bunchloch-local-infisical-fallback-v1\", \"2026-07-24-iac-sync-sites-pangolin-private-infisical-repair-v1\"]\n}\nEOF\necho \"wrote audit record: /tmp/infisical-pangolin-private-repair-${TS}.json\"", timeout_s = 10, description = "Write a JSON audit record to /tmp/infisical-pangolin-private-repair-${TS}.json" } }

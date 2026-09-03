@@ -1,0 +1,166 @@
+public-resources:
+  # ---------------------------------------------------------------------------
+  # Garage S3 API (Virtual-Host Style) - Stays public for programmatic access
+  # ---------------------------------------------------------------------------
+  lakehouse-s3:
+    name: "Lakehouse S3 API"
+    full-domain: "s3.lakehouse.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "bunchloch"
+        hostname: "lakehouse-garage"
+        method: "http"
+        port: 3900
+
+  lakehouse-s3-iceberg:
+    name: "Lakehouse Iceberg Bucket"
+    full-domain: "iceberg.s3.lakehouse.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "bunchloch"
+        hostname: "lakehouse-garage"
+        method: "http"
+        port: 3900
+
+  lakehouse-s3-lance:
+    name: "Lakehouse Lance Bucket"
+    full-domain: "lance.s3.lakehouse.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "bunchloch"
+        hostname: "lakehouse-garage"
+        method: "http"
+        port: 3900
+
+  lakehouse-s3-ducklake:
+    name: "Lakehouse DuckLake Bucket"
+    full-domain: "ducklake.s3.lakehouse.cianfhoghlaim.ie"
+    protocol: "http"
+    targets:
+      - site: "bunchloch"
+        hostname: "lakehouse-garage"
+        method: "http"
+        port: 3900
+
+private-resources:
+  lakehouse-admin:
+    name: "Lakehouse Admin"
+    mode: "http"
+    destination-port: 3903
+    full-domain: "lakehouse-admin.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "lakehouse-admin"
+
+  lakekeeper:
+    name: "Lakekeeper REST Catalog"
+    mode: "http"
+    destination-port: 8181
+    full-domain: "lakekeeper.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "lakekeeper"
+
+  lance-api:
+    name: "Lance Namespace API"
+    mode: "http"
+    destination-port: 8182
+    full-domain: "lance-api.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "lance-api"
+
+  # ---------------------------------------------------------------------------
+  # Nimtable Iceberg Catalog UI (extend-lakehouse-with-nimtable-olake-lancedb)
+  # ---------------------------------------------------------------------------
+  nimtable:
+    name: "Nimtable Iceberg Catalog UI"
+    mode: "http"
+    destination-port: 3018
+    full-domain: "nimtable.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "nimtable"
+
+  # ---------------------------------------------------------------------------
+  # Olake CDC Engine (extend-lakehouse-with-nimtable-olake-lancedb)
+  # ---------------------------------------------------------------------------
+  olake:
+    name: "Olake CDC Engine Admin"
+    mode: "http"
+    destination-port: 8080
+    full-domain: "olake.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "olake"
+
+  # ---------------------------------------------------------------------------
+  # LanceDB Table Viewer (extend-lakehouse-with-nimtable-olake-lancedb)
+  # ---------------------------------------------------------------------------
+  lancedb-viewer:
+    name: "LanceDB Table Viewer"
+    mode: "http"
+    destination-port: 8081
+    full-domain: "lance-viewer.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "lancedb-viewer"
+
+  # ---------------------------------------------------------------------------
+  # Graph DB backends (lakehouse-unified-data-plane 2026-08-15)
+  # ---------------------------------------------------------------------------
+  # Added 2026-08-15 — the 5 graph DB backends (cognee + graphiti + falkordb +
+  # memgraph + memgraph-lab) are now part of the unified lakehouse stack.
+  # The standalone stacks (cognee/, graphiti/, falkordb/, memgraph/, lancedb/)
+  # are deprecated and carry 1-line banners pointing at this blueprint.
+
+  # Cognee knowledge graph builder (port 8000)
+  cognee:
+    name: "Cognee Knowledge Graph"
+    mode: "http"
+    destination-port: 8000
+    full-domain: "cognee.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "cognee"
+
+  # Graphiti bi-temporal KG API (port 8001)
+  graphiti:
+    name: "Graphiti Temporal Knowledge Graph"
+    mode: "http"
+    destination-port: 8001
+    full-domain: "graphiti.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "graphiti"
+
+  # FalkorDB Browser UI (port 3000)
+  falkordb-browser:
+    name: "FalkorDB Browser"
+    mode: "http"
+    destination-port: 3000
+    full-domain: "falkordb.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "falkordb"
+
+  # Memgraph Lab UI (port 3001)
+  memgraph-lab:
+    name: "Memgraph Lab"
+    mode: "http"
+    destination-port: 3001
+    full-domain: "memgraph.cianfhoghlaim.ie"
+    protocol: "http"
+    roles:
+      - "Member"
+    destination: "memgraph-lab"
+

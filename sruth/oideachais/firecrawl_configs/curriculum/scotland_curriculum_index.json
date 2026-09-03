@@ -1,0 +1,328 @@
+{
+  "$schema": "./SCHEMA.json",
+  "version": "1.0.0",
+  "generated_at": "2025-01-05",
+  "jurisdiction": "scotland",
+
+  "sources": {
+    "education_scotland": {
+      "base_url": "https://education.gov.scot",
+      "languages": {"en": ""}
+    },
+    "sqa": {
+      "base_url": "https://www.sqa.org.uk",
+      "languages": {"en": ""}
+    },
+    "bord_na_gaidhlig": {
+      "base_url": "https://www.gaidhlig.scot",
+      "languages": {"en": "", "gd": "/gd"}
+    },
+    "gdsg": {
+      "base_url": "https://www.gdsg.ac.uk",
+      "languages": {"en": ""}
+    },
+    "education_scotland_gaelic": {
+      "base_url": "https://www.education.gov.scot",
+      "languages": {"gd": "/gd"}
+    }
+  },
+
+  "curriculum_levels": {
+    "early": {
+      "name": {"en": "Early Level", "gd": "Ìre Innic"},
+      "age_range": "3-6",
+      "stage": "pre-school"
+    },
+    "first": {
+      "name": {"en": "First Level", "gd": "Ìre Chiùil"},
+      "age_range": "6-9",
+      "stage": "P2-P4"
+    },
+    "second": {
+      "name": {"en": "Second Level", "gd": "Ìre Dàna"},
+      "age_range": "9-12",
+      "stage": "P5-P7"
+    },
+    "third": {
+      "name": {"en": "Third Level", "gd": "Ìre Treas"},
+      "age_range": "12-15",
+      "stage": "S1-S3"
+    },
+    "fourth": {
+      "name": {"en": "Fourth Level", "gd": "Ìre Ceathrach"},
+      "age_range": "15-18",
+      "stage": "S4-S6",
+      "senior_phase": true
+    }
+  },
+
+  "qualifications": {
+    "national_4": {
+      "name": {"en": "National 4", "gd": "Nàiseanta 4"},
+      "age": "16",
+      "level": "SCQF Level 4",
+      "equivalent": ["gcse", "junior_cert"]
+    },
+    "national_5": {
+      "name": {"en": "National 5", "gd": "Nàiseanta 5"},
+      "age": "16",
+      "level": "SCQF Level 5",
+      "equivalent": ["gcse", "junior_cert"]
+    },
+    "higher": {
+      "name": {"en": "Higher", "gd": "Àrd Ìre"},
+      "age": "17",
+      "level": "SCQF Level 6",
+      "equivalent": ["as_level", "leaving_cert_y1"]
+    },
+    "advanced_higher": {
+      "name": {"en": "Advanced Higher", "gd": "Àrd Ìre Adhartach"},
+      "age": "18",
+      "level": "SCQF Level 7",
+      "equivalent": ["a_level", "leaving_cert_y2"]
+    }
+  },
+
+  "subjects": [
+    {
+      "slug": "mathematics",
+      "name": {"en": "Mathematics", "gd": "Matamataig"},
+      "levels": ["first", "second", "third", "fourth"],
+      "qualification_type": ["national_5", "higher", "advanced_higher"],
+      "urls": {
+        "sqa_n5": "/pastpapers/findpastpaper.htm?subject=Mathematics&level=N5",
+        "sqa_h": "/pastpapers/findpastpaper.htm?subject=Mathematics&level=NH",
+        "sqa_ah": "/pastpapers/findpastpaper.htm?subject=Mathematics&level=NAH"
+      }
+    },
+    {
+      "slug": "gaelic_learners",
+      "name": {"en": "Gaelic (Learners)", "gd": "Gàidhlig (Luchd-ionnsaichid)"},
+      "levels": ["third", "fourth"],
+      "qualification_type": ["national_5", "higher", "advanced_higher"],
+      "urls": {
+        "sqa_n5": "/pastpapers/findpastpaper.htm?subject=Gaelic&level=N5",
+        "sqa_h": "/pastpapers/findpastpaper.htm?subject=Gaelic&level=NH"
+      }
+    },
+    {
+      "slug": "gaelic_fluent",
+      "name": {"en": "Gàidhlig (Fluent Speakers)", "gd": "Gàidhlig (Luchd-brìgh"},
+      "levels": ["third", "fourth"],
+      "urls": {}
+    },
+    {
+      "slug": "english",
+      "name": {"en": "English", "gd": "Beurla"},
+      "levels": ["first", "second", "third", "fourth"],
+      "qualification_type": ["national_5", "higher"],
+      "urls": {
+        "sqa_n5": "/pastpapers/findpastpaper.htm?subject=English&level=N5",
+        "sqa_h": "/pastpapers/findpastpaper.htm?subject=English&level=NH"
+      }
+    },
+    {
+      "slug": "scots",
+      "name": {"en": "Scots", "gd": "Scots"},
+      "levels": ["first", "second", "third"],
+      "urls": {}
+    },
+    {
+      "slug": "biology",
+      "name": {"en": "Biology", "gd": "Bith-eòlas"},
+      "levels": ["third", "fourth"],
+      "qualification_type": ["national_5", "higher", "advanced_higher"],
+      "urls": {
+        "sqa_n5": "/pastpapers/findpastpaper.htm?subject=Biology&level=N5",
+        "sqa_h": "/pastpapers/findpastpaper.htm?subject=Biology&level=NH",
+        "sqa_ah": "/pastpapers/findpastpaper.htm?subject=Biology&level=NAH"
+      }
+    },
+    {
+      "slug": "chemistry",
+      "name": {"en": "Chemistry", "gd": "Ceimigeachd"},
+      "levels": ["third", "fourth"],
+      "qualification_type": ["national_5", "higher", "advanced_higher"],
+      "urls": {
+        "sqa_n5": "/pastpapers/findpastpaper.htm?subject=Chemistry&level=N5",
+        "sqa_h": "/pastpapers/findpastpaper.htm?subject=Chemistry&level=NH",
+        "sqa_ah": "/pastpapers/findpastpaper.htm?subject=Chemistry&level=NAH"
+      }
+    },
+    {
+      "slug": "physics",
+      "name": {"en": "Physics", "gd": "Fiosaigs",
+      "levels": ["third", "fourth"],
+      "qualification_type": ["national_5", "higher", "advanced_higher"],
+      "urls": {
+        "sqa_n5": "/pastpapers/findpastpaper.htm?subject=Physics&level=N5",
+        "sqa_h": "/pastpapers/findpastpaper.htm?subject=Physics&level=NH",
+        "sqa_ah": "/pastpapers/findpastpaper.htm?subject=Physics&level=NAH"
+      }
+    },
+    {
+      "slug": "history",
+      "name": {"en": "History", "gd": "Eachdraidh"},
+      "levels": ["first", "second", "third", "fourth"],
+      "qualification_type": ["national_5", "higher"],
+      "urls": {
+        "sqa_n5": "/pastpapers/findpastpaper.htm?subject=History&level=N5",
+        "sqa_h": "/pastpapers/findpastpaper.htm?subject=History&level=NH"
+      }
+    },
+    {
+      "slug": "geography",
+      "name": {"en": "Geography", "gd": "Cruinn-eòlas"},
+      "levels": ["first", "second", "third", "fourth"],
+      "qualification_type": ["national_5", "higher"],
+      "urls": {
+        "sqa_n5": "/pastpapers/findpastpaper.htm?subject=Geography&level=N5",
+        "sqa_h": "/pastpapers/findpastpaper.htm?subject=Geography&level=NH"
+      }
+    },
+    {
+      "slug": "modern_studies",
+      "name": {"en": "Modern Studies", "gd": "An Leasachadh Adharaichte"},
+      "levels": ["third", "fourth"],
+      "qualification_type": ["national_5", "higher"],
+      "urls": {
+        "sqa_n5": "/pastpapers/findpastpaper.htm?subject=Modern%20Studies&level=N5",
+        "sqa_h": "/pastpapers/findpastpaper.htm?subject=Modern%20Studies&level=NH"
+      }
+    },
+    {
+      "slug": "religious_moral_education",
+      "name": {"en": "Religious and Moral Education", "gd": "Foghlam Crìostaidh agus Moraltachd"},
+      "levels": ["first", "second", "third", "fourth"],
+      "urls": {}
+    },
+    {
+      "slug": "computing_science",
+      "name": {"en": "Computing Science", "gd": " Saidheans Coimpiutaireachd"},
+      "levels": ["first", "second", "third", "fourth"],
+      "qualification_type": ["national_5", "higher", "advanced_higher"],
+      "urls": {
+        "sqa_n5": "/pastpapers/findpastpaper.htm?subject=Computing%20Science&level=N5",
+        "sqa_h": "/pastpapers/findpastpaper.htm?subject=Computing%20Science&level=NH",
+        "sqa_ah": "/pastpapers/findpastpaper.htm?subject=Computing%20Science&level=NAH"
+      }
+    },
+    {
+      "slug": "physical_education",
+      "name": {"en": "Physical Education", "gd": " Foghlam Corpraid"},
+      "levels": ["first", "second", "third", "fourth"],
+      "urls": {}
+    },
+    {
+      "slug": "health_wellbeing",
+      "name": {"en": "Health and Wellbeing", "gd": "Slàinte agus Sunnd"},
+      "levels": ["early", "first", "second", "third", "fourth"],
+      "urls": {}
+    },
+    {
+      "slug": "expressive_arts",
+      "name": {"en": "Expressive Arts", "gd": "Ealan Gnìomhach"},
+      "levels": ["early", "first", "second", "third"],
+      "urls": {}
+    },
+    {
+      "slug": "technologies",
+      "name": {"en": "Technologies", "gd": "Teicneòlasan"},
+      "levels": ["first", "second", "third", "fourth"],
+      "urls": {}
+    },
+    {
+      "slug": "social_studies",
+      "name": {"en": "Social Studies", "gd": "Eòlas Sòisealta"},
+      "levels": ["first", "second", "third"],
+      "urls": {}
+    },
+    {
+      "slug": "sciences",
+      "name": {"en": "Sciences", "gd": "Saidheansan"},
+      "levels": ["first", "second", "third"],
+      "urls": {}
+    },
+    {
+      "slug": "languages",
+      "name": {"en": "Languages", "gd": "Cànain"},
+      "levels": ["first", "second", "third", "fourth"],
+      "qualification_type": ["national_5", "higher"],
+      "urls": {
+        "french_n5": "/pastpapers/findpastpaper.htm?subject=French&level=N5",
+        "french_h": "/pastpapers/findpastpaper.htm?subject=French&level=NH",
+        "german_n5": "/pastpapers/findpastpaper.htm?subject=German&level=N5",
+        "german_h": "/pastpapers/findpastpaper.htm?subject=German&level=NH",
+        "spanish_n5": "/pastpapers/findpastpaper.htm?subject=Spanish&level=N5",
+        "spanish_h": "/pastpapers/findpastpaper.htm?subject=Spanish&level=NH"
+      }
+    },
+    {
+      "slug": "art_and_design",
+      "name": {"en": "Art and Design", "gd": "Ealain is Dealbhadh"},
+      "levels": ["third", "fourth"],
+      "qualification_type": ["national_5", "higher"],
+      "urls": {
+        "sqa_n5": "/pastpapers/findpastpaper.htm?subject=Art%20and%20Design&level=N5",
+        "sqa_h": "/pastpapers/findpastpaper.htm?subject=Art%20and%20Design&level=NH"
+      }
+    },
+    {
+      "slug": "drama",
+      "name": {"en": "Drama", "gd": "Dràma"},
+      "levels": ["third", "fourth"],
+      "qualification_type": ["national_5", "higher"],
+      "urls": {
+        "sqa_n5": "/pastpapers/findpastpaper.htm?subject=Drama&level=N5",
+        "sqa_h": "/pastpapers/findpastpaper.htm?subject=Drama&level=NH"
+      }
+    },
+    {
+      "slug": "music",
+      "name": {"en": "Music", "gd": "Ceòl"},
+      "levels": ["first", "second", "third", "fourth"],
+      "qualification_type": ["national_5", "higher"],
+      "urls": {
+        "sqa_n5": "/pastpapers/findpastpaper.htm?subject=Music&level=N5",
+        "sqa_h": "/pastpapers/findpastpaper.htm?subject=Music&level=NH"
+      }
+    },
+    {
+      "slug": "business",
+      "name": {"en": "Business", "gd": "Busnadh"},
+      "levels": ["third", "fourth"],
+      "qualification_type": ["national_5", "higher"],
+      "urls": {
+        "sqa_n5": "/pastpapers/findpastpaper.htm?subject=Business&level=N5",
+        "sqa_h": "/pastpapers/findpastpaper.htm?subject=Business&level=NH"
+      }
+    },
+    {
+      "slug": "economics",
+      "name": {"en": "Economics", "gd": "Eaconamas"},
+      "levels": ["fourth"],
+      "qualification_type": ["higher"],
+      "urls": {
+        "sqa_h": "/pastpapers/findpastpaper.htm?subject=Economics&level=NH"
+      }
+    }
+  ],
+
+  "curriculum_for_excellence_areas": {
+    "literacy": "Literacy across learning",
+    "numeracy": "Numeracy across learning",
+    "health_wellbeing": "Health and wellbeing across learning",
+    "technologies": "Technologies across learning",
+    "expressive_arts": "Expressive arts across learning"
+  },
+
+  "document_types": {
+    "specification": "SQA qualification specification",
+    "past_paper": "SQA past examination paper",
+    "mark_scheme": "SQA marking scheme",
+    "examiner_report": "SQA examiner report",
+    "coursework": "Coursework assessment task",
+    "guidelines": "Teaching guidelines",
+    "statement_of_what_matters": "Curriculum for Excellence statement"
+  }
+}

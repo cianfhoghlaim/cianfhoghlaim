@@ -1,0 +1,54 @@
+{
+  "$schema": "https://unstract.com/schemas/workflow/v1.json",
+  "name": "sec_lc_marking",
+  "version": "1.0.0",
+  "description": "SEC Leaving Certificate marking scheme extraction workflow (BIEP v1 — Path 2 of the 4-path ensemble).",
+  "trigger": {
+    "type": "manual_upload",
+    "file_patterns": ["*_marking*.pdf", "*_guideline*.pdf"],
+    "expected_mime_types": ["application/pdf"]
+  },
+  "prompt_template": {
+    "system": "You are an SEC Leaving Certificate marking-scheme extractor. Given the text of a SEC marking scheme PDF, extract the structured marking scheme + grade bands.",
+    "user": [
+      "Subject: {{ subject }}",
+      "Year: {{ year }}",
+      "",
+      "Text:",
+      "{{ pdf_text }}"
+    ]
+  },
+  "json_schema": {
+    "title": "MarkingScheme",
+    "type": "object",
+    "properties": {
+      "subject": { "type": "string" },
+      "scheme_code": { "type": "string" },
+      "language": { "type": "string" },
+      "level": { "type": "string" },
+      "year": { "type": "integer" },
+      "source_pdf": { "type": "string" },
+      "grade_descriptors": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "band": { "type": "string", "enum": ["BAND_I", "BAND_II", "BAND_III", "BAND_IV", "BAND_V"] },
+            "percentage_min": { "type": "integer" },
+            "percentage_max": { "type": "integer" },
+            "descriptor_text_en": { "type": "string" },
+            "descriptor_text_ga": { "type": ["string", "null"] },
+            "exemplar_responses": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      },
+      "mark_allocations": { "type": "array" }
+    },
+    "required": ["subject", "scheme_code", "year", "grade_descriptors"]
+  },
+  "output_settings": {
+    "format": "json",
+    "destination": "duckdb",
+    "ducklake_namespace": "cianfhoghlaim.leaving_cert.{subject}.{lang}.marking_schemes_extracted.unstract_json"
+  }
+}

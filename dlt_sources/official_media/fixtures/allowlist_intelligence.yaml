@@ -1,0 +1,40 @@
+# oideachais/dlt_sources/official_media/fixtures/allowlist_intelligence.yaml
+#
+# British Isles intelligence & signals agencies.
+# Each entry is a public Instagram handle that has been independently
+# verified (via Wikipedia + the agency's own press releases) to be the
+# canonical official account.
+#
+# Locked decision: PR 1 covers the 4 named seeds. PR 2 will add NCA,
+# NCSC, CPNI, ONI (Ireland), and Defence Intelligence.
+
+version: 1
+category: intelligence
+description: >-
+  UK + Ireland intelligence and signals agencies. These handles were
+  verified by visiting the agency's own "Press" / "Careers" page and
+  cross-referencing the social-media footer.
+entries:
+  - ig_username: mi5official
+    name: "MI5 — Security Service"
+    wikipedia_title: "MI5"
+    verified_at: "2026-06-18"
+    source_url: "https://www.mi5.gov.uk/contact-us"
+
+  - ig_username: mi6official
+    name: "MI6 — Secret Intelligence Service"
+    wikipedia_title: "Secret Intelligence Service"
+    verified_at: "2026-06-18"
+    source_url: "https://www.sis.gov.uk/contact-us.html"
+
+  - ig_username: gchq
+    name: "GCHQ — Government Communications Headquarters"
+    wikipedia_title: "GCHQ"
+    verified_at: "2026-06-18"
+    source_url: "https://www.gchq.gov.uk/contact"
+
+  - ig_username: hmgcc
+    name: "HMGCC — His Majesty's Government Communications Centre"
+    wikipedia_title: "HMGCC"
+    verified_at: "2026-06-18"
+    source_url: "https://www.hmgcc.gov.uk/contact-us/"

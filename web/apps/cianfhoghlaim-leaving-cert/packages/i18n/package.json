@@ -1,0 +1,9 @@
+{
+  "name": "@cianfhoghlaim/i18n",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}

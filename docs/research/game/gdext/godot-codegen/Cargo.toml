@@ -1,0 +1,55 @@
+[package]
+name = "godot-codegen"
+version = "0.4.4"
+edition = "2021"
+rust-version = "1.87"
+license = "MPL-2.0"
+keywords = ["gamedev", "godot", "engine", "codegen"]
+categories = ["game-engines", "graphics"]
+description = "Internal crate used by godot-rust"
+repository = "https://github.com/godot-rust/gdext"
+homepage = "https://godot-rust.github.io"
+
+[features]
+default = []
+codegen-full = []
+codegen-lazy-fptrs = []
+codegen-rustfmt = []
+double-precision = []
+api-custom = ["godot-bindings/api-custom"]
+api-custom-json = ["godot-bindings/api-custom-json"]
+experimental-godot-api = []
+experimental-threads = []
+
+[dependencies]
+godot-bindings = { path = "../godot-bindings", version = "=0.4.4" }
+
+heck = { workspace = true }
+nanoserde = { workspace = true }
+proc-macro2 = { workspace = true }
+quote = { workspace = true }
+regex = { workspace = true }
+
+[build-dependencies]
+godot-bindings = { path = "../godot-bindings", version = "=0.4.4" } # emit_godot_version_cfg
+
+# https://docs.rs/about/metadata
+[package.metadata.docs.rs]
+features = ["experimental-godot-api"]
+rustdoc-args = ["--cfg", "published_docs"]
+rustc-args = ["--cfg", "published_docs"]
+
+# Currently causes "unused manifest key" warnings. Maybe re-enable in the future, to make `published_docs` known.
+#[lints.rust]
+#unexpected_cfgs = { level = "warn", check-cfg = ['cfg(published_docs)'] }
+
+# To check formatter: Disabled below, since it pulls in too many dependencies during `cargo test` but is not really used.
+# Dev-dependencies cannot be optional and feature-gated. Enable manually when needed.
+
+#[[bench]]
+#name = "gdext_fmt_bench"
+#harness = false
+#
+#[dev-dependencies]
+#criterion = "0.5"
+

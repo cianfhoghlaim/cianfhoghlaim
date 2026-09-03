@@ -1,0 +1,41 @@
+# defs/5_agent_ops/adk/geog_agent/defs.yaml
+#
+# L5 CelticAgentOpsComponent for the geog_agent (ADK) — one of the
+# 8 NCCA subject agents for the British Isles Educational MMO.
+type: orchestration.components.CelticAgentOpsComponent
+attributes:
+  agent_name: geog_agent
+  framework: adk
+  tools:
+    - geog_syllabus_tool
+    - geog_past_paper_tool
+    - geog_marking_scheme_tool
+    - geog_formative_item_tool
+    - geog_response_score_tool
+  memory_backend: letta
+  event_stream: risingwave
+  event_stream_endpoint: risingwave.cianfhoghlaim.ie:4566
+  langfuse_trace_tag: agent.geog
+  langfuse_drop_smoke_spans: true
+  cognify:
+    dataset: cianfhoghlaim_lc_geography
+    top_k: 5
+    emit_on:
+      - response_generated
+      - tool_call_completed
+  langfuse_callbacks:
+    trace_name: agent.geog.explain
+    flush_interval: 30s
+  routing_keywords:
+    - geography
+    - physical geography
+    - human geography
+    - regional geography
+    - leaving cert geography
+    - lc geography
+    - ncca geography
+    - manannán mac lir
+    - sea
+    - rocks
+    - tectonic
+    - fluvial

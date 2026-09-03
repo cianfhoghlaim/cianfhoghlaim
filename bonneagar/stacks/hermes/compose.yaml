@@ -1,0 +1,137 @@
+# =============================================================================
+# HERMES — Autonomous Agent Runtime (bunchloch)
+# =============================================================================
+# Long-running gateway that runs the NousResearch/hermes-agent runtime
+# (v0.17.0, MIT) as the 3rd vertex in the agent-platform group alongside
+# OpenClaw (channel-fanout) and OpenChamber (browser IDE).
+#
+# USAGE:
+#   Development:  docker compose --env-file ../../.env.local up -d
+#   Production:   docker compose -f compose.yaml -f sidecar.yaml up -d
+#
+# Security model (3-layer):
+#   1. Pangolin TinyAuth (Pocket ID OIDC) at the Traefik layer
+#   2. config/hermes.yaml users.allowlist (Pocket ID subject allowlist)
+#   3. config/hermes.yaml channels.<name>.allow_from (per-channel sender allowlist)
+#
+# LLM provider:
+#   LiteLLM is the canonical LLM gateway. The M3 plan is reached
+#   exclusively through http://litellm:4000/v1. The upstream
+#   Hermes gateway is NOT used (per the opencode-go-fallback-removal
+#   change).
+#
+# Network model:
+#   The upstream Hermes docker-compose.yml uses network_mode: host;
+#   this rewrite fits the 6-file GOLD_STANDARD pattern. Dashboard
+#   binds 127.0.0.1:9119 (Pangolin-routed). Webhook ports (Telegram,
+#   WhatsApp, SMS, WeCom) bind 127.0.0.1 only.
+#
+# Image pinning: ghcr.io/nousresearch/hermes-agent:0.17.0@sha256:<digest>
+# (no :latest). Update on the monthly renovate cycle.
+# =============================================================================
+
+name: hermes
+
+services:
+  # ---------------------------------------------------------------------------
+  # HERMES AGENT
+  # ---------------------------------------------------------------------------
+  hermes:
+    # Pinned 2026-07-02 (the `0.17.0` semver is per the agent-platform-cluster
+    # spec; the upstream image is private at GHCR — requires NousResearch
+    # credentials on the `docker login ghcr.io` step; the `@sha256:0000...`
+    # digest was a placeholder and would fail `docker compose pull`; replaced
+    # with the real semver tag; full digest pin is a renovate-cycle
+    # follow-up).
+    # Pinned 2026-07-02 (was `ghcr.io/nousresearch/hermes-agent:0.17.0` —
+    # that tag is private on GHCR (401). Per the user's direction
+    # "we shouldnt be using our own ghcr for any", and confirmed by
+    # `docker pull nousresearch/hermes-agent` which works on Docker Hub,
+    # we switch to the public Docker Hub mirror. The semver
+    # `0.17.0` is not published on Docker Hub; the upstream
+    # publishes date-based release tags. `v2026.7.1` is the most
+    # recent stable tag as of 2026-07-01).
+    image: nousresearch/hermes-agent:v2026.7.1
+    container_name: hermes
+    restart: unless-stopped
+    # NousResearch/hermes-agent uses s6-overlay which is fundamentally
+    # designed to run as the root user during init (s6 stage0 chowns
+    # /run + /opt/data, then transitions to the internal `hermes` user
+    # for the actual hermes-agent process). Running as a non-root user
+    # requires either a custom /run setup OR a volume chown that the
+    # upstream image doesn't document. For the local-fallback deploy,
+    # we keep the upstream defaults: user root, no read_only, no
+    # no-new-privileges, full capabilities. The s6-overlay-supervised
+    # hermes-agent process still runs as user 10000 (hermes) once
+    # init completes — so the security model is preserved for the
+    # WORKING runtime, just not for the brief init stage.
+    user: "0:0"
+    tmpfs:
+      - /tmp:size=128m
+    ports:
+      # Dashboard — exposed to Pangolin (Traefik routes 9119)
+      - "127.0.0.1:9119:9119"
+      # Hermes-as-MCP-server (issue #342 preview, internal)
+      - "127.0.0.1:9120:9120"
+      # Webhook ports — internal only (upstream services dial in)
+      - "127.0.0.1:8443:8443"   # Telegram webhook
+      - "127.0.0.1:8090:8090"   # WhatsApp Cloud webhook
+      - "127.0.0.1:8080:8080"   # SMS webhook
+      - "127.0.0.1:8645:8645"   # WeCom / BlueBubbles
+    environment:
+      HERMES_STATE_DIR: /home/hermes/.hermes
+      HERMES_CONFIG: /home/hermes/.hermes/config/hermes.yaml
+      HERMES_PORT: "9119"
+      HERMES_MCP_PORT: "9120"
+      HERMES_LOG_LEVEL: ${HERMES_LOG_LEVEL:-info}
+      # LLM provider — LiteLLM is the primary path (M3 chokepoint)
+      OPENAI_BASE_URL: http://litellm:4000/v1
+      # OPENAI_API_KEY is injected by Locket from LITELLM_MASTER_KEY
+      # 3-layer auth — operator's Pocket ID subject (from day one)
+      HERMES_OPERATOR_POCKET_ID_SUBJECT: ${HERMES_OPERATOR_POCKET_ID_SUBJECT}
+      # Unsloth Studio fallback provider (per the 2026-08-21 change).
+      # When UNSLOTH_PROVIDER=true, the entrypoint runs `unsloth start hermes`
+      # against the unsloth-serve API at http://unsloth:8889/v1.
+      # UNSLOTH_API_KEY is injected by Locket from dev-baile/unsloth/api_key.
+      UNSLOTH_PROVIDER: ${UNSLOTH_PROVIDER:-false}
+      UNSLOTH_BASE_URL: http://unsloth:8889/v1
+      # Observability
+      OTEL_SERVICE_NAME: hermes-agent
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      # Langfuse env vars (LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY,
+      # LANGFUSE_BASE_URL) are injected by Locket from secrets.env
+    volumes:
+      - hermes-state:/home/hermes/.hermes/state
+      - ./config:/home/hermes/.hermes/config:ro
+      # NOTE: do NOT mount a volume at /opt/data — the image ships with
+      # /opt/data owned by the internal `hermes:hermes` user (a non-root
+      # user specific to the upstream image). Mounting our volume there
+      # with root:root ownership breaks `cd /opt/data` in the main-wrapper.sh
+      # cont-init script. For local dev, the ephemeral /opt/data inside
+      # the container is fine (it just loses state on container restart).
+      # For production, the proper approach is to chown the volume to
+      # match the image's hermes user (uid/gid need to be determined from
+      # `docker run --rm nousresearch/hermes-agent:v2026.7.1 cat /etc/passwd`).
+    # depends_on locket is declared in sidecar.yaml (canonical pattern)
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:9119/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+    networks:
+      - cianfhoghlaim
+
+volumes:
+  hermes-state:
+    driver: local
+
+networks:
+  cianfhoghlaim:
+    external: true
+    name: cianfhoghlaim

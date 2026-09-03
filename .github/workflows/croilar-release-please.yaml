@@ -1,0 +1,20 @@
+name: Release Please (croilar)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "croilar/**"
+      - "infrastructure/stacks/croilar*/**"
+
+jobs:
+  release-please:
+    name: release-please
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: python
+          package-name: croilar
+          default-branch: main

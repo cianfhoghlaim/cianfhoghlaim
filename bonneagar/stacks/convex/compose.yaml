@@ -1,0 +1,80 @@
+# =============================================================================
+# CONVEX - Self-Hosted Backend Platform (PlanetScale PG migration)
+# =============================================================================
+# Per openspec/changes/2026-07-19-planetscale-postgres-migration-phase-b0-v1/
+#
+# Phase B.0 ships Convex self-host as a HARD SWITCH to PlanetScale PG.
+#
+# Pre-requisites (operator, before this PR merges):
+#   1. Create the PlanetScale PG branch (e.g. bunchloch-prod)
+#   2. Create the `convex_production` database on that branch
+#   3. Create 2 Infisical secrets in `dev-baile/`:
+#      - convex/database_url   → "postgresql://<user>:<pwd>@<host>.pg.psdb.cloud/convex_production?sslmode=verify-full"
+#      - convex/instance_secret → a random string used by Convex for instance isolation
+#
+# NOTE: This is a clean-start migration. Per the operator's confirmation,
+# the self-hosted Convex deployments are dev-only with NO production data.
+# Future production Convex deployments MUST follow the SQLite → Postgres
+# export-import procedure documented in the Convex docs.
+#
+# Usage:
+#   Development:  docker compose --env-file ../../.env.local up -d
+#   Production:   locket exec --env-file secrets.env -- docker compose up -d
+#   Standalone:   docker compose up -d  (uses defaults — needs the Infisical secrets)
+# =============================================================================
+
+name: convex
+
+services:
+  # ---------------------------------------------------------------------------
+  # CONVEX BACKEND - Core Server (PlanetScale PG-backed)
+  # ---------------------------------------------------------------------------
+  backend:
+    image: ghcr.io/get-convex/convex-backend:latest
+    container_name: convex-backend
+    restart: unless-stopped
+    stop_grace_period: 10s
+    stop_signal: SIGINT
+    ports:
+      - "${CONVEX_PORT:-3210}:3210"
+      - "${CONVEX_SITE_PORT:-3211}:3211"
+    environment:
+      # Core configuration
+      CONVEX_CLOUD_ORIGIN: ${CONVEX_CLOUD_ORIGIN:-http://127.0.0.1:3210}
+      CONVEX_SITE_ORIGIN: ${CONVEX_SITE_ORIGIN:-http://127.0.0.1:3211}
+      INSTANCE_NAME: ${CONVEX_INSTANCE_NAME:-convex}
+      INSTANCE_SECRET: infisical://dev-baile/convex/instance_secret
+      # Database configuration — PlanetScale PG via Locket (per Phase B.0)
+      DATABASE_URL: infisical://dev-baile/convex/database_url
+      POSTGRES_URL: infisical://dev-baile/convex/database_url
+      MYSQL_URL: ${CONVEX_MYSQL_URL:-}
+      # S3 storage configuration (optional)
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_REGION: ${AWS_REGION:-auto}
+      S3_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-}
+      S3_STORAGE_FILES_BUCKET: ${S3_STORAGE_FILES_BUCKET:-}
+      S3_STORAGE_MODULES_BUCKET: ${S3_STORAGE_MODULES_BUCKET:-}
+      S3_STORAGE_SEARCH_BUCKET: ${S3_STORAGE_SEARCH_BUCKET:-}
+      S3_STORAGE_EXPORTS_BUCKET: ${S3_STORAGE_EXPORTS_BUCKET:-}
+      S3_STORAGE_SNAPSHOT_IMPORTS_BUCKET: ${S3_STORAGE_SNAPSHOT_IMPORTS_BUCKET:-}
+      AWS_S3_FORCE_PATH_STYLE: ${AWS_S3_FORCE_PATH_STYLE:-true}
+      # Operational settings
+      DOCUMENT_RETENTION_DELAY: ${DOCUMENT_RETENTION_DELAY:-172800}
+      ACTIONS_USER_TIMEOUT_SECS: ${ACTIONS_USER_TIMEOUT_SECS:-}
+      RUST_LOG: ${RUST_LOG:-info}
+      DISABLE_BEACON: ${DISABLE_BEACON:-}
+    # The `convex-data` SQLite volume has been REMOVED in Phase B.0
+    # Convex now writes to PlanetScale PG exclusively
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3210/version"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - convex
+
+networks:
+  convex:
+    driver: bridge

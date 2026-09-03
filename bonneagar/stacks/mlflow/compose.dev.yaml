@@ -1,0 +1,54 @@
+# MLflow — local dev override
+# ----------------------------------------------------------------------------
+# Mirrors the litellm dev override pattern:
+#   1. No-op locket sidecar (alpine) so `depends_on: locket: service_healthy`
+#      resolves without booting the real Infisical-injection sidecar.
+#   2. `env_file: .env.dev` (this stack) provides all the dev secrets
+#      pointing at the lakehouse-postgres (db=mlflow) + lakehouse-garage
+#      (bucket=mlflow-artifacts).
+#   3. The image is built locally from Dockerfile.mlflow on top of the
+#      public upstream `ghcr.io/mlflow/mlflow:v2.22.4` base.
+#
+# Usage:
+#   docker compose \
+#     -f stacks/mlflow/compose.yaml \
+#     -f stacks/mlflow/sidecar.yaml \
+#     -f stacks/mlflow/compose.dev.yaml \
+#     up -d
+# ----------------------------------------------------------------------------
+
+services:
+  locket:
+    image: alpine:3.20
+    container_name: mlflow-locket-dev
+    restart: "no"
+    command:
+      - sh
+      - -c
+      - "echo '[dev] no-op mlflow locket — secrets from .env.dev'; sleep infinity"
+    healthcheck:
+      test: ["CMD-SHELL", "true"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - mlflow
+      - lakehouse
+
+  mlflow:
+    depends_on:
+      locket:
+        condition: service_started
+    env_file:
+      - .env.dev
+    networks:
+      - mlflow
+      - lakehouse
+
+# Top-level secrets block from sidecar.yaml references the production
+# Infisical secret file (../../infisical_secret). Override with /dev/null
+# so the locket sidecar doesn't fail to mount a missing file.
+secrets:
+  infisical_secret:
+    file: /dev/null

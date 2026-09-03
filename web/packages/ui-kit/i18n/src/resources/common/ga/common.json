@@ -1,0 +1,118 @@
+{
+  "site": {
+    "title": "Croílár",
+    "tagline": "Punann Phearsanta + CV + Innealtóireacht Sonraí"
+  },
+  "nav": {
+    "home": "Baile",
+    "cv": "CV",
+    "music": "Ceol",
+    "code": "Cód",
+    "research": "Taighde",
+    "teaching": "Teagasc",
+    "data": "Sonraí",
+    "identity": "Aitheantas",
+    "contact": "Teagmháil"
+  },
+  "home": {
+    "greeting": "Cian de Búrca",
+    "role": "Innealtóir Bogearraí · Oideachasóir · Léiritheoir Ceoil",
+    "heroTagline": "Ag tógáil ardán sonraí d'oideachas Ceilteach, ag cruthú fuaimdhreacha leictreonacha, agus ag múineadh an chéad ghlúin eile innealtóirí.",
+    "exploreCv": "Féach ar CV",
+    "exploreMusic": "Éist",
+    "exploreCode": "Féach ar Thionscadail"
+  },
+  "cv": {
+    "title": "Curriculum Vitae",
+    "education": "Oideachas",
+    "awards": "Gradaim & Onóracha",
+    "publications": "Foilseacháin",
+    "references": "Teistiméireachtaí",
+    "teaching": "Taithí Teagaisc",
+    "searchPlaceholder": "Cuardaigh CV…",
+    "downloadPdf": "Íoslódáil PDF"
+  },
+  "music": {
+    "title": "Ceol",
+    "subtitle": "Léiriúcháin, remixes, agus comhoibrithe thar ardáin.",
+    "spotify": "Spotify",
+    "soundcloud": "SoundCloud",
+    "youtube": "YouTube",
+    "all": "Uile",
+    "listenNow": "Éist Anois",
+    "tempo": "Luas",
+    "energy": "Fuinneamh",
+    "danceability": "Inchumais Rince",
+    "releasedOn": "Eisithe Ar"
+  },
+  "code": {
+    "title": "Cód",
+    "subtitle": "Tionscadail foinse oscailte agus ranníocaíochtaí ar GitHub.",
+    "repositories": "Stórtha",
+    "totalStars": "Réaltaí Iomlána",
+    "totalForks": "Forcanna Iomlána",
+    "languages": "Teangacha",
+    "viewOnGithub": "Féach ar fad ar GitHub"
+  },
+  "research": {
+    "title": "Taighde",
+    "subtitle": "Aschuir chros-nasctha ó na fo-thionscadail oideachais agus meaisínfhoghlaim.",
+    "educationPlatform": "Ardán Oideachais Cheiltigh",
+    "mlAi": "Meaisínfhoghlaim & IS",
+    "linkedFrom": "Nasctha ó"
+  },
+  "teaching": {
+    "title": "Teagasc",
+    "subtitle": "Scoláireacht BCS PGC, socrúcháin scoile, agus aiseolas ó mhic léinn.",
+    "placements": "Socrúcháin",
+    "feedback": "Aiseolas ó Mhic Léinn",
+    "curriculum": "Curaclam Deartha"
+  },
+  "data": {
+    "title": "Innealtóireacht Sonraí",
+    "subtitle": "Stádas beo ar shócmhainní píblíne Dagster Croílár.",
+    "assets": "Sócmhainní Píblíne",
+    "schedules": "Sceidil",
+    "materializations": "Ábharúcháin le Déanaí",
+    "dagsterUi": "Oscail Comhéadan Dagster",
+    "assetsCount": "Sócmhainní Píblíne",
+    "schedulesCount": "Sceidil Ghníomhacha",
+    "lastRun": "Ábharú Deireanach",
+    "status": "Stádas"
+  },
+  "identity": {
+    "title": "Fíorú Aitheantais",
+    "subtitle": "Meiteashonraí fíoraithe amháin — tá doiciméid PII criptithe agus teastaíonn fíordheimhniú Pocket ID.",
+    "authRequired": "Fíordheimhniú Pocket ID de dhíth",
+    "signIn": "Sínigh isteach le Pocket ID",
+    "documentType": "Cineál Doiciméid",
+    "issuingAuthority": "Údarás Eisiúna",
+    "expiryDate": "Dáta Éaga",
+    "verified": "Fíoraithe",
+    "pending": "Ar Feitheamh"
+  },
+  "contact": {
+    "title": "Teagmháil",
+    "subtitle": "Foirm teagmhála criptithe ó cheann go ceann. Tá gach aighneacht sínithe le HMAC agus seolta trí Hono Worker ar Cloudflare.",
+    "name": "Ainm",
+    "email": "Ríomhphost",
+    "message": "Teachtaireacht",
+    "send": "Seol Teachtaireacht",
+    "sent": "Teachtaireacht seolta — go raibh maith agat.",
+    "encrypted": "Tá an fhoirm seo criptithe ó cheann go ceann."
+  },
+  "footer": {
+    "copyright": "Croílár. Gach ceart ar cosaint.",
+    "tagline": "Punann Phearsanta + CV + Innealtóireacht Sonraí"
+  },
+  "common": {
+    "loading": "Ag lódáil…",
+    "comingSoon": "Ag teacht go luath",
+    "noData": "Níl aon sonraí ar fáil go fóill"
+  },
+  "notFound": {
+    "title": "404 — Gan Aimsiú",
+    "subtitle": "Níl an leathanach atá á lorg agat ann nó tá sé athshuite.",
+    "backHome": "Ar ais chuig an mBaile"
+  }
+}
