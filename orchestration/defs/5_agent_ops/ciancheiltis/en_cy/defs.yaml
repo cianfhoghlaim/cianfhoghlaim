@@ -1,0 +1,141 @@
+# orchestration/defs/5_agent_ops/ciancheiltis/en_cy/defs.yaml
+#
+# L5 CelticAgentOpsComponent for the ciancheiltis Phase 1 (en-cy —
+# Wales) agent ops surface. Per the ciancheiltis spec §"Dagster
+# 5-layer asset graph per phase", every phase MUST have a complete
+# 5-layer asset group; this file is Layer 5.
+#
+# Per the ciancheiltis spec Requirement "MotherDuck Dive + Flight per
+# phase" + Scenario "en-cy Dive renders theme coverage":
+#   - The Dive (the marimo quality dashboard at L4) MUST highlight
+#     themes where the metadata-language-mismatch rate exceeds 5%.
+#   - The Flight (the daily Celery/rq-style synthesis job) MUST run
+#     every 24h to synthesise the next batch of bilingual pairs.
+#
+# This YAML declares the two phase-ops assets the ciancheiltis spec
+# calls for (under the canonical CelticAgentOpsComponent 5-asset
+# emission):
+#   - `ciancheiltis_en_cy_anomaly_sensor`  — alerts when
+#     metadata-language-mismatch rate > 5% (per the en-cy Dive
+#     Scenario in the ciancheiltis spec). Implemented via the
+#     `agent_event_ciancheiltis_en_cy` agent-event asset which
+#     publishes `ciancheiltis.en_cy.metadata_mismatch_alert` events
+#     to RisingWave at `risingwave.cianfhoghlaim.ie:4566`; a
+#     RisingWave materialised view fans out the alert to the L4
+#     marimo dashboard + the deployment-control-panel.
+#   - `synthesis_flight`                   — the daily Celery/rq-style
+#     job that synthesises the next day's bilingual pairs. Emitted
+#     via the `agent_health_ciancheiltis_en_cy` health-check asset
+#     which fires on the `*/15 * * * *` cron and dispatches the
+#     `ciancheiltis_en_cy_synthesis_flight` task to the
+#     rq-style worker at `rq.cianfhoghlaim.ie:6379`.
+#
+# The 3 sibling canonical assets (`agent_routing_`,
+# `agent_memory_`, `agent_trace_`) round out the 5-asset
+# CelticAgentOpsComponent contract.
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" + Requirement
+# "MotherDuck Dive + Flight per phase" + Scenario
+# "en-cy Dive renders theme coverage".
+type: orchestration.components.CelticAgentOpsComponent
+attributes:
+  agent_name: ciancheiltis_en_cy_phase_ops
+  framework: custom
+  module: cianfhoghlaim.agents.ciancheiltis.en_cy_phase_ops
+  tools:
+    - ciancheiltis_en_cy_anomaly_sensor
+    - ciancheiltis_en_cy_synthesis_flight
+    - ciancheiltis_en_cy_pair_quality_score
+    - ciancheiltis_en_cy_metadata_language_audit
+    - ciancheiltis_en_cy_phase_gate_summary
+  memory_backend: graphiti
+  event_stream: risingwave
+  event_stream_endpoint: risingwave.cianfhoghlaim.ie:4566
+  langfuse_trace_tag: agent.ciancheiltis.en_cy_phase_ops
+  langfuse_drop_smoke_spans: true
+  health_endpoint: rq.cianfhoghlaim.ie:6379/health
+  routing_keywords:
+    - ciancheiltis
+    - ciancheiltis en-cy
+    - ciancheiltis wales
+    - en cy
+    - welsh english
+    - bilingual pairs wales
+    - phase 1
+    - metadata language mismatch
+    - synthesis flight
+    - anomaly sensor
+    - cy > en
+    - en > cy
+    - termau cymru
+    - comisiynydd y gymraeg
+  cognee_dataset: cianfhoghlaim_ciancheiltis_en_cy
+  privacy_gate: "INCLUDE_GOV_WALES_PII=false"
+  pseudonymous_user: true
+  langfuse_callbacks:
+    trace_name: agent.ciancheiltis.en_cy_phase_ops
+    flush_interval: 30
+  cognify:
+    enabled: true
+    datasets:
+      - cianfhoghlaim_ciancheiltis_en_cy
+    retrigger: false
+  tags:
+    - ciancheiltis
+    - en-cy
+    - phase-1
+    - agent-ops
+    - anomaly-sensor
+    - synthesis-flight
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_cy
+    asset_aliases:
+      agent_event_ciancheiltis_en_cy_phase_ops: ciancheiltis_en_cy_anomaly_sensor
+      agent_health_ciancheiltis_en_cy_phase_ops: ciancheiltis_en_cy_synthesis_flight
+    anomaly_sensor:
+      name: ciancheiltis_en_cy_anomaly_sensor
+      trigger: metadata_language_mismatch_rate
+      threshold_pct: 5
+      unit: percent
+      source: "RisingWave stream `ciancheiltis.en_cy.metadata_mismatch_alert`"
+      description: |
+        Publishes a `ciancheiltis.en_cy.metadata_mismatch_alert` event
+        to RisingWave at
+        `risingwave.cianfhoghlaim.ie:4566` whenever the per-theme
+        metadata-language-mismatch rate exceeds 5%. The L4 marimo
+        quality dashboard (`ciancheiltis_en_cy_quality.py`) renders
+        the alert in red so operators can spot the regression. The
+        alert feeds the deployment-control-panel 5-tab UI and the
+        `bilingual_coverage_audit.py` gate (≥ 0.95 threshold).
+      cron: "*/5 * * * *"
+    synthesis_flight:
+      name: ciancheiltis_en_cy_synthesis_flight
+      kind: celery_rq_style
+      cadence: daily
+      cron: "0 5 * * *"
+      worker_endpoint: rq.cianfhoghlaim.ie:6379
+      queue: ciancheiltis_en_cy
+      description: |
+        Daily Celery/rq-style synthesis flight for the en-cy Phase 1
+        pipeline. Materialises the next day's bilingual-pair batch:
+        ingests the 8 Welsh public-sector themes via the L1
+        CelticIngestionComponent, runs the BAML extraction via the
+        L2 `_assets.py`, refreshes the L3 CocoIndex v1 embedding,
+        and re-evaluates the L4 asset checks
+        (`bilingual_pairs_seeded_check` ≥ 500 + `ragas_quality_check`
+        ≥ 0.70). The flight runs at 05:00 UTC, one hour after the
+        L1 cron at 04:00 UTC, so the upstream DLT loads complete
+        before BAML fires.
+    notes: |
+      The `framework: custom` choice bypasses the 12-agent fleet
+      (root + 8 ADK + 3 Agno) because the en-cy phase ops is a
+      vertical-slice surface (Dagster-only), not a horizontal
+      agent. The `cognee_dataset: cianfhoghlaim_ciancheiltis_en_cy`
+      is the dedicated knowledge graph for Phase 1 — populated by
+      `agents.ciancheiltis.en_cy_phase_ops.cognify_themes()` and
+      cross-queried by `agents.corpus.corpus_agent` for cross-phase
+      comparison (Phase 2 will reuse the same `cognee_dataset`
+      schema).

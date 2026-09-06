@@ -1,0 +1,85 @@
+# orchestration/defs/1_ingestion/ciancheiltis/en_cy/defs.yaml
+#
+# L1 CelticIngestionComponent for the ciancheiltis Phase 1 (en-cy — Wales)
+# surface. Per the ciancheiltis spec §"Dagster 5-layer asset graph per
+# phase", every phase MUST have a complete 5-layer asset group; this file
+# is Layer 1.
+#
+# Declares the 8 Phase-1 DLT sources (one per Welsh public-sector theme)
+# + a daily 04:00 UTC cron. The 8 sources land under the shared
+# `dlt_sources/ciancheiltis/en_cy/` subtree (subagent 1's territory per
+# the PR0.4 split); this file only wires the orchestration side. The
+# `source_id` values are stable dotted identifiers resolved at runtime
+# against the canonical `dlt_sources.ciancheiltis._shared.registry`.
+#
+# Per-phase asset_check: `bilingual_pairs_seeded_check` (≥ 500) lives
+# in Layer 4 (`4_asset_generation/ciancheiltis/en_cy/defs.yaml`) — that
+# is where the RAGAS gate per the ciancheiltis spec Requirement lives.
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" + Scenario
+# "en-cy Phase 1 RAGAS gate fires".
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ciancheiltis.en_cy.themes
+  domain: ciancheiltis
+  nation: cymru
+  automation: on_cron
+  automation_cron: "0 4 * * *"
+  state_backed: false
+  state_refresh_interval: daily
+  asset_check: bilingual_pairs_seeded_check
+  asset_check_min_rows: 500
+  dlt_source: ciancheiltis.en_cy.themes_source
+  destination_tables:
+    - cianfhoghlaim.ciancheiltis.en_cy_legislation
+    - cianfhoghlaim.ciancheiltis.en_cy_policy_consultations
+    - cianfhoghlaim.ciancheiltis.en_cy_education
+    - cianfhoghlaim.ciancheiltis.en_cy_healthcare
+    - cianfhoghlaim.ciancheiltis.en_cy_language_commissioner
+    - cianfhoghlaim.ciancheiltis.en_cy_termau_cymru
+    - cianfhoghlaim.ciancheiltis.en_cy_court_service
+    - cianfhoghlaim.ciancheiltis.en_cy_local_government
+  fallback_resources:
+    - stedding/ingest_queue/ciancheiltis/en_cy/
+    - stedding/discovery/ciancheiltis_en_cy_wsi_seeds.jsonl
+  tags:
+    - ciancheiltis
+    - en-cy
+    - phase-1
+    - ingestion
+    - bilingual
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_cy
+    languages:
+      - en
+      - cy
+    themes:
+      - legislation
+      - policy_consultations
+      - education
+      - healthcare
+      - language_commissioner
+      - termau_cymru
+      - court_service
+      - local_government
+    dlt_sources:
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_cy.legislation.legislation_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_cy.policy_consultations.policy_consultations_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_cy.education.education_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_cy.healthcare.healthcare_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_cy.language_commissioner.language_commissioner_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_cy.termau_cymru.termau_cymru_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_cy.court_service.court_service_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_cy.local_government.local_government_source
+    baml_extractor: b.ExtractCiancheiltisEnCyBilingualPair(theme=..., pair_kind=...)
+    notes: |
+      Phase 1 of the 6-phase ciancheiltis umbrella (en_cy, en_ga_roi,
+      en_ga_ni, en_gd, en_gv, en_ga_eu). The 8 themes map to the 8
+      Welsh public-sector surfaces. Daily 04:00 UTC cron aligns with
+      the BIEP gov-circulars cron (per the cross-pipeline integration
+      Requirement). Honours USE_LOCAL_SCRAPES=true to read from
+      stedding/ingest_queue/ciancheiltis/en_cy/ + the opaque-URL WSI
+      seeds JSONL.

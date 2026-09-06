@@ -1,0 +1,95 @@
+# orchestration/defs/4_asset_generation/ciancheiltis/en_cy/defs.yaml
+#
+# L4 CelticAssetGenerationComponent for the ciancheiltis Phase 1 (en-cy —
+# Wales) marimo quality dashboard. Per the ciancheiltis spec §"Dagster
+# 5-layer asset graph per phase", every phase MUST have a complete
+# 5-layer asset group; this file is Layer 4.
+#
+# This file declares the asset-check asset group for en-cy Phase 1.
+# The marimo dashboard at `dashboard_path` is the operator-facing
+# surface that surfaces:
+#   1. `bilingual_pairs_seeded_check` — gates ≥ 500 paragraph-level
+#      `(en, cy)` bilingual pairs (ciancheiltis spec Requirement).
+#   2. `ragas_quality_check`          — gates ≥ 0.70 RAGAS bilingual-pair
+#      score (ciancheiltis spec Requirement).
+#
+# The @asset_check definitions live in
+# `orchestration/defs/2_materials/baml_extraction/ciancheiltis/en_cy/
+# _assets.py` (Layer 2 — the natural home, mirroring the wales_assets.py
+# pattern). This L4 Component declares them as the lineage witnesses for
+# the marimo dashboard + records their thresholds in `metadata` so the
+# deployment-control-panel + the ciancheiltis Lakekeeper dashboard can
+# surface them.
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" + Scenario
+# "en-cy Phase 1 RAGAS gate fires".
+type: orchestration.components.CelticAssetGenerationComponent
+attributes:
+  dashboard_kind: marimo
+  dashboard_path: cianfhoghlaim/notebooks/dashboards/ciancheiltis/en_cy_quality.py
+  slug: ciancheiltis_en_cy
+  upstream_assets:
+    - 1_ingestion/ciancheiltis/en_cy
+    - 2_materials/baml_extraction/ciancheiltis/en_cy
+    - 3_model_lifecycle/cocoindex_v1/ciancheiltis_en_cy
+  refresh_on:
+    - "0 4 * * *"
+    - "0 16 * * *"
+  notebooks:
+    - 01_en_cy_themes_overview
+    - 02_bilingual_pairs_coverage
+    - 03_ragas_quality_dashboard
+    - 04_metadata_language_mismatch
+    - 05_phase_gate_summary
+  tags:
+    - ciancheiltis
+    - en-cy
+    - phase-1
+    - asset-checks
+    - bilingual
+    - ragas
+    - marimo
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_cy
+    asset_checks:
+      - name: bilingual_pairs_seeded_check
+        threshold: 500
+        unit: bilingual_pairs
+        description: |
+          ≥ 500 paragraph-level `(en, cy)` bilingual pairs MUST be
+          present in the lakehouse before the phase can be promoted to
+          Phase 2. The actual @asset_check is defined in L2
+          `_assets.py::ciancheiltis_en_cy_bilingual_pairs_seeded_check`.
+      - name: ragas_quality_check
+        threshold: 0.70
+        unit: ragas_score
+        description: |
+          RAGAS ≥ 0.70 bilingual-pair score MUST be achieved across
+          the 8 en-cy themes before the phase can be promoted. The
+          actual @asset_check is defined in L2
+          `_assets.py::ciancheiltis_en_cy_ragas_quality_check`.
+    phase_gate:
+      min_pairs: 500
+      min_ragas: 0.70
+      languages:
+        - en
+        - cy
+      themes:
+        - legislation
+        - policy_consultations
+        - education
+        - healthcare
+        - language_commissioner
+        - termau_cymru
+        - court_service
+        - local_government
+    notes: |
+      The marimo dashboard itself lives at
+      `notebooks/dashboards/ciancheiltis/en_cy_quality.py` and renders
+      the per-theme row count + per-theme RAGAS score + a green/red
+      phase gate (≥ 500 pairs AND ≥ 0.70 RAGAS). Operators open the
+      dashboard via the deployment-control-panel → 5-tab marimo
+      control panel (per the deployment-control-panel spec).

@@ -54,6 +54,63 @@ client<llm> LocalVisionQwen3vl {
   }
 }
 
+// ====== ciancheiltis Phase 1-5 bilingual extraction clients ======
+// Per the 2026-09-06-ciancheiltis-v1 openspec change (PR0.4):
+//   cy (Welsh)              → ciancheiltisCyExtract → gemma-4-26B-A4B   (Welsh-aware multilingual MoE)
+//   ga (Irish)              → ciancheiltisGaExtract → uccix-mistral-24b (modern Irish, UCCIX)
+//   gd (Scottish Gaelic)    → ciancheiltisGdExtract → gemma-4-26B-A4B
+//   gv (Manx)               → ciancheiltisGvExtract → gemma-4-26B-A4B   (Manx few-shot — smallest corpus)
+//
+// All 4 route through LiteLLM → llama-swap (the canonical local-GGUF gateway
+// for the 24-entry VISION_MODELS registry). The model strings are resolved
+// from MODEL_REGISTRY at runtime per the centralized-model-registry contract:
+//   - "local/vision/gemma-4-26B-A4B"  → MODEL_REGISTRY → text_llm/default
+//   - "local/vision/uccix-mistral-24b" → MODEL_REGISTRY → text_llm/irish
+
+client<llm> CiancheiltisCyExtract {
+  provider "openai"
+  options {
+    base_url env.LITELLM_BASE_URL
+    api_key env.LITELLM_API_KEY
+    // MODEL_REGISTRY: family="text_llm", role="default" → "gemma-4-26B-A4B"
+    model "local/vision/gemma-4-26B-A4B"
+  }
+}
+
+client<llm> CiancheiltisGaExtract {
+  provider "openai"
+  options {
+    base_url env.LITELLM_BASE_URL
+    api_key env.LITELLM_API_KEY
+    // MODEL_REGISTRY: family="text_llm", role="irish" → "uccix-mistral-24b"
+    model "local/vision/uccix-mistral-24b"
+  }
+}
+
+client<llm> CiancheiltisGdExtract {
+  provider "openai"
+  options {
+    base_url env.LITELLM_BASE_URL
+    api_key env.LITELLM_API_KEY
+    // MODEL_REGISTRY: family="text_llm", role="default" → "gemma-4-26B-A4B"
+    model "local/vision/gemma-4-26B-A4B"
+  }
+}
+
+client<llm> CiancheiltisGvExtract {
+  provider "openai"
+  options {
+    base_url env.LITELLM_BASE_URL
+    api_key env.LITELLM_API_KEY
+    // MODEL_REGISTRY: family="text_llm", role="default" → "gemma-4-26B-A4B"
+    // NOTE: gv (Manx) is the smallest corpus (< 2% of Celtic-language web
+    // content). The cognify adapter layer SHOULD attach Manx few-shot
+    // exemplars when invoking this client. Track this in a follow-up
+    // issue if few-shot tuning is not yet wired in dlt_sources/ciancheiltis/en_gv/.
+    model "local/vision/gemma-4-26B-A4B"
+  }
+}
+
 // ====== Canonical named clients referenced across BAML functions ======
 // These are the historical aliases used by the various function definitions.
 // They route to the canonical minimax-m3 text client by default, so all

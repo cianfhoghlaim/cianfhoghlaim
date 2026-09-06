@@ -1,0 +1,80 @@
+# orchestration/defs/3_model_lifecycle/cocoindex_v1/ciancheiltis_en_cy/defs.yaml
+#
+# L3 CelticModelLifecycleComponent for the ciancheiltis Phase 1 (en-cy —
+# Wales) CocoIndex v1 App. Per the ciancheiltis spec §"Dagster 5-layer
+# asset graph per phase", every phase MUST have a complete 5-layer asset
+# group; this file is Layer 3.
+#
+# The CocoIndex App module is written by subagent 2 of the PR0.4 split
+# and lives at `cocoindex_flows/british_isles/uk/ciancheiltis_en_cy_embedding.py`.
+# It MUST satisfy the R1-R4 conformance contract (per the
+# `dagster-5-layer-component-architecture` spec + the cocoindex_v1
+# conformance harness).
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" (Phase 1 = en_cy).
+type: orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_name: CiancheiltisEnCyEmbedding
+  app_group: ciancheiltis_en_cy
+  module: cocoindex_flows.british_isles.uk.ciancheiltis_en_cy_embedding
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  apps:
+    - app_name: CiancheiltisEnCyEmbedding
+      module: cocoindex_flows.british_isles.uk.ciancheiltis_en_cy_embedding
+      source: british_isles
+      lance_table: cianfhoghlaim.ciancheiltis.en_cy_chunks
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  lance_table_format: hnsw_pq
+  table_name: cianfhoghlaim.ciancheiltis.en_cy_chunks
+  languages:
+    - en
+    - cy
+  depts:
+    - legislation
+    - policy_consultations
+    - education
+    - healthcare
+    - language_commissioner
+    - termau_cymru
+    - court_service
+    - local_government
+  source_asset: 1_ingestion/ciancheiltis/en_cy
+  source_tables:
+    - cianfhoghlaim.ciancheiltis.en_cy_legislation
+    - cianfhoghlaim.ciancheiltis.en_cy_policy_consultations
+    - cianfhoghlaim.ciancheiltis.en_cy_education
+    - cianfhoghlaim.ciancheiltis.en_cy_healthcare
+    - cianfhoghlaim.ciancheiltis.en_cy_language_commissioner
+    - cianfhoghlaim.ciancheiltis.en_cy_termau_cymru
+    - cianfhoghlaim.ciancheiltis.en_cy_court_service
+    - cianfhoghlaim.ciancheiltis.en_cy_local_government
+  tags:
+    - ciancheiltis
+    - en-cy
+    - phase-1
+    - cocoindex-v1
+    - embedding
+    - bilingual
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_cy
+    lance_uri: lancedb://md:cianfhoghlaim/ciancheiltis/en_cy_chunks
+    embedding_dim: 1024
+    embedder: BAAI/bge-m3
+    embedder_kind: dense
+    expected_total_documents: 500
+    notes: |
+      Phase 1 (en-cy) CocoIndex v1 App for the ciancheiltis umbrella.
+      Mirrors the Welsh public-sector 8-theme surface into a single
+      `lancedb://md:cianfhoghlaim/ciancheiltis/en_cy_chunks` LanceDB
+      table (MotherDuck federated, per the BIEP LanceDB convention).
+      The App module (`cocoindex_flows.british_isles.uk.
+      ciancheiltis_en_cy_embedding`) MUST satisfy R1-R4 — the
+      `cocoindex_v1_conformance` App runs at scaffold time and gates
+      the dagster:dev launch.
