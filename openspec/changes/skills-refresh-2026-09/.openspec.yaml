@@ -1,0 +1,9 @@
+schema: spec-driven
+created: 2026-09-02
+goal: >
+  Refresh the .agents/skills/ surface for openspec 1.11 and the
+  post-2026-08-19 repo layout: rewrite the openspec skill for 1.11,
+  reclassify 2 router-only skills (copilotkit, pydantic) into proper
+  packs, fix YAML frontmatter defects in oversized descriptions, and
+  add a per-skill schema contract that the lint gate enforces.
+skip_specs: true
