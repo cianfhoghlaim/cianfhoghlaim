@@ -1,0 +1,12 @@
+schema: spec-driven
+created: 2026-09-02
+goal: >
+  Bundles the 3 in-flight BIEP v3 orchestration changes
+  (biep-v3-orchestration-activation, biep-v3-jurisdiction-sensor-jobs,
+  england-biiep-pipeline) under one topic batch so the Dagster
+  activation, jurisdiction-sensor wiring, and England BIEP ingestion
+  ship together as the v3 orchestration milestone.
+affected_areas:
+  - orchestration
+  - dlt_sources
+skip_specs: true
