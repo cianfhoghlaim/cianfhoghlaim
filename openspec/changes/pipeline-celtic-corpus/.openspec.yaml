@@ -1,0 +1,11 @@
+schema: spec-driven
+created: 2026-09-02
+goal: >
+  Bundles the 3 Celtic-language corpus extension changes (Celtic
+  language corpus extension + Ogham stones pipeline + Celtic
+  mythology content system) under one topic batch so the
+  Celtic-corpus surface ships as one milestone.
+affected_areas:
+  - oideachais
+  - cocoindex_flows
+skip_specs: true
