@@ -1,0 +1,15 @@
+schema: spec-driven
+created: 2026-09-02
+goal: >
+  Retire the 3 single-requirement retirement-marker specs
+  (oideachais-leabharlann, oideachais-cocoindex-v1-migration,
+  oideachais-university-deep-extraction) whose canonical successor
+  (cianfhoghlaim-leabharlann, cianfhoghlaim-cocoindex-v1-migration,
+  cianfhoghlaim-university-deep-extraction) already covers the same
+  invariants. The 5 deeper overlaps (oideachais-pipeline ↔
+  cianfhoghlaim-pipeline and 4 siblings) are deferred to follow-up
+  work — they are genuine content-overlap questions, not just
+  duplicate files.
+affected_areas:
+  - openspec-specs
+retire_capabilities: true
