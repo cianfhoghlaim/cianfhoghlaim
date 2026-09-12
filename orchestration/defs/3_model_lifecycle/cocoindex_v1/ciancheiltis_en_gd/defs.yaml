@@ -1,0 +1,131 @@
+# orchestration/defs/3_model_lifecycle/cocoindex_v1/ciancheiltis_en_gd/defs.yaml
+#
+# L3 CelticModelLifecycleComponent for the ciancheiltis Phase 4
+# (en-gd — Scotland) CocoIndex v1 App. Per the ciancheiltis
+# spec §"Dagster 5-layer asset graph per phase", every phase MUST have
+# a complete 5-layer asset group; this file is Layer 3.
+#
+# The CocoIndex App module is written by subagent 2 of the PR0.8 split
+# and lives at
+# `cocoindex_flows/british_isles/uk/ciancheiltis_en_gd_embedding.py`.
+# It MUST satisfy the R1-R4 conformance contract (per the
+# `dagster-5-layer-component-architecture` spec + the cocoindex_v1
+# conformance harness):
+#   - R1: imports `from ._lifespan import PHASE_TABLE_URL_GD,
+#     PHASE_LANGUAGE_PAIR_GD` (the per-phase shim which itself
+#     re-exports `cocoindex_flows._shared._lifespan.shared_lifespan`)
+#   - R2: uses the canonical `BAAI/bge-m3` 1024-d embedder
+#   - R3: every flow decorated `@coco.fn(memo=True, deps=[...])`
+#   - R4: mounts the LanceDB table via
+#     `lancedb.mount_table_target("lancedb://md:cianfhoghlaim/ciancheiltis/en_gd_chunks", conformance_required=True)`
+#
+# Phase 4 differs from Phase 1 + Phase 2 + Phase 3 in four ways:
+# 1. The source DuckLake tables are populated by the 8 Scottish DLT
+#    sources under `dlt_sources/ciancheiltis/en_gd/` (subagent 2's
+#    territory per the PR0.8 split). Phase 4 is GREENFIELD relative
+#    to the cached surfaces in `stedding/ingest_queue/ciancheiltis/en_cy/`
+#    and `en_ga_roi/` — there is no pre-existing
+#    Scottish-government cache to fall back on.
+# 2. The canonical bilingual reference is
+#    `https://www.gaidhlig.scot/bord-na-gaidhlig/naidheachdan/` —
+#    Bòrd na Gàidhlig under the Gaelic Language (Scotland) Act 2005
+#    (the Act itself is at
+#    `https://www.legislation.gov.uk/asp/2005/7/contents`, the
+#    founding statute of the modern Scottish Gaelic rights
+#    framework).
+# 3. Scottish legislation lives at `legislation.gov.uk/asp/...` (Acts
+#    of the Scottish Parliament) + `/ssi/...` (Scottish Statutory
+#    Instruments) + `/sdsi/...` (Scottish Draft Statutory Instruments)
+#    — NOT at `irishstatutebook.ie` (Phase 2), NOT at
+#    `legislation.gov.uk/wsi` (Phase 1 = Wales), NOT at
+#    `legislation.gov.uk/uksi` (Phase 3 = NI UK-wide). There is NO
+#    `/gd/` slug variant — the bilingual content lives on the same
+#    `/contents` page with a `<html lang="gd">` body header.
+# 4. The `cognee_dataset` schema uses `minority_languages: [gd]`
+#    (simpler than Phase 3's `[ga, ulster_scots]`) because Scotland
+#    has ONE minority language (Scottish Gaelic) under the 2005 Act.
+#    The `BAAI/bge-m3` 1024-d embedder handles `en` + `gd` natively
+#    per the R2 conformance contract.
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" (Phase 4 = en_gd) +
+# Requirement "6-phase language-pair staging" + Requirement
+# "CocoIndex v1 R1-R4 conformance".
+type: orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_name: CiancheiltisEnGdEmbedding
+  app_group: ciancheiltis_en_gd
+  module: cocoindex_flows.british_isles.uk.ciancheiltis_en_gd_embedding
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  apps:
+    - app_name: CiancheiltisEnGdEmbedding
+      module: cocoindex_flows.british_isles.uk.ciancheiltis_en_gd_embedding
+      source: british_isles
+      lance_table: cianfhoghlaim.ciancheiltis.en_gd_chunks
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  lance_table_format: hnsw_pq
+  table_name: cianfhoghlaim.ciancheiltis.en_gd_chunks
+  languages:
+    - en
+    - gd
+  minority_languages:
+    - gd
+  depts:
+    - legislation
+    - policy_consultations
+    - education
+    - healthcare
+    - language_bodies
+    - terminology
+    - courts
+    - local_government
+  source_asset: 1_ingestion/ciancheiltis/en_gd
+  source_tables:
+    - cianfhoghlaim.ciancheiltis.en_gd_legislation
+    - cianfhoghlaim.ciancheiltis.en_gd_policy_consultations
+    - cianfhoghlaim.ciancheiltis.en_gd_education
+    - cianfhoghlaim.ciancheiltis.en_gd_healthcare
+    - cianfhoghlaim.ciancheiltis.en_gd_language_bodies
+    - cianfhoghlaim.ciancheiltis.en_gd_terminology
+    - cianfhoghlaim.ciancheiltis.en_gd_courts
+    - cianfhoghlaim.ciancheiltis.en_gd_local_government
+  tags:
+    - ciancheiltis
+    - en-gd
+    - phase-4
+    - cocoindex-v1
+    - embedding
+    - bilingual
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_gd
+    lance_uri: lancedb://md:cianfhoghlaim/ciancheiltis/en_gd_chunks
+    embedding_dim: 1024
+    embedder: BAAI/bge-m3
+    embedder_kind: dense
+    expected_total_documents: 500
+    notes: |
+      Phase 4 (en-gd) CocoIndex v1 App for the ciancheiltis
+      umbrella. Mirrors the 8 Scottish public-sector themes into a
+      single
+      `lancedb://md:cianfhoghlaim/ciancheiltis/en_gd_chunks`
+      LanceDB table (MotherDuck federated, per the BIEP LanceDB
+      convention). The App module
+      (`cocoindex_flows.british_isles.uk.ciancheiltis_en_gd_embedding`)
+      MUST satisfy R1-R4 — the `cocoindex_v1_conformance` App runs at
+      scaffold time and gates the dagster:dev launch.
+
+      The canonical bilingual reference is
+      `https://www.gaidhlig.scot/bord-na-gaidhlig/naidheachdan/` —
+      Bòrd na Gàidhlig under the Gaelic Language (Scotland) Act
+      2005. Scotland has ONE minority language (Scottish Gaelic /
+      Gàidhlig) under the 2005 Act, unlike Phase 3 (NI) which has
+      TWO (Irish + Ulster Scots). The `cognee_dataset` schema uses
+      `minority_languages: [gd]` (simpler than Phase 3's
+      `[ga, ulster_scots]`). The `BAAI/bge-m3` 1024-d embedder
+      handles `en` + `gd` natively per the R2 conformance contract.

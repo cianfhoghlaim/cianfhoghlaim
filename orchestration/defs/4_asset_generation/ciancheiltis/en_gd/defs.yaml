@@ -1,0 +1,136 @@
+# orchestration/defs/4_asset_generation/ciancheiltis/en_gd/defs.yaml
+#
+# L4 CelticAssetGenerationComponent for the ciancheiltis Phase 4
+# (en-gd — Scotland) marimo quality dashboard. Per the ciancheiltis
+# spec §"Dagster 5-layer asset graph per phase", every phase MUST have
+# a complete 5-layer asset group; this file is Layer 4.
+#
+# This file declares the asset-check asset group for en-gd Phase 4.
+# The marimo dashboard at `dashboard_path` is the operator-facing
+# surface that surfaces:
+#   1. `bilingual_pairs_seeded_check` — gates ≥ 500 paragraph-level
+#      `(en, gd)` bilingual pairs (ciancheiltis spec Requirement).
+#   2. `ragas_quality_check`          — gates ≥ 0.70 RAGAS
+#      bilingual-pair score (ciancheiltis spec Requirement).
+#
+# The @asset_check definitions live in
+# `orchestration/defs/2_materials/baml_extraction/ciancheiltis/en_gd/_assets.py`
+# (Layer 2 — the natural home, mirroring the en-cy wales_assets.py +
+# the en-ga-roi + en-ga-ni pattern). This L4 Component declares them
+# as the lineage witnesses for the marimo dashboard + records their
+# thresholds in `metadata` so the deployment-control-panel + the
+# ciancheiltis Lakekeeper dashboard can surface them.
+#
+# Phase 4 ships DIFFERENT bilingual sources than Phase 1 + Phase 2 +
+# Phase 3:
+#   - `legislation.gov.uk/asp/<year>/<num>/contents` is the Acts of
+#     the Scottish Parliament surface. Unlike Phase 1 (`wsi`),
+#     Phase 2 (`irishstatutebook.ie`), and Phase 3 (`uksi`), there
+#     is NO bilingual infix — the GD version lives on the same
+#     `/contents` page with a `<html lang="gd">` body header.
+#   - gov.scot publishes a SMALL but real Gaelic content section
+#     (the CMS does NOT enforce a `/gd/` prefix; pairing is
+#     corroborated from body content + the `<html lang="gd">`
+#     attribute).
+#   - gaidhlig.scot is the canonical Bòrd na Gàidhlig surface and
+#     publishes a substantial Gaelic-primary corpus. This is the
+#     **only** public-sector surface where GD-primary content
+#     dominates, and is the canonical Phase 4 T5 reference page.
+#   - nhsinform.scot — NHS Scotland patient information (T4); much
+#     of the gd-side content lives under separate landing pages.
+#   - The `mismatch_reason` taxonomy on the Dive includes
+#     `html_lang_attribute_mismatch` (the gov.scot pattern — body
+#     is bilingual but `<html lang="en">` with a GD section),
+#     `metadata.language`, and `gd_only_no_pair` (a Scottish page
+#     that's GD-only with no EN mirror — VALID bilingual content
+#     per the 2005 Act but flagged at the `gd_only_no_pair` level
+#     because Phase 4 enforces ≥ 500 `(en, gd)` PAIRS, not GD-only
+#     rows).
+# See `motherduck/dives/ciancheiltis_en_gd_dive.py::METADATA_MISMATCH_DIVE_GD`.
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" (Phase 4 = en_gd) +
+# Requirement "6-phase language-pair staging" + Requirement
+# "MotherDuck Dive + Flight per phase".
+type: orchestration.components.CelticAssetGenerationComponent
+attributes:
+  dashboard_kind: marimo
+  dashboard_path: cianfhoghlaim/notebooks/dashboards/ciancheiltis/en_gd_quality.py
+  slug: ciancheiltis_en_gd
+  upstream_assets:
+    - 1_ingestion/ciancheiltis/en_gd
+    - 2_materials/baml_extraction/ciancheiltis/en_gd
+    - 3_model_lifecycle/cocoindex_v1/ciancheiltis_en_gd
+  refresh_on:
+    - "0 4 * * *"
+    - "0 16 * * *"
+  notebooks:
+    - 01_en_gd_themes_overview
+    - 02_bilingual_pairs_coverage
+    - 03_ragas_quality_dashboard
+    - 04_metadata_language_mismatch
+    - 05_phase_gate_summary
+  tags:
+    - ciancheiltis
+    - en-gd
+    - phase-4
+    - asset-checks
+    - bilingual
+    - ragas
+    - marimo
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_gd
+    asset_checks:
+      - name: bilingual_pairs_seeded_check
+        threshold: 500
+        unit: bilingual_pairs
+        description: |
+          ≥ 500 paragraph-level `(en, gd)` bilingual pairs MUST be
+          present in the lakehouse before the phase can be promoted to
+          Phase 5. The actual @asset_check is defined in L2
+          `_assets.py::ciancheiltis_en_gd_bilingual_pairs_seeded_check`.
+      - name: ragas_quality_check
+        threshold: 0.70
+        unit: ragas_score
+        description: |
+          RAGAS ≥ 0.70 bilingual-pair score MUST be achieved across
+          the 8 en-gd themes before the phase can be promoted. The
+          actual @asset_check is defined in L2
+          `_assets.py::ciancheiltis_en_gd_ragas_quality_check`.
+    phase_gate:
+      min_pairs: 500
+      min_ragas: 0.70
+      languages:
+        - en
+        - gd
+      minority_languages:
+        - gd
+      themes:
+        - legislation
+        - policy_consultations
+        - education
+        - healthcare
+        - language_bodies
+        - terminology
+        - courts
+        - local_government
+    notes: |
+      The marimo dashboard itself lives at
+      `notebooks/dashboards/ciancheiltis/en_gd_quality.py` and
+      renders the per-theme row count + per-theme RAGAS score + a
+      green/red phase gate (≥ 500 pairs AND ≥ 0.70 RAGAS). Operators
+      open the dashboard via the deployment-control-panel → 5-tab
+      marimo control panel (per the deployment-control-panel spec).
+
+      Phase 4 differs from Phase 1 + Phase 2 + Phase 3 in the
+      metadata-mismatch interpretation: gov.scot paired pages do
+      NOT use a slug-prefix or a `/gd/` infix — the `<html
+      lang="gd">` attribute is the canonical pair signal. The
+      dashboard MUST show the same green/red gate but with an
+      additional column explaining "mismatch_reason" — typically
+      `html_lang_attribute_mismatch` (gov.scot pattern) rather than
+      `metadata.language` mismatch (Phase 1 legislation.gov.uk
+      Wales) or `slug_prefix_/_articles/_vs_/_gaeilge/airteagal/`
+      (Phase 3 nidirect.gov.uk NI).

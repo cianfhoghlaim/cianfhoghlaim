@@ -15,6 +15,11 @@ This package also houses the CocoIndex v1 App that embeds bilingual
 en-ga government pages into the canonical LanceDB table
 ``lancedb://md:cianfhoghlaim/ciancheiltis/en_ga_ni_chunks``.
 
+Phase 4 of the ciancheiltis umbrella (Scotland / en-gd). This package
+also houses the CocoIndex v1 App that embeds bilingual en-gd
+government pages into the canonical LanceDB table
+``lancedb://md:cianfhoghlaim/ciancheiltis/en_gd_chunks``.
+
 The R1-R4 conformance contract (per the
 ``oideachais-cocoindex-v1`` skill + the
 ``openspec/specs/ciancheiltis/spec.md`` R1-R4 section) is enforced by
@@ -81,16 +86,40 @@ from .ciancheiltis_en_ga_ni_embedding import (
     flow as en_ga_ni_flow,
 )
 
+# Phase 4 (Scotland / en-gd) — re-export the CocoIndex v1 App symbol
+# so downstream consumers can import it via
+# ``cocoindex_flows.british_isles.uk.ciancheiltis_en_gd_embedding``.
+# Added by PR0.8 — the underlying
+# ``ciancheiltis_en_gd_embedding.py`` App is the Phase 4 mirror of
+# the Phase 3 ``ciancheiltis_en_ga_ni_embedding.py`` App, conforming
+# to the same R1-R4 contract. The Phase 4 canonical example is the
+# *Gaelic Language (Scotland) Act 2005*
+# (``https://www.legislation.gov.uk/asp/2005/7/contents``) and Bòrd
+# na Gàidhlig under it
+# (``https://www.gaidhlig.scot/bord-na-gaidhlig/naidheachdan/``).
+from .ciancheiltis_en_gd_embedding import (
+    EnGdChunk,
+    ciancheiltis_en_gd_embedding,
+    en_gd_embedding_flow,
+)
+from .ciancheiltis_en_gd_embedding import (
+    flow as en_gd_flow,
+)
+
 __all__ = [
     "EnCyChunk",
     "EnGaNiChunk",
     "EnGaRoiChunk",
+    "EnGdChunk",
     "ciancheiltis_en_ga_ni_embedding",
+    "ciancheiltis_en_gd_embedding",
     "en_cy_embedding",
     "en_cy_embedding_flow",
     "en_cy_flow",
     "en_ga_ni_embedding_flow",
     "en_ga_ni_flow",
+    "en_gd_embedding_flow",
+    "en_gd_flow",
     "en_ga_roi_embedding",
     "en_ga_roi_embedding_flow",
     "en_ga_roi_flow",

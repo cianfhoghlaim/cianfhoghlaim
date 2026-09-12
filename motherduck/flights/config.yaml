@@ -122,3 +122,16 @@ flights:
       - bilingual
       - phase_3
       - daily_sync
+  - name: ciancheiltis_en_gd_flight
+    module: cianfhoghlaim.motherduck.flights.ciancheiltis_en_gd_flight
+    callable: build_ciancheiltis_en_gd_flight
+    cron: "0 4 * * *"
+    timezone: UTC
+    description: "Daily BAML backfill + RAGAS gate for the en-gd (Scotland) phase of ciancheiltis (Phase 4 of 6)"
+    tags:
+      - ciancheiltis
+      - en_gd
+      - scotland
+      - bilingual
+      - phase_4
+      - daily_sync

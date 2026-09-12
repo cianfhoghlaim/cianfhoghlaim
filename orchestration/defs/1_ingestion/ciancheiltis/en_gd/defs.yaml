@@ -1,0 +1,167 @@
+# orchestration/defs/1_ingestion/ciancheiltis/en_gd/defs.yaml
+#
+# L1 CelticIngestionComponent for the ciancheiltis Phase 4 (en-gd —
+# Scotland) surface. Per the ciancheiltis spec §"Dagster 5-layer asset
+# graph per phase", every phase MUST have a complete 5-layer asset
+# group; this file is Layer 1.
+#
+# Declares the 8 Phase-4 DLT sources (one per Scottish public-sector
+# theme) + a daily 04:00 UTC cron. The 8 sources land under the shared
+# `dlt_sources/ciancheiltis/en_gd/` subtree (subagent 2's territory per
+# the PR0.8 split); this file only wires the orchestration side. The
+# `source_id` values are stable dotted identifiers resolved at runtime
+# against the canonical `dlt_sources.ciancheiltis._shared.registry`.
+#
+# Phase 4 is the Scotland jurisdiction (en-gd) — the fourth of the 6
+# ciancheiltis language-pair stages. Scotland has a statutory bilingual
+# framework distinct from Wales (Phase 1) + Republic of Ireland (Phase
+# 2) + Northern Ireland (Phase 3): the Gaelic Language (Scotland) Act
+# 2005 (asp/2005/7) established Bòrd na Gàidhlig as the principal
+# public authority for the Gaelic language in Scotland and gave
+# Scottish Ministers a duty to promote the use of Gaelic. The
+# canonical bilingual reference for Phase 4 is
+# `https://www.gaidhlig.scot/bord-na-gaidhlig/naidheachdan/` — Bòrd na
+# Gàidhlig under the 2005 Act.
+#
+# Scotland's bilingual URL pattern differs from Phase 1 + Phase 2 + Phase 3:
+#   - legislation.gov.uk: `/asp/<year>/<num>` (Acts of the Scottish
+#     Parliament), `/ssi/<year>/<num>` (Scottish Statutory
+#     Instruments), `/sdsi/<year>/<num>` (Scottish Draft Statutory
+#     Instruments). There is NO bilingual infix on legislation.gov.uk
+#     — the GD version is a separate `/contents` with a `<html
+#     lang="gd">` body header, NOT a `/gd/` or `/cy/` slug.
+#   - gov.scot: the CMS does NOT enforce a `/gd/` prefix; pairing is
+#     corroborated from body content + the `<html lang="gd">`
+#     attribute. gaidhlig.scot is the canonical Bòrd na Gàidhlig
+#     surface and publishes a substantial Gaelic-primary corpus.
+#   - education.gov.scot/foghlam-tron-ghaidhlig/ — Foghlam Alba (the
+#     Gaelic-medium education strand of Education Scotland).
+#   - nhsinform.scot — NHS Scotland patient information (T4); much of
+#     the gd-side content lives under separate landing pages.
+#   - scotland.police.uk — Police Scotland is one of the few public
+#     bodies that publishes GD-side content (linked from the courts /
+#     justice theme T7).
+#
+# Scottish Gaelic coverage is PARTIAL relative to Welsh (Phase 1) or
+# Irish (Phase 2/3) — fewer gov.scot pages have GD translations, and
+# many `legislation.gov.uk/asp/<year>/<num>/contents` pages exist in
+# English only (a smaller canonical GD set than the Welsh Acts set
+# in Phase 1). This is documented in the Phase 4 Dive
+# `METADATA_MISMATCH_DIVE_GD` description — the mismatch rate will be
+# HIGHER than Phase 1/2/3 and that is expected, not a regression.
+#
+# Per-phase asset_check: `bilingual_pairs_seeded_check` (≥ 500) lives
+# in Layer 4 (`4_asset_generation/ciancheiltis/en_gd/defs.yaml`) —
+# that is where the RAGAS gate per the ciancheiltis spec Requirement
+# lives.
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" + Requirement
+# "6-phase language-pair staging" + Scenario
+# "en-cy Phase 1 RAGAS gate fires" (carried verbatim to Phase 4 per
+# the 6-phase language-pair staging Requirement).
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ciancheiltis.en_gd.themes
+  domain: ciancheiltis
+  nation: scotland
+  automation: on_cron
+  automation_cron: "0 4 * * *"
+  state_backed: false
+  state_refresh_interval: daily
+  asset_check: bilingual_pairs_seeded_check
+  asset_check_min_rows: 500
+  dlt_source: ciancheiltis.en_gd.themes_source
+  destination_tables:
+    - cianfhoghlaim.ciancheiltis.en_gd_legislation
+    - cianfhoghlaim.ciancheiltis.en_gd_policy_consultations
+    - cianfhoghlaim.ciancheiltis.en_gd_education
+    - cianfhoghlaim.ciancheiltis.en_gd_healthcare
+    - cianfhoghlaim.ciancheiltis.en_gd_language_bodies
+    - cianfhoghlaim.ciancheiltis.en_gd_terminology
+    - cianfhoghlaim.ciancheiltis.en_gd_courts
+    - cianfhoghlaim.ciancheiltis.en_gd_local_government
+  fallback_resources:
+    - stedding/ingest_queue/ciancheiltis/en_gd/
+    - stedding/discovery/ciancheiltis_en_gd_seeds.jsonl
+  tags:
+    - ciancheiltis
+    - en-gd
+    - phase-4
+    - ingestion
+    - bilingual
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_gd
+    languages:
+      - en
+      - gd
+    themes:
+      - legislation
+      - policy_consultations
+      - education
+      - healthcare
+      - language_bodies
+      - terminology
+      - courts
+      - local_government
+    dlt_sources:
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_gd.legislation.legislation_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_gd.policy_consultations.policy_consultations_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_gd.education.education_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_gd.healthcare.healthcare_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_gd.language_bodies.language_bodies_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_gd.terminology.terminology_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_gd.courts.courts_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_gd.local_government.local_government_source
+    baml_extractor: b.ExtractScottishStatute(theme=...) | b.ExtractScottishGovPage(theme=...)
+    notes: |
+      Phase 4 of the 6-phase ciancheiltis umbrella (en_cy, en_ga_roi,
+      en_ga_ni, en_gd, en_gv, en_ga_eu). The 8 themes map to the 8
+      Scottish public-sector surfaces. The canonical bilingual
+      reference is `https://www.gaidhlig.scot/bord-na-gaidhlig/naidheachdan/`
+      (Bòrd na Gàidhlig under the Gaelic Language (Scotland) Act
+      2005, asp/2005/7). Daily 04:00 UTC cron aligns with the BIEP
+      gov-circulars cron (per the cross-pipeline integration
+      Requirement) and with the Phase 1 en-cy + Phase 2 en-ga-roi +
+      Phase 3 en-ga-ni crons. Honours USE_LOCAL_SCRAPES=true to read
+      from `stedding/ingest_queue/ciancheiltis/en_gd/`.
+
+      Phase 4 differs from Phase 1 + Phase 2 + Phase 3 in FOUR ways:
+      1. Scottish legislation lives at `legislation.gov.uk/asp/<year>/<num>`
+         (Acts of the Scottish Parliament), `/ssi/<year>/<num>`
+         (Scottish Statutory Instruments), and `/sdsi/<year>/<num>`
+         (Scottish Draft Statutory Instruments) — NOT at
+         `irishstatutebook.ie` (Phase 2), NOT at `legislation.gov.uk/wsi`
+         (Phase 1 = Wales), NOT at `legislation.gov.uk/uksi` (Phase 3 =
+         Northern Ireland UK-wide). The bilingual content lives on
+         the same `/contents` page with a `<html lang="gd">` body
+         header rather than a `/gd/` slug variant — the
+         `language_detector` MUST corroborate from body content (per
+         the ciancheiltis spec §"Content-based language detection"
+         Scenario).
+      2. Scotland has ONE minority language (Scottish Gaelic / Gàidhlig)
+         under the Gaelic Language (Scotland) Act 2005 — unlike NI
+         (Phase 3) which has TWO (Irish + Ulster Scots under the
+         2022 Act). The `cognee_dataset` schema uses
+         `minority_languages: [gd]` (simpler than Phase 3's
+         `[ga, ulster_scots]`).
+      3. The metadata-language-mismatch rate on Phase 4 is EXPECTED
+         to be HIGHER than Phase 1 + Phase 2 + Phase 3 because
+         Scottish Gaelic coverage is partial on most government sites
+         (fewer gov.scot pages have GD translations, and many
+         `legislation.gov.uk/asp/<year>/<num>/contents` pages exist
+         in English only). This is documented in
+         `motherduck/dives/ciancheiltis_en_gd_dive.py::METADATA_MISMATCH_DIVE_GD`
+         and is NOT a regression — the L5 anomaly sensor still fires
+         at the 5% threshold but the per-theme mismatch rate will
+         trend higher than ROI/NI/Wales.
+      4. The BAML extraction client is `CiancheiltisGdExtract`
+         (using `gemma-4-26B-A4B`, the same Welsh-aware multilingual
+         MoE used for Phase 1 Welsh — `cy` and `gd` share the same
+         client per the ciancheiltis spec §"BAML extraction suite").
+         The Phase 4 BAML functions are `ExtractScottishStatute` (T1
+         legislation) + `ExtractScottishGovPage` (T2-T5+T7+T8 gov
+         surface) + `ExtractGaelicTerm` (T6 terminology, shared).
+

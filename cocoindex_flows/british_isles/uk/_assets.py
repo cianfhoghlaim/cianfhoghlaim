@@ -1,4 +1,4 @@
-"""Dagster assets wrapper for the ciancheiltis Phase 1 (en-cy) + Phase 2 (en-ga-ROI) + Phase 3 (en-ga-NI) CocoIndex Apps.
+"""Dagster assets wrapper for the ciancheiltis Phase 1 (en-cy) + Phase 2 (en-ga-ROI) + Phase 3 (en-ga-NI) + Phase 4 (en-gd / Scotland) CocoIndex Apps.
 
 This is the **assets surface** that the L3 Dagster component consumes.
 The actual ``defs.yaml`` wiring (at
@@ -37,6 +37,14 @@ Wiring contract (per the ``oideachais-cocoindex-v1`` skill):
    gates ≥ 0.70 RAGAS bilingual-pair coverage + ≥ 500 seeded pairs.
 9. ``en_ga_ni_app_health_check`` — the per-cycle Phase 3 compliance
    asset check that re-validates the R1-R4 conformance contract.
+
+10. ``en_gd_chunks`` — the R1-R4 CocoIndex v1 Phase 4 App as a
+    ``virtual`` asset (drives the LanceDB table mirror at
+    ``lancedb://md:cianfhoghlaim/ciancheiltis/en_gd_chunks``).
+11. ``en_gd_pairs_seeded_check`` — the Phase 4 asset check that
+    gates ≥ 0.70 RAGAS bilingual-pair coverage + ≥ 500 seeded pairs.
+12. ``en_gd_app_health_check`` — the per-cycle Phase 4 compliance
+    asset check that re-validates the R1-R4 conformance contract.
 
 Reference: ``openspec/changes/2026-09-06-ciancheiltis-v1/``.
 """
@@ -81,6 +89,15 @@ from .ciancheiltis_en_ga_ni_embedding import (  # noqa: E402 — module-level
     PHASE_TABLE_URL_GA_NI,
     ciancheiltis_en_ga_ni_embedding,
     en_ga_ni_embedding_flow,
+)
+from .ciancheiltis_en_gd_embedding import (  # noqa: E402 — module-level
+    CIANCHEILTIS_EN_GD_DUCKLAKE_TABLES,
+    CIANCHEILTIS_EN_GD_THEMES,
+    EnGdChunk,
+    PHASE_LANGUAGE_PAIR_GD,
+    PHASE_TABLE_URL_GD,
+    ciancheiltis_en_gd_embedding,
+    en_gd_embedding_flow,
 )
 
 
@@ -151,6 +168,30 @@ def build_en_ga_ni_chunks_asset_spec() -> dict[str, Any]:
     }
 
 
+def build_en_gd_chunks_asset_spec() -> dict[str, Any]:
+    """Build the Phase 4 asset spec dict for the L3 Component to wrap.
+
+    Consumed by ``orchestration/defs/3_model_lifecycle/cocoindex_v1/
+    ciancheiltis_en_gd_embedding/defs.yaml`` (subagent 3's territory).
+    Added by PR0.8 — mirrors ``build_en_ga_ni_chunks_asset_spec`` for
+    the Phase 4 en-gd / Scotland CocoIndex App.
+
+    Canonical example (per the umbrella spec's Scotland row):
+    ``https://www.gaidhlig.scot/bord-na-gaidhlig/naidheachdan/`` —
+    Bòrd na Gàidhlig under the Gaelic Language (Scotland) Act 2005
+    (``https://www.legislation.gov.uk/asp/2005/7/contents``).
+    """
+    return {
+        "app_name": "CiancheiltisEnGdEmbedding",
+        "module": "cocoindex_flows.british_isles.uk.ciancheiltis_en_gd_embedding",
+        "source": "ciancheiltis",
+        "lance_table": PHASE_TABLE_URL_GD,
+        "language_pair": PHASE_LANGUAGE_PAIR_GD,
+        "themes": list(CIANCHEILTIS_EN_GD_THEMES),
+        "ducklake_tables": dict(CIANCHEILTIS_EN_GD_DUCKLAKE_TABLES),
+    }
+
+
 def iter_bilingual_pages() -> Iterator[dict[str, Any]]:
     """Re-export the bilingual-page yielder for the L2 materials layer.
 
@@ -193,6 +234,21 @@ def iter_en_ga_ni_bilingual_pages() -> Iterator[dict[str, Any]]:
     yield from _yield_bilingual_pages()
 
 
+def iter_en_gd_bilingual_pages() -> Iterator[dict[str, Any]]:
+    """Re-export the Phase 4 bilingual-page yielder for the L2 materials layer.
+
+    Phase 4 mirror of ``iter_bilingual_pages`` (Phase 1 en-cy / Wales)
+    + ``iter_en_ga_roi_bilingual_pages`` (Phase 2 en-ga / ROI) +
+    ``iter_en_ga_ni_bilingual_pages`` (Phase 3 en-ga / NI). Added by
+    PR0.8.
+    """
+    # Local import to avoid a top-level side effect when CocoIndex is
+    # absent.
+    from .ciancheiltis_en_gd_embedding import _yield_bilingual_pages
+
+    yield from _yield_bilingual_pages()
+
+
 __all__ = [
     "CIANCHEILTIS_EN_CY_DUCKLAKE_TABLES",
     "CIANCHEILTIS_EN_CY_THEMES",
@@ -200,25 +256,34 @@ __all__ = [
     "CIANCHEILTIS_EN_GA_NI_THEMES",
     "CIANCHEILTIS_EN_GA_ROI_DUCKLAKE_TABLES",
     "CIANCHEILTIS_EN_GA_ROI_THEMES",
+    "CIANCHEILTIS_EN_GD_DUCKLAKE_TABLES",
+    "CIANCHEILTIS_EN_GD_THEMES",
     "COCOINDEX_AVAILABLE",
     "EnGaNiChunk",
+    "EnGdChunk",
     "PHASE_LANGUAGE_PAIR_CY",
     "PHASE_LANGUAGE_PAIR_GA_NI",
     "PHASE_LANGUAGE_PAIR_GA_ROI",
+    "PHASE_LANGUAGE_PAIR_GD",
     "PHASE_TABLE_URL_CY",
     "PHASE_TABLE_URL_GA_NI",
     "PHASE_TABLE_URL_GA_ROI",
+    "PHASE_TABLE_URL_GD",
     "build_en_cy_chunks_asset_spec",
     "build_en_ga_ni_chunks_asset_spec",
     "build_en_ga_roi_chunks_asset_spec",
+    "build_en_gd_chunks_asset_spec",
     "ciancheiltis_en_ga_ni_embedding",
+    "ciancheiltis_en_gd_embedding",
     "en_cy_embedding",
     "en_cy_embedding_flow",
     "en_ga_ni_embedding_flow",
     "en_ga_roi_embedding",
     "en_ga_roi_embedding_flow",
+    "en_gd_embedding_flow",
     "flow",
     "iter_bilingual_pages",
     "iter_en_ga_ni_bilingual_pages",
     "iter_en_ga_roi_bilingual_pages",
+    "iter_en_gd_bilingual_pages",
 ]

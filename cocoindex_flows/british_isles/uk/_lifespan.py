@@ -1,4 +1,4 @@
-"""Per-phase lifespan re-export for the ciancheiltis Phase 1 (en-cy / Wales) + Phase 2 (en-ga / ROI) + Phase 3 (en-ga / NI) Apps.
+"""Per-phase lifespan re-export for the ciancheiltis Phase 1 (en-cy / Wales) + Phase 2 (en-ga / ROI) + Phase 3 (en-ga / NI) + Phase 4 (en-gd / Scotland) Apps.
 
 This is a thin per-phase shim over the canonical shared lifespan at
 ``cocoindex_flows._shared._lifespan``. The R1 conformance contract
@@ -114,6 +114,22 @@ PHASE_TABLE_URL_GA_NI: str = (
     "lancedb://md:cianfhoghlaim/ciancheiltis/en_ga_ni_chunks"
 )
 
+# Phase 4 (en-gd / Scotland) is bilingual EN <-> GD. The
+# shared ``BAAI/bge-m3`` embedder covers both natively (1024-d,
+# multilingual), so no per-phase ContextKey overrides are required
+# here either. The Phase 4 App lives at
+# ``ciancheiltis_en_gd_embedding.py`` (sibling of the Phase 1 App
+# ``ciancheiltis_en_cy_embedding.py`` + the Phase 2 App
+# ``ciancheiltis_en_ga_roi_embedding.py`` + the Phase 3 App
+# ``ciancheiltis_en_ga_ni_embedding.py``) and re-exports the constants
+# below via ``from ._lifespan import PHASE_TABLE_URL_GD,
+# PHASE_LANGUAGE_PAIR_GD`` so the R1 import line in the App is
+# unambiguous about which phase it targets.
+PHASE_LANGUAGE_PAIR_GD: str = "en-gd"
+PHASE_TABLE_URL_GD: str = (
+    "lancedb://md:cianfhoghlaim/ciancheiltis/en_gd_chunks"
+)
+
 
 __all__ = [
     "COCOINDEX_AVAILABLE",
@@ -125,9 +141,11 @@ __all__ = [
     "PHASE_LANGUAGE_PAIR",
     "PHASE_LANGUAGE_PAIR_GA_NI",
     "PHASE_LANGUAGE_PAIR_GA_ROI",
+    "PHASE_LANGUAGE_PAIR_GD",
     "PHASE_TABLE_URL",
     "PHASE_TABLE_URL_GA_NI",
     "PHASE_TABLE_URL_GA_ROI",
+    "PHASE_TABLE_URL_GD",
     "RESOLVED_FILE_REGISTRY",
     "shared_lifespan",
 ]

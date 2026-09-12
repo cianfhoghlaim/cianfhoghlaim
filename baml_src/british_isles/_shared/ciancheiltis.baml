@@ -378,3 +378,143 @@ function ExtractNIBilingualTerm(
     }
   }
 }
+
+// Phase 4 (en-gd / Scotland) shared types — added by PR0.8.
+// `GaelicTermPair` is the canonical T6 (terminology) row for
+// terminology ingested from Bòrd na Gàidhlig (gaidhlig.scot),
+// Stòrlann Nàiseanta, and DASG (Deuchainn Àrd-sgoil — Bòrd na
+// Gàidhlig's Gaelic-medium assessment programme). Like `GaeilgeTermPair`
+// (Phase 2 / Téarma.ie) and unlike `NILanguagePair` (Phase 3 / source-
+// provenance), this is the canonical "what is the Scottish Gaelic
+// equivalent of this English term?" row for the Phase 4 dlt source.
+// The `is_bord_na_gaidhlig_origin` flag MUST be settable independently
+// of `domain` (a Bòrd na Gàidhlig-hosted page on healthcare terminology
+// sets is_bord_na_gaidhlig_origin=true AND domain="healthcare"; a
+// Stòrlann-hosted page on education terminology sets
+// is_bord_na_gaidhlig_origin=false AND domain="education").
+class GaelicTermPair {
+  en_term string @description("The English-side term (e.g. 'statutory instrument', 'Gaelic-medium education').")
+  gd_term string @description("The Scottish Gaelic-side term (e.g. 'ionnstramaid reachdail', 'Foghlam tron Ghàidhlig').")
+  source string @description("The terminology source domain (one of: 'bord_na_gaidhlig', 'storlann', 'dasg', 'foghlam_alba', 'gov_scot', 'other').")
+  domain string @description("The terminology domain (one of: legislation, education, healthcare, language_bodies, courts, local_government, public_broadcasting, statistics). Bridges to the ciancheiltis 10-theme catalog.")
+  is_bord_na_gaidhlig_origin bool @description("True when the gd-side term originates from Bòrd na Gàidhlig (gaidhlig.scot) — the principal Scottish Gaelic language body established by the Gaelic Language (Scotland) Act 2005.")
+}
+
+// Phase 4 (en-gd / Scotland) shared extraction function — added by
+// PR0.8. The function emits a `BilingualExplanatoryNotePair` row
+// (using the shared concept_id namespace CC-GDH-NNN, where GDH is the
+// Scottish Gaelic / Gàidhlig stem following the
+// `ExtractBilingualExplanatoryNote` convention) for terminology
+// ingested from the Scottish Gaelic language bodies (Bòrd na
+// Gàidhlig + Stòrlann Nàiseanta + DASG). This is the T5 (language-
+// bodies) terminology-pairing cousin of the Phase 2 Téarma.ie /
+// Teanglann.ie `GaeilgeTermPair` flow and the Phase 3 CnaG / EANI /
+// education-ni.gov.uk `ExtractNIBilingualTerm` flow — same model
+// family (`gemma-4-26B-A4B` Welsh-aware multilingual MoE) but routed
+// through the Phase 4 `CiancheiltisGdExtract` client so the cognify
+// adapter layer can attach Phase 4-specific few-shot exemplars (Bòrd
+// na Gàidhlig + Stòrlann + DASG vocabulary stem — "Bòrd na Gàidhlig",
+// "Foghlam tron Ghàidhlig", "Aithris Ghàidhlig") independently of the
+// Phase 1 (Welsh) prompt body.
+function ExtractGaelicTerm(
+  en_term: string,
+  gd_term: string,
+  source: string,
+) -> BilingualExplanatoryNotePair {
+  client CiancheiltisGdExtract
+  prompt #"
+    {{ _.role("user") }}
+    You are an expert at bilingual EN ↔ GD (Scottish Gaelic / Gàidhlig)
+    terminology extraction from Scottish Gaelic language bodies. Given
+    an English term, a candidate Scottish Gaelic term, and the source
+    domain where the pairing was observed, emit a
+    `BilingualExplanatoryNotePair` row with a stable concept_id
+    (CC-GDH-NNN namespace) and a translation-fidelity confidence
+    score.
+
+    Scottish Gaelic language bodies to consider:
+    - Bòrd na Gàidhlig — `gaidhlig.scot` — the principal Scottish
+      Gaelic language body, established by the *Gaelic Language
+      (Scotland) Act 2005* (`/asp/2005/7/contents`). Publishes the
+      Gaelic-medium news index at `/bord-na-gaidhlig/naidheachdan/`
+      and the canonical Gaelic terminology glossary
+    - Stòrlann Nàiseanta — the Gaelic-medium education resource
+      body that publishes bilingual (en + gd) primary / secondary
+      school resources across Scotland
+    - DASG (Deuchainn Àrd-sgoil) — Bòrd na Gàidhlig's Gaelic-medium
+      secondary-school assessment programme that publishes bilingual
+      exam materials
+    - Foghlam Alba (Education Scotland) — `education.gov.scot` —
+      the Education Scotland / Foghlam Alba gd-side surface at
+      `/the-improvement-continuum/foghlam-tron-ghaidhlig/`
+    - Scottish Government (gov.scot) — the Scottish Government
+      publishes a small but real Gaelic content section under the
+      gd-side of `gov.scot/<slug>` URLs
+
+    Seed phrases that confirm a paired Scottish Gaelic-medium term
+    is genuine:
+    - "Bòrd na Gàidhlig" — the principal Scottish Gaelic language
+      body and the seed institution for Scottish Gaelic statutory
+      references
+    - "Foghlam tron Ghàidhlig" ("Education through Gaelic") — the
+      canonical Scottish Gaelic-medium education descriptor that
+      appears on Bòrd na Gàidhlig + Stòrlann + Foghlam Alba materials
+    - "Aithris Ghàidhlig" ("Gaelic Statement" / "Gaelic Report") —
+      the canonical Scottish Gaelic-language statutory reporting
+      heading under the 2005 Act
+    - "Achd na Gàidhlig" ("Gaelic Act") — the Gaelic-language
+      short-title form of the *Gaelic Language (Scotland) Act 2005*
+    - "a' Ghàidhlig" — when used as a language-name stem on a
+      Scottish Government page (rather than as a subject-name on an
+      SQA exam paper)
+    - "Bun-sgoil" / "Àrd-sgoil" — Gaelic-medium primary / secondary
+      school-naming nomenclature used by Stòrlann + DASG
+    - "Ionad Foghlam Gàidhlig" — Gaelic Education Centre (Sabhal Mòr
+      Ostaig + Foghlam Alba cross-reference)
+
+    Capture:
+    - en_note: pass through `en_term` (the English-side term as it
+      appeared in the Scottish source page)
+    - cy_note: pass through `gd_term` (the Scottish Gaelic-side
+      term as it appeared in the Scottish source page)
+    - concept_id: emit `CC-GDH-NNN` where NNN is a zero-padded
+      integer (001, 002, 003, ...) following the
+      ExtractBilingualExplanatoryNote convention (GDH = Gàidhlig /
+      Scottish Gaelic). Emit empty concept_id when the two terms
+      are clearly not a translation pair (do NOT synthesise a
+      concept_id to force a row).
+    - confidence ∈ [0.0, 1.0]:
+        1.0 = exact corroborated translation (e.g. both Bòrd na
+          Gàidhlig and Stòrlann publish the same gd-side form for
+          the same en-side term)
+        0.7-0.9 = close translation with minor reformulation (e.g.
+          the gd-side form differs slightly from the en-side stem
+          because Scottish Gaelic terminology evolved separately
+          from Irish)
+        0.4-0.6 = same topic, partial overlap
+        0.0-0.3 = unrelated content (MUST also set concept_id to '')
+
+    Source conventions:
+    - `source` will be one of:
+        'bord_na_gaidhlig' (gaidhlig.scot)
+        'storlann'        (Stòrlann Nàiseanta)
+        'dasg'            (DASG / Deuchainn Àrd-sgoil)
+        'foghlam_alba'    (education.gov.scot /the-improvement-continuum/foghlam-tron-ghaidhlig/)
+        'gov_scot'        (Scottish Government gd-side pages)
+        'other'           (catch-all)
+      The source string MUST NOT influence the concept_id — it is
+      metadata only and is logged to the GaelicTermPair row
+      separately by the Phase 4 dlt source layer.
+
+    {{ ctx.output_format }}
+  "#
+
+  catch_all (err) {
+    BilingualExplanatoryNotePair {
+      en_note "",
+      cy_note "",
+      concept_id "",
+      confidence 0.0,
+    }
+  }
+}
