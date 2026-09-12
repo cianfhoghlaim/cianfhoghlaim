@@ -128,6 +128,19 @@ def _ocr_vision_entries() -> dict[str, ModelRegistryEntry]:
     Each VISION_MODELS key maps to one entry with role derived from the
     existing `role: ModelRole` field on OCRModel
     (tier1_heavy | tier2_medium | tier3_light | specialist | legacy).
+
+    Plus 2 NEW usage-role entries added 2026-08-27 (per the
+    `2026-08-27-tuatha-anam-capture-pipeline-port-and-xmen-corpus-v1`
+    centralized-model-registry delta):
+
+    - `qwen3-vl-8b-hades-boon` (role=`hades_boon`) — for the
+      `ExtractHadesBoon` BAML function.
+    - `qwen3-vl-8b-xmen-scene` (role=`xmen_scene`) — for the
+      `ExtractXmenScene` BAML function.
+
+    Both use the medium-tier Qwen3-VL-8B Unsloth GGUF. The boon
+    icons + animation frames have similar density (~5% ROI +
+    dense overlaid text).
     """
     entries: dict[str, ModelRegistryEntry] = {}
     for vkey, vmodel in VISION_MODELS.items():
@@ -161,6 +174,52 @@ def _ocr_vision_entries() -> dict[str, ModelRegistryEntry]:
             litellm_alias=f"local/vision/{vkey}" if getattr(vmodel, "available", True) else None,
             notes=getattr(vmodel, "notes", ""),
         )
+
+    # NEW 2026-08-27 — 2 usage roles for the ANAM capture pipeline.
+    # Pattern: promote tuatha-clean/tuatha/models/registry.py:ROLES
+    # into the central registry. The role-based dispatch lets
+    # BAML functions resolve the VLM via
+    # MODEL_REGISTRY.resolve("ocr_vision", "hades_boon") etc.
+    entries["qwen3-vl-8b-hades-boon"] = ModelRegistryEntry(
+        key="qwen3-vl-8b-hades-boon",
+        family="ocr_vision",
+        role="hades_boon",
+        display_name="Qwen 3-VL 8B (Hades boon extraction, Unsloth GGUF)",
+        unsloth_id="unsloth/Qwen3-VL-8B-Instruct-GGUF",
+        mlx_id="mlx-community/Qwen3-VL-8B-Instruct-4bit",
+        upstream_id="Qwen/Qwen3-VL-8B-Instruct",
+        backend="llama-swap",
+        available=True,
+        litellm_alias="local/vision/qwen3-vl-8b-hades-boon",
+        env_var="VISION_MODEL_HADES",
+        notes=(
+            "ANAM pipeline: Hades boon extraction. Use when the caller "
+            "is anam_capture.baml::ExtractHadesBoon or the BAML "
+            "ExtractHadesBoon equivalent. Boon icons occupy ~5% of a "
+            "1080p frame with dense overlaid text; needs the medium "
+            "tier, not the light one."
+        ),
+    )
+    entries["qwen3-vl-8b-xmen-scene"] = ModelRegistryEntry(
+        key="qwen3-vl-8b-xmen-scene",
+        family="ocr_vision",
+        role="xmen_scene",
+        display_name="Qwen 3-VL 8B (X-Men: Evolution scene extraction, Unsloth GGUF)",
+        unsloth_id="unsloth/Qwen3-VL-8B-Instruct-GGUF",
+        mlx_id="mlx-community/Qwen3-VL-8B-Instruct-4bit",
+        upstream_id="Qwen/Qwen3-VL-8B-Instruct",
+        backend="llama-swap",
+        available=True,
+        litellm_alias="local/vision/qwen3-vl-8b-xmen-scene",
+        env_var="VISION_MODEL_XMEN",
+        notes=(
+            "ANAM pipeline: X-Men: Evolution scene extraction. "
+            "2000-2003 cel-shaded animation frames with mutant "
+            "ability VFX. Same tier as hades_boon because frames "
+            "have similar density. Used by anam_xmen.baml::"
+            "ExtractXmenScene."
+        ),
+    )
     return entries
 
 
