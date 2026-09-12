@@ -50,6 +50,17 @@ class BilingualExplanatoryNotePair {
   confidence float @description("Translation fidelity score in [0.0, 1.0] where 1.0 = exact corroborated translation, 0.0 = unrelated content. Bridges to the ExtractCrossLinguisticConcept fidelity convention.")
 }
 
+// Phase 2 (en-ga / Republic of Ireland) shared types — added by PR0.6.
+// `GaeilgeTermPair` is the canonical T6 (terminology) row for Téarma.ie /
+// Teanglann.ie ingestion. The concept_id namespace follows the
+// ExtractBilingualExplanatoryNote convention: CC-GAE-NNN for Irish terms.
+class GaeilgeTermPair {
+  term_en string @description("The English-side term (e.g. 'statutory instrument').")
+  term_ga string @description("The Irish-side term (e.g. 'ionstraim reachtúil').")
+  concept_id string @description("Stable cross-linguistic concept identifier in the CC-GAE-NNN namespace. Joins BilingualTopicEdge rows in meaisinfhoghlaim/alignment/schema.py.")
+  domain string @description("The terminology domain (one of: legislation, education, healthcare, language_bodies, courts, local_government, public_broadcasting, statistics). Bridges to the ciancheiltis 10-theme catalog.")
+}
+
 function ExtractCiancheiltisBilingualPage(
   page_markdown: string,
   language_pair: string,
@@ -151,6 +162,96 @@ function ExtractBilingualExplanatoryNote(
       cy_note "",
       concept_id "",
       confidence 0.0,
+    }
+  }
+}
+
+// Phase 2 (en-ga / Republic of Ireland) shared extraction function —
+// added by PR0.6. Given the gov.ie parallel-page URL pattern
+// (`https://www.gov.ie/en/<slug>` ↔ `https://www.gov.ie/ga/<slug>`) and
+// the markdown body of each side, this function emits a BilingualPagePair.
+// It is the canonical T1/T2/T4/T5/T7/T8/T9/T10 pairer for gov.ie content
+// (irishstatutebook.ie is handled by the per-phase
+// `ExtractIrishStatuteBook` in `baml_src/british_isles/ireland/ciancheiltis_en_ga_roi.baml`).
+function ExtractIrelandGAURLPair(
+  url_en: string,
+  url_ga: string,
+  body_en: string,
+  body_ga: string,
+) -> BilingualPagePair {
+  client CiancheiltisGaRoiExtract
+  prompt #"
+    {{ _.role("user") }}
+    You are an expert at bilingual EN ↔ GA (Irish / Gaeilge) URL pairing for
+    the parallel-page pattern on `gov.ie` and its departmental mirrors
+    (e.g. `oideachais.ie`, `justice.ie`, `health.gov.ie`, `housing.gov.ie`,
+    `enterprise.gov.ie`). The canonical pattern is:
+
+        https://www.gov.ie/en/<slug>  ↔  https://www.gov.ie/ga/<slug>
+
+    Both URLs are fetched (their bodies are passed as `body_en` and `body_ga`)
+    and you MUST emit a `BilingualPagePair` row that confirms the pairing is
+    a genuine translation (not two unrelated pages that happen to share a
+    slug pattern).
+
+    gov.ie parallel-page conventions:
+    - English root: `https://www.gov.ie/en/...`
+    - Irish   root: `https://www.gov.ie/ga/...`
+    - Departmental mirrors sometimes invert the path (e.g.
+      `oideachais.ie/en/news` vs `oideachais.ie/ga/nuacht` — note the
+      ga-side uses `nuacht` not `news`). The slug rewrite is
+      jurisdiction-specific.
+    - Some news / press-release pages publish only the en-side; the ga-side
+      may be missing or live at a translated slug. Set `is_same_article=false`
+      when you cannot corroborate the pairing.
+    - Slug translation is NOT deterministic — do not assume `news` ↔ `nuacht`,
+      sometimes it's `news` ↔ `nuacht` but other times `news` ↔ `scelta` or
+      `news` ↔ `fógraí`. Use the body content to corroborate.
+
+    Seed phrases that confirm a page is genuinely Irish-medium (An Ghaeilge):
+    - "Rialtas na hÉireann" ("Government of Ireland") — the canonical footer
+      text on ga-side gov.ie pages
+    - "Baile" ("Home") — the ga-side nav-bar landing link
+    - "Nuacht" ("News"), "Preaseisiúint" ("Press release"),
+      "Fógraí" ("Notices") — ga-side departmental labels
+    - "Tuilleadh eolais" ("More information"), "Teagmháil" ("Contact"),
+      "Achoimre ar an..." ("Summary of the...") — common ga-side boilerplate
+    - "Gaeilge" — when used as a section-name stem (rather than as a
+      subject-name), it signals the page is the ga-language version
+
+    Capture:
+    - source_url: pass through `url_en` (the en-side URL is the canonical
+      discovery URL for the ciancheiltis dlt source pattern)
+    - url_a: rewrite `url_en` to its canonical form (enforce the
+      `https://www.gov.ie/en/<slug>` shape)
+    - url_b: rewrite `url_ga` to its canonical form (enforce the
+      `https://www.gov.ie/ga/<slug>` shape)
+    - language_pair: 'en-ga'
+    - is_same_article: TRUE when both bodies are translation equivalents
+      of the same source article (same publication date, same section IDs,
+      same content stem)
+    - metadata_mismatch: TRUE when the ga page's `<html lang>` is 'en'
+      despite the body being predominantly Irish — this fires often on
+      gov.ie departmental mirrors where the CMS does not flip the lang
+      attribute alongside the slug
+    - theme_code: derive from the URL slug + body content (T1 legislation,
+      T2 policy / consultations, T3 education, T4 healthcare, T5 language
+      bodies, T7 courts, T8 local government, T9 public broadcasting,
+      T10 statistics). T6 (terminology) is handled separately by
+      Téarma.ie / Teanglann.ie ingestion via the `GaeilgeTermPair` class.
+
+    {{ ctx.output_format }}
+  "#
+
+  catch_all (err) {
+    BilingualPagePair {
+      source_url "",
+      url_a "",
+      url_b "",
+      language_pair "en-ga",
+      is_same_article false,
+      metadata_mismatch false,
+      theme_code "",
     }
   }
 }

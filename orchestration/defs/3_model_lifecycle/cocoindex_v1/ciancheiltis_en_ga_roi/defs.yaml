@@ -1,0 +1,102 @@
+# orchestration/defs/3_model_lifecycle/cocoindex_v1/ciancheiltis_en_ga_roi/defs.yaml
+#
+# L3 CelticModelLifecycleComponent for the ciancheiltis Phase 2
+# (en-ga — Republic of Ireland) CocoIndex v1 App. Per the ciancheiltis
+# spec §"Dagster 5-layer asset graph per phase", every phase MUST have
+# a complete 5-layer asset group; this file is Layer 3.
+#
+# The CocoIndex App module is written by subagent 2 of the PR0.6 split
+# and lives at
+# `cocoindex_flows/british_isles/uk/ciancheiltis_en_ga_roi_embedding.py`.
+# It MUST satisfy the R1-R4 conformance contract (per the
+# `dagster-5-layer-component-architecture` spec + the cocoindex_v1
+# conformance harness).
+#
+# Phase 2 differs from Phase 1 in two ways:
+# 1. The source DuckLake tables are populated by the 8 Republic of
+#    Ireland DLT sources under `dlt_sources/ciancheiltis/en_ga_roi/`
+#    (subagent 1's territory per the PR0.6 split), and the existing
+#    `ncca.ie` + `curriculumonline.ie` caches (2,388 EN + 2,010 GA +
+#    1,398 EN + 1,000 GA cached pages) are the Phase 2 seed.
+# 2. The canonical bilingual reference is
+#    `https://www.irishstatutebook.ie/eli/1937/act/0019/enacted/ga/html`
+#    (Bunreacht na hÉireann / Constitution of Ireland 1937) — the
+#    only ciancheiltis jurisdiction that has a constitutional mandate
+#    for bilingual government publications (per the Official Languages
+#    Act 2003, achtaí teangacha oifigiúla 2003).
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" (Phase 2 = en_ga_roi) +
+# Requirement "6-phase language-pair staging".
+type: orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_name: CiancheiltisEnGaRoiEmbedding
+  app_group: ciancheiltis_en_ga_roi
+  module: cocoindex_flows.british_isles.uk.ciancheiltis_en_ga_roi_embedding
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  apps:
+    - app_name: CiancheiltisEnGaRoiEmbedding
+      module: cocoindex_flows.british_isles.uk.ciancheiltis_en_ga_roi_embedding
+      source: british_isles
+      lance_table: cianfhoghlaim.ciancheiltis.en_ga_roi_chunks
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  lance_table_format: hnsw_pq
+  table_name: cianfhoghlaim.ciancheiltis.en_ga_roi_chunks
+  languages:
+    - en
+    - ga
+  depts:
+    - irish_statute_book
+    - gov_ie_policies
+    - ncca_curriculum
+    - hse_health
+    - foras_na_gaeilge
+    - tearma
+    - courts_service
+    - local_government
+  source_asset: 1_ingestion/ciancheiltis/en_ga_roi
+  source_tables:
+    - cianfhoghlaim.ciancheiltis.en_ga_roi_irish_statute_book
+    - cianfhoghlaim.ciancheiltis.en_ga_roi_gov_ie_policies
+    - cianfhoghlaim.ciancheiltis.en_ga_roi_ncca_curriculum
+    - cianfhoghlaim.ciancheiltis.en_ga_roi_hse_health
+    - cianfhoghlaim.ciancheiltis.en_ga_roi_foras_na_gaeilge
+    - cianfhoghlaim.ciancheiltis.en_ga_roi_tearma
+    - cianfhoghlaim.ciancheiltis.en_ga_roi_courts_service
+    - cianfhoghlaim.ciancheiltis.en_ga_roi_local_government
+  tags:
+    - ciancheiltis
+    - en-ga-roi
+    - phase-2
+    - cocoindex-v1
+    - embedding
+    - bilingual
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_ga_roi
+    lance_uri: lancedb://md:cianfhoghlaim/ciancheiltis/en_ga_roi_chunks
+    embedding_dim: 1024
+    embedder: BAAI/bge-m3
+    embedder_kind: dense
+    expected_total_documents: 500
+    notes: |
+      Phase 2 (en-ga-roi) CocoIndex v1 App for the ciancheiltis
+      umbrella. Mirrors the 8 Republic of Ireland public-sector
+      themes into a single
+      `lancedb://md:cianfhoghlaim/ciancheiltis/en_ga_roi_chunks`
+      LanceDB table (MotherDuck federated, per the BIEP LanceDB
+      convention). The App module
+      (`cocoindex_flows.british_isles.uk.ciancheiltis_en_ga_roi_embedding`)
+      MUST satisfy R1-R4 — the `cocoindex_v1_conformance` App runs at
+      scaffold time and gates the dagster:dev launch.
+
+      The Republic of Ireland is the only ciancheiltis jurisdiction
+      with constitutional + statutory bilingual requirements (per the
+      Official Languages Act 2003, achtaí teangacha oifigiúla 2003).
+      The `BAAI/bge-m3` 1024-d embedder natively handles both `en` and
+      `ga` (Modern Irish) per the R2 conformance contract.

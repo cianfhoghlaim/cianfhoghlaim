@@ -1,6 +1,6 @@
 """Bilingual EN<->GA concept pair registry (Plan 2, UC 7).
 
-Per the 2026-08-15-meaisinfoghlaim-ireland-england-roadmap (Plan 2).
+Per the 2026-08-15-meaisinfhoghlaim-ireland-england-roadmap (Plan 2).
 
 The canonical EN<->GA concept pair store. 1 row per concept pair.
 Combines:
@@ -26,6 +26,17 @@ Storage:
 
 Generalisable: same registry works for Wales (EN/CY) + Scotland (EN/GD)
 via the language_pair dimension.
+
+ciancheiltis writer (PR0.6 — 2026-09-06-ciancheiltis-v1):
+  The ciancheiltis umbrella project emits bilingual pairs into a
+  SEPARATE file pattern under the same root:
+      stedding/education/bilingual_concepts/ciancheiltis_<phase>__<theme>.jsonl
+  (one file per (phase, theme) — the ciancheiltis 10-theme catalog T1-T10).
+  The ciancheiltis writer is OPT-IN: enable via
+      BILINGUAL_CONCEPT_REGISTRY_CIANCHEILTIS=1
+  in the environment, OR pass `enable_ciancheiltis_writer=True` to
+  `write_ciancheiltis_pair()`. Disabled by default so the existing
+  Ireland (en-ga) JSONL files are never accidentally overwritten.
 """
 
 from __future__ import annotations
@@ -49,6 +60,26 @@ BILINGUAL_CONCEPTS_ROOT = Path(
         "stedding/education/bilingual_concepts",
     )
 )
+
+
+# Canonical source-value that identifies a row as a ciancheiltis-paired row.
+# Per the 2026-09-06 spec §Requirement Cross-pipeline integration with
+# cianfhoghlaim: the BilingualTopicEdge table gains a `source` dimension
+# and ciancheiltis-paired rows MUST set `source = "ciancheiltis"`.
+CIANCHEILTIS_SOURCE_TAG = "ciancheiltis"
+
+
+# Canonical file-naming convention for the ciancheiltis writer path.
+# Distinct from the existing Ireland (en-ga) writer which uses
+# `<subject>__<stage>.jsonl`. The ciancheiltis writer uses
+# `ciancheiltis_<phase>__<theme>.jsonl` so the two surface can never
+# collide and a `--filter source=ciancheiltis` query on the bilingual
+# concept table is unambiguous.
+CIANCHEILTIS_FILE_PATTERN = "ciancheiltis_{phase}__{theme}.jsonl"
+
+
+# Env-var gate for the ciancheiltis writer (the canonical opt-in flag).
+BILINGUAL_CONCEPT_REGISTRY_CIANCHEILTIS_ENV = "BILINGUAL_CONCEPT_REGISTRY_CIANCHEILTIS"
 
 
 class BilingualConceptRegistry:
@@ -152,9 +183,154 @@ class BilingualConceptRegistry:
         return out
 
 
+# ---------------------------------------------------------------------------
+# ciancheiltis writer path (PR0.6 — 2026-09-06-ciancheiltis-v1)
+# ---------------------------------------------------------------------------
+# The ciancheiltis umbrella emits bilingual pairs into a SEPARATE file
+# pattern under the same root. The writer is OPT-IN — by default the
+# existing Ireland (en-ga) JSONL files are NEVER overwritten.
+
+
+def _ciancheiltis_writer_enabled(
+    enable_ciancheiltis_writer: bool | None,
+) -> bool:
+    """Resolve the opt-in gate: env var OR explicit param enables the writer."""
+    if enable_ciancheiltis_writer is True:
+        return True
+    if os.environ.get(BILINGUAL_CONCEPT_REGISTRY_CIANCHEILTIS_ENV) == "1":
+        return True
+    return False
+
+
+def ciancheiltis_path_for(phase: str, theme: str, root: Path | None = None) -> Path:
+    """Canonical on-disk path for a (phase, theme) ciancheiltis file."""
+    base = Path(root) if root is not None else BILINGUAL_CONCEPTS_ROOT
+    return base / CIANCHEILTIS_FILE_PATTERN.format(phase=phase, theme=theme)
+
+
+def write_ciancheiltis_pair(
+    row: dict[str, Any],
+    phase: str,
+    theme: str,
+    *,
+    enable_ciancheiltis_writer: bool | None = None,
+    root: Path | None = None,
+) -> Path | None:
+    """Write a single ciancheiltis bilingual-pair row to disk.
+
+    The writer is OPT-IN. Enable via either:
+      - the `BILINGUAL_CONCEPT_REGISTRY_CIANCHEILTIS=1` env var, OR
+      - passing `enable_ciancheiltis_writer=True`.
+
+    The function refuses to write rows whose `source` column !=
+    `CIANCHEILTIS_SOURCE_TAG` ("ciancheiltis") and logs a warning.
+    Returns the on-disk path on success, None when the writer is
+    disabled or the row is rejected.
+
+    Per the 2026-09-06 spec §Requirement Cross-pipeline integration with
+    cianfhoghlaim: the on-disk path is
+        stedding/education/bilingual_concepts/ciancheiltis_<phase>__<theme>.jsonl
+    which is distinct from the existing Ireland (en-ga) writer path
+    (`<subject>__<stage>.jsonl`).
+    """
+    if not _ciancheiltis_writer_enabled(enable_ciancheiltis_writer):
+        logger.warning(
+            "ciancheiltis_writer_disabled phase=%s theme=%s hint='set %s=1 or pass enable_ciancheiltis_writer=True'",
+            phase,
+            theme,
+            BILINGUAL_CONCEPT_REGISTRY_CIANCHEILTIS_ENV,
+        )
+        return None
+
+    if not isinstance(row, dict):
+        logger.warning(
+            "ciancheiltis_writer_rejected_non_dict phase=%s theme=%s row_type=%s",
+            phase,
+            theme,
+            type(row).__name__,
+        )
+        return None
+
+    source = row.get("source")
+    if source != CIANCHEILTIS_SOURCE_TAG:
+        logger.warning(
+            "ciancheiltis_writer_rejected_wrong_source phase=%s theme=%s source=%s expected=%s",
+            phase,
+            theme,
+            source,
+            CIANCHEILTIS_SOURCE_TAG,
+        )
+        return None
+
+    path = ciancheiltis_path_for(phase=phase, theme=theme, root=root)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(row, ensure_ascii=False) + "\n")
+    logger.info(
+        "ciancheiltis_pair_written phase=%s theme=%s path=%s pair_id=%s",
+        phase,
+        theme,
+        str(path),
+        row.get("pair_id"),
+    )
+    return path
+
+
+def load_ciancheiltis_pairs(
+    phase: str,
+    theme: str,
+    *,
+    root: Path | None = None,
+) -> list[dict[str, Any]]:
+    """Read the ciancheiltis bilingual-pair JSONL file for a (phase, theme).
+
+    Returns a list of raw row dicts (NOT BilingualConcept objects — the
+    ciancheiltis schema is deliberately narrower than the Ireland
+    education schema, so we keep the round-trip as dicts). Returns an
+    empty list when the file does not exist or fails to parse.
+
+    Per the 2026-09-06 spec §Requirement Cross-pipeline integration with
+    cianfhoghlaim: this reader backs the
+    `bilingual_coverage_audit.py` gate (≥ 0.95 threshold) for the
+    ciancheiltis source dimension.
+    """
+    path = ciancheiltis_path_for(phase=phase, theme=theme, root=root)
+    out: list[dict[str, Any]] = []
+    if not path.exists():
+        return out
+    try:
+        with path.open("r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    d = json.loads(line)
+                except json.JSONDecodeError:
+                    logger.exception(
+                        "load_ciancheiltis_pairs_invalid_json",
+                        path=str(path),
+                    )
+                    continue
+                if isinstance(d, dict):
+                    out.append(d)
+    except Exception:
+        logger.exception(
+            "load_ciancheiltis_pairs_failed",
+            path=str(path),
+        )
+    return out
+
+
 __all__ = [
     "BILINGUAL_CONCEPTS_ROOT",
     "BilingualConcept",
     "BilingualConceptRegistry",
+    "CIANCHEILTIS_FILE_PATTERN",
+    "CIANCHEILTIS_SOURCE_TAG",
+    "BILINGUAL_CONCEPT_REGISTRY_CIANCHEILTIS_ENV",
     "LanguagePair",
+    "ciancheiltis_path_for",
+    "write_ciancheiltis_pair",
+    "load_ciancheiltis_pairs",
 ]

@@ -111,6 +111,29 @@ client<llm> CiancheiltisGvExtract {
   }
 }
 
+// ====== ciancheiltis Phase 2 + Phase 6 (en-ga ROI + en-ga EU) — same model ======
+// Per the 2026-09-06-ciancheiltis-v1 openspec change (PR0.6).
+// Both Phase 2 (Republic of Ireland / irishstatutebook.ie + gov.ie) and
+// the future Phase 6 (EU / EUR-Lex `GA/TXT` + europarl.europa.eu `_GA.html`)
+// use modern Irish (An Caighdeán Oifigiúil). Same model as
+// `CiancheiltisGaExtract` (`uccix-mistral-24b`, UCCIX Mistral fine-tune)
+// but exposed as a separate client name so the cognify adapter layer can
+// attach phase-specific few-shot exemplars and so Phase 2 / Phase 6
+// prompt-engineering can diverge independently in a follow-up PR without
+// touching the canonical Phase 3 / Phase 5 client registrations.
+//
+// Routes through LiteLLM → llama-swap (the canonical local-GGUF gateway
+// for the 24-entry VISION_MODELS registry).
+client<llm> CiancheiltisGaRoiExtract {
+  provider "openai"
+  options {
+    base_url env.LITELLM_BASE_URL
+    api_key env.LITELLM_API_KEY
+    // MODEL_REGISTRY: family="text_llm", role="irish" → "uccix-mistral-24b"
+    model "local/vision/uccix-mistral-24b"
+  }
+}
+
 // ====== Canonical named clients referenced across BAML functions ======
 // These are the historical aliases used by the various function definitions.
 // They route to the canonical minimax-m3 text client by default, so all

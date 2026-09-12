@@ -1,0 +1,106 @@
+# orchestration/defs/1_ingestion/ciancheiltis/en_ga_roi/defs.yaml
+#
+# L1 CelticIngestionComponent for the ciancheiltis Phase 2 (en-ga —
+# Republic of Ireland) surface. Per the ciancheiltis spec §"Dagster
+# 5-layer asset graph per phase", every phase MUST have a complete
+# 5-layer asset group; this file is Layer 1.
+#
+# Declares the 8 Phase-2 DLT sources (one per Irish public-sector theme)
+# + a daily 04:00 UTC cron. The 8 sources land under the shared
+# `dlt_sources/ciancheiltis/en_ga_roi/` subtree (subagent 1's territory
+# per the PR0.4 split); this file only wires the orchestration side.
+# The `source_id` values are stable dotted identifiers resolved at
+# runtime against the canonical
+# `dlt_sources.ciancheiltis._shared.registry`.
+#
+# Phase 2 is the Republic of Ireland (en-ga) — the only jurisdiction
+# that ALREADY has rich bilingual content cached in `stedding/` per
+# the proposal (2,388 EN + 2,010 GA cached pages from `ncca.ie` and
+# 1,398 EN + 1,000 GA from `curriculumonline.ie`). The canonical
+# bilingual example for Phase 2 is
+# `https://www.irishstatutebook.ie/eli/1937/act/0019/enacted/ga/html`
+# (Bunreacht na hÉireann / Constitution of Ireland 1937).
+#
+# Per-phase asset_check: `bilingual_pairs_seeded_check` (≥ 500) lives
+# in Layer 4 (`4_asset_generation/ciancheiltis/en_ga_roi/defs.yaml`) —
+# that is where the RAGAS gate per the ciancheiltis spec Requirement
+# lives.
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" + Scenario
+# "en-cy Phase 1 RAGAS gate fires" (carried verbatim to Phase 2 per
+# the 6-phase language-pair staging Requirement).
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ciancheiltis.en_ga_roi.themes
+  domain: ciancheiltis
+  nation: ireland
+  automation: on_cron
+  automation_cron: "0 4 * * *"
+  state_backed: false
+  state_refresh_interval: daily
+  asset_check: bilingual_pairs_seeded_check
+  asset_check_min_rows: 500
+  dlt_source: ciancheiltis.en_ga_roi.themes_source
+  destination_tables:
+    - cianfhoghlaim.ciancheiltis.en_ga_roi_irish_statute_book
+    - cianfhoghlaim.ciancheiltis.en_ga_roi_gov_ie_policies
+    - cianfhoghlaim.ciancheiltis.en_ga_roi_ncca_curriculum
+    - cianfhoghlaim.ciancheiltis.en_ga_roi_hse_health
+    - cianfhoghlaim.ciancheiltis.en_ga_roi_foras_na_gaeilge
+    - cianfhoghlaim.ciancheiltis.en_ga_roi_tearma
+    - cianfhoghlaim.ciancheiltis.en_ga_roi_courts_service
+    - cianfhoghlaim.ciancheiltis.en_ga_roi_local_government
+  fallback_resources:
+    - stedding/ingest_queue/ciancheiltis/en_ga_roi/
+    - stedding/discovery/ciancheiltis_en_ga_roi_seeds.jsonl
+  tags:
+    - ciancheiltis
+    - en-ga-roi
+    - phase-2
+    - ingestion
+    - bilingual
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_ga_roi
+    languages:
+      - en
+      - ga
+    themes:
+      - irish_statute_book
+      - gov_ie_policies
+      - ncca_curriculum
+      - hse_health
+      - foras_na_gaeilge
+      - tearma
+      - courts_service
+      - local_government
+    dlt_sources:
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_roi.irish_statute_book.irish_statute_book_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_roi.gov_ie_policies.gov_ie_policies_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_roi.ncca_curriculum.ncca_curriculum_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_roi.hse_health.hse_health_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_roi.foras_na_gaeilge.foras_na_gaeilge_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_roi.tearma.tearma_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_roi.courts_service.courts_service_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_roi.local_government.local_government_source
+    baml_extractor: b.ExtractCiancheiltisEnGaRoiBilingualPair(theme=..., pair_kind=...)
+    notes: |
+      Phase 2 of the 6-phase ciancheiltis umbrella (en_cy, en_ga_roi,
+      en_ga_ni, en_gd, en_gv, en_ga_eu). The 8 themes map to the 8
+      Republic of Ireland public-sector surfaces, all of which have
+      statutory bilingual EN ↔ GA content per the Official Languages Act
+      2003 (achtaí teangacha oifigiúla 2003). The canonical bilingual
+      reference is `irishstatutebook.ie/eli/1937/act/0019/enacted/ga/html`
+      (Bunreacht na hÉireann). Daily 04:00 UTC cron aligns with the
+      BIEP gov-circulars cron (per the cross-pipeline integration
+      Requirement) and with the Phase 1 en-cy cron. Honours
+      USE_LOCAL_SCRAPES=true to read from
+      `stedding/ingest_queue/ciancheiltis/en_ga_roi/`.
+
+      The gov.ie `/en/` ↔ `/ga/` paired pages are a different mismatch
+      pattern than `legislation.gov.uk` — the metadata tag is
+      generally correct on gov.ie, but the canonical pair signal is the
+      URL slug itself. See
+      `motherduck/dives/ciancheiltis_en_ga_roi_dive.py::METADATA_MISMATCH_DIVE_GA_ROI`.

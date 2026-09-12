@@ -85,6 +85,20 @@ except ImportError:  # pragma: no cover - cocoindex not installed
 PHASE_LANGUAGE_PAIR: str = "en-cy"
 PHASE_TABLE_URL: str = "lancedb://md:cianfhoghlaim/ciancheiltis/en_cy_chunks"
 
+# Phase 2 (en-ga / Republic of Ireland) is bilingual EN <-> GA. The
+# shared ``BAAI/bge-m3`` embedder covers both natively (1024-d,
+# multilingual), so no per-phase ContextKey overrides are required
+# here either. The Phase 2 App lives at
+# ``ciancheiltis_en_ga_roi_embedding.py`` (sibling of the Phase 1 App
+# ``ciancheiltis_en_cy_embedding.py``) and re-exports the constants
+# below via ``from ._lifespan import PHASE_TABLE_URL_GA_ROI,
+# PHASE_LANGUAGE_PAIR_GA_ROI`` so the R1 import line in the App is
+# unambiguous about which phase it targets.
+PHASE_LANGUAGE_PAIR_GA_ROI: str = "en-ga"
+PHASE_TABLE_URL_GA_ROI: str = (
+    "lancedb://md:cianfhoghlaim/ciancheiltis/en_ga_roi_chunks"
+)
+
 
 __all__ = [
     "COCOINDEX_AVAILABLE",
@@ -94,7 +108,9 @@ __all__ = [
     "LANCEDB_URI",
     "LANCE_DB",
     "PHASE_LANGUAGE_PAIR",
+    "PHASE_LANGUAGE_PAIR_GA_ROI",
     "PHASE_TABLE_URL",
+    "PHASE_TABLE_URL_GA_ROI",
     "RESOLVED_FILE_REGISTRY",
     "shared_lifespan",
 ]

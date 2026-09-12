@@ -5,6 +5,11 @@ houses the CocoIndex v1 App that embeds bilingual en-cy government
 pages into the canonical LanceDB table
 ``lancedb://md:cianfhoghlaim/ciancheiltis/en_cy_chunks``.
 
+Phase 2 of the ciancheiltis umbrella (Republic of Ireland / en-ga).
+This package also houses the CocoIndex v1 App that embeds bilingual
+en-ga government pages into the canonical LanceDB table
+``lancedb://md:cianfhoghlaim/ciancheiltis/en_ga_roi_chunks``.
+
 The R1-R4 conformance contract (per the
 ``oideachais-cocoindex-v1`` skill + the
 ``openspec/specs/ciancheiltis/spec.md`` R1-R4 section) is enforced by
@@ -24,3 +29,42 @@ CY/GA/GD/GV per the umbrella spec § R2).
 
 Reference: ``openspec/changes/2026-09-06-ciancheiltis-v1/``.
 """
+
+# Phase 1 (Wales / en-cy) — re-export the CocoIndex v1 App symbol so
+# downstream consumers can import it via
+# ``cocoindex_flows.british_isles.uk.ciancheiltis_en_cy_embedding``.
+from .ciancheiltis_en_cy_embedding import (
+    EnCyChunk,
+    en_cy_embedding,
+    en_cy_embedding_flow,
+)
+from .ciancheiltis_en_cy_embedding import (
+    flow as en_cy_flow,
+)
+
+# Phase 2 (Republic of Ireland / en-ga) — re-export the CocoIndex v1
+# App symbol so downstream consumers can import it via
+# ``cocoindex_flows.british_isles.uk.ciancheiltis_en_ga_roi_embedding``.
+# Added by PR0.6 — the underlying
+# ``ciancheiltis_en_ga_roi_embedding.py`` App is the Phase 2 mirror of
+# the Phase 1 ``ciancheiltis_en_cy_embedding.py`` App, conforming to
+# the same R1-R4 contract.
+from .ciancheiltis_en_ga_roi_embedding import (
+    EnGaRoiChunk,
+    en_ga_roi_embedding,
+    en_ga_roi_embedding_flow,
+)
+from .ciancheiltis_en_ga_roi_embedding import (
+    flow as en_ga_roi_flow,
+)
+
+__all__ = [
+    "EnCyChunk",
+    "EnGaRoiChunk",
+    "en_cy_embedding",
+    "en_cy_embedding_flow",
+    "en_cy_flow",
+    "en_ga_roi_embedding",
+    "en_ga_roi_embedding_flow",
+    "en_ga_roi_flow",
+]

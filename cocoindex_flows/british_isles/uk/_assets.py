@@ -1,8 +1,10 @@
-"""Dagster assets wrapper for the ciancheiltis Phase 1 (en-cy) CocoIndex App.
+"""Dagster assets wrapper for the ciancheiltis Phase 1 (en-cy) + Phase 2 (en-ga-ROI) CocoIndex Apps.
 
 This is the **assets surface** that the L3 Dagster component consumes.
 The actual ``defs.yaml`` wiring (at
-``orchestration/defs/3_model_lifecycle/cocoindex_v1/ciancheiltis_en_cy_embedding/defs.yaml``)
+``orchestration/defs/3_model_lifecycle/cocoindex_v1/ciancheiltis_en_cy_embedding/defs.yaml``
++ the Phase 2 sibling at
+``orchestration/defs/3_model_lifecycle/cocoindex_v1/ciancheiltis_en_ga_roi_embedding/defs.yaml``)
 lives in subagent 3's territory — this file ships the Python asset
 factory functions only.
 
@@ -17,6 +19,14 @@ Wiring contract (per the ``oideachais-cocoindex-v1`` skill):
 3. ``en_cy_app_health_check`` — the per-cycle compliance asset check
    that re-validates the R1-R4 conformance contract (per the
    ``oideachais-cocoindex-v1`` skill § R1-R4-contract).
+
+4. ``en_ga_roi_chunks`` — the R1-R4 CocoIndex v1 Phase 2 App as a
+   ``virtual`` asset (drives the LanceDB table mirror at
+   ``lancedb://md:cianfhoghlaim/ciancheiltis/en_ga_roi_chunks``).
+5. ``en_ga_roi_pairs_seeded_check`` — the Phase 2 asset check that
+   gates ≥ 0.70 RAGAS bilingual-pair coverage + ≥ 500 seeded pairs.
+6. ``en_ga_roi_app_health_check`` — the per-cycle Phase 2 compliance
+   asset check that re-validates the R1-R4 conformance contract.
 
 Reference: ``openspec/changes/2026-09-06-ciancheiltis-v1/``.
 """
@@ -34,11 +44,23 @@ logger = logging.getLogger(__name__)
 from .ciancheiltis_en_cy_embedding import (  # noqa: E402 — module-level
     CIANCHEILTIS_EN_CY_DUCKLAKE_TABLES,
     CIANCHEILTIS_EN_CY_THEMES,
-    COCOINDEX_AVAILABLE,
-    PHASE_LANGUAGE_PAIR,
-    PHASE_TABLE_URL,
     en_cy_embedding,
     en_cy_embedding_flow,
+)
+from .ciancheiltis_en_cy_embedding import (  # noqa: E402 — module-level
+    PHASE_LANGUAGE_PAIR as PHASE_LANGUAGE_PAIR_CY,
+)
+from .ciancheiltis_en_cy_embedding import (  # noqa: E402 — module-level
+    PHASE_TABLE_URL as PHASE_TABLE_URL_CY,
+)
+from .ciancheiltis_en_ga_roi_embedding import (  # noqa: E402 — module-level
+    CIANCHEILTIS_EN_GA_ROI_DUCKLAKE_TABLES,
+    CIANCHEILTIS_EN_GA_ROI_THEMES,
+    COCOINDEX_AVAILABLE,
+    PHASE_LANGUAGE_PAIR_GA_ROI,
+    PHASE_TABLE_URL_GA_ROI,
+    en_ga_roi_embedding,
+    en_ga_roi_embedding_flow,
     flow,
 )
 
@@ -59,10 +81,30 @@ def build_en_cy_chunks_asset_spec() -> dict[str, Any]:
         "app_name": "CiancheiltisEnCyEmbedding",
         "module": "cocoindex_flows.british_isles.uk.ciancheiltis_en_cy_embedding",
         "source": "ciancheiltis",
-        "lance_table": PHASE_TABLE_URL,
-        "language_pair": PHASE_LANGUAGE_PAIR,
+        "lance_table": PHASE_TABLE_URL_CY,
+        "language_pair": PHASE_LANGUAGE_PAIR_CY,
         "themes": list(CIANCHEILTIS_EN_CY_THEMES),
         "ducklake_tables": dict(CIANCHEILTIS_EN_CY_DUCKLAKE_TABLES),
+    }
+
+
+def build_en_ga_roi_chunks_asset_spec() -> dict[str, Any]:
+    """Build the Phase 2 asset spec dict for the L3 Component to wrap.
+
+    Consumed by ``orchestration/defs/3_model_lifecycle/cocoindex_v1/
+    ciancheiltis_en_ga_roi_embedding/defs.yaml`` (subagent 3's
+    territory). Added by PR0.6 — mirrors
+    ``build_en_cy_chunks_asset_spec`` for the Phase 2 en-ga / ROI
+    CocoIndex App.
+    """
+    return {
+        "app_name": "CiancheiltisEnGaRoiEmbedding",
+        "module": "cocoindex_flows.british_isles.uk.ciancheiltis_en_ga_roi_embedding",
+        "source": "ciancheiltis",
+        "lance_table": PHASE_TABLE_URL_GA_ROI,
+        "language_pair": PHASE_LANGUAGE_PAIR_GA_ROI,
+        "themes": list(CIANCHEILTIS_EN_GA_ROI_THEMES),
+        "ducklake_tables": dict(CIANCHEILTIS_EN_GA_ROI_DUCKLAKE_TABLES),
     }
 
 
@@ -81,15 +123,36 @@ def iter_bilingual_pages() -> Iterator[dict[str, Any]]:
     yield from _yield_bilingual_pages()
 
 
+def iter_en_ga_roi_bilingual_pages() -> Iterator[dict[str, Any]]:
+    """Re-export the Phase 2 bilingual-page yielder for the L2 materials layer.
+
+    Phase 2 mirror of ``iter_bilingual_pages`` (which is Phase 1
+    en-cy / Wales). Added by PR0.6.
+    """
+    # Local import to avoid a top-level side effect when CocoIndex is
+    # absent.
+    from .ciancheiltis_en_ga_roi_embedding import _yield_bilingual_pages
+
+    yield from _yield_bilingual_pages()
+
+
 __all__ = [
     "CIANCHEILTIS_EN_CY_DUCKLAKE_TABLES",
     "CIANCHEILTIS_EN_CY_THEMES",
+    "CIANCHEILTIS_EN_GA_ROI_DUCKLAKE_TABLES",
+    "CIANCHEILTIS_EN_GA_ROI_THEMES",
     "COCOINDEX_AVAILABLE",
-    "PHASE_LANGUAGE_PAIR",
-    "PHASE_TABLE_URL",
+    "PHASE_LANGUAGE_PAIR_CY",
+    "PHASE_LANGUAGE_PAIR_GA_ROI",
+    "PHASE_TABLE_URL_CY",
+    "PHASE_TABLE_URL_GA_ROI",
     "build_en_cy_chunks_asset_spec",
+    "build_en_ga_roi_chunks_asset_spec",
     "en_cy_embedding",
     "en_cy_embedding_flow",
+    "en_ga_roi_embedding",
+    "en_ga_roi_embedding_flow",
     "flow",
     "iter_bilingual_pages",
+    "iter_en_ga_roi_bilingual_pages",
 ]
