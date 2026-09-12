@@ -352,6 +352,135 @@ http:
         - tinyauth
 
   # ---------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # Routers - Per 2026-08-13-edge-routing-and-offline-site-remediation-v1
+  # ---------------------------------------------------------------------------
+    # LiteLLM (OpenAI-compatible gateway)
+    litellm-router-redirect:
+      rule: "Host(`litellm.cianfhoghlaim.ie`)"
+      service: litellm-service
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+    litellm-router:
+      rule: "Host(`litellm.cianfhoghlaim.ie`)"
+      service: litellm-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - secure-headers
+
+    # Langfuse (LLM observability)
+    langfuse-router-redirect:
+      rule: "Host(`langfuse.cianfhoghlaim.ie`)"
+      service: langfuse-service
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+    langfuse-router:
+      rule: "Host(`langfuse.cianfhoghlaim.ie`)"
+      service: langfuse-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - secure-headers
+
+    # Vikunja (kanban + Gantt)
+    vikunja-router-redirect:
+      rule: "Host(`vikunja.cianfhoghlaim.ie`)"
+      service: vikunja-service
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+    vikunja-router:
+      rule: "Host(`vikunja.cianfhoghlaim.ie`)"
+      service: vikunja-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - secure-headers
+
+    # n8n (workflow automation)
+    n8n-router-redirect:
+      rule: "Host(`n8n.cianfhoghlaim.ie`)"
+      service: n8n-service
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+    n8n-router:
+      rule: "Host(`n8n.cianfhoghlaim.ie`)"
+      service: n8n-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - secure-headers
+
+    # Glance (dashboard aggregator)
+    glance-router-redirect:
+      rule: "Host(`glance.cianfhoghlaim.ie`)"
+      service: glance-service
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+    glance-router:
+      rule: "Host(`glance.cianfhoghlaim.ie`)"
+      service: glance-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - secure-headers
+
+    # Changedetection.io (website change monitor)
+    changedetection-router-redirect:
+      rule: "Host(`changedetection.cianfhoghlaim.ie`)"
+      service: changedetection-service
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+    changedetection-router:
+      rule: "Host(`changedetection.cianfhoghlaim.ie`)"
+      service: changedetection-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - secure-headers
+
+    # Paperless-ngx (document archive)
+    paperless-router-redirect:
+      rule: "Host(`paperless.cianfhoghlaim.ie`)"
+      service: paperless-service
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+    paperless-router:
+      rule: "Host(`paperless.cianfhoghlaim.ie`)"
+      service: paperless-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - secure-headers
+
   # Services
   # ---------------------------------------------------------------------------
   services:
@@ -418,6 +547,38 @@ http:
       loadBalancer:
         servers:
           - url: "http://127.0.0.1:18182"
+
+    # Per 2026-08-13-edge-routing-and-offline-site-remediation-v1: 7 missing
+    # routers added to close the public-mesh gap. Container names + ports
+    # match the canonical compose.yaml in each stack.
+    litellm-service:
+      loadBalancer:
+        servers:
+          - url: "http://litellm:4000"
+    langfuse-service:
+      loadBalancer:
+        servers:
+          - url: "http://langfuse-web:3000"
+    vikunja-service:
+      loadBalancer:
+        servers:
+          - url: "http://vikunja:80"
+    n8n-service:
+      loadBalancer:
+        servers:
+          - url: "http://n8n:5678"
+    glance-service:
+      loadBalancer:
+        servers:
+          - url: "http://glance:8080"
+    changedetection-service:
+      loadBalancer:
+        servers:
+          - url: "http://changedetection:5000"
+    paperless-service:
+      loadBalancer:
+        servers:
+          - url: "http://paperless:8000"
 
 # =============================================================================
 # TLS Configuration
