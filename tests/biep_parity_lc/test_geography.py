@@ -1,0 +1,57 @@
+"""tests.biep_parity_lc.test_geography — sister to test_mathematics."""
+from __future__ import annotations
+
+import asyncio
+from pathlib import Path
+
+from cocoindex_flows.british_isles.ireland.education.lc import (
+    build_subject_fixture,
+    pure_python_embed,
+    python_baml_fallback_extract,
+)
+from cocoindex_flows.british_isles.ireland.education.lc.geography import (
+    GeographyChunk,
+    _BAML_AVAILABLE,
+    COCOINDEX_AVAILABLE,
+    app,
+    run_geography_subject,
+)
+
+from .conftest import InMemoryLanceTable, query_in_memory_table
+
+
+def test_geography_module_imports() -> None:
+    assert GeographyChunk is not None
+    assert app is not None
+    assert callable(run_geography_subject)
+
+
+def test_geography_app_name() -> None:
+    assert app._name == "ireland_lc_geography_embedding"
+
+
+def test_geography_baml_fallback() -> None:
+    assert _BAML_AVAILABLE is False
+    text = "Leaving Certificate Geography — tectonics, geomorphology, climate. Higher Level. 2024."
+    extraction = python_baml_fallback_extract("geography", text)
+    assert extraction["subject"] == "geography"
+    assert len(extraction["fields"]["topic"]) >= 1
+    assert "Higher" in extraction["fields"]["level"]
+
+
+def test_geography_fixture_and_pipeline(tmp_path: Path) -> None:
+    fixture = build_subject_fixture("geography", num_rows=3)
+    assert len(fixture) == 3
+    rows = asyncio.run(run_geography_subject(tmp_path))
+    assert len(rows) == 3
+    table = InMemoryLanceTable(table_name="geography_table")
+    for row in rows:
+        table.declare_row(row)
+    for row in table.rows:
+        assert row["subject"] == "geography"
+        assert len(row["embedding"]) == 1024
+        assert row["extracted_topic"]
+    results = query_in_memory_table(
+        table, query_text="tectonics and climate", embed_fn=pure_python_embed, top_k=1
+    )
+    assert results[0][1]["subject"] == "geography"
