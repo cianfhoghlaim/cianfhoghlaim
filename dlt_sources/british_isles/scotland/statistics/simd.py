@@ -132,7 +132,7 @@ def simd_source(max_pages: int = 50):
 
     @dlt.resource(
         name="interactive",
-        write_disposition="replace",
+        refresh="drop",
         primary_key=["url"],
     )
     def interactive():

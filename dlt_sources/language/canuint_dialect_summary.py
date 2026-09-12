@@ -36,7 +36,7 @@ def canuint_dialect_summary_source() -> Iterator[DltResource]:
 
     @dlt.resource(
         name="dialect_stats",
-        write_disposition="replace",
+        refresh="drop",
         primary_key="dialect",
     )
     def dialect_stats_resource() -> Iterator[dict]:

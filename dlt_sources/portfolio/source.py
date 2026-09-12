@@ -121,7 +121,7 @@ def fs_author_source(
 
     Returns:
         A list of DLT resources (one per subdir). Each resource has
-        `table_name=f"fs_author_{subdir}"`, `write_disposition="replace"`,
+        `table_name=f"fs_author_{subdir}"`, `refresh="drop"`,
         and `primary_key="path"`.
     """
     if author_root is None:
@@ -147,7 +147,7 @@ def fs_author_source(
         def _make_resource(d: str = subdir) -> Any:
             @dlt.resource(
                 name=f"fs_author_{d}",
-                write_disposition="replace",
+                refresh="drop",
                 primary_key="path",
             )
             def _iter() -> Iterator[dict[str, Any]]:

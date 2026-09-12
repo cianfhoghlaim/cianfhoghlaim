@@ -28,7 +28,7 @@ _ROOT_PDFS = (
 )
 
 
-@dlt.resource(write_disposition="replace", name="ncca_root_pdfs")
+@dlt.resource(refresh="drop", name="ncca_root_pdfs")
 def ncca_root_pdfs(
     leaving_certificate_dir: str = "cianfhoghlaim/leaving_certificate",
 ) -> Iterator[dict]:

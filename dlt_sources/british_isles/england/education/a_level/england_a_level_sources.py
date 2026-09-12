@@ -116,7 +116,7 @@ def make_a_level_resource(board: str):
 
     @dlt.resource(
         name=f"a_level_{board}_subjects",
-        write_disposition="replace",
+        refresh="drop",
         primary_key="id",
         columns={
             "id": {"data_type": "text"},

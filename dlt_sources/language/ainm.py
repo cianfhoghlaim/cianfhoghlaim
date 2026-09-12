@@ -131,7 +131,7 @@ def ainm_source(
 
     @dlt.resource(
         name="professions",
-        write_disposition="replace",
+        refresh="drop",
         primary_key="profession_id",
     )
     def professions_resource() -> Iterator[dict]:

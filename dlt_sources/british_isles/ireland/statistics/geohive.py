@@ -48,7 +48,7 @@ def geohive_source(
     @dlt.resource(
         name="small_areas",
         primary_key="sa_2016",
-        write_disposition="replace",
+        refresh="drop",
     )
     def small_areas() -> Iterator[TDataItem]:
         """
@@ -77,7 +77,7 @@ def geohive_source(
     @dlt.resource(
         name="counties",
         primary_key="county_id",
-        write_disposition="replace",
+        refresh="drop",
     )
     def counties() -> Iterator[TDataItem]:
         """County boundaries (26 counties + 5 county boroughs)."""
@@ -96,7 +96,7 @@ def geohive_source(
     @dlt.resource(
         name="electoral_divisions",
         primary_key="ed_id",
-        write_disposition="replace",
+        refresh="drop",
     )
     def electoral_divisions() -> Iterator[TDataItem]:
         """Electoral Divisions (3,440 areas)."""
@@ -115,7 +115,7 @@ def geohive_source(
     @dlt.resource(
         name="census_population",
         primary_key="id",
-        write_disposition="replace",
+        refresh="drop",
     )
     def census_population() -> Iterator[TDataItem]:
         """

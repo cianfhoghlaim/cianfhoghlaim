@@ -287,7 +287,7 @@ def binance_source(
 
     @dlt.resource(
         name="spot_exchange_info",
-        write_disposition="replace",
+        refresh="drop",
         primary_key=["symbol"],
     )
     def spot_exchange_info():
@@ -298,7 +298,7 @@ def binance_source(
 
     @dlt.resource(
         name="spot_24h_tickers",
-        write_disposition="replace",
+        refresh="drop",
         primary_key=["symbol"],
     )
     def spot_24h_tickers():
@@ -309,7 +309,7 @@ def binance_source(
 
     @dlt.resource(
         name="futures_exchange_info",
-        write_disposition="replace",
+        refresh="drop",
         primary_key=["symbol"],
     )
     def futures_exchange_info():
@@ -320,7 +320,7 @@ def binance_source(
 
     @dlt.resource(
         name="funding_rates",
-        write_disposition="replace",
+        refresh="drop",
         primary_key=["symbol"],
     )
     def funding_rates():

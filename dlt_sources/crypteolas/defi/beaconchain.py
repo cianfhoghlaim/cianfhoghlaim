@@ -77,7 +77,7 @@ def eth_staking_apr(
 @dlt.resource(
     name="eth_network_stats",
     primary_key=["timestamp"],
-    write_disposition="replace",
+    refresh="drop",
 )
 def eth_network_stats() -> Iterator[dict[str, Any]]:
     """
@@ -126,7 +126,7 @@ def eth_network_stats() -> Iterator[dict[str, Any]]:
 @dlt.resource(
     name="eth_validator_queue",
     primary_key=["timestamp"],
-    write_disposition="replace",
+    refresh="drop",
 )
 def eth_validator_queue() -> Iterator[dict[str, Any]]:
     """

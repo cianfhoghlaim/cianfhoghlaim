@@ -117,7 +117,7 @@ def make_gcse_resource(board: str):
 
     @dlt.resource(
         name=f"gcse_{board}_subjects",
-        write_disposition="replace",
+        refresh="drop",
         primary_key="id",
         columns={
             "id": {"data_type": "text"},

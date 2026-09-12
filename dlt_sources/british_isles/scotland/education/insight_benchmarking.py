@@ -101,7 +101,7 @@ def insight_source(max_pages: int = 50):
 
     @dlt.resource(
         name="measures",
-        write_disposition="replace",
+        refresh="drop",
         primary_key=["url"],
     )
     def measures():

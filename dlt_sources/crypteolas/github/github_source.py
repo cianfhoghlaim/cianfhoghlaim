@@ -526,7 +526,7 @@ def github_code_search_source(
 
     @dlt.resource(
         name="code_search_results",
-        write_disposition="replace",
+        refresh="drop",
         primary_key=["sha", "repo_full_name"],
     )
     def search_results():

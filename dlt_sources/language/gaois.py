@@ -232,7 +232,7 @@ def logainm_source(
 
     @dlt.resource(
         name="categories",
-        write_disposition="replace",
+        refresh="drop",
         primary_key="category_id",
     )
     def categories_resource() -> Iterator[dict]:
@@ -349,7 +349,7 @@ def tearma_source(
 
     @dlt.resource(
         name="domains",
-        write_disposition="replace",
+        refresh="drop",
         primary_key="domain_id",
     )
     def domains_resource() -> Iterator[dict]:
@@ -486,7 +486,7 @@ def ainm_source(
 
     @dlt.resource(
         name="professions",
-        write_disposition="replace",
+        refresh="drop",
         primary_key="profession_id",
     )
     def professions_resource() -> Iterator[dict]:

@@ -89,7 +89,7 @@ def okx_funding_history(
 @dlt.resource(
     name="okx_current_funding",
     primary_key=["inst_id"],
-    write_disposition="replace",
+    refresh="drop",
 )
 def okx_current_funding(
     inst_ids: Optional[list[str]] = None,
@@ -194,7 +194,7 @@ def okx_open_interest(
 @dlt.resource(
     name="okx_mark_price",
     primary_key=["inst_id"],
-    write_disposition="replace",
+    refresh="drop",
 )
 def okx_mark_price(
     inst_type: str = "SWAP",

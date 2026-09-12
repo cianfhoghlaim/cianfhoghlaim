@@ -46,7 +46,7 @@ def met_office_source(
     @dlt.resource(
         name="stations",
         primary_key="station_id",
-        write_disposition="replace",
+        refresh="drop",
     )
     def stations() -> Iterator[TDataItem]:
         """Met Office weather stations."""
@@ -75,7 +75,7 @@ def met_office_source(
     @dlt.resource(
         name="climate_monthly",
         primary_key="id",
-        write_disposition="replace",
+        refresh="drop",
     )
     def climate_monthly() -> Iterator[TDataItem]:
         """Historic monthly climate summaries."""

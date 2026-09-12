@@ -41,7 +41,7 @@ def cso_small_areas_source(
     @dlt.resource(
         name="population",
         primary_key="id",
-        write_disposition="replace",
+        refresh="drop",
     )
     def population() -> Iterator[TDataItem]:
         """Population by Small Area from Census 2022."""
@@ -54,7 +54,7 @@ def cso_small_areas_source(
     @dlt.resource(
         name="education_attainment",
         primary_key="id",
-        write_disposition="replace",
+        refresh="drop",
     )
     def education_attainment() -> Iterator[TDataItem]:
         """Educational attainment by Small Area."""
@@ -70,7 +70,7 @@ def cso_small_areas_source(
     @dlt.resource(
         name="irish_language",
         primary_key="id",
-        write_disposition="replace",
+        refresh="drop",
     )
     def irish_language() -> Iterator[TDataItem]:
         """Irish language speakers by Small Area."""
@@ -83,7 +83,7 @@ def cso_small_areas_source(
     @dlt.resource(
         name="employment",
         primary_key="id",
-        write_disposition="replace",
+        refresh="drop",
     )
     def employment() -> Iterator[TDataItem]:
         """Employment status by Small Area."""

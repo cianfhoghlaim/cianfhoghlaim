@@ -131,7 +131,7 @@ def logainm_source(
 
     @dlt.resource(
         name="categories",
-        write_disposition="replace",
+        refresh="drop",
         primary_key="category_id",
     )
     def categories_resource() -> Iterator[dict]:

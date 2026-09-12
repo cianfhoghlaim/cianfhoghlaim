@@ -366,7 +366,7 @@ def _row(record: dict[str, Any]) -> dict[str, Any]:
 
 @dlt.resource(
     name="lc5_documents",
-    write_disposition="replace",
+    refresh="drop",
     primary_key="id",
     columns={
         "id": {"data_type": "text"},

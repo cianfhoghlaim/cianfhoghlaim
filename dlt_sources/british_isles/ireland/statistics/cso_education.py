@@ -36,7 +36,7 @@ def cso_education_source() -> list:
     @dlt.resource(
         name="primary_schools",
         primary_key="roll_number",
-        write_disposition="replace",
+        refresh="drop",
     )
     def primary_schools() -> Iterator[TDataItem]:
         """Primary school statistics."""
@@ -61,7 +61,7 @@ def cso_education_source() -> list:
     @dlt.resource(
         name="secondary_schools",
         primary_key="roll_number",
-        write_disposition="replace",
+        refresh="drop",
     )
     def secondary_schools() -> Iterator[TDataItem]:
         """Post-primary school statistics."""
@@ -83,7 +83,7 @@ def cso_education_source() -> list:
     @dlt.resource(
         name="gaeltacht_schools",
         primary_key="roll_number",
-        write_disposition="replace",
+        refresh="drop",
     )
     def gaeltacht_schools() -> Iterator[TDataItem]:
         """Schools in Gaeltacht areas and Irish-medium schools."""

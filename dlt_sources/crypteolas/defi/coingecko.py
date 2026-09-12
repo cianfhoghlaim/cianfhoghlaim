@@ -333,7 +333,7 @@ def coingecko_source(
 
     @dlt.resource(
         name="trending",
-        write_disposition="replace",
+        refresh="drop",
         primary_key=["type", "id"],
     )
     def trending():

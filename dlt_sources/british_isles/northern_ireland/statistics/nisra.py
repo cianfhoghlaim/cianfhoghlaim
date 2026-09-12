@@ -114,7 +114,7 @@ def nisra_source(dataset_ids: list[str] | None = None):
 
     @dlt.resource(
         name="datasets",
-        write_disposition="replace",
+        refresh="drop",
         primary_key=["id"],
     )
     def datasets():

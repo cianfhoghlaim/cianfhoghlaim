@@ -219,7 +219,7 @@ def dfe_statistics_source(
 
     @dlt.resource(
         name="publications",
-        write_disposition="replace",
+        refresh="drop",
         primary_key=["id"],
     )
     def publications():

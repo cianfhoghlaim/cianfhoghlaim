@@ -35,7 +35,7 @@ def cso_deprivation_source() -> list:
     @dlt.resource(
         name="hp_deprivation_2022",
         primary_key="sa_2022",
-        write_disposition="replace",
+        refresh="drop",
     )
     def hp_deprivation() -> Iterator[TDataItem]:
         """
@@ -51,7 +51,7 @@ def cso_deprivation_source() -> list:
     @dlt.resource(
         name="deis_schools",
         primary_key="roll_number",
-        write_disposition="replace",
+        refresh="drop",
     )
     def deis_schools() -> Iterator[TDataItem]:
         """

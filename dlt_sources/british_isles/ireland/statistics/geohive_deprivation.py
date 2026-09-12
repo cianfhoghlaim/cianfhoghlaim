@@ -39,7 +39,7 @@ def geohive_deprivation_source() -> list:
     @dlt.resource(
         name="hp_deprivation",
         primary_key="sa_2016",
-        write_disposition="replace",
+        refresh="drop",
     )
     def hp_deprivation() -> Iterator[TDataItem]:
         """HP Deprivation Index scores by Small Area."""

@@ -214,7 +214,7 @@ def statswales_source(
 
     @dlt.resource(
         name="catalogue",
-        write_disposition="replace",
+        refresh="drop",
         primary_key=["id"],
     )
     def catalogue():

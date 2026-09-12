@@ -264,7 +264,7 @@ def defillama_source(
 
     @dlt.resource(
         name="yields",
-        write_disposition="replace",
+        refresh="drop",
         primary_key=["pool_id"],
     )
     def yields():

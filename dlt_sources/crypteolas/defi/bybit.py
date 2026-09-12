@@ -156,7 +156,7 @@ def bybit_open_interest(
 @dlt.resource(
     name="bybit_tickers",
     primary_key=["symbol"],
-    write_disposition="replace",
+    refresh="drop",
 )
 def bybit_tickers(
     category: str = "linear",

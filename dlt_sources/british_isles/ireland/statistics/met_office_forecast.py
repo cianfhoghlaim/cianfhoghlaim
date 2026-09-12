@@ -42,7 +42,7 @@ def met_office_forecast_source(
     @dlt.resource(
         name="forecast_daily",
         primary_key="id",
-        write_disposition="replace",
+        refresh="drop",
     )
     def forecast_daily() -> Iterator[TDataItem]:
         """Daily weather forecast."""

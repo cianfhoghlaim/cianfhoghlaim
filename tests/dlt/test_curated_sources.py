@@ -135,7 +135,10 @@ def test_write_disposition_replace_audit() -> None:
                 pass
 
     if total > 0:
-        pytest.xfail(
+        pytest.fail(
             f"Phase 1 DLT audit: {total} sources use deprecated write_disposition='replace'. "
-            f"Migrate to refresh='drop' or refresh='merge' per the per-source guide."
+            f"Migrate to refresh='drop' or refresh='merge' per the per-source guide. "
+            f"Phase 1 migration (commit $(git rev-parse --short HEAD)) "
+            f"already handled the defi/crypto + statistics + language categories. "
+            f"Check what's left."
         )

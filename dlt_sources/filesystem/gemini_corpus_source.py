@@ -160,7 +160,7 @@ def _row(pdf_path: Path, corpus: str) -> dict[str, Any]:
 
 @dlt.resource(
     name="gemini_documents",
-    write_disposition="replace",
+    refresh="drop",
     primary_key="id",
     columns={
         "id": {"data_type": "text"},
