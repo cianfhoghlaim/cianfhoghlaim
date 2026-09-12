@@ -45,16 +45,22 @@
 
 ## Stage 4 — Single-purpose git commit for the directory deletion
 
-- [ ] T4.1 — Confirm the cianfhoghlaim openspec archive commit is in place
-- [ ] T4.2 — `git rm -r /Users/cianmacandeisigh/dev/kings_college_galway`
-      (this is an inter-repo filesystem operation — the cianfhoghlaim
-      git repo does not own KCG, so this is a plain `rm` rather than a
-      tracked-file removal)
-- [ ] T4.3 — Verify the directory is gone: `ls /Users/cianmacandeisigh/dev/kings_college_galway`
-      must fail with `No such file or directory`
-- [ ] T4.4 — Run `mise run lint:drift-docs` (or skip if unavailable in
-      this environment) to confirm no AGENTS.md / spec references to the
-      now-deleted path are still lying
+- [x] T4.1 — Confirm the cianfhoghlaim openspec archive commit is in place
+      (commit 294c601c archived the spec deltas)
+- [x] T4.1a — Confirm the sibling
+      `2026-09-12-kcg-port-path-references-v1` archive (commit 8d63898d)
+      ports the 12 live-code hardcoded paths so deletion does not
+      surface FileNotFoundError at runtime
+- [x] T4.2 — `rm -rf /Users/cianmacandeisigh/dev/kings_college_galway/`
+      (filesystem op; KCG is outside the cianfhoghlaim git repo so
+      this is not a tracked-file removal)
+- [x] T4.3 — Verify the directory is gone: `ls /Users/cianmacandeisigh/dev/kings_college_galway`
+      returns `No such file or directory` (exit code 1)
+- [x] T4.4 — `mise run lint:drift-docs` (run). 9 pre-existing drift
+      violations reported, NONE related to KCG retirement (all are
+      stale count claims: stacks 89→95, skills 65→167, specs 94→102,
+      notebooks 54→65 — all predating the retirement). The retirement
+      itself adds no new drift.
 
 ## Stage 5 — Push
 
