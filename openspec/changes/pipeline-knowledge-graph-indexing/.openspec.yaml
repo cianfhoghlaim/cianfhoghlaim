@@ -1,0 +1,10 @@
+schema: spec-driven
+created: 2026-09-02
+goal: >
+  Bundles the knowledge graph population + count drift rebase +
+  indexing cognition cleanup changes under one topic batch so the
+  knowledge-graph surface ships as one milestone.
+affected_areas:
+  - cognee
+  - ccc
+skip_specs: true
