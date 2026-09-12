@@ -1,0 +1,11 @@
+schema: spec-driven
+created: 2026-09-02
+goal: >
+  Bring openspec CLI, repo docs, and the openspec skill into agreement
+  with verified reality under openspec 1.11.0; establish the
+  .openspec.yaml convention for new changes; correct the OPSX framing
+  that discouraged /opsx:* adoption for a reason that no longer holds.
+affected_areas:
+  - openspec-cli
+  - openspec-docs
+  - openspec-skill
