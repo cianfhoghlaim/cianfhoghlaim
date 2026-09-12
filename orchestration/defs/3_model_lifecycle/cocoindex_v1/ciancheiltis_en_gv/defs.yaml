@@ -1,0 +1,140 @@
+# orchestration/defs/3_model_lifecycle/cocoindex_v1/ciancheiltis_en_gv/defs.yaml
+#
+# L3 CelticModelLifecycleComponent for the ciancheiltis Phase 5
+# (en-gv — Isle of Man) CocoIndex v1 App. Per the ciancheiltis
+# spec §"Dagster 5-layer asset graph per phase", every phase MUST have
+# a complete 5-layer asset group; this file is Layer 3.
+#
+# The CocoIndex App module is written by subagent 2 of the PR0.9 split
+# and lives at
+# `cocoindex_flows/british_isles/uk/ciancheiltis_en_gv_embedding.py`.
+# It MUST satisfy the R1-R4 conformance contract (per the
+# `dagster-5-layer-component-architecture` spec + the cocoindex_v1
+# conformance harness):
+#   - R1: imports `from ._lifespan import PHASE_TABLE_URL_GV,
+#     PHASE_LANGUAGE_PAIR_GV` (the per-phase shim which itself
+#     re-exports `cocoindex_flows._shared._lifespan.shared_lifespan`)
+#   - R2: uses the canonical `BAAI/bge-m3` 1024-d embedder
+#   - R3: every flow decorated `@coco.fn(memo=True, deps=[...])`
+#   - R4: mounts the LanceDB table via
+#     `lancedb.mount_table_target("lancedb://md:cianfhoghlaim/ciancheiltis/en_gv_chunks", conformance_required=True)`
+#
+# Phase 5 differs from Phase 1 + Phase 2 + Phase 3 + Phase 4 in five
+# ways:
+# 1. The source DuckLake tables are populated by the 8 Manx DLT
+#    sources under `dlt_sources/ciancheiltis/en_gv/` (subagent 2's
+#    territory per the PR0.9 split). Phase 5 is GREENFIELD relative
+#    to the cached surfaces in `stedding/ingest_queue/ciancheiltis/en_cy/`,
+#    `en_ga_roi/`, `en_ga_ni/`, and `en_gd/` — there is no pre-existing
+#    Isle-of-Man-government cache to fall back on (the Manx corpus
+#    requires live Firecrawl scraping on first run).
+# 2. The canonical bilingual reference is
+#    `https://www.culturevannin.im/learn-gaelg/` — Culture Vannin
+#    under Tynwald (the bicameral Isle of Man Parliament). Manx
+#    legislation lives at `legislation.gov.im` (the Acts of Tynwald
+#    portal — Tynwald Day 5 July is the oldest continuous parliament
+#    in the world, dating to AD 979).
+# 3. The Isle of Man is a CROWN DEPENDENCY — the Tynwald is one of
+#    THREE Crown Dependency legislatures in the British Isles (Jersey
+#    + Guernsey are the other two). Phase 5 is the ONLY Crown
+#    Dependency with a Celtic-language surface (Jersey + Guernsey
+#    have only Heritage Patois material, which is out of scope for
+#    the revival-language strict gate). The phase group id in the
+#    controller is `isle_of_man` (not `iom`).
+# 4. Manx (Gaelg) is a REVIVAL language — last native speaker Ned
+#    Maddrell died in 1974. The modern corpus is a constructed
+#    revival under Culture Vannin + Learn Manx + Bunscoill Ghaelgagh
+#    (the Manx-medium primary school) + Radio Manx. There is NO
+#    statutory bilingual framework — pages that DO have a Manx version
+#    are a bonus, NOT a baseline. The Phase 5 PR will land with many
+#    themes containing zero bilingual pairs.
+# 5. The `cognee_dataset` schema uses `minority_languages: [gv]`
+#    (simpler than Phase 3's `[ga, ulster_scots]`, similar to Phase
+#    4's `[gd]`). Manx is ONEOF the smallest Celtic-language corpora
+#    in the ciancheiltis umbrella — significantly smaller than Welsh
+#    (Phase 1), Irish (Phase 2/3), or Scottish Gaelic (Phase 4).
+#    The `BAAI/bge-m3` 1024-d embedder handles `en` + `gv` natively
+#    per the R2 conformance contract.
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" (Phase 5 = en_gv) +
+# Requirement "6-phase language-pair staging" + Requirement
+# "CocoIndex v1 R1-R4 conformance".
+type: orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_name: CiancheiltisEnGvEmbedding
+  app_group: ciancheiltis_en_gv
+  module: cocoindex_flows.british_isles.uk.ciancheiltis_en_gv_embedding
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  apps:
+    - app_name: CiancheiltisEnGvEmbedding
+      module: cocoindex_flows.british_isles.uk.ciancheiltis_en_gv_embedding
+      source: british_isles
+      lance_table: cianfhoghlaim.ciancheiltis.en_gv_chunks
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  lance_table_format: hnsw_pq
+  table_name: cianfhoghlaim.ciancheiltis.en_gv_chunks
+  languages:
+    - en
+    - gv
+  minority_languages:
+    - gv
+  depts:
+    - legislation
+    - policy_consultations
+    - education
+    - healthcare
+    - language_bodies
+    - terminology
+    - courts
+    - local_government
+  source_asset: 1_ingestion/ciancheiltis/en_gv
+  source_tables:
+    - cianfhoghlaim.ciancheiltis.en_gv_legislation
+    - cianfhoghlaim.ciancheiltis.en_gv_policy_consultations
+    - cianfhoghlaim.ciancheiltis.en_gv_education
+    - cianfhoghlaim.ciancheiltis.en_gv_healthcare
+    - cianfhoghlaim.ciancheiltis.en_gv_language_bodies
+    - cianfhoghlaim.ciancheiltis.en_gv_terminology
+    - cianfhoghlaim.ciancheiltis.en_gv_courts
+    - cianfhoghlaim.ciancheiltis.en_gv_local_government
+  tags:
+    - ciancheiltis
+    - en-gv
+    - phase-5
+    - cocoindex-v1
+    - embedding
+    - bilingual
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_gv
+    lance_uri: lancedb://md:cianfhoghlaim/ciancheiltis/en_gv_chunks
+    embedding_dim: 1024
+    embedder: BAAI/bge-m3
+    embedder_kind: dense
+    expected_total_documents: 500
+    notes: |
+      Phase 5 (en-gv) CocoIndex v1 App for the ciancheiltis
+      umbrella. Mirrors the 8 Manx public-sector themes into a
+      single
+      `lancedb://md:cianfhoghlaim/ciancheiltis/en_gv_chunks`
+      LanceDB table (MotherDuck federated, per the BIEP LanceDB
+      convention). The App module
+      (`cocoindex_flows.british_isles.uk.ciancheiltis_en_gv_embedding`)
+      MUST satisfy R1-R4 — the `cocoindex_v1_conformance` App runs at
+      scaffold time and gates the dagster:dev launch.
+
+      The canonical bilingual reference is
+      `https://www.culturevannin.im/learn-gaelg/` — Culture Vannin
+      under Tynwald. Manx (Gaelg) is a REVIVAL language — the
+      `cognee_dataset` schema uses `minority_languages: [gv]`. The
+      `BAAI/bge-m3` 1024-d embedder handles `en` + `gv` natively
+      per the R2 conformance contract. Phase 5 is a Crown
+      Dependency surface — the phase group id in the controller is
+      `isle_of_man`.
+

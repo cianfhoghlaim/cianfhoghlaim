@@ -518,3 +518,167 @@ function ExtractGaelicTerm(
     }
   }
 }
+
+// Phase 5 (en-gv / Isle of Man) shared types — added by PR0.9.
+// `ManxTermPair` is the canonical T6 (terminology) row for terminology
+// ingested from Culture Vannin (the Manx cultural foundation — the
+// canonical Phase 5 reference page at
+// `https://www.culturevannin.im/learn-gaelg/`), Bunscoill Ghaelgagh
+// (the Manx-medium primary schools network — `bunscoillghaelgagh.sch.im`
+// + `manxlanguage.sch.im`), and the Gaelg Corpus (`corpus.gaelg.im`).
+// Like `GaeilgeTermPair` (Phase 2 / Téarma.ie) and `GaelicTermPair`
+// (Phase 4 / Bòrd na Gàidhlig), this is the canonical "what is the
+// Manx equivalent of this English term?" row for the Phase 5 dlt
+// source. The `is_culture_vannin_origin` flag MUST be settable
+// independently of `is_bunscoill_origin` (a Culture Vannin-published
+// term mirrored on the Bunscoill school-recognition register sets
+// is_culture_vannin_origin=true AND is_bunscoill_origin=false; a
+// Bunscoill-published curriculum term sets
+// is_culture_vannin_origin=false AND is_bunscoill_origin=true).
+//
+// Note: Manx (Gaelg) is in **revival** status — no statutory
+// commissioner, no statutory requirement to publish in Manx. The
+// Phase 5 mandate is "capture what bilingual content exists and
+// surface it faithfully" so the row count from Phase 5 will be
+// smaller than Phases 1-4 — every ManxTermPair row is high-value.
+class ManxTermPair {
+  en_term string @description("The English-side term (e.g. 'Tynwald', 'culture', 'school').")
+  gv_term string @description("The Manx-side term (e.g. 'Tinvaal', 'cultoor', 'scoill').")
+  source string @description("The terminology source domain (one of: 'culture_vannin', 'bunscoill', 'learn_manx', 'manx_language_service', 'gaelg_corpus', 'other').")
+  is_culture_vannin_origin bool @description("True when the gv-side term originates from Culture Vannin (culturevannin.im) — the Manx cultural foundation, the canonical Phase 5 reference page at /learn-gaelg/.")
+  is_bunscoill_origin bool @description("True when the gv-side term originates from Bunscoill Ghaelgagh (bunscoillghaelgagh.sch.im / manxlanguage.sch.im) — the Manx-medium primary schools network.")
+}
+
+// Phase 5 (en-gv / Isle of Man) shared extraction function — added
+// by PR0.9. The function emits a `BilingualExplanatoryNotePair` row
+// (using the shared concept_id namespace CC-GLV-NNN, where GLV is
+// the Manx / Gaelg stem following the
+// `ExtractBilingualExplanatoryNote` convention — see line 158-162
+// above) for terminology ingested from the Manx language bodies
+// (Culture Vannin + Learn Manx + Bunscoill Ghaelgagh + Manx Language
+// Service + Gaelg Corpus). This is the T5 (language-bodies) / T6
+// (terminology) cousin of the Phase 2 Téarma.ie / Teanglann.ie
+// `GaeilgeTermPair` flow, the Phase 3 CnaG / EANI
+// `ExtractNIBilingualTerm` flow, and the Phase 4 Bòrd na Gàidhlig /
+// Stòrlann `ExtractGaelicTerm` flow — same model family
+// (`gemma-4-26B-A4B` Welsh-aware multilingual MoE) but routed through
+// the Phase 5 `CiancheiltisGvExtract` client so the cognify adapter
+// layer can attach Phase 5-specific few-shot exemplars (Culture Vannin
+// + Bunscoill Ghaelgagh + Gaelg Corpus vocabulary stem — "Bunscoill
+// Ghaelgagh", "Gaelg", "Kione Hengagh", "Manannagh", "Cooish",
+// "Gaelg-chiuit") independently of Phases 1-4 prompt bodies.
+function ExtractManxTerm(
+  en_term: string,
+  gv_term: string,
+  source: string,
+) -> BilingualExplanatoryNotePair {
+  client CiancheiltisGvExtract
+  prompt #"
+    {{ _.role("user") }}
+    You are an expert at bilingual EN ↔ GV (Manx / Gaelg)
+    terminology extraction from Manx cultural + language-body
+    sources. Given an English term, a candidate Manx term, and the
+    source domain where the pairing was observed, emit a
+    `BilingualExplanatoryNotePair` row with a stable concept_id
+    (CC-GLV-NNN namespace) and a translation-fidelity confidence
+    score.
+
+    Manx language-body + cultural sources to consider:
+    - Culture Vannin — `culturevannin.im` — the Manx cultural
+      foundation; publishes the canonical Manx learning portal at
+      `/learn-gaelg/` (the canonical Phase 5 reference page per the
+      umbrella spec §Phase en-gv + the dlt source strict-gate note),
+      bilingual vocabulary lists, and the Bunscoill-adjacent
+      curriculum guides. Exposed by the Isle of Man Government under
+      the *Tynwald* cultural framework
+    - Learn Manx — `learnmanx.com` — the Manx-medium adult-learning
+      online portal run by Culture Vannin + the Manx Language
+      Service
+    - Bunscoill Ghaelgagh — `bunscoillghaelgagh.sch.im` — the
+      Manx-medium primary schools network (currently 4 schools, the
+      revival flagship). Publishes bilingual school-recognition
+      register + curriculum descriptors
+    - Manx Language Service — `manxlanguage.sch.im` — the per-school
+      Manx Language Service offices (one per Bunscoill school site)
+    - Gaelg Corpus — `corpus.gaelg.im` — the canonical Manx text
+      corpus maintained by Culture Vannin / the Manx Language
+      Service; the Phase 5 equivalent of the Phase 1 Welsh CBAC
+      corpus and the Phase 4 Bòrd na Gàidhlig terminology glossary
+
+    Seed phrases that confirm a paired Manx-medium term is genuine:
+    - "Bunscoill Ghaelgagh" ("Manx-medium Primary School") — the
+      canonical Manx-medium primary-school descriptor that appears
+      on every Culture Vannin + Bunscoill school-recognition
+      register row (mirrors Phase 1 en-cy's "Addysg drwy Gyfrwng y
+      Gymraeg" + Phase 4 gd's "Foghlam tron Ghàidhlig")
+    - "Gaelg" ("Manx") — when used as a language-name stem on a
+      Culture Vannin or Learn Manx page (rather than as a subject
+      name); the single most reliable Manx-language page marker
+    - "Kione Hengagh" ("Department of Education, Sport and Culture"
+      / DESC) — the Manx-language institutional footer on Isle of
+      Man Government Manx-medium material
+    - "Manannagh" ("Manx / of the Isle of Man") — the Manx-language
+      demonym / adjective; appears on Bunscoill + Culture Vannin
+      material as a section-heading stem
+    - "Cooish" ("Conversation") — the canonical Manx-medium
+      conversation-class descriptor used by Learn Manx + the Manx
+      Language Service adult-learning curriculum
+    - "Gaelg-chiuit" ("Small Manx / colloquial Manx") — the
+      colloquial Manx stem used by Culture Vannin + Learn Manx
+      when contrasting with the classical / written form
+    - "Ynsee / screeu" — Manx-medium "teaching / writing" stems
+      used on Bunscoill curriculum descriptors
+
+    Capture:
+    - en_note: pass through `en_term` (the English-side term as it
+      appeared in the Manx source page)
+    - cy_note: pass through `gv_term` (the Manx-side term as it
+      appeared in the Manx source page — note: the field is named
+      `cy_note` for shared cross-Celtic compatibility with the
+      `BilingualExplanatoryNotePair` schema but the value is the
+      Manx / Gaelg side, NOT Welsh / Cymraeg)
+    - concept_id: emit `CC-GLV-NNN` where NNN is a zero-padded
+      integer (001, 002, 003, ...) following the
+      ExtractBilingualExplanatoryNote convention (GLV = Gaelg /
+      Manx — the canonical Manx stem per the concept_id namespace
+      table at line 158-162 above). Emit empty concept_id when
+      the two terms are clearly not a translation pair (do NOT
+      synthesise a concept_id to force a row).
+    - confidence ∈ [0.0, 1.0]:
+        1.0 = exact corroborated translation (e.g. both Culture
+          Vannin and Bunscoill publish the same gv-side form for
+          the same en-side term)
+        0.7-0.9 = close translation with minor reformulation (e.g.
+          the gv-side form differs slightly from the en-side stem
+          because Manx terminology was reconstructed from
+          historical corpora during the 20th-century revival)
+        0.4-0.6 = same topic, partial overlap
+        0.0-0.3 = unrelated content (MUST also set concept_id to '')
+
+    Source conventions:
+    - `source` will be one of:
+        'culture_vannin'        (culturevannin.im — the canonical Phase 5 reference host)
+        'bunscoill'             (bunscoillghaelgagh.sch.im — Bunscoill Ghaelgagh network)
+        'learn_manx'            (learnmanx.com — Learn Manx adult portal)
+        'manx_language_service' (manxlanguage.sch.im — per-school MLS offices)
+        'gaelg_corpus'          (corpus.gaelg.im — canonical Manx text corpus)
+        'other'                 (catch-all)
+      The source string MUST NOT influence the concept_id — it is
+      metadata only and is logged to the ManxTermPair row
+      separately by the Phase 5 dlt source layer. Because Manx is
+      in **revival** status, the row count from this function will
+      be smaller than the Phase 4 (Scotland) and Phase 2 (ROI)
+      sibling functions — every emitted row is high-value.
+
+    {{ ctx.output_format }}
+  "#
+
+  catch_all (err) {
+    BilingualExplanatoryNotePair {
+      en_note "",
+      cy_note "",
+      concept_id "",
+      confidence 0.0,
+    }
+  }
+}

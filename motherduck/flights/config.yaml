@@ -135,3 +135,16 @@ flights:
       - bilingual
       - phase_4
       - daily_sync
+  - name: ciancheiltis_en_gv_flight
+    module: cianfhoghlaim.motherduck.flights.ciancheiltis_en_gv_flight
+    callable: build_ciancheiltis_en_gv_flight
+    cron: "0 4 * * *"
+    timezone: UTC
+    description: "Daily BAML backfill + RAGAS gate for the en-gv (Isle of Man) phase of ciancheiltis (Phase 5 of 6) — Manx is a REVIVAL language under Culture Vannin + Learn Manx + Bunscoill Ghaelgagh + Radio Manx; the 500-pair gate is ASPIRATIONAL per the Phase 5 revival-status caveat"
+    tags:
+      - ciancheiltis
+      - en_gv
+      - isle_of_man
+      - bilingual
+      - phase_5
+      - daily_sync

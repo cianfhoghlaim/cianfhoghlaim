@@ -1,4 +1,4 @@
-"""Per-phase lifespan re-export for the ciancheiltis Phase 1 (en-cy / Wales) + Phase 2 (en-ga / ROI) + Phase 3 (en-ga / NI) + Phase 4 (en-gd / Scotland) Apps.
+"""Per-phase lifespan re-export for the ciancheiltis Phase 1 (en-cy / Wales) + Phase 2 (en-ga / ROI) + Phase 3 (en-ga / NI) + Phase 4 (en-gd / Scotland) + Phase 5 (en-gv / Isle of Man) Apps.
 
 This is a thin per-phase shim over the canonical shared lifespan at
 ``cocoindex_flows._shared._lifespan``. The R1 conformance contract
@@ -12,6 +12,14 @@ en-ga-eu) ships its own sibling ``_lifespan.py`` that re-exports the
 canonical shared lifespan + ContextKeys, so each phase is a self-contained
 module subtree that can be moved (or vendored) without breaking the
 R1 import path.
+
+Phase 5 (en-gv / Isle of Man, language pair ``en-gv``) was added by
+PR0.9. Manx (Gaelg) is in revival status — there is no statutory
+bilingual publication duty. The Phase 5 corpus is therefore expected
+to be smaller than the Phase 1 / Phase 4 sister corpora. The Phase 5
+App lives at ``ciancheiltis_en_gv_embedding.py`` (sibling of the
+Phase 1 / Phase 2 / Phase 3 / Phase 4 Apps) and re-exports
+``PHASE_TABLE_URL_GV`` + ``PHASE_LANGUAGE_PAIR_GV`` from this shim.
 
 The canonical home for the underlying implementations is
 ``cocoindex_flows/_shared/_lifespan.py`` (one of the 14 module-scope
@@ -130,6 +138,33 @@ PHASE_TABLE_URL_GD: str = (
     "lancedb://md:cianfhoghlaim/ciancheiltis/en_gd_chunks"
 )
 
+# Phase 5 (en-gv / Isle of Man) is bilingual EN <-> GV. The
+# shared ``BAAI/bge-m3`` embedder covers Manx (Gaelg) natively
+# (1024-d, multilingual, partial coverage — Manx is a smaller
+# corpus than CY/GA/GD so coverage is partial), so no per-phase
+# ContextKey overrides are required here either. The Phase 5 App
+# lives at ``ciancheiltis_en_gv_embedding.py`` (sibling of the
+# Phase 1 App ``ciancheiltis_en_cy_embedding.py`` + the Phase 2
+# App ``ciancheiltis_en_ga_roi_embedding.py`` + the Phase 3 App
+# ``ciancheiltis_en_ga_ni_embedding.py`` + the Phase 4 App
+# ``ciancheiltis_en_gd_embedding.py``) and re-exports the
+# constants below via ``from ._lifespan import PHASE_TABLE_URL_GV,
+# PHASE_LANGUAGE_PAIR_GV`` so the R1 import line in the App is
+# unambiguous about which phase it targets.
+#
+# Note: Manx (Gaelg) is in **revival** status — there is no
+# statutory bilingual publication duty and no statutory
+# commissioner. The Phase 5 strict-gate (per
+# ``dlt_sources/ciancheiltis/en_gv/__init__.py``) is "capture what
+# bilingual content exists and surface it faithfully". The
+# Phase 5 corpus is therefore expected to be smaller than the
+# Phase 1 / Phase 4 sister corpora and the umbrella spec's
+# content-based language detector is the gate.
+PHASE_LANGUAGE_PAIR_GV: str = "en-gv"
+PHASE_TABLE_URL_GV: str = (
+    "lancedb://md:cianfhoghlaim/ciancheiltis/en_gv_chunks"
+)
+
 
 __all__ = [
     "COCOINDEX_AVAILABLE",
@@ -142,10 +177,12 @@ __all__ = [
     "PHASE_LANGUAGE_PAIR_GA_NI",
     "PHASE_LANGUAGE_PAIR_GA_ROI",
     "PHASE_LANGUAGE_PAIR_GD",
+    "PHASE_LANGUAGE_PAIR_GV",
     "PHASE_TABLE_URL",
     "PHASE_TABLE_URL_GA_NI",
     "PHASE_TABLE_URL_GA_ROI",
     "PHASE_TABLE_URL_GD",
+    "PHASE_TABLE_URL_GV",
     "RESOLVED_FILE_REGISTRY",
     "shared_lifespan",
 ]

@@ -1,4 +1,4 @@
-"""Dagster assets wrapper for the ciancheiltis Phase 1 (en-cy) + Phase 2 (en-ga-ROI) + Phase 3 (en-ga-NI) + Phase 4 (en-gd / Scotland) CocoIndex Apps.
+"""Dagster assets wrapper for the ciancheiltis Phase 1 (en-cy) + Phase 2 (en-ga-ROI) + Phase 3 (en-ga-NI) + Phase 4 (en-gd / Scotland) + Phase 5 (en-gv / Isle of Man) CocoIndex Apps.
 
 This is the **assets surface** that the L3 Dagster component consumes.
 The actual ``defs.yaml`` wiring (at
@@ -6,7 +6,11 @@ The actual ``defs.yaml`` wiring (at
 + the Phase 2 sibling at
 ``orchestration/defs/3_model_lifecycle/cocoindex_v1/ciancheiltis_en_ga_roi_embedding/defs.yaml``
 + the Phase 3 sibling at
-``orchestration/defs/3_model_lifecycle/cocoindex_v1/ciancheiltis_en_ga_ni_embedding/defs.yaml``)
+``orchestration/defs/3_model_lifecycle/cocoindex_v1/ciancheiltis_en_ga_ni_embedding/defs.yaml``
++ the Phase 4 sibling at
+``orchestration/defs/3_model_lifecycle/cocoindex_v1/ciancheiltis_en_gd_embedding/defs.yaml``
++ the Phase 5 sibling at
+``orchestration/defs/3_model_lifecycle/cocoindex_v1/ciancheiltis_en_gv_embedding/defs.yaml``)
 lives in subagent 3's territory — this file ships the Python asset
 factory functions only.
 
@@ -46,7 +50,16 @@ Wiring contract (per the ``oideachais-cocoindex-v1`` skill):
 12. ``en_gd_app_health_check`` — the per-cycle Phase 4 compliance
     asset check that re-validates the R1-R4 conformance contract.
 
-Reference: ``openspec/changes/2026-09-06-ciancheiltis-v1/``.
+13. ``en_gv_chunks`` — the R1-R4 CocoIndex v1 Phase 5 App as a
+    ``virtual`` asset (drives the LanceDB table mirror at
+    ``lancedb://md:cianfhoghlaim/ciancheiltis/en_gv_chunks``).
+14. ``en_gv_pairs_seeded_check`` — the Phase 5 asset check that
+    gates ≥ 0.70 RAGAS bilingual-pair coverage + ≥ 500 seeded pairs.
+15. ``en_gv_app_health_check`` — the per-cycle Phase 5 compliance
+    asset check that re-validates the R1-R4 conformance contract.
+
+Reference: ``openspec/changes/2026-09-06-ciancheiltis-v1/`` + the
+Phase 5 extension at ``openspec/changes/2026-09-12-ciancheiltis-v2/``.
 """
 from __future__ import annotations
 
@@ -98,6 +111,15 @@ from .ciancheiltis_en_gd_embedding import (  # noqa: E402 — module-level
     PHASE_TABLE_URL_GD,
     ciancheiltis_en_gd_embedding,
     en_gd_embedding_flow,
+)
+from .ciancheiltis_en_gv_embedding import (  # noqa: E402 — module-level
+    CIANCHEILTIS_EN_GV_DUCKLAKE_TABLES,
+    CIANCHEILTIS_EN_GV_THEMES,
+    EnGvChunk,
+    PHASE_LANGUAGE_PAIR_GV,
+    PHASE_TABLE_URL_GV,
+    ciancheiltis_en_gv_embedding,
+    en_gv_embedding_flow,
 )
 
 
@@ -192,6 +214,33 @@ def build_en_gd_chunks_asset_spec() -> dict[str, Any]:
     }
 
 
+def build_en_gv_chunks_asset_spec() -> dict[str, Any]:
+    """Build the Phase 5 asset spec dict for the L3 Component to wrap.
+
+    Consumed by ``orchestration/defs/3_model_lifecycle/cocoindex_v1/
+    ciancheiltis_en_gv_embedding/defs.yaml`` (subagent 3's territory).
+    Added by PR0.9 — mirrors ``build_en_gd_chunks_asset_spec`` for
+    the Phase 5 en-gv / Isle of Man CocoIndex App.
+
+    Canonical example (per the umbrella spec's Isle of Man row +
+    ``dlt_sources/ciancheiltis/en_gv/__init__.py``):
+    ``https://www.culturevannin.im/learn-gaelg/`` — Culture Vannin,
+    the Manx cultural foundation. Manx (Gaelg) is in **revival
+    status** — no statutory bilingual publication duty and no
+    statutory commissioner. The Phase 5 strict-gate is "capture what
+    bilingual content exists and surface it faithfully".
+    """
+    return {
+        "app_name": "CiancheiltisEnGvEmbedding",
+        "module": "cocoindex_flows.british_isles.uk.ciancheiltis_en_gv_embedding",
+        "source": "ciancheiltis",
+        "lance_table": PHASE_TABLE_URL_GV,
+        "language_pair": PHASE_LANGUAGE_PAIR_GV,
+        "themes": list(CIANCHEILTIS_EN_GV_THEMES),
+        "ducklake_tables": dict(CIANCHEILTIS_EN_GV_DUCKLAKE_TABLES),
+    }
+
+
 def iter_bilingual_pages() -> Iterator[dict[str, Any]]:
     """Re-export the bilingual-page yielder for the L2 materials layer.
 
@@ -239,12 +288,28 @@ def iter_en_gd_bilingual_pages() -> Iterator[dict[str, Any]]:
 
     Phase 4 mirror of ``iter_bilingual_pages`` (Phase 1 en-cy / Wales)
     + ``iter_en_ga_roi_bilingual_pages`` (Phase 2 en-ga / ROI) +
-    ``iter_en_ga_ni_bilingual_pages`` (Phase 3 en-ga / NI). Added by
-    PR0.8.
+    ``iter_en_ga_ni_bilingual_pages`` (Phase 3 en-ga / NI). Added
+    by PR0.8.
     """
     # Local import to avoid a top-level side effect when CocoIndex is
     # absent.
     from .ciancheiltis_en_gd_embedding import _yield_bilingual_pages
+
+    yield from _yield_bilingual_pages()
+
+
+def iter_en_gv_bilingual_pages() -> Iterator[dict[str, Any]]:
+    """Re-export the Phase 5 bilingual-page yielder for the L2 materials layer.
+
+    Phase 5 mirror of ``iter_bilingual_pages`` (Phase 1 en-cy / Wales)
+    + ``iter_en_ga_roi_bilingual_pages`` (Phase 2 en-ga / ROI) +
+    ``iter_en_ga_ni_bilingual_pages`` (Phase 3 en-ga / NI) +
+    ``iter_en_gd_bilingual_pages`` (Phase 4 en-gd / Scotland). Added
+    by PR0.9.
+    """
+    # Local import to avoid a top-level side effect when CocoIndex is
+    # absent.
+    from .ciancheiltis_en_gv_embedding import _yield_bilingual_pages
 
     yield from _yield_bilingual_pages()
 
@@ -258,32 +323,41 @@ __all__ = [
     "CIANCHEILTIS_EN_GA_ROI_THEMES",
     "CIANCHEILTIS_EN_GD_DUCKLAKE_TABLES",
     "CIANCHEILTIS_EN_GD_THEMES",
+    "CIANCHEILTIS_EN_GV_DUCKLAKE_TABLES",
+    "CIANCHEILTIS_EN_GV_THEMES",
     "COCOINDEX_AVAILABLE",
     "EnGaNiChunk",
     "EnGdChunk",
+    "EnGvChunk",
     "PHASE_LANGUAGE_PAIR_CY",
     "PHASE_LANGUAGE_PAIR_GA_NI",
     "PHASE_LANGUAGE_PAIR_GA_ROI",
     "PHASE_LANGUAGE_PAIR_GD",
+    "PHASE_LANGUAGE_PAIR_GV",
     "PHASE_TABLE_URL_CY",
     "PHASE_TABLE_URL_GA_NI",
     "PHASE_TABLE_URL_GA_ROI",
     "PHASE_TABLE_URL_GD",
+    "PHASE_TABLE_URL_GV",
     "build_en_cy_chunks_asset_spec",
     "build_en_ga_ni_chunks_asset_spec",
     "build_en_ga_roi_chunks_asset_spec",
     "build_en_gd_chunks_asset_spec",
+    "build_en_gv_chunks_asset_spec",
     "ciancheiltis_en_ga_ni_embedding",
     "ciancheiltis_en_gd_embedding",
+    "ciancheiltis_en_gv_embedding",
     "en_cy_embedding",
     "en_cy_embedding_flow",
     "en_ga_ni_embedding_flow",
     "en_ga_roi_embedding",
     "en_ga_roi_embedding_flow",
     "en_gd_embedding_flow",
+    "en_gv_embedding_flow",
     "flow",
     "iter_bilingual_pages",
     "iter_en_ga_ni_bilingual_pages",
     "iter_en_ga_roi_bilingual_pages",
     "iter_en_gd_bilingual_pages",
+    "iter_en_gv_bilingual_pages",
 ]

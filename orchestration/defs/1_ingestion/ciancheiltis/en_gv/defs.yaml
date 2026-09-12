@@ -1,0 +1,190 @@
+# orchestration/defs/1_ingestion/ciancheiltis/en_gv/defs.yaml
+#
+# L1 CelticIngestionComponent for the ciancheiltis Phase 5 (en-gv —
+# Isle of Man) surface. Per the ciancheiltis spec §"Dagster 5-layer asset
+# graph per phase", every phase MUST have a complete 5-layer asset
+# group; this file is Layer 1.
+#
+# Declares the 8 Phase-5 DLT sources (one per Manx public-sector
+# theme) + a daily 04:00 UTC cron. The 8 sources land under the shared
+# `dlt_sources/ciancheiltis/en_gv/` subtree (subagent 2's territory per
+# the PR0.9 split); this file only wires the orchestration side. The
+# `source_id` values are stable dotted identifiers resolved at runtime
+# against the canonical `dlt_sources.ciancheiltis._shared.registry`.
+#
+# Phase 5 is the Isle of Man jurisdiction (en-gv) — the fifth of the 6
+# ciancheiltis language-pair stages. Manx (Gaelg) is a REVIVAL language
+# under active restoration by Culture Vannin, Learn Manx, and the Bunscoill
+# Ghaelgagh (the Manx-medium primary school). It has NO statutory
+# bilingual framework comparable to Wales (Phase 1), Republic of Ireland
+# (Phase 2), Northern Ireland (Phase 3) or Scotland (Phase 4). The
+# canonical bilingual example for Phase 5 is
+# `https://www.culturevannin.im/learn-gaelg/` — Culture Vannin, the
+# statutory Manx-language body under the Tynwald (Isle of Man
+# Parliament).
+#
+# Manx is one of the THREE Crown Dependency languages in the
+# ciancheiltis umbrella (the other two being English in Jersey and
+# Guernsey — Phase 5 is the only Crown Dependency with a Celtic
+# language surface, hence en-gv).
+#
+# Manx coverage is MUCH SMALLER than the Welsh (Phase 1), Irish
+# (Phase 2/3), or Scottish Gaelic (Phase 4) corpora — many public-sector
+# pages simply have NO Manx version, and some themes (T1 legislation,
+# T7 courts, T8 local government) will land with ZERO rows in the
+# Phase 5 PR — the strict gate per
+# `dlt_sources/ciancheiltis/en_gv/__init__.py` is "capture what
+# bilingual content exists and surface it faithfully" — the Manx
+# corpus is partial by design. This is documented in the Phase 5 Dive
+# `METADATA_MISMATCH_DIVE_GV` description and in the Dive descriptions
+# for the THEME_COVERAGE_DIVE_GV (zero-row themes are EXPECTED, not a
+# regression).
+#
+# Per-phase asset_check: `bilingual_pairs_seeded_check` (≥ 500) lives
+# in Layer 4 (`4_asset_generation/ciancheiltis/en_gv/defs.yaml`) —
+# that is where the RAGAS gate per the ciancheiltis spec Requirement
+# lives.
+#
+# Phase 5 differs from Phase 1 + Phase 2 + Phase 3 + Phase 4 in TWO key
+# ways:
+#   1. Manx is a REVIVAL language (last native speaker — Ned Maddrell —
+#      died 1974; the modern Manx-speaking community is a constructed
+#      revival with the Bunscoill Ghaelgagh primary school, the
+#      `Learn Manx` lessons, and the Manx-medium radio service at
+#      Radio Manx). There is NO bilingual statutory obligation — pages
+#      that DO have a Manx version are a bonus, not a baseline. The
+#      500-pair gate is therefore ASPIRATIONAL (documented in
+#      `motherduck/dives/ciancheiltis_en_gv_dive.py::BILINGUAL_PAIRS_DIVE_GV`).
+#   2. Manx URLs are NOT slug-prefixed, NOT infix-paired, and do NOT use
+#      a `<html lang="gv">` attribute consistently. The
+#      `legislation.gov.im` surface has very limited Manx content; the
+#      `culturevannin.im/learn-gaelg/` surface is the dominant
+#      T5 reference. The `language_detector` MUST corroborate from
+#      body content (per the ciancheiltis spec §"Content-based
+#      language detection" Scenario) rather than relying on URL
+#      structure.
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" + Requirement
+# "6-phase language-pair staging" + Scenario
+# "en-cy Phase 1 RAGAS gate fires" (carried verbatim to Phase 5 per
+# the 6-phase language-pair staging Requirement, with a
+# revival-status caveat for the 500-pair threshold).
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ciancheiltis.en_gv.themes
+  domain: ciancheiltis
+  nation: isle_of_man
+  automation: on_cron
+  automation_cron: "0 4 * * *"
+  state_backed: false
+  state_refresh_interval: daily
+  asset_check: bilingual_pairs_seeded_check
+  asset_check_min_rows: 500
+  dlt_source: ciancheiltis.en_gv.themes_source
+  destination_tables:
+    - cianfhoghlaim.ciancheiltis.en_gv_legislation
+    - cianfhoghlaim.ciancheiltis.en_gv_policy_consultations
+    - cianfhoghlaim.ciancheiltis.en_gv_education
+    - cianfhoghlaim.ciancheiltis.en_gv_healthcare
+    - cianfhoghlaim.ciancheiltis.en_gv_language_bodies
+    - cianfhoghlaim.ciancheiltis.en_gv_terminology
+    - cianfhoghlaim.ciancheiltis.en_gv_courts
+    - cianfhoghlaim.ciancheiltis.en_gv_local_government
+  fallback_resources:
+    - stedding/ingest_queue/ciancheiltis/en_gv/
+    - stedding/discovery/ciancheiltis_en_gv_seeds.jsonl
+  tags:
+    - ciancheiltis
+    - en-gv
+    - phase-5
+    - ingestion
+    - bilingual
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_gv
+    languages:
+      - en
+      - gv
+    themes:
+      - legislation
+      - policy_consultations
+      - education
+      - healthcare
+      - language_bodies
+      - terminology
+      - courts
+      - local_government
+    dlt_sources:
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_gv.legislation.legislation_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_gv.policy_consultations.policy_consultations_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_gv.education.education_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_gv.healthcare.healthcare_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_gv.language_bodies.language_bodies_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_gv.terminology.terminology_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_gv.courts.courts_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_gv.local_government.local_government_source
+    baml_extractor: b.ExtractManxStatute(theme=...) | b.ExtractManxGovPage(theme=...)
+    notes: |
+      Phase 5 of the 6-phase ciancheiltis umbrella (en_cy, en_ga_roi,
+      en_ga_ni, en_gd, en_gv, en_ga_eu). The 8 themes map to the 8
+      Manx public-sector surfaces. The canonical bilingual
+      reference is
+      `https://www.culturevannin.im/learn-gaelg/` (Culture Vannin
+      under Tynwald). Daily 04:00 UTC cron aligns with the BIEP
+      gov-circulars cron (per the cross-pipeline integration
+      Requirement) and with the Phase 1 en-cy + Phase 2 en-ga-roi +
+      Phase 3 en-ga-ni + Phase 4 en-gd crons. Honours
+      USE_LOCAL_SCRAPES=true to read from
+      `stedding/ingest_queue/ciancheiltis/en_gv/`.
+
+      Phase 5 differs from Phase 1 + Phase 2 + Phase 3 + Phase 4 in
+      FIVE ways:
+      1. Manx (Gaelg) is a REVIVAL language — last native speaker Ned
+         Maddrell died in 1974; the modern corpus is a constructed
+         revival under Culture Vannin, Learn Manx, Bunscoill
+         Ghaelgagh, and Radio Manx. There is NO statutory bilingual
+         obligation comparable to the Welsh Language (Wales) Measure
+         2011 (Phase 1), the Official Languages Act 2003 (Phase 2/3),
+         the Gaelic Language (Scotland) Act 2005 (Phase 4), or the
+         European Communities Act 1972 (Phase 6). Pages that DO have
+         a Manx version are a bonus, NOT a baseline. The 500-pair
+         gate is therefore ASPIRATIONAL — the Dive
+         `BILINGUAL_PAIRS_DIVE_GV` documents this revival-status
+         caveat.
+      2. The Isle of Man is a CROWN DEPENDENCY (Tynwald — the
+         bicameral parliament with the House of Keys + the
+         Legislative Council) — NOT a UK constituent country and NOT
+         an EU member. The `legislation.gov.im` surface is the
+         canonical Acts of Tynwald portal (the Tynwald Day ceremony
+         is the oldest continuous parliament in the world, dating
+         to AD 979). The phase group id in the controller is
+         `isle_of_man` (not `iom`, not `iom_crown_dependency`).
+      3. Manx is one of THREE Crown Dependency languages in the
+         ciancheiltis umbrella — Jersey + Guernsey are the other two.
+         Phase 5 is the ONLY Crown Dependency with a Celtic-language
+         surface. Jersey (en-JÈ) and Guernsey (en-GU) are Phase 5
+         companions but ship NO bilingual content (they have only
+         Heritage Patois material, which is out of scope for the
+         revival-language strict gate).
+      4. The metadata-language-mismatch rate on Phase 5 is EXPECTED
+         to be MUCH HIGHER than Phase 1 + Phase 2 + Phase 3 + Phase 4
+         because Manx coverage is so sparse: many
+         `legislation.gov.im` pages exist in English only, and
+         many `gov.im` policy pages have NO Manx version. The
+         L5 anomaly sensor still fires at the 5% threshold but the
+         per-theme mismatch rate will trend dramatically higher than
+         ROI/NI/Wales/Scotland — this is documented in
+         `motherduck/dives/ciancheiltis_en_gv_dive.py::METADATA_MISMATCH_DIVE_GV`
+         as a Phase 5 characteristic, NOT a regression.
+      5. The BAML extraction client is `CiancheiltisGvExtract`
+         (using `gemma-4-26B-A4B` with Manx few-shot prompting —
+         `gv` shares the Welsh-aware multilingual MoE client with
+         `cy` and `gd` per the ciancheiltis spec §"BAML extraction
+         suite" — the only language-pair switch is the few-shot
+         prefix). The Phase 5 BAML functions are
+         `ExtractManxStatute` (T1 legislation) +
+         `ExtractManxGovPage` (T2-T5+T7+T8 gov surface) +
+         `ExtractManxTerm` (T6 terminology, shared).
+

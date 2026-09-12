@@ -1,0 +1,162 @@
+# orchestration/defs/4_asset_generation/ciancheiltis/en_gv/defs.yaml
+#
+# L4 CelticAssetGenerationComponent for the ciancheiltis Phase 5
+# (en-gv — Isle of Man) marimo quality dashboard. Per the ciancheiltis
+# spec §"Dagster 5-layer asset graph per phase", every phase MUST have
+# a complete 5-layer asset group; this file is Layer 4.
+#
+# This file declares the asset-check asset group for en-gv Phase 5.
+# The marimo dashboard at `dashboard_path` is the operator-facing
+# surface that surfaces:
+#   1. `bilingual_pairs_seeded_check` — gates ≥ 500 paragraph-level
+#      `(en, gv)` bilingual pairs (ciancheiltis spec Requirement).
+#      ASPIRATIONAL on Phase 5 — see the revival-status caveat below.
+#   2. `ragas_quality_check`          — gates ≥ 0.70 RAGAS
+#      bilingual-pair score (ciancheiltis spec Requirement).
+#
+# The @asset_check definitions live in
+# `orchestration/defs/2_materials/baml_extraction/ciancheiltis/en_gv/_assets.py`
+# (Layer 2 — the natural home, mirroring the en-cy wales_assets.py +
+# the en-ga-roi + en-ga-ni + en-gd pattern). This L4 Component declares
+# them as the lineage witnesses for the marimo dashboard + records
+# their thresholds in `metadata` so the deployment-control-panel + the
+# ciancheiltis Lakekeeper dashboard can surface them.
+#
+# Phase 5 ships DIFFERENT bilingual sources than Phase 1 + Phase 2 +
+# Phase 3 + Phase 4:
+#   - `legislation.gov.im` is the Acts of Tynwald surface. There is
+#     NO bilingual infix and NO `/gv/` slug variant — most pages
+#     exist in English only (Manx is a revival language with no
+#     statutory bilingual framework). The `mismatch_reason` taxonomy
+#     on the Dive is dominated by `en_only_no_pair` and `gv_only_no_pair`.
+#   - gov.im publishes a SMALL Manx content section (mostly government
+#     press releases + Tynwald Day addresses). The CMS does NOT
+#     enforce a `/gv/` prefix; pairing is corroborated from body
+#     content + the `<html lang="gv">` attribute.
+#   - culturevannin.im is the canonical Culture Vannin surface and
+#     publishes the largest Manx-language corpus on the public web.
+#     This is the **only** Phase 5 surface where gv-primary content
+#     dominates, and is the canonical Phase 5 T5 reference page.
+#   - learnmanx.com is the Learn Manx (Ynsee Gaelgagh) surface and
+#     publishes Manx lessons + grammar materials. This is the
+#     canonical Phase 5 T6 terminology reference page.
+#   - bunscoill.sch.im is the Bunscoill Ghaelgagh (Manx-medium
+#     primary school) surface — included under T3 education.
+#   - iomtoday.im is a private newspaper (out of scope for the
+#     ciancheiltis revival-language strict gate).
+# See `motherduck/dives/ciancheiltis_en_gv_dive.py::METADATA_MISMATCH_DIVE_GV`.
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" (Phase 5 = en_gv) +
+# Requirement "6-phase language-pair staging" + Requirement
+# "MotherDuck Dive + Flight per phase".
+type: orchestration.components.CelticAssetGenerationComponent
+attributes:
+  dashboard_kind: marimo
+  dashboard_path: cianfhoghlaim/notebooks/dashboards/ciancheiltis/en_gv_quality.py
+  slug: ciancheiltis_en_gv
+  upstream_assets:
+    - 1_ingestion/ciancheiltis/en_gv
+    - 2_materials/baml_extraction/ciancheiltis/en_gv
+    - 3_model_lifecycle/cocoindex_v1/ciancheiltis_en_gv
+  refresh_on:
+    - "0 4 * * *"
+    - "0 16 * * *"
+  notebooks:
+    - 01_en_gv_themes_overview
+    - 02_bilingual_pairs_coverage
+    - 03_ragas_quality_dashboard
+    - 04_metadata_language_mismatch
+    - 05_phase_gate_summary
+  tags:
+    - ciancheiltis
+    - en-gv
+    - phase-5
+    - asset-checks
+    - bilingual
+    - ragas
+    - marimo
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_gv
+    asset_checks:
+      - name: bilingual_pairs_seeded_check
+        threshold: 500
+        unit: bilingual_pairs
+        description: |
+          ≥ 500 paragraph-level `(en, gv)` bilingual pairs MUST be
+          present in the lakehouse before the phase can be promoted to
+          Phase 6. The actual @asset_check is defined in L2
+          `_assets.py::ciancheiltis_en_gv_bilingual_pairs_seeded_check`.
+          **Phase 5 revival-status caveat**: this threshold is
+          ASPIRATIONAL on Phase 5 — Manx (Gaelg) is a REVIVAL language
+          (last native speaker Ned Maddrell died 1974) with NO
+          statutory bilingual framework. Many themes (T1 legislation,
+          T7 courts, T8 local government) will land with zero rows in
+          the Phase 5 PR because the public-sector bilingual corpus
+          is partial by design. Operators should interpret a Phase 5
+          pair count below 500 as a Phase 5 CHARACTERISTIC, not a
+          regression. See
+          `motherduck/dives/ciancheiltis_en_gv_dive.py::BILINGUAL_PAIRS_DIVE_GV`
+          for the per-theme breakdown.
+      - name: ragas_quality_check
+        threshold: 0.70
+        unit: ragas_score
+        description: |
+          RAGAS ≥ 0.70 bilingual-pair score MUST be achieved across
+          the 8 en-gv themes before the phase can be promoted. The
+          actual @asset_check is defined in L2
+          `_assets.py::ciancheiltis_en_gv_ragas_quality_check`. **Phase
+          5 note**: the same 0.70 threshold measures BAML extraction
+          QUALITY (not pair QUANTITY) — on Phase 5 the few pairs that
+          DO exist (concentrated in T5 Culture Vannin and T6 Learn
+          Manx terminology) tend to score HIGH because the Manx
+          few-shot prompt is targeted, so the RAGAS gate fires green
+          even when the bilingual-pairs-seeded gate fires red.
+    phase_gate:
+      min_pairs: 500
+      min_ragas: 0.70
+      languages:
+        - en
+        - gv
+      minority_languages:
+        - gv
+      themes:
+        - legislation
+        - policy_consultations
+        - education
+        - healthcare
+        - language_bodies
+        - terminology
+        - courts
+        - local_government
+      revival_status_caveat: |
+        Phase 5 is a Manx REVIVAL language (last native speaker
+        Ned Maddrell died 1974); the modern corpus is a constructed
+        revival under Culture Vannin + Learn Manx + Bunscoill
+        Ghaelgagh + Radio Manx. There is NO statutory bilingual
+        framework — pages that DO have a Manx version are a bonus,
+        NOT a baseline. The 500-pair gate is ASPIRATIONAL.
+    notes: |
+      The marimo dashboard itself lives at
+      `notebooks/dashboards/ciancheiltis/en_gv_quality.py` and
+      renders the per-theme row count + per-theme RAGAS score + a
+      green/red phase gate (≥ 500 pairs AND ≥ 0.70 RAGAS). Operators
+      open the dashboard via the deployment-control-panel → 5-tab
+      marimo control panel (per the deployment-control-panel spec).
+
+      Phase 5 differs from Phase 1 + Phase 2 + Phase 3 + Phase 4 in
+      the metadata-mismatch interpretation: IoM government paired
+      pages do NOT use a slug-prefix or a `/gv/` infix — there is
+      effectively NO structural pairing. The `<html lang="gv">`
+      attribute is rare; pairing is corroborated from body content
+      via the lingua-py detector. The dashboard MUST show the same
+      green/red gate but with an additional column explaining
+      "mismatch_reason" — typically `en_only_no_pair` (the dominant
+      Phase 5 reason — most IoM government pages are English-only)
+      rather than `metadata.language` mismatch (Phase 1
+      legislation.gov.uk Wales) or `slug_prefix_/_articles/_vs_/_gaeilge/airteagal/`
+      (Phase 3 nidirect.gov.uk NI) or
+      `html_lang_attribute_mismatch` (Phase 4 gov.scot).
+
