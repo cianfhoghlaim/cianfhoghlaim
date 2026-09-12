@@ -1,0 +1,116 @@
+# orchestration/defs/3_model_lifecycle/cocoindex_v1/ciancheiltis_en_ga_ni/defs.yaml
+#
+# L3 CelticModelLifecycleComponent for the ciancheiltis Phase 3
+# (en-ga — Northern Ireland) CocoIndex v1 App. Per the ciancheiltis
+# spec §"Dagster 5-layer asset graph per phase", every phase MUST have
+# a complete 5-layer asset group; this file is Layer 3.
+#
+# The CocoIndex App module is written by subagent 2 of the PR0.7 split
+# and lives at
+# `cocoindex_flows/british_isles/uk/ciancheiltis_en_ga_ni_embedding.py`.
+# It MUST satisfy the R1-R4 conformance contract (per the
+# `dagster-5-layer-component-architecture` spec + the cocoindex_v1
+# conformance harness).
+#
+# Phase 3 differs from Phase 1 + Phase 2 in three ways:
+# 1. The source DuckLake tables are populated by the 8 Northern Ireland
+#    DLT sources under `dlt_sources/ciancheiltis/en_ga_ni/`
+#    (subagent 2's territory per the PR0.7 split). Unlike Phase 2
+#    (ROI), the NI bilingual content does NOT yet have a rich
+#    pre-existing cache in `stedding/` — Phase 3 is GREENFIELD relative
+#    to Phase 2's 2,388 EN + 2,010 GA + 1,398 EN + 1,000 GA cached
+#    pages from `ncca.ie` + `curriculumonline.ie`.
+# 2. The canonical bilingual reference is
+#    `https://www.legislation.gov.uk/uksi/2022/15/contents/made` —
+#    the Identity and Language (Northern Ireland) Act 2022, which
+#    establishes Irish + Ulster Scots as recognised languages under
+#    NI law (in addition to English). NI is the only ciancheiltis
+#    jurisdiction with TWO minority languages under statute (Irish +
+#    Ulster Scots) per the 2022 Act + the Good Friday Agreement 1998.
+# 3. NI legislation lives at `legislation.gov.uk/uksi/...` (UK-wide),
+#    not at `irishstatutebook.ie` (Phase 2) or `legislation.gov.uk/wsi`
+#    (Phase 1 = Wales). The `cognee_dataset` schema needs a
+#    `minority_languages: [ga, ulster_scots]` extension on top of the
+#    Phase 2 schema.
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" (Phase 3 = en_ga_ni) +
+# Requirement "6-phase language-pair staging".
+type: orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_name: CiancheiltisEnGaNiEmbedding
+  app_group: ciancheiltis_en_ga_ni
+  module: cocoindex_flows.british_isles.uk.ciancheiltis_en_ga_ni_embedding
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  apps:
+    - app_name: CiancheiltisEnGaNiEmbedding
+      module: cocoindex_flows.british_isles.uk.ciancheiltis_en_ga_ni_embedding
+      source: british_isles
+      lance_table: cianfhoghlaim.ciancheiltis.en_ga_ni_chunks
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  lance_table_format: hnsw_pq
+  table_name: cianfhoghlaim.ciancheiltis.en_ga_ni_chunks
+  languages:
+    - en
+    - ga
+  minority_languages:
+    - ga
+    - ulster_scots
+  depts:
+    - legislation
+    - nidirect_government
+    - education
+    - health
+    - foras_na_gaeilge
+    - ulster_scots_agency
+    - courts_service
+    - local_government
+  source_asset: 1_ingestion/ciancheiltis/en_ga_ni
+  source_tables:
+    - cianfhoghlaim.ciancheiltis.en_ga_ni_legislation
+    - cianfhoghlaim.ciancheiltis.en_ga_ni_nidirect_government
+    - cianfhoghlaim.ciancheiltis.en_ga_ni_education
+    - cianfhoghlaim.ciancheiltis.en_ga_ni_health
+    - cianfhoghlaim.ciancheiltis.en_ga_ni_foras_na_gaeilge
+    - cianfhoghlaim.ciancheiltis.en_ga_ni_ulster_scots_agency
+    - cianfhoghlaim.ciancheiltis.en_ga_ni_courts_service
+    - cianfhoghlaim.ciancheiltis.en_ga_ni_local_government
+  tags:
+    - ciancheiltis
+    - en-ga-ni
+    - phase-3
+    - cocoindex-v1
+    - embedding
+    - bilingual
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_ga_ni
+    lance_uri: lancedb://md:cianfhoghlaim/ciancheiltis/en_ga_ni_chunks
+    embedding_dim: 1024
+    embedder: BAAI/bge-m3
+    embedder_kind: dense
+    expected_total_documents: 500
+    notes: |
+      Phase 3 (en-ga-ni) CocoIndex v1 App for the ciancheiltis
+      umbrella. Mirrors the 8 Northern Ireland public-sector themes
+      into a single
+      `lancedb://md:cianfhoghlaim/ciancheiltis/en_ga_ni_chunks`
+      LanceDB table (MotherDuck federated, per the BIEP LanceDB
+      convention). The App module
+      (`cocoindex_flows.british_isles.uk.ciancheiltis_en_ga_ni_embedding`)
+      MUST satisfy R1-R4 — the `cocoindex_v1_conformance` App runs at
+      scaffold time and gates the dagster:dev launch.
+
+      Northern Ireland is the only ciancheiltis jurisdiction with TWO
+      minority languages under statute (Irish + Ulster Scots) per the
+      Identity and Language (Northern Ireland) Act 2022 + the Good
+      Friday Agreement 1998. The `BAAI/bge-m3` 1024-d embedder
+      natively handles `en` + `ga` (Modern Irish) per the R2
+      conformance contract; the `ulster_scots` minority language is
+      a Phase 3+ extension that requires the future `xlm-roberta-base`
+      embedder swap (tracked as a Phase 4 follow-up, not gated here).

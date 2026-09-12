@@ -109,3 +109,16 @@ flights:
       - bilingual
       - phase_2
       - daily_sync
+  - name: ciancheiltis_en_ga_ni_flight
+    module: cianfhoghlaim.motherduck.flights.ciancheiltis_en_ga_ni_flight
+    callable: build_ciancheiltis_en_ga_ni_flight
+    cron: "0 4 * * *"
+    timezone: UTC
+    description: "Daily BAML backfill + RAGAS gate for the en-ga-ni (Northern Ireland) phase of ciancheiltis (Phase 3 of 6)"
+    tags:
+      - ciancheiltis
+      - en_ga_ni
+      - northern_ireland
+      - bilingual
+      - phase_3
+      - daily_sync

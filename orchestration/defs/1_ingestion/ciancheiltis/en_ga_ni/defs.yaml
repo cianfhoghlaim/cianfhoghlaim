@@ -1,0 +1,133 @@
+# orchestration/defs/1_ingestion/ciancheiltis/en_ga_ni/defs.yaml
+#
+# L1 CelticIngestionComponent for the ciancheiltis Phase 3 (en-ga —
+# Northern Ireland) surface. Per the ciancheiltis spec §"Dagster
+# 5-layer asset graph per phase", every phase MUST have a complete
+# 5-layer asset group; this file is Layer 1.
+#
+# Declares the 8 Phase-3 DLT sources (one per Northern Ireland
+# public-sector theme) + a daily 04:00 UTC cron. The 8 sources land
+# under the shared `dlt_sources/ciancheiltis/en_ga_ni/` subtree
+# (subagent 2's territory per the PR0.7 split); this file only wires
+# the orchestration side. The `source_id` values are stable dotted
+# identifiers resolved at runtime against the canonical
+# `dlt_sources.ciancheiltis._shared.registry`.
+#
+# Phase 3 is the Northern Ireland jurisdiction (en-ga) — the third
+# of the 6 ciancheiltis language-pair stages. Northern Ireland has a
+# constitutional + statutory bilingual framework distinct from the
+# Republic of Ireland's Official Languages Act 2003: the Identity and
+# Language (Northern Ireland) Act 2022 establishes Irish + Ulster
+# Scots as recognised languages (in addition to English), and the
+# Good Friday Agreement 1998 commits the NI Executive to "respect,
+# protect and fulfil" the linguistic diversity of the region. The
+# canonical bilingual reference for Phase 3 is
+# `https://www.legislation.gov.uk/uksi/2022/15/contents/made` — the
+# Identity and Language (Northern Ireland) Act 2022 itself.
+#
+# NI's bilingual URL pattern differs from Phase 1 + Phase 2:
+#   - legislation.gov.uk: `/uksi/<year>/<num>/contents/made` (English)
+#     — there is NO `/uksi/<year>/<num>/contents/ga/made` mirror; the
+#     bilingual channel goes through nidirect.gov.uk for non-legislative
+#     content and through Tha Boord o Ulster Scotch / Foras na Gaeilge
+#     for language-specific material.
+#   - nidirect.gov.uk: `/articles/<slug>` ↔ `/gaeilge/airteagal/<slug>`
+#     (the canonical pair signal — different slug root per language)
+#   - comhairle.org (Comhairle na Gaelscolaíochta): the parallel GA
+#     education authority for NI Irish-medium schools.
+#
+# Per-phase asset_check: `bilingual_pairs_seeded_check` (≥ 500) lives
+# in Layer 4 (`4_asset_generation/ciancheiltis/en_ga_ni/defs.yaml`) —
+# that is where the RAGAS gate per the ciancheiltis spec Requirement
+# lives.
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" + Scenario
+# "en-cy Phase 1 RAGAS gate fires" (carried verbatim to Phase 3 per
+# the 6-phase language-pair staging Requirement).
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ciancheiltis.en_ga_ni.themes
+  domain: ciancheiltis
+  nation: northern_ireland
+  automation: on_cron
+  automation_cron: "0 4 * * *"
+  state_backed: false
+  state_refresh_interval: daily
+  asset_check: bilingual_pairs_seeded_check
+  asset_check_min_rows: 500
+  dlt_source: ciancheiltis.en_ga_ni.themes_source
+  destination_tables:
+    - cianfhoghlaim.ciancheiltis.en_ga_ni_legislation
+    - cianfhoghlaim.ciancheiltis.en_ga_ni_nidirect_government
+    - cianfhoghlaim.ciancheiltis.en_ga_ni_education
+    - cianfhoghlaim.ciancheiltis.en_ga_ni_health
+    - cianfhoghlaim.ciancheiltis.en_ga_ni_foras_na_gaeilge
+    - cianfhoghlaim.ciancheiltis.en_ga_ni_ulster_scots_agency
+    - cianfhoghlaim.ciancheiltis.en_ga_ni_courts_service
+    - cianfhoghlaim.ciancheiltis.en_ga_ni_local_government
+  fallback_resources:
+    - stedding/ingest_queue/ciancheiltis/en_ga_ni/
+    - stedding/discovery/ciancheiltis_en_ga_ni_seeds.jsonl
+  tags:
+    - ciancheiltis
+    - en-ga-ni
+    - phase-3
+    - ingestion
+    - bilingual
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_ga_ni
+    languages:
+      - en
+      - ga
+    themes:
+      - legislation
+      - nidirect_government
+      - education
+      - health
+      - foras_na_gaeilge
+      - ulster_scots_agency
+      - courts_service
+      - local_government
+    dlt_sources:
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_ni.legislation.legislation_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_ni.nidirect_government.nidirect_government_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_ni.education.education_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_ni.health.health_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_ni.foras_na_gaeilge.foras_na_gaeilge_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_ni.ulster_scots_agency.ulster_scots_agency_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_ni.courts_service.courts_service_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_ni.local_government.local_government_source
+    baml_extractor: b.ExtractCiancheiltisEnGaNiBilingualPair(theme=..., pair_kind=...)
+    notes: |
+      Phase 3 of the 6-phase ciancheiltis umbrella (en_cy, en_ga_roi,
+      en_ga_ni, en_gd, en_gv, en_ga_eu). The 8 themes map to the 8
+      Northern Ireland public-sector surfaces. The canonical bilingual
+      reference is `legislation.gov.uk/uksi/2022/15/contents/made`
+      (the Identity and Language (Northern Ireland) Act 2022), which
+      establishes Irish + Ulster Scots as recognised languages under
+      NI law (in addition to English). Daily 04:00 UTC cron aligns
+      with the BIEP gov-circulars cron (per the cross-pipeline
+      integration Requirement) and with the Phase 1 en-cy + Phase 2
+      en-ga-roi crons. Honours USE_LOCAL_SCRAPES=true to read from
+      `stedding/ingest_queue/ciancheiltis/en_ga_ni/`.
+
+      Phase 3 differs from Phase 1 + Phase 2 in THREE ways:
+      1. NI legislation lives at `legislation.gov.uk/uksi/...` (the
+         UK-wide portal), NOT at `irishstatutebook.ie` — the Phase 2
+         canonical pattern does NOT apply. Bilingual coverage for
+         Acts comes through nidirect.gov.uk `/articles/` ↔
+         `/gaeilge/airteagal/` slug pairs + the Foras na Gaeilge
+         partner site.
+      2. NI has TWO minority languages (Irish + Ulster Scots) under
+         the 2022 Act, not one — the canonical `cognee_dataset`
+         schema needs a `minority_languages: [ga, ulster_scots]`
+         extension on top of the Phase 2 schema.
+      3. The metadata-language-mismatch pattern on nidirect.gov.uk
+         is similar to gov.ie but uses a SLUG-PREFIX pattern
+         (`/articles/` vs `/gaeilge/airteagal/`) rather than a
+         `/en/` vs `/ga/` infix. See
+         `motherduck/dives/ciancheiltis_en_ga_ni_dive.py::METADATA_MISMATCH_DIVE_GA_NI`.
+

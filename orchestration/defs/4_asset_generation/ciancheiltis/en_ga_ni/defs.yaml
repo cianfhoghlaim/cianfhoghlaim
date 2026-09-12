@@ -1,0 +1,125 @@
+# orchestration/defs/4_asset_generation/ciancheiltis/en_ga_ni/defs.yaml
+#
+# L4 CelticAssetGenerationComponent for the ciancheiltis Phase 3
+# (en-ga — Northern Ireland) marimo quality dashboard. Per the
+# ciancheiltis spec §"Dagster 5-layer asset graph per phase", every
+# phase MUST have a complete 5-layer asset group; this file is Layer 4.
+#
+# This file declares the asset-check asset group for en-ga-ni
+# Phase 3. The marimo dashboard at `dashboard_path` is the
+# operator-facing surface that surfaces:
+#   1. `bilingual_pairs_seeded_check` — gates ≥ 500 paragraph-level
+#      `(en, ga)` bilingual pairs (ciancheiltis spec Requirement).
+#   2. `ragas_quality_check`          — gates ≥ 0.70 RAGAS
+#      bilingual-pair score (ciancheiltis spec Requirement).
+#
+# The @asset_check definitions live in
+# `orchestration/defs/2_materials/baml_extraction/ciancheiltis/en_ga_ni/_assets.py`
+# (Layer 2 — the natural home, mirroring the en-cy wales_assets.py +
+# the en-ga-roi pattern). This L4 Component declares them as the
+# lineage witnesses for the marimo dashboard + records their thresholds
+# in `metadata` so the deployment-control-panel + the ciancheiltis
+# Lakekeeper dashboard can surface them.
+#
+# Phase 3 ships DIFFERENT bilingual sources than Phase 1 + Phase 2:
+#   - nidirect.gov.uk uses a SLUG-PREFIX pattern (`/articles/` vs
+#     `/gaeilge/airteagal/`) for the bilingual channel — different
+#     from Phase 1's `legislation.gov.uk` metadata.language mismatch
+#     and different from Phase 2's gov.ie `/en/` vs `/ga/` infix.
+#   - The canonical bilingual reference is
+#     `legislation.gov.uk/uksi/2022/15/contents/made` (the Identity
+#     and Language (Northern Ireland) Act 2022 itself).
+#   - The `mismatch_reason` taxonomy on the Dive includes
+#     `slug_prefix_/_articles/_vs_/_gaeilge/airteagal/`,
+#     `metadata.language`, and `body_dual_language` (an NI page
+#     that's mostly EN with a GA sidebar / footnote — valid under
+#     the Identity and Language (Northern Ireland) Act 2022 but
+#     flagged at the `body_dual_language` level).
+# See `motherduck/dives/ciancheiltis_en_ga_ni_dive.py::METADATA_MISMATCH_DIVE_GA_NI`.
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" (Phase 3 = en_ga_ni) +
+# Requirement "6-phase language-pair staging" + Requirement
+# "MotherDuck Dive + Flight per phase".
+type: orchestration.components.CelticAssetGenerationComponent
+attributes:
+  dashboard_kind: marimo
+  dashboard_path: cianfhoghlaim/notebooks/dashboards/ciancheiltis/en_ga_ni_quality.py
+  slug: ciancheiltis_en_ga_ni
+  upstream_assets:
+    - 1_ingestion/ciancheiltis/en_ga_ni
+    - 2_materials/baml_extraction/ciancheiltis/en_ga_ni
+    - 3_model_lifecycle/cocoindex_v1/ciancheiltis_en_ga_ni
+  refresh_on:
+    - "0 4 * * *"
+    - "0 16 * * *"
+  notebooks:
+    - 01_en_ga_ni_themes_overview
+    - 02_bilingual_pairs_coverage
+    - 03_ragas_quality_dashboard
+    - 04_metadata_language_mismatch
+    - 05_phase_gate_summary
+  tags:
+    - ciancheiltis
+    - en-ga-ni
+    - phase-3
+    - asset-checks
+    - bilingual
+    - ragas
+    - marimo
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_ga_ni
+    asset_checks:
+      - name: bilingual_pairs_seeded_check
+        threshold: 500
+        unit: bilingual_pairs
+        description: |
+          ≥ 500 paragraph-level `(en, ga)` bilingual pairs MUST be
+          present in the lakehouse before the phase can be promoted to
+          Phase 4. The actual @asset_check is defined in L2
+          `_assets.py::ciancheiltis_en_ga_ni_bilingual_pairs_seeded_check`.
+      - name: ragas_quality_check
+        threshold: 0.70
+        unit: ragas_score
+        description: |
+          RAGAS ≥ 0.70 bilingual-pair score MUST be achieved across
+          the 8 en-ga-ni themes before the phase can be promoted.
+          The actual @asset_check is defined in L2
+          `_assets.py::ciancheiltis_en_ga_ni_ragas_quality_check`.
+    phase_gate:
+      min_pairs: 500
+      min_ragas: 0.70
+      languages:
+        - en
+        - ga
+      minority_languages:
+        - ga
+        - ulster_scots
+      themes:
+        - legislation
+        - nidirect_government
+        - education
+        - health
+        - foras_na_gaeilge
+        - ulster_scots_agency
+        - courts_service
+        - local_government
+    notes: |
+      The marimo dashboard itself lives at
+      `notebooks/dashboards/ciancheiltis/en_ga_ni_quality.py` and
+      renders the per-theme row count + per-theme RAGAS score + a
+      green/red phase gate (≥ 500 pairs AND ≥ 0.70 RAGAS). Operators
+      open the dashboard via the deployment-control-panel → 5-tab
+      marimo control panel (per the deployment-control-panel spec).
+
+      Phase 3 differs from Phase 1 + Phase 2 in the
+      metadata-mismatch interpretation: nidirect.gov.uk paired pages
+      use a SLUG-PREFIX pattern (`/articles/` vs `/gaeilge/airteagal/`)
+      rather than a `/en/` vs `/ga/` infix (gov.ie) or a
+      `metadata.language` mismatch (legislation.gov.uk Wales). The
+      dashboard MUST show the same green/red gate but with an
+      additional column explaining "mismatch_reason" — typically
+      `slug_prefix_/_articles/_vs_/_gaeilge/airteagal/` rather than
+      `metadata.language` mismatch.

@@ -10,6 +10,11 @@ This package also houses the CocoIndex v1 App that embeds bilingual
 en-ga government pages into the canonical LanceDB table
 ``lancedb://md:cianfhoghlaim/ciancheiltis/en_ga_roi_chunks``.
 
+Phase 3 of the ciancheiltis umbrella (Northern Ireland / en-ga).
+This package also houses the CocoIndex v1 App that embeds bilingual
+en-ga government pages into the canonical LanceDB table
+``lancedb://md:cianfhoghlaim/ciancheiltis/en_ga_ni_chunks``.
+
 The R1-R4 conformance contract (per the
 ``oideachais-cocoindex-v1`` skill + the
 ``openspec/specs/ciancheiltis/spec.md`` R1-R4 section) is enforced by
@@ -58,12 +63,34 @@ from .ciancheiltis_en_ga_roi_embedding import (
     flow as en_ga_roi_flow,
 )
 
+# Phase 3 (Northern Ireland / en-ga) — re-export the CocoIndex v1
+# App symbol so downstream consumers can import it via
+# ``cocoindex_flows.british_isles.uk.ciancheiltis_en_ga_ni_embedding``.
+# Added by PR0.7 — the underlying
+# ``ciancheiltis_en_ga_ni_embedding.py`` App is the Phase 3 mirror of
+# the Phase 2 ``ciancheiltis_en_ga_roi_embedding.py`` App, conforming
+# to the same R1-R4 contract. The Phase 3 canonical example is the
+# *Identity and Language (Northern Ireland) Act 2022*
+# (``https://www.legislation.gov.uk/uksi/2022/15/contents/made``).
+from .ciancheiltis_en_ga_ni_embedding import (
+    EnGaNiChunk,
+    ciancheiltis_en_ga_ni_embedding,
+    en_ga_ni_embedding_flow,
+)
+from .ciancheiltis_en_ga_ni_embedding import (
+    flow as en_ga_ni_flow,
+)
+
 __all__ = [
     "EnCyChunk",
+    "EnGaNiChunk",
     "EnGaRoiChunk",
+    "ciancheiltis_en_ga_ni_embedding",
     "en_cy_embedding",
     "en_cy_embedding_flow",
     "en_cy_flow",
+    "en_ga_ni_embedding_flow",
+    "en_ga_ni_flow",
     "en_ga_roi_embedding",
     "en_ga_roi_embedding_flow",
     "en_ga_roi_flow",

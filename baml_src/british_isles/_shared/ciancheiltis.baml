@@ -61,6 +61,23 @@ class GaeilgeTermPair {
   domain string @description("The terminology domain (one of: legislation, education, healthcare, language_bodies, courts, local_government, public_broadcasting, statistics). Bridges to the ciancheiltis 10-theme catalog.")
 }
 
+// Phase 3 (en-ga / Northern Ireland) shared types — added by PR0.7.
+// `NILanguagePair` tracks the NI-specific Irish-medium sourcing provenance
+// (CnaG / comhairle.org vs Education Authority NI / eani.org.uk vs
+// nidirect.gov.uk). Unlike `GaeilgeTermPair` (terminology row), this is
+// the canonical "where did this NI Irish-language page come from?" row
+// for the Phase 3 dlt source metadata column. Both flags MUST be settable
+// independently (a CnaG-hosted page mirrored on nidirect.gov.uk sets
+// is_cna_g_origin=true AND is_eani_origin=false; an Education Authority
+// NI Irish-medium unit press release sets is_eani_origin=true).
+class NILanguagePair {
+  en_url string @description("Canonical English-side URL on the NI source domain.")
+  ga_url string @description("Canonical Irish-side URL on the NI source domain.")
+  source_domain string @description("The NI-specific Irish-medium source host (e.g. 'nidirect.gov.uk', 'comhairle.org', 'eani.org.uk', 'education-ni.gov.uk').")
+  is_cna_g_origin bool @description("True when the ga-side page originates from Comhairle na Gaelscolaíochta (CnaG, comhairle.org) — the NI statutory Irish-medium education body.")
+  is_eani_origin bool @description("True when the ga-side page originates from the Education Authority NI (eani.org.uk) Irish-medium unit.")
+}
+
 function ExtractCiancheiltisBilingualPage(
   page_markdown: string,
   language_pair: string,
@@ -252,6 +269,112 @@ function ExtractIrelandGAURLPair(
       is_same_article false,
       metadata_mismatch false,
       theme_code "",
+    }
+  }
+}
+
+// Phase 3 (en-ga / Northern Ireland) shared extraction function —
+// added by PR0.7. The function emits a `BilingualExplanatoryNotePair`
+// for terminology ingested from NI-language-bodies (CnaG /
+// comhairle.org + Education Authority NI / eani.org.uk + the
+// Department of Education NI / education-ni.gov.uk). This is the
+// T5 (language-bodies) terminology-pairing cousin of the Phase 2
+// Téarma.ie / Teanglann.ie `GaeilgeTermPair` flow — same model
+// (`uccix-mistral-24b`) but routed through the Phase 3
+// `CiancheiltisGaNiExtract` client so the cognify adapter layer can
+// attach NI-specific few-shot exemplars (e.g. the
+// *Identity and Language (Northern Ireland) Act 2022* vocabulary stem
+// — "Acht na dTeangacha", "An Chomhairle", "Oideachas trí Mheán na
+// Gaeilge") independently of the Phase 2 ROI prompt body.
+function ExtractNIBilingualTerm(
+  en_term: string,
+  ga_term: string,
+  source: string,
+) -> BilingualExplanatoryNotePair {
+  client CiancheiltisGaNiExtract
+  prompt #"
+    {{ _.role("user") }}
+    You are an expert at bilingual EN ↔ GA (Irish / Gaeilge) terminology
+    extraction from Northern Ireland language bodies. Given an English
+    term, a candidate Irish-language term, and the source domain where
+    the pairing was observed, emit a `BilingualExplanatoryNotePair` row
+    with a stable concept_id (CC-GAE-NNN namespace) and a translation-
+    fidelity confidence score.
+
+    Northern Ireland language bodies to consider:
+    - Comhairle na Gaelscolaíochta (CnaG) — `comhairle.org` — the
+      statutory Irish-medium education body for Northern Ireland
+      (established under the Irish-medium education provisions of the
+      *Identity and Language (Northern Ireland) Act 2022*)
+    - Education Authority NI (EANI) — `eani.org.uk` — the regional
+      education authority; their Irish-medium unit publishes bilingual
+      parental guidance + enrolment forms
+    - Department of Education NI — `education-ni.gov.uk` — the NI
+      departmental policy home for Irish-medium education funding +
+      the Irish-medium nursery capital scheme
+    - nidirect.gov.uk — the NI government public-information portal
+      (parallel `/articles/...` (en) ↔ `/gaeilge/airteagal/...` (ga)
+      pages for citizen-facing content)
+
+    Seed phrases that confirm a paired NI Irish-medium term is genuine:
+    - "Acht na dTeangacha" ("Languages Act") — the Irish-language
+      short-title form of the *Identity and Language (Northern Ireland)
+      Act 2022* (commencement pending as of 2026-09)
+    - "An Chomhairle" — the Irish-language short-title form of CnaG
+      (the canonical "the Council" reference in NI Gaelscolaíochta
+      discourse)
+    - "Oideachas trí Mheán na Gaeilge" ("Education through the Medium
+      of Irish") — the canonical Irish-medium descriptor that appears
+      on CnaG and EANI materials
+    - "Gaelscoil" / "Bunscoil" — the Irish-medium primary-school
+      nomenclature used across NI
+    - "An Ghaeilge" / "Gaeilge" — when used as a language-name stem
+      on an NI government page (rather than as a subject-name on a
+      CCEA exam paper)
+    - "Tua" / "Iarbhunscoil" — Irish-medium post-primary descriptors
+      used by CnaG in their school-recognition register
+
+    Capture:
+    - en_note: pass through `en_term` (the English-side term as it
+      appeared in the NI source page)
+    - cy_note: pass through `ga_term` (the Irish-side term as it
+      appeared in the NI source page)
+    - concept_id: emit `CC-GAE-NNN` where NNN is a zero-padded integer
+      (001, 002, 003, ...) following the ExtractBilingualExplanatoryNote
+      convention. Emit empty concept_id when the two terms are clearly
+      not a translation pair (do NOT synthesise a concept_id to force
+      a row).
+    - confidence ∈ [0.0, 1.0]:
+        1.0 = exact corroborated translation (e.g. both CnaG and
+          EANI publish the same ga-side form for the same en-side
+          term)
+        0.7-0.9 = close translation with minor reformulation (e.g.
+          the ga-side form differs slightly from the en-side stem
+          because NI Gaelscolaíochta terminology evolved separately
+          from the ROI standard)
+        0.4-0.6 = same topic, partial overlap
+        0.0-0.3 = unrelated content (MUST also set concept_id to '')
+
+    Source conventions:
+    - `source` will be one of:
+        'cna_g'      (comhairle.org)
+        'eani'       (eani.org.uk Irish-medium unit)
+        'dept_ed_ni' (education-ni.gov.uk)
+        'nidirect'   (nidirect.gov.uk parallel page)
+        'other'      (catch-all)
+      The source string MUST NOT influence the concept_id — it is
+      metadata only and is logged to the NILanguagePair row separately
+      by the Phase 3 dlt source layer.
+
+    {{ ctx.output_format }}
+  "#
+
+  catch_all (err) {
+    BilingualExplanatoryNotePair {
+      en_note "",
+      cy_note "",
+      concept_id "",
+      confidence 0.0,
     }
   }
 }
