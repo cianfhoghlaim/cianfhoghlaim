@@ -682,3 +682,186 @@ function ExtractManxTerm(
     }
   }
 }
+
+// Phase 6 (en-ga / European Union) shared types — added by PR0.10.
+// `EUTermPair` is the canonical T6 (terminology) row for terminology
+// ingested from the EU inter-institutional terminology database IATE
+// (`iate.europa.eu/search/standard/EN/<id>` ↔
+// `iate.europa.eu/search/standard/GA/<id>` — the official EU
+// terminology stem for the 24 official EU languages, including
+// Irish / Gaeilge since the 2022 accession). Like `GaeilgeTermPair`
+// (Phase 2 / Téarma.ie), `GaelicTermPair` (Phase 4 / Bòrd na
+// Gàidhlig), and `ManxTermPair` (Phase 5 / Culture Vannin), this is
+// the canonical "what is the EU Irish-language equivalent of this
+// English term?" row for the Phase 6 dlt source. The
+// `language_availability` field MUST be settable independently of
+// `domain` (an IATE record that has only an English-side entry sets
+// language_availability='none' AND domain="legislation"; an IATE
+// record that has a full Irish-side entry added by Foras na
+// Gaeilge post-2022 sets language_availability='full' AND
+// domain="healthcare").
+//
+// IMPORTANT — EU-level Irish coverage is PARTIAL across the wider
+// EU institutional surface (Irish was added as the 24th official EU
+// language on 2022-01-01 per Council Decision (EU) 2020/2172), but
+// IATE coverage is RELATIVELY GOOD because IATE was one of the
+// first EU surfaces to receive Irish-language content after the
+// 2022 accession. The most common `language_availability` value for
+// IATE is 'full' (a complete Irish ↔ English term + definition
+// pairing exists), with 'partial' for the older IATE records
+// (pre-2022) where the Irish side was added retrospectively.
+class EUTermPair {
+  en_term string @description("The English-side IATE term (e.g. 'statutory instrument', 'subsidiary legislation').")
+  ga_term string @description("The Irish-side IATE term (e.g. 'ionstraim reachtúil', 'fo-reachtaíocht').")
+  iate_id string @description("The canonical IATE term identifier (e.g. '1234567' — the IATE internal numeric ID shared by the EN-side and GA-side standard records). Empty string when the pairing was inferred without an explicit IATE ID.")
+  domain string @description("The terminology domain (one of: legislation, education, healthcare, language_bodies, courts, local_government, public_broadcasting, statistics, agriculture, environment, transport, finance, trade, customs, energy, digital, internal_market, employment, social_affairs, research, foreign_affairs, security, justice). Bridges to the ciancheiltis 10-theme catalog.")
+  language_availability string @description("The language_availability status of this IATE pairing. One of: 'full' (complete Irish ↔ English term + definition pairing exists — the most common value for IATE post-2022), 'partial' (only the EN-side or only the GA-side exists, or the GA-side was added retrospectively without a full definition — covers the pre-2022 IATE records that Foras na Gaeilge retro-translated), 'summary_only' (the EN-side record carries only a short Irish-language glossary stub — rare for IATE), 'none' (no Irish-language content exists at all — covers the small set of IATE records that have never received an Irish edition). Captured as a first-class column because the schema MUST distinguish 'real Irish-language IATE rows' from 'English-only IATE rows with an Irish-language stub'.")
+}
+
+// Phase 6 (en-ga / European Union) shared extraction function —
+// added by PR0.10. The function emits a `BilingualExplanatoryNotePair`
+// row (using the shared concept_id namespace CC-GAE-NNN, where GAE is
+// the Irish / Gaeilge stem following the
+// `ExtractBilingualExplanatoryNote` convention — see line 158-162
+// above) for terminology ingested from the EU inter-institutional
+// terminology database IATE. This is the T6 (terminology) cousin of
+// the Phase 2 Téarma.ie / Teanglann.ie `GaeilgeTermPair` flow, the
+// Phase 3 CnaG / EANI `ExtractNIBilingualTerm` flow, the Phase 4
+// Bòrd na Gàidhlig / Stòrlann `ExtractGaelicTerm` flow, and the
+// Phase 5 Culture Vannin / Bunscoill / Gaelg Corpus
+// `ExtractManxTerm` flow — same model family (`uccix-mistral-24b`
+// UCCIX Mistral modern-Irish fine-tune) but routed through the
+// Phase 6 `CiancheiltisGaEuExtract` client so the cognify adapter
+// layer can attach Phase 6-specific few-shot exemplars (IATE + EUR-Lex
+// + europarl vocabulary stem — "IATE", "tearmaíocht AE", "ionadaíocht",
+// "rannóg", "fostaithe") independently of Phases 2 / 3 / 4 / 5
+// prompt bodies.
+function ExtractEUBilingualTermPair(
+  en_term: string,
+  ga_term: string,
+  iate_id: string,
+) -> BilingualExplanatoryNotePair {
+  client CiancheiltisGaEuExtract
+  prompt #"
+    {{ _.role("user") }}
+    You are an expert at bilingual EN ↔ GA (Irish / Gaeilge) terminology
+    extraction from the EU inter-institutional terminology database IATE
+    (Interactive Terminology for Europe — `iate.europa.eu/search/
+    standard/EN/<id>` ↔ `iate.europa.eu/search/standard/GA/<id>`).
+    Given an English term, a candidate Irish-language term, and the
+    IATE term identifier where the pairing was observed, emit a
+    `BilingualExplanatoryNotePair` row with a stable concept_id
+    (CC-GAE-NNN namespace) and a translation-fidelity confidence score.
+
+    The Phase 6 DLT source enumerates the IATE Irish ↔ English term
+    pairings and emits an `EUTermPair` companion row (the `EUTermPair`
+    schema is declared in this file just above) from the
+    en_term / ga_term / iate_id / domain / language_availability
+    fields. This function emits the `BilingualExplanatoryNotePair`
+    row with the stable concept_id + confidence, which the dlt source
+    layer joins to the `EUTermPair` row by the iate_id column.
+
+    EU institutional + IATE surfaces to consider:
+    - IATE — `iate.europa.eu` — the official EU inter-institutional
+      terminology database, the canonical T6 surface for all 24
+      official EU languages. The Irish-language edition was added
+      on 2022-01-01 with the Irish EU accession
+    - EUR-Lex — `eur-lex.europa.eu/legal-content/GA/TXT/?uri=CELEX:<id>`
+      — EU treaty + regulation / directive / decision publications;
+      IATE terminology is cross-referenced from EUR-Lex treaty
+      definitions (the "Definitions" Article of each Treaty / Reg /
+      Directive typically lists the IATE term IDs for every defined
+      term)
+    - europarl — `europarl.europa.eu/doceo/document/CRE-9-<year>-..._GA.pdf`
+      — EP plenary debate transcripts; IATE terminology is used by
+      the EP translation service for the glossary appended to every
+      debate transcript
+    - Council of the EU — `consilium.europa.eu` — the EU Council
+      translation service uses IATE as the canonical source for all
+      institutional terminology
+    - European Commission — `ec.europa.eu` — the EC translation
+      service uses IATE as the canonical source for all
+      institutional terminology
+    - Court of Justice of the EU — `curia.europa.eu` — the CJEU
+      translation service uses IATE as the canonical source for all
+      institutional terminology
+
+    Seed phrases that confirm a paired IATE Irish-medium term is
+    genuine:
+    - "IATE" (the inter-institutional terminology database name,
+      always used in all 24 official EU languages on every page)
+    - "An bunachar sonraí téarmaíochta" ("The terminology database")
+      — the Irish-language descriptor for IATE on the GA-side pages
+    - "téarma" ("term"), "sainmhíniú" ("definition"), "comhchiallach"
+      ("synonym"), "frithchiallach" ("antonym") — Irish-language
+      IATE field labels
+    - "ionadaíocht" ("representation"), "rannóg" ("department"),
+      "fostaithe" ("staff") — common Irish-language IATE provenance
+      vocabulary
+    - "An Coimisiún Eorpach" / "Parlaimint na hEorpa" /
+      "Comhairle an Aontais Eorpaigh" / "Cúirt Bhreithiúnais an
+      Aontais Eorpaigh" — Irish-language EU institutional references
+      that appear as the IATE provenance field on most records
+    - "an Ghaeilge" — when used as a language-name stem on an IATE
+      page (rather than as a subject-name)
+
+    Capture:
+    - en_note: pass through `en_term` (the English-side term as it
+      appeared in the IATE EN-side standard record)
+    - cy_note: pass through `ga_term` (the Irish-side term as it
+      appeared in the IATE GA-side standard record — note: the
+      field is named `cy_note` for shared cross-Celtic compatibility
+      with the `BilingualExplanatoryNotePair` schema but the value
+      is the Irish / Gaeilge side, NOT Welsh / Cymraeg)
+    - concept_id: emit `CC-GAE-NNN` where NNN is a zero-padded
+      integer (001, 002, 003, ...) following the
+      ExtractBilingualExplanatoryNote convention (GAE = Gaeilge /
+      Irish — the canonical Irish stem per the concept_id
+      namespace table at line 158-162 above). Emit empty concept_id
+      when the two terms are clearly not a translation pair (do
+      NOT synthesise a concept_id to force a row).
+    - confidence ∈ [0.0, 1.0]:
+        1.0 = exact corroborated translation (e.g. both IATE and
+          EUR-Lex publish the same ga-side form for the same
+          en-side term)
+        0.7-0.9 = close translation with minor reformulation (e.g.
+          the ga-side form differs slightly from the en-side stem
+          because EU terminology evolved separately from the ROI
+          Gaeltacht standard)
+        0.4-0.6 = same topic, partial overlap
+        0.0-0.3 = unrelated content (MUST also set concept_id to '')
+
+    IATE ID conventions:
+    - `iate_id` will be the IATE internal numeric ID shared by the
+      EN-side and GA-side standard records (e.g. '1234567'). The
+      IATE ID is the canonical term_id across all 24 official EU
+      languages. The ID MUST NOT influence the concept_id — it is
+      metadata only and is logged to the `EUTermPair` companion row
+      separately by the Phase 6 dlt source layer. When the pairing
+      was inferred without an explicit IATE ID (e.g. from a
+      cross-referenced EUR-Lex treaty definition), emit empty
+      iate_id — do NOT synthesise an ID to force a row.
+
+    Language availability conventions:
+    - The Phase 6 dlt source layer sets the `language_availability`
+      field on the `EUTermPair` companion row separately, based on
+      whether the IATE record has a full EN-side + GA-side pairing,
+      a partial pairing, a summary-only pairing, or no Irish content.
+      The `language_availability` value MUST NOT influence the
+      concept_id — it is metadata only and is logged to the
+      `EUTermPair` row separately by the Phase 6 dlt source layer.
+      Most IATE rows post-2022 will be 'full'; most pre-2022 rows
+      retro-translated by Foras na Gaeilge will be 'partial'.
+
+    {{ ctx.output_format }}
+  "#
+
+  catch_all (err) {
+    BilingualExplanatoryNotePair {
+      en_note "",
+      cy_note "",
+      concept_id "",
+      confidence 0.0,
+    }
+  }
+}

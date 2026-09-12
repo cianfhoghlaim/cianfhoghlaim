@@ -28,6 +28,18 @@ en-gv government pages into the canonical LanceDB table
 bilingual publication duty and the Phase 5 strict-gate is
 "capture what bilingual content exists and surface it faithfully".
 
+Phase 6 of the ciancheiltis umbrella (EU level / en-ga). This
+package also houses the CocoIndex v1 App that embeds bilingual
+en-ga EU institutional pages into the canonical LanceDB table
+``lancedb://md:cianfhoghlaim/ciancheiltis/en_ga_eu_chunks``. Irish
+is an official + treaty language of the EU under Article 55 TEU +
+Council Regulation No 1/1958; EU-level coverage is **partial** for
+Irish — many EU documents exist only in English plus a "summary in
+Irish" rather than a full Irish translation. The Phase 6 schema
+MUST capture the ``language_availability`` ∈ ``{"full", "partial",
+"summary_only"}`` as a first-class column (per the umbrella spec's
+Phase 6 § first-class-column rule).
+
 The R1-R4 conformance contract (per the
 ``oideachais-cocoindex-v1`` skill + the
 ``openspec/specs/ciancheiltis/spec.md`` R1-R4 section) is enforced by
@@ -137,18 +149,43 @@ from .ciancheiltis_en_gv_embedding import (
     flow as en_gv_flow,
 )
 
+# Phase 6 (EU level / en-ga) — re-export the CocoIndex v1 App symbol
+# so downstream consumers can import it via
+# ``cocoindex_flows.british_isles.uk.ciancheiltis_en_ga_eu_embedding``.
+# Added by PR0.10 — the underlying
+# ``ciancheiltis_en_ga_eu_embedding.py`` App is the Phase 6 mirror of
+# the Phase 5 ``ciancheiltis_en_gv_embedding.py`` App, conforming to
+# the same R1-R4 contract (the canonical Phase 6 schema also adds a
+# ``language_availability`` ∈ ``{"full", "partial", "summary_only"}``
+# first-class column per the umbrella spec's Phase 6 §
+# first-class-column rule). The Phase 6 canonical example is the
+# Treaty on European Union, Irish-language edition
+# (``https://eur-lex.europa.eu/legal-content/GA/TXT/?uri=CELEX:12012E``).
+from .ciancheiltis_en_ga_eu_embedding import (
+    EnGaEuChunk,
+    ciancheiltis_en_ga_eu_embedding,
+    en_ga_eu_embedding_flow,
+)
+from .ciancheiltis_en_ga_eu_embedding import (
+    flow as en_ga_eu_flow,
+)
+
 __all__ = [
     "EnCyChunk",
+    "EnGaEuChunk",
     "EnGaNiChunk",
     "EnGaRoiChunk",
     "EnGdChunk",
     "EnGvChunk",
+    "ciancheiltis_en_ga_eu_embedding",
     "ciancheiltis_en_ga_ni_embedding",
     "ciancheiltis_en_gd_embedding",
     "ciancheiltis_en_gv_embedding",
     "en_cy_embedding",
     "en_cy_embedding_flow",
     "en_cy_flow",
+    "en_ga_eu_embedding_flow",
+    "en_ga_eu_flow",
     "en_ga_ni_embedding_flow",
     "en_ga_ni_flow",
     "en_gd_embedding_flow",

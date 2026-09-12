@@ -1,0 +1,199 @@
+# orchestration/defs/4_asset_generation/ciancheiltis/en_ga_eu/defs.yaml
+#
+# L4 CelticAssetGenerationComponent for the ciancheiltis Phase 6
+# (en-ga / European Union) marimo quality dashboard. Per the
+# ciancheiltis spec §"Dagster 5-layer asset graph per phase", every
+# phase MUST have a complete 5-layer asset group; this file is Layer 4.
+#
+# This file declares the asset-check asset group for en-ga-eu Phase 6.
+# The marimo dashboard at `dashboard_path` is the operator-facing
+# surface that surfaces:
+#   1. `bilingual_pairs_seeded_check` — gates ≥ 500 paragraph-level
+#      `(en, ga)` bilingual pairs (ciancheiltis spec Requirement).
+#      ASPIRATIONAL on Phase 6 — see the partial-coverage caveat below.
+#   2. `ragas_quality_check`          — gates ≥ 0.70 RAGAS
+#      bilingual-pair score (ciancheiltis spec Requirement).
+#
+# The @asset_check definitions live in
+# `orchestration/defs/2_materials/baml_extraction/ciancheiltis/en_ga_eu/_assets.py`
+# (Layer 2 — the natural home, mirroring the en-cy + en-ga-roi +
+# en-ga-ni + en-gd + en-gv pattern). This L4 Component declares them
+# as the lineage witnesses for the marimo dashboard + records their
+# thresholds in `metadata` so the deployment-control-panel + the
+# ciancheiltis Lakekeeper dashboard can surface them.
+#
+# Phase 6 ships DIFFERENT bilingual sources than Phases 1–5:
+#   - `eur-lex.europa.eu/legal-content/GA/TXT/?uri=CELEX:...` is the
+#     canonical Irish-language EUR-Lex surface (one of the 8 canonical
+#     CELEX treaties the Phase 6 DLT source enumerates, including the
+#     Lisbon 2012 TEU at CELEX 12012E, the TFEU at 12012M, the TEU-
+#     TFEU-CFSP protocols at 12012P, the Charter of Fundamental
+#     Rights at 12012Q, the Treaty of Nice at 12002T, the Treaty of
+#     Amsterdam at 11997D, and the Maastricht Treaty at 11992E).
+#     The Irish-language edition of every CELEX treaty is the canonical
+#     Phase 6 T1 reference page.
+#   - `europarl.europa.eu/..._GA.html` is the European Parliament
+#     debates surface (T8 institutions). The debates are bilingual
+#     (EN + GA transcripts); the GA/MT suffix on the URL is the
+#     canonical Phase 6 slug-prefix pattern.
+#   - `iate.europa.eu` is the IATE (InterActive Terminology for
+#     Europe) database — the canonical Phase 6 T6 terminology
+#     reference. IATE is multilingual (24 official EU languages);
+#     the `en-ga` term pairs are the canonical bilingual surface.
+#   - `curia.europa.eu` is the Court of Justice of the European Union
+#     (CJEU) — the canonical Phase 6 T7 courts reference. CJEU
+#     judgments are published in the language of the case (which may
+#     be Irish under the post-2022-01-01 full-official-language
+#     regime).
+#   - `ecb.europa.eu`, `consilium.europa.eu`, `ec.europa.eu` (Commission),
+#     and `europarl.europa.eu` are the canonical T8 institutions
+#     surfaces — each has a `/ga/` infix for the Irish-language
+#     portal. `https://www.ecb.europa.eu/home/html/index.ga.html` is
+#     the canonical example (Banc Ceannais Eorpach — the Irish-
+#     language ECB portal).
+#   - `eur-lex.europa.eu` is also the canonical source for the
+#     `language_availability` schema column — every CELEX document
+#     declares its publication language set in the metadata, and the
+#     Phase 6 DLT source layer derives `language_availability` from
+#     that metadata. Documents with `GA` + `EN` are `full`; documents
+#     with `GA` summary but no `GA` body are `partial`; documents
+#     with only an Irish-language summary annotation are
+#     `summary_only`.
+# See `motherduck/dives/ciancheiltis_en_ga_eu_dive.py::METADATA_MISMATCH_DIVE_GA_EU`.
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" (Phase 6 = en_ga_eu) +
+# Requirement "6-phase language-pair staging" + Requirement
+# "MotherDuck Dive + Flight per phase".
+type: orchestration.components.CelticAssetGenerationComponent
+attributes:
+  dashboard_kind: marimo
+  dashboard_path: cianfhoghlaim/notebooks/dashboards/ciancheiltis/en_ga_eu_quality.py
+  slug: ciancheiltis_en_ga_eu
+  upstream_assets:
+    - 1_ingestion/ciancheiltis/en_ga_eu
+    - 2_materials/baml_extraction/ciancheiltis/en_ga_eu
+    - 3_model_lifecycle/cocoindex_v1/ciancheiltis_en_ga_eu
+  refresh_on:
+    - "0 4 * * *"
+    - "0 16 * * *"
+  notebooks:
+    - 01_en_ga_eu_themes_overview
+    - 02_bilingual_pairs_coverage
+    - 03_ragas_quality_dashboard
+    - 04_metadata_language_mismatch
+    - 05_phase_gate_summary
+    - 06_umbrella_completion_summary
+  tags:
+    - ciancheiltis
+    - en-ga-eu
+    - phase-6
+    - final-phase
+    - asset-checks
+    - bilingual
+    - ragas
+    - marimo
+    - european-union
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_ga_eu
+    is_final_phase: true
+    asset_checks:
+      - name: bilingual_pairs_seeded_check
+        threshold: 500
+        unit: bilingual_pairs
+        description: |
+          ≥ 500 paragraph-level `(en, ga)` bilingual pairs MUST be
+          present in the lakehouse before the phase can be promoted
+          past Phase 6 (the FINAL phase). The actual @asset_check is
+          defined in L2
+          `_assets.py::ciancheiltis_en_ga_eu_bilingual_pairs_seeded_check`.
+          **Phase 6 partial-coverage caveat**: this threshold is
+          ASPIRATIONAL on Phase 6 — EU-level coverage is PARTIAL for
+          Irish per Council Decision (EU) 2020/2172; many EU
+          documents exist only in English plus a "summary in Irish"
+          rather than a full Irish translation. The Phase 6 schema
+          captures the `language_availability` ∈ {`full`, `partial`,
+          `summary_only`} axis as a first-class column so operators
+          can distinguish a `full` row (canonical Irish-language
+          EUR-Lex GA/TXT treaty) from a `summary_only` row (an Irish-
+          language summary annotation on an otherwise English-only
+          document). Many themes (especially T1 legislation for pre-
+          2022 acts, T5 language bodies for the EU-level Foras na
+          Gaeilge brief, T8 institutions for Council + Parliament
+          working documents) will land with pair counts below the
+          Phase 1–5 baseline because the public-sector bilingual
+          corpus is partial by design. Operators should interpret a
+          Phase 6 pair count below 500 as a Phase 6 CHARACTERISTIC,
+          not a regression. See
+          `motherduck/dives/ciancheiltis_en_ga_eu_dive.py::BILINGUAL_PAIRS_DIVE_GA_EU`
+          for the per-theme breakdown + the
+          `language_availability_distribution` column.
+      - name: ragas_quality_check
+        threshold: 0.70
+        unit: ragas_score
+        description: |
+          RAGAS ≥ 0.70 bilingual-pair score MUST be achieved across
+          the 8 en-ga-eu themes before the phase can be promoted. The
+          actual @asset_check is defined in L2
+          `_assets.py::ciancheiltis_en_ga_eu_ragas_quality_check`.
+          **Phase 6 note**: the same 0.70 threshold measures BAML
+          extraction QUALITY (not pair QUANTITY) — on Phase 6 the
+          `full` rows tend to score HIGH because the `uccix-mistral-
+          24b` modern-Irish client is targeted, so the RAGAS gate
+          fires green even when the bilingual-pairs-seeded gate fires
+          red.
+    phase_gate:
+      min_pairs: 500
+      min_ragas: 0.70
+      languages:
+        - en
+        - ga
+      minority_languages:
+        - ga
+      themes:
+        - legislation
+        - policy_consultations
+        - education
+        - healthcare
+        - language_bodies
+        - terminology
+        - courts
+        - institutions
+      partial_coverage_caveat: |
+        Phase 6 is the FINAL phase of the 6-phase ciancheiltis spine
+        (en_cy, en_ga_roi, en_ga_ni, en_gd, en_gv, en_ga_eu). EU-
+        level coverage is PARTIAL for Irish per Council Decision (EU)
+        2020/2172 + Council Regulation No 1/1958 + Article 55 TEU.
+        Many EU documents exist only in English plus a "summary in
+        Irish" rather than a full Irish translation. The Phase 6
+        schema captures the `language_availability` axis as a first-
+        class column. The 500-pair gate is ASPIRATIONAL.
+    notes: |
+      The marimo dashboard itself lives at
+      `notebooks/dashboards/ciancheiltis/en_ga_eu_quality.py` and
+      renders the per-theme row count + per-theme RAGAS score + the
+      `language_availability_distribution` (full / partial /
+      summary_only split) + a green/red phase gate (≥ 500 pairs AND
+      ≥ 0.70 RAGAS). Operators open the dashboard via the
+      deployment-control-panel → 5-tab marimo control panel (per the
+      deployment-control-panel spec). The 6th cell of the marimo
+      dashboard is the umbrella-completion summary that renders a
+      6-row table across all 6 phases — this is the final-tally
+      dashboard.
+
+      Phase 6 differs from Phases 1–5 in the structural pairing
+      interpretation: the EU institutional surface (Commission +
+      Parliament + Council + ECB + EIB + EIF) uses a `/ga/` infix
+      pattern (e.g. `https://www.ecb.europa.eu/home/html/index.ga.html`
+      — the Irish-language ECB portal) — a SIMILAR but NOT IDENTICAL
+      pattern to Phase 2 (gov.ie `/en/` ↔ `/ga/` infix pair signal)
+      and Phase 4 (gov.scot `/en/` ↔ `/gd/` infix pair signal).
+      Phase 6 also introduces the `language_availability` schema
+      column (full / partial / summary_only) as a FIRST-CLASS
+      dimension — Phases 1–5 do not need this column because the
+      Phase 1–5 sources either have a paired EN + CY/GA/GD/GV
+      surface (full) or they don't (single-language, out of scope).
+      Phase 6's EU surface is unique because partial-coverage is the
+      norm, not the exception.

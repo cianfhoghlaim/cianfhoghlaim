@@ -161,6 +161,47 @@ client<llm> CiancheiltisGaNiExtract {
   }
 }
 
+// ====== ciancheiltis Phase 6 (en-ga European Union) — same model as Phase 2 + Phase 3 ======
+// Per the 2026-XX-XX-ciancheiltis-v1 openspec change (PR0.10).
+// Phase 6 covers the EU institutional surface (EUR-Lex
+// `/legal-content/GA/TXT/?uri=CELEX:<id>` for the 8 canonical treaties +
+// the wider CELEX set + European Parliament plenary debate transcripts
+// at `europarl.europa.eu/doceo/document/CRE-9-<year>-..._GA.pdf` + IATE
+// inter-institutional terminology at
+// `iate.europa.eu/search/standard/EN/<id>` ↔ `/GA/<id>`). Same
+// modern-Irish model as Phase 2 + Phase 3 (`uccix-mistral-24b`, UCCIX
+// Mistral fine-tune) because all three en-ga clients use modern Irish
+// (An Caighdeán Oifigiúil) — exposed as a separate client name so the
+// cognify adapter layer can attach Phase 6-specific few-shot exemplars
+// (IATE + EUR-Lex + europarl vocabulary stem — "Conradh ar an Aontas
+// Eorpach", "Cairt um Chearta Bunúsacha", "Parlaimint na hEorpa",
+// "IATE", "tearmaíocht AE") and so Phase 6 prompt-engineering can
+// diverge independently from Phases 2 / 3 in a follow-up PR without
+// touching the Phase 2 / Phase 3 / canonical `CiancheiltisGaExtract`
+// client registrations.
+//
+// IMPORTANT CONTEXT — EU-level Irish coverage is PARTIAL (Irish was
+// added as the 24th official EU language on 2022-01-01 per Council
+// Decision (EU) 2020/2172). Most older CELEX documents + most EP
+// plenary transcripts + most TED procurement notices ship English-only
+// with at most an Irish-language summary header. The Phase 6 schema
+// MUST capture `language_availability` ∈ {"full", "partial",
+// "summary_only", "none"} as a first-class column on every emitted row
+// — the dlt source layer downstream relies on this column to distinguish
+// real Irish-language EU rows from summary-only rows.
+//
+// Routes through LiteLLM → llama-swap (the canonical local-GGUF gateway
+// for the 24-entry VISION_MODELS registry).
+client<llm> CiancheiltisGaEuExtract {
+  provider "openai"
+  options {
+    base_url env.LITELLM_BASE_URL
+    api_key env.LITELLM_API_KEY
+    // MODEL_REGISTRY: family="text_llm", role="irish" → "uccix-mistral-24b"
+    model "local/vision/uccix-mistral-24b"
+  }
+}
+
 // ====== Canonical named clients referenced across BAML functions ======
 // These are the historical aliases used by the various function definitions.
 // They route to the canonical minimax-m3 text client by default, so all

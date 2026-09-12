@@ -1,0 +1,182 @@
+# orchestration/defs/1_ingestion/ciancheiltis/en_ga_eu/defs.yaml
+#
+# L1 CelticIngestionComponent for the ciancheiltis Phase 6 (en-ga —
+# European Union / Irish as treaty language) surface. Per the
+# ciancheiltis spec §"Dagster 5-layer asset graph per phase", every
+# phase MUST have a complete 5-layer asset group; this file is Layer 1.
+#
+# Declares the 8 Phase-6 DLT sources (one per EU public-sector theme
+# that ships any Irish-language content) + a daily 04:00 UTC cron.
+# The 8 sources land under the shared `dlt_sources/ciancheiltis/en_ga_eu/`
+# subtree (subagent 2's territory per the PR0.10 split — alongside
+# `institutions.py` which replaces `local_government.py` because the
+# EU has no local-government tier; the eighth theme is `institutions`
+# for the Commission / Parliament / Council / ECB / CJEU / EIB family);
+# this file only wires the orchestration side. The `source_id` values
+# are stable dotted identifiers resolved at runtime against the
+# canonical `dlt_sources.ciancheiltis._shared.registry`.
+#
+# Phase 6 is the EU-level (en-ga) jurisdiction — the **FINAL** phase of
+# the 6-phase ciancheiltis spine (Phase 1 en-cy / Phase 2 en-ga-roi /
+# Phase 3 en-ga-ni / Phase 4 en-gd / Phase 5 en-gv / Phase 6 en-ga-eu).
+# Irish (Gaeilge) is a treaty language under Article 55 of the Treaty
+# on European Union (TEU) + Council Regulation No 1/1958, and a full
+# official EU language since Council Decision (EU) 2020/2172 took effect
+# on 2022-01-01. The canonical bilingual example is
+# `https://eur-lex.europa.eu/legal-content/GA/TXT/?uri=CELEX:12012E` —
+# the Irish-language edition of the Treaty on European Union
+# (Lisbon 2012, CELEX 12012E). Sister bodies enumerated by the 8
+# themes are EUR-Lex (T1), Commission Green/White papers (T2),
+# Eurydice (T3), ECDC + EMA (T4), Foras na Gaeilge at the EU level +
+# the Irish-language desk of the European Commission (T5), IATE (T6),
+# the Court of Justice of the European Union (T7), and the EU
+# institutions surface (T8) — Commission / Parliament / Council /
+# ECB / EIB / EIF.
+#
+# Phase 6 differs from Phases 1–5 in TWO structural ways:
+#   1. **Partial coverage**. EU-level coverage is **partial** for
+#      Irish: many EU documents exist only in English plus a
+#      "summary in Irish" rather than a full Irish translation
+#      (this is the documented Council Decision (EU) 2020/2172
+#      derogation for older acts). The Phase 6 schema MUST capture
+#      `language_availability` ∈ {"full", "partial", "summary_only"}
+#      as a first-class column — the L4 marimo dashboard + the
+#      BILINGUAL_PAIRS_DIVE_GA_EU render a `language_availability_distribution`
+#      column showing the `full` / `partial` / `summary_only` split.
+#      The 500-pair + RAGAS ≥ 0.70 gates from the ciancheiltis spec
+#      are therefore ASPIRATIONAL on Phase 6 — operators should
+#      interpret a Phase 6 pair count below 500 as a Phase 6
+#      CHARACTERISTIC, not a regression (mirroring the Phase 5
+#      revival-status caveat).
+#   2. **The eighth theme is `institutions` (not `local_government`)**.
+#      Phases 1–5 use `local_government` as the eighth theme (22 Welsh
+#      LAs / 31 ROI councils / 11 NI councils / 32 Scottish councils /
+#      6 IoM departments). Phase 6 has no local-government tier — the
+#      EU is sui generis (no sub-EU municipalities have a statutory
+#      Irish-language obligation). The eighth theme `institutions`
+#      captures the EU institution family (Commission + Parliament +
+#      Council + ECB + EIB + EIF), with the canonical example
+#      `https://www.ecb.europa.eu/home/html/index.ga.html` (Banc
+#      Ceannais Eorpach — the Irish-language ECB portal).
+#
+# Per-phase asset_check: `bilingual_pairs_seeded_check` (≥ 500) lives
+# in Layer 4 (`4_asset_generation/ciancheiltis/en_ga_eu/defs.yaml`) —
+# that is where the RAGAS gate per the ciancheiltis spec Requirement
+# lives.
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" + Requirement
+# "6-phase language-pair staging" + Scenario
+# "en-cy Phase 1 RAGAS gate fires" (carried verbatim to Phase 6 per
+# the 6-phase language-pair staging Requirement, with a
+# partial-coverage caveat for the 500-pair threshold).
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ciancheiltis.en_ga_eu.themes
+  domain: ciancheiltis
+  nation: european_union
+  automation: on_cron
+  automation_cron: "0 4 * * *"
+  state_backed: false
+  state_refresh_interval: daily
+  asset_check: bilingual_pairs_seeded_check
+  asset_check_min_rows: 500
+  dlt_source: ciancheiltis.en_ga_eu.themes_source
+  destination_tables:
+    - cianfhoghlaim.ciancheiltis.en_ga_eu_legislation
+    - cianfhoghlaim.ciancheiltis.en_ga_eu_policy_consultations
+    - cianfhoghlaim.ciancheiltis.en_ga_eu_education
+    - cianfhoghlaim.ciancheiltis.en_ga_eu_healthcare
+    - cianfhoghlaim.ciancheiltis.en_ga_eu_language_bodies
+    - cianfhoghlaim.ciancheiltis.en_ga_eu_terminology
+    - cianfhoghlaim.ciancheiltis.en_ga_eu_courts
+    - cianfhoghlaim.ciancheiltis.en_ga_eu_institutions
+  fallback_resources:
+    - stedding/ingest_queue/ciancheiltis/en_ga_eu/
+    - stedding/discovery/ciancheiltis_en_ga_eu_seeds.jsonl
+  tags:
+    - ciancheiltis
+    - en-ga-eu
+    - phase-6
+    - final-phase
+    - ingestion
+    - bilingual
+    - european-union
+    - irish-treaty-language
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_ga_eu
+    is_final_phase: true
+    languages:
+      - en
+      - ga
+    themes:
+      - legislation
+      - policy_consultations
+      - education
+      - healthcare
+      - language_bodies
+      - terminology
+      - courts
+      - institutions
+    dlt_sources:
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_eu.legislation.legislation_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_eu.policy_consultations.policy_consultations_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_eu.education.education_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_eu.healthcare.healthcare_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_eu.language_bodies.language_bodies_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_eu.terminology.terminology_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_eu.courts.courts_source
+      - cianfhoghlaim.dlt_sources.ciancheiltis.en_ga_eu.institutions.institutions_source
+    baml_extractor: b.ExtractEuTreaty(theme=...) | b.ExtractEuInstitutionPage(theme=...) | b.ExtractEuTerm(theme=...)
+    notes: |
+      Phase 6 of the 6-phase ciancheiltis umbrella
+      (en_cy, en_ga_roi, en_ga_ni, en_gd, en_gv, en_ga_eu) — the
+      FINAL phase. The 8 themes map to the 8 EU public-sector
+      surfaces that ship any Irish-language content. The canonical
+      bilingual reference is
+      `https://eur-lex.europa.eu/legal-content/GA/TXT/?uri=CELEX:12012E`
+      (the Irish-language edition of the Treaty on European Union,
+      Lisbon 2012, CELEX 12012E — one of the canonical 8 CELEX
+      treaties the Phase 6 DLT source enumerates). Daily 04:00 UTC
+      cron aligns with the BIEP gov-circulars cron (per the
+      cross-pipeline integration Requirement) and with the Phase 1
+      en-cy + Phase 2 en-ga-roi + Phase 3 en-ga-ni + Phase 4 en-gd +
+      Phase 5 en-gv crons. Honours USE_LOCAL_SCRAPES=true to read
+      from `stedding/ingest_queue/ciancheiltis/en_ga_eu/`.
+
+      Phase 6 differs from Phases 1–5 in THREE ways:
+      1. **PARTIAL COVERAGE — the language_availability axis**. EU-level
+         coverage is partial for Irish: many EU documents exist only in
+         English plus a "summary in Irish" rather than a full Irish
+         translation (this is the documented Council Decision (EU)
+         2020/2172 derogation for older acts pre-dating 2022-01-01).
+         The Phase 6 schema MUST capture `language_availability` ∈
+         {"full", "partial", "summary_only"} as a first-class column on
+         every per-phase row. The 500-pair gate from the ciancheiltis
+         spec is therefore ASPIRATIONAL on Phase 6 — the L4 marimo
+         dashboard `BILINGUAL_PAIRS_DIVE_GA_EU` documents the
+         partial-coverage caveat + the `language_availability_distribution`
+         column shows the `full` / `partial` / `summary_only` split.
+      2. **The eighth theme is `institutions` (not `local_government`)**.
+         The EU is sui generis — no sub-EU municipalities have a
+         statutory Irish-language obligation. The 8th theme captures
+         the EU institutions family (Commission + Parliament + Council
+         + ECB + EIB + EIF), with the canonical example
+         `https://www.ecb.europa.eu/home/html/index.ga.html` (Banc
+         Ceannais Eorpach — the Irish-language ECB portal).
+      3. **FINAL phase of the umbrella**. Phase 6 is the closing
+         phase of the 6-phase ciancheiltis spine. The marimo notebook
+         `notebooks/ciancheiltis_en_ga_eu.py` includes a 5th cell
+         that renders a 6-row umbrella-completion summary table across
+         all 6 phases (en-cy / en-ga-roi / en-ga-ni / en-gd / en-gv /
+         en-ga-eu) — this is the final-tally dashboard.
+
+      The BAML extraction client is `CiancheiltisGaEuExtract`
+      (using `uccix-mistral-24b` for modern Irish — `ga` shares the
+      modern-Irish client with Phase 2 + Phase 3 per the ciancheiltis
+      spec §"BAML extraction suite"). The Phase 6 BAML functions are
+      `ExtractEuTreaty` (T1 legislation — EUR-Lex CELEX) +
+      `ExtractEuInstitutionPage` (T2-T5+T7+T8 EU gov surface) +
+      `ExtractEuTerm` (T6 IATE terminology, shared).

@@ -1,4 +1,4 @@
-"""Per-phase lifespan re-export for the ciancheiltis Phase 1 (en-cy / Wales) + Phase 2 (en-ga / ROI) + Phase 3 (en-ga / NI) + Phase 4 (en-gd / Scotland) + Phase 5 (en-gv / Isle of Man) Apps.
+"""Per-phase lifespan re-export for the ciancheiltis Phase 1 (en-cy / Wales) + Phase 2 (en-ga / ROI) + Phase 3 (en-ga / NI) + Phase 4 (en-gd / Scotland) + Phase 5 (en-gv / Isle of Man) + Phase 6 (en-ga / EU level) Apps.
 
 This is a thin per-phase shim over the canonical shared lifespan at
 ``cocoindex_flows._shared._lifespan``. The R1 conformance contract
@@ -165,6 +165,42 @@ PHASE_TABLE_URL_GV: str = (
     "lancedb://md:cianfhoghlaim/ciancheiltis/en_gv_chunks"
 )
 
+# Phase 6 (en-ga / EU level) is bilingual EN <-> GA. Irish is an
+# official language and treaty language of the European Union under
+# Article 55 of the Treaty on European Union (TEU) + Council
+# Regulation No 1/1958. EU institutions translate selectively into
+# Irish — the shared ``BAAI/bge-m3`` embedder covers GA natively
+# (1024-d, multilingual). The Phase 6 App lives at
+# ``ciancheiltis_en_ga_eu_embedding.py`` (sibling of the Phase 1
+# ``ciancheiltis_en_cy_embedding.py`` + the Phase 2 App
+# ``ciancheiltis_en_ga_roi_embedding.py`` + the Phase 3 App
+# ``ciancheiltis_en_ga_ni_embedding.py`` + the Phase 4 App
+# ``ciancheiltis_en_gd_embedding.py`` + the Phase 5 App
+# ``ciancheiltis_en_gv_embedding.py``) and re-exports the constants
+# below via ``from ._lifespan import PHASE_TABLE_URL_GA_EU,
+# PHASE_LANGUAGE_PAIR_GA_EU`` so the R1 import line in the App is
+# unambiguous about which phase it targets.
+#
+# Note: EU-level coverage is **partial** for Irish — many EU
+# documents exist only in English plus a "summary in Irish" rather
+# than a full Irish translation. The Phase 6 schema MUST capture
+# the ``language_availability`` ∈ ``{"full", "partial",
+# "summary_only"}`` as a first-class column (the constant
+# ``PHASE_LANGUAGE_AVAILABILITY`` below); the BAML coverage gate
+# flags the partial rows but does not drop them.
+PHASE_LANGUAGE_PAIR_GA_EU: str = "en-ga"
+PHASE_TABLE_URL_GA_EU: str = (
+    "lancedb://md:cianfhoghlaim/ciancheiltis/en_ga_eu_chunks"
+)
+# The Phase 6 schema column for ``language_availability`` ∈
+# ``{"full", "partial", "summary_only"}`` (the umbrella spec's
+# Phase 6 § first-class-column rule). The Phase 6 App
+# (``ciancheiltis_en_ga_eu_embedding.py``) reads this constant via
+# the R1 import line so the BAML extraction client
+# (``CiancheiltisGaEuExtract``) can populate the column without
+# re-declaring the value at every call site.
+PHASE_LANGUAGE_AVAILABILITY: str = "language_availability"
+
 
 __all__ = [
     "COCOINDEX_AVAILABLE",
@@ -174,11 +210,14 @@ __all__ = [
     "LANCEDB_URI",
     "LANCE_DB",
     "PHASE_LANGUAGE_PAIR",
+    "PHASE_LANGUAGE_AVAILABILITY",
+    "PHASE_LANGUAGE_PAIR_GA_EU",
     "PHASE_LANGUAGE_PAIR_GA_NI",
     "PHASE_LANGUAGE_PAIR_GA_ROI",
     "PHASE_LANGUAGE_PAIR_GD",
     "PHASE_LANGUAGE_PAIR_GV",
     "PHASE_TABLE_URL",
+    "PHASE_TABLE_URL_GA_EU",
     "PHASE_TABLE_URL_GA_NI",
     "PHASE_TABLE_URL_GA_ROI",
     "PHASE_TABLE_URL_GD",

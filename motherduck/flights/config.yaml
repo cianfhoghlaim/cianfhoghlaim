@@ -148,3 +148,35 @@ flights:
       - bilingual
       - phase_5
       - daily_sync
+  # ===========================================================================
+  # 🎉 CIANCHEILTIS PHASE 6 (en_ga_eu) — the FINAL phase of the 6-phase spine.
+  #
+  # Phase 6 closes the ciancheiltis umbrella:
+  #   Phase 1 en_cy   — Wales
+  #   Phase 2 en_ga   — Republic of Ireland
+  #   Phase 3 en_ga   — Northern Ireland
+  #   Phase 4 en_gd   — Scotland
+  #   Phase 5 en_gv   — Isle of Man
+  #   Phase 6 en_ga   — European Union (IRISH AS TREATY LANGUAGE — the FINAL phase)
+  #
+  # EU-level coverage is PARTIAL for Irish per Council Decision (EU) 2020/2172
+  # + Council Regulation No 1/1958 + Article 55 TEU. The Phase 6 schema
+  # captures the `language_availability` ∈ {`full`, `partial`,
+  # `summary_only`} axis as a first-class column. The 500-pair + RAGAS ≥
+  # 0.70 gates from the ciancheiltis spec are ASPIRATIONAL on Phase 6.
+  # ===========================================================================
+  - name: ciancheiltis_en_ga_eu_flight
+    module: cianfhoghlaim.motherduck.flights.ciancheiltis_en_ga_eu_flight
+    callable: build_ciancheiltis_en_ga_eu_flight
+    cron: "0 4 * * *"
+    timezone: UTC
+    description: "Daily BAML backfill + RAGAS gate for the en-ga (European Union) phase of ciancheiltis (Phase 6 of 6 — the FINAL phase) — EU-level coverage is PARTIAL for Irish per Council Decision (EU) 2020/2172; the 500-pair gate is ASPIRATIONAL per the Phase 6 partial-coverage caveat"
+    tags:
+      - ciancheiltis
+      - en_ga_eu
+      - european_union
+      - bilingual
+      - phase_6
+      - daily_sync
+      - final-phase
+      - umbrella-completion

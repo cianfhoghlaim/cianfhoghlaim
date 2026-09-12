@@ -8,33 +8,37 @@ Local-dev entrypoint that:
    CocoIndex App + the en-ga / Republic of Ireland Phase 2 CocoIndex
    App + the en-ga / Northern Ireland Phase 3 CocoIndex App + the
    en-gd / Scotland Phase 4 CocoIndex App + the en-gv / Isle of Man
-   Phase 5 CocoIndex App
+   Phase 5 CocoIndex App + the en-ga / EU level Phase 6 CocoIndex App
    (per the ``oideachais-cocoindex-v1`` skill).
 3. Runs ``<app>.update()`` for a one-shot catch-up (or ``-L`` for live
    mode).
 
 Usage:
 
-    uv run python -m cocoindex_flows.british_isles.uk --check                       # R1-R4 audit on all 5 phases
+    uv run python -m cocoindex_flows.british_isles.uk --check                       # R1-R4 audit on all 6 phases
     uv run python -m cocoindex_flows.british_isles.uk --check-phase1               # R1-R4 audit on Phase 1 only
     uv run python -m cocoindex_flows.british_isles.uk --check-phase2               # R1-R4 audit on Phase 2 only
     uv run python -m cocoindex_flows.british_isles.uk --check-phase3               # R1-R4 audit on Phase 3 only
     uv run python -m cocoindex_flows.british_isles.uk --check-phase4               # R1-R4 audit on Phase 4 only
     uv run python -m cocoindex_flows.british_isles.uk --check-phase5               # R1-R4 audit on Phase 5 only
+    uv run python -m cocoindex_flows.british_isles.uk --check-phase6               # R1-R4 audit on Phase 6 only
     uv run python -m cocoindex_flows.british_isles.uk --update-phase1              # Phase 1 catch-up
     uv run python -m cocoindex_flows.british_isles.uk --update-phase2              # Phase 2 catch-up
     uv run python -m cocoindex_flows.british_isles.uk --update-phase3              # Phase 3 catch-up
     uv run python -m cocoindex_flows.british_isles.uk --update-phase4              # Phase 4 catch-up
     uv run python -m cocoindex_flows.british_isles.uk --update-phase5              # Phase 5 catch-up
+    uv run python -m cocoindex_flows.british_isles.uk --update-phase6              # Phase 6 catch-up
     uv run python -m cocoindex_flows.british_isles.uk --live-phase1                # Phase 1 live mode (-L flag)
     uv run python -m cocoindex_flows.british_isles.uk --live-phase2                # Phase 2 live mode (-L flag)
     uv run python -m cocoindex_flows.british_isles.uk --live-phase3                # Phase 3 live mode (-L flag)
     uv run python -m cocoindex_flows.british_isles.uk --live-phase4                # Phase 4 live mode (-L flag)
     uv run python -m cocoindex_flows.british_isles.uk --live-phase5                # Phase 5 live mode (-L flag)
-    uv run python -m cocoindex_flows.british_isles.uk --metadata                   # all 5 phases metadata
+    uv run python -m cocoindex_flows.british_isles.uk --live-phase6                # Phase 6 live mode (-L flag)
+    uv run python -m cocoindex_flows.british_isles.uk --metadata                   # all 6 phases metadata
 
 Reference: ``openspec/changes/2026-09-06-ciancheiltis-v1/`` + the
-Phase 5 extension at ``openspec/changes/2026-09-12-ciancheiltis-v2/``.
+Phase 5 + Phase 6 extension at
+``openspec/changes/2026-09-12-ciancheiltis-v2/``.
 """
 from __future__ import annotations
 
@@ -50,12 +54,15 @@ from ._lifespan import (  # noqa: F401 — re-export surface
     EMBEDDER,
     LANCE_DB,
     LANCEDB_URI,
+    PHASE_LANGUAGE_AVAILABILITY,
     PHASE_LANGUAGE_PAIR,
+    PHASE_LANGUAGE_PAIR_GA_EU,
     PHASE_LANGUAGE_PAIR_GA_NI,
     PHASE_LANGUAGE_PAIR_GA_ROI,
     PHASE_LANGUAGE_PAIR_GD,
     PHASE_LANGUAGE_PAIR_GV,
     PHASE_TABLE_URL,
+    PHASE_TABLE_URL_GA_EU,
     PHASE_TABLE_URL_GA_NI,
     PHASE_TABLE_URL_GA_ROI,
     PHASE_TABLE_URL_GD,
@@ -68,6 +75,7 @@ PHASE2_MODULE = "cocoindex_flows.british_isles.uk.ciancheiltis_en_ga_roi_embeddi
 PHASE3_MODULE = "cocoindex_flows.british_isles.uk.ciancheiltis_en_ga_ni_embedding"
 PHASE4_MODULE = "cocoindex_flows.british_isles.uk.ciancheiltis_en_gd_embedding"
 PHASE5_MODULE = "cocoindex_flows.british_isles.uk.ciancheiltis_en_gv_embedding"
+PHASE6_MODULE = "cocoindex_flows.british_isles.uk.ciancheiltis_en_ga_eu_embedding"
 
 
 def _print_r1_to_r4_audit(module: str, label: str) -> bool:
@@ -138,6 +146,14 @@ def _print_app_metadata() -> None:
         f"  embedder      = {EMBED_MODEL} (dim={EMBED_DIM})\n"
         f"  lancedb_uri   = {LANCEDB_URI}\n"
         f"  phase_table   = {PHASE_TABLE_URL_GV}\n"
+        f"  cocoindex_avail = {COCOINDEX_AVAILABLE}\n"
+        "\n"
+        "ciancheiltis_en_ga_eu_embedding_phase6 metadata:\n"
+        f"  language_pair = {PHASE_LANGUAGE_PAIR_GA_EU}\n"
+        f"  embedder      = {EMBED_MODEL} (dim={EMBED_DIM})\n"
+        f"  lancedb_uri   = {LANCEDB_URI}\n"
+        f"  phase_table   = {PHASE_TABLE_URL_GA_EU}\n"
+        f"  language_availability_column = {PHASE_LANGUAGE_AVAILABILITY}\n"
         f"  cocoindex_avail = {COCOINDEX_AVAILABLE}"
     )
 
@@ -174,13 +190,13 @@ def _run_update(module: str, app_name: str, live: bool) -> int:
 def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="python -m cocoindex_flows.british_isles.uk",
-        description="ciancheiltis en-cy / Wales Phase 1 + en-ga / ROI Phase 2 + en-ga / NI Phase 3 + en-gd / Scotland Phase 4 + en-gv / Isle of Man Phase 5 CocoIndex App CLI",
+        description="ciancheiltis en-cy / Wales Phase 1 + en-ga / ROI Phase 2 + en-ga / NI Phase 3 + en-gd / Scotland Phase 4 + en-gv / Isle of Man Phase 5 + en-ga / EU level Phase 6 CocoIndex App CLI",
     )
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument(
         "--check",
         action="store_true",
-        help="Run the R1-R4 conformance audit on all 5 phase Apps",
+        help="Run the R1-R4 conformance audit on all 6 phase Apps",
     )
     group.add_argument(
         "--check-phase1",
@@ -208,6 +224,11 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
         help="Run the R1-R4 conformance audit on Phase 5 (en-gv / Isle of Man) only",
     )
     group.add_argument(
+        "--check-phase6",
+        action="store_true",
+        help="Run the R1-R4 conformance audit on Phase 6 (en-ga / EU level) only",
+    )
+    group.add_argument(
         "--update-phase1",
         action="store_true",
         help="Run a one-shot catch-up via en_cy_embedding.update()",
@@ -231,6 +252,11 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
         "--update-phase5",
         action="store_true",
         help="Run a one-shot catch-up via ciancheiltis_en_gv_embedding.update()",
+    )
+    group.add_argument(
+        "--update-phase6",
+        action="store_true",
+        help="Run a one-shot catch-up via ciancheiltis_en_ga_eu_embedding.update()",
     )
     group.add_argument(
         "--live-phase1",
@@ -258,6 +284,11 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
         help="Run Phase 5 in live mode (-L flag) — watches for upstream changes",
     )
     group.add_argument(
+        "--live-phase6",
+        action="store_true",
+        help="Run Phase 6 in live mode (-L flag) — watches for upstream changes",
+    )
+    group.add_argument(
         "--metadata",
         action="store_true",
         help="Print the App's module-level metadata (R1-R4 + phase + table URL)",
@@ -275,7 +306,8 @@ def main(argv: list[str] | None = None) -> int:
         ok3 = _print_r1_to_r4_audit(PHASE3_MODULE, "ciancheiltis_en_ga_ni_embedding_phase3")
         ok4 = _print_r1_to_r4_audit(PHASE4_MODULE, "ciancheiltis_en_gd_embedding_phase4")
         ok5 = _print_r1_to_r4_audit(PHASE5_MODULE, "ciancheiltis_en_gv_embedding_phase5")
-        return 0 if (ok1 and ok2 and ok3 and ok4 and ok5) else 1
+        ok6 = _print_r1_to_r4_audit(PHASE6_MODULE, "ciancheiltis_en_ga_eu_embedding_phase6")
+        return 0 if (ok1 and ok2 and ok3 and ok4 and ok5 and ok6) else 1
     if args.check_phase1:
         return 0 if _print_r1_to_r4_audit(PHASE1_MODULE, "ciancheiltis_en_cy_embedding_phase1") else 1
     if args.check_phase2:
@@ -286,6 +318,8 @@ def main(argv: list[str] | None = None) -> int:
         return 0 if _print_r1_to_r4_audit(PHASE4_MODULE, "ciancheiltis_en_gd_embedding_phase4") else 1
     if args.check_phase5:
         return 0 if _print_r1_to_r4_audit(PHASE5_MODULE, "ciancheiltis_en_gv_embedding_phase5") else 1
+    if args.check_phase6:
+        return 0 if _print_r1_to_r4_audit(PHASE6_MODULE, "ciancheiltis_en_ga_eu_embedding_phase6") else 1
     if args.metadata:
         return 0
     if args.update_phase1:
@@ -298,6 +332,8 @@ def main(argv: list[str] | None = None) -> int:
         return _run_update(PHASE4_MODULE, "CiancheiltisEnGdEmbedding", live=False)
     if args.update_phase5:
         return _run_update(PHASE5_MODULE, "CiancheiltisEnGvEmbedding", live=False)
+    if args.update_phase6:
+        return _run_update(PHASE6_MODULE, "CiancheiltisEnGaEuEmbedding", live=False)
     if args.live_phase1:
         return _run_update(PHASE1_MODULE, "CiancheiltisEnCyEmbedding", live=True)
     if args.live_phase2:
@@ -308,6 +344,8 @@ def main(argv: list[str] | None = None) -> int:
         return _run_update(PHASE4_MODULE, "CiancheiltisEnGdEmbedding", live=True)
     if args.live_phase5:
         return _run_update(PHASE5_MODULE, "CiancheiltisEnGvEmbedding", live=True)
+    if args.live_phase6:
+        return _run_update(PHASE6_MODULE, "CiancheiltisEnGaEuEmbedding", live=True)
     return 0  # unreachable: argparse makes the group mutually exclusive
 
 

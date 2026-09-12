@@ -1,0 +1,154 @@
+# orchestration/defs/3_model_lifecycle/cocoindex_v1/ciancheiltis_en_ga_eu/defs.yaml
+#
+# L3 CelticModelLifecycleComponent for the ciancheiltis Phase 6
+# (en-ga / European Union) CocoIndex v1 App. Per the ciancheiltis
+# spec §"Dagster 5-layer asset graph per phase", every phase MUST have
+# a complete 5-layer asset group; this file is Layer 3.
+#
+# The CocoIndex App module is written by subagent 2 of the PR0.10
+# split and lives at
+# `cocoindex_flows/british_isles/uk/ciancheiltis_en_ga_eu_embedding.py`.
+# It MUST satisfy the R1-R4 conformance contract (per the
+# `dagster-5-layer-component-architecture` spec + the cocoindex_v1
+# conformance harness):
+#   - R1: imports `from ._lifespan import PHASE_TABLE_URL_GA_EU,
+#     PHASE_LANGUAGE_PAIR_GA_EU` (the per-phase shim which itself
+#     re-exports `cocoindex_flows._shared._lifespan.shared_lifespan`)
+#   - R2: uses the canonical `BAAI/bge-m3` 1024-d embedder
+#   - R3: every flow decorated `@coco.fn(memo=True, deps=[...])`
+#   - R4: mounts the LanceDB table via
+#     `lancedb.mount_table_target("lancedb://md:cianfhoghlaim/ciancheiltis/en_ga_eu_chunks", conformance_required=True)`
+#
+# Phase 6 differs from Phases 1–5 in FIVE ways:
+# 1. The source DuckLake tables are populated by the 8 EU DLT
+#    sources under `dlt_sources/ciancheiltis/en_ga_eu/` (subagent 2's
+#    territory per the PR0.10 split). Phase 6 is GREENFIELD relative
+#    to the cached surfaces in `stedding/ingest_queue/ciancheiltis/
+#    {en_cy,en_ga_roi,en_ga_ni,en_gd,en_gv}/` — there are 18 placeholder
+#    JSON files but no real EUR-Lex document cached. The EU-level
+#    surface requires live Firecrawl scraping on first run.
+# 2. The canonical bilingual reference is
+#    `https://eur-lex.europa.eu/legal-content/GA/TXT/?uri=CELEX:12012E`
+#    — the Irish-language edition of the Treaty on European Union
+#    (the Lisbon 2012 TEU, CELEX 12012E). Irish (Gaeilge) is a
+#    treaty language under Article 55 of the Treaty on European Union
+#    (TEU) + Council Regulation No 1/1958, and a full official EU
+#    language since Council Decision (EU) 2020/2172 took effect on
+#    2022-01-01.
+# 3. The EU is **partial-coverage**: many EU documents exist only in
+#    English plus a "summary in Irish" rather than a full Irish
+#    translation (the documented Council Decision (EU) 2020/2172
+#    derogation for older acts pre-dating 2022-01-01). The Phase 6
+#    schema MUST capture `language_availability` ∈ {"full", "partial",
+#    "summary_only"} as a first-class column on every per-phase row.
+#    The 500-pair gate is therefore ASPIRATIONAL — documented in
+#    `motherduck/dives/ciancheiltis_en_ga_eu_dive.py::BILINGUAL_PAIRS_DIVE_GA_EU`
+#    which renders a `language_availability_distribution` column.
+# 4. **The eighth theme is `institutions` (NOT `local_government`)**.
+#    The EU is sui generis — no sub-EU municipalities have a statutory
+#    Irish-language obligation. The 8th theme captures the EU
+#    institutions family (Commission + Parliament + Council + ECB +
+#    EIB + EIF), with the canonical example
+#    `https://www.ecb.europa.eu/home/html/index.ga.html` (Banc
+#    Ceannais Eorpach — the Irish-language ECB portal).
+# 5. **FINAL phase of the umbrella**. Phase 6 is the closing phase of
+#    the 6-phase ciancheiltis spine (en_cy, en_ga_roi, en_ga_ni, en_gd,
+#    en_gv, en_ga_eu). The marimo notebook
+#    `notebooks/ciancheiltis_en_ga_eu.py` includes a 5th cell that
+#    renders a 6-row umbrella-completion summary table across all 6
+#    phases — this is the final-tally dashboard.
+#
+# Reference: openspec/specs/ciancheiltis/spec.md — Requirement
+# "Dagster 5-layer asset graph per phase" (Phase 6 = en_ga_eu) +
+# Requirement "6-phase language-pair staging" + Requirement
+# "CocoIndex v1 R1-R4 conformance".
+type: orchestration.components.CelticModelLifecycleComponent
+attributes:
+  app_name: CiancheiltisEnGaEuEmbedding
+  app_group: ciancheiltis_en_ga_eu
+  module: cocoindex_flows.british_isles.uk.ciancheiltis_en_ga_eu_embedding
+  embedding_model: BAAI/bge-m3
+  hnsw_index: true
+  conformance_required: true
+  apps:
+    - app_name: CiancheiltisEnGaEuEmbedding
+      module: cocoindex_flows.british_isles.uk.ciancheiltis_en_ga_eu_embedding
+      source: british_isles
+      lance_table: cianfhoghlaim.ciancheiltis.en_ga_eu_chunks
+  schedule:
+    cron: "0 4 * * *"
+    timezone: UTC
+  lance_table_format: hnsw_pq
+  table_name: cianfhoghlaim.ciancheiltis.en_ga_eu_chunks
+  languages:
+    - en
+    - ga
+  minority_languages:
+    - ga
+  depts:
+    - legislation
+    - policy_consultations
+    - education
+    - healthcare
+    - language_bodies
+    - terminology
+    - courts
+    - institutions
+  source_asset: 1_ingestion/ciancheiltis/en_ga_eu
+  source_tables:
+    - cianfhoghlaim.ciancheiltis.en_ga_eu_legislation
+    - cianfhoghlaim.ciancheiltis.en_ga_eu_policy_consultations
+    - cianfhoghlaim.ciancheiltis.en_ga_eu_education
+    - cianfhoghlaim.ciancheiltis.en_ga_eu_healthcare
+    - cianfhoghlaim.ciancheiltis.en_ga_eu_language_bodies
+    - cianfhoghlaim.ciancheiltis.en_ga_eu_terminology
+    - cianfhoghlaim.ciancheiltis.en_ga_eu_courts
+    - cianfhoghlaim.ciancheiltis.en_ga_eu_institutions
+  tags:
+    - ciancheiltis
+    - en-ga-eu
+    - phase-6
+    - final-phase
+    - cocoindex-v1
+    - embedding
+    - bilingual
+    - european-union
+  metadata:
+    openspec_change: 2026-09-06-ciancheiltis-v1
+    spec: ciancheiltis
+    phase: en_ga_eu
+    is_final_phase: true
+    lance_uri: lancedb://md:cianfhoghlaim/ciancheiltis/en_ga_eu_chunks
+    embedding_dim: 1024
+    embedder: BAAI/bge-m3
+    embedder_kind: dense
+    expected_total_documents: 500
+    notes: |
+      Phase 6 (en-ga-eu) CocoIndex v1 App for the ciancheiltis
+      umbrella. Mirrors the 8 EU public-sector themes into a single
+      `lancedb://md:cianfhoghlaim/ciancheiltis/en_ga_eu_chunks`
+      LanceDB table (MotherDuck federated, per the BIEP LanceDB
+      convention). The App module
+      (`cocoindex_flows.british_isles.uk.ciancheiltis_en_ga_eu_embedding`)
+      MUST satisfy R1-R4 — the `cocoindex_v1_conformance` App runs at
+      scaffold time and gates the dagster:dev launch.
+
+      The canonical bilingual reference is
+      `https://eur-lex.europa.eu/legal-content/GA/TXT/?uri=CELEX:12012E`
+      — the Irish-language edition of the Treaty on European Union
+      (Lisbon 2012, CELEX 12012E). Irish (Gaeilge) is a treaty
+      language under Article 55 TEU + Council Regulation No 1/1958,
+      and a full official EU language since Council Decision (EU)
+      2020/2172 took effect on 2022-01-01. The `cognee_dataset`
+      schema uses `minority_languages: [ga]` (mirroring Phase 2 +
+      Phase 3's `[ga]`). The `BAAI/bge-m3` 1024-d embedder handles
+      `en` + `ga` natively per the R2 conformance contract.
+
+      Phase 6 is the FINAL phase of the 6-phase ciancheiltis spine
+      (en_cy, en_ga_roi, en_ga_ni, en_gd, en_gv, en_ga_eu). Phase 6
+      is partial-coverage: many EU documents exist only in English
+      plus a "summary in Irish" rather than a full Irish translation.
+      The Phase 6 schema captures the `language_availability` axis
+      as a first-class column. The 500-pair gate is therefore
+      ASPIRATIONAL — operators should interpret a Phase 6 pair count
+      below 500 as a Phase 6 CHARACTERISTIC, not a regression.

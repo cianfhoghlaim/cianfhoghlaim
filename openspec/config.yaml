@@ -1,0 +1,6 @@
+schema: spec-driven
+created: 2026-09-02
+purpose: >
+  OpenSpec root configuration for the cianfhoghlaim monorepo.
+  Single workflow schema (spec-driven) is in use; the new
+  openspec 1.11 doctor root-health check requires this file.
