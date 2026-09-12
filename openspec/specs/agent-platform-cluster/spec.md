@@ -31,7 +31,9 @@ substrate. The cluster is the canonical home for every agent in the
 fleet; the user contract is "if it touches an LLM, it goes through
 LiteLLM; if it remembers, it goes through Cognee + Graphiti; if it
 observes, it goes through Langfuse + Logfire + MLflow".
+
 ## Requirements
+
 ### Requirement: 8-stack cluster deployed together
 
 The system SHALL provide 8 Docker Compose stacks that deploy as a
@@ -505,7 +507,7 @@ copying, rehydrating, or shadowing them in its own config volume.
 #### Scenario: Existing sessions are visible through OpenChamber
 
 - **WHEN** the host OpenCode server has an existing session for
-  `/Users/cianmacandeisigh/dev/kings_college_galway`
+  `/Users/cianmacandeisigh/dev/cianfhoghlaim`
 - **THEN** OpenChamber can list and reopen that session through the external
   server
 - **AND** the session resolves to the identical absolute repository path
@@ -517,6 +519,17 @@ copying, rehydrating, or shadowing them in its own config volume.
   statuses through the external server
 - **AND** no MCP credential or configuration is duplicated into the
   OpenChamber-owned persistent volume
+
+#### Scenario: Legacy KCG session paths are not consulted
+
+- **WHEN** the legacy `/Users/cianmacandeisigh/dev/kings_college_galway`
+  directory no longer exists on the host (per the
+  `2026-09-12-kcg-legacy-folder-retirement-v1` archive)
+- **THEN** the host OpenCode server SHALL NOT report sessions whose
+  project path is `/Users/cianmacandeisigh/dev/kings_college_galway`
+- **AND** OpenChamber session listings SHALL contain only sessions whose
+  project path lives under `/Users/cianmacandeisigh/dev/cianfhoghlaim`
+  (or other live repositories on the host)
 
 ### Requirement: Agent-surface parity verification
 
