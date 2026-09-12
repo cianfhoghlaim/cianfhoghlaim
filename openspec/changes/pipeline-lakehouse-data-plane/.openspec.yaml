@@ -1,0 +1,10 @@
+schema: spec-driven
+created: 2026-09-02
+goal: >
+  Bundles the lakehouse unified data plane + bonneagar infra
+  remediation v3 changes under one topic batch so the lakehouse
+  + IaC surfaces ship as one milestone.
+affected_areas:
+  - bonneagar
+  - lakehouse
+skip_specs: true

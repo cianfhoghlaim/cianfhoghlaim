@@ -1,0 +1,12 @@
+schema: spec-driven
+created: 2026-09-12
+goal: >
+  Resolve the 5 deeper content overlaps between oideachais-* /
+  cianfhoghlaim-* spec pairs and between british-isles-education-pipeline
+  / british-isles-education-pipeline-v3, by picking the canonical owner,
+  consolidating unique content from the losing side into the canonical
+  via MODIFIED Requirements, and converting each losing spec to a
+  single-requirement retirement marker.
+affected_areas:
+  - openspec-specs
+retire_capabilities: true

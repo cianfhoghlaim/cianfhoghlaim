@@ -1,0 +1,10 @@
+schema: spec-driven
+created: 2026-09-02
+goal: >
+  Bundles the BAML extraction completion + CopilotKit action wiring
+  changes under one topic batch so the BAML client + action layer
+  ships as one milestone.
+affected_areas:
+  - baml_src
+  - agents
+skip_specs: true

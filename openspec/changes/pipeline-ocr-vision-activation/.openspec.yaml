@@ -1,0 +1,11 @@
+schema: spec-driven
+created: 2026-09-02
+goal: >
+  Bundles the 3 OCR/vision activation changes (ocr-vision-activation
+  + ocr-vision-activation-completion + unsloth-v5 vision LLM Hermes
+  OpenClaw OpenCode Marimo integration) under one topic batch so the
+  vision stack ships as a coordinated milestone.
+affected_areas:
+  - meaisinfhoghlaim
+  - models
+skip_specs: true

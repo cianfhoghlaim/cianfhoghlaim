@@ -1,0 +1,10 @@
+schema: spec-driven
+created: 2026-09-02
+goal: >
+  Bundles the web monorepo consolidation + agent integration change
+  (162 tasks) as the canonical web/Apps batch — the largest single
+  in-flight change in the registry.
+affected_areas:
+  - web
+  - agents
+skip_specs: true

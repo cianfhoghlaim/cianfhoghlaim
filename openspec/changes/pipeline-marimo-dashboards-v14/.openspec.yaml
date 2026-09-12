@@ -1,0 +1,11 @@
+schema: spec-driven
+created: 2026-09-02
+goal: >
+  Bundles the 4 Marimo v14 dashboard consolidation changes
+  (tier3-grouped + sync-health + ireland-england-dashboards +
+  cascading-effects-verification) under one topic batch so the
+  Marimo v14 surface ships as one dashboard milestone.
+affected_areas:
+  - notebooks
+  - marimo
+skip_specs: true
