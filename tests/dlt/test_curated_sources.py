@@ -142,3 +142,41 @@ def test_write_disposition_replace_audit() -> None:
             f"already handled the defi/crypto + statistics + language categories. "
             f"Check what's left."
         )
+
+
+def test_dlt_cli_available() -> None:
+    """The dlt CLI is available with the [hub] extra installed (dlt 1.29+)."""
+    import subprocess
+
+    result = subprocess.run(
+        [".venv/bin/dlt", "--version"],
+        capture_output=True, text=True,
+        cwd=str(REPO_ROOT),
+        timeout=10,
+    )
+    assert result.returncode == 0, (
+        f"Phase 1 DLT audit: dlt CLI not available. "
+        f"stderr: {result.stderr}"
+    )
+    # dlt 1.29+ should report its version
+    assert "dlt" in result.stdout.lower() or "1." in result.stdout, (
+        f"Phase 1 DLT audit: unexpected dlt --version output: {result.stdout}"
+    )
+
+
+def test_dlthub_cli_available() -> None:
+    """The dlthub CLI is available (the new 'dlt ai' since 1.27)."""
+    import subprocess
+
+    result = subprocess.run(
+        [".venv/bin/dlthub", "--version"],
+        capture_output=True, text=True,
+        cwd=str(REPO_ROOT),
+        timeout=10,
+    )
+    # dlthub CLI may print to stderr
+    out = (result.stdout + result.stderr).lower()
+    assert result.returncode == 0 or "dlthub" in out, (
+        f"Phase 1 DLT audit: dlthub CLI not available. "
+        f"stdout: {result.stdout}, stderr: {result.stderr}"
+    )

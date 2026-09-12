@@ -479,7 +479,7 @@ dependencies = [
     { name = "dagster" },
     { name = "dagster-dbt" },
     { name = "dagster-dlt" },
-    { name = "dlt", extra = ["duckdb", "filesystem", "motherduck"] },
+    { name = "dlt", extra = ["duckdb", "filesystem", "hub", "motherduck"] },
     { name = "duckdb" },
     { name = "fastapi" },
     { name = "firecrawl" },
@@ -517,7 +517,7 @@ requires-dist = [
     { name = "dagster", specifier = ">=1.13" },
     { name = "dagster-dbt", specifier = ">=0.29" },
     { name = "dagster-dlt", specifier = ">=0.29" },
-    { name = "dlt", extras = ["duckdb", "motherduck", "filesystem"], specifier = ">=1.28.1" },
+    { name = "dlt", extras = ["duckdb", "motherduck", "filesystem", "hub"], specifier = ">=1.28.1" },
     { name = "duckdb", specifier = ">=1.4" },
     { name = "fastapi", specifier = ">=0.115.0,<0.140" },
     { name = "firecrawl", specifier = ">=4.28.2" },
@@ -612,6 +612,30 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/84/1b/1ecdd371fa68839cfbda15cc671d0f6c92d2c42688df995a9bf6e36f3511/coloredlogs-14.0.tar.gz", hash = "sha256:a1fab193d2053aa6c0a97608c4342d031f1f93a3d1218432c59322441d31a505", size = 275863, upload-time = "2020-02-16T20:51:12.172Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/5c/2f/12747be360d6dea432e7b5dfae3419132cb008535cfe614af73b9ce2643b/coloredlogs-14.0-py2.py3-none-any.whl", hash = "sha256:346f58aad6afd48444c2468618623638dadab76e4e70d5e10822676f2d32226a", size = 43888, upload-time = "2020-02-16T20:51:09.712Z" },
+]
+
+[[package]]
+name = "cron-descriptor"
+version = "2.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/91/75/b44b05ae7d1e49b59a27a917c44e04ce9aa4cebdd05dac42ba7df06a91b4/cron_descriptor-2.1.0.tar.gz", hash = "sha256:ecddb8b2f6c5286398949aaefe185364666af74f33b01877c61378e1fd4e38e6", size = 50221, upload-time = "2026-06-02T16:26:28.223Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0d/41/c476c41cb88dbbba83e0685dd331b9d32599f1e4a94ca223b02437a3d83b/cron_descriptor-2.1.0-py3-none-any.whl", hash = "sha256:e280efae0e375e2cbc62846f833888f12c7921d2d11ab0dca598f94c51af8639", size = 74734, upload-time = "2026-06-02T16:26:26.919Z" },
+]
+
+[[package]]
+name = "croniter"
+version = "6.2.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "python-dateutil" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/37/57/2e2a65aee2a70483cb28e2b7e15a072d00a523207593b44400d4717bb100/croniter-6.2.4.tar.gz", hash = "sha256:fc124f751b1b04805c2a04b061898b436b45ab2320b045e1e052ea895de65189", size = 166267, upload-time = "2026-07-10T09:52:59.955Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/cd/ba/d678e5bd329646ca51d3c92addbc77804e86d21f4b6b6a027218e6abb010/croniter-6.2.4-py3-none-any.whl", hash = "sha256:8ef3d544107a5c05a150a2d78f8bf5a8eb9c5c4d93405a736b824109574e3f4d", size = 46677, upload-time = "2026-07-10T09:52:58.425Z" },
 ]
 
 [[package]]
@@ -983,9 +1007,42 @@ filesystem = [
     { name = "botocore" },
     { name = "s3fs" },
 ]
+hub = [
+    { name = "dlthub" },
+    { name = "dlthub-client" },
+]
 motherduck = [
     { name = "duckdb" },
     { name = "pyarrow" },
+]
+
+[[package]]
+name = "dlthub"
+version = "0.29.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/7c/58/155eeebd831c402127289ff6d97dcb0e7cf0072c753470098e71b46952e8/dlthub-0.29.0.tar.gz", hash = "sha256:60e514446747d6e7a9005e74a71b2ccfa3759ba822af7515a40ac34b0afd47f2", size = 170583, upload-time = "2026-07-10T13:21:28.316Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/45/89/6daedf3a2d78324ae153d4b23307663d01e06439679dd6e2015bf15af799/dlthub-0.29.0-py3-none-any.whl", hash = "sha256:1f96df548d290bd62712eeaa35e8d89bff05ef027b19e31ebb86cab74d21ceb5", size = 227905, upload-time = "2026-07-10T13:21:29.786Z" },
+]
+
+[[package]]
+name = "dlthub-client"
+version = "0.28.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "attrs" },
+    { name = "cron-descriptor" },
+    { name = "croniter" },
+    { name = "httpx" },
+    { name = "pathspec" },
+    { name = "pyjwt" },
+    { name = "regex" },
+    { name = "tabulate" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e3/ce/e8822974df965645a159fce5a4abca37164ef9ca6d5cc2fbd697978b1bc0/dlthub_client-0.28.4.tar.gz", hash = "sha256:f0a38268cc8690bb97d733ee5e1981c60521d14bc737472287e01d2c18b1666a", size = 303781, upload-time = "2026-09-10T12:19:38.372Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/80/05/409b5539a5e46cd3e32e2f3d037ae7457f5c60a1f294ff68fae9553dec70/dlthub_client-0.28.4-py3-none-any.whl", hash = "sha256:2bab5cb34d9ff692f0789be639aa2d5f21ffd80139109440db2a04f17ce9bb31", size = 678866, upload-time = "2026-09-10T12:19:36.98Z" },
 ]
 
 [[package]]
@@ -3788,7 +3845,7 @@ name = "pyzmq"
 version = "27.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "cffi", marker = "implementation_name == 'pypy' and sys_platform != 'emscripten'" },
+    { name = "cffi", marker = "implementation_name == 'pypy'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/04/0b/3c9baedbdf613ecaa7aa07027780b8867f57b6293b6ee50de316c9f3222b/pyzmq-27.1.0.tar.gz", hash = "sha256:ac0765e3d44455adb6ddbf4417dcce460fc40a05978c08efdf2948072f6db540", size = 281750, upload-time = "2025-09-08T23:10:18.157Z" }
 wheels = [
