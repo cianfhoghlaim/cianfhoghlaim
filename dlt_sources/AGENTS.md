@@ -21,6 +21,12 @@
 uv run python -m dlt_sources.cli run-pipeline <name>     # Run a curated source by name
 uv run python -m dlt_sources.cli list-sources            # List the 22 curated sources
 
+# dlt 1.29+ extras (installed via dlt[hub] — see pyproject.toml)
+.venv/bin/dlt --version                                   # dlt 1.29.1
+.venv/bin/dlt dashboard                                    # local pipeline browser UI
+.venv/bin/dlt pipeline <name> show                        # show pipeline state
+.venv/bin/dlthub ai                                       # AI assistant for pipeline dev (replaces 'dlt ai' from 1.27+)
+
 # The Ireland BIEP v3 generic pipeline (the canonical reference)
 python -c "from dlt_sources.british_isles.ireland.education.ireland_jurisdiction_pipeline import ireland_jurisdiction_pipeline; print(ireland_jurisdiction_pipeline.jurisdiction)"
 # -> ireland
@@ -29,6 +35,26 @@ python -c "from dlt_sources.british_isles.ireland.education.ireland_jurisdiction
 python -c "from dlt_sources.british_isles._cross.registry_loader import seed_registry; print(type(seed_registry()))"
 # -> <class 'function'>
 ```
+
+### Per-source migration guide (write_disposition='replace' → refresh='drop')
+
+Per dlt 1.28+ deprecation, `write_disposition='replace'` is deprecated.
+The 29 sources migrated in the Phase 1 audit (commit 67658e329) were all
+safe-to-drop categories:
+
+| Category | Example sources | Action |
+|----------|----------------|--------|
+| **Pure lookups** | `github_repos`, `defi/binance`, `defi/coingecko` | `replace` → `refresh="drop"` (safe — fully reconstructable) |
+| **Statistics** | `cso_*`, `geohive`, `met_office`, `simd`, `nisra` | `refresh="drop"` (safe — read-only public data) |
+| **Filesystem sources** | `gemini_corpus_source`, `leaving_cert_source`, `portfolio/source` | `refresh="drop"` (re-reads local files) |
+| **Language databases** | `logainm`, `gaois`, `ainm`, `canuint_dialect_summary` | `refresh="drop"` (lookup tables) |
+| **Education source discovery** | `england_a_level_sources`, `england_gcse_sources`, `ncca_root_pdfs` | `refresh="drop"` (catalog data) |
+| **Scotland benchmarking** | `insight_benchmarking` (`measures`) | `refresh="drop"` (lookup data) |
+| **Time-series incrementals** | (none in our 29 batch) | Keep `merge` with primary key — do NOT switch |
+| **Append-only event logs** | (none in our 29 batch) | Keep `append` — do NOT switch |
+
+Test audit: `tests/dlt/test_curated_sources.py::test_write_disposition_replace_audit`
+verifies no new `replace` patterns leak in (currently passes; was xfail).
 
 ### Priority compose stacks
 
