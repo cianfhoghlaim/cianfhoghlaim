@@ -252,7 +252,7 @@ def _scrape_subject_page(
         samples_dir_roots = [
             Path("/stedding/ingest_queue"),
             Path(__file__).parent.parent.parent.parent.parent / "stedding" / "ingest_queue",
-            Path("/Users/cianmacandeisigh/dev/kings_college_galway/stedding/ingest_queue"),
+            Path(os.environ.get("BIEP_SAMPLES_DIR", "/Users/cianmacandeisigh/dev/cianfhoghlaim/stedding/ingest_queue")),
         ]
         for samples_dir in samples_dir_roots:
             if samples_dir.exists():

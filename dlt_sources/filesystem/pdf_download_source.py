@@ -66,7 +66,7 @@ GARAGE_PDF_PREFIX = "leaving_cert"
 _CIANFHOGHLAIM_ROOT = Path(
     os.environ.get(
         "CIANFHOGHLAIM_ROOT",
-        "/Users/cianmacandeisigh/dev/kings_college_galway/cianfhoghlaim",
+        "/Users/cianmacandeisigh/dev/cianfhoghlaim",
     )
 )
 _LOCAL_PDF_CACHE = _CIANFHOGHLAIM_ROOT / "leaving_certificate"

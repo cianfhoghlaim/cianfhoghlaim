@@ -16,7 +16,7 @@ it returns a `suggested_fix` field with a machine-readable remediation
 — this is the self-heal mechanism.
 
 References:
-  - /Users/cianmacandeisigh/dev/kings_college_galway/.agents/skills/mcp-apps-builder/SKILL.md
+  - /Users/cianmacandeisigh/dev/cianfhoghlaim/.agents/skills/mcp-apps-builder/SKILL.md
   - .agents/skills/copilotkit/skills/a2ui-renderer/SKILL.md
   - cianfhoghlaim/web/apps/cianfhoghlaim-leaving-cert/apps/web/src/styles/tokens.css
   - cianfhoghlaim/web/apps/cianfhoghlaim-leaving-cert/apps/web/src/styles/tokens.schema.json

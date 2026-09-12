@@ -136,7 +136,7 @@ def make_a_level_resource(board: str):
             Path(
                 os.environ.get(
                     "STEDDING_INGEST_QUEUE",
-                    "/Users/cianmacandeisigh/dev/kings_college_galway/stedding/site_scrape_samples",
+                    "/Users/cianmacandeisigh/dev/cianfhoghlaim/stedding/site_scrape_samples",
                 )
             )
             / "england"

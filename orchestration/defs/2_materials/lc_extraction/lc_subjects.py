@@ -100,7 +100,7 @@ def _resolve_pdf_paths(subject: str) -> list[str]:
     cache_root = Path(
         os.environ.get(
             "STEDDING_INGEST_QUEUE",
-            "/Users/cianmacandeisigh/dev/kings_college_galway/stedding/site_scrape_samples",
+            "/Users/cianmacandeisigh/dev/cianfhoghlaim/stedding/site_scrape_samples",
         )
     )
     subj_dir = cache_root / "lc" / subject
@@ -249,7 +249,7 @@ def lc_subject_pilot_factory(subject: str) -> tuple[Any, ...]:
         # The loading step is delegated to scripts/load_lc_chemistry_pilot.py
         # (canonical pattern from the chemistry pilot)
         script = (
-            "/Users/cianmacandeisigh/dev/kings_college_galway/"
+            "/Users/cianmacandeisigh/dev/cianfhoghlaim/"
             "scripts/load_lc_chemistry_pilot.py"
         )
         if not os.path.exists(script):
@@ -261,7 +261,7 @@ def lc_subject_pilot_factory(subject: str) -> tuple[Any, ...]:
         try:
             result = subprocess.run(
                 [
-                    "/Users/cianmacandeisigh/dev/kings_college_galway/.venv/bin/python3",
+                    "/Users/cianmacandeisigh/dev/cianfhoghlaim/.venv/bin/python3",
                     script,
                     "--subject",
                     subject,

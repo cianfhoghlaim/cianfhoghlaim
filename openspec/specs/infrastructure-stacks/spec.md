@@ -2705,6 +2705,48 @@ crash-looped the container before the `2026-07-29` fix).
 - **THEN** the lint allows them (they're per-model, not the
   router-level crash-loop risk)
 
+### Requirement: Canonical host-path indirection for live code
+
+All cianfhoghlaim live code (DLT sources, Dagster assets, IaC bootstrap,
+web app lineage registries, CocoIndex v1 Apps, MCP servers) that needs to
+reference the host repository's local filesystem SHALL express that path
+as `/Users/cianmacandeisigh/dev/cianfhoghlaim`, never as the legacy
+`/Users/cianmacandeisigh/dev/kings_college_galway`. Python files that
+expose a `samples_dir` to ingestion pipelines SHALL additionally honour
+the `BIEP_SAMPLES_DIR` environment variable (per
+`AGENTS.md §2. Respect the Ingestion Cache`) so CI / dev can override
+without code changes.
+
+#### Scenario: A DLT source's samples_dir resolves post-KCG-retirement
+
+- **WHEN** any DLT source in `dlt_sources/` declares a `samples_dir` or
+  `samples_root` pointing at the legacy KCG path
+- **THEN** the live code reads its path from
+  `/Users/cianmacandeisigh/dev/cianfhoghlaim/...` (or the
+  `BIEP_SAMPLES_DIR` env override)
+- **AND** the `FileNotFoundError` that would otherwise surface after
+  `/Users/cianmacandeisigh/dev/kings_college_galway/` is deleted
+  (per the `2026-09-12-kcg-legacy-folder-retirement-v1` archive)
+  never occurs
+
+#### Scenario: IaC bootstrap finds the bonneagar/ tree post-retirement
+
+- **WHEN** an operator runs `iac:bootstrap` (the 8-phase state machine
+  that walks `bonneagar/stacks/<name>/`)
+- **THEN** the bootstrap script `cd`s into
+  `/Users/cianmacandeisigh/dev/cianfhoghlaim/bonneagar/stacks/<name>/`
+  rather than the deleted KCG path
+- **AND** the iac:health check that follows the bootstrap can locate
+  `/Users/cianmacandeisigh/dev/cianfhoghlaim/bonneagar/`
+
+#### Scenario: Leaving Cert lineage-registry resolves real PDFs
+
+- **WHEN** the TanStack Start web app reads the `pdf_path` field of any
+  entry in `web/apps/cianfhoghlaim-leaving-cert/apps/web/src/lib/lineage-registry.ts`
+- **THEN** every `pdf_path` points to an existing file under
+  `/Users/cianmacandeisigh/dev/cianfhoghlaim/leaving_certificate/`
+  (the canonical PDF home, not the deleted KCG directory)
+
 ## Infrastructure (Control Plane) Stacks
 
 | Stack | Image(s) | Key Ports |

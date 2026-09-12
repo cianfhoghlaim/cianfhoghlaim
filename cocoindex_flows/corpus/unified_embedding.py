@@ -119,7 +119,7 @@ TOP_K = 10
 # that default but parameterises the connection + query.
 DEFAULT_DUCKDB_CONNECTION = os.getenv(
     "UNIFIED_DUCKDB_CONNECTION",
-    "duckdb:/Users/cianmacandeisigh/dev/kings_college_galway/crypteolas/storage/data/ducklake.ducklake",
+    "duckdb:/Users/cianmacandeisigh/dev/cianfhoghlaim/crypteolas/storage/data/ducklake.ducklake",
 )
 DEFAULT_DUCKDB_QUERY = os.getenv(
     "UNIFIED_DUCKDB_QUERY",

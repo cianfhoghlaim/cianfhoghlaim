@@ -89,7 +89,7 @@ def _crawl_source(
     if not samples_dir.exists():
         samples_dir = Path(__file__).parent.parent.parent.parent.parent.parent / "stedding" / "ingest_queue"
         if not samples_dir.exists():
-            samples_dir = Path("/Users/cianmacandeisigh/dev/kings_college_galway/stedding/ingest_queue")
+            samples_dir = Path(os.environ.get("BIEP_SAMPLES_DIR", "/Users/cianmacandeisigh/dev/cianfhoghlaim/stedding/ingest_queue"))
 
     parsed_url = urlparse(base_url)
     domain = parsed_url.netloc.replace("www.", "")
