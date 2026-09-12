@@ -143,7 +143,7 @@ docker logs traefik --tail 100
 docker exec crowdsec cscli decisions list
 
 # Check Pangolin health
-curl -I https://pangolin.cianfhoglam.ie/api/v1/
+curl -I https://pangolin.cianfhoghlaim.ie/api/v1/
 ```
 
 ## Operational Runbook
@@ -178,7 +178,7 @@ curl -I https://pangolin.cianfhoglam.ie/api/v1/
 - `stacks/pangolin/` — the 6-file GOLD_STANDARD stack
 - `stacks/olm-arm1-oci/` — the OLM TCP tunnel client
   (moved from `pangolin/olm-oracle/` in v5)
-- `SECRETS-MANAGEMENT.md` — the Infisial + Locket + mise
+- `SECRETS-MANAGEMENT.md` — the Infisical + Locket + mise
   3-way contract
 - `DEPLOYMENT-STRATEGY.md` — the 2-host topology
   (`arm1-oci` + `bunchloch`)

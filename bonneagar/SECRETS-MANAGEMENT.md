@@ -135,7 +135,7 @@ Reference format: `{{ infisical://vault/item/field }}`
 
 3. **Enter the directory** (triggers automatic injection):
    ```bash
-   cd /Users/cliste/dev/cianfhoghlaim
+   cd /Users/cianmacandeisigh/dev/cianfhoghlaim
    ```
 
 4. **Verify secrets are loaded**:
@@ -240,6 +240,6 @@ source .env
 - **Pangolin**: Service mesh with SSO-protected secret access
 
 See also:
-- `bonneagar/uirlisí/op/` - Infisical server setup
-- `bonneagar/uirlisí/locket/` - Locket sidecar documentation
+- `bonneagar/stacks/infisical/` - Infisical server setup
+- `bonneagar/locket-shim/` - Locket sidecar documentation
 - `meaisínfhoghlaim/models/secrets/` - LiteLLM secrets templates
