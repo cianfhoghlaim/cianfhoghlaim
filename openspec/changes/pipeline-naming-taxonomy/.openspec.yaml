@@ -1,0 +1,12 @@
+schema: spec-driven
+created: 2026-09-02
+goal: >
+  Establish the canonical naming law for pipeline identifiers,
+  directory structure, and deprecation-shim lifecycle across
+  dlt_sources/, orchestration/, and cocoindex_flows/, so future
+  pipelines are added consistently and existing drift has a
+  documented target to converge on.
+affected_areas:
+  - dlt_sources
+  - orchestration
+  - cocoindex_flows
