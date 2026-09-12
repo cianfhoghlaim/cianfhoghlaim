@@ -1,6 +1,6 @@
 ---
 name: dlt
-description: Master routing skill for data load tool (dlt 1.28.1, June 2026). Use this to understand dlt rules, decide which sub-skill to invoke, and apply the Cianfhoghlaim dlt conventions (DuckLake/DuckDB destination, USE_LOCAL_SCRAPES offline fallback, relative imports only, type-safe BAML-driven pipelines, multi-destination fan-out to LanceDB / Memgraph / Graphiti, and Dagster dlt_assets wrapping). Powers the British-Isles Education pipeline (6 LC subjects + gov.ie circulars). Notes the 1.27 `dlt[hub]` plugin split and the 1.28 `refresh` > `replace` deprecation.
+description: Master routing skill for data load tool (dlt 1.29.1, September 2026). Use this to understand dlt rules, decide which sub-skill to invoke, and apply the Cianfhoghlaim dlt conventions (DuckLake/DuckDB destination, USE_LOCAL_SCRAPES offline fallback, relative imports only, type-safe BAML-driven pipelines, multi-destination fan-out to LanceDB / Memgraph / Graphiti, and Dagster dlt_assets wrapping). Powers the British-Isles Education pipeline (6 LC subjects + gov.ie circulars). Notes the 1.27 `dlt[hub]` plugin split, the 1.28 `refresh` > `replace` deprecation, and the 1.29 Polars / Lance REST additions.
 ---
 
 # DLT Master Router & Rules (Cianfhoghlaim)
@@ -9,29 +9,31 @@ You are operating within the `cianfhoghlaim` stack which uses `dlt`
 (data load tool) for extracting and loading data. This skill is the
 **router + decision tree + project rules** for all dlt operations.
 
-## 1.1 Live version (verified 2026-06-29)
+## 1.1 Live version (verified 2026-09-03)
 
-- **Latest**: `dlt 1.28.1` (released **Jun 19, 2026**) on PyPI.
+- **Latest**: `dlt 1.29.1` (released **Sep 2026**) on PyPI.
 - **Python**: `requires-python = ">=3.10, <3.15"` — Python 3.9 dropped in
   1.28.1; Python 3.14 supported (experimental).
 - **Source count**: **8,000+ sources** (was 5,000+ in Wave 1).
 - **Yanked**: 1.27.0 and 1.27.1 — data-loss bug ("incremental merge
   truncates destination table"). Pin `dlt>=1.27.2,<1.28` if you must, or
-  upgrade to 1.28.1.
+  upgrade to 1.28.1+.
 - **CLI split (1.27.0)**: `pip install dlt[hub]` is now required for
   `dlt dashboard`, `dlt pipeline ... show`, `dlt pipeline ... mcp`. `dlt ai`
   is now `dlthub ai`.
 - **`refresh` > `replace` (1.28.0)**: the `replace` write-disposition
   switch is deprecated; use the `refresh` parameter instead.
+  **Status 2026-09**: ~50+ of our sources still use `replace` and need migration.
 - **Lance destination (1.25.0)** + **Lance REST Namespace (1.27.0)**: a
   `lance` destination now exists alongside `lancedb` — use the former
   for local/S3/Az/GCS Lance files, the latter for LanceDB Cloud.
 - **Native Polars (1.27.0)**: `@dlt.resource` can yield Polars DataFrame
-  or LazyFrame directly (auto-routed through Arrow).
+  or LazyFrame directly (auto-routed through Arrow). **Status 2026-09**: not adopted in any of our 22 curated sources.
 - **Databricks Zerobus (1.27.0)**: `databricks_adapter(...,
-  insert_api="zerobus")`.
+  insert_api="zerobus")`. (Out of scope — no Databricks usage.)
 - **`dlt.Relation.join(...)` (1.26.0)** and **`dlt.current.interval()`
   (1.26.0)** for relational composition and time-windowed incrementals.
+  **Status 2026-09**: neither pattern adopted.
 
 ## 1. Project rules (PRESERVED from the original skill, with one fix)
 
@@ -71,6 +73,29 @@ When assuming the `data-engineer` persona, use these rules:
 - **Ingestion cache** (per project AGENTS.md): Test with
   `USE_LOCAL_SCRAPES=true` before live web scraping to avoid API
   rate limits.
+- **Write disposition migration (dlt ≥ 1.28)**: `replace` is deprecated;
+  use the `refresh=` parameter. For per-source migration, prefer the
+  **`refresh="drop"`** semantic for full reload and **`refresh="merge"`**
+  for upsert-style flows. See "Per-source migration guide" below.
+- **`dlt[hub]` plugin (dlt ≥ 1.27)**: install via
+  `dlt[duckdb,motherduck,filesystem,hub]` to enable `dlt dashboard`,
+  `dlt pipeline ... show`, `dlt pipeline ... mcp`, and `dlthub ai`.
+  See D1 below for whether to add `hub` to our deps.
+- **Verified sources (dlt ≥ 1.28)**: for any new source not in the 22
+  curated set, prefer `dlt init <verified-source>` over hand-writing.
+  See https://dlthub.com/docs/dlt-ecosystem/verified-sources for the
+  current 8,000+ catalog (Stripe, Notion, Salesforce, HubSpot, MongoDB,
+  Kafka, Slack, Postgres replication, etc.).
+- **Per-source migration guide** (the 50+ sources still using `replace`):
+  - **Pure lookups** (e.g. `github_repos`): `replace` → `refresh="drop"`.
+    Drop-and-recreate is safe because the data is fully reconstructable.
+  - **Time-series + incremental** (e.g. `spotify_api`, `soundcloud_scraper`):
+    keep using `merge` with a primary key; do NOT switch to `refresh`.
+  - **Append-only event logs** (e.g. `leabharlann_email_inbox`):
+    keep `append` — these are exactly what `replace`/`refresh` should
+    NOT be used on.
+  - The defi/crypto sources (`binance`, `coinbase`, `okx`, etc.)
+    are pure lookups → safe to `refresh="drop"`.
 
 ## 2. Decision tree → sub-skill or reference
 
