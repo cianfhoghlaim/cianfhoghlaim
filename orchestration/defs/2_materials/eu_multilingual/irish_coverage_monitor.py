@@ -2,7 +2,7 @@
 
 from datetime import UTC, datetime
 
-import dlt_sources
+import dlt
 from dagster import AssetExecutionContext, asset
 
 
