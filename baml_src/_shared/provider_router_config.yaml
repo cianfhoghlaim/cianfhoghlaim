@@ -1,0 +1,101 @@
+# CIANCHOSAINT per-deployment ModelProviderRouter config.
+#
+# Per the openspec/changes/cianchosaint-provider-router-v1/spec.md,
+# Requirement: Per-deployment config (YAML-driven).
+#
+# Mirrors the cianchosaint-deployment deployment-choice.yaml pattern:
+# - provider_order: the priority order of the 4 providers
+# - provider_overrides: per-provider base_url / model / timeout / enabled
+# - per_force_overrides: per UK force (force_id from
+#   met_police_extraction.baml) provider + model preferences
+# - per_jurisdiction_overrides: per jurisdiction (from the BAML
+#   enums) provider + model preferences
+#
+# The router (baml_src/_shared/provider_router.py) loads this file at
+# instantiation time. If the file is missing, the router falls back
+# to the env-var chain (UNSLOTH_STUDIO_BASE_URL, LITELLM_BASE_URL,
+# MINIMAX_BASE_URL, GEMINI_BASE_URL).
+#
+# All `api_key` fields are intentionally left empty here — they MUST
+# be resolved at runtime via the mise directory hooks from the
+# Infisical `dev-baile` vault (per the cianchosaint secrets contract).
+#
+# Licence: BUSL-1.1 (per LICENSE.md)
+
+provider_order:
+  - unsloth_studio
+  - litellm
+  - minimax_token_plan
+  - gemini_api
+
+provider_overrides:
+  unsloth_studio:
+    base_url: http://unsloth-serve:8889/api/v1
+    model: minimax-m3
+    timeout_seconds: 30.0
+    enabled: true
+  litellm:
+    base_url: https://litellm.cianchosaint.ie
+    model: minimax-m3
+    timeout_seconds: 30.0
+    enabled: true
+  minimax_token_plan:
+    base_url: https://api.minimax.io/v1
+    model: minimax-m3
+    timeout_seconds: 30.0
+    enabled: true
+  gemini_api:
+    base_url: https://generativelanguage.googleapis.com/v1beta
+    model: gemini-2.5-pro
+    timeout_seconds: 30.0
+    enabled: true
+
+# Per-force overrides for the UK 43 forces via data.police.uk.
+# Keyed by force_id from the met_police_extraction.baml schema.
+# E.g. the Metropolitan Police prefers minimal cost (Tier 1), but
+# the National Crime Agency prefers higher-accuracy (Tier 2 LiteLLM
+# routes to a hosted higher-accuracy model).
+per_force_overrides:
+  metropolitan:
+    preferred_tier: unsloth_studio
+    timeout_seconds: 20.0
+  city_of_london:
+    preferred_tier: unsloth_studio
+    timeout_seconds: 20.0
+  nca_national_crime_agency:
+    preferred_tier: litellm
+    timeout_seconds: 60.0
+
+# Per-jurisdiction overrides (the 8 British Isles jurisdictions from
+# the BAML enums: UK, IRELAND, NI, SCOTLAND, WALES, JERSEY, GUERNSEY, IOM).
+# The Crown Dependencies (JERSEY, GUERNSEY, IOM) prefer Gemmini
+# because they're outside the EU/EEA primary LLM routing.
+per_jurisdiction_overrides:
+  UK:
+    preferred_tier: unsloth_studio
+  IRELAND:
+    preferred_tier: litellm
+  NI:
+    preferred_tier: litellm
+  SCOTLAND:
+    preferred_tier: litellm
+  WALES:
+    preferred_tier: litellm
+  JERSEY:
+    preferred_tier: gemini_api
+  GUERNSEY:
+    preferred_tier: gemini_api
+  IOM:
+    preferred_tier: gemini_api
+
+# Conservative posture (per LICENSE.md + the cianchosaint-bootstrap-v2 spec)
+# - The 4-tier chain is the only source of truth. Adding a 5th provider
+#   requires a separate openspec change.
+# - API keys are resolved at runtime via the Infisical `dev-baile` vault.
+# - The router NEVER bypasses the circuit-breaker (3-strike + 60s reset).
+# - The router NEVER logs the API key to the Langfuse span attributes.
+conservative_posture:
+  enabled: true
+  licence_posture: BUSL-1.1_v2_British_Isles_only
+  osint_ceiling_enforced: true
+  analyst_review_required: true
