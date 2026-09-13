@@ -1,43 +1,41 @@
-## 1. Highest priority — silent data-loss bug (do first, independent of everything else)
+# Tasks: pipeline-naming-taxonomy
 
-- [ ] 1.1 Fix `cocoindex_flows/european_nations_cross/law_embedding.py`'s `SOURCE_DIR = pathlib.Path("dlt/european_nations")` to point at the correct post-v7 path (`dlt_sources/european_nations`); verify by confirming the glob under the corrected path returns non-empty results for at least one known-present source file
+> Canonical data-platform naming law.
+> In-progress (1/17). Established by the `pipeline-naming-taxonomy`
+> proposal as the umbrella for all rename work.
 
-## 2. Resume any in-flight renames (do not duplicate)
+## 1. Establishing the naming law (in progress)
 
-- [ ] 2.1 For each in-flight rename change tracked in `openspec/changes/`, confirm its task list conforms to this change's naming-law spec; resume execution there rather than here
+- [x] **N1.1** Write the proposal + this tasks.md (done)
+- [x] **N1.2** Verify `design.md` (cross-references the 2026-08-27 kcg-rename commit sequence)
+- [ ] **N1.3** Add `openspec/specs/pipeline-naming-taxonomy/spec.md` with the full 17 Requirements
 
-## 3. `official_media/` duplicate-directory cleanup
+## 2. Five naming-law Requirements (R1–R5)
 
-- [ ] 3.1 For each of the 6 old-flat directories (`sct`, `wls`, `ggy`, `iom`, `jsy`, `companies_house`), grep the codebase for imports of the old path; produce a per-directory "imported: yes/no" table
-- [ ] 3.2 Delete each confirmed-dead old directory, or add a dated `LEGACY_ALIASES.md` entry (per Requirement "Deprecation shims declare an expiry date") for each still-imported one; verify `dlt_sources/official_media/` contains no directory present in both old-flat and new-grouped form
+- [ ] **N2.1** R1: Canonical BIEP spelling (`biep`, NOT `biiep`/`bie`)
+- [ ] **N2.2** R2: `pipeline_name=` template (`<domain>_<source>_pipeline`) — add a `linter` script that fails CI if a string literal violates the template
+- [ ] **N2.3** R3: `orchestration/defs/` vs `orchestration/pipelines/` two-tree split — add a `validate-tree-split.sh` script
+- [ ] **N2.4** R4: Deprecation-shim expiry policy (dated, not indefinite — add `SHIM_EXPIRY=` env var + a 90-day reminder cron)
+- [ ] **N2.5** R5: Sibling-sprawl nesting threshold (max 3 levels deep per cohort) — add `lsp.check-sibling-depth` CI gate
 
-## 4. BIEP/BIIEP/BIE spelling unification
+## 3. Apply the law to the 7 high-volume surfaces
 
-- [ ] 4.1 Rename the file containing the literal `biiep_ocr_ensemble` (verify exact path via `rg -l "biiep_ocr_ensemble"`); verify all importers are updated and tests still pass
-- [ ] 4.2 Add the lint rule for `\\bbiiep\\b`/`\\bbie-` outside `openspec/changes/archive/`; verify it fails on a deliberately-introduced test occurrence and passes once removed
+- [ ] **N3.1** `dlt_sources/**/` — adopt canonical `pipeline_name=` for every `pipeline.build_pipeline_resource()` (currently 30+ un-normalised literals)
+- [ ] **N3.2** `orchestration/defs/` — apply the defs vs pipelines split (currently mixing the two in `defs/`)
+- [ ] **N3.3** `cocoindex_flows/` — adopt canonical flow name template
+- [ ] **N3.4** `baml_src/` — apply canonical client-name template
+- [ ] **N3.5** `agents/adk/` — apply canonical agent-name template (per the `sister-shared` contract)
+- [ ] **N3.6** `mise.toml` — apply canonical task-name template
+- [ ] **N3.7** `openspec/specs/` — apply canonical spec-name template
 
-## 5. Sibling-sprawl nesting (3+ threshold, per this change's spec)
+## 4. Verification
 
-- [ ] 5.1 Nest `crypteolas_*` siblings under `crypteolas/` if 3+ exist; verify import paths updated and tests pass
-- [ ] 5.2 Nest `media_*` siblings under `media/` if 3+ exist; verify import paths updated and tests pass
-- [ ] 5.3 Resolve `artwork`, `labels`, `portfolio` — nest under `cv/` or a new `portfolio/` parent (decide during execution); verify no remaining references to the retired path
+- [ ] Run `openspec validate pipeline-naming-taxonomy --strict` — pass
+- [ ] Run `mise run lint:naming-taxonomy` (the new CI gate) — pass
 
-## 6. `pipeline_name=` normalisation
+## Verification
 
-- [ ] 6.1 Locate and rename the pipeline literally named `foo` (`rg -n 'pipeline_name\\s*=\\s*"foo"'`); verify the rename follows the `<domain>_<source>_pipeline` template
-- [ ] 6.2 Merge duplicate `pipeline_name=` pairs into one function; verify no remaining reference to the retired name
-
-## 7. Shim expiry policy
-
-- [ ] 7.1 Add `expires: YYYY-MM-DD` to all current shim entries across `dlt_sources/LEGACY_ALIASES.md` and `cocoindex_flows/LEGACY_ALIASES.md`, dated retroactively from each shim's introducing change (+90 days); verify every entry has the field
-- [ ] 7.2 Add the `mise run lint:expired-shims` gate; verify it fails against a deliberately-backdated test entry
-
-## 8. Lower priority — scripts/ triage and test renaming (opportunistic)
-
-- [ ] 8.1 Triage the flat `scripts/` directory into `scripts/{sync,lint,ops,cognee,migrations}/`; verify `mise run` tasks referencing script paths still resolve
-- [ ] 8.2 Rename `tests/test_phase{2,7,11..22}_*.py` by behaviour instead of session phase, opportunistically when next touching each file; verify test collection still finds the renamed file
-
-## 9. Verification
-
-- [x] 9.1 Run `openspec validate pipeline-naming-taxonomy --strict`; verify it passes (verified 2026-09-12)
-- [ ] 9.2 Run `openspec status pipeline-naming-taxonomy`; verify all 4 artifacts report done
+```bash
+cd ~/dev/cianchosaint-laim 2>/dev/null || cd ~/dev/cianchoshlaim
+openspec validate pipeline-naming-taxonomy --strict
+```

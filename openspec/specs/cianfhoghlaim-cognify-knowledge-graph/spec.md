@@ -21,7 +21,9 @@ cognify with 3 datasets), with deterministic cross-archive edge
 population in FalkorDB. The full 133-line `knowledge-graph` spec is
 subsumed by this spec; the 36-line `leabharlann-cognify-and-cross-archive-edges`
 spec is also subsumed.
+
 ## Requirements
+
 ### Requirement: 5-stage cross-stage knowledge graph
 
 The system SHALL build a 5-stage curriculum knowledge graph with 8
@@ -192,6 +194,19 @@ only sees valid records.
   and skipped — it is NEVER fed to `cognee.add(...)`
 - **AND** the cognify dataset is guaranteed to contain only
   eval-passing records
+
+### Requirement: Bilingual GA↔EN cross-stage BAML extraction SHALL be added
+
+`baml_src/british_isles/ireland/education/_cross/cross_linguistic.baml` SHALL add `ExtractBilingualLearningOutcome(en_text, ga_text) -> BilingualLearningOutcome` and `ExtractCrossLinguisticGA(ga_text) -> CrossLinguisticConcept` functions with real prompts.
+
+**WHEN** `b.ExtractBilingualLearningOutcome(en_text=..., ga_text=...)` is called with paired LC English + Irish syllabus text
+**THEN** it SHALL return `{en_lo_id, ga_lo_id, confidence, source_pairs: [(en_segment, ga_segment)]}`
+
+#### Scenario: Bilingual pair extracted from LC English + Irish chemistry syllabus
+
+- **WHEN** the operator runs `b.ExtractBilingualLearningOutcome(en_text=english_chem_syllabus, ga_text=irish_chem_syllabus)`
+- **THEN** the function returns `{en_lo_id: "LC-CHEM-LO-023", ga_lo_id: "LC-CEM-LO-023", confidence: 0.92, source_pairs: [...]}`
+- **AND** the result lands in `md:cianfhoghlaim.bilingual_los` table for downstream Graphiti episodes
 
 ## Cross-references
 

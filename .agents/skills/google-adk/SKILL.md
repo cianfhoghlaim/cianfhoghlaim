@@ -1,11 +1,35 @@
 ---
 name: google-adk
 description: Expert assistance for building AI agents with Google's Agent Development Kit. Use when users need multi-agent coordination via the Multi-Agent Workflow Engine + NodeRunner, Native Inter-Agent Routing (v2.1+), the A2A Protocol for cross-agent communication, neuro-symbolic OWL truth-anchoring, or production deployment to Agent Engine. KCG-specific: agent chain is OCR → BAML → embedding → Graphiti → RAGAS.
+
+
+## ⚠️ CURRENT STATUS (2026-09-13, Plan 6 audit)
+
+- **Installed**: `google-adk==1.17.0` (PyPI)
+  - **Major version drift**: skill says ≥2.1.0 but actual is 1.17.0
+  - 1.x is the canonical ADK line (the skill numbering was wrong)
+- **12 ADK-related Python files** under `agents/meaisinfhoghlaim/`
+  - `educational/`: 4 agents (celtic_grammar_agent, celtic_morphology_agent, academic_history_agent, media_descriptor)
+  - `firecrawl_mcp/`: 1 client + corpus + memory (the 12-tool Firecrawl wrapper)
+  - `media_intel/`: 2 agents
+- **Graceful BAML degradation**: every agent has `try: from baml_client import b` +
+  fallback path (per the Plan 2 BAML blocker)
+- **Agent fleet orchestration**: 14 agents in the registry per the
+  `agent-fleet-orchestration` skill (was 12, now 14 per Plan 76 skill update)
+- **A2A Protocol**: agents expose `/.well-known/agent.json` Agent Cards
+
+### ADK 1.17.0 features we may not be using
+
+- **Agent Engine deployment**: `make deploy` to managed Agent Engine
+- **OpenTelemetry-native observability**: always-on Cloud Trace
+- **A2A JSON-RPC 2.0 over SSE**: standard agent-to-agent messaging
+
+These are NOT yet used in our agent fleet — adoption deferred.
 ---
 
 # Google ADK - Agent Development Kit
 
-**Version:** >=2.1.0 | **Last Updated:** 2026-06
+**Version:** >=1.17.0 | **Last Updated:** 2026-09-13
 
 ## Overview
 

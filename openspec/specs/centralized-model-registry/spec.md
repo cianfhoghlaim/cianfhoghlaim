@@ -2,7 +2,9 @@
 
 ## Purpose
 TBD - created by archiving change 2026-08-15-centralized-model-schema-registry-and-deployment-control-panel-v1. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Single canonical model registry covering all model families
 
 The system SHALL provide a single canonical `MODEL_REGISTRY` dict at
@@ -372,3 +374,268 @@ model string that is not routed through `MODEL_REGISTRY`.
 - **THEN** `mise run lint:registry` exits 1 with
   `path/to/file.py:<line>: 'qwen3-coder-plus' — route through MODEL_REGISTRY`
 
+### Requirement: Bilingual GA↔EN cross-stage BAML extraction SHALL be added
+
+`baml_src/british_isles/ireland/education/_cross/cross_linguistic.baml` SHALL add `ExtractBilingualLearningOutcome(en_text, ga_text) -> BilingualLearningOutcome` and `ExtractCrossLinguisticGA(ga_text) -> CrossLinguisticConcept` functions with real prompts.
+
+**WHEN** `b.ExtractBilingualLearningOutcome(en_text=..., ga_text=...)` is called with paired LC English + Irish syllabus text
+**THEN** it SHALL return `{en_lo_id, ga_lo_id, confidence, source_pairs: [(en_segment, ga_segment)]}`
+
+#### Scenario: Bilingual pair extracted from LC English + Irish chemistry syllabus
+
+- **WHEN** the operator runs `b.ExtractBilingualLearningOutcome(en_text=english_chem_syllabus, ga_text=irish_chem_syllabus)`
+- **THEN** the function returns `{en_lo_id: "LC-CHEM-LO-023", ga_lo_id: "LC-CEM-LO-023", confidence: 0.92, source_pairs: [...]}`
+- **AND** the result lands in `md:cianfhoghlaim.bilingual_los` table for downstream Graphiti episodes
+
+### Requirement: Cross-stage cognify SHALL create 8 cross-stage edges
+
+The `cross_stage_cognify` asset SHALL execute the 8 hand-coded `EDGE_DEFINITIONS`:
+- `AistearPrinciple-BRIDGES_TO->PrimaryLearningOutcome`
+- `PrimaryLearningOutcome-PREPARES_FOR->JCLearningOutcome`
+- `JCLearningOutcome-PROGRESSES_TO->SCLearningOutcome`
+- `SCLearningOutcome-ASSESSED_BY->ExamQuestion`
+- `LCSubject-REQUIRED_FOR->CAOCourse`
+- `CAOCourse-DELIVERS->Programme`
+- `QQIFetAward-LADDERS_INTO->CAOCourse`
+- `Apprenticeship-ALTERNATIVE_TO->CAOCourse`
+
+**WHEN** all 5 stage cognify assets complete successfully
+**THEN** cross-stage cognify SHALL iterate the 8 EDGE_DEFINITIONS and call BAML `ExtractCrossStageLink(a, b)` to score each pair
+**AND** write edges to Cognee dataset `cianfhoghlaim.education.cross_stage` where the BAML score >= 0.5
+
+#### Scenario: AistearPrinciple bridges to PrimaryLearningOutcome via BAML scoring
+
+- **WHEN** the cross-stage cognify runs after `aistear_cognify` + `primary_cognify` complete
+- **THEN** for each pair (AistearPrinciple, PrimaryLearningOutcome), `ExtractCrossStageLink(principle, lo)` returns a score
+- **AND** if score >= 0.5, a `BRIDGES_TO` edge is written to the cross_stage dataset
+
+### Requirement: Cross-qualification map SHALL be backed by Cognee
+
+The 30 hard-coded equivalences in `meaisinfhoghlaim/alignment/cross_qualification_subject_map.py:81-120` SHALL be migrated to a Cognee dataset `british_isles_equivalences` with provenance from `baml_src/british_isles/_cross/isles_education.baml`. New equivalences SHALL be added for: Scotland Nat 5/Higher/Adv Higher (3), Wales WJEC (1), Northern Ireland CCEA (1), Jersey/Guernsey/Isle of Man (3) — total 38 equivalences.
+
+**WHEN** `CrossJurisdictionDiffer.diff(qual_a, jur_a, qual_b, jur_b)` is called
+**THEN** it SHALL query Cognee for the matching equivalence edge
+**AND** return the alignment percentage + provenance link to the source BAML extraction
+
+#### Scenario: Ireland chemistry ↔ England chemistry returns 0.80 alignment
+
+- **WHEN** `CrossJurisdictionDiffer.diff("lc", "ireland", "gcse", "england", subject="chemistry")` is called
+- **THEN** it queries the Cognee `british_isles_equivalences` dataset for the matching edge
+- **AND** returns `{alignment_pct: 0.80, equivalence_id: "lc_chem_gcse_chem_01", notes: "LC is broader"}`
+
+### Requirement: 9 cognee_ingest scripts SHALL be wired as Dagster sensors
+
+Each of `cognee_ingest_{docs,dlt_sources,baml_schemas,skills,agent_definitions,openspec,stacks_catalog,notebooks}.py` SHALL be wrapped as a `@sensor` in `orchestration/defs/3_model_lifecycle/cognify/sensors/` watching the relevant root directory.
+
+**WHEN** any file in `baml_src/*.baml` changes
+**THEN** the `cognee_ingest_baml_schemas` sensor SHALL trigger a re-cognify into the `baml_schemas` Cognee dataset
+
+#### Scenario: New BAML function triggers re-cognify
+
+- **WHEN** an operator adds a new `@function` to `baml_src/british_isles/ireland/education/stages/aistear.baml`
+- **THEN** the `baml_schemas_sensor` fires within 60s
+- **AND** `cognee_ingest_baml_schemas.py` runs against the new schema
+- **AND** the `baml_schemas` Cognee dataset is updated
+
+### Requirement: ocr_vision family SHALL be exposed with full pipeline documentation in centralized-registry §11
+
+The `centralized-registry` skill MUST add a `## 11. OCR/VLM
+Pipeline` section (after the existing `## 10. The 6
+follow-up issues`) that documents the full OCR/VLM surface
+for the Cianfhoghlaim platform — at minimum:
+
+1. The 22-entry `VISION_MODELS` subset view of the
+   `ocr_vision` family in `MODEL_REGISTRY`, with per-entry
+   `key` / `role` / `upstream_id` / `backend`
+2. The 6 `CLASSICAL_OCR` backends in
+   `meaisinfhoghlaim/models/registry.py:CLASSICAL_OCR`
+   (Pylaia + TrOCR + PaddleOCR + Tesseract + dots.ocr + VLM)
+3. The BIEP v2 4-path ensemble (`EnsembledExtractor` —
+   `baml + unstract + qwen3_vl + gemma4`) at
+   `meaisinfhoghlaim/ocr/ensemble/ensembled_extractor.py`,
+   including the RAGAS voting pattern and the
+   `OCR_WEBHOOK_URL` emission pattern
+4. The 7 PDF converters in
+   `meaisinfhoghlaim/document_factory/` (`docling`,
+   `marker`, `unstructured`, `deepseekocr`, `pymupdf4llm`,
+   `curriculum_document`, `pdf_factory`)
+5. The 4 alignment methods in
+   `meaisinfhoghlaim/alignment/aligner.py` (`VecAlign`,
+   `HunAlign`, `GaoisAlign`, `Hybrid`) plus the
+   `ColPaliAligner` for manuscript bbox extraction
+6. The Irish HTR dataset
+   (`meaisinfhoghlaim/datasets/irish_htr_dataset.py`)
+7. The M4-Max dispatch helper
+   (`select_optimal_for_m4_max()`)
+8. The llama-swap GGUF inference path
+   (`meaisinfhoghlaim/models/llama_swap_config.yaml`)
+9. The BAML `baml_src/clients_ocr_ensemble.baml` patterns
+10. The `meaisinfhoghlaim/ocr/` back-compat shim (with
+    `DeprecationWarning` documentation — canonical is
+    `meaisinfhoghlaim.models`)
+
+The §11 entry MUST be the first CCC result for any agent
+query containing "OCR", "VLM", "vision model", or
+"document extraction".
+
+#### Scenario: Agent discovers OCR/VLM surface via §11
+
+- **GIVEN** an agent is asked to add or modify an OCR model
+  in the Cianfhoghlaim platform
+- **WHEN** the agent runs
+  `bun run ccc:search "OCR VLM pipeline"` or
+  `bun run ccc:search "vision model selection"`
+- **THEN** the first CCC result MUST be the
+  `centralized-registry` §11 entry
+- **AND** §11 MUST include the 22-entry `VISION_MODELS`
+  table with `key` / `role` / `upstream_id` / `backend`
+  columns
+- **AND** §11 MUST include a code sample for the 4-path
+  ensemble `EnsembledExtractor` invocation
+- **AND** §11 MUST cross-reference
+  `meaisinfhoghlaim/README.md` for the deeper sub-package
+  docs
+- **AND** §11 MUST document the `meaisinfhoghlaim/ocr/`
+  back-compat shim `DeprecationWarning` and point at
+  `meaisinfhoghlaim.models` as canonical
+
+#### Scenario: Agent uses §11 to pick an OCR model for a new jurisdiction
+
+- **GIVEN** an agent is adding a new BIEP v3 jurisdiction
+  pipeline and needs to pick an OCR model
+- **WHEN** the agent reads §11 to choose a model
+- **THEN** §11 MUST group the 22 `VISION_MODELS` entries
+  by role (`default` / `irish` / `bilingual` /
+  `scanned_manuscript` / `diagram` / `dense_ocr`)
+- **AND** §11 MUST show the M4-Max dispatch helper code
+  with a sample invocation returning the recommended
+  model for the M4-Max 64GB workload
+- **AND** §11 MUST reference
+  `meaisinfhoghlaim/models/llama_swap_config.yaml` for
+  the local inference configuration
+- **AND** §11 MUST reference
+  `baml_src/clients_ocr_ensemble.baml` for the
+  ensemble client pattern
+
+### Requirement: dlt_sources/DATA_PLATFORM_ROUTER.md SHALL exist as the single router for the 5 per-area AGENTS.md files
+
+A `DATA_PLATFORM_ROUTER.md` file at `dlt_sources/` MUST
+serve as the single router for the Cianfhoghlaim data
+platform surface. It MUST link to each of the 5 canonical
+per-area docs (`dlt_sources/AGENTS.md`, `baml_src/AGENTS.md`,
+`cocoindex/AGENTS.md`, `orchestration/AGENTS.md`,
+`meaisinfhoghlaim/README.md`) and document the 6 critical
+conventions:
+
+1. Always use relative imports within sub-packages
+2. Respect the ingestion cache (`USE_LOCAL_SCRAPES=true`)
+3. Zero absolute namespaces in data pipelines
+4. R1-R4 CocoIndex conformance
+5. MODEL_REGISTRY-only (no hardcoded model strings)
+6. Factory pattern for N nearly-identical Apps
+
+The router MUST be co-located with the per-area `AGENTS.md`
+files (at `dlt_sources/DATA_PLATFORM_ROUTER.md`), NOT in
+`.agents/skills/`, so it does not inflate the top-level
+skill count.
+
+Each of the 5 per-area docs MUST contain a cross-link back
+to `DATA_PLATFORM_ROUTER.md` (verified via
+`grep -l "DATA_PLATFORM_ROUTER" <5 files>` returning 5
+matches).
+
+#### Scenario: New agent discovers the data platform surface via the router
+
+- **GIVEN** a new agent is asked to add a DLT source for a
+  new British Isles education jurisdiction
+- **WHEN** the agent searches for "data platform" or
+  reads `dlt_sources/AGENTS.md`
+- **THEN** the agent finds a link to
+  `DATA_PLATFORM_ROUTER.md`
+- **AND** the router points at the 5 per-area docs and the
+  6 critical conventions
+- **AND** the router includes a "I want to add X, where do
+  I go?" routing table that the agent can use to find the
+  correct sub-package for the task
+
+#### Scenario: Per-area docs cross-link the router
+
+- **GIVEN** the `DATA_PLATFORM_ROUTER.md` file exists at
+  `dlt_sources/DATA_PLATFORM_ROUTER.md`
+- **WHEN** an operator runs
+  `grep -l "DATA_PLATFORM_ROUTER" dlt_sources/AGENTS.md baml_src/AGENTS.md cocoindex/AGENTS.md orchestration/AGENTS.md meaisinfhoghlaim/README.md`
+- **THEN** the command returns 5 matches (one per per-area
+  doc)
+- **AND** each per-area doc has a
+  `## Data platform router` section with a 1-line link to
+  the router file
+
+### Requirement: INDEXING_AND_COGNITION.md §10 SHALL resolve the ccc CLI vs codebase_indexing v1 App split
+
+The `.agents/skills/INDEXING_AND_COGNITION.md` skill MUST
+add a `## 10. Code-search canonical entrypoint` section
+(after the existing `## 9. The cianfhoghlaim v4
+consolidation`) that provides a single decision matrix
+resolving the dual CLI vs v1 App vs graph companion split.
+
+The matrix MUST list at least these 3 surfaces:
+
+1. **CLI** — `bun run ccc:search "<query>"`
+   (kept for developer shortcuts; the `ccc` skill carries
+   the DEPRECATION NOTICE banner)
+2. **Python v1 App** —
+   `from cocoindex.codebase_indexing import code_search`
+   (the canonical replacement for `ccc search`)
+3. **Graph companion** —
+   `search_code_graph(file_path=..., node_type=...)`
+   (the 7-node / 7-edge code graph; 7 node types: File,
+   Function, Class, Method, Module, Interface, Variable;
+   7 edge types: CONTAINS, IMPORTS, CALLS, EXTENDS,
+   IMPLEMENTS, USES, DEFINES)
+
+Plus the 4 infrastructure companions:
+`search_api_endpoints`, `search_filesystem`,
+`search_storage`, `search_config`.
+
+#### Scenario: Agent picks the right code-search surface for the task
+
+- **GIVEN** an agent needs to find a specific function in
+  the codebase
+- **WHEN** the agent reads `INDEXING_AND_COGNITION.md §10`
+- **THEN** the matrix MUST recommend the v1 App
+  (`code_search(...)`) for pipelines and ad-hoc Python
+  use, the CLI (`ccc search`) for one-off terminal
+  searches, and the graph companion
+  (`search_code_graph(...)`) for code-structure queries
+  (e.g. "what calls function X?")
+- **AND** the matrix MUST cross-reference
+  `cocoindex/AGENTS.md` for the v1 App canonical pattern
+- **AND** the matrix MUST cross-reference
+  `.agents/skills/ccc/SKILL.md` for the CLI surface
+  (with the DEPRECATION NOTICE context)
+
+### Requirement: cocoindex_query_api integration helper
+
+The system SHALL provide a `cocoindex_query_api` integration helper at
+`cocoindex/_shared/cocoindex_query_api.py` that exposes every
+CocoIndex App as a `search(query, top_k=5) -> List[Chunk]` Python
+closure. The closure wraps `lancedb.Table.search` with the canonical
+`BAAI/bge-m3` embedder.
+
+The helper replaces the 47 ad-hoc `lancedb.connect(CIANFHOGHLAIM_LANCEDB_URL)`
+calls scattered across notebooks, agents, and web apps.
+
+#### Scenario: Every CocoIndex App exposes a search closure
+
+- **GIVEN** the 47 BIEP CocoIndex Apps + the 4 infrastructure CocoIndex Apps (upstream_blog_monitor, upstream_api_surface, docs_skills_consolidation, codebase_indexing)
+- **WHEN** the operator runs `python -c "from cocoindex._shared.cocoindex_query_api import get_search; print(get_search('ireland_lc_mathematics_embedding'))"`
+- **THEN** the helper returns a callable that runs the canonical
+  LanceDB query against the BIEP v3 table
+  `cianhoghlaim.education.ireland.lc.mathematics.chunks`
+
+#### Scenario: All 47 ad-hoc lancedb.connect calls are replaced
+
+- **WHEN** `mise run lint:cocoindex-query-api-coverage` runs
+- **THEN** all 47 ad-hoc `lancedb.connect(...)` calls MUST be replaced
+  with `from cocoindex._shared.cocoindex_query_api import get_search`
+- **AND** the lint returns `OK: 47/47 connect calls replaced`

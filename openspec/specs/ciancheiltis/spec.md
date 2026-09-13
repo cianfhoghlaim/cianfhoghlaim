@@ -255,3 +255,10 @@ shared `dlt_sources/common/` helpers.
 
 The system MUST NOT mark a phase complete based on URL count alone —
 RAGAS bilingual-pair coverage is the canonical completion gate.
+
+
+#### Scenario: DO NOT clauses are enforced at lint time
+
+- **WHEN** an agent adds a new DLT source or CocoIndex flow
+- **THEN** the linter MUST verify that none of the DO NOT clauses are violated
+- **AND** MUST fail CI if any are violated

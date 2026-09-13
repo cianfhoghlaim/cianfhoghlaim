@@ -2747,6 +2747,217 @@ without code changes.
   `/Users/cianmacandeisigh/dev/cianfhoghlaim/leaving_certificate/`
   (the canonical PDF home, not the deleted KCG directory)
 
+### Requirement: litellm + llama-swap redeployed + GGUF-loaded before BIEP v2 OCR runs
+
+The system SHALL ensure that the litellm proxy
+(`http://litellm:4000/v1`) is running with the canonical
+`router_settings.fallbacks` config (a list of dicts, not a bare
+list of model names — the litellm v1.84+ validation requirement),
+AND that the llama-swap container is running with the 17 GGUF model
+weights loaded into `stedding/huggingface/gguf/`, BEFORE any Dagster
+asset in the `2_materials_curriculum_biiep_ensemble` group is
+materialised. A `mise run lint:biiep-v2-orchestration-readiness`
+CI gate SHALL fail the build if either condition is not met.
+
+#### Scenario: All 4 paths of the BIEP v2 ensemble reach their backend
+
+- **GIVEN** the litellm proxy is redeployed + llama-swap has the
+  GGUF weights loaded
+- **WHEN** `EnsembledExtractor.extract(pdf_path=...)` runs
+- **THEN** the 4 paths (BAML → docling-serve, Unstract → unstract-api,
+  qwen3_vl → litellm → llama-swap → qwen3-vl-8b, gemma4 →
+  litellm → llama-swap → gemma-4-26B-A4B) all reach their backend
+  endpoints
+- **AND** no path's HTTP response is a 404 (the silent-failure mode
+  caused by the litellm model alias mismatch)
+
+#### Scenario: RAGAS-voted canonical row lands in ocr_results
+
+- **GIVEN** the litellm + llama-swap readiness is verified
+- **WHEN** `python scripts/run_biiep_ocr_ensemble.py --pdf
+  <chemistry_syllabus.pdf>` runs
+- **THEN** the function returns
+  `{"voted_path": "baml|unstract|qwen3_vl|gemma4", "ragas_score": >= 0.70, ...}`
+- **AND** 1 canonical row is written to
+  `md:cianfhoghlaim.ocr_results` per PDF
+- **AND** the canonical row's `model` field matches the model used
+  by the voted path
+
+#### Scenario: GGUF-weight download script is idempotent
+
+- **GIVEN** a partial `stedding/huggingface/gguf/` directory (some
+  weights already downloaded)
+- **WHEN** `python scripts/download_gguf_weights.py` runs
+- **THEN** the script skips files that already exist (no re-download)
+- **AND** downloads the missing weights only
+- **AND** exits 0 when all 17 GGUF files are present
+
+### Requirement: Resource-sync repo-namespace consistency
+
+The system SHALL ensure that every Komodo resource-sync TOML file at
+`bonneagar/komodo/resource-syncs/*.toml` declares the same `repo =`
+value. The canonical repo SHALL be `cianfhoghlaim/bonneagar` (the
+post-2026-07-17 v7-flatten canonical Git namespace). A
+`mise run lint:komodo:resource-sync-repo-consistency` CI gate SHALL
+fail the build if any resource-sync's `repo =` value differs from
+`cianfhoghlaim/bonneagar` (or a documented `repo =` exception in
+`openspec/specs/infrastructure-stacks/exceptions.toml`).
+
+#### Scenario: All 4 resource-syncs declare the canonical repo
+
+- **GIVEN** the 4 resource-sync TOML files at
+  `bonneagar/komodo/resource-syncs/{arm1-oci,bunchloch,cross-cutting,storage-infrastructure}.toml`
+- **WHEN** `mise run lint:komodo:resource-sync-repo-consistency` runs
+- **THEN** all 4 files SHALL declare
+  `repo = "cianfhoghlaim/bonneagar"`
+- **AND** the lint passes with 0 errors
+
+#### Scenario: A stale `cliste/bonneagar` reference is caught
+
+- **GIVEN** a developer accidentally changes
+  `bonneagar/komodo/resource-syncs/storage-infrastructure.toml:14`
+  back to `repo = "cliste/bonneagar"` (the pre-v7 GitHub namespace)
+- **WHEN** `mise run lint:komodo:resource-sync-repo-consistency` runs
+- **THEN** the lint fails with
+  `stale_repo_namespace: storage-infrastructure.toml:14 declares
+  'cliste/bonneagar' — must be 'cianfhoghlaim/bonneagar' per the v7
+  flatten (2026-07-17)`
+- **AND** the developer is forced to fix the value before the change
+  can ship
+
+#### Scenario: Storage-infrastructure sync polls the canonical repo
+
+- **GIVEN** `storage-infrastructure.toml` declares
+  `repo = "cianfhoghlaim/bonneagar"`
+- **WHEN** the Komodo Core polls the storage-infrastructure sync
+- **THEN** the sync successfully discovers the latest TOML files at
+  `bonneagar/komodo/{servers,stacks,procedures,actions,resource-syncs}/*.toml`
+  in the canonical repo
+- **AND** newly-added `komodo/stacks/<new>.toml` files are
+  auto-registered within 60s of the next poll cycle
+
+### Requirement: All `*.cianfhoghlaim.ie` hostnames have live Traefik routers + live Pangolin siteResources
+
+The system SHALL ensure that every documented `*.cianfhoghlaim.ie`
+hostname has BOTH:
+1. A live Traefik `router.Rule: Host(...)` entry in
+   `bonneagar/pangolin/config/traefik/traefik_config.yml` that routes
+   to the correct internal service.
+2. A live Pangolin `siteResources` row bound to a live site (not an
+   offline site).
+
+The 17 documented hostnames SHALL include the 10 in scope for this
+change (`litellm`/`langfuse`/`vikunja`/`n8n`/`glance`/`changedetection`/
+`paperless`/`infisical`/`openchamber`/`komodo`) plus the 7
+already-working (e.g. `pangolin`, `marimo`, `dagster`, etc.).
+
+A `mise run lint:edge-tls-coverage` CI gate SHALL fail the build if
+any hostname is missing a Traefik router OR has a Pangolin
+siteResources row bound to an offline site.
+
+#### Scenario: All 10 newly-fixed hostnames pass `check-edge-tls.sh`
+
+- **GIVEN** the 10 hostnames in scope
+- **WHEN** `bash scripts/check-edge-tls.sh --strict --all` runs
+- **THEN** the command exits 0 with each hostname returning
+  `verify return code: 0` (live cert) or a documented graceful
+  offline-site exit
+- **AND** no hostname returns `HTTP 000` (the offline-site bug) or
+  `CN=TRAEFIK DEFAULT CERT` (the missing-router bug)
+
+#### Scenario: `iac:health` reports the edge-tls check
+
+- **GIVEN** the `iac:health` integration is wired
+- **WHEN** `mise run iac:health` runs
+- **THEN** the output includes a new "edge-tls" check status line
+- **AND** if any hostname fails, the health check returns non-zero
+- **AND** the operator sees the failing hostname(s) in the output
+
+#### Scenario: Hourly probe catches future drift
+
+- **GIVEN** the `cron-edge-tls-probe-both.toml` procedure is
+  registered
+- **WHEN** an operator introduces a hostname with a missing Traefik
+  router (the regression scenario)
+- **THEN** within 60 minutes (next probe cycle), the Komodo alert
+  fires
+- **AND** the operator receives a Slack notification (per the
+  existing Komodo alert routing)
+
+#### Scenario: Lint gate catches missing router at CI time
+
+- **GIVEN** a developer adds a new `*.cianfhoghlaim.ie` hostname
+  to a stack's `pangolin.yaml` but forgets to add the matching
+  Traefik router
+- **WHEN** `mise run lint:edge-tls-coverage` runs in CI
+- **THEN** the lint fails with
+  `missing_traefik_router: <hostname> declared in pangolin.yaml but
+  no Host(...) router found in traefik_config.yml`
+- **AND** the developer is forced to add the router before the
+  change can ship
+
+### Requirement: Unified lakehouse data plane (graph DB consolidation)
+
+The lakehouse stack at `bonneagar/stacks/lakehouse/compose.yaml` SHALL
+be the single canonical entry point for the entire data engineering
+pipeline (lakehouse data plane + 5 graph DB backends). The 5 graph DB
+backends (Cognee + Graphiti + FalkorDB + Memgraph + LanceDB Viewer)
+SHALL be defined as services in the SAME `compose.yaml` file — NOT as
+separate stacks under `bonneagar/stacks/<name>/compose.yaml`.
+
+Each graph DB service SHALL:
+- Run on the shared `lakehouse_lakehouse` external network (the same
+  network the existing lakehouse services use)
+- Be resolved by the single Locket sidecar (no separate Locket per graph DB)
+- Use canonical `infisical://dev-baile/<svc>/<key>` URIs for every secret
+- Join the unified `blueprint.yaml` private-resources list
+
+Cognee SHALL use the shared `lakehouse-postgres` at the
+`cognee_cianfhoghlaim` database (created in `init-db.sql`) — NOT a
+dedicated `cognee-postgres` container. FalkorDB SHALL run with
+`--appendonly yes --appendfsync everysec` and
+`FALKORDB_ARGS=THREAD_COUNT 8 CACHE_SIZE 50 TIMEOUT_MAX 60000`.
+
+The 5 deprecated stacks (`cognee/`, `graphiti/`, `falkordb/`,
+`memgraph/`, `lancedb/`) SHALL each carry a 1-line deprecation banner
+at the top of their `compose.yaml` pointing at the unified
+`bonneagar/stacks/lakehouse/` stack. The banner SHALL NOT delete the
+files; deletion is deferred to a follow-up change after one release
+cycle.
+
+#### Scenario: Operator brings up the entire data plane with one command
+
+- **WHEN** `cd bonneagar/stacks/lakehouse && docker compose -f compose.yaml -f sidecar.yaml up -d` runs
+- **THEN** all 16 services come up healthy (11 existing + 5 new graph DB services: cognee + graphiti + falkordb + memgraph + memgraph-lab)
+- **AND** `mise run lakehouse:preflight` reports `9/9` required endpoints healthy + `13/13` databases present + `8/8` buckets present
+
+#### Scenario: Cognee uses shared lakehouse-postgres
+
+- **WHEN** the lakehouse stack deploys
+- **THEN** the `cognee` service connects to `postgres:5432/cognee_cianfhoghlaim` (the shared lakehouse-postgres)
+- **AND** the `cognee-postgres` container does NOT exist in the compose (it's gone — replaced by the shared Postgres)
+- **AND** `COGNEE_POSTGRES_PASSWORD` resolves to the same value as `POSTGRES_PASSWORD` (Locket-resolved)
+
+#### Scenario: FalkorDB persistence + production args
+
+- **WHEN** the lakehouse stack deploys
+- **THEN** the `falkordb` service runs with `--appendonly yes --appendfsync everysec` (AOF persistence enabled)
+- **AND** `FALKORDB_ARGS=THREAD_COUNT 8 CACHE_SIZE 50 TIMEOUT_MAX 60000` is set in the service environment
+- **AND** the vector-search module `vector.so` is loaded via `--loadmodule` (the hybrid query capability is available)
+
+#### Scenario: Deprecated stacks carry banners
+
+- **WHEN** the operator opens `bonneagar/stacks/cognee/compose.yaml`
+- **THEN** the first non-comment line is a 1-line banner pointing at `bonneagar/stacks/lakehouse/`
+- **AND** the banner references `2026-08-15-lakehouse-unified-data-plane-v1`
+- **AND** the banner explicitly says "do NOT deploy this stack — deploy the unified lakehouse instead"
+
+#### Scenario: Komodo bunchloch resource-sync no longer pulls the 5 deprecated stacks
+
+- **WHEN** `bonneagar/komodo/resource-syncs/bunchloch.toml` is read
+- **THEN** the resource_path list does NOT contain references to `cognee-bunchloch.toml` + `graphiti-bunchloch.toml` + `falkordb-bunchloch.toml` + `memgraph-bunchloch.toml` + `lancedb-bunchloch.toml`
+- **AND** the resource_path references `lakehouse-bunchloch.toml` (the single unified entry point)
+
 ## Infrastructure (Control Plane) Stacks
 
 | Stack | Image(s) | Key Ports |

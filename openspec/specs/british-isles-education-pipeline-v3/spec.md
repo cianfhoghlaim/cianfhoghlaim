@@ -639,6 +639,140 @@ real-time.
 - **THEN** the CocoIndex App re-extracts the file within 30 seconds
 - **AND** the lineage metadata reflects the new `extracted_at` timestamp
 
+### Requirement: All 6 LC subjects SHALL have real BAML extraction prompts
+
+`baml_src/british_isles/ireland/education/lc_extraction/{syllabus,exam_paper,marking_scheme,diagram,cross_linguistic}.baml` SHALL have real extraction prompts for all 6 priority subjects: mathematics, applied_mathematics, chemistry, geography, english, gaeilge, computer_science. Each prompt SHALL follow the `{{ _.role("user") }}` + `{{ ctx.output_format }}` marker pattern established in `aistear.baml`.
+
+**WHEN** `b.ExtractCurriculumSyllabus(text=<pdf>, subject="chemistry")` is called
+**THEN** the prompt SHALL extract: `{topics: [{code, title, learning_outcomes: [{code, text, blooms_level}]}], strands: [{name, topics}], assessment_objectives: [...], key_competencies: [...]}`
+
+#### Scenario: Chemistry syllabus extraction returns structured topics + LOs
+
+- **WHEN** `b.ExtractCurriculumSyllabus(text=<chemistry_specification_pdf>, subject="chemistry")` is called
+- **THEN** the result has at least 5 topics with NCCA LO codes (e.g. `LC-CHEM-LO-001`)
+- **AND** each topic has at least 3 learning_outcomes
+- **AND** the JSON is serialisable via `.model_dump_json()`
+
+### Requirement: LC subject pilot factory SHALL scale to all 6 subjects
+
+The `lc_chemistry_pilot_assets.py` template SHALL be refactored into a factory `lc_subject_pilot_factory(subject)` that returns 3 assets + 3 checks per subject. Wire the factory in `orchestration/defs/2_materials/lc_extraction/lc_subjects.py`.
+
+**WHEN** `dagster asset materialize --select lc_*_pilot_loaded` runs
+**THEN** all 6 LC subjects SHALL materialize end-to-end (ingestion → BAML extraction → cross-check → MotherDuck load)
+
+#### Scenario: All 6 LC subjects materialize end-to-end
+
+- **WHEN** the operator runs `dagster asset materialize --select '*_pilot_loaded'`
+- **THEN** 6 subjects × 3 assets = 18 assets complete
+- **AND** each subject's `lc_<subject>_pilot_loaded` writes rows to `md:cianfhoghlaim.cianfhoghlaim.lc_<subject>_<level>_<language>`
+
+### Requirement: Irish-language BAML path SHALL use `uccix-mistral-24b`
+
+For the gaeilge LC subject pilot, the BAML client SHALL switch from `minimax-direct/MiniMax-M3` to `uccix-mistral-24b` (via LiteLLM `irish` alias).
+
+**WHEN** `b.ExtractCurriculumSyllabus(text=<gaeilge_pdf>, subject="gaeilge")` is called
+**THEN** the BAML client SHALL be `baml_src/clients.baml:gaeilge_lc_client` with `provider: litellm`, `model: uccix-mistral-24b`
+
+#### Scenario: Gaeilge LC pilot uses Irish-language model
+
+- **WHEN** the operator runs `dagster asset materialize --select lc_gaeilge_pilot_loaded`
+- **THEN** the BAML calls route through `uccix-mistral-24b` via LiteLLM
+- **AND** the extracted LOs have Irish-language text (not English)
+
+### Requirement: 5-stage cognify graph populated
+
+The system SHALL ensure that the Cognee knowledge graph at
+`md:cianfhoghlaim.cognee_graph` contains nodes for all 5 stages of
+the Irish education system (Aistear, Primary, Junior Cycle, Senior
+Cycle, University). Each stage SHALL have a dedicated
+`orchestration/defs/3_model_lifecycle/cognify/<stage>/defs.yaml` file
+that registers the corresponding `lc5_<stage>_cognified` Dagster
+asset. The cross-stage graph SHALL be wired with 8 BRIDGE edges
+connecting adjacent stages + 38 cross-jurisdiction equivalences
+connecting the Irish 5-stage graph to the England / Scotland / Wales /
+NI graphs.
+
+A `mise run sync:cognee-graph` CI gate SHALL fail the build if any
+of the 5 stage cognify `defs.yaml` files is missing or if
+`SELECT COUNT(*) FROM coggee_graph.nodes WHERE stage IN ('aistear',
+'primary', 'jc', 'sc', 'university')` returns < 1,000.
+
+#### Scenario: All 5 stages have populated cognify assets
+
+- **GIVEN** the 5 cognify stages (Aistear + Primary + JC + SC + University)
+- **WHEN** `dagster asset list | grep cognified` runs
+- **THEN** the command returns 5+ `lc5_<stage>_cognified` assets
+- **AND** `SELECT COUNT(*) FROM cognee_graph.nodes` returns ≥ 1,000
+  real nodes (not stubs)
+
+#### Scenario: 8 BRIDGE cross-stage edges connect adjacent stages
+
+- **GIVEN** the cross-stage cognify graph
+- **WHEN** the 8 BRIDGE edges are added
+- **THEN** the edges connect Aistear ↔ Primary, Primary ↔ JC,
+  JC ↔ SC, SC ↔ University (4 adjacent-stage edges), plus the 4
+  lateral cross-qualification edges (JC ↔ England KS4, SC ↔
+  Scotland Higher, etc.)
+- **AND** `SELECT COUNT(*) FROM cognee_graph.edges WHERE
+  relationship = 'BRIDGE'` returns 8
+
+### Requirement: Bilingual EN+GA extraction uses the Gaeilge client
+
+The system SHALL ensure that all BAML extraction functions whose
+`subject_language == 'GA'` are wired to the `gaeilge_lc_client`
+(defined in `baml_src/clients.baml`) which routes through LiteLLM to
+the `uccix-mistral-24b` model — the platform's only dedicated
+Irish-language model. The `gaeilge_lc_client` block SHALL be the
+canonical BAML client for the 2 Gaeilge functions
+(`ExtractBilingualLearningOutcome`, `ExtractCrossLinguisticGA`).
+
+#### Scenario: A gaeilge syllabus PDF routes through the Gaeilge client
+
+- **GIVEN** a Gaeilge-medium Leaving Certificate syllabus PDF
+- **WHEN** the cognify pipeline ingests it
+- **THEN** the `lc5_gaeilge_cognified` Dagster asset calls
+  `b.ExtractBilingualLearningOutcome` with
+  `subject_language == 'GA'`
+- **AND** the BAML function invocation routes through
+  `gaeilge_lc_client` → litellm → `uccix-mistral-24b`
+- **AND** the response preserves Irish fadas (á, é, í, ó, ú) in the
+  extracted `LearningOutcome.excerpt_ga` field
+
+### Requirement: 4-path OCR ensemble BAML → CocoIndex wire
+
+The system SHALL wire the 4-path OCR ensemble BAML function
+(`Run4PathEnsemble`) into the `ensembled_extraction` CocoIndex App at
+`cocoindex/british_isles/england/education/ensembled_extraction.py`
+using the `spawn` + `await` BAML pattern (BEP-034).
+
+The 4 paths are: BAML (`ExtractAQAQualSpec`) + Unstract
+(`RunUnstractWorkflow`) + qwen3-vl-8b (`ConcurrentRunLLM`) + gemma-4
+(`ExtractGemma4Vision`). Each path runs as a `spawn` block; the
+ensemble uses `catch_all` to degrade gracefully on any single path
+failure.
+
+#### Scenario: The 4-path ensemble runs concurrently with graceful degradation
+
+- **GIVEN** a NCCA PDF for one of the 3 England awarding bodies
+- **WHEN** the `ensembled_extraction` CocoIndex App runs
+- **THEN** the 4 paths run concurrently as `spawn` blocks
+- **AND** any path that fails is caught by `catch_all` and returns a
+  `PathOutput { path: "<name>", schema_valid: false }` (so the
+  ensemble never aborts)
+- **AND** the RAGAS vote (per the existing `EnsembleConsensus`
+  class) selects the best path
+
+#### Scenario: The baml tour notebook demonstrates the 5 lc6 functions
+
+- **GIVEN** the `notebooks/00_baml_tour.py` educative notebook
+- **WHEN** an operator opens the notebook via `marimo edit 00_baml_tour`
+- **THEN** the notebook demonstrates every BAML feature used by the
+  BIEP v3 jurisdiction dashboards (the 5 lc6 functions, the
+  qpack_template, the cross-linguistic concept extraction, the
+  syllabus diagram extraction)
+- **AND** each cell has a `@app.cell(hide_code=True)` prose intro
+  (the E1 pattern from `00_marimo_patterns_tour.py`)
+
 ## Cross-references
 
 - `british-isles-education-pipeline` (v1) — the legacy 6-subject Ireland LC spec
