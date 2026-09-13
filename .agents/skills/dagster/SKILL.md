@@ -4,7 +4,44 @@ description:
   Expert guidance for working with Dagster and the dg CLI. ALWAYS use before doing any task that requires
   knowledge specific to Dagster, or that references assets, materialization, components, data tools or data pipelines.
   Common tasks may include creating a new project, adding new definitions, understanding the current project structure, answering general questions about the codebase (finding asset, schedule, sensor, component or job definitions), debugging issues, or providing deep information about a specific Dagster concept.
-  Drives the British-Isles Education pipeline (42 lc5/lc6 assets = 7 subjects × 6 BAML stages) via `orchestration/defs/2_materials/`.
+  Drives the British-Isles Education pipeline (10 per-jurisdiction asset shims + 1 shared `JurisdictionAssetsBase` + Ireland LC + GC + AI + ...) via `orchestration/defs/2_materials/`. 150 `@asset` + 54 `@asset_check` decorators across 77 .py files.
+
+
+## ⚠️ CURRENT STATUS (2026-09-13, Plan 5 audit)
+
+- **Installed**: `dagster==1.13.17` (PyPI)
+- **150 `@asset` decorators** + **54 `@asset_check` decorators** across 77 .py files
+- **`JurisdictionAssetsBase`** at `orchestration/defs/2_materials/_base/jurisdiction_assets_base.py` (262 LOC) — the canonical shared logic
+- **10 per-jurisdiction shims**: `ireland`, `england`, `scotland`, `wales`, `northern_ireland`, `sct_wls_ni`, `guernsey`, `jersey`, `isle_of_man`, `crown_dependencies`
+- **`build_jurisdiction_assets` factory** (Phase 17.1) is **GONE** (lost in Phase 16-29 disaster)
+  - Per-jurisdiction shims still use the old `JurisdictionAssetsBase` subclass pattern
+  - The factory pattern would reduce 10×43 LOC shims to 10×15 LOC shims
+  - Restoration deferred until Phase 16-29 work is re-applied
+- **dg CLI**: `uv run dagster dev -m orchestration.definitions` for local dev
+- **`dagster-dg-cli`** available for programmatic DAG ops
+
+### Jurisdiction_assets_base architecture
+
+The per-jurisdiction pattern uses a `JurisdictionAssetsBase` ABC:
+```python
+class JurisdictionAssetsBase(ABC):
+    jurisdiction_code: str  # ISO 3166-1 alpha-3 lowercase
+    domain: str              # education | law | medicine | statistics | government
+    supported_languages: tuple[str, ...]
+    @abstractmethod
+    def documents_ingested(self, context): ...
+```
+
+Each shim is a 41-48 LOC subclass. The lost factory would have replaced these
+with thin `build_jurisdiction_assets(config)` calls.
+
+### Dagster 1.13.17 features we may not be using
+
+- **Component YAML loaders** (1.10+) — for component-based scaffolding
+- **Declarative Automation** (1.13+) — for asset materialization policies
+- **Asset versioning** (1.11+) — for tracking asset code changes
+
+These are NOT yet used in our orchestrators — adoption deferred.
 ---
 
 ## Core Dagster Concepts
