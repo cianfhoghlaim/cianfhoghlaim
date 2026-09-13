@@ -23,6 +23,7 @@ from .selfhosted import (
 from .paid import (
     BrowserbaseBackend,
     FirecrawlBackend,
+    GeminiDeepResearchBackend,
     ZAIVisionBackend,
     ZAIMCPClient,
     get_zai_mcp_client,
@@ -43,6 +44,7 @@ __all__ = [
     # Paid backends
     "BrowserbaseBackend",
     "FirecrawlBackend",
+    "GeminiDeepResearchBackend",
     "ZAIVisionBackend",
     "ZAIMCPClient",
     "get_zai_mcp_client",

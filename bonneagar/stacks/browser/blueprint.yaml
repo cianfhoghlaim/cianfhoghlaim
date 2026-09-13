@@ -1,0 +1,22 @@
+# =============================================================================
+# Browser stack — Pangolin root blueprint
+# =============================================================================
+# Per the openspec change `2026-09-06-adk-gemini-deep-research-control-plane-v1`.
+# The browser stack is internal-only (no public Pangolin route); the api
+# service listens on 8003 internally, no host port mapping needed since
+# the upstream reverse-proxy (Pangolin) routes via the internal browser-net.
+
+private-resources:
+  browser-api:
+    name: Cianfhoghlaim Browser Stack API
+    mode: http
+    sites:
+      - bunchloch
+    destination: api
+    destination-port: 8003
+    full-domain: browser.cianfhoghlaim.ie
+    ssl: true
+    scheme: https
+    enabled: true
+    roles:
+      - Member

@@ -99,6 +99,15 @@ The full inventory of 93 stacks is at
 [`bonneagar/AGENTS.md`](bonneagar/AGENTS.md) (the IaC subdirectory
 owns the stack catalogue; see the `## Repo Boundary` section below).
 
+### `~/dev/` working-copy inventory (local-only — gitignored)
+
+Before reaching for `ls ~/dev`, read
+[`stedding/AGENTS_STEDDING.MD`](stedding/AGENTS_STEDDING.MD). That file
+labels every subdirectory under `~/dev/` (active monorepos, hackathon
+trees, sister repos, stedding junkyard, backup snapshots) so an agent
+can pick the right working tree without re-asking. **Local-only — do
+not commit; `stedding/` is gitignored.**
+
 ## Monorepo topology
 
 See [`README.md`](README.md#monorepo-topology-v7--flattened-polyglot)

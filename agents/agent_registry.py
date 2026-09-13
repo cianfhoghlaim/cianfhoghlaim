@@ -43,10 +43,18 @@ logger = logging.getLogger(__name__)
 AGENT_REGISTRY: dict[str, AgentFleetWiring] = {
     "root_agent": AgentFleetWiring(
         agent_name="root_agent",
-        module_slug="root",
-        module_path="cianfhoghlaim.agents.adk.root_agent",
-        framework=AgentFramework.CUSTOM,
-        display_name="Root Agent",
+        module_slug="cian_root",
+        module_path="cianfhoghlaim.agents.adk.cian_root_agent",
+        # Per the openspec change
+        # `2026-09-06-adk-gemini-deep-research-control-plane-v1`,
+        # the root_agent is now an ADK `SequentialAgent` named
+        # `cian_root` (replacing the prior Custom LiteLLM router).
+        # The legacy `agents.adk.root_agent` module remains for
+        # back-compat (imported by `enhanced_orchestrator.py` +
+        # `curriculum_agent.py`); new code SHOULD import from
+        # `agents.adk.cian_root_agent` instead.
+        framework=AgentFramework.ADK,
+        display_name="Cian Root Agent (ADK)",
         baml_prefix="Root",
         langfuse_trace_name="agent.root.route",
         cognee_dataset="oideachais_root",

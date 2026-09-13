@@ -157,7 +157,8 @@ async def research_topic(
 ) -> dict:
     """Research a topic across multiple sources.
 
-    Uses Firecrawl's autonomous research agent.
+    Uses Gemini Deep Research (preferred) or Firecrawl's autonomous
+    research agent as fallback.
 
     Args:
         topic: Research topic or question
@@ -168,6 +169,48 @@ async def research_topic(
     """
     from .gatherer import deep_research
     return await deep_research(topic, max_urls=max_sources)
+
+
+async def deep_research_stream(
+    topic: str,
+    max_sources: int = 10,
+) -> dict:
+    """Stream a Gemini Deep Research session, yielding interactions.
+
+    Used by the AG-UI adapter to stream Deep Research progress
+    to CopilotKit consumers. Per the openspec change
+    `2026-09-06-adk-gemini-deep-research-control-plane-v1`.
+
+    Args:
+        topic: Research topic or question
+        max_sources: Maximum sources to consult
+
+    Returns:
+        Dict with ``interactions``, ``synthesized_report``, and
+        ``backend_used`` keys.
+    """
+    from ..backends import get_router
+    from ..browser_types import BackendType
+
+    router = get_router()
+    gemini_dr = router.get_backend(BackendType.GEMINI_DEEP_RESEARCH)
+    if gemini_dr is None:
+        raise RuntimeError("GeminiDeepResearchBackend not registered with router")
+
+    interactions: list[dict] = []
+    synthesized_chunks: list[str] = []
+    async for event in gemini_dr.stream_interactions(topic, max_urls=max_sources):
+        interactions.append(event)
+        if event.get("kind") == "content_chunk" and event.get("text"):
+            synthesized_chunks.append(event["text"])
+
+    return {
+        "success": True,
+        "topic": topic,
+        "interactions": interactions,
+        "synthesized_report": "".join(synthesized_chunks),
+        "backend_used": BackendType.GEMINI_DEEP_RESEARCH,
+    }
 
 
 async def interactive_browse(
@@ -199,20 +242,25 @@ async def interactive_browse(
 # Create utility tools
 quick_tool = FunctionTool(quick_extract)
 research_tool = FunctionTool(research_topic)
+deep_research_tool = FunctionTool(deep_research_stream)
 interactive_tool = FunctionTool(interactive_browse)
 
 
 # Root agent - main entry point
+# Per the openspec change `2026-09-06-adk-gemini-deep-research-control-plane-v1`,
+# the model is the `minimax` LiteLLM alias (7-tier fallback chain) instead of
+# the hard-coded `gemini-2.0-flash`. The `gemini-deep-research` alias resolves
+# to `gemini-2.5-pro-deep-research` via the canonical LiteLLM config.
 root_agent = LlmAgent(
     name="browser_agent",
-    model="gemini-2.0-flash",
+    model="minimax",
     description="""Intelligent browser automation agent.
 
     Capabilities:
     - Navigate websites with visual understanding
     - Extract content in various formats
     - Handle complex forms and interactions
-    - Research topics across multiple sources
+    - Research topics across multiple sources (Gemini Deep Research preferred)
     - Quality-validated extraction with fallback
 
     Use for:
@@ -231,13 +279,15 @@ root_agent = LlmAgent(
 
     **Quick Tools**:
     - quick_extract: Simple page extraction without navigation
-    - research_topic: Deep research across multiple sources
+    - research_topic: Deep research across multiple sources (prefers Gemini Deep Research)
+    - deep_research_stream: Stream Gemini Deep Research interactions in real time
     - interactive_browse: Execute a sequence of browser actions
 
     **When to use what**:
     - Simple scraping: quick_extract
     - Need to click/fill: browser_pipeline or interactive_browse
     - Research question: research_topic
+    - Streaming research: deep_research_stream
     - Complex multi-page: browser_pipeline
 
     Always report:
@@ -255,6 +305,7 @@ root_agent = LlmAgent(
     tools=[
         quick_tool,
         research_tool,
+        deep_research_tool,
         interactive_tool,
         AgentTool(browser_pipeline),
     ],

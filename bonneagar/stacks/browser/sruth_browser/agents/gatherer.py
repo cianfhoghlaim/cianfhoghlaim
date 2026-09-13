@@ -223,7 +223,10 @@ async def deep_research(
 ) -> dict:
     """Perform deep research on a topic across multiple sources.
 
-    Uses Firecrawl's /agent endpoint for autonomous research.
+    Per the openspec change
+    `2026-09-06-adk-gemini-deep-research-control-plane-v1`, this prefers
+    the Gemini Deep Research API over Firecrawl for cross-source synthesis.
+    Falls back to Firecrawl /agent, then Skyvern.
 
     Args:
         topic: Research topic or question
@@ -235,7 +238,16 @@ async def deep_research(
     """
     router = get_router()
 
-    # Prefer Firecrawl for research
+    # Prefer Gemini Deep Research (top priority per BACKEND_PRIORITY)
+    gemini_dr = router.get_backend(BackendType.GEMINI_DEEP_RESEARCH)
+    if gemini_dr and hasattr(gemini_dr, "research"):
+        return await gemini_dr.research(
+            topic,
+            max_urls=max_urls,
+            schema=schema,
+        )
+
+    # Fall back to Firecrawl
     firecrawl = router.get_backend(BackendType.FIRECRAWL_MCP)
     if firecrawl and hasattr(firecrawl, "research"):
         return await firecrawl.research(

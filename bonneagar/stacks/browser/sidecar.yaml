@@ -1,0 +1,34 @@
+# Browser stack sidecar — Infisical Locket secret injection.
+# Injects GOOGLE_API_KEY (Gemini Deep Research), BROWSER_API_KEYS,
+# LITELLM_API_KEY, LANGFUSE keys. Per the openspec change
+# `2026-09-06-adk-gemini-deep-research-control-plane-v1`.
+services:
+  locket:
+    image: ghcr.io/bpbradley/locket:infisical
+    restart: unless-stopped
+    container_name: cianfhoghlaim-browser-locket
+    user: "65532"
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "/locket", "healthcheck"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+    volumes:
+      - type: tmpfs
+        target: /run/secrets/locket
+        tmpfs:
+          mode: 0700
+    env_file:
+      - ./secrets.env
+    networks:
+      - browser-net
+
+networks:
+  browser-net:
+    name: browser_browser-net
+    external: true

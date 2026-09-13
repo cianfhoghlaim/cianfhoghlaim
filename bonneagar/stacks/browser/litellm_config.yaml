@@ -1,5 +1,31 @@
+# Browser stack LiteLLM config.
+#
+# Per the openspec change `2026-09-06-adk-gemini-deep-research-control-plane-v1`:
+# - `gemini-deep-research` alias resolves to the Gemini Deep Research model
+#   (`gemini-2.5-pro-deep-research`) and is the default RESEARCH backend.
+# - The Stagehand V3 SEA binary (`stagehand-agent`) continues to use
+#   `openai/deepseek-v4-pro` via the OpenCode Go gateway.
+# - The `minimax` alias resolves through the 7-tier fallback chain in the
+#   canonical `bonneagar/stacks/litellm/config/config.yaml`.
+
 model_list:
+  # Stagehand V3 SEA binary — OpenAI Responses API → OpenCode Go
   - model_name: claude-3-5-sonnet-20241022
+    litellm_params:
+      model: openai/deepseek-v4-pro
+      api_base: https://opencode.ai/zen/go/v1
+      api_key: os.environ/OPENCODE_GO_API
+
+  # Gemini Deep Research (the new top-priority RESEARCH backend)
+  # Uses google-genai SDK directly via the GeminiDeepResearchBackend.
+  # Documented at https://ai.google.dev/gemini-api/docs/deep-research
+  - model_name: gemini-deep-research
+    litellm_params:
+      model: gemini/gemini-2.5-pro-deep-research
+      api_key: os.environ/GOOGLE_API_KEY
+
+  # ADK root_agent fallback alias (matches the canonical cianfhoghlaim alias)
+  - model_name: minimax
     litellm_params:
       model: openai/deepseek-v4-pro
       api_base: https://opencode.ai/zen/go/v1

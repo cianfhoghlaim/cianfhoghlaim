@@ -288,3 +288,56 @@ test ExtractExamTest {
         url "https://examinations.ie/papers/2023/LC/Irish/Higher/Paper1.pdf"
     }
 }
+
+// =============================================================================
+// GEMINI DEEP RESEARCH (per the 2026-09-06-adk-gemini-deep-research-control-plane-v1 change)
+// =============================================================================
+
+class ResearchCitation {
+    url string @description("Source URL")
+    title string? @description("Source title")
+    claim string? @description("The claim supported by this citation")
+}
+
+class ResearchInteraction {
+    interaction_id string @description("Unique interaction ID")
+    action string @description("Action type: search, navigate, extract, cite")
+    target string? @description("Target URL or selector")
+    rationale string? @description("Why the agent took this action")
+}
+
+class GeminiDeepResearchReport {
+    query string @description("Original research query")
+    synthesized_report string @description("Final long-form markdown report")
+    interactions ResearchInteraction[] @description("Per-step agent actions in order")
+    citations ResearchCitation[] @description("Per-claim source URLs")
+    key_findings string[] @description("Short bullet takeaways")
+    created_at string @description("ISO 8601 timestamp")
+    quality_score float? @description("Extraction quality (0.0 - 1.0)")
+}
+
+function ExtractGeminiDeepResearchReport(text: string) -> GeminiDeepResearchReport {
+    client ExtractEn
+    prompt #"
+        {{ _.role("user") }}
+        Extract a structured representation of a Gemini Deep Research report.
+
+        Source type: markdown (long-form Deep Research output)
+
+        Extract:
+        - query: the original research query
+        - synthesized_report: the final long-form markdown answer
+        - interactions: ordered list of per-step agent actions
+          (action, target URL or selector, rationale)
+        - citations: per-claim source URLs with optional title and the claim
+        - key_findings: list of short bullet takeaways
+        - created_at: ISO 8601 timestamp of the report
+
+        Return a `GeminiDeepResearchReport` matching the schema. Use the
+        BAML ClientRegistry fallback chain (Unsloth → LiteLLM → Gemini).
+
+        {{ ctx.output_format }}
+
+        {{ text }}
+    "#
+}
