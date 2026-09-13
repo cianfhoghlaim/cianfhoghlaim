@@ -98,6 +98,138 @@ class YouTubeVideoRow:
     bytes_on_disk: int = 0
     downloaded_at: str | None = None  # ISO 8601 UTC
     curated_label: str | None = None
+    # NEW (2026-09-12 — youtube-source-playlist-support-and-agent-training-v1)
+    # Populated when the row came from a playlist-scoped watchlist entry;
+    # null for the 4 channel-only entries (3Blue1Brown, Khan Academy, etc.)
+    playlist_id: str | None = None
+    playlist_index: int | None = None
+
+
+# NEW (2026-09-12 — youtube-source-playlist-support-and-agent-training-v1)
+# Bumped whenever youtube_videos_migrations.sql changes; apply_migrations()
+# uses this to decide whether to re-run the SQL.
+_MIGRATIONS_VERSION = 1
+
+
+# NEW (2026-09-12) — default DuckLake destination for the subtable views
+# created by youtube_videos_migrations.sql. The views live in the
+# `cianfhoghlaim.youtube` schema (per the canonical CocoIndex App
+# reference at `cocoindex_flows/knowledge_graph/youtube_kg_embedding.py:80`).
+# Override via the `YOUTUBE_SCHEMA` env var.
+YOUTUBE_SCHEMA = os.getenv(
+    "YOUTUBE_SCHEMA",
+    "cianfhoghlaim.youtube",
+)
+
+
+def apply_migrations(
+    pipeline: dlt.Pipeline | None = None,
+    migrations_path: Path | None = None,
+) -> int:
+    """Apply the YouTube schema migrations idempotently.
+
+    NEW (2026-09-12 — youtube-source-playlist-support-and-agent-training-v1).
+    Reads `dlt_sources/api_sources/youtube_videos_migrations.sql` and
+    executes each statement against the destination DuckDB. Returns
+    the number of statements executed. The 3 view-creating statements
+    use `CREATE VIEW IF NOT EXISTS` so re-running is safe.
+
+    If `pipeline` is None, opens a transient `duckdb` connection to
+    the default destination. The caller can pass an existing
+    `dlt.Pipeline` (post `pipeline.run()`) so the views are created in
+    the same DB the source wrote to.
+
+    A `meta` table `_youtube_migrations` records the applied version
+    (`_MIGRATIONS_VERSION`); future versions can short-circuit if the
+    DB is already current.
+    """
+    sql_path = migrations_path or (
+        Path(__file__).resolve().parent / "youtube_videos_migrations.sql"
+    )
+    if not sql_path.exists():
+        logger.warning(
+            "youtube_migrations_missing: skipping",
+            path=str(sql_path),
+        )
+        return 0
+
+    sql_text = sql_path.read_text(encoding="utf-8")
+    # Substitute the schema placeholder (NEW 2026-09-12).
+    sql_text = sql_text.replace("{YOUTUBE_SCHEMA}", YOUTUBE_SCHEMA)
+
+    # Split on the `--` separator lines (the SQL file uses them as
+    # block separators; strip them out).
+    statements: list[str] = []
+    for raw_block in sql_text.split("\n--\n"):
+        cleaned_lines: list[str] = []
+        for line in raw_block.splitlines():
+            stripped = line.strip()
+            if not stripped or stripped.startswith("--"):
+                continue
+            cleaned_lines.append(line)
+        cleaned = "\n".join(cleaned_lines).strip()
+        if cleaned and not cleaned.startswith("--"):
+            statements.append(cleaned)
+
+    # The MIGRATIONS_VERSION gate: only run if the recorded version is
+    # older than the current `_MIGRATIONS_VERSION`. Idempotent.
+    if pipeline is not None:
+        with pipeline.sql_client() as client:
+            executed = _run_migration_statements(client, statements)
+    else:
+        import duckdb
+
+        with duckdb.connect(DEFAULT_STAGING_DIR.parent / "youtube_migrations.duckdb") as conn:
+            executed = _run_migration_statements_duckdb(conn, statements)
+
+    logger.info(
+        "youtube_migrations_applied",
+        version=_MIGRATIONS_VERSION,
+        statement_count=executed,
+        sql_path=str(sql_path),
+    )
+    return executed
+
+
+def _run_migration_statements(
+    client: Any,
+    statements: list[str],
+) -> int:
+    """Execute migration statements via the dlt SQL client."""
+    # Ensure the meta table exists + is current.
+    client.execute_sql(
+        f"CREATE TABLE IF NOT EXISTS {YOUTUBE_SCHEMA}._youtube_migrations ("
+        "version INTEGER PRIMARY KEY, applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
+    )
+    client.execute_sql(
+        f"INSERT INTO {YOUTUBE_SCHEMA}._youtube_migrations (version) VALUES "
+        f"({_MIGRATIONS_VERSION}) ON CONFLICT DO NOTHING"
+    )
+    for stmt in statements:
+        client.execute_sql(stmt)
+    return len(statements)
+
+
+def _run_migration_statements_duckdb(
+    conn: Any,
+    statements: list[str],
+) -> int:
+    """Execute migration statements via a raw DuckDB connection."""
+    conn.execute(
+        f"CREATE SCHEMA IF NOT EXISTS {YOUTUBE_SCHEMA}"
+    )
+    conn.execute(
+        f"CREATE TABLE IF NOT EXISTS {YOUTUBE_SCHEMA}._youtube_migrations ("
+        "version INTEGER PRIMARY KEY, applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
+    )
+    conn.execute(
+        f"INSERT INTO {YOUTUBE_SCHEMA}._youtube_migrations (version) VALUES "
+        f"({_MIGRATIONS_VERSION}) ON CONFLICT DO NOTHING"
+    )
+    for stmt in statements:
+        conn.execute(stmt)
+    conn.commit()
+    return len(statements)
 
 
 def load_curated_watchlist(path: Path | None = None) -> list[dict[str, Any]]:
@@ -105,6 +237,12 @@ def load_curated_watchlist(path: Path | None = None) -> list[dict[str, Any]]:
 
     Falls back to a small default watchlist (3Blue1Brown + Khan Academy)
     if the YAML file is missing.
+
+    MODIFIED (2026-09-12 — youtube-source-playlist-support-and-agent-training-v1):
+    accept both the flat-list shape (the legacy format the loader
+    declared) and the wrapped `channels:` shape (the format the file
+    actually uses). Unwrap the dict shape if encountered so the loader
+    contract is independent of the YAML's top-level structure.
     """
     p = path or DEFAULT_WATCHLIST_PATH
     if not p.exists():
@@ -112,9 +250,12 @@ def load_curated_watchlist(path: Path | None = None) -> list[dict[str, Any]]:
 
     with p.open("r", encoding="utf-8") as f:
         data = yaml.safe_load(f)
+    # MODIFIED (2026-09-12): handle the wrapped `channels:` shape.
+    if isinstance(data, dict) and "channels" in data:
+        data = data["channels"]
     if not isinstance(data, list):
         raise ValueError(
-            f"Expected `stedding/youtube_curated.yaml` to be a list, got {type(data).__name__}"
+            f"Expected `stedding/youtube_curated.yaml` to be a list (or a dict with a 'channels' key), got {type(data).__name__}"
         )
     return data
 
@@ -245,6 +386,50 @@ def _channel_video_urls(channel_id: str, max_videos: int) -> Iterator[str]:
             yield line
 
 
+def _playlist_video_urls(playlist_id: str, max_videos: int) -> Iterator[str]:
+    """Yield up to `max_videos` video URLs from a YouTube playlist.
+
+    NEW (2026-09-12 — youtube-source-playlist-support-and-agent-training-v1).
+    Mirrors `_channel_video_urls` but targets the playlist URL with the
+    `--playlist-end` flag preserved (so the per-playlist order is
+    deterministic — index 1 is always the first video, index N is the
+    last). Used by `youtube_videos_source()` when a watchlist entry
+    carries `playlist_id`.
+
+    Returns webpage URLs in playlist order (newest at index 1 by
+    default; pass `--playlist-items 1-N` or `--playlist-start` to
+    slice).
+    """
+    cmd = [
+        "yt-dlp",
+        "--flat-playlist",
+        "--print",
+        "%(webpage_url)s",
+        "--playlist-end",
+        str(max_videos),
+        f"https://www.youtube.com/playlist?list={playlist_id}",
+    ]
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=120,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as e:
+        raise RuntimeError(
+            f"yt-dlp playlist dump timed out for playlist {playlist_id}"
+        ) from e
+    if result.returncode != 0:
+        # Fall back to empty — the per-video metadata dump will fail later.
+        return
+    for line in result.stdout.splitlines():
+        line = line.strip()
+        if line:
+            yield line
+
+
 def _safe_upload_date(raw: str | None) -> str:
     """yt-dlp returns YYYYMMDD as a string; normalize to ISO 8601 date."""
     if not raw or len(raw) != 8:
@@ -255,8 +440,18 @@ def _safe_upload_date(raw: str | None) -> str:
 def _row_from_info_json(
     info: dict[str, Any],
     curated_label: str | None,
+    playlist_id: str | None = None,
+    playlist_index: int | None = None,
 ) -> YouTubeVideoRow:
-    """Convert a yt-dlp info_json dict into a `YouTubeVideoRow`."""
+    """Convert a yt-dlp info_json dict into a `YouTubeVideoRow`.
+
+    NEW (2026-09-12): when invoked from the playlist branch of
+    `youtube_videos_source()`, the `playlist_id` + `playlist_index`
+    parameters are populated from the outer loop's tracking state.
+    yt-dlp's `--dump-json` against a playlist URL returns both fields
+    in the info dict, but we pass them explicitly so the contract is
+    independent of how yt-dlp serialises the playlist context.
+    """
     video_id = info.get("id", "")
     file_path: str | None = None
     info_json_path: str | None = None
@@ -283,6 +478,19 @@ def _row_from_info_json(
     if info_json_file.exists():
         info_json_path = info_json_file.name
 
+    # Fall back to info_dict fields when the outer loop didn't pass them
+    # explicitly. yt-dlp's `--dump-json` against a playlist URL embeds
+    # `playlist_id` + `playlist_index` in the per-video info dict.
+    resolved_playlist_id = playlist_id or info.get("playlist_id")
+    resolved_playlist_index = playlist_index
+    if resolved_playlist_index is None:
+        raw_index = info.get("playlist_index")
+        if raw_index is not None:
+            try:
+                resolved_playlist_index = int(raw_index)
+            except (TypeError, ValueError):
+                resolved_playlist_index = None
+
     return YouTubeVideoRow(
         video_id=video_id,
         channel_id=info.get("channel_id", ""),
@@ -303,6 +511,8 @@ def _row_from_info_json(
         bytes_on_disk=bytes_on_disk,
         downloaded_at=info.get("timestamp") and info["timestamp"].isoformat() if hasattr(info.get("timestamp"), "isoformat") else None,
         curated_label=curated_label,
+        playlist_id=resolved_playlist_id,
+        playlist_index=resolved_playlist_index,
     )
 
 
@@ -336,10 +546,21 @@ def youtube_videos_source(
             channel_id = entry.get("channel_id")
             if not channel_id:
                 continue
+            # NEW (2026-09-12): honour playlist_id when present.
+            # Falls back to the existing channel-only behaviour when
+            # playlist_id is absent (the 4 pre-existing entries).
+            playlist_id = entry.get("playlist_id")
             max_v = max_videos_per_channel or entry.get("max_videos") or 5
             label = entry.get("label")
 
-            for url in _channel_video_urls(channel_id, max_v):
+            if playlist_id:
+                url_iter: Iterator[str] = _playlist_video_urls(
+                    playlist_id, max_v
+                )
+            else:
+                url_iter = _channel_video_urls(channel_id, max_v)
+
+            for url in url_iter:
                 try:
                     info = _yt_dlp_dump_json(url)
                 except RuntimeError:
@@ -355,7 +576,12 @@ def youtube_videos_source(
                         # Keep going with the metadata-only row.
                         pass
 
-                yield _row_from_info_json(info, label)
+                yield _row_from_info_json(
+                    info,
+                    label,
+                    playlist_id=playlist_id,
+                    playlist_index=None,
+                )
 
     return [youtube_videos]
 
@@ -373,10 +599,17 @@ def youtube_videos_source(
 
 if __name__ == "__main__":
     # Ad-hoc invocation: `uv run python -m cianfhoghlaim.dlt.api_sources.youtube_videos`
+    # MODIFIED (2026-09-12): use the canonical `cianfhoghlaim.youtube`
+    # dataset name (per the CocoIndex App reference at
+    # `cocoindex_flows/knowledge_graph/youtube_kg_embedding.py:80`).
+    # Override via the `YOUTUBE_SCHEMA` env var.
     pipeline = dlt.pipeline(
         pipeline_name="youtube_videos",
         destination="duckdb",
-        dataset_name="oideachais.youtube",
+        dataset_name=YOUTUBE_SCHEMA,
     )
     load_info = pipeline.run(youtube_videos_source())
+    # NEW (2026-09-12): create the 3 subtable views (2 per-playlist +
+    # 1 playlist registry) on the same DuckDB.
+    apply_migrations(pipeline=pipeline)
     print(load_info)

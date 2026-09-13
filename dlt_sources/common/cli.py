@@ -35,6 +35,14 @@ DLT_SOURCES = (
     "github_repos",
     "spotify_api",
     "soundcloud_scraper",
+    # NEW (2026-09-12 — youtube-source-playlist-support-and-agent-training-v1)
+    # 3 entries wired to dlt_sources/api_sources/youtube_videos.py.
+    # The `youtube_videos` name is the generic alias; the other two
+    # map 1:1 to the playlist-specific subtable views created by
+    # apply_migrations() + youtube_videos_migrations.sql.
+    "youtube_videos",
+    "huggingface_post_training_agents",
+    "google_cloud_ai_agent_crash_course",
 )
 
 
