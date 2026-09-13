@@ -1,7 +1,7 @@
 ---
 name: openspec
-description: Spec-driven change management with OpenSpec 1.4 (Fission AI). Use when writing proposal.md/tasks.md/spec deltas, validating changes with --strict, archiving completed changes, navigating the 78 pending + 96 archived changes, or running the view/status/instructions subcommands. Covers both the legacy spec-driven schema (proposal + tasks + spec deltas) and the experimental OPSX schema (YAML+Markdown templates + DAG dependencies).
-when_to_use: "proposal author | validator | archivist | spec author | openspec CLI user"
+description: Spec-driven change management with OpenSpec 1.11 (Fission AI). Use when writing proposal.md/tasks.md/spec deltas, validating changes with --strict, archiving completed changes, navigating the 13 pending + 121 specs + 401 archived changes, or running the list/validate/status/archive subcommands. Single `spec-driven` schema (no legacy/OPSX split). Each change MAY add a `.openspec.yaml` per the new 1.11 convention.
+when_to_use: "proposal author | validator | archivist | spec author | openspec CLI user | change consolidator"
 ---
 
 # OpenSpec — spec-driven change management
@@ -11,23 +11,24 @@ canonical change-management surface for the cianfhoghlaim monorepo.
 Every non-trivial change — refactor, capability, infrastructure stack,
 skill consolidation — lives in `openspec/changes/<id>/` as a 3-artifact
 bundle (`proposal.md` + `tasks.md` + `spec deltas`) before any code is
-written. Local install: **`@fission-ai/openspec@1.4.1`** (per
+written. Local install: **`@fission-ai/openspec@1.11.1`** (per
 `openspec --version`).
 
-> **Schema notice (2026-08-19):** This repo uses the **legacy
-> `spec-driven` schema** (proposal + tasks + spec deltas). The new
-> `OPSX` schema (`YAML` templates + DAG dependencies + status command)
-> is shipped in OpenSpec 1.4 but is **not adopted** here — migration
-> would require re-archiving all 78 pending changes. See
-> `openspec/AGENTS.md` § OPSX vs legacy for the full reasoning.
+> **Schema notice (2026-09-13):** This repo uses the **single
+> `spec-driven` schema** (proposal + tasks + spec delta) on
+> **`@fission-ai/openspec@1.11`** (verified `openspec --version`
+> reports `1.11`). Per the new 1.11 convention, every NEW-format
+> change MAY add a `.openspec.yaml` at its root for change-level
+> metadata (workflow profile, custom instructions). The previous
+> 1.4 legacy/OPSX schema split is no longer relevant.
 
 ## Quick start — the 4 priority commands
 
 ```bash
-openspec list --specs                    # list all 96 capability specs
-openspec list                            # list all 78 pending changes
-openspec view                            # interactive dashboard (NEW 1.4)
-openspec status <change-id>              # artifact completion check (NEW 1.4)
+openspec list --specs                    # list all 121 capability specs
+openspec list                            # list all 13 pending changes (post-consolidation)
+openspec status --change <id>           # artifact completion check
+openspec validate --all --strict          # strict-validation gate (CI)
 openspec show <change-id|spec-id>        # formatted view (NEW 1.4)
 openspec validate <change-id> --strict   # MUST pass before commit
 openspec validate --all --strict         # validate everything (CI gate)

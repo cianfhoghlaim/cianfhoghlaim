@@ -79,22 +79,14 @@ mise run sync:all                  # run all 14 sync layers (paths + ccc + cogne
 > `sync:all`, `dagster:dev`, `cic:stack-doctor`, `iac:health`) remain
 > valid for 1 release cycle as aliases.
 
-### OPSX vs legacy schema (NEW 2026-08-19)
+# Schema convention (single schema, no split)
 
-OpenSpec 1.4 ships **two schemas**:
+This repo uses the **single `spec-driven` schema** on
+`@fission-ai/openspec@1.11`. All changes ship as
+`openspec/changes/<id>/{proposal.md, tasks.md, specs/<capability-path>/spec.md}`
+plus the optional `.openspec.yaml` per-change metadata file (new in
+1.11). There is no longer a separate legacy/OPSX schema split.
 
-- **Legacy `spec-driven` schema** (used by this repo) — proposal.md +
-  tasks.md + spec deltas under `openspec/changes/<id>/`. All 78 pending
-  + 96 archived changes use this format. Migration would require
-  re-archiving every change; not worth the cost.
-- **Experimental `OPSX` schema** — external YAML + Markdown templates,
-  DAG dependencies, `openspec status <id>` command. Available via
-  `openspec schemas` + `openspec schema which --all`. **NOT ADOPTED** in
-  this repo (per the `dev-tooling-surfaces` spec Requirement § openspec-
-  schema-stability).
-
-The new 1.4 subcommands (`view`, `status`, `show`, `instructions`,
-`schemas`) work with both schemas — no migration required to use them.
 
 ### ccc code search (for openspec work)
 
