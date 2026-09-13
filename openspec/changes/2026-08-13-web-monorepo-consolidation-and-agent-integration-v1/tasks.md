@@ -204,32 +204,32 @@
 
 ## PR 9: Phase T (Central Cianfhoghlaim Homepage + agentic chat)
 
-- [ ] T.1 NEW `web/apps/cianfhoghlaim/` (4th app)
-- [ ] T.2 NEW `web/apps/cianfhoghlaim/routes/index.tsx` (central homepage)
-- [ ] T.3 NEW `web/apps/cianfhoghlaim/routes/chat.tsx`
-- [ ] T.4 NEW `web/apps/cianfhoghlaim/routes/api/chat/$threadId.ts`
-- [ ] T.5 NEW `web/apps/cianfhoghlaim/src/components/AgenticChat.tsx`
-- [ ] T.6 NEW `web/apps/cianfhoghlaim/src/components/PipelineStatusPanel.tsx`
-- [ ] T.7 NEW `web/apps/cianfhoghlaim/src/components/SubjectGrid.tsx`
-- [ ] T.8 NEW `web/apps/cianfhoghlaim/src/components/SubjectAgentCards.tsx`
-- [ ] T.9 NEW `web/apps/cianfhoghlaim/src/components/KnowledgeGraphPanel.tsx`
-- [ ] T.10 NEW `web/apps/cianfhoghlaim/src/components/RecentActivityFeed.tsx`
-- [ ] T.11 NEW `web/apps/cianfhoghlaim/src/lib/tanstack-ai-client.ts`
-- [ ] T.12 NEW `web/apps/cianfhoghlaim/src/lib/convex-client.ts`
-- [ ] T.13 NEW `web/apps/cianfhoghlaim/src/lib/ducklake-query.ts`
-- [ ] T.14 NEW `web/apps/cianfhoghlaim/src/lib/lancedb-search.ts`
-- [ ] T.15 NEW `web/apps/cianfhoghlaim/src/lib/cognee-query.ts`
-- [ ] T.16 NEW `web/apps/cianfhoghlaim/src/lib/baml-extract.ts`
-- [ ] T.17 NEW `web/apps/cianfhoghlaim/src/lib/subject-detector.ts`
-- [ ] T.18 NEW `web/apps/cianfhoghlaim/src/lib/agent-router.ts`
-- [ ] T.19 NEW `web/apps/cianfhoghlaim/convex/schema/homepage.ts`
-- [ ] T.20 NEW `web/apps/cianfhoghlaim/convex/schema/threads.ts`
-- [ ] T.21 NEW `web/apps/cianfhoghlaim/convex/schema/agent_routing.ts`
-- [ ] T.22 NEW `web/apps/cianfhoghlaim/AGENTS.md`
-- [ ] T.23 NEW `openspec/specs/central-cianfhoghlaim-homepage/spec.md`
+- [x] T.1 NEW `web/apps/cianfhoghlaim/` (4th app)
+- [x] T.2 NEW `web/apps/cianfhoghlaim/routes/index.tsx` (central homepage)
+- [x] T.3 NEW `web/apps/cianfhoghlaim/routes/chat.tsx`
+- [x] T.4 NEW `web/apps/cianfhoghlaim/routes/api/chat/$threadId.ts`
+- [x] T.5 NEW `web/apps/cianfhoghlaim/src/components/AgenticChat.tsx`
+- [x] T.6 NEW `web/apps/cianfhoghlaim/src/components/PipelineStatusPanel.tsx`
+- [x] T.7 NEW `web/apps/cianfhoghlaim/src/components/SubjectGrid.tsx`
+- [x] T.8 NEW `web/apps/cianfhoghlaim/src/components/SubjectAgentCards.tsx`
+- [x] T.9 NEW `web/apps/cianfhoghlaim/src/components/KnowledgeGraphPanel.tsx`
+- [x] T.10 NEW `web/apps/cianfhoghlaim/src/components/RecentActivityFeed.tsx`
+- [x] T.11 NEW `web/apps/cianfhoghlaim/src/lib/tanstack-ai-client.ts`
+- [x] T.12 NEW `web/apps/cianfhoghlaim/src/lib/convex-client.ts`
+- [x] T.13 NEW `web/apps/cianfhoghlaim/src/lib/ducklake-query.ts`
+- [x] T.14 NEW `web/apps/cianfhoghlaim/src/lib/lancedb-search.ts`
+- [x] T.15 NEW `web/apps/cianfhoghlaim/src/lib/cognee-query.ts`
+- [x] T.16 NEW `web/apps/cianfhoghlaim/src/lib/baml-extract.ts`
+- [x] T.17 NEW `web/apps/cianfhoghlaim/src/lib/subject-detector.ts`
+- [x] T.18 NEW `web/apps/cianfhoghlaim/src/lib/agent-router.ts`
+- [x] T.19 NEW `web/apps/cianfhoghlaim/convex/schema/homepage.ts`
+- [x] T.20 NEW `web/apps/cianfhoghlaim/convex/schema/threads.ts`
+- [x] T.21 NEW `web/apps/cianfhoghlaim/convex/schema/agent_routing.ts`
+- [x] T.22 NEW `web/apps/cianfhoghlaim/AGENTS.md`
+- [x] T.23 NEW `openspec/specs/central-cianfhoghlaim-homepage/spec.md`
 
 ### Commit + push
-- [ ] `git commit -m "feat(cianfhoghlaim): central homepage with agentic chat (Phase T)"`
+- [x] `git commit -m "feat(cianfhoghlaim): central homepage with agentic chat (Phase T)"`
 - [ ] `git push`
 
 ---
