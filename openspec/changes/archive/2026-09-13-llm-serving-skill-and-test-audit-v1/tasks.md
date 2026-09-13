@@ -19,6 +19,6 @@
 
 ## Phase D — Validation + archive (5 min)
 
-- [ ] **D.1** `uv run pytest tests/llm_serving/ -v` all 7 pass
-- [ ] **D.2** `uv run openspec validate 2026-09-13-llm-serving-skill-and-test-audit-v1 --strict` exits 0
-- [ ] **D.3** `uv run openspec archive 2026-09-13-llm-serving-skill-and-test-audit-v1 --yes`
+- [x] **D.1** `uv run pytest tests/llm_serving/ -v` all 7 pass
+- [x] **D.2** `uv run openspec validate 2026-09-13-llm-serving-skill-and-test-audit-v1 --strict` exits 0
+- [x] **D.3** `uv run openspec archive 2026-09-13-llm-serving-skill-and-test-audit-v1 --yes`

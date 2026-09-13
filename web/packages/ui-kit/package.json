@@ -8,6 +8,7 @@
     ".": "./src/index.ts",
     "./analytics": "./analytics/src/index.ts",
     "./i18n": "./i18n/src/index.ts",
+    "./ui": "./components/src/index.ts",
     "./components": "./components/src/index.ts",
     "./config": "./config/src/index.ts",
     "./hooks": "./hooks/use-mobile.ts"

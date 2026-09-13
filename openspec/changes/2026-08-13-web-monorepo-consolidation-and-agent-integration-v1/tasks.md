@@ -4,39 +4,39 @@
 
 ### Phase A — web/packages/ consolidation (6 → 3)
 
-- [ ] A.1 MERGE `web/packages/analytics/`, `web/packages/i18n/`, `web/packages/ui/`, `web/packages/config/` → `web/packages/ui-kit/`
-  - [ ] A.1.1 Move `analytics/index.ts` → `ui-kit/analytics/index.ts`
-  - [ ] A.1.2 Move `i18n/index.ts` + `i18n/resources/` → `ui-kit/i18n/`
-  - [ ] A.1.3 Move `ui/index.ts` + `ui/components/` + `ui/hooks/` → `ui-kit/components/` + `ui-kit/hooks/`
-  - [ ] A.1.4 Move `config/index.ts` → `ui-kit/config/index.ts`
-  - [ ] A.1.5 Create `ui-kit/index.ts` re-exporting all
-  - [ ] A.1.6 Create `ui-kit/package.json` with the consolidated dependencies
-- [ ] A.2 KEEP `web/packages/auth/`
-- [ ] A.3 KEEP `web/packages/db/` (extended with Convex generators per Phase H)
-- [ ] A.4 DELETE the 4 old `web/packages/{analytics,i18n,ui,config}/` directories
+- [x] A.1 MERGE `web/packages/analytics/`, `web/packages/i18n/`, `web/packages/ui/`, `web/packages/config/` → `web/packages/ui-kit/`
+  - [x] A.1.1 Move `analytics/index.ts` → `ui-kit/analytics/index.ts`
+  - [x] A.1.2 Move `i18n/index.ts` + `i18n/resources/` → `ui-kit/i18n/`
+  - [x] A.1.3 Move `ui/index.ts` + `ui/components/` + `ui/hooks/` → `ui-kit/components/` + `ui-kit/hooks/`
+  - [x] A.1.4 Move `config/index.ts` → `ui-kit/config/index.ts`
+  - [x] A.1.5 Create `ui-kit/index.ts` re-exporting all
+  - [x] A.1.6 Create `ui-kit/package.json` with the consolidated dependencies
+- [x] A.2 KEEP `web/packages/auth/`
+- [x] A.3 KEEP `web/packages/db/` (extended with Convex generators per Phase H)
+- [x] A.4 DELETE the 4 old `web/packages/{analytics,i18n,ui,config}/` directories
 
 ### Phase B — Monorepo tooling
 
-- [ ] B.1 NEW `web/package.json` (bun workspaces root)
-  - [ ] B.1.1 Declare `apps/*` and `packages/*` workspaces
-  - [ ] B.1.2 Add root dev/build scripts
-- [ ] B.2 NEW `web/turbo.json` (matches root `turbo.json`)
-  - [ ] B.2.1 Mirror the root `turbo.json` pipeline
-  - [ ] B.2.2 Add `web:#lint`, `web:#typecheck`, `web:#build` tasks
-- [ ] B.3 NEW `web/.gitignore`
-- [ ] B.4 NEW `web/tsconfig.base.json` (shared TS config)
-- [ ] B.5 NEW `web/.npmrc` (workspace settings)
+- [x] B.1 NEW `web/package.json` (bun workspaces root)
+  - [x] B.1.1 Declare `apps/*` and `packages/*` workspaces
+  - [x] B.1.2 Add root dev/build scripts
+- [x] B.2 NEW `web/turbo.json` (matches root `turbo.json`)
+  - [x] B.2.1 Mirror the root `turbo.json` pipeline
+  - [x] B.2.2 Add `web:#lint`, `web:#typecheck`, `web:#build` tasks
+- [x] B.3 NEW `web/.gitignore`
+- [x] B.4 NEW `web/tsconfig.base.json` (shared TS config)
+- [x] B.5 NEW `web/.npmrc` (workspace settings)
 
 ### Validation gates
-- [ ] `bun install` (workspace sync succeeds)
-- [ ] `bun run typecheck` (all 6 packages + 7 apps typecheck)
-- [ ] `bun run lint` (all packages pass)
-- [ ] `bun run build` (all packages build)
-- [ ] `openspec validate 2026-08-13-web-monorepo-consolidation-and-agent-integration-v1 --strict`
+- [x] `bun install` (workspace sync succeeds)
+- [x] `bun run typecheck` (all 6 packages + 7 apps typecheck)
+- [x] `bun run lint` (all packages pass)
+- [x] `bun run build` (all packages build)
+- [x] `openspec validate 2026-08-13-web-monorepo-consolidation-and-agent-integration-v1 --strict`
 
 ### Commit + push
-- [ ] `git add web/`
-- [ ] `git commit -m "feat(web): consolidate web/packages/ 6→3 + add monorepo tooling (Phase A-B)"`
+- [x] `git add web/`
+- [x] `git commit -m "feat(web): consolidate web/packages/ 6→3 + add monorepo tooling (Phase A-B)"`
 - [ ] `git push`
 
 ---
