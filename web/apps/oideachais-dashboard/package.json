@@ -15,6 +15,8 @@
   },
   "dependencies": {
     "@cianfhoghlaim/ui-kit": "workspace:*",
+    "@copilotkit/react-core/v2": "^1.67.1",
+    "@copilotkit/react-ui/v2": "^1.67.1",
     "@tanstack/start": "^1.95.0",
     "@tanstack/react-router": "^1.95.0",
     "@tanstack/react-query": "^5.62.0",
