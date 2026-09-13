@@ -70,8 +70,26 @@ logger = structlog.get_logger(__name__)
 LANCEDB_TABLE_SEGMENTS = "video_segments"
 LANCEDB_TABLE_FRAME_CAPTIONS = "video_frame_captions"
 LANCEDB_TABLE_TRIPLES = "video_triples"
+LANCEDB_TABLE_CROSS_SOURCE_CONCEPTS = "cross_source_concepts"  # NEW (2026-09-12)
 REFRESH_INTERVAL_SECS = int(os.getenv("YOUTUBE_KG_REFRESH_SECS", "86400"))  # daily
 FRAME_SAMPLE_FPS = float(os.getenv("YOUTUBE_KG_FRAME_FPS", "0.1"))  # 1 frame / 10s
+
+# NEW (2026-09-12 — youtube-source-playlist-support-and-agent-training-v1):
+# the 2 playlist IDs that drive the cross-source extraction. Loaded from
+# env vars so the production pipeline can override them per deployment.
+HF_POST_TRAINING_PLAYLIST_ID = os.getenv(
+    "YOUTUBE_HF_POST_TRAINING_PLAYLIST_ID",
+    "PLo2EIpI_JMQvQZm-kVlz4wY1vWF0LBcf5",
+)
+GC_AI_AGENT_PLAYLIST_ID = os.getenv(
+    "YOUTUBE_GC_AI_AGENT_PLAYLIST_ID",
+    "PLIivdWyY5sqLNeW9MPxldbbevMEJGMWBG",
+)
+# Minimum confidence for a cross-source concept to land in the
+# `cross_source_concepts` table. Tunable via env var.
+CROSS_SOURCE_CONFIDENCE_THRESHOLD = float(
+    os.getenv("YOUTUBE_CROSS_SOURCE_CONFIDENCE_THRESHOLD", "0.6")
+)
 
 
 # The DuckLake table populated by the `dlt.api_sources.youtube_videos`
@@ -146,6 +164,34 @@ class VideoTripleRecord:
     embedding: Annotated[list[float], EMBED_MODEL]
 
 
+@dataclass
+class CrossSourceConceptRecord:
+    """One shared concept across the HuggingFace + Google Cloud playlists.
+
+    NEW (2026-09-12 — youtube-source-playlist-support-and-agent-training-v1).
+    Sibling to VideoSegmentRecord + VideoFrameCaptionRecord + VideoTripleRecord.
+    One row per concept; the BAML extraction emits a deduplicated list with
+    hf_video_ids + gc_video_ids + source_evidence populated.
+
+    The downstream consumer is `notebooks/case_studies/agent_training_research.py`
+    marimo notebook (Tab 3 + Tab 4). The confidence threshold is applied at
+    extraction time so the table only contains concepts ≥
+    CROSS_SOURCE_CONFIDENCE_THRESHOLD (default 0.6).
+    """
+
+    concept_name: str
+    concept_kind: str  # str-coerced from the BAML ConceptKind enum
+    hf_video_ids: list[str]
+    gc_video_ids: list[str]
+    confidence: float
+    source_evidence_json: str  # JSON-encoded list of SnippetEvidence dicts
+    # Embedder model is sourced from cocoindex_flows/_shared/_lifespan.py:EMBED_MODEL
+    # (which reads CIANFHOGHLAIM_EMBED_MODEL). The previous hardcoded
+    # "BAAI/bge-m3" string was replaced with the shared symbol so the
+    # canonical env knob (CIANFHOGHLAIM_EMBED_MODEL) propagates here.
+    embedding: Annotated[list[float], EMBED_MODEL]
+
+
 # ---------------------------------------------------------------------------
 # CocoIndex v1 App
 # ---------------------------------------------------------------------------
@@ -180,6 +226,12 @@ if COCOINDEX_AVAILABLE_LOCAL and coco is not None:
         triples_table = lancedb.mount_table_target(  # type: ignore[attr-defined]
             None,
             table_name=LANCEDB_TABLE_TRIPLES,
+        )
+        # NEW (2026-09-12 — youtube-source-playlist-support-and-agent-training-v1):
+        # 4th LanceDB target for the cross-source concept extraction.
+        cross_source_table = lancedb.mount_table_target(  # type: ignore[attr-defined]
+            None,
+            table_name=LANCEDB_TABLE_CROSS_SOURCE_CONCEPTS,
         )
 
         @coco.function(  # type: ignore[misc]
@@ -277,6 +329,111 @@ if COCOINDEX_AVAILABLE_LOCAL and coco is not None:
             # R4 conformance: declare the vector index on the
             # `embedding` column for every mounted LanceDB table.
             target_table.declare_vector_index(column="embedding")  # type: ignore[union-attr]
+
+        # NEW (2026-09-12): cross-source concept extraction across the
+        # HF Post-training Agents + GC AI Agent Crash Course playlists.
+        # Reads video descriptions from the DuckLake parent table via
+        # 2 filters (1 per playlist) + emits 1 row per shared concept
+        # to the 4th LanceDB target. Threshold-filtered at extraction
+        # time (≥ CROSS_SOURCE_CONFIDENCE_THRESHOLD).
+
+        @coco.function(  # type: ignore[misc]
+            executor=coco.FunctionExecutor(parallelism=1),  # type: ignore[attr-defined]
+        )
+        async def extract_cross_source_concepts(  # type: ignore[no-untyped-def]
+            all_videos: list[dict],
+        ) -> list[CrossSourceConceptRecord]:
+            """Find concepts shared between the 2 playlists.
+
+            Splits `all_videos` by `playlist_id` (HF vs GC), feeds the
+            per-playlist descriptions to BAML `ExtractCrossSourceConcept`,
+            filters by `CROSS_SOURCE_CONFIDENCE_THRESHOLD`, and returns
+            typed `CrossSourceConceptRecord` rows ready for LanceDB.
+            """
+            hf_videos = [
+                v for v in all_videos
+                if v.get("playlist_id") == HF_POST_TRAINING_PLAYLIST_ID
+            ]
+            gc_videos = [
+                v for v in all_videos
+                if v.get("playlist_id") == GC_AI_AGENT_PLAYLIST_ID
+            ]
+            if not hf_videos or not gc_videos:
+                logger.warning(
+                    "youtube_kg.cross_source_skipped",
+                    hf_count=len(hf_videos),
+                    gc_count=len(gc_videos),
+                )
+                return []
+
+            hf_descs = [
+                f"{v.get('video_id', '?')}: {v.get('title', '?')} — {v.get('description', '')[:200]}"
+                for v in hf_videos
+            ]
+            gc_descs = [
+                f"{v.get('video_id', '?')}: {v.get('title', '?')} — {v.get('description', '')[:200]}"
+                for v in gc_videos
+            ]
+
+            concepts = await _extract_cross_source_via_baml(
+                hf_video_descriptions=hf_descs,
+                gc_video_descriptions=gc_descs,
+            )
+
+            out: list[CrossSourceConceptRecord] = []
+            for c in concepts:
+                if c.confidence < CROSS_SOURCE_CONFIDENCE_THRESHOLD:
+                    continue
+                # Coerce the BAML enum to a string for LanceDB storage.
+                concept_kind = (
+                    c.concept_kind.value
+                    if hasattr(c.concept_kind, "value")
+                    else str(c.concept_kind)
+                )
+                # JSON-encode the source_evidence list for the typed
+                # string column. Decoded on read in the marimo notebook.
+                # Use json.dumps to handle escape characters correctly
+                # rather than an inline string.
+                import json as _json
+
+                evidence_list = [
+                    {
+                        "video_id": e.video_id,
+                        "timestamp_s": float(e.timestamp_s),
+                        "snippet": (e.snippet or "")[:200],
+                    }
+                    for e in c.source_evidence
+                ]
+                evidence_json = _json.dumps(evidence_list)
+                out.append(
+                    CrossSourceConceptRecord(
+                        concept_name=c.concept_name,
+                        concept_kind=concept_kind,
+                        hf_video_ids=list(c.hf_video_ids),
+                        gc_video_ids=list(c.gc_video_ids),
+                        confidence=c.confidence,
+                        source_evidence_json=evidence_json,
+                        embedding=[],
+                    )
+                )
+            logger.info(
+                "youtube_kg.cross_source_extracted",
+                hf_count=len(hf_videos),
+                gc_count=len(gc_videos),
+                concept_count=len(out),
+            )
+            return out
+
+        # Wire the new extractor into the 4th LanceDB target. Reads the
+        # whole parent table (the videos source is already mounted at the
+        # top of the app via `builder.set_source("videos", ...)`).
+        extract_cross_source_concepts.collect(  # type: ignore[attr-defined]
+            source=coco.duckdb_source(  # type: ignore[attr-defined]
+                table_name=YOUTUBE_VIDEOS_DUCKLAKE_TABLE,
+                database="lakehouse",
+            )
+        ).into(cross_source_table)
+        cross_source_table.declare_vector_index(column="embedding")  # type: ignore[union-attr]
 
 else:  # pragma: no cover - degrade gracefully
     youtube_kg_embedding_app = None
@@ -487,6 +644,42 @@ async def _extract_via_baml(
     return triples, chain
 
 
+async def _extract_cross_source_via_baml(
+    hf_video_descriptions: list[str],
+    gc_video_descriptions: list[str],
+) -> list[Any]:
+    """Run the new `ExtractCrossSourceConcept` BAML function.
+
+    NEW (2026-09-12 — youtube-source-playlist-support-and-agent-training-v1).
+    Defined in `baml_src/processing/youtube_cross_source.baml`. Returns a
+    list of `CrossSourceConcept` records (or `[]` if the BAML client is
+    unavailable). Errors degrade to a warning + empty list — the
+    per-video downstream surface stays usable even if the cross-source
+    extraction fails.
+    """
+    try:
+        from baml_client import b  # type: ignore[import-not-found]
+    except ImportError as e:
+        logger.warning(
+            "youtube_kg.cross_source_baml_client_missing",
+            error=str(e),
+        )
+        return []
+
+    try:
+        concepts = await b.ExtractCrossSourceConcept(  # type: ignore[attr-defined]
+            hf_video_descriptions=hf_video_descriptions,
+            gc_video_descriptions=gc_video_descriptions,
+        )
+        return concepts or []
+    except Exception as e:
+        logger.warning(
+            "youtube_kg.cross_source_baml_error",
+            error=str(e),
+        )
+        return []
+
+
 # ---------------------------------------------------------------------------
 # Tiny VL-model call helpers (LiteLLM route through the registry)
 # ---------------------------------------------------------------------------
@@ -568,9 +761,14 @@ __all__ = [
     "VideoSegmentRecord",
     "VideoFrameCaptionRecord",
     "VideoTripleRecord",
+    "CrossSourceConceptRecord",  # NEW (2026-09-12)
     "youtube_kg_embedding_app",
     "YOUTUBE_VIDEOS_DUCKLAKE_TABLE",
     "LANCEDB_TABLE_SEGMENTS",
     "LANCEDB_TABLE_FRAME_CAPTIONS",
     "LANCEDB_TABLE_TRIPLES",
+    "LANCEDB_TABLE_CROSS_SOURCE_CONCEPTS",  # NEW (2026-09-12)
+    "HF_POST_TRAINING_PLAYLIST_ID",  # NEW (2026-09-12)
+    "GC_AI_AGENT_PLAYLIST_ID",  # NEW (2026-09-12)
+    "CROSS_SOURCE_CONFIDENCE_THRESHOLD",  # NEW (2026-09-12)
 ]
