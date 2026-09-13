@@ -1,12 +1,39 @@
 ---
 name: litellm
-description: Expert assistance for unified LLM access with LiteLLM v1.84–1.90 (per-model routing groups, cosign-verified Docker, OpenAI Realtime GA, OpenTelemetry v2 metrics, MCP gateway, vector stores, workflows, providers incl. OpenAI / Anthropic / Azure AI / Bedrock / DeepSeek / xAI / Gemini / ModelScope / LibertAI / Parasail / Pinstripes / TinyFish / FastCRW).
+description: Expert assistance for unified LLM access with LiteLLM v1.91.0–1.97.0 (per-model routing groups, cosign-verified Docker, OpenAI Realtime GA, OpenTelemetry v2 metrics, MCP gateway, vector stores, workflows, providers incl. OpenAI / Anthropic / Azure AI / Bedrock / DeepSeek / xAI / Gemini / ModelScope / LibertAI / Parasail / Pinstripes / TinyFish / FastCRW).
 ---
 
 # LiteLLM - Unified LLM Interface
 
-**Version:** 1.90.x | **Last Updated:** 2026-06-29
-**Live evidence**: PyPI `litellm==1.90.0` (2026-06-27); docs latest = "Six New Providers, OpenTelemetry v2 Parity & Streaming Reliability".
+**Version:** 1.97.0 (Python lib) / v1.91.0 (Docker) | **Last Updated:** 2026-09-12
+**Live evidence**: PyPI `litellm==1.97.0` (2026-09-12); compose.yaml uses `litellm-database:v1.91.0`
+
+## ⚠️ CURRENT STATUS (2026-09-12, Plan 3 audit)
+
+The litellm surface in this repo:
+
+- **Installed**: `litellm==1.97.0` (Python lib)
+- **Docker**: `ghcr.io/berriai/litellm-database:v1.91.0` (per compose.yaml)
+- **52 models** in `bonneagar/stacks/litellm/config/config.yaml` (24 VISION + 6 CLASSICAL_OCR + 4 TEXT + others)
+- **16 unique model strings** referenced by BAML clients (mostly all `minimax-m3`)
+- **Version drift**: skill says 1.90 but actual is 1.97 (drift detected by smoke test)
+
+### BAML client → litellm model mapping
+
+16 of the 29 `clients.baml` clients use `model "minimax-m3"` (the default text model).
+3 clients use `local/vision/*` (the GGUF vision models routed through llama-swap).
+The remaining 10 are aliases for the same minimax-m3 deployment with different
+retry policies / timeout configurations.
+
+### New 1.97 features we may not be using
+
+- **MCP gateway** (1.97): expose litellm as an MCP server
+- **Vector stores v2**: in-built RAG store
+- **Workflows**: chained LLM calls as a first-class concept
+- **Otel v2 metrics**: replacement for v1 OpenTelemetry
+
+These are NOT yet used in any of our config.yaml models — adoption deferred.
+; docs latest = "Six New Providers, OpenTelemetry v2 Parity & Streaming Reliability".
 
 ## 0. Versioning & cosign verification (v1.84.0+)
 

@@ -5,8 +5,17 @@ description: Efficient LLM fine-tuning with 70% VRAM reduction and 2x speedup. E
 
 # Unsloth
 
-**Version:** >=2026.6.9 | **Last Updated:** 2026-06-28
-**Verified upstream:** unsloth v0.1.471-beta (GitHub, 2026-06-18) / unsloth 2026.6.9 (PyPI, 2026-06-22)
+**Version:** >=2026.9.x | **Last Updated:** 2026-09-12
+**Verified upstream:** unsloth v0.1.x-latest (GitHub, 2026-09); Docker image `${UNSLOTH_IMAGE:-unsloth/unsloth:latest}` (per compose.yaml)
+
+## ⚠️ CURRENT STATUS (2026-09-12, Plan 3 audit)
+
+- **Docker**: `unsloth/unsloth:latest` (per `bonneagar/stacks/unsloth-serve/compose.yaml`)
+- **Deployable**: `docker compose -f compose.yaml -f compose.bunchloch.yaml up -d`
+- **20 `local/unsloth/*` aliases** in litellm config route through this server
+- **llama-swap**: uses `ghcr.io/mostlygeek/llama-swap:cpu` (CPU-only) - Metal GPU passthrough not possible in Docker Desktop on macOS
+- **5 agent integrations** consume the Unsloth endpoint: opencode, openclaw, hermes-agent, claude-code, codex
+
 **Docs:** https://unsloth.ai/docs/llms.txt
 
 ## Overview
