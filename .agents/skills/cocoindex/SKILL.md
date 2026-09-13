@@ -1,6 +1,26 @@
 ---
 name: cocoindex
-description: Toolkit for CocoIndex v1 library (pip v1.0.14, 2026-06-25; docs frozen on v1.0.7 / 2026-06-23 — verified live 2026-06-29). Use when users need pipelines with the v1 `coco.App` + `@coco.fn` + `ContextKey` + `mount_table_target` + `Annotated[NDArray, EMBEDDER]` model, 17 source/target connectors (S3, Doris, FalkorDB, Google Drive, Iggy, Kafka, LanceDB, LocalFS, Neo4j, OCI Object Storage, Postgres, Qdrant, SQLite, SurrealDB, Turbopuffer, Valkey, zvec), execution primitives (`memo=True`, `logic_tracking`, `version`, `deps`, `batching=True`, `runner=coco.GPU`, `as_async`), and lifecycle via `@coco.lifespan` + `coco.start() / coco.stop() / coco.runtime()`. Powers the 7 BIEP v1 Apps (6 LC subjects + `government_circulars`) + the canonical `_lifespan.py` shared embedder (`BAAI/bge-m3`, 1024-d). PyPI marks 1.0.8 as yanked; pin `>=1.0,<2.0,!=1.0.8`.
+description: Toolkit for CocoIndex v1 library (pip v1.0.20, 2026-09-12; docs frozen on v1.0.7 / 2026-06-23 — verified live 2026-06-29). Use when users need pipelines with the v1 `coco.App` + `@coco.fn` + `ContextKey` + `mount_table_target` + `Annotated[NDArray, EMBEDDER]` model, 17 source/target connectors (S3, Doris, FalkorDB, Google Drive, Iggy, Kafka, LanceDB, LocalFS, Neo4j, OCI Object Storage, Postgres, Qdrant, SQLite, SurrealDB, Turbopuffer, Valkey, zvec), execution primitives (`memo=True`, `logic_tracking`, `version`, `deps`, `batching=True`, `runner=coco.GPU`, `as_async`), and lifecycle via `@coco.lifespan` + `coco.start() / coco.stop() / coco.runtime()`. Powers the 7 BIEP v1 Apps (6 LC subjects + `government_circulars`) + the canonical `_lifespan.py` shared embedder (`BAAI/bge-m3`, 1024-d). PyPI marks 1.0.8 as yanked; pin `>=1.0,<2.0,!=1.0.8`.
+
+
+## ⚠️ CURRENT STATUS (2026-09-12, Plan 4 audit)
+
+- **Installed**: `cocoindex==1.0.20` (Python lib, 2026-09-12)
+- **42 `*_embedding.py` flows** across 13 jurisdiction/subject clusters
+- **Ireland LC**: 6 per-subject flows + 1 shared scaffolding (1902 LOC),
+  with Python fallback when `baml_client.baml_client` is unavailable
+  (the Plan 2 BAML compilation blocker)
+- **biep_parity_lc tests**: 6 per-subject tests under `tests/biep_parity_lc/`
+- **No flows currently call `baml_client` successfully** — all use the
+  pure-Python `_python_baml_fallback_extract` path
+
+### CocoIndex v1.0.20 features (new since skill was authored)
+
+- **`memo=True` decorator argument** for functions (post-1.0.15)
+- **Lance REST namespace** support (post-1.0.18)
+- **Concurrent writer safety** via `concurrent_source` (post-1.0.17)
+
+These are NOT yet used in our 42 flows — adoption deferred.
 ---
 
 # CocoIndex v1
