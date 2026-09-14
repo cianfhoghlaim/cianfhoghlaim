@@ -1,6 +1,43 @@
 ---
 name: marimo
-description: Expert assistant for marimo reactive Python notebooks. Use when building reactive dashboards with multi-column layout, PEP 723 inline dependency blocks, `@app.setup` + `@app.function` lifecycle modes, `mo.sql(engine=)` for federated SQL against DuckLake/MotherDuck, DLT + LanceDB + RRF hybrid search patterns, or marimo-on-Cloudflare Workers + Container deployment. Powers the 6 per-subject BIEP notebooks (Mathematics, Chemistry, Geography, Gaeilge, English, Computer Science) at `notebooks/`.
+description: Expert assistant for marimo reactive Python notebooks. Use when building reactive dashboards with multi-column layout, PEP 723 inline dependency blocks, `@app.setup` + `@app.function` lifecycle modes, `mo.sql(engine=)` for federated SQL against DuckLake/MotherDuck, DLT + LanceDB + RRF hybrid search patterns, or marimo-on-Cloudflare Workers + Container deployment. Powers the 66-notebook BIEP surface (6 per-subject + 17 BIEP lakehouse pipeline + 5 official media + 1 unified control panel + ...). `notebooks/_shared/marimo_patterns.py` is the canonical pattern library.
+
+
+## ⚠️ CURRENT STATUS (2026-09-13, Plan 7 audit)
+
+- **Installed**: `marimo==0.23.13` (PyPI)
+- **66 notebooks** under `notebooks/` (vs skill claim of "6 per-subject")
+  - **17 BIEP lakehouse pipeline** (`10_biep_pipeline_lakehouse_*`)
+  - **5 official media** (`13_official_media_*`)
+  - **4 Crown dependencies** (`22_crown_dependencies_*`)
+  - **1 unified control panel** (`00_control_panel.py`)
+  - **1 marimo patterns tour** (`00_marimo_patterns_tour.py`)
+  - **6 Ireland LC subjects** (in `a_level/`, `notebooks/a_level/`)
+  - The canonical `40_leaving_cert_subject_panel.py` is **GONE**
+    (lost Phase 16-29 disaster)
+- **Shared patterns**: `notebooks/_shared/marimo_patterns.py` provides
+  the 8 pillars (R1-R4 + P1-P6) for reuse across all dashboards
+- **PEP 723 inline dependencies**: `_pep723_template.py` provides
+  the canonical `CANONICAL_DEPENDENCIES` block
+
+### Marimo 0.23.13 features we may not be using
+
+- **`@app.cell(column=N)`** multi-column layout (canonical 0.20+)
+- **`mo.ui.tabs`** for tabbed consoles (canonical 0.22+)
+- **`mo.sql(engine=...)`** for federated SQL (canonical)
+- **`mo.status.spinner` / `progress_bar`** for long-running ops
+
+These ARE used (the patterns module wraps them) — adoption complete.
+
+### Lost Phase 16-29 notebooks
+
+- `notebooks/40_leaving_cert_subject_panel.py` — the unified 7-tab
+  + LLM chat panel (lost in disaster)
+- Several `notebooks/10_biep_pipeline_lakehouse_*` notebooks may
+  reference the lost subject panel as a building block
+
+Re-applying these is out of scope for Plan 7 — see Plan 10
+(education sources) for the unified panel rebuild.
 ---
 
 # Marimo Notebook Assistant
