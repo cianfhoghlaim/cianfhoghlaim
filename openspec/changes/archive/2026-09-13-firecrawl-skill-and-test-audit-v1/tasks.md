@@ -14,6 +14,6 @@
 
 ## Phase C — Validation (5 min)
 
-- [ ] **C.1** `uv run pytest tests/firecrawl/ -v` all 8 pass
-- [ ] **C.2** `uv run openspec validate 2026-09-13-firecrawl-skill-and-test-audit-v1 --strict` exits 0
-- [ ] **C.3** `uv run openspec archive 2026-09-13-firecrawl-skill-and-test-audit-v1 --yes`
+- [x] **C.1** `uv run pytest tests/firecrawl/ -v` all 8 pass
+- [x] **C.2** `uv run openspec validate 2026-09-13-firecrawl-skill-and-test-audit-v1 --strict` exits 0
+- [x] **C.3** `uv run openspec archive 2026-09-13-firecrawl-skill-and-test-audit-v1 --yes`
