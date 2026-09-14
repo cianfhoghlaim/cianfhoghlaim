@@ -10,6 +10,6 @@
 
 ## Phase B — Validation (5 min)
 
-- [ ] **B.1** `uv run pytest tests/education_sources/ -v` all 9 pass
-- [ ] **B.2** `uv run openspec validate 2026-09-13-education-sources-test-audit-v1 --strict` exits 0
-- [ ] **B.3** `uv run openspec archive 2026-09-13-education-sources-test-audit-v1 --yes`
+- [x] **B.1** `uv run pytest tests/education_sources/ -v` all 9 pass
+- [x] **B.2** `uv run openspec validate 2026-09-13-education-sources-test-audit-v1 --strict` exits 0
+- [x] **B.3** `uv run openspec archive 2026-09-13-education-sources-test-audit-v1 --yes`
