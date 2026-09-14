@@ -25,7 +25,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 BAML_SRC = REPO_ROOT / "baml_src"
-TEMPLATES_DIR = BAML_SRC / "_shared" / "templates"
+TEMPLATES_DIR = REPO_ROOT / "baml_templates"
 BACKUP_DIR = REPO_ROOT / ".baml_stubs_backup"
 
 STUB_LITERAL = "Auto-generated extraction prompt."
