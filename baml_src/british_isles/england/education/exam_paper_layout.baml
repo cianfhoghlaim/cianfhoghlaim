@@ -63,7 +63,8 @@ function ExtractAQAExamPaper(
   subject: string?,
   qualification_level: string?,
   year: int?,
-) -> AQAExamPaper {  client ExtractEn
+) -> AQAExamPaper {
+  client ExtractEn
   // Real extraction prompt (2026-08-08 docs-informed-quest-and-credential-
   // generation-v1 change). Same placeholder-prompt bug class already fixed
   // for Ireland's lc_extraction functions and for England's own
@@ -114,20 +115,5 @@ function ExtractAQAExamPaper(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    AQAExamPaper {
-      board examboard {},
-      qualification_level qualificationlevel {},
-      subject "",
-      language null,
-      year 0,
-      source_pdf "",
-      total_pages 0,
-      total_marks 0,
-      duration_minutes null,
-      has_formula_sheet false,
-      has_data_booklet false,
-      sections null,
-    }
-  }
+
 }

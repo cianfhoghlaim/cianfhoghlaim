@@ -144,7 +144,8 @@ class Notebook {
   difficulty string
 }
 
-function GetSubjectList(language: string) -> Subject[] {  client ExtractEn
+function GetSubjectList(language: string) -> Subject[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -157,7 +158,8 @@ function GetSubjectList(language: string) -> Subject[] {  client ExtractEn
   "#
 }
 
-function GetPastPapers(subject: string, year_from: int, year_to: int) -> PastPaperStorage[] {  client ExtractEn
+function GetPastPapers(subject: string, year_from: int, year_to: int) -> PastPaperStorage[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -170,7 +172,8 @@ function GetPastPapers(subject: string, year_from: int, year_to: int) -> PastPap
   "#
 }
 
-function GetMarkingSchemes(subject: string, year_from: int, year_to: int) -> MarkingSchemeShared[] {  client ExtractEn
+function GetMarkingSchemes(subject: string, year_from: int, year_to: int) -> MarkingSchemeShared[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -183,7 +186,8 @@ function GetMarkingSchemes(subject: string, year_from: int, year_to: int) -> Mar
   "#
 }
 
-function GetPracticeItems(subject: string, lo_code: string) -> PracticeItem[] {  client ExtractEn
+function GetPracticeItems(subject: string, lo_code: string) -> PracticeItem[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -196,7 +200,8 @@ function GetPracticeItems(subject: string, lo_code: string) -> PracticeItem[] { 
   "#
 }
 
-function GetFoundations() -> Foundation[] {  client ExtractEn
+function GetFoundations() -> Foundation[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -209,7 +214,8 @@ function GetFoundations() -> Foundation[] {  client ExtractEn
   "#
 }
 
-function GetNotebooks(subject: string) -> Notebook[] {  client ExtractEn
+function GetNotebooks(subject: string) -> Notebook[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -236,7 +242,8 @@ function GetNotebooks(subject: string) -> Notebook[] {  client ExtractEn
 // from the v0.223.0 / 5-tangent bump).
 
 /// Bilingual EN+GA text extractor; returns the canonical BilingualText shape.
-function ExtractBilingualText(content: string) -> BilingualText {  client ExtractEn
+function ExtractBilingualText(content: string) -> BilingualText {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -248,13 +255,12 @@ function ExtractBilingualText(content: string) -> BilingualText {  client Extrac
     {{ input }}
   "#
 
-  catch_all (err) {
-    BilingualText {}
-  }
+
 }
 
 /// NCCA strand/outcome extractor; returns the GA-canonical statement list.
-function ExtractStrandGaStatement(paragraph: string) -> string[] {  client ExtractEn
+function ExtractStrandGaStatement(paragraph: string) -> string[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -266,7 +272,5 @@ function ExtractStrandGaStatement(paragraph: string) -> string[] {  client Extra
     {{ input }}
   "#
 
-  catch_all (err) {
-    string[] {}
-  }
+
 }

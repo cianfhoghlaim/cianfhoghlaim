@@ -15,8 +15,9 @@ class RomaniaHealthGuidance {
 function ExtractRomaniaHealthGuidance(
   nation: string,
   language: string,
-  text: string
-) -> RomaniaHealthGuidance {  client ExtractEn
+  text: string,
+) -> RomaniaHealthGuidance {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -28,12 +29,5 @@ function ExtractRomaniaHealthGuidance(
     {{ input }}
   "#
 
-  catch_all (err) {
-    RomaniaHealthGuidance {
-      title "",
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

@@ -96,8 +96,9 @@ function AnalyzePlayerResponse(
   expected_response: string?,
   context: string,
   language: CelticLanguage,
-  skill_being_tested: SkillDomain
-) -> ResponseAnalysis {  client ExtractEn
+  skill_being_tested: SkillDomain,
+) -> ResponseAnalysis {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -148,8 +149,9 @@ class AdaptiveQuestion {
 function GenerateAdaptiveAssessment(
   player_profile: PlayerLanguageProfile,
   focus_areas: SkillDomain[],
-  question_count: int
-) -> AdaptiveAssessment {  client ExtractEn
+  question_count: int,
+) -> AdaptiveAssessment {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -181,8 +183,9 @@ class PlacementResult {
 
 function EvaluatePlacementTest(
   responses: PlacementResponse[],
-  language: CelticLanguage
-) -> PlacementResult {  client ExtractEn
+  language: CelticLanguage,
+) -> PlacementResult {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -245,8 +248,9 @@ function GenerateProgressReport(
   player_id: string,
   activity_data: map<string, string>,
   language: CelticLanguage,
-  period: string
-) -> ProgressReport {  client ExtractEn
+  period: string,
+) -> ProgressReport {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -294,7 +298,8 @@ function GenerateExitCardQuestions(
   level: string,
   num_questions: int,
   curriculum_extract: CircularExtraction?,
-) -> ExitCardSet {  client ExtractEn
+) -> ExitCardSet {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

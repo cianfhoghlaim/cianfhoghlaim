@@ -45,7 +45,8 @@ enum MarkingType {
   AO7
 }
 
-function ExtractMarkingScheme(pdf_text: string, subject: string, year: int, paper: string) -> MarkingSchemeSec {  client ExtractEn
+function ExtractMarkingScheme(pdf_text: string, subject: string, year: int, paper: string) -> MarkingSchemeSec {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -57,11 +58,5 @@ function ExtractMarkingScheme(pdf_text: string, subject: string, year: int, pape
     {{ input }}
   "#
 
-  catch_all (err) {
-    MarkingSchemeSec {
-      year 0,
-      paper "",
-      totalMarks 0,
-    }
-  }
+
 }

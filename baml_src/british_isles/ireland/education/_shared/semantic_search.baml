@@ -49,7 +49,8 @@ class SearchTelemetry {
 }
 
 
-function SemanticSearch(query: string, filters: string) -> SearchResult[] {  client ExtractEn
+function SemanticSearch(query: string, filters: string) -> SearchResult[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -71,7 +72,8 @@ function SemanticSearchTelemetry(
   result_count: int,
   cache_hit: bool,
   search_id: string,
-) -> SearchTelemetry {  client ExtractEn
+) -> SearchTelemetry {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

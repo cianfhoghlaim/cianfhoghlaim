@@ -26,16 +26,9 @@ class GeographySpec {
 
 function ExtractGeographySpec(
   input: string,
-) -> GeographySpec {  client ExtractEn
+) -> GeographySpec {
+  client ExtractEn
     prompt #"{{ _.role('user') }} Extract geography spec from {{ input }}"#
 
-  catch_all (err) {
-    GeographySpec {
-      lo_code_prefix "JC-GEOG-LO",
-      strand_count 3,
-      total_learning_outcomes 0,
-      has_cba true,
-      cba_count 1,
-    }
-  }
+
 }

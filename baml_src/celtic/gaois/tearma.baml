@@ -279,8 +279,9 @@ class ITTerm {
 
 // Parse Tearma API JSON response for a single term
 function ParseTearmaTerm(
-  json_response: string
-) -> TearmaTerm {  client ExtractEn
+  json_response: string,
+) -> TearmaTerm {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
@@ -311,8 +312,9 @@ function ParseTearmaTerm(
 
 // Parse Tearma search results
 function ParseTearmaSearchResults(
-  json_response: string
-) -> TearmaSearchResult {  client ExtractEn
+  json_response: string,
+) -> TearmaSearchResult {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
@@ -344,8 +346,9 @@ function ParseTearmaSearchResults(
 // Extract domain-specific terminology
 function ExtractDomainTerminology(
   json_response: string,
-  target_domain: TerminologyDomain
-) -> TearmaDomainTerms {  client ExtractEn
+  target_domain: TerminologyDomain,
+) -> TearmaDomainTerms {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
@@ -373,17 +376,16 @@ function ExtractDomainTerminology(
     {{ input }}
   "#
 
-  catch_all (err) {
-    TearmaDomainTerms {}
-  }
+
 }
 
 // Extract educational terminology for curriculum alignment
 function ExtractEducationalTerms(
   json_response: string,
   subject: string,
-  level: string
-) -> EducationalTerm[] {  client ExtractEn
+  level: string,
+) -> EducationalTerm[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
@@ -411,16 +413,15 @@ function ExtractEducationalTerms(
     {{ input }}
   "#
 
-  catch_all (err) {
-    EducationalTerm[] {}
-  }
+
 }
 
 // Extract Irish grammar information from term
 function ExtractIrishGrammar(
   term_text: string,
-  context: string
-) -> IrishGrammar {  client ExtractEn
+  context: string,
+) -> IrishGrammar {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
@@ -448,15 +449,14 @@ function ExtractIrishGrammar(
     {{ input }}
   "#
 
-  catch_all (err) {
-    IrishGrammar {}
-  }
+
 }
 
 // Generate bilingual term card for vocabulary learning
 function GenerateTermCard(
-  term: TearmaTerm
-) -> string {  client ExtractEn
+  term: TearmaTerm,
+) -> string {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
@@ -488,8 +488,9 @@ function GenerateTermCard(
 // Link term to Logainm placenames (for geographic terminology)
 function LinkTermToPlacenames(
   term: TearmaTerm,
-  placename_contexts: string[]
-) -> int[] {  client ExtractEn
+  placename_contexts: string[],
+) -> int[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
@@ -522,8 +523,9 @@ function LinkTermToPlacenames(
 function TranslateTerm(
   source_text: string,
   source_language: string,
-  domain_context: TerminologyDomain?
-) -> TearmaTerm {  client ExtractEn
+  domain_context: TerminologyDomain?,
+) -> TearmaTerm {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
@@ -576,8 +578,9 @@ class DuchasFolkloreReference {
 // Find folklore uses of a term
 function FindFolkloreUsage(
   term: TearmaTerm,
-  duchas_search_results: string
-) -> TearmaFolkloreLink {  client ExtractEn
+  duchas_search_results: string,
+) -> TearmaFolkloreLink {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).
@@ -621,8 +624,9 @@ class BilingualPlaceTerm {
 function CrossReferencePlacenameElement(
   term_text: string,
   tearma_data: string,
-  logainm_glossary: string
-) -> BilingualPlaceTerm {  client ExtractEn
+  logainm_glossary: string,
+) -> BilingualPlaceTerm {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured terminology data from Tearma.ie (the Irish National Terminology Database).

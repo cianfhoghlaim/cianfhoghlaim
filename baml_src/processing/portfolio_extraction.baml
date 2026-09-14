@@ -293,7 +293,8 @@ class HybridProfile {
 // =============================================================================
 
 // Extract profile from CV/resume document
-function ExtractProfileFromCV(document: string) -> HybridProfile {  client ExtractEn
+function ExtractProfileFromCV(document: string) -> HybridProfile {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -305,13 +306,12 @@ function ExtractProfileFromCV(document: string) -> HybridProfile {  client Extra
     {{ input }}
   "#
 
-  catch_all (err) {
-    HybridProfile {}
-  }
+
 }
 
 // Extract profile from GitHub README
-function ExtractProfileFromGitHubReadme(readme: string, username: string) -> DeveloperProfile {  client ExtractEn
+function ExtractProfileFromGitHubReadme(readme: string, username: string) -> DeveloperProfile {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -323,13 +323,12 @@ function ExtractProfileFromGitHubReadme(readme: string, username: string) -> Dev
     {{ input }}
   "#
 
-  catch_all (err) {
-    DeveloperProfile {}
-  }
+
 }
 
 // Extract music profile from Spotify/SoundCloud data
-function ExtractMusicProfile(platformData: string, platform: PlatformType) -> MusicProfile {  client ExtractEn
+function ExtractMusicProfile(platformData: string, platform: PlatformType) -> MusicProfile {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -341,13 +340,12 @@ function ExtractMusicProfile(platformData: string, platform: PlatformType) -> Mu
     {{ input }}
   "#
 
-  catch_all (err) {
-    MusicProfile {}
-  }
+
 }
 
 // Extract game project details from documentation/README
-function ExtractGameProject(projectDocs: string) -> GameProject {  client ExtractEn
+function ExtractGameProject(projectDocs: string) -> GameProject {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -359,13 +357,12 @@ function ExtractGameProject(projectDocs: string) -> GameProject {  client Extrac
     {{ input }}
   "#
 
-  catch_all (err) {
-    GameProject {}
-  }
+
 }
 
 // Merge profiles from multiple sources into unified profile
-function MergeProfiles(profiles: HybridProfile[]) -> HybridProfile {  client ExtractEn
+function MergeProfiles(profiles: HybridProfile[]) -> HybridProfile {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -382,8 +379,9 @@ function MergeProfiles(profiles: HybridProfile[]) -> HybridProfile {  client Ext
 function GenerateProfileSummary(
     profile: HybridProfile,
     tenantType: ProfileType,
-    maxLength: int
-) -> string {  client ExtractEn
+    maxLength: int,
+) -> string {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

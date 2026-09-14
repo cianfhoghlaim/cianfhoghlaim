@@ -274,8 +274,9 @@ class CoverageCell {
 function ExtractCrossNationSpec(
   document: string,
   nation: Nation,
-  level: NationEducationLevel
-) -> CrossNationCurriculumSpec {  client ExtractEn
+  level: NationEducationLevel,
+) -> CrossNationCurriculumSpec {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -287,26 +288,14 @@ function ExtractCrossNationSpec(
     {{ input }}
   "#
 
-  catch_all (err) {
-    CrossNationCurriculumSpec {
-      nation nation {},
-      level nationeducationlevel {},
-      framework curriculumframework {},
-      board null,
-      subject "",
-      learning_outcomes null,
-      assessment_structure null,
-      resources_required null,
-      source_url "",
-      last_crawled "",
-    }
-  }
+
 }
 
 function AlignOutcomes(
   source_outcomes: CrossNationLearningOutcome[],
-  target_outcomes: CrossNationLearningOutcome[]
-) -> OutcomeAlignment[] {  client ExtractEn
+  target_outcomes: CrossNationLearningOutcome[],
+) -> OutcomeAlignment[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -321,8 +310,9 @@ function AlignOutcomes(
 
 function CompareCurricula(
   specs: CrossNationCurriculumSpec[],
-  subject: string
-) -> CrossNationComparison {  client ExtractEn
+  subject: string,
+) -> CrossNationComparison {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -337,8 +327,9 @@ function CompareCurricula(
 
 function IdentifyResourceSharing(
   source_spec: CrossNationCurriculumSpec,
-  target_specs: CrossNationCurriculumSpec[]
-) -> ResourceSharingRecommendation[] {  client ExtractEn
+  target_specs: CrossNationCurriculumSpec[],
+) -> ResourceSharingRecommendation[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -370,7 +361,8 @@ class ResourceSharingRecommendation {
 // LEVEL EQUIVALENCE MAPPING
 // ============================================================================
 
-function MapLevelEquivalence(level: NationEducationLevel) -> NationEducationLevel[] {  client ExtractEn
+function MapLevelEquivalence(level: NationEducationLevel) -> NationEducationLevel[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -404,7 +396,8 @@ class TranslationResult {
   terminology_used string[]? @description("Official terminology applied")
 }
 
-function TranslateEducationalContent(request: TranslationRequest) -> TranslationResult {  client ExtractEn
+function TranslateEducationalContent(request: TranslationRequest) -> TranslationResult {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

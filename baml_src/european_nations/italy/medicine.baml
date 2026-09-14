@@ -14,8 +14,9 @@ class ItalyMedicineDocument {
 function ExtractItalyMedicineDocument(
   country_code: string,
   language: string,
-  text: string
-) -> ItalyMedicineDocument {  client ExtractEn
+  text: string,
+) -> ItalyMedicineDocument {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -27,13 +28,5 @@ function ExtractItalyMedicineDocument(
     {{ input }}
   "#
 
-  catch_all (err) {
-    ItalyMedicineDocument {
-      title "",
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

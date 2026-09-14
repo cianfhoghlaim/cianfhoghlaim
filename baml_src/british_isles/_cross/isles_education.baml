@@ -228,7 +228,8 @@ class TeachingResource {
 // EXTRACTION FUNCTIONS
 // =============================================================================
 
-function ExtractCurriculumSpec(document: string) -> CurriculumSpecIsles {  client ExtractEn
+function ExtractCurriculumSpec(document: string) -> CurriculumSpecIsles {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -240,12 +241,11 @@ function ExtractCurriculumSpec(document: string) -> CurriculumSpecIsles {  clien
     {{ input }}
   "#
 
-  catch_all (err) {
-    CurriculumSpecIsles {}
-  }
+
 }
 
-function ExtractExamPaper(document: string) -> ExamPaperIsles {  client ExtractEn
+function ExtractExamPaper(document: string) -> ExamPaperIsles {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -257,12 +257,11 @@ function ExtractExamPaper(document: string) -> ExamPaperIsles {  client ExtractE
     {{ input }}
   "#
 
-  catch_all (err) {
-    ExamPaperIsles {}
-  }
+
 }
 
-function ExtractTerminology(document: string) -> TermEntry[] {  client ExtractEn
+function ExtractTerminology(document: string) -> TermEntry[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -274,12 +273,11 @@ function ExtractTerminology(document: string) -> TermEntry[] {  client ExtractEn
     {{ input }}
   "#
 
-  catch_all (err) {
-    TermEntry[] {}
-  }
+
 }
 
-function ExtractTeachingResource(document: string) -> TeachingResource {  client ExtractEn
+function ExtractTeachingResource(document: string) -> TeachingResource {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -291,12 +289,11 @@ function ExtractTeachingResource(document: string) -> TeachingResource {  client
     {{ input }}
   "#
 
-  catch_all (err) {
-    TeachingResource {}
-  }
+
 }
 
-function DetectDocumentType(document: string) -> DocumentTypeIsles {  client ExtractEn
+function DetectDocumentType(document: string) -> DocumentTypeIsles {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -309,7 +306,8 @@ function DetectDocumentType(document: string) -> DocumentTypeIsles {  client Ext
   "#
 }
 
-function DetectLanguages(text: string) -> LanguageCodeIsles[] {  client ExtractEn
+function DetectLanguages(text: string) -> LanguageCodeIsles[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

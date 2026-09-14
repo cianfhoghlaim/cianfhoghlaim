@@ -98,7 +98,8 @@ function ExtractMathematicsMarkingScheme(
   pdf_text: string,
   year: int?,
   level: string?,
-) -> MathematicsMarkingScheme {  client ExtractEn
+) -> MathematicsMarkingScheme {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -110,16 +111,7 @@ function ExtractMathematicsMarkingScheme(
     {{ input }}
   "#
 
-  catch_all (err) {
-    MathematicsMarkingScheme {
-      year 0,
-      source_pdf "",
-      mark_allocations null,
-      subject_specific mathsubjectdiscriminator {},
-      total_marks 0,
-      total_questions 0,
-    }
-  }
+
 }
 
 // test mathematics_marking_extraction_smoke {

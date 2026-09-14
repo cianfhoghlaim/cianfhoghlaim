@@ -27,16 +27,9 @@ class EnglishSpec {
 
 function ExtractEnglishSpec(
   input: string,
-) -> EnglishSpec {  client ExtractEn
+) -> EnglishSpec {
+  client ExtractEn
     prompt #"{{ _.role('user') }} Extract english spec from {{ input }}"#
 
-  catch_all (err) {
-    EnglishSpec {
-      lo_code_prefix "JC-ENGL-LO",
-      strand_count 3,
-      total_learning_outcomes 0,
-      has_prescribed_texts true,
-      has_cba true,
-    }
-  }
+
 }

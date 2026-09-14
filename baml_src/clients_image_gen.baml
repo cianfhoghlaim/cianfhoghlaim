@@ -144,18 +144,7 @@ function ExtractImageAssetMetadata(prompt: string, language: string?) -> ImageAs
     PROMPT: {{ prompt }}
   "#
 
-  catch_all (err) {
-    ImageAssetMetadata {
-      subject "",
-      style null,
-      palette null,
-      width 0,
-      height 0,
-      baml_routing_role "",
-      cocoindex_record_id "",
-      created_at "",
-    }
-  }
+
 }
 
 // ====== Style-match function (for the style_match tool) ======
@@ -195,11 +184,5 @@ function ExtractStyleMatchVariants(reference_prompt: string, target_prompt: stri
     TARGET SUBJECT: {{ target_prompt }}
   "#
 
-  catch_all (err) {
-    StyleMatchVariants {
-      reference_prompt "",
-      target_prompt "",
-      variants null,
-    }
-  }
+
 }

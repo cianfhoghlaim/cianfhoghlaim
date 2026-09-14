@@ -36,7 +36,8 @@ class LeavingCertSyllabus {
   @@stream.done
 }
 
-function ExtractLeavingCertSyllabus(pdf_text: string) -> LeavingCertSyllabus {  client ExtractEn
+function ExtractLeavingCertSyllabus(pdf_text: string) -> LeavingCertSyllabus {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -48,9 +49,7 @@ function ExtractLeavingCertSyllabus(pdf_text: string) -> LeavingCertSyllabus {  
     {{ input }}
   "#
 
-  catch_all (err) {
-    LeavingCertSyllabus {}
-  }
+
 }
 
 // ---------------------------------------------------------------------------
@@ -78,7 +77,8 @@ class SyllabusStructure {
   @@stream.done
 }
 
-function ExtractSyllabusStructure(pdf_text: string, subject: string, language: string) -> SyllabusStructure {  client ExtractEn
+function ExtractSyllabusStructure(pdf_text: string, subject: string, language: string) -> SyllabusStructure {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -90,7 +90,5 @@ function ExtractSyllabusStructure(pdf_text: string, subject: string, language: s
     {{ input }}
   "#
 
-  catch_all (err) {
-    SyllabusStructure {}
-  }
+
 }

@@ -6,7 +6,8 @@
 function ExtractSubjectRubric(text: string,
   subject: string,
   level: ExamLevel,
-  exam_years: int[]) -> SubjectRubric {  client ExtractEn
+  exam_years: int[]) -> SubjectRubric {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -18,16 +19,15 @@ function ExtractSubjectRubric(text: string,
     {{ input }}
   "#
 
-  catch_all (err) {
-    SubjectRubric {}
-  }
+
 }
 
 
 function ScoreEssayAgainstRubric(essay: string,
   subject: string,
   level: ExamLevel,
-  rubric_text: string) -> RubricScore {  client ExtractEn
+  rubric_text: string) -> RubricScore {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -45,7 +45,8 @@ function CompareMarkingSchemes(year_a: int,
   year_b: int,
   scheme_a: string,
   scheme_b: string,
-  subject: string) -> MarkingSchemeDiff {  client ExtractEn
+  subject: string) -> MarkingSchemeDiff {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -62,7 +63,8 @@ function CompareMarkingSchemes(year_a: int,
 function LazyExtractExamPaper(text: string,
   subject: string,
   year: int,
-  level: ExamLevel) -> ExamPaper {  client ExtractEn
+  level: ExamLevel) -> ExamPaper {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

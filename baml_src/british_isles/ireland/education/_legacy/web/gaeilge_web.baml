@@ -123,8 +123,9 @@ function GaeilgeWebStudyPlan(
   weeks_until_exam: int,
   target_level: GaeilgeLevel,
   language: "baml_src.british_isles.ireland.education._shared.content_types.GaeilgeLanguage",
-  focus_topics: string[]
-) -> GaeilgeWebStudyPlanResponse {  client ExtractEn
+  focus_topics: string[],
+) -> GaeilgeWebStudyPlanResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -142,8 +143,9 @@ function GaeilgeWebExamPaperDiscussion(
   paper_year: int,
   paper_level: GaeilgeLevel,
   paper_language: "baml_src.british_isles.ireland.education._shared.content_types.GaeilgeLanguage",
-  question_text: string
-) -> GaeilgeWebExamPaperDiscussionResponse {  client ExtractEn
+  question_text: string,
+) -> GaeilgeWebExamPaperDiscussionResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -160,8 +162,9 @@ function GaeilgeWebMarkingSchemeExplanation(
   subject: string,
   paper_year: int,
   paper_level: GaeilgeLevel,
-  paper_language: "baml_src.british_isles.ireland.education._shared.content_types.GaeilgeLanguage"
-) -> GaeilgeWebMarkingSchemeExplanationResponse {  client ExtractEn
+  paper_language: "baml_src.british_isles.ireland.education._shared.content_types.GaeilgeLanguage",
+) -> GaeilgeWebMarkingSchemeExplanationResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

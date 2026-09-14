@@ -16,8 +16,9 @@ class BosniaAndHerzegovinaHealthGuidance {
 function ExtractBosniaAndHerzegovinaHealthGuidance(
   nation: string,
   language: string,
-  text: string
-) -> BosniaAndHerzegovinaHealthGuidance {  client ExtractEn
+  text: string,
+) -> BosniaAndHerzegovinaHealthGuidance {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -29,13 +30,5 @@ function ExtractBosniaAndHerzegovinaHealthGuidance(
     {{ input }}
   "#
 
-  catch_all (err) {
-    BosniaAndHerzegovinaHealthGuidance {
-      title "",
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

@@ -15,8 +15,9 @@ class MexicoMedicineDocument {
 function ExtractMexicoMedicineDocument(
   jurisdiction: string,
   language: string,
-  text: string
-) -> MexicoMedicineDocument {  client ExtractEn
+  text: string,
+) -> MexicoMedicineDocument {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -28,14 +29,5 @@ function ExtractMexicoMedicineDocument(
     {{ input }}
   "#
 
-  catch_all (err) {
-    MexicoMedicineDocument {
-      language "",
-      title "",
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

@@ -170,7 +170,8 @@ class MatriculationAudit {
 // Functions
 // -----------------------------------------------------------------------------
 
-function ExtractCaliforniaOCourseList(page_markdown: string, year: int) -> CaliforniaOCourse[] {  client ExtractEn
+function ExtractCaliforniaOCourseList(page_markdown: string, year: int) -> CaliforniaOCourse[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -182,12 +183,11 @@ function ExtractCaliforniaOCourseList(page_markdown: string, year: int) -> Calif
     {{ input }}
   "#
 
-  catch_all (err) {
-    CaliforniaOCourse[] {}
-  }
+
 }
 
-function ExtractMatriculationRules(page_markdown: string, institution: string) -> MatriculationRequirement[] {  client ExtractEn
+function ExtractMatriculationRules(page_markdown: string, institution: string) -> MatriculationRequirement[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -199,12 +199,11 @@ function ExtractMatriculationRules(page_markdown: string, institution: string) -
     {{ input }}
   "#
 
-  catch_all (err) {
-    MatriculationRequirement[] {}
-  }
+
 }
 
-function ExtractQQIFetAwards(page_markdown: string) -> QqiFetAward[] {  client ExtractEn
+function ExtractQQIFetAwards(page_markdown: string) -> QqiFetAward[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -216,12 +215,11 @@ function ExtractQQIFetAwards(page_markdown: string) -> QqiFetAward[] {  client E
     {{ input }}
   "#
 
-  catch_all (err) {
-    QqiFetAward[] {}
-  }
+
 }
 
-function ExtractApprenticeshipListings(page_markdown: string) -> Apprenticeship {  client ExtractEn
+function ExtractApprenticeshipListings(page_markdown: string) -> Apprenticeship {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -233,22 +231,13 @@ function ExtractApprenticeshipListings(page_markdown: string) -> Apprenticeship 
     {{ input }}
   "#
 
-  catch_all (err) {
-    Apprenticeship {
-      programme_code "",
-      title_en "",
-      title_ga null,
-      duration_years 0,
-      nfq_level nfqlevel {},
-      consortia_partners null,
-      source_url "",
-    }
-  }
+
 }
 
 
 function ExtractApplicationTimeline(page_markdown: string,
-  year: int) -> ApplicationTimeline {  client ExtractEn
+  year: int) -> ApplicationTimeline {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -260,20 +249,14 @@ function ExtractApplicationTimeline(page_markdown: string,
     {{ input }}
   "#
 
-  catch_all (err) {
-    ApplicationTimeline {
-      course_code "",
-      late_application_close null,
-      offer_round_2 null,
-      registration_open "",
-    }
-  }
+
 }
 
 
 function EstimateCoursePoints(course: SOLASCourse,
   historical_points: int[],
-  applicant_profile: string) -> CoursePointsPrediction {  client ExtractEn
+  applicant_profile: string) -> CoursePointsPrediction {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -289,7 +272,8 @@ function EstimateCoursePoints(course: SOLASCourse,
 
 function AuditMatriculation(institution: string,
   course_code: string,
-  applicant_grades: string) -> MatriculationAudit {  client ExtractEn
+  applicant_grades: string) -> MatriculationAudit {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -307,7 +291,8 @@ function AuditMatriculation(institution: string,
 // From-URL extraction functions (merged from cianfhoghlaim_other/tertiary.baml)
 // =============================================================================
 
-function ExtractCaliforniaOCourseListFromUrl(page_url: string, year: int) -> CaliforniaOCourse[] {  client ExtractEn
+function ExtractCaliforniaOCourseListFromUrl(page_url: string, year: int) -> CaliforniaOCourse[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -319,12 +304,11 @@ function ExtractCaliforniaOCourseListFromUrl(page_url: string, year: int) -> Cal
     {{ input }}
   "#
 
-  catch_all (err) {
-    CaliforniaOCourse[] {}
-  }
+
 }
 
-function ExtractMatriculationRulesFromUrl(page_url: string, institution: string) -> MatriculationRequirement[] {  client ExtractEn
+function ExtractMatriculationRulesFromUrl(page_url: string, institution: string) -> MatriculationRequirement[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -336,15 +320,14 @@ function ExtractMatriculationRulesFromUrl(page_url: string, institution: string)
     {{ input }}
   "#
 
-  catch_all (err) {
-    MatriculationRequirement[] {}
-  }
+
 }
 
 function AuditMatriculationStdLib(
   institution: string,
-  applicant_grades: map<string, string>
-) -> MatriculationAudit {  client ExtractEn
+  applicant_grades: map<string, string>,
+) -> MatriculationAudit {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

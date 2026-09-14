@@ -40,7 +40,8 @@ class PIABPage {
 function ExtractPIABPage(
   page_url: string,
   page_html: string,
-) -> PIABPage {  client ExtractEn
+) -> PIABPage {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -52,11 +53,5 @@ function ExtractPIABPage(
     {{ input }}
   "#
 
-  catch_all (err) {
-    PIABPage {
-      url "",
-      title "",
-      page_kind piabpagekind {},
-    }
-  }
+
 }

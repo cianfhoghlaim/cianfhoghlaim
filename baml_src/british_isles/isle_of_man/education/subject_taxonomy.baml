@@ -105,7 +105,8 @@ function ExtractIsleOfManSyllabus(
   pdf_text: string,
   subject: IsleOfManSubject?,
   level: IsleOfManLevel?,
-) -> IsleOfManSyllabusSpec {  client BIEPV3Extract
+) -> IsleOfManSyllabusSpec {
+  client BIEPV3Extract
   prompt #"
     Extract the structured syllabus data from this Isle of Man
     (Department of Education, Sport and Culture) PDF specification
@@ -119,22 +120,7 @@ function ExtractIsleOfManSyllabus(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    IsleOfManSyllabusSpec {
-      source_pdf "",
-      source_pages 0,
-      subject isleofmansubject {},
-      level isleofmanlevel {},
-      title "",
-      version "",
-      first_teaching_year null,
-      last_certification_year null,
-      total_marks 0,
-      component_papers 0,
-      topics null,
-      assessment_objectives null,
-    }
-  }
+
 }
 
 test ExtractIsleOfManSyllabus {

@@ -79,8 +79,9 @@ class VisualSequence {
 function ExtractVideoKnowledgeTriple(
   video_id: string,
   transcript: string,
-  frame_captions: string[]
-) -> KnowledgeTriple[] {  client ExtractEn
+  frame_captions: string[],
+) -> KnowledgeTriple[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -92,16 +93,15 @@ function ExtractVideoKnowledgeTriple(
     {{ input }}
   "#
 
-  catch_all (err) {
-    KnowledgeTriple[] {}
-  }
+
 }
 
 
 function ExtractConceptChain(
   triples: KnowledgeTriple[],
-  video_id: string
-) -> ConceptChain {  client ExtractEn
+  video_id: string,
+) -> ConceptChain {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -113,17 +113,16 @@ function ExtractConceptChain(
     {{ input }}
   "#
 
-  catch_all (err) {
-    ConceptChain {}
-  }
+
 }
 
 
 function ExtractFrameSequence(
   video_id: string,
   frame_paths: string[],
-  fps_sampled: float
-) -> VisualSequence {  client ExtractEn
+  fps_sampled: float,
+) -> VisualSequence {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -135,7 +134,5 @@ function ExtractFrameSequence(
     {{ input }}
   "#
 
-  catch_all (err) {
-    VisualSequence {}
-  }
+
 }

@@ -14,8 +14,9 @@ class IndiaEducationDocument {
 function ExtractIndiaEducationDocument(
   country_code: string,
   language: string,
-  text: string
-) -> IndiaEducationDocument {  client ExtractEn
+  text: string,
+) -> IndiaEducationDocument {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -27,14 +28,5 @@ function ExtractIndiaEducationDocument(
     {{ input }}
   "#
 
-  catch_all (err) {
-    IndiaEducationDocument {
-      language "",
-      title "",
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

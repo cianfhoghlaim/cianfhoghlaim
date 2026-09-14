@@ -47,7 +47,8 @@ class TeachingQualification {
   @@stream.done
 }
 
-function ExtractPlacement(text: string) -> Placement[] {  client ExtractEn
+function ExtractPlacement(text: string) -> Placement[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -59,12 +60,11 @@ function ExtractPlacement(text: string) -> Placement[] {  client ExtractEn
     {{ input }}
   "#
 
-  catch_all (err) {
-    Placement[] {}
-  }
+
 }
 
-function ExtractStudentFeedback(text: string) -> StudentFeedback[] {  client ExtractEn
+function ExtractStudentFeedback(text: string) -> StudentFeedback[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -76,12 +76,11 @@ function ExtractStudentFeedback(text: string) -> StudentFeedback[] {  client Ext
     {{ input }}
   "#
 
-  catch_all (err) {
-    StudentFeedback[] {}
-  }
+
 }
 
-function ExtractCurriculumDesigned(text: string) -> CurriculumDesigned[] {  client ExtractEn
+function ExtractCurriculumDesigned(text: string) -> CurriculumDesigned[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -93,12 +92,11 @@ function ExtractCurriculumDesigned(text: string) -> CurriculumDesigned[] {  clie
     {{ input }}
   "#
 
-  catch_all (err) {
-    CurriculumDesigned[] {}
-  }
+
 }
 
-function ExtractTeachingQualification(text: string) -> TeachingQualification[] {  client ExtractEn
+function ExtractTeachingQualification(text: string) -> TeachingQualification[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -110,7 +108,5 @@ function ExtractTeachingQualification(text: string) -> TeachingQualification[] {
     {{ input }}
   "#
 
-  catch_all (err) {
-    TeachingQualification[] {}
-  }
+
 }

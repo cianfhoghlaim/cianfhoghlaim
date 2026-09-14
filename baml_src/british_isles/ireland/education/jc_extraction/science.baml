@@ -28,16 +28,9 @@ class ScienceSpec {
 
 function ExtractScienceSpec(
   input: string,
-) -> ScienceSpec {  client ExtractEn
+) -> ScienceSpec {
+  client ExtractEn
     prompt #"{{ _.role('user') }} Extract science spec from {{ input }}"#
 
-  catch_all (err) {
-    ScienceSpec {
-      lo_code_prefix "JC-SCI-LO",
-      strand_count 4,
-      total_learning_outcomes 0,
-      has_cba true,
-      cba_count 2,
-    }
-  }
+
 }

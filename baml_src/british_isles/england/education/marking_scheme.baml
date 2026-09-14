@@ -57,7 +57,8 @@ function ExtractAQAMarkingScheme(
   pdf_text: string,
   subject: string?,
   qualification_level: string?,
-) -> AQAMarkingScheme {  client ExtractEn
+) -> AQAMarkingScheme {
+  client ExtractEn
   // Real extraction prompt (2026-08-08 docs-informed-quest-and-credential-
   // generation-v1 change) — same fix as ExtractAQAExamPaper above.
   prompt #"
@@ -96,15 +97,5 @@ function ExtractAQAMarkingScheme(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    AQAMarkingScheme {
-      board examboard {},
-      qualification_level qualificationlevel {},
-      subject "",
-      grade_boundaries null,
-      source_pdf "",
-      source_pages 0,
-      year null,
-    }
-  }
+
 }

@@ -52,7 +52,8 @@ class VerificationSummary {
   lastUpdated string
 }
 
-function ExtractIdentityDocument(text: string) -> IdentityDocument[] {  client ExtractEn
+function ExtractIdentityDocument(text: string) -> IdentityDocument[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -64,12 +65,11 @@ function ExtractIdentityDocument(text: string) -> IdentityDocument[] {  client E
     {{ input }}
   "#
 
-  catch_all (err) {
-    IdentityDocument[] {}
-  }
+
 }
 
-function ExtractGardaVetting(text: string) -> GardaVetting[] {  client ExtractEn
+function ExtractGardaVetting(text: string) -> GardaVetting[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -81,12 +81,11 @@ function ExtractGardaVetting(text: string) -> GardaVetting[] {  client ExtractEn
     {{ input }}
   "#
 
-  catch_all (err) {
-    GardaVetting[] {}
-  }
+
 }
 
-function ExtractProfessionalRegistration(text: string) -> ProfessionalRegistration[] {  client ExtractEn
+function ExtractProfessionalRegistration(text: string) -> ProfessionalRegistration[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -98,12 +97,11 @@ function ExtractProfessionalRegistration(text: string) -> ProfessionalRegistrati
     {{ input }}
   "#
 
-  catch_all (err) {
-    ProfessionalRegistration[] {}
-  }
+
 }
 
-function GenerateVerificationSummary(docs: IdentityDocument[], vetting: GardaVetting[], regs: ProfessionalRegistration[]) -> VerificationSummary {  client ExtractEn
+function GenerateVerificationSummary(docs: IdentityDocument[], vetting: GardaVetting[], regs: ProfessionalRegistration[]) -> VerificationSummary {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

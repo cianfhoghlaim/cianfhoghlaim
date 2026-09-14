@@ -118,8 +118,9 @@ class TaleType {
 // Extract tale from Hidden Heritages page
 function ExtractHiddenHeritagesTale(
   page_content: string,
-  tale_id: string
-) -> HiddenHeritagesTale {  client ExtractEn
+  tale_id: string,
+) -> HiddenHeritagesTale {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -131,9 +132,7 @@ function ExtractHiddenHeritagesTale(
     {{ input }}
   "#
 
-  catch_all (err) {
-    HiddenHeritagesTale {}
-  }
+
 }
 
 test ExtractHiddenHeritagesTale {
@@ -163,8 +162,9 @@ test ExtractHiddenHeritagesTale {
 // Extract tales listing from browse page
 function ExtractTalesListing(
   page_content: string,
-  page_number: int
-) -> TalesListingPage {  client ExtractEn
+  page_number: int,
+) -> TalesListingPage {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -176,9 +176,7 @@ function ExtractTalesListing(
     {{ input }}
   "#
 
-  catch_all (err) {
-    TalesListingPage {}
-  }
+
 }
 
 // Summary of tales on a listing page

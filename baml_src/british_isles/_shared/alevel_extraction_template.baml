@@ -306,26 +306,7 @@ function ExtractALevelCurriculumSyllabus(
     {{ pdf_text }}
   "#
 
-  catch_all (err) {
-    ALevelSyllabusSpec {
-      subject alevelsubjectslug {},
-      language alevellanguage {},
-      board alevelexamboard {},
-      stage alevelstage {},
-      title "",
-      version "",
-      first_teaching_year null,
-      last_certification_year null,
-      source_pdf "",
-      source_pages null,
-      total_marks 0,
-      assessment_objectives null,
-      component_papers 0,
-      module_topics null,
-      total_learning_outcomes 0,
-      lineage null,
-    }
-  }
+
 }
 
 function ExtractALevelExamPaperLayout(
@@ -348,23 +329,7 @@ function ExtractALevelExamPaperLayout(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    ALevelExamPaper {
-      subject alevelsubjectslug {},
-      board alevelexamboard {},
-      stage alevelstage {},
-      language alevellanguage {},
-      year 0,
-      source_pdf "",
-      total_pages 0,
-      total_marks 0,
-      total_questions 0,
-      sections null,
-      duration_minutes null,
-      has_formula_sheet false,
-      lineage null,
-    }
-  }
+
 }
 
 function ExtractALevelMarkingSchemeGuideline(
@@ -385,23 +350,7 @@ function ExtractALevelMarkingSchemeGuideline(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    ALevelMarkingScheme {
-      subject alevelsubjectslug {},
-      board alevelexamboard {},
-      stage alevelstage {},
-      scheme_code "",
-      language alevellanguage {},
-      year null,
-      source_pdf "",
-      grade_descriptors null,
-      mark_allocations null,
-      total_bands 0,
-      total_pages 0,
-      descriptor_word_count_avg 0,
-      lineage null,
-    }
-  }
+
 }
 
 function ExtractALevelSyllabusDiagram(
@@ -421,21 +370,7 @@ function ExtractALevelSyllabusDiagram(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    ALevelSyllabusDiagram {
-      diagram_id "",
-      caption_en null,
-      caption_ga null,
-      page_number 0,
-      source_pdf "",
-      subject alevelsubjectslug {},
-      board alevelexamboard {},
-      pointing_model "",
-      confidence_score 0,
-      related_lo_ids null,
-      lineage null,
-    }
-  }
+
 }
 
 function ExtractALevelCrossSubjectTopics(
@@ -454,14 +389,7 @@ function ExtractALevelCrossSubjectTopics(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    ALevelCrossSubjectTopics {
-      subject alevelsubjectslug {},
-      topics null,
-      total_topics 0,
-      cross_subject_topics null,
-    }
-  }
+
 }
 
 function ExtractALevelPerQuestionScheme(
@@ -479,9 +407,7 @@ function ExtractALevelPerQuestionScheme(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    ALevelMarkAllocation[] {}
-  }
+
 }
 
 // ============================================================================

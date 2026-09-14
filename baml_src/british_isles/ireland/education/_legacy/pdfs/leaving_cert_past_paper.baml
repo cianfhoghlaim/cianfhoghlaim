@@ -28,7 +28,8 @@ class PastPaper {
   @@stream.done
 }
 
-function ExtractPastPaper(pdf_text: string) -> PastPaper {  client ExtractEn
+function ExtractPastPaper(pdf_text: string) -> PastPaper {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -40,14 +41,5 @@ function ExtractPastPaper(pdf_text: string) -> PastPaper {  client ExtractEn
     {{ input }}
   "#
 
-  catch_all (err) {
-    PastPaper {
-      subject "",
-      year 0,
-      paper "",
-      level "",
-      totalMarks 0,
-      questions null,
-    }
-  }
+
 }

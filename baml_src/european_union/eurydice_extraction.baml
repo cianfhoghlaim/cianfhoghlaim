@@ -16,8 +16,9 @@ class EurydiceNationalEducationStructure {
 
 function ExtractEurydiceNationalEducationStructure(
   language: EULanguage,
-  text: string
-) -> EurydiceNationalEducationStructure {  client ExtractEn
+  text: string,
+) -> EurydiceNationalEducationStructure {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -29,15 +30,5 @@ function ExtractEurydiceNationalEducationStructure(
     {{ input }}
   "#
 
-  catch_all (err) {
-    EurydiceNationalEducationStructure {
-      language eulanguage {},
-      title "",
-      primary_education_years null,
-      lower_secondary_education_years null,
-      upper_secondary_education_years null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

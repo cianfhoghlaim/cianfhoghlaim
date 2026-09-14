@@ -272,8 +272,9 @@ class DisagreementVariant {
 function ValidateOCRResult(
   ocr_text: string,
   model_id: string,
-  processing_time: float
-) -> OCRValidationResult {  client ExtractEn
+  processing_time: float,
+) -> OCRValidationResult {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -288,8 +289,9 @@ function ValidateOCRResult(
 
 // Validate Irish language quality specifically
 function ValidateIrishContent(
-  text: string
-) -> IrishContentQuality {  client ExtractEn
+  text: string,
+) -> IrishContentQuality {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -305,8 +307,9 @@ function ValidateIrishContent(
 // Extract document structure
 function ExtractDocumentStructure(
   ocr_text: string,
-  page_count: int
-) -> DocumentStructure {  client ExtractEn
+  page_count: int,
+) -> DocumentStructure {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -318,16 +321,15 @@ function ExtractDocumentStructure(
     {{ input }}
   "#
 
-  catch_all (err) {
-    DocumentStructure {}
-  }
+
 }
 
 // Compare results from multiple OCR models
 function CompareOCRModels(
   document_id: string,
-  model_results: ModelResult[]
-) -> ModelComparisonResult {  client ExtractEn
+  model_results: ModelResult[],
+) -> ModelComparisonResult {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

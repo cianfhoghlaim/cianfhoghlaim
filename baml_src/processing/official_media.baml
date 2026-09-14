@@ -29,8 +29,9 @@ class OfficialMediaCategory {
 function ClassifyOfficialMedia(
   ig_username: string,
   ig_bio: string,
-  ig_external_url: string?
-) -> OfficialMediaCategory {  client ExtractEn
+  ig_external_url: string?,
+) -> OfficialMediaCategory {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

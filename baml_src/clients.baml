@@ -300,21 +300,43 @@ client<llm> ExtractQwenCrossCheck {
 // All ``model`` strings below are resolved via MODEL_REGISTRY at
 // runtime — see the comments next to each block.
 
-client<llm> ArtworkAnalyzer     { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
-client<llm> CelticContentFallback { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
+client<llm> ArtworkAnalyzer     { provider "openai-generic" options {
+    base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3"
+  } }  // MODEL_REGISTRY: text_llm/default
+client<llm> CelticContentFallback { provider "openai-generic" options {
+    base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3"
+  } }  // MODEL_REGISTRY: text_llm/default
 // Claude / ClaudeMini / ClaudeOpus are defined in
 // education/cross_nation/multi_nation_curriculum.baml (Anthropic Claude configs).
 // They are intentionally NOT redeclared here.
 // ClaudeHaiku is an alias for ClaudeMini (both target Claude 3.5 Haiku).
-client<llm> ClaudeHaiku         { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
-client<llm> Extractor           { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
-client<llm> ExtractorFast       { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
-client<llm> FastAnalyzer        { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
-client<llm> FastExtraction      { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
-client<llm> Gemini2FlashAlias   { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
-client<llm> LiteLLM             { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
-client<llm> OideachaisDefault   { provider "openai-generic" options { base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3" } }  // MODEL_REGISTRY: text_llm/default
-client<llm> VisionExtractor     { provider "openai"         options { base_url env.LITELLM_BASE_URL api_key env.LITELLM_API_KEY model "local/vision/qwen3-vl-8b" } }  // MODEL_REGISTRY: ocr_vision/qwen3_vl_default
+client<llm> ClaudeHaiku         { provider "openai-generic" options {
+    base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3"
+  } }  // MODEL_REGISTRY: text_llm/default
+client<llm> Extractor           { provider "openai-generic" options {
+    base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3"
+  } }  // MODEL_REGISTRY: text_llm/default
+client<llm> ExtractorFast       { provider "openai-generic" options {
+    base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3"
+  } }  // MODEL_REGISTRY: text_llm/default
+client<llm> FastAnalyzer        { provider "openai-generic" options {
+    base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3"
+  } }  // MODEL_REGISTRY: text_llm/default
+client<llm> FastExtraction      { provider "openai-generic" options {
+    base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3"
+  } }  // MODEL_REGISTRY: text_llm/default
+client<llm> Gemini2FlashAlias   { provider "openai-generic" options {
+    base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3"
+  } }  // MODEL_REGISTRY: text_llm/default
+client<llm> LiteLLM             { provider "openai-generic" options {
+    base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3"
+  } }  // MODEL_REGISTRY: text_llm/default
+client<llm> OideachaisDefault   { provider "openai-generic" options {
+    base_url env.MINIMAX_BASE_URL api_key env.MINIMAX_API_KEY model "minimax-m3"
+  } }  // MODEL_REGISTRY: text_llm/default
+client<llm> VisionExtractor     { provider "openai"         options {
+    base_url env.LITELLM_BASE_URL api_key env.LITELLM_API_KEY model "local/vision/qwen3-vl-8b"
+  } }  // MODEL_REGISTRY: ocr_vision/qwen3_vl_default
 
 // ====== BIEP v3 canonical 3 clients (2026-08-13-biep-v3-systematic-download-ireland-england-v1) ======
 // Per the 2026-08-07-biep-v3-hardening-v1 + 2026-08-13 changes.

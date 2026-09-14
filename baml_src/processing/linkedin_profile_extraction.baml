@@ -39,7 +39,8 @@ class LinkedInProfile {
   @@stream.done
 }
 
-function ExtractLinkedInProfile(text: string) -> LinkedInProfile {  client ExtractEn
+function ExtractLinkedInProfile(text: string) -> LinkedInProfile {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -51,22 +52,11 @@ function ExtractLinkedInProfile(text: string) -> LinkedInProfile {  client Extra
     {{ input }}
   "#
 
-  catch_all (err) {
-    LinkedInProfile {
-      name "",
-      headline "",
-      location "",
-      about "",
-      experience null,
-      education null,
-      skills null,
-      recommendations null,
-      profileUrl "",
-    }
-  }
+
 }
 
-function ExtractExperienceHighlights(profile: LinkedInProfile) -> string {  client ExtractEn
+function ExtractExperienceHighlights(profile: LinkedInProfile) -> string {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -78,7 +68,5 @@ function ExtractExperienceHighlights(profile: LinkedInProfile) -> string {  clie
     {{ input }}
   "#
 
-  catch_all (err) {
-    ""
-  }
+
 }

@@ -69,7 +69,8 @@ function ExtractGaeilgeMarkingScheme(
   pdf_text: string,
   year: int?,
   level: string?,
-) -> GaeilgeMarkingScheme {  client ExtractEn
+) -> GaeilgeMarkingScheme {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -81,18 +82,7 @@ function ExtractGaeilgeMarkingScheme(
     {{ input }}
   "#
 
-  catch_all (err) {
-    GaeilgeMarkingScheme {
-      scheme_code "",
-      year 0,
-      source_pdf "",
-      grade_descriptors null,
-      mark_allocations null,
-      subject_specific gaelsubjectdiscriminator {},
-      total_marks 0,
-      total_questions 0,
-    }
-  }
+
 }
 
 // test gaeilge_marking_extraction_smoke {

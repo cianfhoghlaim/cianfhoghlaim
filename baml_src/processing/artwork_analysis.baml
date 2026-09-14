@@ -138,7 +138,8 @@ class GenerationSpec {
 
 // Extraction functions
 
-function AnalyzeArtwork(artwork: image) -> ArtworkAnalysis {  client ExtractEn
+function AnalyzeArtwork(artwork: image) -> ArtworkAnalysis {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -151,7 +152,8 @@ function AnalyzeArtwork(artwork: image) -> ArtworkAnalysis {  client ExtractEn
   "#
 }
 
-function QuickAnalyzeArtwork(artwork: image) -> QuickAnalysis {  client ExtractEn
+function QuickAnalyzeArtwork(artwork: image) -> QuickAnalysis {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -164,7 +166,8 @@ function QuickAnalyzeArtwork(artwork: image) -> QuickAnalysis {  client ExtractE
   "#
 }
 
-function CompareArtworkStyles(artwork1: image, artwork2: image) -> StyleComparison {  client ExtractEn
+function CompareArtworkStyles(artwork1: image, artwork2: image) -> StyleComparison {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -181,8 +184,9 @@ function GenerateArtworkSpec(
   subject: string,
   reference_artwork: image?,
   target_genre: MusicGenreArtwork,
-  preferred_mood: MoodCategory?
-) -> GenerationSpec {  client ExtractEn
+  preferred_mood: MoodCategory?,
+) -> GenerationSpec {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -195,7 +199,8 @@ function GenerateArtworkSpec(
   "#
 }
 
-function ExtractColorPalette(artwork: image) -> ColorInfo[] {  client ExtractEn
+function ExtractColorPalette(artwork: image) -> ColorInfo[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -207,12 +212,11 @@ function ExtractColorPalette(artwork: image) -> ColorInfo[] {  client ExtractEn
     {{ input }}
   "#
 
-  catch_all (err) {
-    ColorInfo[] {}
-  }
+
 }
 
-function GenerateVariationPrompt(artwork: image, variation_type: string) -> string {  client ExtractEn
+function GenerateVariationPrompt(artwork: image, variation_type: string) -> string {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

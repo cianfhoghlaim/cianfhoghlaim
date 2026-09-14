@@ -145,7 +145,8 @@ class HandwrittenEquation {
 // Functions
 // =============================================================================
 
-function ExtractGeminiReport(pdf_text: string, file_name: string) -> GeminiDeepResearchReport {  client ExtractEn
+function ExtractGeminiReport(pdf_text: string, file_name: string) -> GeminiDeepResearchReport {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
@@ -169,12 +170,11 @@ function ExtractGeminiReport(pdf_text: string, file_name: string) -> GeminiDeepR
     {{ input }}
   "#
 
-  catch_all (err) {
-    GeminiDeepResearchReport {}
-  }
+
 }
 
-function ExtractUoGArtifact(pdf_text: string, file_name: string, file_type: string) -> UniversityOfGalwayArtifact {  client ExtractEn
+function ExtractUoGArtifact(pdf_text: string, file_name: string, file_type: string) -> UniversityOfGalwayArtifact {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
@@ -198,12 +198,11 @@ function ExtractUoGArtifact(pdf_text: string, file_name: string, file_type: stri
     {{ input }}
   "#
 
-  catch_all (err) {
-    UniversityOfGalwayArtifact {}
-  }
+
 }
 
-function ExtractHandwrittenEquations(ocr_text: string, file_name: string) -> HandwrittenEquation[] {  client ExtractEn
+function ExtractHandwrittenEquations(ocr_text: string, file_name: string) -> HandwrittenEquation[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
@@ -227,12 +226,11 @@ function ExtractHandwrittenEquations(ocr_text: string, file_name: string) -> Han
     {{ input }}
   "#
 
-  catch_all (err) {
-    HandwrittenEquation[] {}
-  }
+
 }
 
-function ExtractZoteroMetadata(pdf_text: string, file_name: string, arxiv_id: string?) -> ZoteroPaper {  client ExtractEn
+function ExtractZoteroMetadata(pdf_text: string, file_name: string, arxiv_id: string?) -> ZoteroPaper {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
@@ -256,9 +254,7 @@ function ExtractZoteroMetadata(pdf_text: string, file_name: string, arxiv_id: st
     {{ input }}
   "#
 
-  catch_all (err) {
-    ZoteroPaper {}
-  }
+
 }
 
 // =============================================================================
@@ -380,8 +376,9 @@ function PreResearchSite(
   url: string,
   goal: string,
   backend_payload: string,
-  backend_name: string
-) -> ResearchSiteMap {  client ExtractEn
+  backend_name: string,
+) -> ResearchSiteMap {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
@@ -434,8 +431,9 @@ class CondensedPage {
 function CondenseToCriticalInfo(
   raw_markdown: string,
   goal: string,
-  max_output_bytes: int
-) -> CondensedPage {  client ExtractEn
+  max_output_bytes: int,
+) -> CondensedPage {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
@@ -488,8 +486,9 @@ class UiIndicator {
 
 function IdentifyUiPatterns(
   raw_markdown: string,
-  goal: string
-) -> UiIndicator[] {  client ExtractEn
+  goal: string,
+) -> UiIndicator[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
@@ -538,8 +537,9 @@ class GroundedElement {
 
 function VisualGroundingFromScreenshot(
   screenshot_description: string,
-  natural_language_query: string
-) -> GroundedElement {  client ExtractEn
+  natural_language_query: string,
+) -> GroundedElement {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
@@ -573,8 +573,9 @@ function SummarizeSite(
   url: string,
   goal: string,
   sitemap_urls: string[],
-  sample_markdown: string
-) -> ResearchSiteMap {  client ExtractEn
+  sample_markdown: string,
+) -> ResearchSiteMap {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.
@@ -622,8 +623,9 @@ enum AuthorArchiveCivicCategory {
 function ClassifySiteCivic(
   url: string,
   site_structure_summary: string,
-  primary_content_types: string[]
-) -> AuthorArchiveCivicCategory {  client ExtractEn
+  primary_content_types: string[],
+) -> AuthorArchiveCivicCategory {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting author/creator metadata from an archival document.

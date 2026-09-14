@@ -135,8 +135,9 @@ class AdjectiveComparison {
 // Extract full verb conjugation
 function ExtractVerbConjugation(
   verb: string @description("Verb infinitive or any form"),
-  language: CelticLanguage @description("Language of the verb")
-) -> VerbConjugation {  client ExtractEn
+  language: CelticLanguage @description("Language of the verb"),
+) -> VerbConjugation {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -152,8 +153,9 @@ function ExtractVerbConjugation(
 // Extract noun declension
 function ExtractNounDeclension(
   noun: string @description("Noun in any form"),
-  language: CelticLanguage @description("Language of the noun")
-) -> NounDeclension {  client ExtractEn
+  language: CelticLanguage @description("Language of the noun"),
+) -> NounDeclension {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -170,8 +172,9 @@ function ExtractNounDeclension(
 function IdentifyMorphologicalClass(
   word: string @description("Word to classify"),
   pos: PartOfSpeech @description("Part of speech"),
-  language: CelticLanguage @description("Language")
-) -> string {  client ExtractEn
+  language: CelticLanguage @description("Language"),
+) -> string {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -187,8 +190,9 @@ function IdentifyMorphologicalClass(
 // Compare adjectives
 function CompareAdjective(
   adjective: string @description("Adjective in positive form"),
-  language: CelticLanguage @description("Language")
-) -> AdjectiveComparison {  client ExtractEn
+  language: CelticLanguage @description("Language"),
+) -> AdjectiveComparison {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -233,8 +237,9 @@ class CelticForm {
 function ExtractCelticMorphology(
   text: string,
   language: CelticLanguageCurriculum,
-  word_class_hint: string?
-) -> CelticMorphologySpec[] {  client ExtractEn
+  word_class_hint: string?,
+) -> CelticMorphologySpec[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -246,7 +251,5 @@ function ExtractCelticMorphology(
     {{ input }}
   "#
 
-  catch_all (err) {
-    CelticMorphologySpec[] {}
-  }
+
 }

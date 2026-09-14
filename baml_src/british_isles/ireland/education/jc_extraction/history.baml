@@ -28,16 +28,9 @@ class HistorySpec {
 
 function ExtractHistorySpec(
   input: string,
-) -> HistorySpec {  client ExtractEn
+) -> HistorySpec {
+  client ExtractEn
     prompt #"{{ _.role('user') }} Extract history spec from {{ input }}"#
 
-  catch_all (err) {
-    HistorySpec {
-      lo_code_prefix "JC-HIST-LO",
-      strand_count 4,
-      total_learning_outcomes 0,
-      has_cba true,
-      cba_count 2,
-    }
-  }
+
 }

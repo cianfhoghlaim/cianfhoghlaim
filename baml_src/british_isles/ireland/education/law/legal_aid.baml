@@ -45,7 +45,8 @@ class LegalAidForm {
 function ExtractLegalAidPage(
   page_url: string,
   page_html: string,
-) -> LegalAidPage {  client ExtractEn
+) -> LegalAidPage {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -57,20 +58,14 @@ function ExtractLegalAidPage(
     {{ input }}
   "#
 
-  catch_all (err) {
-    LegalAidPage {
-      url "",
-      title "",
-      legal_aid_category legalaidcategory {},
-      eligibility_outcome legalaideligibilityoutcome {},
-    }
-  }
+
 }
 
 function ExtractLegalAidForm(
   page_url: string,
   page_html: string,
-) -> LegalAidForm {  client ExtractEn
+) -> LegalAidForm {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -82,11 +77,5 @@ function ExtractLegalAidForm(
     {{ input }}
   "#
 
-  catch_all (err) {
-    LegalAidForm {
-      url "",
-      form_title "",
-      legal_aid_category legalaidcategory {},
-    }
-  }
+
 }

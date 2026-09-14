@@ -15,8 +15,9 @@ class VenezuelaEducationDocument {
 function ExtractVenezuelaEducationDocument(
   jurisdiction: string,
   language: string,
-  text: string
-) -> VenezuelaEducationDocument {  client ExtractEn
+  text: string,
+) -> VenezuelaEducationDocument {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -28,14 +29,5 @@ function ExtractVenezuelaEducationDocument(
     {{ input }}
   "#
 
-  catch_all (err) {
-    VenezuelaEducationDocument {
-      language "",
-      title "",
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

@@ -80,7 +80,7 @@ class CrossSourceComparison {
 // playlist that mention each concept.
 function ExtractCrossSourceConcept(
   hf_video_descriptions: string[],
-  gc_video_descriptions: string[]
+  gc_video_descriptions: string[],
 ) -> CrossSourceConcept[] {
   client "ExtractEn"
   prompt #"
@@ -122,7 +122,7 @@ function ExtractCrossSourceConcept(
     concepts found.
 
     {{ ctx.output_format }}
-  "%
+  "#
 }
 
 // Compare how the 2 playlists discuss a single shared concept.
@@ -132,7 +132,7 @@ function CompareCrossSourcePerspectives(
   gc_video_id: string,
   shared_concept: string,
   hf_video_description: string,
-  gc_video_description: string
+  gc_video_description: string,
 ) -> CrossSourceComparison {
   client "ExtractEn"
   prompt #"
@@ -155,5 +155,5 @@ function CompareCrossSourcePerspectives(
     points of disagreement or nuance.
 
     {{ ctx.output_format }}
-  "%
+  "#
 }

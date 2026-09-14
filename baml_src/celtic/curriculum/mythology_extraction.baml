@@ -122,7 +122,8 @@ class CelticTerm {
 }
 
 // Extract character from mythology text
-function ExtractMythologicalCharacter(text: string, tradition: CelticTradition) -> MythologicalCharacter {  client ExtractEn
+function ExtractMythologicalCharacter(text: string, tradition: CelticTradition) -> MythologicalCharacter {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -134,18 +135,12 @@ function ExtractMythologicalCharacter(text: string, tradition: CelticTradition) 
     {{ input }}
   "#
 
-  catch_all (err) {
-    MythologicalCharacter {
-      character_type charactertype {},
-      tradition celtictradition {},
-      cycle null,
-      relationships null,
-    }
-  }
+
 }
 
 // Extract story structure
-function ExtractMythologicalStory(text: string) -> MythologicalStory {  client ExtractEn
+function ExtractMythologicalStory(text: string) -> MythologicalStory {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -157,21 +152,12 @@ function ExtractMythologicalStory(text: string) -> MythologicalStory {  client E
     {{ input }}
   "#
 
-  catch_all (err) {
-    MythologicalStory {
-      title "",
-      native_title null,
-      tradition celtictradition {},
-      cycle mythologicalcycle {},
-      main_characters null,
-      locations null,
-      key_events null,
-    }
-  }
+
 }
 
 // Extract location lore
-function ExtractMythologicalLocation(text: string, tradition: CelticTradition) -> MythologicalLocation {  client ExtractEn
+function ExtractMythologicalLocation(text: string, tradition: CelticTradition) -> MythologicalLocation {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -183,16 +169,7 @@ function ExtractMythologicalLocation(text: string, tradition: CelticTradition) -
     {{ input }}
   "#
 
-  catch_all (err) {
-    MythologicalLocation {
-      name "",
-      native_names null,
-      tradition celtictradition {},
-      description "",
-      associated_characters null,
-      key_events null,
-    }
-  }
+
 }
 
 // Generate NPC dialogue from character
@@ -215,8 +192,9 @@ function GenerateNPCDialogue(
   character: MythologicalCharacter,
   context: string,
   player_level: int,
-  target_language: CelticLanguage
-) -> NPCDialogue {  client ExtractEn
+  target_language: CelticLanguage,
+) -> NPCDialogue {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -240,7 +218,8 @@ class FolkloreElement {
   @@stream.done
 }
 
-function ExtractFolkloreElements(text: string) -> FolkloreElement[] {  client ExtractEn
+function ExtractFolkloreElements(text: string) -> FolkloreElement[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -252,9 +231,7 @@ function ExtractFolkloreElements(text: string) -> FolkloreElement[] {  client Ex
     {{ input }}
   "#
 
-  catch_all (err) {
-    FolkloreElement[] {}
-  }
+
 }
 
 // ============================================================================
@@ -294,7 +271,8 @@ function GenerateNpcDialogue(
   player_utterance: string,
   conversation_history: string,  // last 6 turns, formatted as "Speaker: text"
   scholarly_source: string,  // the cached Wikipedia article for this NPC
-) -> NpcDialogueExchange {  client ExtractEn
+) -> NpcDialogueExchange {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

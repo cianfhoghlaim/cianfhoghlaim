@@ -122,7 +122,8 @@ function ExtractWalesSyllabus(
   pdf_text: string,
   subject: WJECSubject?,
   level: WJECLevel?,
-) -> WalesSyllabusSpec {  client BIEPV3Extract
+) -> WalesSyllabusSpec {
+  client BIEPV3Extract
   prompt #"
     Extract the structured syllabus data from this Wales (WJEC)
     qualification PDF for the subject {{ subject }} at the {{ level }}
@@ -135,20 +136,7 @@ function ExtractWalesSyllabus(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    WalesSyllabusSpec {
-      source_pdf "",
-      source_pages 0,
-      subject wjecsubject {},
-      level wjeclevel {},
-      first_teaching_year null,
-      last_certification_year null,
-      total_marks 0,
-      component_papers 0,
-      topics null,
-      assessment_objectives null,
-    }
-  }
+
 }
 
 test ExtractWalesSyllabus {

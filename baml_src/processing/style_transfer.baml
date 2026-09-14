@@ -41,7 +41,8 @@ class StyleBlend {
 
 // Style transfer functions
 
-function ExtractStyleFeatures(artwork: image) -> StyleFeatures {  client ExtractEn
+function ExtractStyleFeatures(artwork: image) -> StyleFeatures {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at generating a style transfer specification from a reference prompt.
@@ -64,15 +65,14 @@ function ExtractStyleFeatures(artwork: image) -> StyleFeatures {  client Extract
     {{ input }}
   "#
 
-  catch_all (err) {
-    StyleFeatures {}
-  }
+
 }
 
 function CreateStyleTransferSpec(
   content_prompt: string,
-  style_reference: image
-) -> StyleTransferSpec {  client ExtractEn
+  style_reference: image,
+) -> StyleTransferSpec {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at generating a style transfer specification from a reference prompt.
@@ -100,8 +100,9 @@ function BlendStyles(
   style_a: image,
   style_b: image,
   blend_ratio: float,
-  content: string
-) -> StyleBlend {  client ExtractEn
+  content: string,
+) -> StyleBlend {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at generating a style transfer specification from a reference prompt.
@@ -128,8 +129,9 @@ function BlendStyles(
 function GenerateSeriesPrompts(
   base_style: image,
   count: int,
-  variation_axis: string
-) -> string[] {  client ExtractEn
+  variation_axis: string,
+) -> string[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at generating a style transfer specification from a reference prompt.
@@ -153,7 +155,8 @@ function GenerateSeriesPrompts(
   "#
 }
 
-function AnalyzeForIPAdapter(artwork: image) -> StyleEmbedding {  client ExtractEn
+function AnalyzeForIPAdapter(artwork: image) -> StyleEmbedding {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at generating a style transfer specification from a reference prompt.
@@ -184,8 +187,9 @@ function GenerateAlbumCoverSpec(
   artist_name: string,
   track_list: string[],
   style_reference: image?,
-  genre: string
-) -> StyleTransferSpec {  client ExtractEn
+  genre: string,
+) -> StyleTransferSpec {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at generating a style transfer specification from a reference prompt.
@@ -211,8 +215,9 @@ function GenerateAlbumCoverSpec(
 
 function GenerateSingleCoverVariation(
   original_album_cover: image,
-  single_title: string
-) -> string {  client ExtractEn
+  single_title: string,
+) -> string {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at generating a style transfer specification from a reference prompt.

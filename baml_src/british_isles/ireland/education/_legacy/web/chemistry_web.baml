@@ -127,8 +127,9 @@ function ChemistryWebStudyPlan(
   weeks_until_exam: int,
   target_level: ChemistryLevel,
   language: ChemistryLanguage,
-  focus_topics: string[]
-) -> ChemistryWebStudyPlanResponse {  client ExtractEn
+  focus_topics: string[],
+) -> ChemistryWebStudyPlanResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -146,8 +147,9 @@ function ChemistryWebExamPaperDiscussion(
   paper_year: int,
   paper_level: ChemistryLevel,
   paper_language: ChemistryLanguage,
-  question_text: string
-) -> ChemistryWebExamPaperDiscussionResponse {  client ExtractEn
+  question_text: string,
+) -> ChemistryWebExamPaperDiscussionResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -164,8 +166,9 @@ function ChemistryWebMarkingSchemeExplanation(
   subject: string,
   paper_year: int,
   paper_level: ChemistryLevel,
-  paper_language: ChemistryLanguage
-) -> ChemistryWebMarkingSchemeExplanationResponse {  client ExtractEn
+  paper_language: ChemistryLanguage,
+) -> ChemistryWebMarkingSchemeExplanationResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

@@ -28,17 +28,9 @@ class ArtSpec {
 
 function ExtractArtSpec(
   input: string,
-) -> ArtSpec {  client ExtractEn
+) -> ArtSpec {
+  client ExtractEn
     prompt #"{{ _.role('user') }} Extract art spec from {{ input }}"#
 
-  catch_all (err) {
-    ArtSpec {
-      lo_code_prefix "JC-ART-LO",
-      strand_count 4,
-      total_learning_outcomes 0,
-      has_cba true,
-      cba_count 2,
-      is_studio_based true,
-    }
-  }
+
 }

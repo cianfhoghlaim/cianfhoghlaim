@@ -29,7 +29,8 @@ class CourtRule {
 function ExtractCourtRule(
   page_url: string,
   page_html: string,
-) -> CourtRule {  client ExtractEn
+) -> CourtRule {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -41,10 +42,5 @@ function ExtractCourtRule(
     {{ input }}
   "#
 
-  catch_all (err) {
-    CourtRule {
-      url "",
-      court_level courtlevel {},
-    }
-  }
+
 }

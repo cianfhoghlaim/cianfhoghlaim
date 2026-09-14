@@ -26,17 +26,9 @@ class MusicSpec {
 
 function ExtractMusicSpec(
   input: string,
-) -> MusicSpec {  client ExtractEn
+) -> MusicSpec {
+  client ExtractEn
     prompt #"{{ _.role('user') }} Extract music spec from {{ input }}"#
 
-  catch_all (err) {
-    MusicSpec {
-      lo_code_prefix "JC-MUS-LO",
-      strand_count 3,
-      total_learning_outcomes 0,
-      has_cba true,
-      cba_count 2,
-      has_listening_exam true,
-    }
-  }
+
 }

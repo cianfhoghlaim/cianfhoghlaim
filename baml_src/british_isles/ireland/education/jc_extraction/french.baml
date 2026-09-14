@@ -27,16 +27,9 @@ class FrenchSpec {
 
 function ExtractFrenchSpec(
   input: string,
-) -> FrenchSpec {  client ExtractEn
+) -> FrenchSpec {
+  client ExtractEn
     prompt #"{{ _.role('user') }} Extract french spec from {{ input }}"#
 
-  catch_all (err) {
-    FrenchSpec {
-      lo_code_prefix "JC-FREN-LO",
-      strand_count 4,
-      total_learning_outcomes 0,
-      cefr_target_level "A2-B1",
-      has_cba true,
-    }
-  }
+
 }

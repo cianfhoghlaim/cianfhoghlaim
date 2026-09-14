@@ -49,7 +49,8 @@ function GradeChemistryResponse(
   question: "baml_src.education.lc_extraction.exam_paper_layout.Question",
   marking_scheme: "baml_src.education.lc_extraction.marking_scheme.MarkAllocation",
   is_higher_level: bool,
-) -> ChemistryGrade {  client ExtractEn
+) -> ChemistryGrade {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -65,7 +66,8 @@ function GradeChemistryResponse(
 function ExplainChemistryMarkingScheme(
   marking_scheme_id: string,
   marking_scheme: "baml_src.education.lc_extraction.marking_scheme.MarkingScheme",
-) -> ChemistryMarkingRationale {  client ExtractEn
+) -> ChemistryMarkingRationale {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

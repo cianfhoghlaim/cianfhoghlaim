@@ -87,8 +87,9 @@ function GenerateLanguageQuest(
   learning_outcome: LearningOutcome,
   language: CelticLanguage,
   zone: string,
-  difficulty: QuestDifficulty
-) -> Quest {  client ExtractEn
+  difficulty: QuestDifficulty,
+) -> Quest {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured game content from a game design document.
@@ -117,8 +118,9 @@ function GenerateMythologyQuest(
   story: MythologicalStory,
   character: MythologicalCharacter?,
   language: CelticLanguage,
-  difficulty: QuestDifficulty
-) -> Quest {  client ExtractEn
+  difficulty: QuestDifficulty,
+) -> Quest {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured game content from a game design document.
@@ -178,8 +180,9 @@ function GenerateNPC(
   zone: string,
   role: string,
   language: CelticLanguage,
-  mythological_inspiration: MythologicalCharacter?
-) -> NPC {  client ExtractEn
+  mythological_inspiration: MythologicalCharacter?,
+) -> NPC {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured game content from a game design document.
@@ -240,8 +243,9 @@ function GenerateGameLocation(
   zone: string,
   real_world_basis: string?,
   mythology_connection: MythologicalLocation?,
-  language: CelticLanguage
-) -> GameLocation {  client ExtractEn
+  language: CelticLanguage,
+) -> GameLocation {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured game content from a game design document.
@@ -290,8 +294,9 @@ function GenerateGameItem(
   item_type: string,
   rarity: string,
   mythology_inspiration: string?,
-  language: CelticLanguage
-) -> GameItem {  client ExtractEn
+  language: CelticLanguage,
+) -> GameItem {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting structured game content from a game design document.

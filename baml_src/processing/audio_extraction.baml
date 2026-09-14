@@ -110,8 +110,9 @@ class VocabularyNote {
 // Extract recording metadata from Canúint.ie page using Stagehand
 function ExtractCanuintPage(
   page_content: string,
-  barony_id: int
-) -> CanuintRecording {  client ExtractEn
+  barony_id: int,
+) -> CanuintRecording {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -123,17 +124,16 @@ function ExtractCanuintPage(
     {{ input }}
   "#
 
-  catch_all (err) {
-    CanuintRecording {}
-  }
+
 }
 
 // Extract multiple recordings from barony listing page
 function ExtractBaronyRecordings(
   page_content: string,
   barony_id: int,
-  barony_name: string
-) -> CanuintRecording[] {  client ExtractEn
+  barony_name: string,
+) -> CanuintRecording[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -145,9 +145,7 @@ function ExtractBaronyRecordings(
     {{ input }}
   "#
 
-  catch_all (err) {
-    CanuintRecording[] {}
-  }
+
 }
 
 // ============================================================================
@@ -204,8 +202,9 @@ class DialectSimilarity {
 function AnalyzeDialect(
   transcription: CanuintTranscription,
   speaker: CanuintSpeaker,
-  location: CanuintLocation
-) -> DialectAnalysis {  client ExtractEn
+  location: CanuintLocation,
+) -> DialectAnalysis {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

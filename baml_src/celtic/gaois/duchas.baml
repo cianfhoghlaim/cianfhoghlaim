@@ -281,8 +281,9 @@ class DuchasPhotograph {
 
 // Parse CBES volume response
 function ParseSchoolsVolume(
-  json_response: string
-) -> DuchasSchoolsVolume {  client ExtractEn
+  json_response: string,
+) -> DuchasSchoolsVolume {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -297,8 +298,9 @@ function ParseSchoolsVolume(
 
 // Parse CBED person response
 function ParsePerson(
-  json_response: string
-) -> DuchasPerson {  client ExtractEn
+  json_response: string,
+) -> DuchasPerson {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -313,8 +315,9 @@ function ParsePerson(
 
 // Parse CBEG photograph response
 function ParsePhotograph(
-  json_response: string
-) -> DuchasPhotograph {  client ExtractEn
+  json_response: string,
+) -> DuchasPhotograph {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -330,8 +333,9 @@ function ParsePhotograph(
 // Extract folklore topics from a Schools Collection item
 function ClassifyFolkloreTopic(
   item_text: string,
-  available_topics: DuchasSchoolsTopic[]
-) -> DuchasSchoolsTopic[] {  client ExtractEn
+  available_topics: DuchasSchoolsTopic[],
+) -> DuchasSchoolsTopic[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -347,8 +351,9 @@ function ClassifyFolkloreTopic(
 // Link Schools Collection story to modern Logainm places
 function LinkStoryToPlaces(
   story: DuchasSchoolsItem,
-  mentioned_places: string[]
-) -> int[] {  client ExtractEn
+  mentioned_places: string[],
+) -> int[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -426,8 +431,9 @@ class DuchasTranscriptionLine {
 // Uses `molmo2-8b` (diagram pointing) + `dots-ocr` (layout) via LlamaSwap routing.
 function ExtractDuchasManuscript(
   xml_record: string,
-  image_path: string?
-) -> DuchasManuscriptRecord {  client ExtractEn
+  image_path: string?,
+) -> DuchasManuscriptRecord {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -439,9 +445,7 @@ function ExtractDuchasManuscript(
     {{ input }}
   "#
 
-  catch_all (err) {
-    DuchasManuscriptRecord {}
-  }
+
 }
 
 // Extract 5-level bounding box alignment from a handwritten manuscript page
@@ -450,8 +454,9 @@ function ExtractDuchasManuscript(
 function ExtractDuchasImageBoundingBox(
   image_path: string,
   transcript: string,
-  collection: DuchasCollection
-) -> DuchasBoundingBox[] {  client ExtractEn
+  collection: DuchasCollection,
+) -> DuchasBoundingBox[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -463,9 +468,7 @@ function ExtractDuchasImageBoundingBox(
     {{ input }}
   "#
 
-  catch_all (err) {
-    DuchasBoundingBox[] {}
-  }
+
 }
 
 // Extract a transcription line-by-line from a handwritten manuscript page
@@ -473,8 +476,9 @@ function ExtractDuchasImageBoundingBox(
 function ExtractDuchasTranscription(
   handwritten_image: string,
   collection: DuchasCollection,
-  language_hint: string?
-) -> DuchasTranscriptionLine[] {  client ExtractEn
+  language_hint: string?,
+) -> DuchasTranscriptionLine[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -486,7 +490,5 @@ function ExtractDuchasTranscription(
     {{ input }}
   "#
 
-  catch_all (err) {
-    DuchasTranscriptionLine[] {}
-  }
+
 }

@@ -27,16 +27,9 @@ class MathematicsSpec {
 
 function ExtractMathematicsSpec(
   input: string,
-) -> MathematicsSpec {  client ExtractEn
+) -> MathematicsSpec {
+  client ExtractEn
     prompt #"{{ _.role('user') }} Extract mathematics spec from {{ input }}"#
 
-  catch_all (err) {
-    MathematicsSpec {
-      lo_code_prefix "JC-MATH-LO",
-      strand_count 5,
-      total_learning_outcomes 0,
-      has_cba true,
-      cba_count 2,
-    }
-  }
+
 }

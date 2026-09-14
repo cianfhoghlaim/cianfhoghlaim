@@ -127,17 +127,7 @@ function ExtractCiancheiltisBilingualPage(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    BilingualPagePair {
-      source_url "",
-      url_a "",
-      url_b "",
-      language_pair "",
-      is_same_article false,
-      metadata_mismatch false,
-      theme_code "",
-    }
-  }
+
 }
 
 function ExtractBilingualExplanatoryNote(
@@ -173,14 +163,7 @@ function ExtractBilingualExplanatoryNote(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    BilingualExplanatoryNotePair {
-      en_note "",
-      cy_note "",
-      concept_id "",
-      confidence 0.0,
-    }
-  }
+
 }
 
 // Phase 2 (en-ga / Republic of Ireland) shared extraction function —
@@ -260,17 +243,7 @@ function ExtractIrelandGAURLPair(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    BilingualPagePair {
-      source_url "",
-      url_a "",
-      url_b "",
-      language_pair "en-ga",
-      is_same_article false,
-      metadata_mismatch false,
-      theme_code "",
-    }
-  }
+
 }
 
 // Phase 3 (en-ga / Northern Ireland) shared extraction function —
@@ -369,14 +342,7 @@ function ExtractNIBilingualTerm(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    BilingualExplanatoryNotePair {
-      en_note "",
-      cy_note "",
-      concept_id "",
-      confidence 0.0,
-    }
-  }
+
 }
 
 // Phase 4 (en-gd / Scotland) shared types — added by PR0.8.
@@ -509,14 +475,7 @@ function ExtractGaelicTerm(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    BilingualExplanatoryNotePair {
-      en_note "",
-      cy_note "",
-      concept_id "",
-      confidence 0.0,
-    }
-  }
+
 }
 
 // Phase 5 (en-gv / Isle of Man) shared types — added by PR0.9.
@@ -673,14 +632,7 @@ function ExtractManxTerm(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    BilingualExplanatoryNotePair {
-      en_note "",
-      cy_note "",
-      concept_id "",
-      confidence 0.0,
-    }
-  }
+
 }
 
 // Phase 6 (en-ga / European Union) shared types — added by PR0.10.
@@ -856,12 +808,5 @@ function ExtractEUBilingualTermPair(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    BilingualExplanatoryNotePair {
-      en_note "",
-      cy_note "",
-      concept_id "",
-      confidence 0.0,
-    }
-  }
+
 }

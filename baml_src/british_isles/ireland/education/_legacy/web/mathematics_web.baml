@@ -129,8 +129,9 @@ function MathematicsWebStudyPlan(
   weeks_until_exam: int,
   target_level: MathematicsLevel,
   language: MathematicsLanguage,
-  focus_topics: string[]
-) -> MathematicsWebStudyPlanResponse {  client ExtractEn
+  focus_topics: string[],
+) -> MathematicsWebStudyPlanResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -148,8 +149,9 @@ function MathematicsWebExamPaperDiscussion(
   paper_year: int,
   paper_level: MathematicsLevel,
   paper_language: MathematicsLanguage,
-  question_text: string
-) -> MathematicsWebExamPaperDiscussionResponse {  client ExtractEn
+  question_text: string,
+) -> MathematicsWebExamPaperDiscussionResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -166,8 +168,9 @@ function MathematicsWebMarkingSchemeExplanation(
   subject: string,
   paper_year: int,
   paper_level: MathematicsLevel,
-  paper_language: MathematicsLanguage
-) -> MathematicsWebMarkingSchemeExplanationResponse {  client ExtractEn
+  paper_language: MathematicsLanguage,
+) -> MathematicsWebMarkingSchemeExplanationResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

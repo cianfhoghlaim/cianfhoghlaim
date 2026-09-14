@@ -16,8 +16,9 @@ function ExtractGeorgiaSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,
-  text: string
-) -> GeorgiaSubjectCurriculum {  client ExtractEn
+  text: string,
+) -> GeorgiaSubjectCurriculum {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -29,10 +30,5 @@ function ExtractGeorgiaSubjectCurriculum(
     {{ input }}
   "#
 
-  catch_all (err) {
-    GeorgiaSubjectCurriculum {
-      publication_date null,
-      content_hash null,
-    }
-  }
+
 }

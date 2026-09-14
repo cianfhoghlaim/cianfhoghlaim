@@ -6,8 +6,9 @@
 
 function ExtractSeniorCycleSpecFromUrl(
   source_url: string,
-  subject: LeavingCertSubject
-) -> SubjectRubric {  client ExtractEn
+  subject: LeavingCertSubject,
+) -> SubjectRubric {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -19,15 +20,14 @@ function ExtractSeniorCycleSpecFromUrl(
     {{ input }}
   "#
 
-  catch_all (err) {
-    SubjectRubric {}
-  }
+
 }
 
 function ScoreEssayAgainstRubricStdLib(
   essay: string,
-  subject: LeavingCertSubject
-) -> RubricScore {  client ExtractEn
+  subject: LeavingCertSubject,
+) -> RubricScore {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

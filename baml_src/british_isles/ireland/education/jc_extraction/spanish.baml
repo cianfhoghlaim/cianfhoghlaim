@@ -27,16 +27,9 @@ class SpanishSpec {
 
 function ExtractSpanishSpec(
   input: string,
-) -> SpanishSpec {  client ExtractEn
+) -> SpanishSpec {
+  client ExtractEn
     prompt #"{{ _.role('user') }} Extract spanish spec from {{ input }}"#
 
-  catch_all (err) {
-    SpanishSpec {
-      lo_code_prefix "JC-SPAN-LO",
-      strand_count 4,
-      total_learning_outcomes 0,
-      cefr_target_level "A2-B1",
-      has_cba true,
-    }
-  }
+
 }

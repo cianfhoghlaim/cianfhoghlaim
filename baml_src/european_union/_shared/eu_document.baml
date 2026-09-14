@@ -48,8 +48,9 @@ class EUDocument {
 
 function ExtractEUDocument(
   language: EULanguage,
-  text: string
-) -> EUDocument {  client ExtractEn
+  text: string,
+) -> EUDocument {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -61,9 +62,7 @@ function ExtractEUDocument(
     {{ input }}
   "#
 
-  catch_all (err) {
-    EUDocument {}
-  }
+
 }
 
 
@@ -92,8 +91,9 @@ class EUExtractableBilingualDocument {
 function ExtractEUDocumentBilingualEnGa(
   institution: EUInstitution,
   language: EULanguage,
-  text: string
-) -> EUExtractableBilingualDocument {  client ExtractEn
+  text: string,
+) -> EUExtractableBilingualDocument {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -105,17 +105,5 @@ function ExtractEUDocumentBilingualEnGa(
     {{ input }}
   "#
 
-  catch_all (err) {
-    EUExtractableBilingualDocument {
-      url "",
-      institution euinstitution {},
-      language eulanguage {},
-      celex_id null,
-      title bilingualtextenga {},
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

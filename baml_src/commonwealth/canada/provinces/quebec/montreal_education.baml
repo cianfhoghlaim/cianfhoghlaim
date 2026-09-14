@@ -15,8 +15,9 @@ class MontrealSchoolBoardRecord {
 function ExtractMontrealSchoolBoardDocument(
   school_board: string,
   language: string,
-  text: string
-) -> MontrealSchoolBoardRecord {  client ExtractEn
+  text: string,
+) -> MontrealSchoolBoardRecord {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -28,13 +29,5 @@ function ExtractMontrealSchoolBoardDocument(
     {{ input }}
   "#
 
-  catch_all (err) {
-    MontrealSchoolBoardRecord {
-      url "",
-      title "",
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

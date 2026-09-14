@@ -73,7 +73,8 @@ function ExtractComputerScienceMarkingScheme(
   pdf_text: string,
   year: int?,
   level: string?,
-) -> ComputerScienceMarkingScheme {  client ExtractEn
+) -> ComputerScienceMarkingScheme {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -85,18 +86,7 @@ function ExtractComputerScienceMarkingScheme(
     {{ input }}
   "#
 
-  catch_all (err) {
-    ComputerScienceMarkingScheme {
-      scheme_code "",
-      year 0,
-      source_pdf "",
-      grade_descriptors null,
-      mark_allocations null,
-      subject_specific cssubjectdiscriminator {},
-      total_marks 0,
-      total_questions 0,
-    }
-  }
+
 }
 
 // test computer_science_marking_extraction_smoke {

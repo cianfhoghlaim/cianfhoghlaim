@@ -55,8 +55,9 @@ class EURLexTreaty {
 
 function ExtractEURLexRegulation(
   language: EULanguage,
-  text: string
-) -> EURLexRegulation {  client ExtractEn
+  text: string,
+) -> EURLexRegulation {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -68,21 +69,14 @@ function ExtractEURLexRegulation(
     {{ input }}
   "#
 
-  catch_all (err) {
-    EURLexRegulation {
-      language eulanguage {},
-      title "",
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }
 
 function ExtractEURLexDirective(
   language: EULanguage,
-  text: string
-) -> EURLexDirective {  client ExtractEn
+  text: string,
+) -> EURLexDirective {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -94,24 +88,14 @@ function ExtractEURLexDirective(
     {{ input }}
   "#
 
-  catch_all (err) {
-    EURLexDirective {
-      celex_id "",
-      language eulanguage {},
-      title "",
-      publication_date null,
-      in_force false,
-      source_url "",
-      content_hash null,
-      affected_sectors null,
-    }
-  }
+
 }
 
 function ExtractEURLexDecision(
   language: EULanguage,
-  text: string
-) -> EURLexDecision {  client ExtractEn
+  text: string,
+) -> EURLexDecision {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -123,43 +107,5 @@ function ExtractEURLexDecision(
     {{ input }}
   "#
 
-  catch_all (err) {
-    EURLexDecision {
-      celex_id "",
-      language eulanguage {},
-      title "",
-      publication_date null,
-      source_url "",
-      content_hash null,
-      summary null,
-    }
-  }
-}
 
-function ExtractEURLexTreaty(
-  language: EULanguage,
-  text: string
-) -> EURLexTreaty {  client ExtractEn
-    prompt #"
-    {{ _.role("user") }}
-    You are an expert extractor. From the input below, extract every field
-    in the return type according to the @description decorators on the
-    class definition. Preserve the canonical field names + types.
-
-    {{ ctx.output_format }}
-
-    {{ input }}
-  "#
-
-  catch_all (err) {
-    EURLexTreaty {
-      celex_id "",
-      language eulanguage {},
-      title "",
-      signature_date null,
-      entry_into_force_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
 }

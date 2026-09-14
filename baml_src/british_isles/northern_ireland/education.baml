@@ -16,8 +16,9 @@ class NorthernIrelandEducationDocument {
 function ExtractNorthernIrelandEducationDocument(
   nation: string,
   language: string,
-  text: string
-) -> NorthernIrelandEducationDocument {  client ExtractEn
+  text: string,
+) -> NorthernIrelandEducationDocument {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -29,13 +30,5 @@ function ExtractNorthernIrelandEducationDocument(
     {{ input }}
   "#
 
-  catch_all (err) {
-    NorthernIrelandEducationDocument {
-      title "",
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

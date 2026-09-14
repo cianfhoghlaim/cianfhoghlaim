@@ -127,8 +127,9 @@ function GeographyWebStudyPlan(
   weeks_until_exam: int,
   target_level: GeographyLevel,
   language: GeographyLanguage,
-  focus_topics: string[]
-) -> GeographyWebStudyPlanResponse {  client ExtractEn
+  focus_topics: string[],
+) -> GeographyWebStudyPlanResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -146,8 +147,9 @@ function GeographyWebExamPaperDiscussion(
   paper_year: int,
   paper_level: GeographyLevel,
   paper_language: GeographyLanguage,
-  question_text: string
-) -> GeographyWebExamPaperDiscussionResponse {  client ExtractEn
+  question_text: string,
+) -> GeographyWebExamPaperDiscussionResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -164,8 +166,9 @@ function GeographyWebMarkingSchemeExplanation(
   subject: string,
   paper_year: int,
   paper_level: GeographyLevel,
-  paper_language: GeographyLanguage
-) -> GeographyWebMarkingSchemeExplanationResponse {  client ExtractEn
+  paper_language: GeographyLanguage,
+) -> GeographyWebMarkingSchemeExplanationResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

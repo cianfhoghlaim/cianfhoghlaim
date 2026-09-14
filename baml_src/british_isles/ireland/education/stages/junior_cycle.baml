@@ -138,7 +138,8 @@ class L2LPOutcome {
 // -----------------------------------------------------------------------------
 
 function ExtractJuniorCycleSpec(text: string,
-  subject: string) -> JuniorCycleSubjectSpec {  client ExtractEn
+  subject: string) -> JuniorCycleSubjectSpec {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert Irish Junior Cycle (ages 12-15) curriculum extractor for the 8 NCCA JC subjects.
@@ -166,14 +167,7 @@ function ExtractJuniorCycleSpec(text: string,
     {{ input }}
   "#
 
-  catch_all (err) {
-    JuniorCycleSubjectSpec {
-      subject juniorcyclesubject {},
-      specification_year 0,
-      cba_tasks null,
-      specification_url "",
-    }
-  }
+
 }
 
 
@@ -181,7 +175,8 @@ function ExtractJuniorCycleSpec(text: string,
 
 
 function ExtractShortCourse(text: string,
-  course_name: string) -> JuniorCycleShortCourse {  client ExtractEn
+  course_name: string) -> JuniorCycleShortCourse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert Irish Junior Cycle (ages 12-15) curriculum extractor for the 8 NCCA JC subjects.
@@ -209,16 +204,15 @@ function ExtractShortCourse(text: string,
     {{ input }}
   "#
 
-  catch_all (err) {
-    JuniorCycleShortCourse {}
-  }
+
 }
 
 
 function ExtractJuniorCycleSpecFromUrl(
   source_url: string,
-  subject: JuniorCycleSubject
-) -> JuniorCycleSubjectSpec {  client ExtractEn
+  subject: JuniorCycleSubject,
+) -> JuniorCycleSubjectSpec {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert Irish Junior Cycle (ages 12-15) curriculum extractor for the 8 NCCA JC subjects.
@@ -246,14 +240,7 @@ function ExtractJuniorCycleSpecFromUrl(
     {{ input }}
   "#
 
-  catch_all (err) {
-    JuniorCycleSubjectSpec {
-      subject juniorcyclesubject {},
-      specification_year 0,
-      cba_tasks null,
-      specification_url "",
-    }
-  }
+
 }
 
 

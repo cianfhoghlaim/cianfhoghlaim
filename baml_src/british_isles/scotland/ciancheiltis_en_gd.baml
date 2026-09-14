@@ -150,17 +150,7 @@ function ExtractScottishStatute(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    BilingualPagePair {
-      source_url "",
-      url_a "",
-      url_b "",
-      language_pair "en-gd",
-      is_same_article false,
-      metadata_mismatch false,
-      theme_code "T1",
-    }
-  }
+
 }
 
 function ExtractScottishGovPage(
@@ -257,15 +247,5 @@ function ExtractScottishGovPage(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    BilingualPagePair {
-      source_url "",
-      url_a "",
-      url_b "",
-      language_pair "en-gd",
-      is_same_article false,
-      metadata_mismatch false,
-      theme_code "",
-    }
-  }
+
 }

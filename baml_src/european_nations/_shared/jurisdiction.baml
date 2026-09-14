@@ -14,8 +14,9 @@ class NationJurisdictionMetadata {
 function ExtractNationJurisdictionMetadata(
   countryCode: string,
   language: string,
-  text: string
-) -> NationJurisdictionMetadata {  client ExtractEn
+  text: string,
+) -> NationJurisdictionMetadata {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -27,10 +28,5 @@ function ExtractNationJurisdictionMetadata(
     {{ input }}
   "#
 
-  catch_all (err) {
-    NationJurisdictionMetadata {
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

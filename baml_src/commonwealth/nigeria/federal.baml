@@ -16,8 +16,9 @@ class NigerianFederalCurriculumSpec {
 function ExtractNigerianFederalCurriculumSpec(
   federal_institution: string,
   language: string,
-  text: string
-) -> NigerianFederalCurriculumSpec {  client ExtractEn
+  text: string,
+) -> NigerianFederalCurriculumSpec {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -29,14 +30,5 @@ function ExtractNigerianFederalCurriculumSpec(
     {{ input }}
   "#
 
-  catch_all (err) {
-    NigerianFederalCurriculumSpec {
-      url "",
-      title "",
-      course_list null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

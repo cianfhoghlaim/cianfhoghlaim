@@ -14,8 +14,9 @@ class SlovakiaStatute {
 function ExtractSlovakiaStatute(
   nation: string,
   language: string,
-  text: string
-) -> SlovakiaStatute {  client ExtractEn
+  text: string,
+) -> SlovakiaStatute {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -27,11 +28,5 @@ function ExtractSlovakiaStatute(
     {{ input }}
   "#
 
-  catch_all (err) {
-    SlovakiaStatute {
-      title "",
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

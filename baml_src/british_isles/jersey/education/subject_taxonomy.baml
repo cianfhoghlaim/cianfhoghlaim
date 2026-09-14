@@ -106,7 +106,8 @@ function ExtractJerseySyllabus(
   pdf_text: string,
   subject: JerseySubject?,
   level: JerseyLevel?,
-) -> JerseySyllabusSpec {  client BIEPV3Extract
+) -> JerseySyllabusSpec {
+  client BIEPV3Extract
   prompt #"
     Extract the structured syllabus data from this Jersey (States of
     Jersey Education Department) PDF specification for the subject
@@ -119,20 +120,7 @@ function ExtractJerseySyllabus(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    JerseySyllabusSpec {
-      source_pdf "",
-      source_pages 0,
-      subject jerseysubject {},
-      level jerseylevel {},
-      first_teaching_year null,
-      last_certification_year null,
-      total_marks 0,
-      component_papers 0,
-      topics null,
-      assessment_objectives null,
-    }
-  }
+
 }
 
 test ExtractJerseySyllabus {

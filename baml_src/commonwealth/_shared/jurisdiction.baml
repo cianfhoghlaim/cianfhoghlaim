@@ -15,8 +15,9 @@ class CommonwealthJurisdictionMetadata {
 function ExtractCommonwealthJurisdictionMetadata(
   countryCode: string,
   language: string,
-  text: string
-) -> CommonwealthJurisdictionMetadata {  client ExtractEn
+  text: string,
+) -> CommonwealthJurisdictionMetadata {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -28,10 +29,5 @@ function ExtractCommonwealthJurisdictionMetadata(
     {{ input }}
   "#
 
-  catch_all (err) {
-    CommonwealthJurisdictionMetadata {
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

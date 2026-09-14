@@ -206,8 +206,9 @@ class QueryResult {
 
 function ExtractStatistics(
   document: string,
-  expected_source: DataSource
-) -> StatisticRecord[] {  client ExtractEn
+  expected_source: DataSource,
+) -> StatisticRecord[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -219,17 +220,16 @@ function ExtractStatistics(
     {{ input }}
   "#
 
-  catch_all (err) {
-    StatisticRecord[] {}
-  }
+
 }
 
 function CompareNationStatistics(
   metric_name: string,
   category: MetricCategory,
   academic_year: string,
-  statistics: StatisticRecord[]
-) -> NationComparison {  client ExtractEn
+  statistics: StatisticRecord[],
+) -> NationComparison {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -245,8 +245,9 @@ function CompareNationStatistics(
 function AnalyzeTrend(
   metric_name: string,
   nation: string,
-  historical_data: TrendPoint[]
-) -> TrendAnalysis {  client ExtractEn
+  historical_data: TrendPoint[],
+) -> TrendAnalysis {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -263,8 +264,9 @@ function RankAreas(
   metric_name: string,
   nation: string,
   aggregation_level: AggregationLevel,
-  statistics: StatisticRecord[]
-) -> AreaRanking {  client ExtractEn
+  statistics: StatisticRecord[],
+) -> AreaRanking {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -278,8 +280,9 @@ function RankAreas(
 }
 
 function GenerateStatisticsQuery(
-  natural_language_query: string
-) -> StatisticsQuery {  client ExtractEn
+  natural_language_query: string,
+) -> StatisticsQuery {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

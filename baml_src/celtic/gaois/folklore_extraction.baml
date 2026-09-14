@@ -67,8 +67,9 @@ class DuchasPersonNameExtraction {
 
 // Parse Dúchas XML response
 function ParseDuchasXML(
-  xml_content: string
-) -> DuchasXMLRecord {  client ExtractEn
+  xml_content: string,
+) -> DuchasXMLRecord {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -111,8 +112,9 @@ class HandwritingExtraction {
 // Extract text from handwritten manuscript image
 function ExtractHandwriting(
   page_image: image,
-  context: DuchasXMLRecord?
-) -> HandwritingExtraction {  client ExtractEn
+  context: DuchasXMLRecord?,
+) -> HandwritingExtraction {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -124,9 +126,7 @@ function ExtractHandwriting(
     {{ input }}
   "#
 
-  catch_all (err) {
-    HandwritingExtraction {}
-  }
+
 }
 
 // Batch extraction for multi-page stories
@@ -145,8 +145,9 @@ class StoryExtraction {
 // Extract complete story from multiple pages
 function ExtractStory(
   page_images: image[],
-  metadata: DuchasXMLRecord
-) -> StoryExtraction {  client ExtractEn
+  metadata: DuchasXMLRecord,
+) -> StoryExtraction {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -158,9 +159,7 @@ function ExtractStory(
     {{ input }}
   "#
 
-  catch_all (err) {
-    StoryExtraction {}
-  }
+
 }
 
 // ============================================================================

@@ -80,7 +80,8 @@ class TriplesResult {
 // Functions
 // -----------------------------------------------------------------------------
 
-function ExtractDocSkillTag(content: string, path: string) -> DocSkillTag {  client ExtractEn
+function ExtractDocSkillTag(content: string, path: string) -> DocSkillTag {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -92,12 +93,11 @@ function ExtractDocSkillTag(content: string, path: string) -> DocSkillTag {  cli
     {{ input }}
   "#
 
-  catch_all (err) {
-    DocSkillTag {}
-  }
+
 }
 
-function ExtractTriples(content: string, path: string) -> TriplesResult {  client ExtractEn
+function ExtractTriples(content: string, path: string) -> TriplesResult {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -109,9 +109,7 @@ function ExtractTriples(content: string, path: string) -> TriplesResult {  clien
     {{ input }}
   "#
 
-  catch_all (err) {
-    TriplesResult {}
-  }
+
 }
 
 // -----------------------------------------------------------------------------

@@ -43,7 +43,8 @@ class ResearchGateProfile {
   @@stream.done
 }
 
-function ExtractResearchGateProfile(text: string) -> ResearchGateProfile {  client ExtractEn
+function ExtractResearchGateProfile(text: string) -> ResearchGateProfile {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -55,24 +56,11 @@ function ExtractResearchGateProfile(text: string) -> ResearchGateProfile {  clie
     {{ input }}
   "#
 
-  catch_all (err) {
-    ResearchGateProfile {
-      name "",
-      institution null,
-      location null,
-      about null,
-      skillsAndExpertise null,
-      publications null,
-      followers null,
-      following null,
-      totalReads null,
-      totalCitations null,
-      profileUrl "",
-    }
-  }
+
 }
 
-function ExtractResearchGatePublication(publication_text: string) -> ResearchGatePublication {  client ExtractEn
+function ExtractResearchGatePublication(publication_text: string) -> ResearchGatePublication {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -84,17 +72,5 @@ function ExtractResearchGatePublication(publication_text: string) -> ResearchGat
     {{ input }}
   "#
 
-  catch_all (err) {
-    ResearchGatePublication {
-      title "",
-      authors null,
-      year null,
-      doi null,
-      abstract null,
-      citationCount null,
-      readCount null,
-      recommendationCount null,
-      url "",
-    }
-  }
+
 }

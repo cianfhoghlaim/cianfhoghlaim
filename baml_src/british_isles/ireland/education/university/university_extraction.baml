@@ -190,8 +190,9 @@ class ProgrammeDescriptor {
 
 function ExtractCourseDescriptor(
   course_page_markdown: string,
-  course_url: string
-) -> CourseDescriptor {  client ExtractEn
+  course_url: string,
+) -> CourseDescriptor {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -215,15 +216,14 @@ function ExtractCourseDescriptor(
     {{ input }}
   "#
 
-  catch_all (err) {
-    CourseDescriptor {}
-  }
+
 }
 
 function ExtractModuleDescriptor(
   module_page_markdown: string,
-  module_url: string
-) -> ModuleDescriptor {  client ExtractEn
+  module_url: string,
+) -> ModuleDescriptor {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -247,15 +247,14 @@ function ExtractModuleDescriptor(
     {{ input }}
   "#
 
-  catch_all (err) {
-    ModuleDescriptor {}
-  }
+
 }
 
 function ExtractProgrammeDescriptor(
   programme_page_markdown: string,
-  programme_url: string
-) -> ProgrammeDescriptor {  client ExtractEn
+  programme_url: string,
+) -> ProgrammeDescriptor {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -279,15 +278,14 @@ function ExtractProgrammeDescriptor(
     {{ input }}
   "#
 
-  catch_all (err) {
-    ProgrammeDescriptor {}
-  }
+
 }
 
 function ExtractReadingList(
   module_page_markdown: string,
-  module_url: string
-) -> ReadingListItem[] {  client ExtractEn
+  module_url: string,
+) -> ReadingListItem[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -311,9 +309,7 @@ function ExtractReadingList(
     {{ input }}
   "#
 
-  catch_all (err) {
-    ReadingListItem[] {}
-  }
+
 }
 
 // =============================================================================
@@ -651,8 +647,9 @@ class SOLASCourse {
 
 function ExtractUniversityInfo(
   page_markdown: string,
-  institution_id: string
-) -> University {  client ExtractEn
+  institution_id: string,
+) -> University {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -676,15 +673,14 @@ function ExtractUniversityInfo(
     {{ input }}
   "#
 
-  catch_all (err) {
-    University {}
-  }
+
 }
 
 function ExtractTuInfo(
   page_markdown: string,
-  tu_id: string
-) -> TU {  client ExtractEn
+  tu_id: string,
+) -> TU {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -708,15 +704,14 @@ function ExtractTuInfo(
     {{ input }}
   "#
 
-  catch_all (err) {
-    TU {}
-  }
+
 }
 
 function ExtractQQIAward(
   page_markdown: string,
-  award_code: string
-) -> QQIAward {  client ExtractEn
+  award_code: string,
+) -> QQIAward {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -740,15 +735,14 @@ function ExtractQQIAward(
     {{ input }}
   "#
 
-  catch_all (err) {
-    QQIAward {}
-  }
+
 }
 
 function ExtractCaliforniaOChoice(
   page_markdown: string,
-  cao_code: string
-) -> CaliforniaOChoice {  client ExtractEn
+  cao_code: string,
+) -> CaliforniaOChoice {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -772,15 +766,14 @@ function ExtractCaliforniaOChoice(
     {{ input }}
   "#
 
-  catch_all (err) {
-    CaliforniaOChoice {}
-  }
+
 }
 
 function ExtractSOLASCourse(
   page_markdown: string,
-  course_code: string
-) -> SOLASCourse {  client ExtractEn
+  course_code: string,
+) -> SOLASCourse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -804,9 +797,7 @@ function ExtractSOLASCourse(
     {{ input }}
   "#
 
-  catch_all (err) {
-    SOLASCourse {}
-  }
+
 }
 
 // =============================================================================

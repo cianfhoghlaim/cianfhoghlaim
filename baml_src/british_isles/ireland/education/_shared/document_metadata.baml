@@ -17,7 +17,8 @@ class DocumentMetadata {
 }
 
 function ExtractAllPdfMetadata(page_markdown: string,
-  pdf_urls: string[]) -> DocumentMetadata[] {  client ExtractEn
+  pdf_urls: string[]) -> DocumentMetadata[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -29,9 +30,7 @@ function ExtractAllPdfMetadata(page_markdown: string,
     {{ input }}
   "#
 
-  catch_all (err) {
-    DocumentMetadata[] {}
-  }
+
 }
 
 
@@ -53,7 +52,8 @@ class CurriculumExtraction {
   @@stream.done
 }
 
-function ExtractCurriculumExtraction(pdf_text: string) -> CurriculumExtraction {  client ExtractEn
+function ExtractCurriculumExtraction(pdf_text: string) -> CurriculumExtraction {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -65,11 +65,5 @@ function ExtractCurriculumExtraction(pdf_text: string) -> CurriculumExtraction {
     {{ input }}
   "#
 
-  catch_all (err) {
-    CurriculumExtraction {
-      subject "",
-      topics null,
-      totalSuggestedHours 0,
-    }
-  }
+
 }

@@ -27,17 +27,9 @@ class GaeilgeSpec {
 
 function ExtractGaeilgeSpec(
   input: string,
-) -> GaeilgeSpec {  client ExtractEn
+) -> GaeilgeSpec {
+  client ExtractEn
     prompt #"{{ _.role('user') }} Extract gaeilge spec from {{ input }}"#
 
-  catch_all (err) {
-    GaeilgeSpec {
-      lo_code_prefix "JC-GAEL-LO",
-      strand_count 3,
-      total_learning_outcomes 0,
-      is_bilingual true,
-      has_prescribed_texts true,
-      has_cba true,
-    }
-  }
+
 }

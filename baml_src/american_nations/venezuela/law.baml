@@ -15,8 +15,9 @@ class VenezuelaLawDocument {
 function ExtractVenezuelaLawDocument(
   jurisdiction: string,
   language: string,
-  text: string
-) -> VenezuelaLawDocument {  client ExtractEn
+  text: string,
+) -> VenezuelaLawDocument {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -28,14 +29,5 @@ function ExtractVenezuelaLawDocument(
     {{ input }}
   "#
 
-  catch_all (err) {
-    VenezuelaLawDocument {
-      language "",
-      title "",
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

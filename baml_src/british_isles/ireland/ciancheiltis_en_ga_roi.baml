@@ -91,17 +91,7 @@ function ExtractIrishStatuteBook(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    BilingualPagePair {
-      source_url "",
-      url_a "",
-      url_b "",
-      language_pair "en-ga",
-      is_same_article false,
-      metadata_mismatch false,
-      theme_code "T1",
-    }
-  }
+
 }
 
 function ExtractIrelandBilingualSyllabus(
@@ -168,15 +158,5 @@ function ExtractIrelandBilingualSyllabus(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    BilingualPagePair {
-      source_url "",
-      url_a "",
-      url_b "",
-      language_pair "en-ga",
-      is_same_article false,
-      metadata_mismatch false,
-      theme_code "T3",
-    }
-  }
+
 }

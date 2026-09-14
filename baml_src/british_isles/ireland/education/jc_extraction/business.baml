@@ -27,16 +27,9 @@ class BusinessSpec {
 
 function ExtractBusinessSpec(
   input: string,
-) -> BusinessSpec {  client ExtractEn
+) -> BusinessSpec {
+  client ExtractEn
     prompt #"{{ _.role('user') }} Extract business spec from {{ input }}"#
 
-  catch_all (err) {
-    BusinessSpec {
-      lo_code_prefix "JC-BUS-LO",
-      strand_count 4,
-      total_learning_outcomes 0,
-      has_cba true,
-      cba_count 1,
-    }
-  }
+
 }

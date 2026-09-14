@@ -177,8 +177,9 @@ class GlossaryEntry {
 
 // Parse Logainm API JSON response for a single place
 function ParseLogainmPlace(
-  json_response: string
-) -> LogainmPlace {  client ExtractEn
+  json_response: string,
+) -> LogainmPlace {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -193,8 +194,9 @@ function ParseLogainmPlace(
 
 // Parse Logainm search results
 function ParseLogainmSearchResults(
-  json_response: string
-) -> LogainmSearchResult {  client ExtractEn
+  json_response: string,
+) -> LogainmSearchResult {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -209,8 +211,9 @@ function ParseLogainmSearchResults(
 
 // Extract placename etymology from glossary references
 function ExtractPlacenameEtymology(
-  place: LogainmPlace
-) -> string {  client ExtractEn
+  place: LogainmPlace,
+) -> string {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -222,9 +225,7 @@ function ExtractPlacenameEtymology(
     {{ input }}
   "#
 
-  catch_all (err) {
-    ""
-  }
+
 }
 
 // Find places within a geographic radius
@@ -232,8 +233,9 @@ function ParseGeoQuery(
   json_response: string,
   center_lat: float,
   center_lon: float,
-  radius_m: int
-) -> LogainmSearchResult {  client ExtractEn
+  radius_m: int,
+) -> LogainmSearchResult {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -262,8 +264,9 @@ class LogainmDuchasLink {
 // Enrich place data with Dúchas folklore references
 function EnrichPlaceWithFolklore(
   place: LogainmPlace,
-  duchas_data: string
-) -> LogainmDuchasLink {  client ExtractEn
+  duchas_data: string,
+) -> LogainmDuchasLink {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

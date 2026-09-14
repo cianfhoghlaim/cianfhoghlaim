@@ -43,7 +43,8 @@ class CourtFee {
 function ExtractCourtForm(
   page_url: string,
   page_html: string,
-) -> CourtForm {  client ExtractEn
+) -> CourtForm {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -55,19 +56,14 @@ function ExtractCourtForm(
     {{ input }}
   "#
 
-  catch_all (err) {
-    CourtForm {
-      url "",
-      form_title "",
-      court_level courtlevel {},
-    }
-  }
+
 }
 
 function ExtractCourtFee(
   page_url: string,
   page_html: string,
-) -> CourtFee {  client ExtractEn
+) -> CourtFee {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -79,10 +75,5 @@ function ExtractCourtFee(
     {{ input }}
   "#
 
-  catch_all (err) {
-    CourtFee {
-      url "",
-      court_level courtlevel {},
-    }
-  }
+
 }

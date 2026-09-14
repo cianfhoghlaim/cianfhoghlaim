@@ -261,25 +261,7 @@ function ExtractGCSECurriculumSyllabus(
     {{ pdf_text }}
   "#
 
-  catch_all (err) {
-    GCSESyllabusSpec {
-      subject gcsesubjectslug {},
-      board gcseexamboard {},
-      stage gcsestage {},
-      title "",
-      version "",
-      first_teaching_year null,
-      last_certification_year null,
-      source_pdf "",
-      source_pages null,
-      total_marks 0,
-      assessment_objectives null,
-      component_papers 0,
-      area_topics null,
-      total_topics 0,
-      lineage null,
-    }
-  }
+
 }
 
 function ExtractGCSEExamPaperLayout(
@@ -303,22 +285,7 @@ function ExtractGCSEExamPaperLayout(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    GCSEExamPaper {
-      subject gcsesubjectslug {},
-      board gcseexamboard {},
-      stage gcsestage {},
-      year 0,
-      source_pdf "",
-      total_pages 0,
-      total_marks 0,
-      total_questions 0,
-      sections null,
-      duration_minutes null,
-      has_formula_sheet false,
-      tier null,
-    }
-  }
+
 }
 
 function ExtractGCSEMarkingSchemeGuideline(
@@ -339,20 +306,7 @@ function ExtractGCSEMarkingSchemeGuideline(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    GCSEMarkingScheme {
-      subject gcsesubjectslug {},
-      board gcseexamboard {},
-      stage gcsestage {},
-      scheme_code "",
-      year null,
-      source_pdf "",
-      mark_allocations null,
-      total_bands 0,
-      total_pages 0,
-      descriptor_word_count_avg 0,
-    }
-  }
+
 }
 
 function ExtractGCSESyllabusDiagram(
@@ -372,22 +326,7 @@ function ExtractGCSESyllabusDiagram(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    GCSESyllabusDiagram {
-      diagram_id "",
-      caption_en null,
-      caption_ga null,
-      page_number 0,
-      source_pdf "",
-      subject gcsesubjectslug {},
-      board gcseexamboard {},
-      pointing_model "",
-      confidence_score 0,
-      regions null,
-      related_lo_ids null,
-      lineage null,
-    }
-  }
+
 }
 
 function ExtractGCSECrossSubjectTopics(
@@ -406,14 +345,7 @@ function ExtractGCSECrossSubjectTopics(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    GCSECrossSubjectTopics {
-      subject gcsesubjectslug {},
-      topics null,
-      total_topics 0,
-      cross_subject_topics null,
-    }
-  }
+
 }
 
 function ExtractGCSEPerQuestionScheme(
@@ -431,9 +363,7 @@ function ExtractGCSEPerQuestionScheme(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    GCSEPerQuestionScheme[] {}
-  }
+
 }
 
 // ============================================================================

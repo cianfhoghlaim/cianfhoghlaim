@@ -42,7 +42,8 @@ class NCCAKeyCompetencyRootPdf {
   @@stream.done
 }
 
-function ExtractKeyCompetencies(pdf_text: string) -> NCCAKeyCompetencyRootPdf[] {  client ExtractEn
+function ExtractKeyCompetencies(pdf_text: string) -> NCCAKeyCompetencyRootPdf[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -54,9 +55,7 @@ function ExtractKeyCompetencies(pdf_text: string) -> NCCAKeyCompetencyRootPdf[] 
     {{ input }}
   "#
 
-  catch_all (err) {
-    NCCAKeyCompetencyRootPdf[] {}
-  }
+
 }
 
 // ============================================================================
@@ -72,7 +71,8 @@ class PedagogySet {
   @@stream.done
 }
 
-function ExtractOnlineLearningPedagogy(pdf_text: string) -> PedagogySet {  client ExtractEn
+function ExtractOnlineLearningPedagogy(pdf_text: string) -> PedagogySet {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -84,12 +84,7 @@ function ExtractOnlineLearningPedagogy(pdf_text: string) -> PedagogySet {  clien
     {{ input }}
   "#
 
-  catch_all (err) {
-    PedagogySet {
-      introduction bilingualtextrootpdf {},
-      evidence evidencelink {},
-    }
-  }
+
 }
 
 // ============================================================================
@@ -105,7 +100,8 @@ class CertGuidance {
   @@stream.done
 }
 
-function ExtractCertificationGuidance(pdf_text: string) -> CertGuidance {  client ExtractEn
+function ExtractCertificationGuidance(pdf_text: string) -> CertGuidance {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -117,12 +113,7 @@ function ExtractCertificationGuidance(pdf_text: string) -> CertGuidance {  clien
     {{ input }}
   "#
 
-  catch_all (err) {
-    CertGuidance {
-      introduction bilingualtextrootpdf {},
-      evidence evidencelink {},
-    }
-  }
+
 }
 
 // ============================================================================
@@ -138,7 +129,8 @@ class ExaminerCommentary {
   @@stream.done
 }
 
-function ExtractSCRAdvisory(pdf_text: string) -> ExaminerCommentary {  client ExtractEn
+function ExtractSCRAdvisory(pdf_text: string) -> ExaminerCommentary {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -150,12 +142,7 @@ function ExtractSCRAdvisory(pdf_text: string) -> ExaminerCommentary {  client Ex
     {{ input }}
   "#
 
-  catch_all (err) {
-    ExaminerCommentary {
-      introduction bilingualtextrootpdf {},
-      evidence evidencelink {},
-    }
-  }
+
 }
 
 // ============================================================================
@@ -171,7 +158,8 @@ class AimsExpectations {
   @@stream.done
 }
 
-function ExtractProgrammeStatement(pdf_text: string) -> AimsExpectations {  client ExtractEn
+function ExtractProgrammeStatement(pdf_text: string) -> AimsExpectations {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -183,10 +171,5 @@ function ExtractProgrammeStatement(pdf_text: string) -> AimsExpectations {  clie
     {{ input }}
   "#
 
-  catch_all (err) {
-    AimsExpectations {
-      introduction bilingualtextrootpdf {},
-      evidence evidencelink {},
-    }
-  }
+
 }

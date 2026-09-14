@@ -68,7 +68,8 @@ function ExtractEnglishMarkingScheme(
   pdf_text: string,
   year: int?,
   level: string?,
-) -> EnglishMarkingScheme {  client ExtractEn
+) -> EnglishMarkingScheme {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -80,18 +81,7 @@ function ExtractEnglishMarkingScheme(
     {{ input }}
   "#
 
-  catch_all (err) {
-    EnglishMarkingScheme {
-      scheme_code "",
-      year 0,
-      source_pdf "",
-      grade_descriptors null,
-      mark_allocations null,
-      subject_specific engsubjectdiscriminator {},
-      total_marks 0,
-      total_questions 0,
-    }
-  }
+
 }
 
 // test english_marking_extraction_smoke {

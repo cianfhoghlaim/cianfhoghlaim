@@ -118,8 +118,9 @@ class LeabharlannDoc {
 function ExtractLeabharlannDoc(
   text: string,
   file_name: string,
-  subcorpus: LeabharlannSubcorpus
-) -> LeabharlannDoc {  client ExtractEn
+  subcorpus: LeabharlannSubcorpus,
+) -> LeabharlannDoc {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -131,9 +132,7 @@ function ExtractLeabharlannDoc(
     {{ input }}
   "#
 
-  catch_all (err) {
-    LeabharlannDoc {}
-  }
+
 }
 
 // =============================================================================

@@ -16,8 +16,9 @@ class EurostatDatasetMetadata {
 
 function ExtractEurostatDatasetMetadata(
   language: EULanguage,
-  text: string
-) -> EurostatDatasetMetadata {  client ExtractEn
+  text: string,
+) -> EurostatDatasetMetadata {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -29,12 +30,5 @@ function ExtractEurostatDatasetMetadata(
     {{ input }}
   "#
 
-  catch_all (err) {
-    EurostatDatasetMetadata {
-      language eulanguage {},
-      title "",
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

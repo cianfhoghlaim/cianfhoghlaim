@@ -127,8 +127,9 @@ function EnglishWebStudyPlan(
   weeks_until_exam: int,
   target_level: EnglishLevel,
   language: EnglishLanguage,
-  focus_topics: string[]
-) -> EnglishWebStudyPlanResponse {  client ExtractEn
+  focus_topics: string[],
+) -> EnglishWebStudyPlanResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -146,8 +147,9 @@ function EnglishWebExamPaperDiscussion(
   paper_year: int,
   paper_level: EnglishLevel,
   paper_language: EnglishLanguage,
-  question_text: string
-) -> EnglishWebExamPaperDiscussionResponse {  client ExtractEn
+  question_text: string,
+) -> EnglishWebExamPaperDiscussionResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -164,8 +166,9 @@ function EnglishWebMarkingSchemeExplanation(
   subject: string,
   paper_year: int,
   paper_level: EnglishLevel,
-  paper_language: EnglishLanguage
-) -> EnglishWebMarkingSchemeExplanationResponse {  client ExtractEn
+  paper_language: EnglishLanguage,
+) -> EnglishWebMarkingSchemeExplanationResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

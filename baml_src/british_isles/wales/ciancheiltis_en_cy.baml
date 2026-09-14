@@ -70,17 +70,7 @@ function ExtractWalesBilingualSyllabus(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    BilingualPagePair {
-      source_url "",
-      url_a "",
-      url_b "",
-      language_pair "en-cy",
-      is_same_article false,
-      metadata_mismatch false,
-      theme_code "T3",
-    }
-  }
+
 }
 
 function ExtractWelshSI(
@@ -132,15 +122,5 @@ function ExtractWelshSI(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    BilingualPagePair {
-      source_url "",
-      url_a "",
-      url_b "",
-      language_pair "en-cy",
-      is_same_article false,
-      metadata_mismatch false,
-      theme_code "T1",
-    }
-  }
+
 }

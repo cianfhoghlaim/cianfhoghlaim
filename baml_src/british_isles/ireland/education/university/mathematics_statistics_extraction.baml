@@ -571,8 +571,9 @@ class AcademicHistorySnapshot {
 
 function ExtractAcademicModuleSyllabus(
   pdf_text: string,
-  module_code: string
-) -> AcademicModuleDescriptor {  client ExtractEn
+  module_code: string,
+) -> AcademicModuleDescriptor {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -596,16 +597,15 @@ function ExtractAcademicModuleSyllabus(
     {{ input }}
   "#
 
-  catch_all (err) {
-    AcademicModuleDescriptor {}
-  }
+
 }
 
 function ExtractCourseworkArtifact(
   pdf_text: string,
   file_name: string,
-  document_kind: DocumentKind
-) -> CourseworkArtifactExtraction {  client ExtractEn
+  document_kind: DocumentKind,
+) -> CourseworkArtifactExtraction {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -629,16 +629,15 @@ function ExtractCourseworkArtifact(
     {{ input }}
   "#
 
-  catch_all (err) {
-    CourseworkArtifactExtraction {}
-  }
+
 }
 
 function ExtractTertiaryExamPaper(
   pdf_text: string,
   module_code: string,
-  year: int
-) -> TertiaryExamPaper {  client ExtractEn
+  year: int,
+) -> TertiaryExamPaper {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -662,17 +661,14 @@ function ExtractTertiaryExamPaper(
     {{ input }}
   "#
 
-  catch_all (err) {
-    TertiaryExamPaper {
-      confidence 0,
-    }
-  }
+
 }
 
 function ExtractAssignmentBrief(
   pdf_text: string,
-  module_code: string
-) -> AssignmentBrief {  client ExtractEn
+  module_code: string,
+) -> AssignmentBrief {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -696,17 +692,14 @@ function ExtractAssignmentBrief(
     {{ input }}
   "#
 
-  catch_all (err) {
-    AssignmentBrief {
-      confidence 0,
-    }
-  }
+
 }
 
 function ExtractStudentAnswerScript(
   pdf_text: string,
-  assignment_id: string
-) -> StudentAnswerScript {  client ExtractEn
+  assignment_id: string,
+) -> StudentAnswerScript {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -730,17 +723,14 @@ function ExtractStudentAnswerScript(
     {{ input }}
   "#
 
-  catch_all (err) {
-    StudentAnswerScript {
-      confidence 0,
-    }
-  }
+
 }
 
 function ExtractWorkedSolution(
   pdf_text: string,
-  question_id: string
-) -> WorkedSolution {  client ExtractEn
+  question_id: string,
+) -> WorkedSolution {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -764,16 +754,13 @@ function ExtractWorkedSolution(
     {{ input }}
   "#
 
-  catch_all (err) {
-    WorkedSolution {
-      confidence 0,
-    }
-  }
+
 }
 
 function ExtractFormulaRecords(
-  pdf_text: string
-) -> FormulaRecord[] {  client ExtractEn
+  pdf_text: string,
+) -> FormulaRecord[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -797,14 +784,13 @@ function ExtractFormulaRecords(
     {{ input }}
   "#
 
-  catch_all (err) {
-    FormulaRecord[] {}
-  }
+
 }
 
 function ExtractTheorems(
-  pdf_text: string
-) -> TheoremRecord[] {  client ExtractEn
+  pdf_text: string,
+) -> TheoremRecord[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -828,14 +814,13 @@ function ExtractTheorems(
     {{ input }}
   "#
 
-  catch_all (err) {
-    TheoremRecord[] {}
-  }
+
 }
 
 function ExtractStatisticalProcedureRecords(
-  pdf_text: string
-) -> StatisticalProcedureRecord[] {  client ExtractEn
+  pdf_text: string,
+) -> StatisticalProcedureRecord[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -859,14 +844,13 @@ function ExtractStatisticalProcedureRecords(
     {{ input }}
   "#
 
-  catch_all (err) {
-    StatisticalProcedureRecord[] {}
-  }
+
 }
 
 function ExtractNumericalMethodRecords(
-  pdf_text: string
-) -> NumericalMethodRecord[] {  client ExtractEn
+  pdf_text: string,
+) -> NumericalMethodRecord[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -890,14 +874,13 @@ function ExtractNumericalMethodRecords(
     {{ input }}
   "#
 
-  catch_all (err) {
-    NumericalMethodRecord[] {}
-  }
+
 }
 
 function ExtractNonlinearSystemRecords(
-  pdf_text: string
-) -> NonlinearSystemRecord[] {  client ExtractEn
+  pdf_text: string,
+) -> NonlinearSystemRecord[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -921,14 +904,13 @@ function ExtractNonlinearSystemRecords(
     {{ input }}
   "#
 
-  catch_all (err) {
-    NonlinearSystemRecord[] {}
-  }
+
 }
 
 function ExtractAcademicHistorySnapshot(
-  history_json: string
-) -> AcademicHistorySnapshot {  client ExtractEn
+  history_json: string,
+) -> AcademicHistorySnapshot {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting University of Galway (or Irish university) module syllabus data from PDF.
@@ -952,11 +934,7 @@ function ExtractAcademicHistorySnapshot(
     {{ input }}
   "#
 
-  catch_all (err) {
-    AcademicHistorySnapshot {
-      confidence 0,
-    }
-  }
+
 }
 
 // =============================================================================

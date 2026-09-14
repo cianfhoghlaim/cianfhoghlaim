@@ -14,8 +14,9 @@ class JerseyLawDocument {
 function ExtractJerseyLawDocument(
   island: string,
   language: string,
-  text: string
-) -> JerseyLawDocument {  client ExtractEn
+  text: string,
+) -> JerseyLawDocument {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -27,13 +28,5 @@ function ExtractJerseyLawDocument(
     {{ input }}
   "#
 
-  catch_all (err) {
-    JerseyLawDocument {
-      title "",
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

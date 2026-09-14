@@ -50,8 +50,9 @@ function ClassifyEmail(
   email_subject: string,
   email_body: string,
   sender_domain: string,
-  recipient_domain: string
-) -> EmailClassificationResult {  client ExtractEn
+  recipient_domain: string,
+) -> EmailClassificationResult {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -80,8 +81,9 @@ class EmailThread {
 
 function ExtractEmailThread(
   thread_messages: string[],
-  thread_subject: string
-) -> EmailThread {  client ExtractEn
+  thread_subject: string,
+) -> EmailThread {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -93,9 +95,7 @@ function ExtractEmailThread(
     {{ input }}
   "#
 
-  catch_all (err) {
-    EmailThread {}
-  }
+
 }
 
 // =============================================================================
@@ -117,8 +117,9 @@ class CandidatePDF {
 
 function LinkEmailToResearch(
   email_body: string,
-  candidate_pdfs: CandidatePDF[]
-) -> ResearchLink[] {  client ExtractEn
+  candidate_pdfs: CandidatePDF[],
+) -> ResearchLink[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

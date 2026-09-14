@@ -104,8 +104,9 @@ class MutationTriggerPattern {
 // Extract grammar patterns from text
 function ExtractGrammarPatterns(
   text: string @description("Celtic language text"),
-  language: CelticLanguage @description("Language of the text")
-) -> GrammarPattern[] {  client ExtractEn
+  language: CelticLanguage @description("Language of the text"),
+) -> GrammarPattern[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting Celtic-language grammar patterns from a pedagogical text.
@@ -135,8 +136,9 @@ function ExtractGrammarPatterns(
 
 // Analyze Irish copula usage
 function ExtractIrishCopula(
-  sentence: string @description("Irish sentence possibly containing copula")
-) -> IrishCopulaPattern? {  client ExtractEn
+  sentence: string @description("Irish sentence possibly containing copula"),
+) -> IrishCopulaPattern? {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting Celtic-language grammar patterns from a pedagogical text.
@@ -167,8 +169,9 @@ function ExtractIrishCopula(
 // Analyze VSO word order
 function AnalyzeVSOOrder(
   sentence: string @description("Celtic sentence"),
-  language: CelticLanguage @description("Language")
-) -> VSOPattern {  client ExtractEn
+  language: CelticLanguage @description("Language"),
+) -> VSOPattern {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting Celtic-language grammar patterns from a pedagogical text.
@@ -198,8 +201,9 @@ function AnalyzeVSOOrder(
 
 // Extract possession patterns
 function ExtractPossession(
-  sentence: string @description("Sentence expressing possession")
-) -> PossessionPattern {  client ExtractEn
+  sentence: string @description("Sentence expressing possession"),
+) -> PossessionPattern {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting Celtic-language grammar patterns from a pedagogical text.
@@ -230,8 +234,9 @@ function ExtractPossession(
 // Generate prepositional pronoun table
 function GeneratePrepositionalPronouns(
   preposition: string @description("Base preposition"),
-  language: CelticLanguage @description("Language")
-) -> PrepositionalPronoun[] {  client ExtractEn
+  language: CelticLanguage @description("Language"),
+) -> PrepositionalPronoun[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting Celtic-language grammar patterns from a pedagogical text.
@@ -261,8 +266,9 @@ function GeneratePrepositionalPronouns(
 
 // Document mutation triggers
 function DocumentMutationTriggers(
-  language: CelticLanguage @description("Language to document")
-) -> MutationTriggerPattern[] {  client ExtractEn
+  language: CelticLanguage @description("Language to document"),
+) -> MutationTriggerPattern[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting Celtic-language grammar patterns from a pedagogical text.
@@ -313,8 +319,9 @@ class CelticGrammarPattern {
 function ExtractCelticGrammar(
   text: string,
   language: CelticLanguageCurriculum,
-  max_patterns: int?
-) -> CelticGrammarPattern[] {  client ExtractEn
+  max_patterns: int?,
+) -> CelticGrammarPattern[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert at extracting Celtic-language grammar patterns from a pedagogical text.
@@ -341,7 +348,5 @@ function ExtractCelticGrammar(
     {{ input }}
   "#
 
-  catch_all (err) {
-    CelticGrammarPattern[] {}
-  }
+
 }

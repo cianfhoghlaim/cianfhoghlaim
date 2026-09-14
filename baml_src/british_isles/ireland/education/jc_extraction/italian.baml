@@ -27,16 +27,9 @@ class ItalianSpec {
 
 function ExtractItalianSpec(
   input: string,
-) -> ItalianSpec {  client ExtractEn
+) -> ItalianSpec {
+  client ExtractEn
     prompt #"{{ _.role('user') }} Extract italian spec from {{ input }}"#
 
-  catch_all (err) {
-    ItalianSpec {
-      lo_code_prefix "JC-ITAL-LO",
-      strand_count 4,
-      total_learning_outcomes 0,
-      cefr_target_level "A2-B1",
-      has_cba true,
-    }
-  }
+
 }

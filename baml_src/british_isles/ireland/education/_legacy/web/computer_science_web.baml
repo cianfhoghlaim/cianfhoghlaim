@@ -127,8 +127,9 @@ function ComputerScienceWebStudyPlan(
   weeks_until_exam: int,
   target_level: ComputerScienceLevel,
   language: ComputerScienceLanguage,
-  focus_topics: string[]
-) -> ComputerScienceWebStudyPlanResponse {  client ExtractEn
+  focus_topics: string[],
+) -> ComputerScienceWebStudyPlanResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -146,8 +147,9 @@ function ComputerScienceWebExamPaperDiscussion(
   paper_year: int,
   paper_level: ComputerScienceLevel,
   paper_language: ComputerScienceLanguage,
-  question_text: string
-) -> ComputerScienceWebExamPaperDiscussionResponse {  client ExtractEn
+  question_text: string,
+) -> ComputerScienceWebExamPaperDiscussionResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -164,8 +166,9 @@ function ComputerScienceWebMarkingSchemeExplanation(
   subject: string,
   paper_year: int,
   paper_level: ComputerScienceLevel,
-  paper_language: ComputerScienceLanguage
-) -> ComputerScienceWebMarkingSchemeExplanationResponse {  client ExtractEn
+  paper_language: ComputerScienceLanguage,
+) -> ComputerScienceWebMarkingSchemeExplanationResponse {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

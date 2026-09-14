@@ -14,8 +14,9 @@ class IsleOfManEducationDocument {
 function ExtractIsleOfManEducationDocument(
   island: string,
   language: string,
-  text: string
-) -> IsleOfManEducationDocument {  client ExtractEn
+  text: string,
+) -> IsleOfManEducationDocument {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -27,13 +28,5 @@ function ExtractIsleOfManEducationDocument(
     {{ input }}
   "#
 
-  catch_all (err) {
-    IsleOfManEducationDocument {
-      title "",
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

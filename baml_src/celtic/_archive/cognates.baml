@@ -102,8 +102,9 @@ enum CelticSoundChange {
 function IdentifyCognates(
   word: string @description("Word to find cognates for"),
   language: CelticLanguage @description("Language of the word"),
-  meaning: string? @description("Meaning if known")
-) -> CognateSet {  client ExtractEn
+  meaning: string? @description("Meaning if known"),
+) -> CognateSet {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -120,7 +121,7 @@ function IdentifyCognates(
 function CompareCelticVocabulary(
   text: string @description("Text to analyze for cognates"),
   language_a: CelticLanguage @description("First language"),
-  language_b: CelticLanguage @description("Second language to compare")
+  language_b: CelticLanguage @description("Second language to compare"),
 ) -> CognatePair[] {  client ExtractEn
     prompt #"
     {{ _.role("user") }}
@@ -138,7 +139,7 @@ function CompareCelticVocabulary(
 function IdentifyFalseFriends(
   word: string @description("Word to check"),
   language_a: CelticLanguage @description("First language"),
-  language_b: CelticLanguage @description("Second language")
+  language_b: CelticLanguage @description("Second language"),
 ) -> FalseFriend? {  client ExtractEn
     prompt #"
     {{ _.role("user") }}
@@ -156,7 +157,7 @@ function IdentifyFalseFriends(
 function ExplainSoundChanges(
   proto_form: string @description("Reconstructed Proto-Celtic form"),
   modern_form: string @description("Modern form in any Celtic language"),
-  language: CelticLanguage @description("Language of modern form")
+  language: CelticLanguage @description("Language of modern form"),
 ) -> SoundChange[] {  client ExtractEn
     prompt #"
     {{ _.role("user") }}
@@ -173,7 +174,7 @@ function ExplainSoundChanges(
 // Generate cognate vocabulary for a semantic field
 function GenerateCognateVocabulary(
   semantic_field: string @description("Topic: numbers, family, nature, etc."),
-  languages: CelticLanguage[] @description("Languages to include")
+  languages: CelticLanguage[] @description("Languages to include"),
 ) -> CognateSet[] {  client ExtractEn
     prompt #"
     {{ _.role("user") }}

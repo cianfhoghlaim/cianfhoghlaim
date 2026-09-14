@@ -387,18 +387,7 @@ function ExtractCurriculumSyllabus(
     {{ pdf_text }}
   "#
 
-  catch_all (err) {
-    LCSyllabusDocument {
-      subject lcsubjectslug {},
-      stage lceducationstage {},
-      source_pdf "",
-      module_topics null,
-      total_learning_outcomes 0,
-      cross_curricular null,
-      assessment_objectives null,
-      lineage null,
-    }
-  }
+
 }
 
 function ExtractExamPaperLayout(
@@ -423,23 +412,7 @@ function ExtractExamPaperLayout(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    LCExamPaper {
-      subject lcsubjectslug {},
-      paper_code "",
-      year 0,
-      source_pdf "",
-      total_pages 0,
-      total_marks 0,
-      total_questions 0,
-      sections null,
-      duration_minutes null,
-      has_formula_sheet false,
-      has_data_booklet false,
-      formula_sheet_pages null,
-      lineage null,
-    }
-  }
+
 }
 
 function ExtractMarkingSchemeGuideline(
@@ -460,22 +433,7 @@ function ExtractMarkingSchemeGuideline(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    LCMarkingScheme {
-      subject lcsubjectslug {},
-      scheme_code "",
-      language "",
-      level "",
-      year null,
-      source_pdf "",
-      grade_descriptors null,
-      mark_allocations null,
-      total_bands 0,
-      total_pages 0,
-      descriptor_word_count_avg 0,
-      lineage null,
-    }
-  }
+
 }
 
 function ExtractCrossLinguisticConcept(
@@ -500,9 +458,7 @@ function ExtractCrossLinguisticConcept(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    LCCrossLinguisticConcept[] {}
-  }
+
 }
 
 function ExtractSyllabusDiagram(
@@ -522,19 +478,7 @@ function ExtractSyllabusDiagram(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    LCSyllabusDiagram {
-      diagram_id "",
-      caption_en null,
-      caption_ga null,
-      page_number 0,
-      source_pdf "",
-      subject lcsubjectslug {},
-      confidence_score 0,
-      regions null,
-      lineage null,
-    }
-  }
+
 }
 
 function ExtractCircular(
@@ -553,20 +497,7 @@ function ExtractCircular(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    LCEducationCircular {
-      year 0,
-      language "",
-      title_en "",
-      title_ga null,
-      summary "",
-      full_text "",
-      url "",
-      published_at "",
-      extraction_confidence 0,
-      extracted_at "",
-    }
-  }
+
 }
 
 function LinkCircularToSyllabus(
@@ -616,13 +547,7 @@ function ExtractLCTopicExtraction(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    LCTopicExtraction {
-      subject lcsubjectslug {},
-      topics null,
-      total_topics 0,
-    }
-  }
+
 }
 
 // ============================================================================

@@ -21,8 +21,9 @@ class QuebecEducationBilingualRecord {
 function ExtractQuebecEducationDocument(
   province: string,
   language: string,
-  text: string
-) -> QuebecEducationBilingualRecord {  client ExtractEn
+  text: string,
+) -> QuebecEducationBilingualRecord {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -34,14 +35,5 @@ function ExtractQuebecEducationDocument(
     {{ input }}
   "#
 
-  catch_all (err) {
-    QuebecEducationBilingualRecord {
-      title bilingualtextquebec {},
-      summary null,
-      subject null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

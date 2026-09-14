@@ -50,7 +50,8 @@ function GradeGeographyResponse(
   question: "baml_src.education.lc_extraction.exam_paper_layout.Question",
   marking_scheme: "baml_src.education.lc_extraction.marking_scheme.MarkAllocation",
   is_higher_level: bool,
-) -> GeographyGrade {  client ExtractEn
+) -> GeographyGrade {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -66,7 +67,8 @@ function GradeGeographyResponse(
 function ExplainGeographyMarkingScheme(
   marking_scheme_id: string,
   marking_scheme: "baml_src.education.lc_extraction.marking_scheme.MarkingScheme",
-) -> GeographyMarkingRationale {  client ExtractEn
+) -> GeographyMarkingRationale {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

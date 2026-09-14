@@ -30,17 +30,9 @@ class ChineseSpec {
 
 function ExtractChineseSpec(
   input: string,
-) -> ChineseSpec {  client ExtractEn
+) -> ChineseSpec {
+  client ExtractEn
     prompt #"{{ _.role('user') }} Extract chinese spec from {{ input }}"#
 
-  catch_all (err) {
-    ChineseSpec {
-      lo_code_prefix "JC-CHN-LO",
-      strand_count 5,
-      total_learning_outcomes 0,
-      cefr_target_level "A2",
-      has_cba true,
-      has_hanzi_literacy true,
-    }
-  }
+
 }

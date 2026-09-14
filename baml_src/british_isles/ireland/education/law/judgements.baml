@@ -33,7 +33,8 @@ class Judgement {
 function ExtractJudgement(
   page_url: string,
   page_html: string,
-) -> Judgement {  client ExtractEn
+) -> Judgement {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -45,10 +46,5 @@ function ExtractJudgement(
     {{ input }}
   "#
 
-  catch_all (err) {
-    Judgement {
-      url "",
-      court_level courtlevel {},
-    }
-  }
+
 }

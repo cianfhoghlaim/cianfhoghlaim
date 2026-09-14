@@ -16,8 +16,9 @@ function ExtractBosniaAndHerzegovinaSubjectCurriculum(
   nation: string,
   language: string,
   subject: string,
-  text: string
-) -> BosniaAndHerzegovinaSubjectCurriculum {  client ExtractEn
+  text: string,
+) -> BosniaAndHerzegovinaSubjectCurriculum {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -29,10 +30,5 @@ function ExtractBosniaAndHerzegovinaSubjectCurriculum(
     {{ input }}
   "#
 
-  catch_all (err) {
-    BosniaAndHerzegovinaSubjectCurriculum {
-      publication_date null,
-      content_hash null,
-    }
-  }
+
 }

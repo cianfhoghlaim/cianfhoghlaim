@@ -34,8 +34,9 @@ class CultureHeritageClaim {
 
 function ExtractCultureClaims(
   pdf_path: string,
-  context: string
-) -> CultureHeritageClaim[] {  client ExtractEn
+  context: string,
+) -> CultureHeritageClaim[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -47,7 +48,5 @@ function ExtractCultureClaims(
     {{ input }}
   "#
 
-  catch_all (err) {
-    CultureHeritageClaim[] {}
-  }
+
 }

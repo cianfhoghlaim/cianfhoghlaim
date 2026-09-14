@@ -141,7 +141,8 @@ class BridgeEdge {
 // -----------------------------------------------------------------------------
 
 function ExtractAistearFrameworkFromText(text: string,
-  language: string) -> AistearDocument {  client ExtractEn
+  language: string) -> AistearDocument {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -153,22 +154,12 @@ function ExtractAistearFrameworkFromText(text: string,
     {{ input }}
   "#
 
-  catch_all (err) {
-    AistearDocument {
-      document_id "",
-      title_en "",
-      title_ga null,
-      source_url "",
-      age_band aistearageband {},
-      themes null,
-      principles null,
-      learning_goals null,
-    }
-  }
+
 }
 
 
-function ExtractNaionraListing(page_markdown: string) -> Naionra[] {  client ExtractEn
+function ExtractNaionraListing(page_markdown: string) -> Naionra[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -180,14 +171,13 @@ function ExtractNaionraListing(page_markdown: string) -> Naionra[] {  client Ext
     {{ input }}
   "#
 
-  catch_all (err) {
-    Naionra[] {}
-  }
+
 }
 
 
 function BridgeAistearToPrimary(aistear_doc: AistearDocument,
-  primary_doc: PrimaryCurriculumArea) -> BridgeEdge[] {  client ExtractEn
+  primary_doc: PrimaryCurriculumArea) -> BridgeEdge[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -201,7 +191,8 @@ function BridgeAistearToPrimary(aistear_doc: AistearDocument,
 }
 
 
-function ExtractAistearFrameworkFromUrl(source_url: string) -> AistearDocument {  client ExtractEn
+function ExtractAistearFrameworkFromUrl(source_url: string) -> AistearDocument {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -213,22 +204,12 @@ function ExtractAistearFrameworkFromUrl(source_url: string) -> AistearDocument {
     {{ input }}
   "#
 
-  catch_all (err) {
-    AistearDocument {
-      document_id "",
-      title_en "",
-      title_ga null,
-      source_url "",
-      age_band aistearageband {},
-      themes null,
-      principles null,
-      learning_goals null,
-    }
-  }
+
 }
 
 
-function ExtractAistearFrameworkFromPdf(pdf_text: string) -> AistearFramework {  client ExtractEn
+function ExtractAistearFrameworkFromPdf(pdf_text: string) -> AistearFramework {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -240,9 +221,7 @@ function ExtractAistearFrameworkFromPdf(pdf_text: string) -> AistearFramework { 
     {{ input }}
   "#
 
-  catch_all (err) {
-    AistearFramework {}
-  }
+
 }
 
 // =============================================================================
@@ -251,7 +230,8 @@ function ExtractAistearFrameworkFromPdf(pdf_text: string) -> AistearFramework { 
 
 // Alias for the canonical aistear.baml ExtractAistearFramework(text, language) call
 function ExtractAistearFramework(text: string,
-  language: string) -> AistearDocument {  client ExtractEn
+  language: string) -> AistearDocument {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -263,22 +243,12 @@ function ExtractAistearFramework(text: string,
     {{ input }}
   "#
 
-  catch_all (err) {
-    AistearDocument {
-      document_id "",
-      title_en "",
-      title_ga null,
-      source_url "",
-      age_band aistearageband {},
-      themes null,
-      principles null,
-      learning_goals null,
-    }
-  }
+
 }
 
 // Alias for the early_childhood.baml ExtractAistearFramework(pdf_text) call
-function ExtractAistearFrameworkLegacy(pdf_text: string) -> AistearFramework {  client ExtractEn
+function ExtractAistearFrameworkLegacy(pdf_text: string) -> AistearFramework {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -290,7 +260,5 @@ function ExtractAistearFrameworkLegacy(pdf_text: string) -> AistearFramework {  
     {{ input }}
   "#
 
-  catch_all (err) {
-    AistearFramework {}
-  }
+
 }

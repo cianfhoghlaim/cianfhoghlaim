@@ -220,17 +220,7 @@ function ExtractEURLexTreaty(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    EUBilingualPage {
-      source_url "",
-      ce_lex "",
-      language_availability "none",
-      is_treaty false,
-      is_regulation false,
-      en_content "",
-      ga_content "",
-    }
-  }
+
 }
 
 function ExtractEuroparlPlenary(
@@ -335,17 +325,7 @@ function ExtractEuroparlPlenary(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    EUBilingualPage {
-      source_url "",
-      ce_lex "",
-      language_availability "none",
-      is_treaty false,
-      is_regulation false,
-      en_content "",
-      ga_content "",
-    }
-  }
+
 }
 
 function ExtractIATETerm(
@@ -449,15 +429,5 @@ function ExtractIATETerm(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    EUBilingualPage {
-      source_url "",
-      ce_lex "",
-      language_availability "none",
-      is_treaty false,
-      is_regulation false,
-      en_content "",
-      ga_content "",
-    }
-  }
+
 }

@@ -80,7 +80,8 @@ function ExtractLC6Syllabus(
   subject: string,
   text: string,
   language: string,
-) -> LCSyllabus {  client ExtractEn
+) -> LCSyllabus {
+  client ExtractEn
   // Real extraction prompt (2026-08-06 token-plan-apis change, Phase 2b).
   // The previous placeholder rendered a
   // system-only chat with no user content, which the MiniMax-M3 endpoint
@@ -125,11 +126,7 @@ function ExtractLC6Syllabus(
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    LCSyllabus {
-      document syllabusdocument {},
-    }
-  }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -142,7 +139,8 @@ function ExtractLC6Syllabus(
 // subject. Each is a one-line alias for ExtractLC6Syllabus
 // with the `subject` argument pinned.
 
-function ExtractMathSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
+function ExtractMathSyllabus(text: string, language: string) -> LCSyllabus {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -154,14 +152,11 @@ function ExtractMathSyllabus(text: string, language: string) -> LCSyllabus {  cl
     {{ input }}
   "#
 
-  catch_all (err) {
-    LCSyllabus {
-      document syllabusdocument {},
-    }
-  }
+
 }
 
-function ExtractChemSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
+function ExtractChemSyllabus(text: string, language: string) -> LCSyllabus {
+  client ExtractEn
   // Real extraction prompt (2026-08-06 token-plan-apis change, Phase 2b) —
   // behaves exactly like ExtractLC6Syllabus with subject pinned to chemistry.
   // The previous placeholder rendered a system-only chat that the MiniMax-M3
@@ -201,14 +196,11 @@ function ExtractChemSyllabus(text: string, language: string) -> LCSyllabus {  cl
     {{ ctx.output_format }}
   "#
 
-  catch_all (err) {
-    LCSyllabus {
-      document syllabusdocument {},
-    }
-  }
+
 }
 
-function ExtractGeogSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
+function ExtractGeogSyllabus(text: string, language: string) -> LCSyllabus {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -220,14 +212,11 @@ function ExtractGeogSyllabus(text: string, language: string) -> LCSyllabus {  cl
     {{ input }}
   "#
 
-  catch_all (err) {
-    LCSyllabus {
-      document syllabusdocument {},
-    }
-  }
+
 }
 
-function ExtractGaelSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
+function ExtractGaelSyllabus(text: string, language: string) -> LCSyllabus {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -239,14 +228,11 @@ function ExtractGaelSyllabus(text: string, language: string) -> LCSyllabus {  cl
     {{ input }}
   "#
 
-  catch_all (err) {
-    LCSyllabus {
-      document syllabusdocument {},
-    }
-  }
+
 }
 
-function ExtractEnglSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
+function ExtractEnglSyllabus(text: string, language: string) -> LCSyllabus {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -258,14 +244,11 @@ function ExtractEnglSyllabus(text: string, language: string) -> LCSyllabus {  cl
     {{ input }}
   "#
 
-  catch_all (err) {
-    LCSyllabus {
-      document syllabusdocument {},
-    }
-  }
+
 }
 
-function ExtractCompSyllabus(text: string, language: string) -> LCSyllabus {  client ExtractEn
+function ExtractCompSyllabus(text: string, language: string) -> LCSyllabus {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -277,9 +260,5 @@ function ExtractCompSyllabus(text: string, language: string) -> LCSyllabus {  cl
     {{ input }}
   "#
 
-  catch_all (err) {
-    LCSyllabus {
-      document syllabusdocument {},
-    }
-  }
+
 }

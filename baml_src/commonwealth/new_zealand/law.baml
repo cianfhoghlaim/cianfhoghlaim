@@ -14,8 +14,9 @@ class NewZealandLawDocument {
 function ExtractNewZealandLawDocument(
   country_code: string,
   language: string,
-  text: string
-) -> NewZealandLawDocument {  client ExtractEn
+  text: string,
+) -> NewZealandLawDocument {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -27,14 +28,5 @@ function ExtractNewZealandLawDocument(
     {{ input }}
   "#
 
-  catch_all (err) {
-    NewZealandLawDocument {
-      language "",
-      title "",
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }

@@ -114,8 +114,9 @@ function ExtractImagePrompt(
   outcome_text: string,
   subject: string,
   cycle: string,
-  purpose: ImagePurpose
-) -> ImagePromptSpec {  client ExtractEn
+  purpose: ImagePurpose,
+) -> ImagePromptSpec {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -127,22 +128,15 @@ function ExtractImagePrompt(
     {{ input }}
   "#
 
-  catch_all (err) {
-    ImagePromptSpec {
-      purpose imagepurpose {},
-      camera_angle cameraangle {},
-      lighting lightingstyle {},
-      mood mood {},
-      style visualstyle {},
-    }
-  }
+
 }
 
 function BuildFIBOConfig(
   spec: ImagePromptSpec,
   outcome_id: string,
-  syllabus_path: string
-) -> FIBOConfig {  client ExtractEn
+  syllabus_path: string,
+) -> FIBOConfig {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

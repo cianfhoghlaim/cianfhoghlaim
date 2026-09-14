@@ -64,7 +64,8 @@ function RenderConceptMap(
   past_papers_json: string,
   marking_schemes_json: string,
   five_key_competencies_json: string,
-) -> DiagramPayload {  client ExtractEn
+) -> DiagramPayload {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -86,7 +87,8 @@ function RenderTopicHeatmap(
   language: string,
   past_papers_json: string,
   year_range: int[],
-) -> DiagramPayload {  client ExtractEn
+) -> DiagramPayload {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -109,7 +111,8 @@ function RenderPCLMFlow(
   marking_scheme_json: string,
   paper: string,
   year: int,
-) -> DiagramPayload {  client ExtractEn
+) -> DiagramPayload {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -131,7 +134,8 @@ function RenderQuestionSankey(
   language: string,
   past_papers_json: string,
   year_range: int[],
-) -> DiagramPayload {  client ExtractEn
+) -> DiagramPayload {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

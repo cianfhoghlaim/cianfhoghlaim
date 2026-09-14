@@ -88,7 +88,8 @@ class PrimaryCurriculumArea {
 
 function ExtractPrimaryFramework(text: string,
   stage: PrimaryStage,
-  area: PrimaryAreaCode) -> PrimaryCurriculumArea {  client ExtractEn
+  area: PrimaryAreaCode) -> PrimaryCurriculumArea {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -100,22 +101,14 @@ function ExtractPrimaryFramework(text: string,
     {{ input }}
   "#
 
-  catch_all (err) {
-    PrimaryCurriculumArea {
-      name primaryareacode {},
-      rationale "",
-      rationale_ga null,
-      strands null,
-      source_url "",
-      document_year 0,
-    }
-  }
+
 }
 
 
 function ExtractPrimaryLearningOutcomes(text: string,
   stage: PrimaryStage,
-  area: PrimaryAreaCode) -> PrimaryLearningOutcome[] {  client ExtractEn
+  area: PrimaryAreaCode) -> PrimaryLearningOutcome[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -127,15 +120,14 @@ function ExtractPrimaryLearningOutcomes(text: string,
     {{ input }}
   "#
 
-  catch_all (err) {
-    PrimaryLearningOutcome[] {}
-  }
+
 }
 
 
 function ExtractPrimaryFrameworkFromUrl(source_url: string,
   stage: PrimaryStage,
-  area: PrimaryAreaCode) -> PrimaryCurriculumArea {  client ExtractEn
+  area: PrimaryAreaCode) -> PrimaryCurriculumArea {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -147,16 +139,7 @@ function ExtractPrimaryFrameworkFromUrl(source_url: string,
     {{ input }}
   "#
 
-  catch_all (err) {
-    PrimaryCurriculumArea {
-      name primaryareacode {},
-      rationale "",
-      rationale_ga null,
-      strands null,
-      source_url "",
-      document_year 0,
-    }
-  }
+
 }
 
 // -----------------------------------------------------------------------------

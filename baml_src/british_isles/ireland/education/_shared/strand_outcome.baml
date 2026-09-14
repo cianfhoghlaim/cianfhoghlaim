@@ -393,7 +393,8 @@ class ExtractionBudget {
 //   }
 // }
 
-function ExtractStrandFromCatalog(catalog_yaml: string) -> CurriculumSpecStrand[] {  client ExtractEn
+function ExtractStrandFromCatalog(catalog_yaml: string) -> CurriculumSpecStrand[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -405,7 +406,5 @@ function ExtractStrandFromCatalog(catalog_yaml: string) -> CurriculumSpecStrand[
     {{ input }}
   "#
 
-  catch_all (err) {
-    CurriculumSpecStrand[] {}
-  }
+
 }

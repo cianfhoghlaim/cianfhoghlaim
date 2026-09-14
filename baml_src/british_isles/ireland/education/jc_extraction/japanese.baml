@@ -30,17 +30,9 @@ class JapaneseSpec {
 
 function ExtractJapaneseSpec(
   input: string,
-) -> JapaneseSpec {  client ExtractEn
+) -> JapaneseSpec {
+  client ExtractEn
     prompt #"{{ _.role('user') }} Extract japanese spec from {{ input }}"#
 
-  catch_all (err) {
-    JapaneseSpec {
-      lo_code_prefix "JC-JPN-LO",
-      strand_count 5,
-      total_learning_outcomes 0,
-      cefr_target_level "A2",
-      has_cba true,
-      has_kanji_literacy true,
-    }
-  }
+
 }

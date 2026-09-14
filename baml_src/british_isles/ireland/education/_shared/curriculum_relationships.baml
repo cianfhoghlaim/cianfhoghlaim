@@ -5,7 +5,8 @@
 
 function ExtractLearningOutcomeRelationships(source_outcome: LearningOutcome,
   target_outcomes: LearningOutcome[],
-  subject_context: string) -> RelationshipExtractionResult {  client ExtractEn
+  subject_context: string) -> RelationshipExtractionResult {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -17,14 +18,13 @@ function ExtractLearningOutcomeRelationships(source_outcome: LearningOutcome,
     {{ input }}
   "#
 
-  catch_all (err) {
-    RelationshipExtractionResult {}
-  }
+
 }
 
 
 function ExtractSkillsFromOutcome(outcome: LearningOutcome,
-  curriculum_context: string) -> SkillExtractionResult {  client ExtractEn
+  curriculum_context: string) -> SkillExtractionResult {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -36,15 +36,14 @@ function ExtractSkillsFromOutcome(outcome: LearningOutcome,
     {{ input }}
   "#
 
-  catch_all (err) {
-    SkillExtractionResult {}
-  }
+
 }
 
 
 function ExtractCurriculumFromDocument(document_text: string,
   subject: string,
-  level: EducationLevel) -> ExtractedCurriculumDocument {  client ExtractEn
+  level: EducationLevel) -> ExtractedCurriculumDocument {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -56,15 +55,14 @@ function ExtractCurriculumFromDocument(document_text: string,
     {{ input }}
   "#
 
-  catch_all (err) {
-    ExtractedCurriculumDocument {}
-  }
+
 }
 
 
 function IdentifyPrerequisiteChain(target_outcome: LearningOutcome,
   available_outcomes: LearningOutcome[],
-  max_depth: int) -> LearningOutcome[] {  client ExtractEn
+  max_depth: int) -> LearningOutcome[] {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field

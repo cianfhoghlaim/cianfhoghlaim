@@ -15,8 +15,9 @@ class US_US_CAEducationDocument {
 function ExtractUS_US_CAEducationDocument(
   jurisdiction: string,
   language: string,
-  text: string
-) -> US_US_CAEducationDocument {  client ExtractEn
+  text: string,
+) -> US_US_CAEducationDocument {
+  client ExtractEn
     prompt #"
     {{ _.role("user") }}
     You are an expert extractor. From the input below, extract every field
@@ -28,14 +29,5 @@ function ExtractUS_US_CAEducationDocument(
     {{ input }}
   "#
 
-  catch_all (err) {
-    US_US_CAEducationDocument {
-      language "",
-      title "",
-      summary null,
-      publication_date null,
-      source_url "",
-      content_hash null,
-    }
-  }
+
 }
