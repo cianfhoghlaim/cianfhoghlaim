@@ -1,6 +1,44 @@
 ---
 name: motherduck
 description: Master routing skill for all MotherDuck operations. Use this to determine which of the 4 task-specific MotherDuck sub-skills to invoke (architecture, data-modeling, analytics, connections), or to wire the mcp-server-motherduck (the KCG-preferred agent path). Powers the 4 BIEP Dives (`lc_syllabus_topics`, `lc_exam_difficulty`, `lc_marking_complexity`, `gov_circulars_archive`) + the lc6 MotherDuck Flights (scheduled DuckDB queries for BAML row backfill).
+
+
+## WARNING CURRENT STATUS (2026-09-13, Plan 9 audit)
+
+- dlt_sources/lakehouse/ is EMPTY (only __pycache__/)
+  - The destination dispatch code was MIGRATED to dlt_sources/common/
+  - dlt_sources/common/motherduck_options.py + destinations.py
+    hold the current 3-tier dispatch logic
+- MotherDuck version: depends on dlt[motherduck] Python extra
+  (verified installed via Plan 1)
+- dlt_sources/lakehouse/destinations.py is GONE
+  - Per Phase 17.1 the dispatch was consolidated into common/
+
+### The 3-tier destination dispatch (current)
+
+dlt_sources/common/destinations.py provides:
+- USE_DUCKLAKE=true -> MotherDuck cloud warehouse (production)
+- USE_DUCKLAKE=false -> local DuckDB file (dev)
+- BONNEAGAR_LAKEHOUSE_URI -> full Bonneagar stack (Garage S3 + Lakekeeper)
+
+### The 99 bonneagar stacks
+
+ls bonneagar/stacks/ = 99 production stacks covering:
+- Data plane: lakehouse, motherduck, cognee, qdrant
+- LLM serving: litellm, llama-swap, unsloth-serve
+- Monitoring: loki, grafana, prometheus
+- Network: pangolin, komodo, traefik
+- ... and 91+ more
+
+### Lost Phase 17.1 work
+
+The Plan 1 recovery did NOT restore the lakehouse/ subdirectory.
+The 3-tier destination logic now lives in dlt_sources/common/
+and works correctly, but the historical lakehouse/ subdirectory
+pattern is no longer used.
+
+Re-introducing a separate lakehouse/ subdirectory is deferred
+not needed for current operation.
 ---
 
 # MotherDuck Master Router
