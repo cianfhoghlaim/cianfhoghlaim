@@ -49,3 +49,30 @@ Default toward the most specific sub-skill:
 - **NEVER** make a Firecrawl call without `FIRECRAWL_API_KEY` set in the environment (or `.env`)
 - For one-off terminal tasks, prefer `crawl4ai` (local) if no API credits are available
 - Self-hosted Firecrawl works too — set `FIRECRAWL_API_URL` to point at your instance
+
+
+## ⚠️ CURRENT STATUS (2026-09-13, Plan 8 audit)
+
+- **MCP server**: configured at `.mcp.json` (`bunx -y firecrawl-mcp`)
+  - 12 tools exposed: scrape, map, search, parse, crawl, agent,
+    interact, batch_scrape, monitor_*, research_*, developer_search, ask
+- **4 monitor configs** at `docs/firecrawl/monitors/upstream_packages/`:
+  - `dlthub_blog.yml` — dlt/dltHub blog (30-min cadence)
+  - `lancedb_blog.yml` — LanceDB blog
+  - `motherduck_blog.yml` — MotherDuck blog
+  - `cocoindex_docs.yml` — CocoIndex docs (5 surfaces + llms-full.txt)
+- **Wrapper**: `agents/meaisinfhoghlaim/firecrawl_mcp/client.py`
+  wraps all 12 tools with Pydantic + Langfuse observability
+- **No Firecrawl v2 SDK installed locally** — uses `bunx firecrawl-mcp`
+- **Firecrawl docs are not in `docs/firecrawl/`** — only the 4 monitor
+  configs are present (the upstream blog posts themselves are fetched
+  live via Firecrawl)
+
+### Firecrawl monitor → CocoIndex pipeline (Phase 8 from the v6 plan)
+
+The 4 monitor configs scrape upstream blog posts every 30 min. The
+extracted `ApiChange` records would normally flow into a v1 CocoIndex
+App (`upstream_api_surface_app`) which writes them to the
+`upstream_packages_graph` FalkorDB graph — **but this pipeline is
+currently broken** (the CocoIndex App was lost in Phase 16-29).
+Re-implementation deferred to when Phase 16-29 work is re-applied.
