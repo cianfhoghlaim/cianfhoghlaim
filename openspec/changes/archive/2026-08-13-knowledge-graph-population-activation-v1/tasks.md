@@ -11,7 +11,7 @@
 
 ## Phase B — Register 5 per-stage cognify `defs.yaml` files (1 task, ~30 minutes)
 
-- [ ] B1 Copy the `cross_stage_cognify/defs.yaml` template to
+- [x] B1 Copy the `cross_stage_cognify/defs.yaml` template to
   `orchestration/defs/3_model_lifecycle/cognify/{aistear,primary,junior_cycle,senior_cycle,university}/defs.yaml`,
   adjusting the dataset name + partition key per stage.
 - [ ] B2 `dagster asset list | grep cognify` returns 5 new
@@ -31,7 +31,7 @@
 
 ## Phase D — Activate the 8 BRIDGE cross-stage edges + 38 equivalences (2 tasks, ~1 hour)
 
-- [ ] D1 Add the 8 BRIDGE cross-stage edges to the Cognee graph via
+- [x] D1 Add the 8 BRIDGE cross-stage edges to the Cognee graph via
   `cognee_client.add_edges()` in
   `orchestration/defs/3_model_lifecycle/cognify/cross_stage_cognify/assets.py`.
 - [ ] D2 Add the 38 cross-jurisdiction equivalences via
