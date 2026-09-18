@@ -2,14 +2,14 @@
 
 ## Phase A — Code-only stubs-to-real (no live services required)
 
-- [ ] A1 Replace
+- [x] A1 Replace
   `meaisinfhoghlaim/ocr/ensemble/ensembled_extractor.py:266-283`
   (`_run_path_baml`) — replace the `NotImplementedError` with a real
   `b.Extract<Function>(text=_docling_text, ...)` call. Reuse the
   `baml_function` parameter that's already wired through. Guard the
   import with the existing `BAML_AVAILABLE` pattern.
 
-- [ ] A2 Replace
+- [x] A2 Replace
   `meaisinfhoghlaim/ocr/ensemble/ensembled_extractor.py:472-494`
   (`_ragas_vote`) — call `evaluate_ensemble(ensemble_result)` from
   `meaisinfhoghlaim.evaluation.ragas_biiep_ensemble`. Refactor the
@@ -17,14 +17,14 @@
   `(voted_path, ragas_score, voted_output)` by selecting the winner
   from the `evaluate_ensemble()` return value (highest `composite`).
 
-- [ ] A3 Fix the MLFLOW experiment-name inconsistency at
+- [x] A3 Fix the MLFLOW experiment-name inconsistency at
   `meaisinfhoghlaim/evaluation/ragas_biiep_ensemble.py:1` docstring —
   change `biiep_v2` → `biiep_v3` (the constant at line 49 is correct;
   this is docstring drift only).
 
 ## Phase B — Unit tests
 
-- [ ] B1 Create
+- [x] B1 Create
   `tests/meaisinfoghlaim/backends/test_scanned_detector.py` with
   fixture PDFs covering:
   - Text-rich PDF (chemistry syllabus) → `is_scanned=False`,
@@ -33,7 +33,7 @@
     `recommended_backend="qwen3-vl-8b"`
   - Blank/empty PDF → `is_scanned=True`, `recommended_backend=""`
 
-- [ ] B2 `pytest tests/meaisinfoghlaim/backends/test_scanned_detector.py`
+- [x] B2 `pytest tests/meaisinfoghlaim/backends/test_scanned_detector.py`
   passes locally.
 
 ## Phase C — Dagster scanned-PDF fanout
@@ -57,7 +57,7 @@
 
 ## Phase D — Validation (no live services required)
 
-- [ ] D1 `mise run lint:registry` returns 0 hardcoded model strings.
+- [x] D1 `mise run lint:registry` returns 0 hardcoded model strings.
 - [ ] D2 `pytest tests/meaisinfoghlaim/backends/test_scanned_detector.py`
   passes (3 tests).
 - [ ] D3 `mise run sync:dagster` reports the 6 new

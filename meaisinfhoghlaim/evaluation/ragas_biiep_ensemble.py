@@ -121,7 +121,7 @@ def evaluate_ensemble(
     """Score all 4 paths of the ensemble and return the per-path scores.
 
     If `mlflow_run=True` (default), the per-path scores are logged to
-    the MLflow experiment `biiep_v2` for observability.
+    the MLflow experiment `biiep_v3` for observability.
     """
     scores: dict[str, RAGASScore] = {}
     for path in ensemble_result.paths:
@@ -172,7 +172,7 @@ def _log_scores_to_mlflow(
     ensemble_result: EnsembleResult,
     scores: dict[str, RAGASScore],
 ) -> None:  # pragma: no cover - observability stub
-    """Log the per-path scores to MLflow experiment `biiep_v2`."""
+    """Log the per-path scores to MLflow experiment `biiep_v3`."""
     if not MLFLOW_AVAILABLE:
         return
     try:
