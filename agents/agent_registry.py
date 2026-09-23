@@ -1,10 +1,10 @@
 """Agent fleet registry.
 
-The single source of truth for the 13 main agents in the
+The single source of truth for the 14 main agents in the
 Cianfhoghlaim agent fleet. The 8 NCCA subject agents are
 re-exported through ``agents/tuatha/wiring.py`` for back-compat.
 
-The 13 main agents are:
+The 14 main agents are:
 
 - ``root_agent`` (Custom) — the query router + orchestrator
 - ``curriculum_agent`` (ADK) — 5-nation curriculum search
@@ -20,10 +20,15 @@ The 13 main agents are:
 - ``mcp_curriculum_agent`` (ADK) — MCP-server-bridged curriculum agent
 - ``image_generation_agent`` (ADK) — consumes the 5 ``image_gen``
   MODEL_REGISTRY entries for 2D assets + Babylon.js textures
+- ``students_union_root_agent`` (ADK) — UoG Students' Union root
+  orchestrator + 5 SU specialists (moved from ciandlithe per the
+  ``2026-09-23-consolidate-uog-tertiary-pipeline-v1`` change)
 
 Reference: openspec/changes/2026-08-14-agents-fleet-wiring-parity-v1.
 Extended by openspec/changes/2026-08-13-web-monorepo-consolidation-and-agent-integration-v1/
 (Phase L — image_generation_agent).
+Extended by openspec/changes/2026-09-23-consolidate-uog-tertiary-pipeline-v1/
+(13th→14th specialist — students_union_root_agent).
 """
 from __future__ import annotations
 
@@ -209,6 +214,23 @@ AGENT_REGISTRY: dict[str, AgentFleetWiring] = {
         letta_agent_id="kcg-image-generation-agent",
         litellm_routing_key="image_generation",
     ),
+    # ---------------------------------------------------------------------
+    # Students' Union root orchestrator (per 2026-09-23-consolidate-
+    # uog-tertiary-pipeline-v1) — moved from ciandlithe; the 13th→14th
+    # specialist in the 12-agent fleet
+    # ---------------------------------------------------------------------
+    "students_union_root_agent": AgentFleetWiring(
+        agent_name="students_union_root_agent",
+        module_slug="students_union",
+        module_path="cianfhoghlaim.agents.meaisinfhoghlaim.educational.students_union.root_agent",
+        framework=AgentFramework.ADK,
+        display_name="Students' Union Root Agent (UoG)",
+        baml_prefix="SU",
+        langfuse_trace_name="agent.students_union.route",
+        cognee_dataset="oideachais_students_union",
+        letta_agent_id="kcg-students-union-agent",
+        litellm_routing_key="students_union",
+    ),
 }
 
 
@@ -233,7 +255,7 @@ FRAMEWORK_AVAILABLE: dict[AgentFramework, bool] = {
 
 
 def list_agent_names() -> list[str]:
-    """Return the sorted list of the 13 main agent names."""
+    """Return the sorted list of the 14 main agent names."""
     return sorted(AGENT_REGISTRY.keys())
 
 

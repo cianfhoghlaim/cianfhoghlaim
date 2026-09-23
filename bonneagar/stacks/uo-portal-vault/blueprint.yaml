@@ -1,0 +1,34 @@
+name: uo-portal-vault-blueprint
+
+# =============================================================================
+# UO-PORTAL-VAULT — Komodo blueprint
+# =============================================================================
+# Per the 6-file GOLD_STANDARD pattern. The blueprint declares the
+# stack's commands + the per-procedure vault unlock (the 1-time manual
+# login at the operator terminal).
+# =============================================================================
+
+procedures:
+  deploy-uo-portal-vault:
+    description: "Deploy the uo-portal-vault per-user credential vault"
+    command: "docker compose -f compose.yaml -f sidecar.yaml up -d"
+    health_check: "curl -f http://localhost:8765/health"
+  teardown-uo-portal-vault:
+    description: "Tear down the uo-portal-vault"
+    command: "docker compose -f compose.yaml -f sidecar.yaml down"
+  unlock-uo-portal-profile:
+    description: "1-time manual login at the operator terminal — drives the M365 login via Patchright + captures the AppProxy cookies + writes to the persistent profile"
+    command: "python -m uo_portal_vault.cli unlock --user ${UO_PORTAL_USER} --service regexam"
+    manual: true
+  unlock-uo-portal-canvas:
+    description: "1-time manual login at the operator terminal — generates the Canvas PAT (self-service) and/or drives the M365 OAuth fallback + writes to the persistent profile"
+    command: "python -m uo_portal_vault.cli unlock --user ${UO_PORTAL_USER} --service canvas"
+    manual: true
+  add-uo-portal-user:
+    description: "Provision the 4 per-user Infisical secrets (regexam-user/password + canvas-user/password/pat) for a new student/staff member"
+    command: "python -m uo_portal_vault.cli adduser --user ${UO_PORTAL_USER} --regexam-user ${REGEXAM_USER} --canvas-token ${CANVAS_PAT}"
+labels:
+  - "uo-portal"
+  - "m365-auth"
+  - "appproxy-cookies"
+  - "canvas-pat"

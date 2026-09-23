@@ -96,6 +96,22 @@ ROUTING_KEYWORDS: dict[str, list[str]] = {
         "ms421", "st412", "st419", "cs402",
         "numerical analysis", "nonlinear systems",
     ],
+    # T6 (2026-09-23) — the 14th bucket for the Students' Union root
+    # orchestrator introduced by openspec/changes/2026-09-23-consolidate-
+    # uog-tertiary-pipeline-v1/. Routes SU-specific queries (clubs/socs,
+    # grants, class rep, complaints, elections) before any generic bucket.
+    "students_union_root_agent": [
+        "students union", "su ", "clubs", "societies", "socs",
+        "affiliate", "registration form", "start a society",
+        "grant", "funding", "budget", "subsid", "travel grant",
+        "equipment grant", "welfare grant", "event grant",
+        "class rep", "rep report", "module review", "lecturer concerns",
+        "assessment feedback", "complaint", "harassment", "discrimination",
+        "hardship", "welfare concern", "safeguard", "election",
+        "candidate", "nominat", "sabbatical", "sabbat", "referendum",
+        "vote", "ballot", "president", "vp ",
+        "comhaltas", "mac léinn", "ollscoil na gaillimhe",
+    ],
 }
 
 

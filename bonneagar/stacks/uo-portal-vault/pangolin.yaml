@@ -1,0 +1,31 @@
+name: uo-portal-vault-pangolin
+
+# =============================================================================
+# UO-PORTAL-VAULT — Pangolin resource binding
+# =============================================================================
+# Per the 6-file GOLD_STANDARD pattern. The 6-label Pangolin resource
+# exposes the vault's POST /auth/login endpoint to the agent runtime.
+# =============================================================================
+
+resources:
+  uo-portal-vault-auth:
+    hosts:
+      - uo-portal-vault-auth.cianfhoghlaim.ie
+    targets:
+      - service: uo-portal-vault
+        port: 8765
+    auth:
+      type: password
+      username: ${UO_PORTAL_VAULT_USERNAME}
+      password: ${UO_PORTAL_VAULT_PASSWORD}
+    tls:
+      enabled: true
+      cert: /etc/pangolin/certs/cianfhoghlaim.ie.crt
+      key: /etc/pangolin/certs/cianfhoghlaim.ie.key
+    headers:
+      - name: X-Forwarded-For
+        value: %client_ip
+    labels:
+      tier: "auth"
+      purpose: "uo-portal-credential-vault"
+      owner: "uo-portal-vault"

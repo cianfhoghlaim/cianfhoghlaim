@@ -50,6 +50,22 @@ DEFAULT_PIPELINE_ALLOCATIONS: dict[str, int] = {
     "dlt:pdst_ie": 25,
     "dlt:examinations_ie_papers": 80,
     "dlt:examinations_ie_marking": 80,
+    # UoG tertiary pipeline (per 2026-09-23-consolidate-uog-tertiary-pipeline-v1)
+    "dlt:uog_colleges": 40,
+    "dlt:uog_schools": 40,
+    "dlt:uog_programmes": 80,
+    "dlt:uog_modules": 120,
+    "dlt:uog_module_handbooks": 80,
+    "dlt:uog_reading_lists": 40,
+    "dlt:uog_past_papers": 40,
+    "dlt:uog_press_releases": 40,
+    "dlt:uog_governance_minutes": 40,
+    "dlt:uog_research_outputs": 40,
+    # Authenticated UoA portal pipeline
+    "dlt:regexam_nuig_papers": 60,
+    "dlt:regexam_nuig_marking": 60,
+    "dlt:canvas_nuig_files": 80,
+    "dlt:canvas_nuig_video": 40,
     # Software corpus + agentic sub-total (~1,017 credits/mo)
     "corpus:build:cocoindex": 10,
     "corpus:build:dagster": 17,

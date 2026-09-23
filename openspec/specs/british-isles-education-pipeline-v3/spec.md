@@ -695,11 +695,11 @@ NI graphs.
 A `mise run sync:cognee-graph` CI gate SHALL fail the build if any
 of the 5 stage cognify `defs.yaml` files is missing or if
 `SELECT COUNT(*) FROM coggee_graph.nodes WHERE stage IN ('aistear',
-'primary', 'jc', 'sc', 'university')` returns < 1,000.
+'primary', 'jc', 'sc', 'tertiary')` returns < 1,000.
 
 #### Scenario: All 5 stages have populated cognify assets
 
-- **GIVEN** the 5 cognify stages (Aistear + Primary + JC + SC + University)
+- **GIVEN** the 5 cognify stages (Aistear + Primary + JC + SC + Tertiary)
 - **WHEN** `dagster asset list | grep cognified` runs
 - **THEN** the command returns 5+ `lc5_<stage>_cognified` assets
 - **AND** `SELECT COUNT(*) FROM cognee_graph.nodes` returns ≥ 1,000
