@@ -20,6 +20,7 @@ import { Route as EnFoundationsRouteImport } from './routes/en/foundations'
 import { Route as EnDiagramsRouteImport } from './routes/en/diagrams'
 import { Route as EnAgentsRouteImport } from './routes/en/agents'
 import { Route as EnAboutRouteImport } from './routes/en/about'
+import { Route as ActionsRouteImport } from './routes/actions'
 import { Route as GaPortalIndexRouteImport } from './routes/ga/portal/index'
 import { Route as EnPortalIndexRouteImport } from './routes/en/portal/index'
 import { Route as GaSubjectsTireolaiochtRouteImport } from './routes/ga/subjects/tireolaiocht'
@@ -128,6 +129,11 @@ const EnAgentsRoute = EnAgentsRouteImport.update({
 const EnAboutRoute = EnAboutRouteImport.update({
   id: '/en/about',
   path: '/en/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ActionsRoute = ActionsRouteImport.update({
+  id: '/actions',
+  path: '/actions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GaPortalIndexRoute = GaPortalIndexRouteImport.update({
@@ -437,6 +443,7 @@ const EnLeavingCertSubjectPracticeTopicRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/actions': typeof ActionsRoute
   '/en/about': typeof EnAboutRoute
   '/en/agents': typeof EnAgentsRouteWithChildren
   '/en/diagrams': typeof EnDiagramsRoute
@@ -504,6 +511,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/actions': typeof ActionsRoute
   '/en/about': typeof EnAboutRoute
   '/en/agents': typeof EnAgentsRouteWithChildren
   '/en/diagrams': typeof EnDiagramsRoute
@@ -566,6 +574,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/actions': typeof ActionsRoute
   '/en/about': typeof EnAboutRoute
   '/en/agents': typeof EnAgentsRouteWithChildren
   '/en/diagrams': typeof EnDiagramsRoute
@@ -635,6 +644,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/actions'
     | '/en/about'
     | '/en/agents'
     | '/en/diagrams'
@@ -702,6 +712,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/actions'
     | '/en/about'
     | '/en/agents'
     | '/en/diagrams'
@@ -763,6 +774,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/actions'
     | '/en/about'
     | '/en/agents'
     | '/en/diagrams'
@@ -831,6 +843,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ActionsRoute: typeof ActionsRoute
   EnAboutRoute: typeof EnAboutRoute
   EnAgentsRoute: typeof EnAgentsRouteWithChildren
   EnDiagramsRoute: typeof EnDiagramsRoute
@@ -870,6 +883,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/actions': {
+      id: '/actions'
+      path: '/actions'
+      fullPath: '/actions'
+      preLoaderRoute: typeof ActionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ga/about': {
@@ -1497,6 +1517,7 @@ const GaLeavingCertSubjectRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ActionsRoute: ActionsRoute,
   EnAboutRoute: EnAboutRoute,
   EnAgentsRoute: EnAgentsRouteWithChildren,
   EnDiagramsRoute: EnDiagramsRoute,

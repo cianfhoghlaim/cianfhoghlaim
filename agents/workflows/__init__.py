@@ -20,6 +20,16 @@ Licence: BUSL-1.1 Cianfhoghlaim edition (per LICENSE.md).
 from __future__ import annotations
 
 
+from .teacher_daily_workflow import teacher_daily_workflow
+from .student_secondary_workflow import student_secondary_workflow
+from .tertiary_personal_workflow import tertiary_personal_workflow
+from .aistear_deep_research import aistear_deep_research
+from .primary_deep_research import primary_deep_research
+from .jc_deep_research import jc_deep_research
+from .sc_deep_research import sc_deep_research
+from .tertiary_deep_research import tertiary_deep_research
+
+
 __all__ = [
     "teacher_daily_workflow",
     "student_secondary_workflow",
