@@ -6,6 +6,18 @@
 > oideachais-dashboard + cianfhoghlaim) + the Hono API gateway
 > + 3 shared packages.
 
+> **AG-UI wire-up** (per the 2026-09-24-web-agentic-deep-refactor-v1 change):
+> - `web/apps/_shared/copilotkit/` — the canonical shared module
+>   (Tool type + defineTool + callAgentRegistryRuntime + devFallbackConfig)
+> - `web/hono-api/src/routes/copilotkit/registry.ts` — end-to-end wire-up of
+>   the 3 Python `agent_registry_runtime` helpers (config / events /
+>   schema / handshake) with in-process dev fallback
+> - `web/apps/cianfhoghlaim-web/apps/api/src/copilotkit/actions.ts` — the
+>   canonical 18 CopilotKit actions (6 leaving-cert + 4 diagram + 2 3D-asset +
+>   1 cross-subject + 1 SCR commentary + 4 stage-specific + 2 misc) with real
+>   handlers (Drizzle-backed, no stubs)
+> - `.agents/skills/copilotkit-agui-bridge/SKILL.md` — the AG-UI bridge router skill
+
 ## Routing
 
 Load this AGENTS.md when:
