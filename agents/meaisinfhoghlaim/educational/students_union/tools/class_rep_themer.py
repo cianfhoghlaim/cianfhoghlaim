@@ -15,6 +15,13 @@ The theme taxonomy is the canonical SU Education Council taxonomy
 (assessment = 1.0, welfare = 0.8, etc.) so the output is sorted by
 weighted volume.
 
+**Phase 2 — UoG tertiary pipeline real-data upgrade:**
+Each `ClassRepReport.module_code` is resolved via
+`config.module_full_names` to its snake_case full-name form
+(e.g. "CS203" → "cs203_data_structures") so the aggregation JOINs
+the 4-tier tertiary Module schema at
+`dlt_sources/british_isles/ireland/tertiary/uog/modules.py`.
+
 Licence: BUSL-1.1 Cianfhoghlaim edition (per LICENSE.md at the cianfhoghlaim repo root).
 """
 from __future__ import annotations
@@ -30,11 +37,21 @@ from ..config import config as _config
 class ClassRepReport:
     """A single Class Rep's weekly/monthly feedback report."""
     rep_id: str
-    module_code: str
+    module_code: str  # bare code, e.g. "CS203"
     module_title: str
     report_text: str
     semester: str  # e.g. "2025/26 S1"
     submitted_at_iso: str
+
+    @property
+    def module_id(self) -> str:
+        """The snake_case full-name FK to the 4-tier Module schema.
+
+        Returns the canonical module_id (e.g. "cs203_data_structures")
+        that JOINs with `dlt_sources/.../tertiary/uog/modules.py`.
+        """
+        from ..config import module_full_name
+        return module_full_name(self.module_code) or self.module_code.lower()
 
 
 @dataclass(frozen=True)

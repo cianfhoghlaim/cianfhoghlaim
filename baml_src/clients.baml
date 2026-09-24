@@ -378,6 +378,82 @@ client<llm> BIEPV3Vision {
   retry_policy Exponential
 }
 
+// ====== UoG tertiary pipeline clients (per 2026-09-23-uog-tertiary-real-data-upgrade-v1) ======
+// 5 new BAML clients routed through the MODEL_REGISTRY.
+//
+// UoA Portal vision-language extraction (the ADK vision tool at
+// agents/uoa_portal/tools/uoa_vision.py uses Qwen3-VL-8B for screenshot
+// interpretation of the regexam.nuigalway.ie + canvas.universityofgalway.ie
+// pages).
+client<llm> UoAPortalVision {
+  provider "openai"
+  options {
+    base_url env.LITELLM_BASE_URL
+    api_key env.LITELLM_API_KEY
+    // MODEL_REGISTRY: family="ocr_vision", role="qwen3_vl_default" → "qwen3-vl-8b"
+    model "local/vision/qwen3-vl-8b"
+  }
+  retry_policy Exponential
+}
+
+// UoG module handbook extraction (per-module PDFs, 4-path OCR ensemble).
+// Uses Qwen3.6-27B-MTP for its long-context (128K) window that can fit
+// an entire 12-page handbook in a single prompt.
+client<llm> UoGModuleHandbookExtract {
+  provider "openai"
+  options {
+    base_url env.LITELLM_BASE_URL
+    api_key env.LITELLM_API_KEY
+    // MODEL_REGISTRY: family="text_llm", role="long_context" → "qwen3.6-27b-mtp"
+    model "local/vision/qwen3.6-27b-mtp"
+  }
+  retry_policy Exponential
+}
+
+// UoG general tertiary extraction (4-tier College→School→Programme→Module
+// + academic calendar + governance minutes + press releases +
+// research outputs + programme catalogue). Uses Gemma-4-26B-A4B for
+// its strong multilingual structured extraction.
+client<llm> UoGTertiaryExtract {
+  provider "openai"
+  options {
+    base_url env.LITELLM_BASE_URL
+    api_key env.LITELLM_API_KEY
+    // MODEL_REGISTRY: family="ocr_vision", role="gemma4_strong" → "gemma-4-26B-A4B"
+    model "local/vision/gemma-4-26B-A4B"
+  }
+  retry_policy Exponential
+}
+
+// UoG regexam past-papers OCR (the per-paper PDF extraction at
+// agents/uoa_portal/tools/regexam_paper_ocr.py). Uses OlmOCR-2-7B-1025
+// which is the dedicated OCR model in the registry.
+client<llm> UoGRegexamOcr {
+  provider "openai"
+  options {
+    base_url env.LITELLM_BASE_URL
+    api_key env.LITELLM_API_KEY
+    // MODEL_REGISTRY: family="ocr_vision", role="olmocr" → "olmocr-2-7b-1025"
+    model "local/vision/olmocr-2-7b-1025"
+  }
+  retry_policy Exponential
+}
+
+// UoG CocoIndex embedder (the 10 tertiary CocoIndex flows at
+// cocoindex_flows/british_isles/ireland/tertiary/uog/*_flow.py). Uses
+// BAAI/bge-m3 (1024-d, multilingual) per
+// cocoindex_flows/_shared/_lifespan.py:108.
+client<llm> UoGBgeM3Embedder {
+  provider "openai-generic"
+  options {
+    base_url env.BGE_M3_BASE_URL
+    api_key env.BGE_M3_API_KEY
+    // MODEL_REGISTRY: family="embedder", role="default" → "bge-m3"
+    model "bge-m3"
+  }
+  retry_policy Exponential
+}
+
 // ── Retry policies ──
 
 retry_policy Simple {

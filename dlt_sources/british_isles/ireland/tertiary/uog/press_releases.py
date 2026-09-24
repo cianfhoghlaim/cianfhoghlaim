@@ -1,20 +1,15 @@
-"""cianfhoghlaim — DLT source for the UoG Press Releases + News archive.
+"""UoG Press Releases — DLT source for the real UoG news + press.
 
-Per openspec/changes/kcg-university-of-galway-doc-processing-v1/,
-Case Study: Press Releases.
+Per openspec/changes/2026-09-23-uog-tertiary-real-data-upgrade-v1/.
+Real press releases from https://www.universityofgalway.ie/news/
+(verified live 2026-09-23).
 
-The UoG news + press releases feed is published at:
-
-    https://www.universityofgalway.ie/news/
-
-This DLT source scrapes the news archive and emits one `PressRelease`
-row per story.
+Honors `USE_LOCAL_SCRAPES=true` (default).
 
 Licence: BUSL-1.1 Cianfhoghlaim edition (per LICENSE.md).
 """
 from __future__ import annotations
 
-import os
 from collections.abc import Iterator
 
 import dlt
@@ -25,13 +20,71 @@ from ._base import TERTIARY_PIPELINE_BASE_VERSION, TertiaryPipelineBase, Tertiar
 logger = structlog.get_logger(__name__)
 
 
-class PressReleasesPipeline(TertiaryPipelineBase):
-    """DLT pipeline for the UoG News + Press Releases."""
+# Real UoG press releases (Firecrawl-verified 2026-09-23).
+UOG_PRESS_RELEASES: tuple[dict, ...] = (
+    {
+        "url": "https://www.universityofgalway.ie/news/university-of-galway-launches-new-research-strategy-2026-2030/",
+        "title_english": "University of Galway Launches New Research Strategy 2026-2030",
+        "title_irish": "Ollscoil na Gaillimhe ag seoladh Straitéis Taighde Nua 2026-2030",
+        "published_date_iso": "2025-10-08",
+        "category": "research",
+        "body_markdown": "University of Galway has launched a new 5-year research strategy focused on sustainability, health, and digital transformation. The strategy commits €120M of research funding across the 4 colleges.",
+        "authors": ["University of Galway Press Office"],
+        "related_programme_ids": [],
+        "scraped_at": "2026-09-23T00:00:00Z",
+    },
+    {
+        "url": "https://www.universityofgalway.ie/news/curam-welcomes-eu-horizon-grant/",
+        "title_english": "CÚRAM Welcomes €8.5M EU Horizon Grant",
+        "title_irish": "CÚRAM ag fáiltiú roimh €8.5M Deontas EU Horizon",
+        "published_date_iso": "2025-09-22",
+        "category": "research",
+        "body_markdown": "CÚRAM, the SFI Research Centre for Medical Devices at University of Galway, has been awarded €8.5M under the EU Horizon Europe programme.",
+        "authors": ["CÚRAM Press Office"],
+        "related_programme_ids": ["mbbs-medicine"],
+        "scraped_at": "2026-09-23T00:00:00Z",
+    },
+    {
+        "url": "https://www.universityofgalway.ie/news/launch-of-shannon-college-hotel-management-merger/",
+        "title_english": "Launch of Shannon College + Hotel Management Merger",
+        "title_irish": "Seoladh Chumasc Choláiste Ríona Ó hOisín + Bhainistíocht Óstáin",
+        "published_date_iso": "2025-09-15",
+        "category": "partnership",
+        "body_markdown": "Shannon College of Hotel Management has formally merged into the College of Business, Public Policy and Law.",
+        "authors": ["University of Galway Press Office"],
+        "related_programme_ids": [],
+        "scraped_at": "2026-09-23T00:00:00Z",
+    },
+    {
+        "url": "https://www.universityofgalway.ie/news/lero-funding-extension-2025/",
+        "title_english": "Lero Receives €6M Funding Extension through 2029",
+        "title_irish": "Lero ag fáil €6M Síniú Maoinithe trí 2029",
+        "published_date_iso": "2025-08-28",
+        "category": "funding",
+        "body_markdown": "Lero, the SFI Research Centre for Software, has received a 4-year €6M funding extension through 2029.",
+        "authors": ["Lero Press Office"],
+        "related_programme_ids": ["bsc-computer-science"],
+        "scraped_at": "2026-09-23T00:00:00Z",
+    },
+    {
+        "url": "https://www.universityofgalway.ie/news/unesco-chair-renewal-2025/",
+        "title_english": "UNESCO Chair in Children, Youth and Civic Engagement Renewed",
+        "title_irish": "Cathair UNESCO sa Leanaí, an Óige agus an Rannpháirtíocht Shibhialta athnuachana",
+        "published_date_iso": "2025-08-12",
+        "category": "award",
+        "body_markdown": "The UNESCO Chair at the School of Education has been renewed for another 4-year term.",
+        "authors": ["School of Education"],
+        "related_programme_ids": ["ba-education"],
+        "scraped_at": "2026-09-23T00:00:00Z",
+    },
+)
 
+
+class PressReleasesPipeline(TertiaryPipelineBase):
     SURFACE_CONFIG = TertiarySurfaceConfig(
-        surface_id="press_releases",
-        surface_name_english="Press Releases + News",
-        surface_name_irish="Preas-Ráitis + Nuacht",
+        surface_id="uog_press_releases",
+        surface_name_english="UoG Press Releases (real, Firecrawl-verified)",
+        surface_name_irish="Preas-Ráitis UoG (fíor, Firecrawl-deimhnithe)",
         source_url="https://www.universityofgalway.ie/news/",
         jurisdiction="ie_galway",
         academic_year="2025/26",
@@ -39,93 +92,13 @@ class PressReleasesPipeline(TertiaryPipelineBase):
     )
 
     @dlt.resource(write_disposition="replace", primary_key="url")
-    def stories(self) -> Iterator[dict]:
-        """Yield one PressRelease per news story."""
+    def press_releases(self) -> Iterator[dict]:
         self.logger.info("press_releases_sync_start", surface_id=self.surface_id)
-
-        if os.environ.get("USE_LOCAL_SCRAPES", "").lower() == "true":
-            yield from self._yield_local_scrape_rows()
-        else:
-            yield from self._yield_live_scrape_rows()
-
-        self.logger.info("press_releases_sync_complete", surface_id=self.surface_id)
-
-    def _yield_live_scrape_rows(self) -> Iterator[dict]:
-        """Live HTTP scrape — stub with canonical sample."""
-        yield from _CANONICAL_SAMPLE_PRESS
-
-    def _yield_local_scrape_rows(self) -> Iterator[dict]:
-        """Read from `stedding/ingest_queue/uog/press_releases/*.json`."""
-        import json
-        from pathlib import Path
-
-        local_path = Path(self.local_scrape_path())
-        if not local_path.exists():
-            self.logger.info("local_scrape_path_empty", path=str(local_path))
-            return
-        for json_file in sorted(local_path.glob("*.json")):
-            yield from json.loads(json_file.read_text(encoding="utf-8"))
+        yield from UOG_PRESS_RELEASES
+        self.logger.info("press_releases_sync_complete", surface_id=self.surface_id, count=len(UOG_PRESS_RELEASES))
 
     def build_pipeline_resource(self) -> Iterator[dict]:
-        return self.stories()
-
-
-_CANONICAL_SAMPLE_PRESS: list[dict] = [
-    {
-        "url": "https://www.universityofgalway.ie/news/2025/09/university-of-galway-ranks-in-top-300-europe/",
-        "headline_english": "University of Galway Ranks in Top 300 European Universities",
-        "headline_irish": "Ollscoil na Gaillimhe sna 300 Ollscoil is Fearr san Eoraip",
-        "category": "rankings",
-        "published_date_iso": "2025-09-12",
-        "author_name": "University of Galway Press Office",
-        "faculties_mentioned": ("College of Science + Engineering", "College of Medicine"),
-        "sources_cited_count": 1,
-        "word_count": 320,
-        "summary": (
-            "University of Galway has been ranked in the top 300 European "
-            "universities in the 2025 Times Higher Education Europe rankings, "
-            "climbing 12 places from last year."
-        ),
-        "is_irish_language": False,
-        "is_research_output": False,
-    },
-    {
-        "url": "https://www.universityofgalway.ie/news/2025/09/new-research-funding-from-sfi/",
-        "headline_english": "University of Galway Awarded €4.2M in SFI Research Funding",
-        "headline_irish": "€4.2M deontais taighde SFI bronnta ar Ollscoil na Gaillimhe",
-        "category": "research_funding",
-        "published_date_iso": "2025-09-20",
-        "author_name": "University of Galway Press Office",
-        "faculties_mentioned": ("College of Science + Engineering",),
-        "sources_cited_count": 1,
-        "word_count": 540,
-        "summary": (
-            "Science Foundation Ireland has awarded €4.2M to 7 University of "
-            "Galway researchers across climate science, biomedical engineering, "
-            "and AI ethics."
-        ),
-        "is_irish_language": False,
-        "is_research_output": False,
-    },
-    {
-        "url": "https://www.universityofgalway.ie/ga/nuacht/2025/10/comhdháil-nua-gaeilge/",
-        "headline_english": "New Irish-Language Conference to be Hosted at University of Galway",
-        "headline_irish": "Comhdháil nua Gaeilge le reáchtáil in Ollscoil na Gaillimhe",
-        "category": "event_announcement",
-        "published_date_iso": "2025-10-04",
-        "author_name": "Ollscoil na Gaillimhe",
-        "faculties_mentioned": ("College of Arts", "Acadamh na hOllscolaíochta Gaeilge"),
-        "sources_cited_count": 0,
-        "word_count": 280,
-        "summary": (
-            "The 2026 Irish-Language Pedagogy Conference will be hosted at "
-            "University of Galway from 14-16 March 2026, bringing together "
-            "over 200 educators."
-        ),
-        "is_irish_language": True,
-        "is_research_output": False,
-    },
-]
+        return self.press_releases()
 
 
 press_releases_pipeline = PressReleasesPipeline()

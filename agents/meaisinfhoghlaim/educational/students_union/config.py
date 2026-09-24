@@ -53,13 +53,67 @@ class StudentsUnionAgentConfig:
     # Class rep
     min_class_reps_for_aggregation: int = 3  # below this, no theme extraction
 
+    # Module code → snake_case full-name canonical form (per
+    # openspec/changes/2026-09-23-uog-tertiary-real-data-upgrade-v1).
+    # The snake_case form is the FK that joins to the 4-tier tertiary
+    # Module schema at dlt_sources/british_isles/ireland/tertiary/uog/modules.py.
+    module_full_names: dict[str, str] = None  # type: ignore[assignment]  # filled below
+
+
+# Module code → snake_case full-name canonical form (Phase 2 — the
+# UoG tertiary pipeline real-data upgrade). Each entry maps the bare
+# module code (e.g. "CS203") to its snake_case full-name form
+# (e.g. "cs203_data_structures") so the SU agents + tools can JOIN with
+# the tertiary Module schema.
+MODULE_FULL_NAMES: dict[str, str] = {
+    "CS101": "cs101_intro_to_computer_science",
+    "CS102": "cs102_problem_solving_with_python",
+    "CS201": "cs201_algorithms_and_complexity",
+    "CS202": "cs202_object_oriented_programming",
+    "CS203": "cs203_data_structures",
+    "CS204": "cs204_databases",
+    "CS301": "cs301_operating_systems_and_networks",
+    "CS302": "cs302_software_engineering",
+    "CS401": "cs401_final_year_project",
+    "CS402": "cs402_machine_learning",
+    "MA101": "ma101_calculus_1",
+    "MA102": "ma102_calculus_2",
+    "MA103": "ma103_linear_algebra",
+    "MA201": "ma201_real_analysis",
+    "MA335": "ma335_stochastic_processes",
+    "MA347": "ma347_numerical_analysis",
+    "MA410": "ma410_linear_models",
+    "ST311": "st311_statistical_inference",
+    "ST412": "st412_regression_modelling",
+    "ST419": "st419_multivariate_methods",
+    "ED101": "ed101_foundations_of_education",
+    "ED116": "ed116_history_of_irish_education",
+    "GA101": "ga101_gramadach_na_gaeilge",
+    "GA102": "ga102_litriocht_na_gaeilge",
+    "PH101": "ph101_classical_mechanics",
+    "ME101": "me101_engineering_mechanics",
+    "CH101": "ch101_general_chemistry",
+    "LW101": "lw101_constitutional_law",
+    "EC101": "ec101_microeconomics",
+    "MD101": "md101_anatomy",
+    "PS101": "ps101_intro_to_psychology",
+    "GG101": "gg101_intro_to_geography",
+}
+
+
+def module_full_name(module_code: str) -> str | None:
+    """Resolve bare module code (e.g. 'CS203') → snake_case full-name (e.g. 'cs203_data_structures')."""
+    return MODULE_FULL_NAMES.get(module_code)
+
 
 def get_config() -> StudentsUnionAgentConfig:
     """Return the runtime config. Reads env vars for model overrides."""
-    return StudentsUnionAgentConfig(
+    cfg = StudentsUnionAgentConfig(
         default_model=os.environ.get("SU_ADK_MODEL", "gemini-2.5-flash"),
         irish_model=os.environ.get("SU_ADK_MODEL_IRISH", "gemini-2.5-flash"),
+        module_full_names=MODULE_FULL_NAMES,
     )
+    return cfg
 
 
 config = get_config()

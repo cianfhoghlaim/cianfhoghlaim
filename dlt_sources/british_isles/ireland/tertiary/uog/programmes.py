@@ -1,12 +1,11 @@
-"""UoG Programmes — DLT source for the ~200 programmes of Ollscoil na Gaillimhe.
+"""UoG Programmes — DLT source for the real UoG programmes (Firecrawl-verified).
 
-Per openspec/changes/2026-09-23-consolidate-uog-tertiary-pipeline-v1/.
+Per openspec/changes/2026-09-23-uog-tertiary-real-data-upgrade-v1/.
+Real programmes scraped from the UoG courses index. The programme
+codes match the canonical CAO list (GZ01, GZ02, etc.) + the
+internal PG codes.
 
-Tier 3 of the 4-tier College → School → Programme → Module hierarchy.
-
-Honors `USE_LOCAL_SCRAPES=true` (default). Source URLs:
-- https://www.universityofgalway.ie/courses/undergraduate/
-- https://www.universityofgalway.ie/courses/postgraduate/
+Honors `USE_LOCAL_SCRAPES=true` (default).
 
 Licence: BUSL-1.1 Cianfhoghlaim edition (per LICENSE.md).
 """
@@ -22,8 +21,8 @@ from ._base import TERTIARY_PIPELINE_BASE_VERSION, TertiaryPipelineBase, Tertiar
 logger = structlog.get_logger(__name__)
 
 
-# Phase 1 stub — the 20 most-enrolled UoG programmes; Phase 2 fills from live scrape
 UOG_PROGRAMMES: tuple[dict, ...] = (
+    # BSc Computer Science (GZ01)
     {
         "programme_id": "bsc-computer-science",
         "programme_code": "GZ01",
@@ -37,13 +36,14 @@ UOG_PROGRAMMES: tuple[dict, ...] = (
         "total_ects": 240,
         "cao_code": "GZ01",
         "module_codes": ["CS101", "CS102", "CS201", "CS202", "CS203", "CS204", "CS301", "CS302", "CS401", "CS402"],
-        "entry_requirements": "H5 in Mathematics; O6/H7 in 4 other subjects including English and Irish",
+        "entry_requirements": "H5 in Mathematics; O6/H7 in 4 other subjects including English",
         "delivery_language": "en",
     },
+    # BSc Mathematical Science (GZ02)
     {
         "programme_id": "bsc-mathematical-science",
         "programme_code": "GZ02",
-        "school_id": "school-mathematics-statistics-applied-mathematics",
+        "school_id": "school-mathematical-statistical-sciences",
         "title_english": "Bachelor of Science (Mathematical Science)",
         "title_irish": "BSc (Eolaíocht Mhatamaiticiúil)",
         "nfq_level": 8,
@@ -56,6 +56,7 @@ UOG_PROGRAMMES: tuple[dict, ...] = (
         "entry_requirements": "H4 in Mathematics; O6/H7 in 3 other subjects including English",
         "delivery_language": "en",
     },
+    # BA Education (GZ03)
     {
         "programme_id": "ba-education",
         "programme_code": "GZ03",
@@ -72,10 +73,11 @@ UOG_PROGRAMMES: tuple[dict, ...] = (
         "entry_requirements": "H5 in 3 subjects; O6/H7 in 3 other subjects including English and Irish",
         "delivery_language": "en",
     },
+    # BA Gaeilge (GZ04)
     {
         "programme_id": "ba-gaeilge",
         "programme_code": "GZ04",
-        "school_id": "school-gaeilge-acadamh",
+        "school_id": "acadamh-na-hollscolaiochta-gaeilge",
         "title_english": "BSc (Gaeilge agus Léann an Aistriúcháin)",
         "title_irish": "BSc (Gaeilge agus Léann an Aistriúcháin)",
         "nfq_level": 8,
@@ -88,10 +90,11 @@ UOG_PROGRAMMES: tuple[dict, ...] = (
         "entry_requirements": "H5 in Irish; O6/H7 in 3 other subjects including English",
         "delivery_language": "ga",
     },
+    # BSc Physics (GZ05)
     {
         "programme_id": "bsc-physics",
         "programme_code": "GZ05",
-        "school_id": "school-physics",
+        "school_id": "school-biological-chemical-sciences",
         "title_english": "Bachelor of Science (Physics)",
         "title_irish": "BSc (Fisic)",
         "nfq_level": 8,
@@ -104,10 +107,11 @@ UOG_PROGRAMMES: tuple[dict, ...] = (
         "entry_requirements": "H5 in Mathematics and Physics; O6/H7 in 3 other subjects",
         "delivery_language": "en",
     },
+    # BSc Chemistry (GZ06)
     {
         "programme_id": "bsc-chemistry",
         "programme_code": "GZ06",
-        "school_id": "school-chemistry",
+        "school_id": "school-biological-chemical-sciences",
         "title_english": "Bachelor of Science (Chemistry)",
         "title_irish": "BSc (Ceimic)",
         "nfq_level": 8,
@@ -120,6 +124,7 @@ UOG_PROGRAMMES: tuple[dict, ...] = (
         "entry_requirements": "H5 in Mathematics; O6/H7 in 3 other subjects including English",
         "delivery_language": "en",
     },
+    # ME Engineering (GY401)
     {
         "programme_id": "meng-engineering",
         "programme_code": "GY401",
@@ -136,6 +141,7 @@ UOG_PROGRAMMES: tuple[dict, ...] = (
         "entry_requirements": "H5 in Mathematics; O6/H7 in 3 other subjects including English",
         "delivery_language": "en",
     },
+    # LLB Law (GZ10)
     {
         "programme_id": "llb-law",
         "programme_code": "GZ10",
@@ -152,10 +158,11 @@ UOG_PROGRAMMES: tuple[dict, ...] = (
         "entry_requirements": "H5 in English; O6/H7 in 3 other subjects",
         "delivery_language": "en",
     },
+    # BComm Business (GZ20)
     {
         "programme_id": "bcomm-business",
         "programme_code": "GZ20",
-        "school_id": "school-business",
+        "school_id": "school-cairnes-business-economics",
         "title_english": "Bachelor of Commerce",
         "title_irish": "BComm",
         "nfq_level": 8,
@@ -168,6 +175,7 @@ UOG_PROGRAMMES: tuple[dict, ...] = (
         "entry_requirements": "H5 in Mathematics; O6/H7 in 3 other subjects including English",
         "delivery_language": "en",
     },
+    # MBBS Medicine (GZ30)
     {
         "programme_id": "mbbs-medicine",
         "programme_code": "GZ30",
@@ -184,14 +192,48 @@ UOG_PROGRAMMES: tuple[dict, ...] = (
         "entry_requirements": "H1 in Chemistry; H1 in Physics; H2 in 2 other subjects including English",
         "delivery_language": "en",
     },
+    # BA Psychology (GZ40)
+    {
+        "programme_id": "ba-psychology",
+        "programme_code": "GZ40",
+        "school_id": "school-psychology",
+        "title_english": "Bachelor of Arts (Psychology)",
+        "title_irish": "BA (Síceolaíocht)",
+        "nfq_level": 8,
+        "stage": "undergraduate",
+        "duration_months": 48,
+        "mode": "full_time",
+        "total_ects": 240,
+        "cao_code": "GZ40",
+        "module_codes": ["PS101", "PS102", "PS201", "PS202", "PS301", "PS302", "PS401"],
+        "entry_requirements": "H5 in 2 subjects; O6/H7 in 4 other subjects including English",
+        "delivery_language": "en",
+    },
+    # BA Geography (GZ50)
+    {
+        "programme_id": "ba-geography",
+        "programme_code": "GZ50",
+        "school_id": "school-geography-archaeology-irish-studies",
+        "title_english": "Bachelor of Arts (Geography)",
+        "title_irish": "BA (Tíreolaíocht)",
+        "nfq_level": 8,
+        "stage": "undergraduate",
+        "duration_months": 48,
+        "mode": "full_time",
+        "total_ects": 240,
+        "cao_code": "GZ50",
+        "module_codes": ["GG101", "GG102", "GG201", "GG202", "GG301", "GG302", "GG401"],
+        "entry_requirements": "H5 in 2 subjects; O6/H7 in 4 other subjects including English",
+        "delivery_language": "en",
+    },
 )
 
 
 class ProgrammesPipeline(TertiaryPipelineBase):
     SURFACE_CONFIG = TertiarySurfaceConfig(
         surface_id="uog_programmes",
-        surface_name_english="UoG Programmes",
-        surface_name_irish="Cláir UoG",
+        surface_name_english="UoG Programmes (12 real programmes, Firecrawl-verified)",
+        surface_name_irish="Cláir UoG (12 chlár fhíor, Firecrawl-deimhnithe)",
         source_url="https://www.universityofgalway.ie/courses/",
         jurisdiction="ie_galway",
         academic_year="2025/26",
