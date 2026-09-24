@@ -5,6 +5,12 @@
 > with a centralized wiring layer, a 5-layer observability stack, and
 > a 5-backend memory layer.
 
+> **ADK 2 3-Pillar orchestration** (per the 2026-09-23-upgrade-to-adk2-pillars-1-2-3-v1
+> change): 3 Pillar-1 `Workflow(edges=...)` graphs in `agents/workflows/`
+> + 3 Pillar-2 `sub_agents=[...] + mode="single_turn"` collaborative root
+> orchestrators + 5 Pillar-3 `@node(parallel_worker=True)` deep-research
+> pipelines. The canonical reference is `.agents/skills/adk2-pillars/SKILL.md`.
+
 ## What this is
 
 `agents/` hosts the `AGENT_REGISTRY` — 13 root-level agents (routed

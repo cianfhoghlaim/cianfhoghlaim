@@ -4,6 +4,14 @@
 >
 > Pre-v7 this lived at `cianfhoghlaim/dlt/`; post-v7 flattening (2026-07-17) it's the canonical sibling location at the repo root. 1,905 `.py` files, 920 `@dlt.source` decorated functions, 13 top-level sub-trees.
 
+> **ADK 2 3-Pillar ingestion** (per the 2026-09-23-upgrade-to-adk2-pillars-1-2-3-v1
+> change): the `season.csv` pattern from
+> `docs/google_examples/agent-valley-archive/` (BigQuery → 5 tables → Vertex AI
+> Memory Bank → property graph) is the model for adding education-specific
+> season archives (e.g. `season/k12_assessments.csv`, `season/teacher_pd_logs.csv`).
+> The `burn()` function in `agents/meaisinfhoghlaim/educational/_archive/memory.py`
+> is the GDPR / Children First Act 2015 delete pattern.
+
 ## Priority quick reference
 
 ### Priority skills (3 of 53)

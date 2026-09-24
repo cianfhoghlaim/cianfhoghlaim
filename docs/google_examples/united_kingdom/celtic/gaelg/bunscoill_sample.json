@@ -1,0 +1,35 @@
+{
+  "source_id": "bunscoill_ghaelgagh_main",
+  "region": "isle_of_man",
+  "language": {
+    "primary": "en",
+    "secondary": ["gv"]
+  },
+  "content": {
+    "markdown": "# Bunscoill Ghaelgagh\n\nManx-medium primary school in the Isle of Man.\n\n## Contact & Location\nThe school is located on Main Rd, St Johns, Isle of Man.\n- Telephone: 803330\n- Email: BunscoillEnquiries@sch.im\n\n## Educational Focus\nThe school promotes Manx language learning for families. The school invites parents to learn Manx: \"By vie lhiat gysagh Gaelg? Would you like to learn some Manx?\"\n\n## Community Engagement\nThe institution maintains an active social media presence on Facebook and publishes regular blog content about school activities and language instruction.\n\n## Historical Context\nBunscoill Ghaelgagh is the only Manx-medium primary school in the world, enabling approximately 170 children to become fluent Manx speakers. The school follows the same curriculum as other Isle of Man schools but delivers it through the medium of Manx.",
+    "extracted_text": "By vie lhiat gysagh Gaelg? Would you like to learn some Manx?"
+  },
+  "metadata": {
+    "title": {
+      "en": "Bunscoill Ghaelgagh - Manx Primary School",
+      "gv": "Bunscoill Ghaelgagh"
+    },
+    "url": "https://bunscoillghaelgagh.sch.im/",
+    "document_type": "school_information",
+    "education_level": "primary",
+    "language_medium": "gv",
+    "location": {
+      "address": "Main Rd, St Johns, Isle of Man",
+      "telephone": "803330",
+      "email": "BunscoillEnquiries@sch.im"
+    },
+    "unique_status": "Only Manx-medium school globally",
+    "scraped_at": "2025-12-18T00:00:00Z",
+    "source_org": "Bunscoill Ghaelgagh"
+  },
+  "provenance": {
+    "scrapeId": "sample-bunscoill-001",
+    "tool": "webfetch",
+    "creditsUsed": 0
+  }
+}

@@ -1,0 +1,71 @@
+metadata:
+  generated: "2025-12-17"
+  languages: 
+    - code: kw
+      name: "Cornish (Kernewek)"
+      iso_639_3: cor
+
+# =============================================================================
+# CORNISH (KERNEWEK) SAMPLES
+# =============================================================================
+cornish:
+  korpus_kernewek_samples:
+    source: "https://www.akademikernewek.org.uk/corpus/"
+    description: "Sample translations and usage from Cornish corpus"
+
+    entries:
+      - cornish: "Myttin da"
+        english: "Good morning"
+        source: "Standard greeting"
+
+      - cornish: "Dydh da"
+        english: "Good day"
+        source: "Standard greeting"
+
+      - cornish: "Meur ras"
+        english: "Thank you"
+        literal: "Great grace"
+
+      - cornish: "Kernewek yw ow yeth"
+        english: "Cornish is my language"
+        note: "Common phrase among speakers"
+
+  gerlyver_kernewek_samples:
+    source: "https://www.cornishdictionary.org.uk/"
+    description: "Sample dictionary entries"
+
+    entries:
+      - cornish: "ker"
+        english: "town, city"
+        plural: "kerow"
+        examples:
+          - "Truro yw pennser Kernow"
+          - "Truro is the capital of Cornwall"
+
+      - cornish: "chy"
+        english: "house"
+        plural: "treven"
+        mutation: "Lenites after feminine article (an jy)"
+
+      - cornish: "mor"
+        english: "sea"
+        related: ["morlanow (tide)", "morvran (cormorant)"]
+
+      - cornish: "yeth"
+        english: "language"
+        examples:
+          - "Kernewek yw yeth Kernow"
+          - "Cornish is the language of Cornwall"
+
+  basic_phrases:
+    - cornish: "Fatla genes?"
+      english: "How are you?"
+      response: "Da lowr, meur ras (Well enough, thanks)"
+
+    - cornish: "Pyth yw dha hanow?"
+      english: "What is your name?"
+      response: "Ow hanow yw... (My name is...)"
+
+    - cornish: "A wodhes ta Kernewek?"
+      english: "Do you know Cornish?"
+      response: "Gonn / Na wonn (Yes/No)"

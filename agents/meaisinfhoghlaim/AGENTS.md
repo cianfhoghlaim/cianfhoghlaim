@@ -1,4 +1,4 @@
-# agents/meaisinfhoghlaim — OCR/HTR/Alignment Sub-Package
+# agents/meaisinfhoghlaim — OCR/HTR/Alignment + ADK 2 Pillars Sub-Package
 
 > **The OCR/HTR/alignment sub-package** for the agent fleet.
 > Houses the 10 OCR backends (split across `meaisinfhoghlaim/backends/adapters.py`
@@ -6,6 +6,16 @@
 > for the 6 VLM/ensemble paths) + the 3 alignment primitives + the
 > 3 educational agents. The canonical home for OCR/HTR processing of
 > scanned curricula, manuscripts, and historical documents.
+
+> **ADK 2 3-Pillar orchestration** (per the 2026-09-23-upgrade-to-adk2-pillars-1-2-3-v1
+> change). `meaisinfhoghlaim/_shared/` hosts the Pydantic I/O schemas
+> (EducationRequest + SpecialistInput + SpecialistResponse +
+> DecomposerOutput + ResearchFinding + DeepResearchBriefing) + the
+> memory ladder (5 floors mapped to the 5 BIEP v3 stages). `meaisinfhoghlaim/
+> educational/_archive/` hosts the education twin of agent-valley-archive:
+> Vesper the archivist with the 5-floor memory ladder (visit → visitor →
+> student → stage → valley) + the `burn()` GDPR delete + the BigQuery
+> warehouse pattern.
 
 ## Priority quick reference
 

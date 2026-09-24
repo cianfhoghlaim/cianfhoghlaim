@@ -1,0 +1,107 @@
+# Other Celtic Languages Sample Data
+# Breton (br), Cornish (kw), Manx (gv)
+
+metadata:
+  generated: "2025-12-17"
+  languages:
+
+    - code: gv
+      name: "Manx (Gaelg)"
+      iso_639_3: glv
+
+# =============================================================================
+# MANX (GAELG) SAMPLES
+# =============================================================================
+manx:
+  corpus_gaelg_samples:
+    source: "https://corpus.gaelg.im/"
+    description: "Sample texts from Manx Corpus Search (500+ texts)"
+
+    historical_texts:
+      - id: "MC-1610"
+        title: "Book of Common Prayer extract"
+        period: "1610"
+        text: "Ayr ain t'ayns niau, Casherick dy row dty Ennym."
+        translation: "Our Father who art in heaven, Hallowed be thy Name."
+        significance: "Earliest printed Manx text"
+
+      - id: "MC-1765"
+        title: "Manx Bible extract"
+        period: "1765"
+        text: "Ayns y toshiaght chroo Jee yn aer as y thalloo."
+        translation: "In the beginning God created the heaven and the earth."
+        source: "Genesis 1:1"
+
+    modern_texts:
+      - id: "MC-2020"
+        title: "Contemporary writing"
+        period: "21st century"
+        text: "Ta mee gynsagh Gaelg rish queig blein."
+        translation: "I have been learning Manx for five years."
+
+  dictionary_samples:
+    source: "https://kevinscannell.com/files/gv2ga.pdf"
+    description: "Sample entries from Manx-Irish dictionary"
+
+    entries:
+      - manx: "moghrey mie"
+        irish: "maidin mhaith"
+        english: "good morning"
+
+      - manx: "fastyr mie"
+        irish: "tráthnóna maith"
+        english: "good afternoon/evening"
+
+      - manx: "slane lhiu"
+        irish: "slán libh"
+        english: "goodbye (to multiple people)"
+
+      - manx: "gura mie ayd"
+        irish: "go raibh maith agat"
+        english: "thank you"
+
+  intergaelic_samples:
+    source: "http://www.intergaelic.com/"
+    description: "Cross-Goidelic translation examples"
+
+    translations:
+      - concept: "I am learning"
+        manx: "Ta mee gynsagh"
+        irish: "Tá mé ag foghlaim"
+        scottish_gaelic: "Tha mi ag ionnsachadh"
+
+      - concept: "house"
+        manx: "thie"
+        irish: "teach"
+        scottish_gaelic: "taigh"
+
+      - concept: "water"
+        manx: "ushtey"
+        irish: "uisce"
+        scottish_gaelic: "uisge"
+
+  ud_treebank_samples:
+    source: "https://github.com/UniversalDependencies/UD_Manx-Cadhan"
+    description: "Sample parsed sentences from Manx UD treebank"
+
+    sentences:
+      - id: "gv-001"
+        text: "Ta mee goll dy valley."
+        translation: "I am going home."
+        tokens:
+          - form: "Ta"
+            lemma: "ve"
+            upos: "AUX"
+          - form: "mee"
+            lemma: "mee"
+            upos: "PRON"
+          - form: "goll"
+            lemma: "goll"
+            upos: "VERB"
+          - form: "dy"
+            lemma: "dy"
+            upos: "ADP"
+          - form: "valley"
+            lemma: "balley"
+            upos: "NOUN"
+

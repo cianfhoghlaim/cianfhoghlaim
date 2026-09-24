@@ -1,0 +1,36 @@
+{
+  "source_id": "sqa_gaelic_hub",
+  "region": "scotland",
+  "language": {
+    "primary": "en",
+    "secondary": ["gd"]
+  },
+  "content": {
+    "markdown": "# SQA Gaelic Qualifications Summary\n\n## Available Qualification Levels\n\nNational Qualifications for Gaelic (Learners) and Gàidhlig are available at National 3, National 4, National 5, Higher and Advanced Higher levels. The organization also offers qualifications in further and higher education sectors.\n\n## Subjects Available in Gaelic\n\nCurrent exam offerings through Gaelic medium include:\n- Geography (Cruinn-eòlas)\n- History (Eachdraidh)\n- Mathematics (Matamataig)\n- Applications of Mathematics (Gnìomhachas Matamataigs)\n- Modern Studies (Nuadh-eòlas)\n\nThese are available at National 5, Higher, and Advanced Higher levels.\n\n## Resources and References\n\nKey documents provided:\n- **Gaelic Orthographic Conventions** — widely-used publication supporting language standards\n- SQA's provision for Gaelic leaflet — overview of qualification options\n- PDA in Gaelic Translation documents\n- Allocation Guidance for candidates\n\nAll materials note that qualifications attained through Gaelic are reported in Gaelic on Scottish Qualifications Certificates.",
+    "extracted_text": "National Qualifications for Gaelic (Learners) and Gàidhlig are available at National 3, National 4, National 5, Higher and Advanced Higher levels."
+  },
+  "metadata": {
+    "title": {
+      "en": "Gaelic - SQA",
+      "gd": "Gàidhlig - SQA"
+    },
+    "url": "https://www.sqa.org.uk/sqa/45347.html",
+    "og:locale": "en_GB",
+    "document_type": "qualification_hub",
+    "education_levels": ["national_3", "national_4", "national_5", "higher", "advanced_higher"],
+    "subjects": [
+      {"en": "Geography", "gd": "Cruinn-eòlas"},
+      {"en": "History", "gd": "Eachdraidh"},
+      {"en": "Mathematics", "gd": "Matamataig"},
+      {"en": "Applications of Mathematics", "gd": "Gnìomhachas Matamataigs"},
+      {"en": "Modern Studies", "gd": "Nuadh-eòlas"}
+    ],
+    "scraped_at": "2025-12-18T00:00:00Z",
+    "source_org": "Scottish Qualifications Authority"
+  },
+  "provenance": {
+    "scrapeId": "sample-sqa-001",
+    "tool": "webfetch",
+    "creditsUsed": 0
+  }
+}

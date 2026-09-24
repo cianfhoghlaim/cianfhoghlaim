@@ -1,0 +1,41 @@
+{
+  "source_id": "go_cornish_main",
+  "region": "cornwall",
+  "language": {
+    "primary": "en",
+    "secondary": ["kw"]
+  },
+  "content": {
+    "markdown": "# Go Cornish Programme\n\nCornish language learning programme for primary schools in Cornwall.\n\n## Learning Approach\nGo Cornish emphasizes making language learning enjoyable. The programme integrates Cornish language education with cultural heritage and history.\n\n## Available Resources\nThe programme offers:\n- Learning materials for all ages and abilities\n- Mobile applications\n- Digital tools\n- Teacher's toolkits (for registered schools)\n- Cross-curricular topic resources\n- A school phrasebook\n\n## Age Groups Targeted\nThe programme primarily targets **primary school children**, though it also serves all learners through general resources available to the broader community.\n\n## Reach\nGo Cornish reaches over 8,000 primary school children in 51 schools across Cornwall.\n\n## Funding\nGo Cornish is funded by Cornwall Council and developed by Golden Tree Productions CIC.",
+    "extracted_text": "The resources make learning fun! Go Cornish reaches over 8,000 primary school children in 51 schools."
+  },
+  "metadata": {
+    "title": {
+      "en": "Go Cornish - Get into the Cornish language revival",
+      "kw": "Go Cornish - Dos yn dasvewans an yeth Kernewek"
+    },
+    "url": "https://gocornish.org/",
+    "document_type": "programme_overview",
+    "education_level": "primary",
+    "reach": {
+      "schools": 51,
+      "pupils": 8000
+    },
+    "resources": [
+      "mobile_apps",
+      "digital_tools",
+      "teacher_toolkits",
+      "school_phrasebook",
+      "cross_curricular_topics"
+    ],
+    "funding_org": "Cornwall Council",
+    "developer": "Golden Tree Productions CIC",
+    "scraped_at": "2025-12-18T00:00:00Z",
+    "source_org": "Go Cornish"
+  },
+  "provenance": {
+    "scrapeId": "sample-gocornish-001",
+    "tool": "webfetch",
+    "creditsUsed": 0
+  }
+}

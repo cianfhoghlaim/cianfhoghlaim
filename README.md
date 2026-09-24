@@ -44,6 +44,19 @@ Plus the **safety gate** for any `iac:bootstrap`, `iac:plan`, or `km deploy stac
 > many subsystems that *do* work are partially obscured by the design
 > choices meant for *my* team's downstream use. Read this section before
 > forming an opinion about the repo.
+
+> **The 3 Pillar ADK 2.x orchestration patterns** (per
+> [`.agents/skills/adk2-pillars/SKILL.md`](.agents/skills/adk2-pillars/SKILL.md))
+> are now the canonical agentic layer:
+> - **Pillar 1 — Workflow** (3 graphs: `teacher_daily_workflow`, `student_secondary_workflow`, `tertiary_personal_workflow`)
+> - **Pillar 2 — Collaborative** (`sub_agents=[...] + mode="single_turn"`: 3 root orchestrators)
+> - **Pillar 3 — Dynamic** (`@node(parallel_worker=True) + recursive ctx.run_node`: 5 deep-research pipelines)
+> The model source: [`docs/google_examples/adk2-tutorial/`](docs/google_examples/adk2-tutorial/)
+> (10-level runnable); the memory + warehouse twin:
+> [`docs/google_examples/agent-valley-archive/`](docs/google_examples/agent-valley-archive/)
+> (5-floor ladder). The local implementation: `agents/workflows/`,
+> `agents/meaisinfhoghlaim/educational/{teachers,students_jc,students_union}/_root.py`,
+> `agents/meaisinfhoghlaim/educational/_archive/`.
 >
 > **The value for anyone looking at this project today is in the
 > specific combinations of already well-calculated open-source

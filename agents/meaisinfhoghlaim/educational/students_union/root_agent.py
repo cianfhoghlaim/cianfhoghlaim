@@ -36,10 +36,14 @@ from .grants_funding_agent import grants_funding_agent
 root_agent = LlmAgent(
     name="students_union_root_agent",
     model=config.default_model,
+    # Per openspec/changes/2026-09-23-upgrade-to-adk2-pillars-1-2-3-v1/
+    # Pillar 2 collaborative mode (parallel invocation + synthesis).
+    mode="single_turn",
     description=(
         "University of Galway Students' Union root agent — routes "
         "queries to the correct specialist (clubs/socs, grants, class "
-        "rep, complaints/welfare, elections)."
+        "rep, complaints, elections). Pillar 2 collaborative mode fans the "
+        "relevant subset of the 5 specialists out in parallel and synthesizes."
     ),
     instruction=f"""
 You are the root orchestrator for the University of Galway Students'
