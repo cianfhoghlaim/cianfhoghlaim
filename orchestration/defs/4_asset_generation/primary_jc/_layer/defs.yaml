@@ -1,0 +1,3 @@
+# orchestration/defs/4_asset_generation/primary_jc/_layer/defs.yaml
+type: dagster.DefsFolderComponent
+attributes: {}

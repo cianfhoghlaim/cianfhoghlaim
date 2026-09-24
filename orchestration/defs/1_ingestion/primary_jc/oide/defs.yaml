@@ -1,0 +1,13 @@
+# orchestration/defs/1_ingestion/primary_jc/oide/defs.yaml
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.k12.oide
+  domain: teacher_pd
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 7 * * 1"
+  dlt_source: dlt_sources.british_isles.ireland.education.oide.oide_source
+  destination_table: cianfhoghlaim.education.british_isles.ireland.oide
+  fallback_resources:
+    - stedding/ingest_queue/oide/
+  tags: [biep, k12, primary_jc, oide, teacher_pd, ingestion]

@@ -1,0 +1,78 @@
+# cocoindex_flows/_shared/_jc_subjects.yaml
+#
+# Per openspec/changes/2026-09-23-k12-teacher-student-pipeline-v1/.
+# The 18-row Junior Cycle factory config.
+# Mirrors dlt_sources/british_isles/ireland/education/junior_cycle.py::JC_SUBJECTS_REAL.
+
+- subject_slug: english
+  entity_name_en: "JC English"
+  entity_name_ga: "JC Béarla"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/english/"
+- subject_slug: gaeilge
+  entity_name_en: "JC Gaeilge"
+  entity_name_ga: "JC Gaeilge"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/gaeilge/"
+- subject_slug: mathematics
+  entity_name_en: "JC Mathematics"
+  entity_name_ga: "JC Matamaitic"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/mathematics/"
+- subject_slug: irish_history
+  entity_name_en: "JC History"
+  entity_name_ga: "JC Stair"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/history/"
+- subject_slug: geography
+  entity_name_en: "JC Geography"
+  entity_name_ga: "JC Tíreolaíocht"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/geography/"
+- subject_slug: science
+  entity_name_en: "JC Science"
+  entity_name_ga: "JC Eolaíocht"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/science/"
+- subject_slug: business_studies
+  entity_name_en: "JC Business Studies"
+  entity_name_ga: "JC Staidéar Gnó"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/business-studies/"
+- subject_slug: french
+  entity_name_en: "JC French"
+  entity_name_ga: "JC Fraincis"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/french/"
+- subject_slug: german
+  entity_name_en: "JC German"
+  entity_name_ga: "JC Gearmáinis"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/german/"
+- subject_slug: spanish
+  entity_name_en: "JC Spanish"
+  entity_name_ga: "JC Spáinnis"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/spanish/"
+- subject_slug: italian
+  entity_name_en: "JC Italian"
+  entity_name_ga: "JC Iodáilis"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/italian/"
+- subject_slug: home_economics
+  entity_name_en: "JC Home Economics"
+  entity_name_ga: "JC Eacnamaíocht Bhaile"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/home-economics/"
+- subject_slug: art
+  entity_name_en: "JC Visual Art"
+  entity_name_ga: "JC Amharcealaíon"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/visual-art/"
+- subject_slug: music
+  entity_name_en: "JC Music"
+  entity_name_ga: "JC Ceol"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/music/"
+- subject_slug: engineering
+  entity_name_en: "JC Engineering"
+  entity_name_ga: "JC Innealtóireacht"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/engineering/"
+- subject_slug: wood_technology
+  entity_name_en: "JC Wood Technology"
+  entity_name_ga: "JC Teicneolaíocht Adhmaid"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/wood-technology/"
+- subject_slug: applied_technology
+  entity_name_en: "JC Applied Technology"
+  entity_name_ga: "JC Teicneolaíocht Fheidhmeach"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/applied-technology/"
+- subject_slug: religious_education
+  entity_name_en: "JC Religious Education"
+  entity_name_ga: "JC Oideachas Creidimh"
+  canonical_url: "https://curriculumonline.ie/junior-cycle/junior-cycle-subjects/religious-education/"

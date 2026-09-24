@@ -1,0 +1,14 @@
+# orchestration/defs/2_materials/primary_jc/jc_extraction/defs.yaml
+type: orchestration.components.CelticMaterialsComponent
+attributes:
+  extraction_id: ie.k12.jc_extraction
+  domain: junior_cycle
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 5 * * *"
+  baml_function: ExtractJcSubjectSpec
+  baml_module: baml_src.british_isles.ireland.education.junior_cycle_extraction.jc_subject_extraction
+  baml_client: ExtractEn
+  dlt_source_id: ie.k12.junior_cycle
+  destination_table: cianfhoghlaim.education.british_isles.ireland.jc_extractions
+  tags: [biep, k12, primary_jc, junior_cycle, baml_extraction]

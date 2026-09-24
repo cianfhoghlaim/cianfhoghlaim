@@ -1,0 +1,12 @@
+# orchestration/defs/5_agent_ops/primary_jc/exam_timetable/defs.yaml
+type: orchestration.components.CelticAgentOpComponent
+attributes:
+  agent_id: exam_timetable_agent
+  domain: primary_jc
+  nation: ie
+  agent_module: agents.meaisinfhoghlaim.educational.students_jc.exam_timetable_agent
+  agent_function: exam_timetable_agent
+  agent_framework: google-adk
+  automation: on_demand
+  framework_priority: 24
+  tags: [biep, k12, primary_jc, adk, agent_op, exam_timetable, student, jc, lc]

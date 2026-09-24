@@ -1,0 +1,12 @@
+# orchestration/defs/5_agent_ops/primary_jc/wellbeing/defs.yaml
+type: orchestration.components.CelticAgentOpComponent
+attributes:
+  agent_id: wellbeing_agent
+  domain: primary_jc
+  nation: ie
+  agent_module: agents.meaisinfhoghlaim.educational.students_jc.wellbeing_agent
+  agent_function: wellbeing_agent
+  agent_framework: google-adk
+  automation: on_demand
+  framework_priority: 23
+  tags: [biep, k12, primary_jc, adk, agent_op, wellbeing, student]

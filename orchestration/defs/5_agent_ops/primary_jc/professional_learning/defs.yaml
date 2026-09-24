@@ -1,0 +1,12 @@
+# orchestration/defs/5_agent_ops/primary_jc/professional_learning/defs.yaml
+type: orchestration.components.CelticAgentOpComponent
+attributes:
+  agent_id: professional_learning_agent
+  domain: primary_jc
+  nation: ie
+  agent_module: agents.meaisinfhoghlaim.educational.teachers.professional_learning_agent
+  agent_function: professional_learning_agent
+  agent_framework: google-adk
+  automation: on_demand
+  framework_priority: 19
+  tags: [biep, k12, primary_jc, adk, agent_op, professional_learning, oide, pdst, teacher]

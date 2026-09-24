@@ -1,0 +1,12 @@
+# orchestration/defs/5_agent_ops/primary_jc/parent_meeting/defs.yaml
+type: orchestration.components.CelticAgentOpComponent
+attributes:
+  agent_id: parent_meeting_agent
+  domain: primary_jc
+  nation: ie
+  agent_module: agents.meaisinfhoghlaim.educational.teachers.parent_meeting_agent
+  agent_function: parent_meeting_agent
+  agent_framework: google-adk
+  automation: on_demand
+  framework_priority: 18
+  tags: [biep, k12, primary_jc, adk, agent_op, parent_meeting, teacher]

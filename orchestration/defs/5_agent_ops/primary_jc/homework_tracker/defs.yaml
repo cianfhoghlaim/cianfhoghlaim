@@ -1,0 +1,12 @@
+# orchestration/defs/5_agent_ops/primary_jc/homework_tracker/defs.yaml
+type: orchestration.components.CelticAgentOpComponent
+attributes:
+  agent_id: homework_tracker_agent
+  domain: primary_jc
+  nation: ie
+  agent_module: agents.meaisinfhoghlaim.educational.students_jc.homework_tracker_agent
+  agent_function: homework_tracker_agent
+  agent_framework: google-adk
+  automation: on_demand
+  framework_priority: 20
+  tags: [biep, k12, primary_jc, adk, agent_op, homework_tracker, student]

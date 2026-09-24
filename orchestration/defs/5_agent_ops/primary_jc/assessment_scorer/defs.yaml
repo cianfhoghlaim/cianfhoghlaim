@@ -1,0 +1,12 @@
+# orchestration/defs/5_agent_ops/primary_jc/assessment_scorer/defs.yaml
+type: orchestration.components.CelticAgentOpComponent
+attributes:
+  agent_id: assessment_scorer_agent
+  domain: primary_jc
+  nation: ie
+  agent_module: agents.meaisinfhoghlaim.educational.teachers.assessment_scorer_agent
+  agent_function: assessment_scorer_agent
+  agent_framework: google-adk
+  automation: on_demand
+  framework_priority: 16
+  tags: [biep, k12, primary_jc, adk, agent_op, assessment_scorer, teacher]

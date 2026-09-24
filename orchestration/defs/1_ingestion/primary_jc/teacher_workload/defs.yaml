@@ -1,0 +1,13 @@
+# orchestration/defs/1_ingestion/primary_jc/teacher_workload/defs.yaml
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.k12.teacher_workload
+  domain: teacher_workload
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 6 * * 1"
+  dlt_source: dlt_sources.british_isles.ireland.education.teacher_workload.teacher_workload_source
+  destination_table: cianfhoghlaim.education.british_isles.ireland.teacher_workload
+  fallback_resources:
+    - stedding/ingest_queue/teacher_workload/
+  tags: [biep, k12, primary_jc, teacher_workload, pii, ingestion]

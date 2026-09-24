@@ -1,0 +1,16 @@
+# orchestration/defs/3_model_lifecycle/primary_jc/embedder/defs.yaml
+type: orchestration.components.CelticEmbedderComponent
+attributes:
+  routing_id: ie.k12.embedder
+  domain: primary_jc
+  nation: ie
+  primary:
+    model_id: bge_m3_1024
+    model_name: BAAI/bge-m3
+    embed_dim: 1024
+  fallback:
+    model_id: qwen3_vl_8b
+    model_name: local/vision/qwen3-vl-8b
+    embed_dim: 4096
+  detection: true
+  tags: [biep, k12, primary_jc, model_lifecycle, embedder]

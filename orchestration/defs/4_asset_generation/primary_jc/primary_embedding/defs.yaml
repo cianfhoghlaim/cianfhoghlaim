@@ -1,0 +1,13 @@
+# orchestration/defs/4_asset_generation/primary_jc/primary_embedding/defs.yaml
+type: orchestration.components.CelticCocoIndexAsset
+attributes:
+  asset_id: k12_primary_embedding
+  domain: primary_jc
+  cocoindex_flow_module: cocoindex_flows.subjects.primary_embedding
+  cocoindex_flow_function: primary_embedding
+  embedder_id: ie.k12.embedder
+  lance_table: k12_primary
+  lance_uri: stedding/lancedb/k12.lance
+  automation: on_cron
+  automation_cron: "0 7 * * *"
+  tags: [biep, k12, primary_jc, cocoindex, primary]

@@ -1,0 +1,12 @@
+# orchestration/defs/5_agent_ops/primary_jc/sen_pastoral/defs.yaml
+type: orchestration.components.CelticAgentOpComponent
+attributes:
+  agent_id: sen_pastoral_care_agent
+  domain: primary_jc
+  nation: ie
+  agent_module: agents.meaisinfhoghlaim.educational.teachers.sen_pastoral_care_agent
+  agent_function: sen_pastoral_care_agent
+  agent_framework: google-adk
+  automation: on_demand
+  framework_priority: 17
+  tags: [biep, k12, primary_jc, adk, agent_op, sen_pastoral, teacher]

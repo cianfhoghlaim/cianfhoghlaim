@@ -112,6 +112,59 @@ ROUTING_KEYWORDS: dict[str, list[str]] = {
         "vote", "ballot", "president", "vp ",
         "comhaltas", "mac léinn", "ollscoil na gaillimhe",
     ],
+    # T7 (2026-09-23) — the 15th-19th buckets for the K-12 TEACHER agents
+    # introduced by openspec/changes/2026-09-23-k12-teacher-student-pipeline-v1/.
+    # Routes teacher-centric queries (lesson plan, assessment, SEN, parent,
+    # PD) before any generic bucket.
+    "lesson_planner_agent": [
+        "lesson plan", "planning", "scheme of work", "weekly plan",
+        "tasc an lae", "plean ceachta",
+    ],
+    "assessment_scorer_agent": [
+        "cba", "classroom-based assessment", "assessment task",
+        "scoring", "marking", "rubric", "feedback", "grade",
+        "exam paper", "scrap exam",
+    ],
+    "sen_pastoral_care_agent": [
+        "sen", "special educational needs", "pastoral", "welfare",
+        "safeguarding", "children first", "asd", "spld",
+        "senco", "inclusive education", "reasonable accommodation",
+        "resource teaching", "learning support",
+    ],
+    "parent_meeting_agent": [
+        "parent meeting", "parent-teacher", "ptm", "tuismitheoir",
+        "school report", "progress meeting",
+    ],
+    "professional_learning_agent": [
+        "oide", "pdst", "cpd", "professional development",
+        "summer course", "cluster meeting", "induction",
+        "career stage", "newly qualified teacher",
+    ],
+    # T8 (2026-09-23) — the 20th-24th buckets for the K-12 STUDENT agents
+    # introduced by openspec/changes/2026-09-23-k12-teacher-student-pipeline-v1/.
+    # Routes post-primary student queries (homework + CBA + study + wellbeing
+    # + exam) before any generic bucket.
+    "homework_tracker_agent": [
+        "homework", "obair bhaile", "assignment", "due date",
+        "tracking homework", "homework tracker",
+    ],
+    "cba_planner_agent": [
+        "cba", "classroom-based assessment", "cba planning",
+        "cba tracker", "brief", "draft", "final",
+    ],
+    "study_plan_agent": [
+        "study plan", "revision", "leaving cert", "lc",
+        "transition year", "ty", "exam prep", "past papers",
+    ],
+    "wellbeing_agent": [
+        "wellbeing", "mental health", "stress", "anxiety",
+        "meabhairshláinte", "wellbeing check-in",
+    ],
+    "exam_timetable_agent": [
+        "exam timetable", "state examinations commission",
+        "sec timetable", "lc timetable", "jc timetable",
+        "exam centre", "exam clashes", "exam logistics",
+    ],
 }
 
 

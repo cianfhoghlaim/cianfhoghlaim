@@ -1,0 +1,218 @@
+# cocoindex_flows/_shared/_primary_modules.yaml
+#
+# Per openspec/changes/2026-09-23-k12-teacher-student-pipeline-v1/.
+# The 50-row K-12 Primary factory config that drives
+# cocoindex_flows/british_isles/ireland/education/_shared.py::create_k12_entity_flow.
+#
+# Each entry produces one CocoIndex v1 App per primary curriculum area
+# (Phase 1 PoC: the 12 canonical NCCA primary areas + the 4 stage
+# years × multiple sub-areas each).
+
+- entity_id: primary-language-english-stage1
+  entity_name_en: "English — Stage 1 (Junior + Senior Infants)"
+  entity_name_ga: "An Bhéarla — Céim 1"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/english/stage-1/"
+- entity_id: primary-language-english-stage2
+  entity_name_en: "English — Stage 2 (1st + 2nd Class)"
+  entity_name_ga: "An Bhéarla — Céim 2"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/english/stage-2/"
+- entity_id: primary-language-english-stage3
+  entity_name_en: "English — Stage 3 (3rd + 4th Class)"
+  entity_name_ga: "An Bhéarla — Céim 3"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/english/stage-3/"
+- entity_id: primary-language-english-stage4
+  entity_name_en: "English — Stage 4 (5th + 6th Class)"
+  entity_name_ga: "An Bhéarla — Céim 4"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/english/stage-4/"
+- entity_id: primary-language-gaeilge-stage1
+  entity_name_en: "Gaeilge — Stage 1 (Junior + Senior Infants)"
+  entity_name_ga: "An Ghaeilge — Céim 1"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/gaeilge/stage-1/"
+- entity_id: primary-language-gaeilge-stage2
+  entity_name_en: "Gaeilge — Stage 2 (1st + 2nd Class)"
+  entity_name_ga: "An Ghaeilge — Céim 2"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/gaeilge/stage-2/"
+- entity_id: primary-language-gaeilge-stage3
+  entity_name_en: "Gaeilge — Stage 3 (3rd + 4th Class)"
+  entity_name_ga: "An Ghaeilge — Céim 3"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/gaeilge/stage-3/"
+- entity_id: primary-language-gaeilge-stage4
+  entity_name_en: "Gaeilge — Stage 4 (5th + 6th Class)"
+  entity_name_ga: "An Ghaeilge — Céim 4"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/gaeilge/stage-4/"
+- entity_id: primary-mathematics-stage1
+  entity_name_en: "Mathematics — Stage 1"
+  entity_name_ga: "Matamaitic — Céim 1"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/stage-1/"
+- entity_id: primary-mathematics-stage2
+  entity_name_en: "Mathematics — Stage 2"
+  entity_name_ga: "Matamaitic — Céim 2"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/stage-2/"
+- entity_id: primary-mathematics-stage3
+  entity_name_en: "Mathematics — Stage 3"
+  entity_name_ga: "Matamaitic — Céim 3"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/stage-3/"
+- entity_id: primary-mathematics-stage4
+  entity_name_en: "Mathematics — Stage 4"
+  entity_name_ga: "Matamaitic — Céim 4"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/mathematics/stage-4/"
+- entity_id: primary-sese-science-stage1
+  entity_name_en: "SESE Science — Stage 1"
+  entity_name_ga: "Eolaíocht SESE — Céim 1"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/science/stage-1/"
+- entity_id: primary-sese-science-stage2
+  entity_name_en: "SESE Science — Stage 2"
+  entity_name_ga: "Eolaíocht SESE — Céim 2"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/science/stage-2/"
+- entity_id: primary-sese-science-stage3
+  entity_name_en: "SESE Science — Stage 3"
+  entity_name_ga: "Eolaíocht SESE — Céim 3"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/science/stage-3/"
+- entity_id: primary-sese-science-stage4
+  entity_name_en: "SESE Science — Stage 4"
+  entity_name_ga: "Eolaíocht SESE — Céim 4"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/science/stage-4/"
+- entity_id: primary-sese-history-stage1
+  entity_name_en: "SESE History — Stage 1"
+  entity_name_ga: "Stair SESE — Céim 1"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/history/stage-1/"
+- entity_id: primary-sese-history-stage2
+  entity_name_en: "SESE History — Stage 2"
+  entity_name_ga: "Stair SESE — Céim 2"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/history/stage-2/"
+- entity_id: primary-sese-history-stage3
+  entity_name_en: "SESE History — Stage 3"
+  entity_name_ga: "Stair SESE — Céim 3"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/history/stage-3/"
+- entity_id: primary-sese-history-stage4
+  entity_name_en: "SESE History — Stage 4"
+  entity_name_ga: "Stair SESE — Céim 4"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/history/stage-4/"
+- entity_id: primary-sese-geography-stage1
+  entity_name_en: "SESE Geography — Stage 1"
+  entity_name_ga: "Tíreolaíocht SESE — Céim 1"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/geography/stage-1/"
+- entity_id: primary-sese-geography-stage2
+  entity_name_en: "SESE Geography — Stage 2"
+  entity_name_ga: "Tíreolaíocht SESE — Céim 2"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/geography/stage-2/"
+- entity_id: primary-sese-geography-stage3
+  entity_name_en: "SESE Geography — Stage 3"
+  entity_name_ga: "Tíreolaíocht SESE — Céim 3"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/geography/stage-3/"
+- entity_id: primary-sese-geography-stage4
+  entity_name_en: "SESE Geography — Stage 4"
+  entity_name_ga: "Tíreolaíocht SESE — Céim 4"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/geography/stage-4/"
+- entity_id: primary-visual-arts-stage1
+  entity_name_en: "Visual Arts — Stage 1"
+  entity_name_ga: "Ealaíona Amhairc — Céim 1"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/visual-arts/stage-1/"
+- entity_id: primary-visual-arts-stage2
+  entity_name_en: "Visual Arts — Stage 2"
+  entity_name_ga: "Ealaíona Amhairc — Céim 2"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/visual-arts/stage-2/"
+- entity_id: primary-visual-arts-stage3
+  entity_name_en: "Visual Arts — Stage 3"
+  entity_name_ga: "Ealaíona Amhairc — Céim 3"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/visual-arts/stage-3/"
+- entity_id: primary-visual-arts-stage4
+  entity_name_en: "Visual Arts — Stage 4"
+  entity_name_ga: "Ealaíona Amhairc — Céim 4"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/visual-arts/stage-4/"
+- entity_id: primary-music-stage1
+  entity_name_en: "Music — Stage 1"
+  entity_name_ga: "Ceol — Céim 1"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/music/stage-1/"
+- entity_id: primary-music-stage2
+  entity_name_en: "Music — Stage 2"
+  entity_name_ga: "Ceol — Céim 2"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/music/stage-2/"
+- entity_id: primary-music-stage3
+  entity_name_en: "Music — Stage 3"
+  entity_name_ga: "Ceol — Céim 3"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/music/stage-3/"
+- entity_id: primary-music-stage4
+  entity_name_en: "Music — Stage 4"
+  entity_name_ga: "Ceol — Céim 4"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/music/stage-4/"
+- entity_id: primary-drama-stage1
+  entity_name_en: "Drama — Stage 1"
+  entity_name_ga: "Drámaíocht — Céim 1"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/drama/stage-1/"
+- entity_id: primary-drama-stage2
+  entity_name_en: "Drama — Stage 2"
+  entity_name_ga: "Drámaíocht — Céim 2"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/drama/stage-2/"
+- entity_id: primary-drama-stage3
+  entity_name_en: "Drama — Stage 3"
+  entity_name_ga: "Drámaíocht — Céim 3"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/drama/stage-3/"
+- entity_id: primary-drama-stage4
+  entity_name_en: "Drama — Stage 4"
+  entity_name_ga: "Drámaíocht — Céim 4"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/drama/stage-4/"
+- entity_id: primary-physical-education-stage1
+  entity_name_en: "PE — Stage 1"
+  entity_name_ga: "Corpoideachas — Céim 1"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/physical-education/stage-1/"
+- entity_id: primary-physical-education-stage2
+  entity_name_en: "PE — Stage 2"
+  entity_name_ga: "Corpoideachas — Céim 2"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/physical-education/stage-2/"
+- entity_id: primary-physical-education-stage3
+  entity_name_en: "PE — Stage 3"
+  entity_name_ga: "Corpoideachas — Céim 3"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/physical-education/stage-3/"
+- entity_id: primary-physical-education-stage4
+  entity_name_en: "PE — Stage 4"
+  entity_name_ga: "Corpoideachas — Céim 4"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/physical-education/stage-4/"
+- entity_id: primary-sphe-stage1
+  entity_name_en: "SPHE — Stage 1"
+  entity_name_ga: "OSPS — Céim 1"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/sphe/stage-1/"
+- entity_id: primary-sphe-stage2
+  entity_name_en: "SPHE — Stage 2"
+  entity_name_ga: "OSPS — Céim 2"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/sphe/stage-2/"
+- entity_id: primary-sphe-stage3
+  entity_name_en: "SPHE — Stage 3"
+  entity_name_ga: "OSPS — Céim 3"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/sphe/stage-3/"
+- entity_id: primary-sphe-stage4
+  entity_name_en: "SPHE — Stage 4"
+  entity_name_ga: "OSPS — Céim 4"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/sphe/stage-4/"
+- entity_id: primary-religion-stage1
+  entity_name_en: "Religion — Stage 1"
+  entity_name_ga: "Creideamh — Céim 1"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/religion/stage-1/"
+- entity_id: primary-religion-stage2
+  entity_name_en: "Religion — Stage 2"
+  entity_name_ga: "Creideamh — Céim 2"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/religion/stage-2/"
+- entity_id: primary-religion-stage3
+  entity_name_en: "Religion — Stage 3"
+  entity_name_ga: "Creideamh — Céim 3"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/religion/stage-3/"
+- entity_id: primary-religion-stage4
+  entity_name_en: "Religion — Stage 4"
+  entity_name_ga: "Creideamh — Céim 4"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/religion/stage-4/"
+- entity_id: primary-stand-alone-gaeilge-stage1
+  entity_name_en: "Stand-alone Gaeilge (L1) — Stage 1"
+  entity_name_ga: "Gaeilge Aonraic (L1) — Céim 1"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/stand-alone-gaeilge/stage-1/"
+- entity_id: primary-stand-alone-gaeilge-stage2
+  entity_name_en: "Stand-alone Gaeilge (L1) — Stage 2"
+  entity_name_ga: "Gaeilge Aonraic (L1) — Céim 2"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/stand-alone-gaeilge/stage-2/"
+- entity_id: primary-stand-alone-gaeilge-stage3
+  entity_name_en: "Stand-alone Gaeilge (L1) — Stage 3"
+  entity_name_ga: "Gaeilge Aonraic (L1) — Céim 3"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/stand-alone-gaeilge/stage-3/"
+- entity_id: primary-stand-alone-gaeilge-stage4
+  entity_name_en: "Stand-alone Gaeilge (L1) — Stage 4"
+  entity_name_ga: "Gaeilge Aonraic (L1) — Céim 4"
+  canonical_url: "https://www.curriculumonline.ie/primary/curriculum-areas/primary-language/stand-alone-gaeilge/stage-4/"

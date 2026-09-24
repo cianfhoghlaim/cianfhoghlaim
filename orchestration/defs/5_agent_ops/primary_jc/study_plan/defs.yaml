@@ -1,0 +1,12 @@
+# orchestration/defs/5_agent_ops/primary_jc/study_plan/defs.yaml
+type: orchestration.components.CelticAgentOpComponent
+attributes:
+  agent_id: study_plan_agent
+  domain: primary_jc
+  nation: ie
+  agent_module: agents.meaisinfhoghlaim.educational.students_jc.study_plan_agent
+  agent_function: study_plan_agent
+  agent_framework: google-adk
+  automation: on_demand
+  framework_priority: 22
+  tags: [biep, k12, primary_jc, adk, agent_op, study_plan, student, lc]

@@ -1,0 +1,12 @@
+# orchestration/defs/4_asset_generation/primary_jc/lesson_plan_flow/defs.yaml
+type: orchestration.components.CelticCocoIndexAsset
+attributes:
+  asset_id: k12_lesson_plan_flow
+  domain: primary_jc
+  cocoindex_flow_module: cocoindex_flows.british_isles.ireland.education.lesson_plan_flow
+  cocoindex_flow_function: lesson_plan_flow
+  embedder_id: ie.k12.embedder
+  lance_table: k12_lesson_plans
+  lance_uri: stedding/lancedb/k12.lance
+  automation: on_demand
+  tags: [biep, k12, primary_jc, cocoindex, lesson_plan, teacher]

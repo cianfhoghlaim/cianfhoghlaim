@@ -1,0 +1,12 @@
+# orchestration/defs/1_ingestion/primary_jc/class_roster/defs.yaml
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.k12.class_roster
+  domain: class_roster
+  nation: ie
+  automation: on_demand
+  dlt_source: dlt_sources.british_isles.ireland.education.class_roster.class_roster_source
+  destination_table: cianfhoghlaim.education.british_isles.ireland.class_roster
+  fallback_resources:
+    - stedding/ingest_queue/class_roster/
+  tags: [biep, k12, primary_jc, class_roster, pii, ingestion]

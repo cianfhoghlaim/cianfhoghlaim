@@ -1,0 +1,129 @@
+# cocoindex_flows/_shared/_sc_subjects.yaml
+#
+# Per openspec/changes/2026-09-23-k12-teacher-student-pipeline-v1/.
+# The 40-row Senior Cycle factory config.
+# Mirrors dlt_sources/british_isles/ireland/education/senior_cycle.py::SC_SUBJECTS_REAL.
+
+- subject_slug: accounting
+  entity_name_en: "SC Accounting"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/accounting/"
+- subject_slug: agricultural_science
+  entity_name_en: "SC Agricultural Science"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/agricultural-science/"
+- subject_slug: ancient_greek
+  entity_name_en: "SC Ancient Greek"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/ancient-greek/"
+- subject_slug: applied_mathematics
+  entity_name_en: "SC Applied Mathematics"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/applied-mathematics/"
+- subject_slug: applied_graphics_design
+  entity_name_en: "SC Applied Graphics and Design"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/applied-graphics-and-design/"
+- subject_slug: arabic
+  entity_name_en: "SC Arabic"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/arabic/"
+- subject_slug: art
+  entity_name_en: "SC Art"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/art/"
+- subject_slug: biology
+  entity_name_en: "SC Biology"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/biology/"
+- subject_slug: business
+  entity_name_en: "SC Business"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/business/"
+- subject_slug: climate_action_sustainable_development
+  entity_name_en: "SC Climate Action and Sustainable Development"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/climate-action-and-sustainable-development/"
+- subject_slug: chemical_physical_science
+  entity_name_en: "SC Chemical and Physical Science"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/physics-and-chemistry/"
+- subject_slug: chemistry
+  entity_name_en: "SC Chemistry"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/chemistry/"
+- subject_slug: classical_studies
+  entity_name_en: "SC Classical Studies"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/classical-studies/"
+- subject_slug: computer_science
+  entity_name_en: "SC Computer Science"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/computer-science/"
+- subject_slug: construction_studies
+  entity_name_en: "SC Construction Studies"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/construction-studies/"
+- subject_slug: drama_film_theatre_studies
+  entity_name_en: "SC Drama, Film and Theatre Studies"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/drama-film-and-theatre-studies/"
+- subject_slug: english
+  entity_name_en: "SC English"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/english/"
+- subject_slug: economics
+  entity_name_en: "SC Economics"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/economics/"
+- subject_slug: engineering
+  entity_name_en: "SC Engineering"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/engineering/"
+- subject_slug: french
+  entity_name_en: "SC French"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/french/"
+- subject_slug: gaeilge
+  entity_name_en: "SC Gaeilge"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/gaeilge/"
+- subject_slug: geography
+  entity_name_en: "SC Geography"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/geography/"
+- subject_slug: german
+  entity_name_en: "SC German"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/german/"
+- subject_slug: hebrew_studies
+  entity_name_en: "SC Hebrew Studies"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/hebrew-studies/"
+- subject_slug: home_economics
+  entity_name_en: "SC Home Economics"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/home-economics/"
+- subject_slug: italian
+  entity_name_en: "SC Italian"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/italian/"
+- subject_slug: latin
+  entity_name_en: "SC Latin"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/latin/"
+- subject_slug: lithuanian
+  entity_name_en: "SC Lithuanian"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/lithuanian/"
+- subject_slug: mandarin_chinese
+  entity_name_en: "SC Mandarin Chinese"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/mandarin-chinese/"
+- subject_slug: mathematics
+  entity_name_en: "SC Mathematics"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/mathematics/"
+- subject_slug: music
+  entity_name_en: "SC Music"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/music/"
+- subject_slug: physical_education
+  entity_name_en: "SC Physical Education"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/physical-education-specification/"
+- subject_slug: physics
+  entity_name_en: "SC Physics"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/physics/"
+- subject_slug: physics_chemistry
+  entity_name_en: "SC Physics and Chemistry (combined)"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/chemical-and-physical-science/"
+- subject_slug: polish
+  entity_name_en: "SC Polish"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/polish/"
+- subject_slug: politics_society
+  entity_name_en: "SC Politics and Society"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/politics-and-society/"
+- subject_slug: portuguese
+  entity_name_en: "SC Portuguese"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/portuguese/"
+- subject_slug: religious_education
+  entity_name_en: "SC Religious Education"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/religious-education/"
+- subject_slug: russian
+  entity_name_en: "SC Russian"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/russian/"
+- subject_slug: spanish
+  entity_name_en: "SC Spanish"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/spanish/"
+- subject_slug: technology
+  entity_name_en: "SC Technology"
+  canonical_url: "https://curriculumonline.ie/senior-cycle/senior-cycle-subjects/technology/"

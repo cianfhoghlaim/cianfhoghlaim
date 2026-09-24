@@ -1,0 +1,13 @@
+# orchestration/defs/1_ingestion/primary_jc/junior_cycle/defs.yaml
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.k12.junior_cycle
+  domain: junior_cycle
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 6 * * *"
+  dlt_source: dlt_sources.british_isles.ireland.education.junior_cycle.junior_cycle_source
+  destination_table: cianfhoghlaim.education.british_isles.ireland.junior_cycle
+  fallback_resources:
+    - stedding/ingest_queue/junior_cycle/
+  tags: [biep, k12, primary_jc, junior_cycle, ingestion]
