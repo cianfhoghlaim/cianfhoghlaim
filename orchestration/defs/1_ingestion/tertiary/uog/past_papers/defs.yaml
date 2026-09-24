@@ -1,0 +1,13 @@
+# defs.yaml — L1 Ingestion for past_papers.py (NEW in the umbrella change)
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.tertiary.uog.past_papers
+  domain: tertiary
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 6 * * 1"
+  dlt_source: dlt_sources.british_isles.ireland.tertiary.uog.past_papers.past_papers_pipeline
+  destination_table: cianfhoghlaim.tertiary.uog.past_papers
+  fallback_resources:
+    - stedding/ingest_queue/uog/past_papers/
+  tags: [biep, tertiary, uog, ingestion, past_papers]

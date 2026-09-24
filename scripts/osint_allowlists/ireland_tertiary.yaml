@@ -1,0 +1,82 @@
+# scripts/osint_allowlists/ireland_tertiary.yaml
+
+# Per openspec/changes/2026-09-23-consolidate-uog-tertiary-pipeline-v1/.
+# The 8 canonical UoG public surfaces + the 2 authenticated surfaces
+# (regexam.nuigalway.ie + canvas.universityofgalway.ie).
+# The lint gate (scripts/lint_osint_allowlists.py) verifies every
+# DLT source URL is on this list before yielding rows.
+
+version: "1"
+jurisdiction: ie_galway
+stage: tertiary
+
+entries:
+  - url: https://www.universityofgalway.ie/about-us/structure/
+    surface: uog_colleges
+    osint_ceiling: true
+    reason: Public university structure page
+
+  - url: https://www.universityofgalway.ie/about-us/structure/arts-social-sciences-celtic-studies/
+    surface: uog_colleges
+    osint_ceiling: true
+    reason: Public college overview
+
+  - url: https://www.universityofgalway.ie/science-engineering/schools/computer-science/
+    surface: uog_schools
+    osint_ceiling: true
+    reason: Public school overview
+
+  - url: https://www.universityofgalway.ie/courses/
+    surface: uog_programme_catalog
+    osint_ceiling: true
+    reason: Public programme catalogue
+
+  - url: https://www.universityofgalway.ie/courses/undergraduate/
+    surface: uog_programmes
+    osint_ceiling: true
+    reason: Public undergraduate programmes
+
+  - url: https://www.universityofgalway.ie/courses/postgraduate/
+    surface: uog_programmes
+    osint_ceiling: true
+    reason: Public postgraduate programmes
+
+  - url: https://www.universityofgalway.ie/programmes/
+    surface: uog_modules
+    osint_ceiling: true
+    reason: Public per-programme module listings
+
+  - url: https://www.universityofgalway.ie/academic-calendar/
+    surface: uog_academic_calendar
+    osint_ceiling: true
+    reason: Public academic calendar
+
+  - url: https://www.universityofgalway.ie/governance/
+    surface: uog_governance_minutes
+    osint_ceiling: true
+    reason: Public governance minutes
+
+  - url: https://www.universityofgalway.ie/news/
+    surface: uog_press_releases
+    osint_ceiling: true
+    reason: Public press releases
+
+  - url: https://www.universityofgalway.ie/research/
+    surface: uog_research_outputs
+    osint_ceiling: true
+    reason: Public research outputs
+
+  - url: https://www.universityofgalway.ie/science-engineering/schools/computer-science/cs203.pdf
+    surface: uog_module_handbooks
+    osint_ceiling: true
+    reason: Public per-module handbook PDF (sample)
+
+  - url: https://regexam.nuigalway.ie/
+    surface: uog_regexam_papers
+    osint_ceiling: false  # authenticated; per-user vault
+    reason: Authenticated M365-gated exam archive (per-user credentials)
+
+  - url: https://canvas.universityofgalway.ie/
+    surface: uog_canvas_materials
+    osint_ceiling: false  # authenticated; per-user vault
+    reason: Authenticated Canvas LMS (PAT primary + M365 OAuth fallback)

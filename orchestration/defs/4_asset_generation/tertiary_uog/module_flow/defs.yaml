@@ -1,0 +1,20 @@
+# defs.yaml — L4 CocoIndex App asset for the per-module factory
+#
+# The flagship tertiary asset — emits ≥1,500 module CocoIndex Apps
+# from cocoindex_flows/british_isles/ireland/tertiary/uog/_shared.py.
+type: orchestration.components.CelticCocoIndexAsset
+attributes:
+  asset_id: uog_module_factory
+  domain: tertiary
+  cocoindex_flow_module: cocoindex_flows.british_isles.ireland.tertiary.uog
+  cocoindex_flow_function: create_uog_module_flow
+  factory_config: cocoindex_flows/british_isles/ireland/tertiary/uog/_modules.yaml
+  embedder_id: ie.tertiary.uog.embedder
+  lance_table_prefix: uog_modules
+  lance_uri: stedding/lancedb/uog.lance
+  automation: on_cron
+  automation_cron: "0 7 * * *"
+  tags: [biep, tertiary, uog, cocoindex, factory, flagship]
+  asset_checks:
+    - module_count_gte_1500
+    - app_factory_emits_count_gte_1500

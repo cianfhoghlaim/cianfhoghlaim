@@ -420,6 +420,20 @@
       "color": "#5f3a8a",
       "prompt": "{file:./.opencode/agents/baml.md}"
     },
+    "uoa_portal_pipeline": {
+      "description": "Authenticated UoA portal ADK 5-stage SequentialAgent (regexam.nuigalway.ie + Canvas). The 14th specialist in the fleet — added by openspec/changes/2026-09-23-consolidate-uog-tertiary-pipeline-v1.",
+      "model": "qwen/qwen3.7-plus",
+      "mode": "subagent",
+      "color": "#8a3a5f",
+      "prompt": "{file:./.opencode/agents/uoa_portal.md}"
+    },
+    "students_union_root_agent": {
+      "description": "UoG Students' Union root orchestrator (5 SU specialists). The 13th specialist in the fleet — moved from ciandlithe per openspec/changes/2026-09-23-consolidate-uog-tertiary-pipeline-v1.",
+      "model": "qwen/qwen3-coder-next",
+      "mode": "subagent",
+      "color": "#3a8a5f",
+      "prompt": "{file:./.opencode/agents/students_union.md}"
+    },
     "dagster": {
       "description": "Dagster asset + component + job authoring for the 5-layer KCG architecture.",
       "model": "qwen/qwen3-coder-next",

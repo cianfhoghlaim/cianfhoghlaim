@@ -1,0 +1,21 @@
+# defs.yaml — L3 Vision-language model routing for the authenticated
+# uoa_portal_pipeline (per the umbrella change).
+#
+# Routes between Gemini 2.5 Pro (primary vision-language for the
+# authenticated regexam/Canvas screenshots) and the LiteLLM minimax
+# alias (fallback).
+type: orchestration.components.CelticVisionComponent
+attributes:
+  routing_id: ie.tertiary.uog.vision
+  domain: tertiary
+  nation: ie
+  primary:
+    model_id: gemini_2_5_pro
+    model_name: gemini-2.5-pro
+    api_base: https://generativelanguage.googleapis.com/v1beta
+  fallback:
+    model_id: minimax
+    model_name: minimax
+    api_base: https://litellm.cianfhoghlaim.ie
+  use_case: authenticated_visual_interpretation
+  tags: [biep, tertiary, uog, model_lifecycle, vision_language, gemini]

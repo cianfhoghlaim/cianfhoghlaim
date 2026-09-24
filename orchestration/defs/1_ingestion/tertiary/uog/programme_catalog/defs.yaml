@@ -1,0 +1,13 @@
+# defs.yaml — L1 Ingestion for programme_catalog.py
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.tertiary.uog.programme_catalog
+  domain: tertiary
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 6 * * 1"
+  dlt_source: dlt_sources.british_isles.ireland.tertiary.uog.programme_catalog.programme_catalog_pipeline
+  destination_table: cianfhoghlaim.tertiary.uog.programme_catalog
+  fallback_resources:
+    - stedding/ingest_queue/uog/programme_catalog/
+  tags: [biep, tertiary, uog, ingestion]

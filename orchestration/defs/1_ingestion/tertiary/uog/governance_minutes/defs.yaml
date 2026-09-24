@@ -1,0 +1,13 @@
+# defs.yaml — L1 Ingestion for governance_minutes.py
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.tertiary.uog.governance_minutes
+  domain: tertiary
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 6 * * 1"
+  dlt_source: dlt_sources.british_isles.ireland.tertiary.uog.governance_minutes.governance_minutes_pipeline
+  destination_table: cianfhoghlaim.tertiary.uog.governance_minutes
+  fallback_resources:
+    - stedding/ingest_queue/uog/governance_minutes/
+  tags: [biep, tertiary, uog, ingestion]

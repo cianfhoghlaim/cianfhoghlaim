@@ -1,0 +1,13 @@
+# defs.yaml — L1 Ingestion for programmes.py (NEW in the umbrella change)
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.tertiary.uog.programmes
+  domain: tertiary
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 6 * * 1"
+  dlt_source: dlt_sources.british_isles.ireland.tertiary.uog.programmes.programmes_pipeline
+  destination_table: cianfhoghlaim.tertiary.uog.programmes
+  fallback_resources:
+    - stedding/ingest_queue/uog/programmes/
+  tags: [biep, tertiary, uog, ingestion, tier_3]

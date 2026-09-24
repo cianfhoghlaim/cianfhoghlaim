@@ -1,0 +1,17 @@
+# defs.yaml — L1 Ingestion for canvas_materials.py (AUTHENTICATED)
+#
+# Per openspec/changes/2026-09-23-consolidate-uog-tertiary-pipeline-v1/.
+# Canvas REST primary + M365 OAuth fallback (no IT involvement).
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.tertiary.uog.canvas_materials
+  domain: tertiary
+  nation: ie
+  automation: on_demand
+  dlt_source: dlt_sources.british_isles.ireland.tertiary.uog.canvas_materials.canvas_nuig_materials_source
+  destination_table: cianfhoghlaim.tertiary.uog.canvas_materials
+  fallback_resources:
+    - stedding/user_profiles/${UO_PORTAL_USER}/canvas/
+  tags: [biep, tertiary, uog, ingestion, authenticated, canvas, m365_oauth, pii]
+  requires_credentials: true
+  credential_vault: uo-portal-vault

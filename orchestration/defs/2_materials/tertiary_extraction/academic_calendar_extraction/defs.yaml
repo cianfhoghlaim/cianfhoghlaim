@@ -1,0 +1,14 @@
+# defs.yaml — L2 BAML extraction for ExtractAcademicCalendarEvent
+type: orchestration.components.CelticMaterialsComponent
+attributes:
+  extraction_id: ie.tertiary.uog.academic_calendar_extraction
+  domain: tertiary
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 5 * * *"
+  baml_function: ExtractAcademicCalendarBulk
+  baml_module: baml_src.british_isles.ireland.tertiary.academic_calendar
+  baml_client: ExtractEn
+  dlt_source_id: ie.tertiary.uog.academic_calendar
+  destination_table: cianfhoghlaim.tertiary.uog.academic_calendar_extractions
+  tags: [biep, tertiary, uog, baml_extraction]

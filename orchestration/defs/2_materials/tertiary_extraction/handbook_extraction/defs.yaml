@@ -1,0 +1,20 @@
+# defs.yaml — L2 BAML extraction for ExtractModuleHandbook (PDF)
+#
+# Per the umbrella change; uses the BIEP v2 4-path OCR ensemble
+# (BAML/Docling + Unstract + qwen3-vl-8b + gemma-4-26B-A4B) +
+# RAGAS voting via the centralised-registry spec.
+type: orchestration.components.CelticMaterialsComponent
+attributes:
+  extraction_id: ie.tertiary.uog.module_handbook_extraction
+  domain: tertiary
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 6 * * *"
+  baml_function: ExtractModuleHandbook
+  baml_module: baml_src.british_isles.ireland.tertiary.module_handbook
+  baml_client: ExtractEn
+  dlt_source_id: ie.tertiary.uog.module_handbooks
+  destination_table: cianfhoghlaim.tertiary.uog.module_handbook_extractions
+  ocr_ensemble: biep_v2_4path
+  ragas_voting: true
+  tags: [biep, tertiary, uog, baml_extraction, ocr_ensemble, deep_extraction]

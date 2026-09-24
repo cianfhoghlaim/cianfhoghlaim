@@ -1,0 +1,17 @@
+# defs.yaml — L1 Ingestion for regexam_papers.py (AUTHENTICATED)
+#
+# Per openspec/changes/2026-09-23-consolidate-uog-tertiary-pipeline-v1/.
+# Requires the per-user uo-portal-vault credentials.
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.tertiary.uog.regexam_papers
+  domain: tertiary
+  nation: ie
+  automation: on_demand
+  dlt_source: dlt_sources.british_isles.ireland.tertiary.uog.regexam_papers.regexam_nuig_papers_source
+  destination_table: cianfhoghlaim.tertiary.uog.regexam_papers
+  fallback_resources:
+    - stedding/user_profiles/${UO_PORTAL_USER}/regexam/
+  tags: [biep, tertiary, uog, ingestion, authenticated, m365_oauth, pii]
+  requires_credentials: true
+  credential_vault: uo-portal-vault

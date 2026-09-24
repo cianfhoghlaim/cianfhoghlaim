@@ -1,0 +1,3 @@
+# orchestration/defs/3_model_lifecycle/tertiary/_layer/defs.yaml
+type: dagster.DefsFolderComponent
+attributes: {}

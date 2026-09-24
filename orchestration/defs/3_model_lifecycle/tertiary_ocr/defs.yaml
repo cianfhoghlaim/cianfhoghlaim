@@ -1,0 +1,27 @@
+# defs.yaml — L3 OCR ensemble for tertiary handbooks
+#
+# The BIEP v2 4-path OCR ensemble for the per-module PDF handbooks
+# (BAML/Docling + Unstract + qwen3-vl-8b + gemma-4-26B-A4B) +
+# RAGAS voting per the centralised-registry spec.
+type: orchestration.components.CelticOCREnsembleComponent
+attributes:
+  routing_id: ie.tertiary.uog.handbook_ocr
+  domain: tertiary
+  nation: ie
+  ensemble_paths:
+    - path_id: baml_docling
+      model: docling-serve
+      weight: 0.30
+    - path_id: unstract
+      model: unstract
+      weight: 0.25
+    - path_id: qwen3_vl_8b
+      model: local/vision/qwen3-vl-8b
+      weight: 0.25
+    - path_id: gemma4_26b
+      model: gemma-4-26B-A4B
+      weight: 0.20
+  ragas_voting: true
+  ragas_threshold: 0.70
+  webhook_env: OCR_WEBHOOK_URL
+  tags: [biep, tertiary, uog, model_lifecycle, ocr_ensemble, ragas]

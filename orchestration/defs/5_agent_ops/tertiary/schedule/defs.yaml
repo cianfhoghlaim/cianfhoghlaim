@@ -1,0 +1,15 @@
+# defs.yaml — L5 weekly schedule + daily sensor for the tertiary pipeline
+type: orchestration.components.CelticAgentOpSchedule
+attributes:
+  schedule_id: ie.tertiary.uog.weekly
+  domain: tertiary
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 4 * * 1"
+  jobs:
+    - uoa_portal_pipeline
+    - students_union_root_agent
+  asset_check_id: tertiary_ragas_quality_gate
+  sensor_id: tertiary_module_handbook_release_sensor
+  sensor_poll_interval_seconds: 600
+  tags: [biep, tertiary, uog, schedule, sensor]

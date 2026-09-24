@@ -1,0 +1,3 @@
+# orchestration/defs/1_ingestion/tertiary/uog/_layer/defs.yaml
+type: dagster.DefsFolderComponent
+attributes: {}

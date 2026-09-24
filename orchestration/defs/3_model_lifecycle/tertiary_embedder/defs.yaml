@@ -1,0 +1,19 @@
+# defs.yaml — L3 Embedder routing for the tertiary pipeline
+#
+# Routes between BAAI/bge-m3 (1024-d, multilingual, primary) and
+# the local llama-swap Qwen3-VL-8B fallback for non-text content.
+type: orchestration.components.CelticEmbedderComponent
+attributes:
+  routing_id: ie.tertiary.uog.embedder
+  domain: tertiary
+  nation: ie
+  primary:
+    model_id: bge_m3_1024
+    model_name: BAAI/bge-m3
+    embed_dim: 1024
+  fallback:
+    model_id: qwen3_vl_8b
+    model_name: local/vision/qwen3-vl-8b
+    embed_dim: 4096
+  detection: true
+  tags: [biep, tertiary, uog, model_lifecycle, embedder]

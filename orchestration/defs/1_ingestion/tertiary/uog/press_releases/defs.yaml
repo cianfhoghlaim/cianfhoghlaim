@@ -1,0 +1,13 @@
+# defs.yaml — L1 Ingestion for press_releases.py
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.tertiary.uog.press_releases
+  domain: tertiary
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 6 * * 1"
+  dlt_source: dlt_sources.british_isles.ireland.tertiary.uog.press_releases.press_releases_pipeline
+  destination_table: cianfhoghlaim.tertiary.uog.press_releases
+  fallback_resources:
+    - stedding/ingest_queue/uog/press_releases/
+  tags: [biep, tertiary, uog, ingestion]

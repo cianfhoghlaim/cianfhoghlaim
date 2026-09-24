@@ -1,0 +1,20 @@
+# defs.yaml — L2 BAML extraction for ExtractModule
+#
+# The flagship tertiary extraction — ~1,500 module rows.
+type: orchestration.components.CelticMaterialsComponent
+attributes:
+  extraction_id: ie.tertiary.uog.module_extraction
+  domain: tertiary
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 5 * * *"
+  baml_function: ExtractModule
+  baml_module: baml_src.british_isles.ireland.tertiary.university_extraction
+  baml_client: ExtractEn
+  dlt_source_id: ie.tertiary.uog.modules
+  destination_table: cianfhoghlaim.tertiary.uog.module_extractions
+  tags: [biep, tertiary, uog, baml_extraction, tier_4, flagship]
+  asset_checks:
+    - ragas_score_gte_0.70
+    - module_field_completeness_gte_0.90
+    - learning_outcomes_count_gte_3

@@ -1,0 +1,13 @@
+# defs.yaml — L1 Ingestion for schools.py (NEW in the umbrella change)
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.tertiary.uog.schools
+  domain: tertiary
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 6 * * 1"
+  dlt_source: dlt_sources.british_isles.ireland.tertiary.uog.schools.schools_pipeline
+  destination_table: cianfhoghlaim.tertiary.uog.schools
+  fallback_resources:
+    - stedding/ingest_queue/uog/schools/
+  tags: [biep, tertiary, uog, ingestion, tier_2]

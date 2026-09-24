@@ -1,0 +1,16 @@
+# defs.yaml — L1 Ingestion for modules.py (NEW in the umbrella change)
+#
+# The flagship tertiary asset — ~1,500 module rows feed the
+# CocoIndex factory in cocoindex_flows/british_isles/ireland/tertiary/uog/_shared.py.
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.tertiary.uog.modules
+  domain: tertiary
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 6 * * 1"
+  dlt_source: dlt_sources.british_isles.ireland.tertiary.uog.modules.modules_pipeline
+  destination_table: cianfhoghlaim.tertiary.uog.modules
+  fallback_resources:
+    - stedding/ingest_queue/uog/modules/
+  tags: [biep, tertiary, uog, ingestion, tier_4, flagship]

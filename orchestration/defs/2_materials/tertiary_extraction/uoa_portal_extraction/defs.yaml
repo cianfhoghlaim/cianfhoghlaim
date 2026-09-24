@@ -1,0 +1,16 @@
+# defs.yaml — L2 BAML extraction for ExtractUoAPortalContent (authenticated)
+#
+# The authenticated ADK vision-language extraction for the
+# uoa_portal_pipeline (regexam.nuigalway.ie + Canvas).
+type: orchestration.components.CelticMaterialsComponent
+attributes:
+  extraction_id: ie.tertiary.uog.uoa_portal_extraction
+  domain: tertiary
+  nation: ie
+  automation: on_demand
+  baml_function: ExtractUoAPortalContent
+  baml_module: baml_src.british_isles.ireland.tertiary.uoa_portal_content
+  baml_client: ExtractEn
+  dlt_source_id: ie.tertiary.uog.regexam_papers
+  destination_table: cianfhoghlaim.tertiary.uog.uoa_portal_extractions
+  tags: [biep, tertiary, uog, baml_extraction, authenticated, vision_language]

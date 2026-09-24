@@ -1,0 +1,14 @@
+# defs.yaml — L2 BAML extraction for ExtractGovernanceMinute
+type: orchestration.components.CelticMaterialsComponent
+attributes:
+  extraction_id: ie.tertiary.uog.governance_extraction
+  domain: tertiary
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 5 * * *"
+  baml_function: ExtractGovernanceMinuteBulk
+  baml_module: baml_src.british_isles.ireland.tertiary.governance_minute
+  baml_client: ExtractEn
+  dlt_source_id: ie.tertiary.uog.governance_minutes
+  destination_table: cianfhoghlaim.tertiary.uog.governance_extractions
+  tags: [biep, tertiary, uog, baml_extraction]

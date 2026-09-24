@@ -1,0 +1,13 @@
+# defs.yaml — L1 Ingestion for research_outputs.py
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.tertiary.uog.research_outputs
+  domain: tertiary
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 6 * * 1"
+  dlt_source: dlt_sources.british_isles.ireland.tertiary.uog.research_outputs.research_outputs_pipeline
+  destination_table: cianfhoghlaim.tertiary.uog.research_outputs
+  fallback_resources:
+    - stedding/ingest_queue/uog/research_outputs/
+  tags: [biep, tertiary, uog, ingestion]

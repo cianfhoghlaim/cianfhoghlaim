@@ -1,0 +1,22 @@
+# defs.yaml — L5 ADK agent for the Students' Union (the 13th specialist)
+#
+# Per openspec/changes/2026-09-23-consolidate-uog-tertiary-pipeline-v1/.
+# The 5 specialist SU agents + 1 root orchestrator at
+# agents/meaisinfhoghlaim/educational/students_union/.
+type: orchestration.components.CelticAgentOpComponent
+attributes:
+  agent_id: students_union_root_agent
+  domain: tertiary
+  nation: ie
+  agent_module: agents.meaisinfhoghlaim.educational.students_union.root_agent
+  agent_function: root_agent
+  agent_framework: google-adk
+  automation: on_demand
+  framework_priority: 13
+  tags: [biep, tertiary, uog, adk, agent_op, students_union, fleet_13th]
+  sub_agents:
+    - clubs_socs_agent
+    - grants_funding_agent
+    - class_rep_aggregator_agent
+    - complaints_welfare_agent
+    - elections_agent

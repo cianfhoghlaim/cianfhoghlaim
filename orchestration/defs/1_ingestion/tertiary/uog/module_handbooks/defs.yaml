@@ -1,0 +1,13 @@
+# defs.yaml — L1 Ingestion for module_handbooks.py (NEW in the umbrella change)
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.tertiary.uog.module_handbooks
+  domain: tertiary
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 6 * * 1"
+  dlt_source: dlt_sources.british_isles.ireland.tertiary.uog.module_handbooks.module_handbooks_pipeline
+  destination_table: cianfhoghlaim.tertiary.uog.module_handbooks
+  fallback_resources:
+    - stedding/ingest_queue/uog/module_handbooks/
+  tags: [biep, tertiary, uog, ingestion, deep_extraction]

@@ -1,0 +1,13 @@
+# defs.yaml — L1 Ingestion for reading_lists.py (NEW in the umbrella change)
+type: orchestration.components.CelticIngestionComponent
+attributes:
+  source_id: ie.tertiary.uog.reading_lists
+  domain: tertiary
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 6 * * 1"
+  dlt_source: dlt_sources.british_isles.ireland.tertiary.uog.reading_lists.reading_lists_pipeline
+  destination_table: cianfhoghlaim.tertiary.uog.reading_lists
+  fallback_resources:
+    - stedding/ingest_queue/uog/reading_lists/
+  tags: [biep, tertiary, uog, ingestion, deep_extraction]

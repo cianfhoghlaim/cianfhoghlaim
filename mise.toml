@@ -636,3 +636,59 @@ depends = ["sync"]
 run = '''
 uv run python "scripts/meaisin_ocr_htr_tests/agent_{{arg(agent)}}_extract.py" "$@"
 '''
+
+# ============================================================================
+# oideachais:tertiary:* — UoG tertiary pipeline tasks (per 2026-09-23 umbrella)
+# ============================================================================
+
+[task_templates."oideachais:tertiary:source:run"]
+description = "Run UoG DLT source {{arg(source=uog_modules)}} (USE_LOCAL_SCRAPES=true by default)"
+usage = 'arg "<source>" help="UoG DLT source (uog_colleges/uog_schools/uog_programmes/uog_modules/...)"'
+run = '''
+uv run python -m "dlt_sources.british_isles.ireland.tertiary.uog.{{arg(source)}}"
+'''
+
+[task_templates."oideachais:tertiary:test:smoke"]
+description = "Run the UoG tertiary pipeline smoke test (pytest)"
+run = '''
+uv run pytest tests/tertiary/test_uog_smoke.py -v
+'''
+
+[task_templates."oideachais:tertiary:lint:osint"]
+description = "Lint the UoG tertiary OSINT allowlist"
+run = '''
+uv run python scripts/lint_osint_allowlists.py
+'''
+
+[task_templates."oideachais:tertiary:vault:unlock"]
+description = "1-time M365 unlock for user {{arg(user)}} + service {{arg(service=regexam)}}"
+usage = 'arg "<user>" help="UoG user_id (e.g. a.oconnor1)"; arg "[service]" help="regexam|canvas|both (default: both)"'
+run = '''
+uv run python -m "uo_portal_vault.cli" unlock --user "{{arg(user)}}" --service "{{arg(service)}}"
+'''
+
+[task_templates."oideachais:tertiary:vault:adduser"]
+description = "Provision the 4 per-user Infisical secrets for user {{arg(user)}}"
+usage = 'arg "<user>" help="UoG user_id"'
+run = '''
+uv run python -m "uo_portal_vault.cli" adduser --user "{{arg(user)}}"
+'''
+
+[task_templates."oideachais:uoa-portal:smoke"]
+description = "Run the uoa_portal_pipeline ADK agent smoke test"
+run = '''
+uv run python -m "agents.uoa_portal.portal_agent" --help 2>&1 | head -20 || echo "Phase 2: implement Patchright-driven unlock"
+'''
+
+[task_templates."oideachais:students-union:smoke"]
+description = "Run the Students' Union 5-agent smoke test (the moved ciandlithe package)"
+run = '''
+uv run python "agents/meaisinfhoghlaim/educational/students_union/_smoke_test.py"
+'''
+
+[task_templates."oideachais:tertiary:full-pipeline"]
+description = "Run the full UoG tertiary 5-phase pattern (Ingestion → Extraction → Embedding → ibis logging → Analytics)"
+run = '''
+uv run pytest tests/tertiary/test_uog_smoke.py -v && \
+uv run python scripts/lint_osint_allowlists.py
+'''

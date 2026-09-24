@@ -1,0 +1,13 @@
+# defs.yaml — L4 CocoIndex App asset for schools_flow
+type: orchestration.components.CelticCocoIndexAsset
+attributes:
+  asset_id: uog_schools_flow
+  domain: tertiary
+  cocoindex_flow_module: cocoindex_flows.british_isles.ireland.tertiary.uog.schools_flow
+  cocoindex_flow_function: uog_schools_flow
+  embedder_id: ie.tertiary.uog.embedder
+  lance_table: uog_schools
+  lance_uri: stedding/lancedb/uog.lance
+  automation: on_cron
+  automation_cron: "0 7 * * *"
+  tags: [biep, tertiary, uog, cocoindex, tier_2]

@@ -1,0 +1,14 @@
+# defs.yaml — L2 BAML extraction for ExtractSchool
+type: orchestration.components.CelticMaterialsComponent
+attributes:
+  extraction_id: ie.tertiary.uog.school_extraction
+  domain: tertiary
+  nation: ie
+  automation: on_cron
+  automation_cron: "0 5 * * *"
+  baml_function: ExtractSchool
+  baml_module: baml_src.british_isles.ireland.tertiary.university_extraction
+  baml_client: ExtractEn
+  dlt_source_id: ie.tertiary.uog.schools
+  destination_table: cianfhoghlaim.tertiary.uog.school_extractions
+  tags: [biep, tertiary, uog, baml_extraction, tier_2]

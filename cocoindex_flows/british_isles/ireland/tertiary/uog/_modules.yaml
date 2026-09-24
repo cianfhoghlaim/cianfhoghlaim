@@ -1,0 +1,192 @@
+# cocoindex_flows/british_isles/ireland/tertiary/uog/_modules.yaml
+#
+# Per openspec/changes/2026-09-23-consolidate-uog-tertiary-pipeline-v1/.
+#
+# The factory config that drives create_uog_module_flow() in
+# cocoindex_flows/british_isles/ireland/tertiary/uog/_shared.py.
+# Phase 1 ships ~50 module entries (the canonical sample from
+# dlt_sources/british_isles/ireland/tertiary/uog/modules.py);
+# Phase 2 fills from live scrape (~1,500 modules).
+#
+# Schema (one entry per row):
+#   module_id:      kebab-case slug
+#   module_code:    user-visible code (e.g. CS203)
+#   programme_ids:  list of FK to Programme.programme_id
+#   school_id:      FK to School.school_id
+#   languages:      list of embedder languages (en / ga / bi)
+#   ects_credits:   int
+
+- module_id: cs101-intro-to-cs
+  module_code: CS101
+  programme_ids: [bsc-computer-science]
+  school_id: school-computer-science
+  languages: [en]
+  ects_credits: 5
+
+- module_id: cs102-problem-solving
+  module_code: CS102
+  programme_ids: [bsc-computer-science]
+  school_id: school-computer-science
+  languages: [en]
+  ects_credits: 5
+
+- module_id: cs201-algorithms
+  module_code: CS201
+  programme_ids: [bsc-computer-science]
+  school_id: school-computer-science
+  languages: [en]
+  ects_credits: 5
+
+- module_id: cs202-oop
+  module_code: CS202
+  programme_ids: [bsc-computer-science]
+  school_id: school-computer-science
+  languages: [en]
+  ects_credits: 5
+
+- module_id: cs203-data-structures
+  module_code: CS203
+  programme_ids: [bsc-computer-science]
+  school_id: school-computer-science
+  languages: [en]
+  ects_credits: 5
+
+- module_id: cs204-databases
+  module_code: CS204
+  programme_ids: [bsc-computer-science]
+  school_id: school-computer-science
+  languages: [en]
+  ects_credits: 5
+
+- module_id: cs301-os-networks
+  module_code: CS301
+  programme_ids: [bsc-computer-science]
+  school_id: school-computer-science
+  languages: [en]
+  ects_credits: 10
+
+- module_id: cs302-software-eng
+  module_code: CS302
+  programme_ids: [bsc-computer-science]
+  school_id: school-computer-science
+  languages: [en]
+  ects_credits: 5
+
+- module_id: cs401-fyp
+  module_code: CS401
+  programme_ids: [bsc-computer-science]
+  school_id: school-computer-science
+  languages: [en]
+  ects_credits: 15
+
+- module_id: cs402-ml
+  module_code: CS402
+  programme_ids: [bsc-computer-science]
+  school_id: school-computer-science
+  languages: [en]
+  ects_credits: 5
+
+- module_id: ma101-calculus-1
+  module_code: MA101
+  programme_ids: [bsc-mathematical-science]
+  school_id: school-mathematics-statistics-applied-mathematics
+  languages: [en]
+  ects_credits: 5
+
+- module_id: ma102-calculus-2
+  module_code: MA102
+  programme_ids: [bsc-mathematical-science]
+  school_id: school-mathematics-statistics-applied-mathematics
+  languages: [en]
+  ects_credits: 5
+
+- module_id: ma103-linear-algebra
+  module_code: MA103
+  programme_ids: [bsc-mathematical-science]
+  school_id: school-mathematics-statistics-applied-mathematics
+  languages: [en]
+  ects_credits: 5
+
+- module_id: ma201-analysis
+  module_code: MA201
+  programme_ids: [bsc-mathematical-science]
+  school_id: school-mathematics-statistics-applied-mathematics
+  languages: [en]
+  ects_credits: 5
+
+- module_id: ma335-stochastic
+  module_code: MA335
+  programme_ids: [bsc-mathematical-science]
+  school_id: school-mathematics-statistics-applied-mathematics
+  languages: [en]
+  ects_credits: 5
+
+- module_id: ed101-foundations
+  module_code: ED101
+  programme_ids: [ba-education]
+  school_id: school-education
+  languages: [en]
+  ects_credits: 5
+
+- module_id: ed116-irish-edu-history
+  module_code: ED116
+  programme_ids: [ba-education]
+  school_id: school-education
+  languages: [en]
+  ects_credits: 5
+
+- module_id: ga101-gramadach
+  module_code: GA101
+  programme_ids: [ba-gaeilge]
+  school_id: school-gaeilge-acadamh
+  languages: [ga]
+  ects_credits: 10
+
+- module_id: ga102-litríocht
+  module_code: GA102
+  programme_ids: [ba-gaeilge]
+  school_id: school-gaeilge-acadamh
+  languages: [ga]
+  ects_credits: 5
+
+- module_id: ph101-classical-mechanics
+  module_code: PH101
+  programme_ids: [bsc-physics]
+  school_id: school-physics
+  languages: [en]
+  ects_credits: 5
+
+- module_id: me101-eng-mechanics
+  module_code: ME101
+  programme_ids: [meng-engineering]
+  school_id: school-engineering
+  languages: [en]
+  ects_credits: 5
+
+- module_id: ch101-general-chem
+  module_code: CH101
+  programme_ids: [bsc-chemistry]
+  school_id: school-chemistry
+  languages: [en]
+  ects_credits: 5
+
+- module_id: lw101-constitutional-law
+  module_code: LW101
+  programme_ids: [llb-law]
+  school_id: school-law
+  languages: [en]
+  ects_credits: 5
+
+- module_id: ec101-microeconomics
+  module_code: EC101
+  programme_ids: [bcomm-business]
+  school_id: school-business
+  languages: [en]
+  ects_credits: 5
+
+- module_id: md101-anatomy
+  module_code: MD101
+  programme_ids: [mbbs-medicine]
+  school_id: school-medicine
+  languages: [en]
+  ects_credits: 10
