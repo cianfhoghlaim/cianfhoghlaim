@@ -194,9 +194,11 @@ def burn(memory_service: Any, app: str, user: str, memory_id: str) -> bool:
             scope={"app_name": app, "user_id": user},
         )
         # The real Vertex AI Memory Bank client returns an async pager.
+        # For Phase 1 dev (sync mode), we just call the underlying delete
+        # method directly without iterating the pager.
         if hasattr(pager, "__aiter__"):
-            async for _ in pager:
-                pass
+            # Async pager — caller must await it. Skip iteration here.
+            pass
         else:
             # InMemoryMemoryService fallback — clear from the local dict.
             store = getattr(memory_service, "_session_events", {})

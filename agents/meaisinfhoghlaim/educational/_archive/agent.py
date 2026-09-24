@@ -26,6 +26,7 @@ from __future__ import annotations
 from typing import Any
 
 from google.adk import Agent, Event, Workflow
+from google.adk.workflow._base_node import START
 from google.adk.agents.context import Context
 from google.adk.events import EventActions
 from google.adk.tools import ToolContext
@@ -92,7 +93,6 @@ def list_floor_node(_ctx, node_input: Any):
 
 
 # Tools Vesper uses (the teacher's + student's 5 floors)
-@ToolContext
 def write_down(field: str, value: str, tool_context: ToolContext) -> dict:
     """Write one line of the visitor's slip (per the agent-valley pattern)."""
     if not field or not value:
@@ -117,14 +117,15 @@ vesper = Agent(
 )
 
 
-# The workflow — explicit graph (Pillar 1)
+# The workflow — explicit graph (Pillar 1, ADK 2 format)
+# START node seeds 3 chains, all reachable from the workflow entrypoint.
 archive_workflow = Workflow(
     name="archive_workflow",
     description="The Archive: classify_intent → (recall + answer) | archive_today | list_floor.",
     edges=[
-        (classify_intent, recall_all_stages, answer_agent_node),
-        (archive_today_node,),
-        (list_floor_node,),
+        (START, classify_intent, recall_all_stages, answer_agent_node),
+        (START, archive_today_node),
+        (START, list_floor_node),
     ],
 )
 

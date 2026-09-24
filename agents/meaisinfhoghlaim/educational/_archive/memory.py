@@ -68,8 +68,8 @@ def burn(memory_service: Any, app: str, user: str, memory_id: str) -> bool:
             scope={"app_name": app, "user_id": user},
         )
         if hasattr(pager, "__aiter__"):
-            async for _ in pager:
-                pass
+            # Async pager — caller must await it. Phase 1 dev skips iteration.
+            pass
         else:
             store = getattr(memory_service, "_session_events", {})
             for (a, u), sessions in store.items():
