@@ -24,34 +24,21 @@ from pathlib import Path
 CONFIG_PATH = Path("bonneagar/stacks/litellm/config/config.yaml")
 
 REQUIRED_ALIASES = {
-    "vision",
-    "ocr",
-    "diagram",
-    "gaelic",
-    "irish",
-    "default",
-    "math",
-    "extract",
-    "embedding-bge-m3",
+    "vision", "ocr", "diagram", "gaelic", "irish",
+    "default", "math", "extract", "embedding-bge-m3",
 }
 
 V3_FORBIDDEN_KEYS = {
-    "qwen2.5-vl",
-    "qwen25-vl",
-    "gemma-3-vision",
-    "gemma3-vision",
-    "deepseek-ocr",
-    "qwen2.5-math",
-    "qwen25-math",
-    "uccix-13b",
+    "qwen2.5-vl", "qwen25-vl", "gemma-3-vision", "gemma3-vision",
+    "deepseek-ocr", "qwen2.5-math", "qwen25-math", "uccix-13b",
 }
 
 V4_REQUIRED_MODELS = {
     "local/vision/gemma-4-26B-A4B",  # M4 default
-    "local/vision/qwen3-vl-8b",  # workhorse
-    "local/vision/glm-4.6v-flash",  # realtime
-    "local/vision/olmocr-2-7b-1025",  # allenai specialist
-    "local/vision/deepseek-ocr-2",  # formula OCR
+    "local/vision/qwen3-vl-8b",        # workhorse
+    "local/vision/glm-4.6v-flash",     # realtime
+    "local/vision/olmocr-2-7b-1025",   # allenai specialist
+    "local/vision/deepseek-ocr-2",     # formula OCR
     "local/vision/granite-docling-258M",
     "local/vision/molmo2-8b",
     "local/vision/uccix-mistral-24b",  # Irish language
@@ -63,6 +50,7 @@ ALLOWED_API_BASES = {
     "http://llama-swap:8080/v1",
     "http://mlx-omni:10240/v1",
     "http://transformers:5000/v1",
+    "http://192.168.148.5:8889/v1",    # unsloth-serve container on the bunchloch docker network (per 2026-09-25-pangolin-aware-bunchloch-vlm-deploy-v1)
     "http://docling-serve:5001/v1",
     "http://olmocr:8003/v1",
     # M3 chokepoint (OpenCode Go) — pre-existing, added 2026-07-08

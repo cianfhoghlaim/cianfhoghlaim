@@ -2,148 +2,13 @@
 
 This project uses standard GitHub/Forgejo issues for task tracking. Please use `gh` or standard `git` workflows.
 
-## New in 2026-08-23-uog-personal-archive-tertiary-modules-v1 (UoG personal archive → tertiary subject pipeline)
-
-Lifts `leabharlann/ollscoil_na_gaillimhe/` + transcript PDFs to
-feature parity with the leaving-cycle subject pipeline (4 CocoIndex
-v1 Apps, 10 typed Cognee edges, 6 Dagster assets, 8-tab Marimo
-notebook, Convex + CopilotKit + Genie + ADK, tests + observability +
-thesis figures).
-
-**Source**: `leabharlann/ollscoil_na_gaillimhe/` (auto-discovered; no curated drop-PDF UI as primary entry).
-
-**F-granularity destination**: per-question, per-assignment, per-topic — chatable via `notebooks/15_personal_archive.py`, Convex `chatOverMyArchive`, CopilotKit `<AskMyArchive />`, Genie tile, ADK agent `personal_archive_module_assistant`.
-
-**Transferability**: 9 env vars + a generic `UniversityPersonalArchiveConfig` Pydantic model; any university student can point it at their own `leabharlann/<university>/` corpus.
-
-**Key file paths**:
-
-| Layer | Path |
-|---|---|
-| Openspec proposal + tasks | `openspec/changes/2026-08-23-uog-personal-archive-tertiary-modules-v1/{proposal.md,tasks.md}` |
-| Spec | `openspec/changes/2026-08-23-uog-personal-archive-tertiary-modules-v1/specs/cianfhoghlaim-personal-archive-typed-modules/spec.md` |
-| BAML schema | `baml_src/british_isles/ireland/education/university/personal_archive_extraction.baml` |
-| DLT source | `dlt_sources/filesystem/uog_personal_archive.py` |
-| HTR ensemble | `dlt_sources/filesystem/_htr_ensemble.py` |
-| Generic factory | `dlt_sources/british_isles/ireland/education/university/personal_archive/uog_personal_archive_source.py` |
-| DuckLake tables | `dlt_sources/lakehouse/personal_archive_destinations.py` |
-| CocoIndex Apps | `cocoindex_flows/british_isles/ireland/education/university/personal_archive_embedding.py` |
-| Cognee edges | `scripts/graph_storage/cognify/rules/personal_archive_typed_edges.py` |
-| Marimo notebook | `notebooks/15_personal_archive.py` |
-| Dagster assets | `orchestration/defs/uog_personal_archive.py` |
-| Convex chat | `web/apps/cianfhoghlaim/convex/personalArchive.ts` |
-| CopilotKit | `web/apps/cianfhoghlaim/components/AskMyArchive.tsx` |
-| Genie UI | `web/apps/cianfhoghlaim/genie/personal_archive_browser.ts` |
-| ADK agent | `agents/adk/personal_archive_module_assistant.py` |
-| Thesis figures | `orchestration/defs/uog_personal_archive_figures.py` |
-| Grafana dashboard | `observability/dashboards/personal_archive.json` |
-| Tests | `tests/personal_archive/` (12 tests) |
-
-**Quickstart**:
-
-```bash
-# Run the test suite (12 passing)
-uv run pytest tests/personal_archive/ -v
-
-# Validate the openspec change
-uv run openspec validate 2026-08-23-uog-personal-archive-tertiary-modules-v1 --strict
-
-# Materialise the DuckLake tables (smoke test)
-uv run python -c "import duckdb; from dlt_sources.lakehouse import register_personal_archive_tables; con = duckdb.connect(':memory:'); register_personal_archive_tables(con); print('OK')"
-
-# Auto-classify a sample file
-uv run python -c "from pathlib import Path; from dlt_sources.filesystem.uog_personal_archive import _classify_file; print(_classify_file(Path('leabharlann/ollscoil_na_gaillimhe/mata/networks/CS4423 - Networks/cian_mac_liathain_assignment_3.pdf')))"
-```
-
-
-## New in 2026-09-01 (Cianfhoghlaim-Nua V6 Era + 10 follow-on Steps) — What shipped
-
-The V6 era (2026-09-01) shipped **19 openspec changes** + **~10,000 LOC**
-that lift the GCP-first `gemini_hackathon/` sister-repo learnings
-into the canonical OSS-first `cianfhoghlaim/` substrate. The
-5-pillar pattern: **BAML → Convex → A2UI → Hono → React**.
-
-### 19 openspec changes (in openspec/changes/)
-
-| # | Phase/Step | Change |
-|--:|--|--|
-| 0 | Phase 1 umbrella | `2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1/` |
-| 0.1 | Sister-side mirrors (6) | `2026-09-01-{bonneagar,tuatha,ciancheiltis,ciandlithe,cianchosaint,gemini-hackathon}-sister-umbrella-mirror-v1/` |
-| 0.5 | BAML regeneration | `2026-09-01-baml-regeneration-blocker-v1/` |
-| 1 | End-to-end showcase (4 subjects) | `2026-09-01-cianfhoghlaim-nua-end-to-end-showcase-v1/` |
-| 2 | A2UI v0.9 catalog (11 components) | `2026-09-01-cianfhoghlaim-nua-a2ui-catalog-v1/` |
-| 3 | Web consolidation (5 apps → 1) | `2026-09-01-cianfhoghlaim-nua-web-consolidation-v1/` |
-| 3.2 | Web consolidation completion | `2026-09-01-cianfhoghlaim-nua-web-consolidation-completion-v1/` |
-| 4 | NCCE showcase | `2026-09-01-cianfhoghlaim-nua-biep-ncce-showcase-v1/` |
-| 5 | BAML/CocoIndex/DLT hardening | (partial) FTS index added |
-| 6 | Oral study plans | `2026-09-01-cianfhoghlaim-nua-oral-study-plans-v1/` |
-| 7 | LC/JC certificate pipeline | `2026-09-01-cianfhoghlaim-nua-certificate-pipeline-v1/` |
-| 8 | Sister-side mirrors activation | `2026-09-01-sister-side-mirrors-v1/` |
-| 9 | GCP opt-in completion | `2026-09-01-gcp-opt-in-completion-v1/` |
-| 10 | V7 from-the-ground-up (DEFERRED) | `2026-09-01-v7-from-the-ground-up-v1/` |
-| S0 | Phase 3 web consolidation fix | `2026-09-01-cianfhoghlaim-nua-web-consolidation-completion-v1/` |
-| S1 | DLT path drift fix | `2026-09-01-dlt-path-drift-fix-v1/` |
-| S2 | Ireland LC completion | `2026-09-01-cianfhoghlaim-nua-ireland-lc-completion-v1/` |
-| S3 | Firecrawl England source discovery | `2026-09-01-firecrawl-england-source-discovery-v1/` |
-| S4-S8 | 5-jurisdiction completion (EN+WL+NI+IM+SC) | `2026-09-01-cianfhoghlaim-nua-5-jurisdiction-completion-v1/` |
-| S9 | Vernacular language pipelines (7 langs) | `2026-09-01-cianfhoghlaim-nua-v7-vernaculars-v1/` |
-
-### Key file paths
-
-| Layer | Path |
-|---|---|
-| Phase 1 BAML (study-plan) | `baml_src/british_isles/_shared/study_plan.baml` |
-| Phase 1 BAML (oral-study) | `baml_src/british_isles/_shared/oral_study_plan.baml` |
-| Phase 1 planner | `agents/adk/subjects/lc/planner.py` |
-| Phase 2 A2UI catalog | `web/packages/a2ui/src/catalog.tsx` + `web/packages/a2ui/src/components/` |
-| Phase 3 consolidated app | `web/apps/cianfhoghlaim-nua/` |
-| Phase 3 web completion | `web/apps/cianfhoghlaim-nua/routes/__root.tsx` + `app.config.ts` + `src/convex/{schema,auth}.ts` |
-| Phase 4 NCCE BAML | `baml_src/british_isles/uk_ncce/learning_graph.baml` |
-| Phase 4 NCCE equivalencies | `baml_src/british_isles/uk_ncce/equivalencies.baml` |
-| Phase 4 CocoIndex flow | `cocoindex_flows/uk_ncce/learning_graphs_app.py` |
-| Phase 5 FTS index | `cocoindex_flows/biep_parity/ireland_lc_factory.py:139-141` |
-| Phase 6 Pipecat client | `agents/api/_oideachais_api/services/pipecat_client.py` |
-| Phase 6 TTS router | `agents/api/_oideachais_api/services/tts_router.py` |
-| Phase 6 OralStudyPlayer | `web/packages/a2ui/src/components/OralStudyPlayer.tsx` |
-| Phase 7 certificate types | `meaisinfhoghlaim/certificate/types.py` |
-| Phase 7 certificate pipeline | `meaisinfhoghlaim/certificate/pipeline.py` |
-| Phase 7 certification BAML | `baml_src/british_isles/ireland/education/certification.baml` |
-| S2 Ireland NCCA-adjacent marking | `baml_src/british_isles/ireland/education/marking/{accounting,business,french,history,art,music,applied_mathematics,physics}_marking.baml` |
-| S2 Ireland Convex LC tables | `web/apps/cianfhoghlaim-nua/convex/lc/` (16 files: 8 ts + 8 types.ts) |
-| S2 Ireland early-years CocoIndex | `cocoindex_flows/british_isles/ireland/education/{aistear,primary}_embedding.py` |
-| S3 England DLT scaffold | `dlt_sources/education/england/british_isles/england_gov_sources.py` |
-| S4-S8 jurisdiction BAMLs | `baml_src/british_isles/{en,wl,ni,im,sc}/education/{en,wl,ni,im,sc}_extraction.baml` (5 files) |
-| S9 vernacular BAML | `baml_src/british_isles/_cross/vernacular_languages.baml` (VernacularLanguage enum + VernacularSubjectSpec class + 8 extraction functions) |
-| Tests | `tests/test_adk_subject_actions.py` (11) + `tests/test_phase7_certificate_pipeline.py` (7) |
-
-### Phase 7 quick-start
-
-```bash
-# 1. Validate the BAML client is reachable
-uv run python -c "from baml_client.baml_client.sync_client import b; print(b.ExtractNCCAPolicyCriteria)"
-
-# 2. Run the 7-stage certificate pipeline
-uv run python -c "
-import asyncio
-from meaisinfhoghlaim.certificate import run_certificate_pipeline
-result = asyncio.run(run_certificate_pipeline(
-    learner_id='learner-1',
-    learner_name='Test',
-    subject_slug='chemistry',
-    stage='scoil_sinsearach',
-    lo_codes=['LC-CHEM-LO-3.1'],
-    ncca_policy_pdfs=[('SC-L1-L2-Programme-Statement.pdf', 'Sample NCCA text...')],
-))
-print(result.png_bytes[:8])  # PNG magic bytes
-"
-```
 ## Priority quick reference
 
 The 5 priority skills, the 4 priority commands, the 4 priority
 compose stacks, and the 4 priority openspec specs at a glance.
 **Read this first**; the rest of the file is detail.
 
-### Priority skills (7 of 64)
+### Priority skills (10 of 67)
 
 | Skill | When to load |
 |:--|:--|
@@ -154,6 +19,9 @@ compose stacks, and the 4 priority openspec specs at a glance.
 | [`centralized-registry`](.agents/skills/centralized-registry/SKILL.md) | **The single source of truth for models + schemas** — MODEL_REGISTRY + notebooks/_shared/schema.py + deployment-choice.yaml (post-2026-08-15). Load this when adding/changing/toggling any model, schema, pipeline, or stack. |
 | [`openspec`](openspec/AGENTS.md) | Spec-driven change management (96 capability specs) |
 | [`indexing-and-cognition`](.agents/skills/INDEXING_AND_COGNITION.md) | Consolidated setup + MCP reference for `ccc` (semantic code search) + `cognee` (knowledge graph over docs). Use when an agent or team member asks "how do I set up ccc?", "how do I start cognee?", "what MCP tools are available?", or "how does the dual-search workflow work?" |
+| [`pangolin-cli`](.agents/skills/pangolin-cli/SKILL.md) | Pangolin CLI v0.17 — machine-client tunneling, `pangolin up`, `pangolin configure opencode`, launchd/systemd service-install |
+| [`pangolin-ai-gateway`](.agents/skills/pangolin-ai-gateway/SKILL.md) | The 2026-Q3 identity-aware AI Gateway contract — public+private overlapping resources, Custom providers, budgets, session logs |
+| [`marimo-embed`](.agents/skills/marimo-embed/SKILL.md) | Embed marimo notebooks in TanStack Start pages via the marimo-server-on-Pangolin pattern (sandboxed iframe) |
 
 ### ccc code search (always use before grep)
 
@@ -179,7 +47,7 @@ The **3 new post-2026-08-15 specs** (centralized-model-registry + centralized-sc
 
 | Spec | One-liner |
 |:--|:--|
-| [`centralized-model-registry`](openspec/specs/centralized-model-registry/spec.md) | The single canonical model registry (76 entries / 7 families) — drives LiteLLM, BAML, agents, embedders, image-gen, voice, translation |
+| [`centralized-model-registry`](openspec/specs/centralized-model-registry/spec.md) | The single canonical model registry (52 entries / 7 families) — drives LiteLLM, BAML, agents, embedders, image-gen, voice, translation |
 | [`centralized-schema-registry`](openspec/specs/centralized-schema-registry/spec.md) | BAML is the single source of truth — Pydantic + Zod are codegen; 96 hand-written Pydantic duplicates removed |
 | [`deployment-control-panel`](openspec/specs/deployment-control-panel/spec.md) | The 5-tab marimo control panel + web UI + CLI for picking models/pipelines/datasets/stacks; writes to `deployment-choice.yaml` |
 
@@ -193,45 +61,19 @@ the task for the domain you're working on today:
 # Daily "I'm working on X" commands (omnibus tasks per domain)
 mise run core                     # dev env (sync + install + lint + test + format)
 mise run core:ci                  # the canonical CI gate (lint + test + openspec:validate-all + devops:validate-stacks)
-mise run devops                   # IaC + 100 stacks + Komodo/Pangolin/Locket/Infisical
+mise run devops                   # IaC + 107 stacks + Komodo/Pangolin/Locket/Infisical
 mise run data                     # lakehouse + BIEP + Dagster + baml_src + CocoIndex + motherduck + notebooks
 mise run ml                       # meaisinfhoghlaim (OCR/HTR/Alignment/Celtic) + 12-agent fleet + MODEL_REGISTRY
 mise run web                      # web/apps + web/packages + web/hono-api + Turborepo
 
 # Surgical subcommands (when you know exactly what you want)
-mise run lint:skills              # validate .agents/skills/ metadata (167 skills pass)
+mise run lint:skills              # validate .agents/skills/ metadata (172 skills pass)
 mise run lint:drift-docs          # validate every AGENTS.md number claim against ground truth
-mise run openspec:validate-all    # CI gate for every openspec change + spec (146 items pass)
-mise run devops:validate-stacks   # validate all 94 Docker Compose stacks against the 6-file GOLD_STANDARD
+mise run openspec:validate-all    # CI gate for every openspec change + spec (131 items pass)
+mise run devops:validate-stacks   # validate all 89 Docker Compose stacks against the 6-file GOLD_STANDARD
 mise run data:dagster:up          # launch the Dagster UI on :3335
 mise run data:biep:milestone -- 1 # run BIEP v3 milestone m1
-mise run data:all:up               # bring up the FULL data plane (lakehouse + logfire + langfuse + mlflow + dagster)
-mise run ml:registry:audit         # verify all 22 ocr_vision models are live on HF Hub
-mise run ml:litellm:regenerate     # regenerate config.yaml from MODEL_REGISTRY (now auto-runs in CI per 2026-08-21)
-
-# New in 2026-08-22 dev-tooling-refactor v2 (bun 1.4 + mise fmt + uv 0.12 + openspec 1.10):
-mise run core:bun:prune            # bun prune (remove unused packages; bun 1.4+)
-mise run core:bun:audit:fix       # bun audit fix (auto-upgrade vulns; bun 1.4+)
-mise run core:bun:dedupe           # bun dedupe (remove duplicate versions; bun 1.4+)
-mise run core:bun:format           # bunx prettier --write . (the missing formatter)
-mise run core:bun:parallel         # bun run --parallel
-mise run core:mise:fmt             # mise fmt (auto-format mise.toml)
-mise run core:mise:fmt:check       # mise fmt --check (CI gate)
-mise run core:mise:upgrade         # mise upgrade (the mise CLI itself)
-mise run core:uv:lock:refresh      # uv lock --refresh (re-resolve)
-mise run core:uv:lock:upgrade      # uv lock --upgrade (upgrade all packages)
-mise run core:uv:tree:json         # uv tree --format=json (programmatic)
-mise run core:uv:format            # uv format (Python formatter, uv 0.12+)
-mise run openspec:upgrade          # print the bun add -g @fission-ai/openspec@1.10.0 command
-
-# New in 2026-08-23 dev-tooling-refactor v3 (version pinning + spec hygiene):
-mise run core:tool-versions:report          # print a table of all installed tools + resolved versions
-mise run core:tool-versions:check-stale    # exit 1 if any pinned tool is > 1 major behind latest
-mise run lint:spec:purpose                 # fail CI if any openspec has a TBD Purpose section
-
-# Subproject tasks (after mise 2026.8.10+ is installed, the root aliases route to subprojects):
-cd bonneagar && mise run devops:health   # IaC subproject
-cd agents && mise run ml:agents:smoke    # agent-fleet subproject
+mise run ml:registry:audit         # verify all 24 VISION_MODELS are live on HF Hub
 mise run web:dev tuatha-ui        # per-app dev server via Turbo filter
 ```
 
@@ -247,7 +89,7 @@ mise run lint:drift-docs           # validate every AGENTS.md number claim again
 mise run openspec:validate         # run `openspec validate --strict` against the pending change under review
 ```
 
-### Priority compose stacks (4 of 94)
+### Priority compose stacks (4 of 93)
 
 | Stack | Port | Domain |
 |:--|--:|:--|
@@ -256,9 +98,18 @@ mise run openspec:validate         # run `openspec validate --strict` against th
 | `langfuse` | 3000 | `langfuse.cianfhoghlaim.ie` (LLM observability) |
 | `lakehouse` | 3900-3904, 5433, 8181-8182 | internal (Garage S3 + Postgres + Lakekeeper) |
 
-The full inventory of 100 stacks is at
+The full inventory of 107 stacks is at
 [`bonneagar/AGENTS.md`](bonneagar/AGENTS.md) (the IaC subdirectory
 owns the stack catalogue; see the `## Repo Boundary` section below).
+
+### `~/dev/` working-copy inventory (local-only — gitignored)
+
+Before reaching for `ls ~/dev`, read
+[`stedding/AGENTS_STEDDING.MD`](stedding/AGENTS_STEDDING.MD). That file
+labels every subdirectory under `~/dev/` (active monorepos, hackathon
+trees, sister repos, stedding junkyard, backup snapshots) so an agent
+can pick the right working tree without re-asking. **Local-only — do
+not commit; `stedding/` is gitignored.**
 
 ## Monorepo topology
 
@@ -295,39 +146,6 @@ names appear in the Langfuse trace.
 The `FirecrawlMCPClient` wrapper at
 `agents/meaisinfhoghlaim/firecrawl_mcp/client.py` exposes the MCP
 tools with Pydantic validation + Langfuse `@observe`.
-
-### MCP Tool Routing (the 12 enabled surfaces)
-
-Every MCP listed in `opencode.json` with `enabled: true` exposes tools
-that appear in the agent's system prompt. OpenCode auto-prefixes
-`mcp__<server>__` so the model only sees the short name. Call the MCP
-tool directly when you need the live result — `mise run <task>` is
-for build pipelines and shell scripts.
-
-| Intent | MCP tool | Server | When to use |
-|:--|:--|:--|:--|
-| Find code in this repo | `cocoindex-code_search` | cocoindex-code | Always before `grep`/`find` |
-| Find docs about our architecture | `cognee_search` | cognee | "What's the 12-agent dispatch matrix?" |
-| Find a page on a known URL | `firecrawl_scrape` | firecrawl | Replaces `webfetch` for fresh content |
-| Search the live web | `firecrawl_search` | firecrawl | `categories:["developer"]` for code Q's |
-| Cite a paper (43M-paper index) | `firecrawl_research_search_papers` | firecrawl | biomedical + arXiv |
-| Read passages from a paper | `firecrawl_research_read_paper` | firecrawl | Once you have an arXiv/PMID/DOI |
-| Verify a deployed site renders | `chrome_navigate_page` + `chrome_take_snapshot` | chrome | "Is the hero image loading?" |
-| Screenshot a page | `chrome_take_screenshot` | chrome | full-page or element-scoped |
-| Profile Core Web Vitals | `chrome_performance_start_trace` | chrome | LCP/INP/CLS audit |
-| Query MotherDuck (SQL) | `motherduck_execute_query` | motherduck | one-shot SQL over the lakehouse |
-| List models on HuggingFace | `huggingface_hub_repo_search` | huggingface | "What's the best OCR-VLM for Irish?" |
-| Run a HuggingFace Space | `huggingface_dynamic_space` | huggingface | Invoke an HF Space tool |
-| Mutate a runtime secret | (via infisical — see skill) | infisical | "Rotate the firecrawl key" |
-| Recall a Langfuse trace | (via langfuse — see skill) | langfuse | Debug a past agent run |
-| Watch a page for upstream changes | `firecrawl_monitor_create` | firecrawl | openspec-change-detection surface |
-| Operate a logged-in page | `firecrawl_interact` | firecrawl | profile-aware Playwright-style |
-| Bulk-extract many URLs | `crawl4ai_*` (md/html/screenshot/pdf) | crawl4ai | Self-hosted alternative to Firecrawl |
-| Add DLT workspace docs | (via dlt-workspace-mcp) | dlt-workspace-mcp | "How does the personal-archive pipeline work?" |
-
-The `lint:mcp-runtime` CI gate at `mise run lint:mcp-runtime`
-fails if any enabled MCP has no `mcp:smoke:<name>` task; run
-`mise run mcp:smoke` to round-trip all 12.
 
 ### Developer onboarding (one command)
 
@@ -545,31 +363,6 @@ openspec change (see its
 | [`unsloth`](.agents/skills/unsloth/SKILL.md) | LLM fine-tuning | Multilingual support (v2024.12+), flash attention, 2x faster |
 | [`tanstack-start`](.agents/skills/tanstack-start/SKILL.md) | React framework | React Server Components (v1.94+), edge runtime, streaming suspense |
 
-## OpenCode Agent Dispatch Matrix (NEW 2026-08-23)
-
-Per the `2026-08-23-agent-opencode-agent-coverage-expansion-v1` change,
-the 15 agents under `.opencode/agents/*.md` are organized into 3 tiers:
-
-| Tier | Agent | When to dispatch |
-|:-----|:------|:-----------------|
-| **Primary (4)** | `build` | Default BUILD agent. Full skill_filter (no restriction). |
-| **Primary (4)** | `plan` | Read-only planning. Default dispatch for "plan this" tasks. |
-| **Functional subagent (5)** | `data-platform` | DLT + Dagster + BAML + CocoIndex + MotherDuck + marimo tasks. Dispatch via `task` tool with `subagent_type: data-platform`. |
-| **Functional subagent (5)** | `infrastructure` | Komodo + Pangolin + Locket + Infisical + 94-stack IaC. Dispatch via `task` tool with `subagent_type: infrastructure`. |
-| **Functional subagent (5)** | `agent-platform` | BAML + LiteLLM + Langfuse + MLflow + RAGAS + Graphiti + Cognee + 12-agent fleet. Dispatch via `task` tool with `subagent_type: agent-platform`. |
-| **Functional subagent (5)** | `frontend-apps` | TanStack Start + Convex + Hono + CopilotKit + AG-UI + marimo + Babylon.js. Dispatch via `task` tool with `subagent_type: frontend-apps`. |
-| **Functional subagent (5)** | `research` | BrowserBase + Firecrawl + CCC + Cognee + change-detection. Dispatch via `task` tool with `subagent_type: research`. |
-| **Domain subagent (10)** | `baml`, `dagster`, `mise`, `notebooks`, `orchestrator`, `proposal-author`, `deep-cuts`, `dev-env-demo` | Scoped to a single domain (BAML schema authoring, Dagster asset authoring, mise task authoring, marimo notebook authoring, openspec change authoring, deep structural analysis, dev-env demos). |
-
-**Dispatch rules:**
-
-- **Always use `build` (the default)** for general tasks — it has the full skill_filter.
-- **Prefer a functional subagent** when the task is clearly within one of the 5 functional surfaces (data, infra, agents, web, research). The subagent gets a scoped skill_filter that improves focus + reduces token usage.
-- **Prefer a domain subagent** when the task is specifically about authoring (e.g., "write a new Dagster asset" → `dagster` subagent).
-- **Never dispatch `research` for tasks that require making changes** — the `research` subagent is read-only.
-
-The full agent list + their `skill_filter` arrays live in the YAML frontmatter of `.opencode/agents/*.md` (NOT in `opencode.json`). The `mcp:` allowlist block in each agent's frontmatter enables the MCP servers the agent can call. All 12 enabled MCPs (`dlt-workspace-mcp`, `firecrawl`, `crawl4ai`, `infisical`, `motherduck`, `chrome`, `cocoindex-code`, `cognee`, `graphiti`, `langfuse`, `huggingface`, `design-system`) are visible to every agent by default. The 15 agent `.md` files under `.opencode/agents/` are the per-agent prompts (split out from the inline `prompt` field per the dev-tooling refactor).
-
 ## Domain-to-Skill Mapping
 
 To ensure you use the appropriate skills for the different aspects of the project, strictly adhere to this mapping:
@@ -577,7 +370,7 @@ To ensure you use the appropriate skills for the different aspects of the projec
 ### Codebase Exploration & General Development
 - **Code Search**: Use [`ccc`](.agents/skills/ccc/SKILL.md) (CocoIndex Code) for semantic search over the codebase. Prefer `ccc search` over raw `grep`/`find` to get context-aware, relevant files instantly.
 - **Python Quality**: Use [`dignified-python`](.agents/skills/dignified-python/SKILL.md) for LBYL exception handling patterns, ABC interfaces, and explicit module boundaries.
-- **Centralized Registries**: Load [`centralized-registry`](.agents/skills/centralized-registry/SKILL.md) when adding/changing/toggling any model, schema, pipeline, or stack. The canonical surfaces are `MODEL_REGISTRY` (76 entries / 7 families), `notebooks/_shared/schema.py` (5 introspection helpers), `deployment-choice.yaml` (the enablement file), and the `00_control_panel.py` marimo notebook (the 5-tab UI).
+- **Centralized Registries**: Load [`centralized-registry`](.agents/skills/centralized-registry/SKILL.md) when adding/changing/toggling any model, schema, pipeline, or stack. The canonical surfaces are `MODEL_REGISTRY` (52 entries / 7 families), `notebooks/_shared/schema.py` (5 introspection helpers), `deployment-choice.yaml` (the enablement file), and the `00_control_panel.py` marimo notebook (the 5-tab UI).
 
 ### Core Data Platform (`dlt/` + `orchestration/`)
 - **Orchestration**: Load [`dagster`](.agents/skills/dagster/SKILL.md) (specifically the expert routing rules inside it). This ensures you know how to build `MultiPartitionsDefinition` and avoid absolute namespace errors.
@@ -588,7 +381,7 @@ To ensure you use the appropriate skills for the different aspects of the projec
 - **Workflow authoring / debugging**: n8n visual pipeline editor at `n8n.cianfhoghlaim.ie` (private). The 6 seeded workflows live in `bonneagar/stacks/n8n/workflows/team-*.json` and are imported by the `n8n-init` one-shot container.
 - **Task management + Gantt + team sharing**: Vikunja REST API at `vikunja.cianfhoghlaim.ie/api/v1/`. Kanban + Gantt + list views; team group shared across `client-work`, `internal`, `support` projects.
 - **Scheduling**: cal-diy (cal.com community build) at `calcom.cianfhoghlaim.ie`. Team booking page at `/team`, per-member pages at `/<member-slug>`. Outbound webhooks → n8n.
-- **LLM backbone**: All workflow LLM steps use the OpenCode Go API (`$OPENAI_BASE_URL/chat/completions`) as a unified OpenAI-compatible endpoint. Per the 2026-08-31 v5 model priority change, the canonical chain is now `minimax-m3` (primary, BIEP chokepoint) → `gemma-4-26b-a4b` (Tier 2 fallback via Unsloth Studio) → `gemini-3.5-flash` (Tier 1 Google fallback via Vertex AI / AI Studio). The `kimi-k2.6`, `glm-5.1`, `minimax-m2.5`, `mimo-v2.5`, `deepseek-v4-flash` models are now dev-profile only (per `MODEL_PROFILE=dev`).
+- **LLM backbone**: All workflow LLM steps use the OpenCode Go API (`$OPENAI_BASE_URL/chat/completions`) as a unified OpenAI-compatible endpoint. Models: `kimi-k2.6`, `glm-5.1`, `minimax-m2.5`, `mimo-v2.5`, `deepseek-v4-flash`.
 
 ### Analytics & Notebooks (`notebooks/`)
 - **Data Exploration**: Load [`explore-data`](.claude/skills/explore-data/SKILL.md) to query endpoints or databases and generate an `analysis_plan.md` artifact.
@@ -642,9 +435,83 @@ Use [`ragas`](.agents/skills/ragas/SKILL.md) with [`langfuse`](.agents/skills/la
 ### UI/UX
 
 1. **Use CopilotKit components** for consistent AI interfaces
-2. **Implement streaming suspense** with TanStack Start (v1.94+)
+ 2. **Implement streaming suspense** with TanStack Start (v1.94+)
 3. **Leverage React Server Components** for better performance
 4. **Support multi-agent interfaces** for complex workflows
+
+## Remote access (Pangolin.app + Pangolin CLI)
+
+Pangolin.app is the macOS WireGuard GUI VPN client (already installed + connected on
+this MacBook). It tunnels `*.cianfhoghlaim.ie` private resources from any device on the
+local network — use it whenever you need to reach the marimo server, the cianfhoghlaim-cognee
+UI, the Langfuse dashboard, the lakehouse viewer, the litellm proxy, the unsloth Studio, or
+any other private resource from inside the bunchloch Docker network.
+
+For machine-client access (background services, CI, headless containers), use the
+Pangolin CLI instead:
+
+```bash
+curl -fsSL https://static.pangolin.net/get-cli.sh | bash   # installs to /usr/local/bin (requires sudo)
+pangolin login                                              # browser-based user auth
+pangolin up --attach                                        # foreground tunnel
+pangolin service install client --id <id> --secret <secret> --endpoint https://pangolin.cianfhoghlaim.ie
+```
+
+For coding-agent wire-up (OpenCode, Claude Code, Codex, Gemini CLI):
+
+```bash
+pangolin configure opencode --resource ai.cianfhoghlaim.ie
+```
+
+See `.agents/skills/pangolin-cli/SKILL.md` for full details + the Docker sidecar + Kubernetes
+patterns.
+
+## VLM testing surface
+
+The bunchloch MacBook now hosts a self-hosted VLM stack reachable through the Pangolin
+AI Gateway at `https://ai.cianfhoghlaim.ie`. Three ways to reach the fleet:
+
+1. **Preferred**: `https://ai.cianfhoghlaim.ie/v1/chat/completions` (identity-aware via
+   the Pangolin.app tunnel; placeholder key `none` for the private resource)
+2. **Fallback**: `http://localhost:4000/v1` (LiteLLM proxy on the bunchloch docker network)
+3. **Direct**: `http://192.168.148.5:8889/v1` (the unsloth-serve container on the
+   bunchloch `cianfhoghlaim` docker network — bypasses the gateway)
+
+The 12 unsloth-served models + the 20 ocr_vision models in MODEL_REGISTRY all share
+this surface. See `notebooks/_shared/evaluation/vlm_registry_benchmark.py` for the
+benchmark notebook that exercises the canonical 89 models against 3 standard prompts (NCCA
+syllabus PDF page + LC marking-scheme snippet + Ordnance Survey map extract).
+
+For the future (deferred to `2026-09-26-bunchloch-vlm-stacks-v1/`):
+- `invokeai-local` (Stable Diffusion XL + Flux image gen on `:9090`)
+- `comfyui-local` (ComfyUI workflows + OpenAI bridge on `:8188` + `:9000`)
+
+## arm1-oci SSH quick reference
+
+The Pangolin control plane + Newt connector run on the OCI arm (`140.238.96.148`). SSH
+config is at `~/.ssh/config` (host alias: `oci.arm1`):
+
+```bash
+# Verify reachability (use this as the health gate)
+ssh -o ConnectTimeout=5 -o BatchMode=yes oci.arm1 'true'
+
+# Inspect the running Pangolin stack
+ssh oci.arm1 'docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Image}}"'
+# Pangolin: fosrl/pangolin:ee-1.21.1 (running, healthy)
+# Newt:     fosrl/newt:1.16.0
+# Traefik:  reverse proxy for *.cianfhoghlaim.ie
+
+# Check Pangolin + Newt version compatibility
+ssh oci.arm1 'docker exec pangolin -- pangolin --version'   # 1.21.x (Enterprise)
+docker exec newt-bunchloch -- newt --version                # 1.16.x
+
+# Open browser SSH to a bunchloch machine from the Pangolin UI
+# https://pangolin.cianfhoghlaim.ie → Sites → bunchloch → Machines → SSH
+# Requires pangolin ≥ 1.19 (✓) + newt ≥ 1.13 (✓)
+
+# Push secrets to the Infisical vault on arm1-oci
+ssh oci.arm1 'infisical secrets set <KEY> "<value>" --project-id d900f50a-acbf-446b-b4f6-e439710253e4 --env dev-baile --path /<service>'
+```
 
 ## Landing the Plane (Session Completion)
 
@@ -693,68 +560,3 @@ This automatically routes extraction to the highly curated `stedding/ingest_queu
 Upon finishing a complex task, pipeline update, or major deployment, you **MUST** execute the synchronization script:
 `./scripts/sync_agent_docs.sh`
 This updates the local telemetry blocks across `README.md` and ensures no rogue imports were introduced.
-
-### 5. Concurrent-Write Safety Protocol (NEW 2026-08-22)
-
-**Problem:** Multiple agents (orchestrator, 5 subagents, IDE sessions, hooks) operate against the same git working tree concurrently. Without a guard, an agent's carefully-staged diff can be wiped out by another agent's `git reset` / `git checkout --` / `git restore` / `git stash` operation. This was the root cause of the 2026-08-22 incident where 8 PR #5 file modifications were lost mid-session.
-
-**Mandatory 4-step file edit protocol** (every file edit, every agent, every session):
-
-```bash
-# STEP 1 — BEFORE editing: verify the file is in the expected state
-git status -- <path/to/file>
-git diff -- <path/to/file>   # should be empty for tracked files
-sha256sum <path/to/file>    # record the hash for cross-check
-
-# STEP 2 — Make the edit (use Edit tool, Write tool, or shell sed/awk)
-# ... your edit here ...
-
-# STEP 3 — AFTER editing: verify the diff is what you expected
-git diff -- <path/to/file>
-sha256sum <path/to/file>    # should differ from STEP 1
-
-# STEP 4 — Stage ONLY the intended files (NOT `git add -A` which scoops up unrelated changes)
-git add <path/to/file>
-git status -- <path/to/file>   # verify staged state
-
-# COMMIT — always commit immediately after staging, in the SAME shell context
-git commit -m "..."
-git push origin <branch>
-```
-
-**If STEP 3 reveals unexpected changes** (different line counts, missing hunks, extra files):
-- **ABORT** the commit immediately
-- Run `git status` to inspect the full working tree
-- Look for concurrent-agent artifacts: `.tmp_*` directories, branch-switch commits, stash entries, reflog
-- Run `git reflog --date=iso | head -20` to see recent operations
-- Re-apply the lost edits if possible; otherwise escalate to the orchestrator
-
-**Forbidden patterns** (always cause concurrent-write disasters):
-- ❌ `git add -A` / `git add .` — scoops up unrelated changes from concurrent agents
-- ❌ `git stash --include-untracked` followed by `git stash pop` — race conditions with other stashes
-- ❌ `git reset --hard` without first running `git stash`
-- ❌ `git checkout -- <path>` without first verifying the file is clean
-- ❌ `git restore --staged <path>` without re-running the safety protocol
-- ❌ Multi-agent commits on the same branch without explicit coordination
-- ❌ `git commit --amend` if any concurrent agent may have pushed between commit and push
-
-**Safe patterns** (use these instead):
-- ✅ `git add <specific/path>` — explicit file list
-- ✅ `git status -- <path>` before AND after each edit
-- ✅ One commit per task (not mega-commits with many unrelated changes)
-- ✅ Use `git worktree add <path> <branch>` to isolate multi-agent work
-- ✅ Commit IMMEDIATELY after staging (don't batch)
-
-**The "CLAIM A FILE" pattern** (when multiple agents touch the same area):
-```bash
-# Agent A claims the dagster files
-echo "$(date -Iseconds) agent A claims dagster/*" > /tmp/agent-claims.log
-
-# Agent B waits or picks a different area
-# Agent A finishes, commits, then releases the claim
-echo "$(date -Iseconds) agent A releases dagster/*" >> /tmp/agent-claims.log
-```
-
-**Full openspec contract:** see `openspec/specs/repo-hygiene-agent-routing/spec.md` (3 ADDED Requirements added by `2026-08-22-concurrent-agent-write-safety-v1`).
-
-**Reference incident:** the 2026-08-22 PR #5 file-loss event — see `openspec/changes/archive/2026-08-22-2026-08-22-lakehouse-observability-stacks-modernization-v1/proposal.md` § Notes section for the post-mortem.

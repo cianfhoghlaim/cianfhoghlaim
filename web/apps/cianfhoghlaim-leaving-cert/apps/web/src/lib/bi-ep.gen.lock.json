@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-18T17:54:34.232Z",
+  "file_hash": "9656473d689e610815260cdec23687c0472e2f9baa78234b98445b6dac969bf2",
+  "table_count": 24,
+  "tables": [
+    {
+      "name": "mathematics_syllabus",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 14
+    },
+    {
+      "name": "mathematics_papers",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 13
+    },
+    {
+      "name": "mathematics_marking_schemes",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 11
+    },
+    {
+      "name": "mathematics_topics",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 11
+    },
+    {
+      "name": "chemistry_syllabus",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 14
+    },
+    {
+      "name": "chemistry_papers",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 13
+    },
+    {
+      "name": "chemistry_marking_schemes",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 11
+    },
+    {
+      "name": "chemistry_topics",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 11
+    },
+    {
+      "name": "geography_syllabus",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 14
+    },
+    {
+      "name": "geography_papers",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 13
+    },
+    {
+      "name": "geography_marking_schemes",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 11
+    },
+    {
+      "name": "geography_topics",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 11
+    },
+    {
+      "name": "english_syllabus",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 14
+    },
+    {
+      "name": "english_papers",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 13
+    },
+    {
+      "name": "english_marking_schemes",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 11
+    },
+    {
+      "name": "english_topics",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 11
+    },
+    {
+      "name": "gaeilge_syllabus",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 14
+    },
+    {
+      "name": "gaeilge_papers",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 13
+    },
+    {
+      "name": "gaeilge_marking_schemes",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 11
+    },
+    {
+      "name": "gaeilge_topics",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 11
+    },
+    {
+      "name": "cs_syllabus",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 14
+    },
+    {
+      "name": "cs_papers",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 13
+    },
+    {
+      "name": "cs_marking_schemes",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 11
+    },
+    {
+      "name": "cs_topics",
+      "database": "oideachais",
+      "schema": "leaving_cert",
+      "column_count": 11
+    }
+  ],
+  "unknown_columns": []
+}
