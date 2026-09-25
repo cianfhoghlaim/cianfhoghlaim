@@ -76,6 +76,27 @@ for f in fns:
 | S4-S8 | `2026-09-01-cianfhoghlaim-nua-5-jurisdiction-completion-v1/` | EN + WL + NI + IM + SC BAML |
 | S9 | `2026-09-01-cianfhoghlaim-nua-v7-vernaculars-v1/` | 7 vernacular language BAMLs |
 
+## 2026-10 Convergence Saga quick path
+
+```bash
+# Plan 1: see the saga plan
+cat openspec/plans/2026-10-01-convergence-saga-v1.md
+
+# Plan 2: ADK + asset-gen — list the image models
+uv run python scripts/asset_bench.py --list-models
+
+# Plan 2: generate a single asset (cycles through 5 roles)
+uv run python scripts/asset_bench.py "An Irish round tower at sunset"
+
+# Plan 2: generate with a specific role
+uv run python scripts/asset_bench.py "An Irish round tower at sunset" --role qwen
+
+# Plan 2: run a full Pillar 3 pipeline (decompose → research → synthesise → render)
+uv run python scripts/asset_bench.py --pipeline aistear_deep_research --query "How do the 4 themes support wellbeing?"
+
+# Plan 3-8: see openspec/plans/2026-10-01-convergence-saga-v1.md
+```
+
 ## Top 10 priority mise tasks
 
 | Task | Purpose |

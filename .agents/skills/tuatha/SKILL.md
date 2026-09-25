@@ -19,10 +19,12 @@ description: |
   tests.
 
   The skill supersedes the deprecated tuatha-mmo +
-  tuatha-platform + celtic-asset-generation skills. The
-  legacy theming (Pent-Elemental Cosmology + Babylon.js 3D +
-  SpacetimeDB v2 + Crypteolas + Anam Cara + Brown Ajah) is
-  HARD-ARCHIVED per the 2026-08-25 consolidation change. The
+  tuatha-platform skills. The legacy theming (Pent-Elemental Cosmology +
+  Babylon.js 3D + SpacetimeDB v2 + Crypteolas + Anam Cara + Brown Ajah)
+  is HARD-ARCHIVED per the 2026-08-25 consolidation change. The
+  asset-generation surface lives in the new
+  [`tuatha-asset-generation`](../tuatha-asset-generation/SKILL.md) skill
+  (per the 2026-10-02-adk-asset-generation-pillar3-v1 saga change). The
   new tuatha uses the British Isles Formative Assessment MMO
   theme per openspec/specs/cianfhoghlaim-educational-mmo.
 when_to_use: "tuatha British Isles Formative Assessment MMO consolidation BAML extraction DLT source Dagster asset group CocoIndex App marimo notebook"
