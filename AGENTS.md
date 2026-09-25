@@ -23,6 +23,7 @@ compose stacks, and the 4 priority openspec specs at a glance.
 | [`pangolin-ai-gateway`](.agents/skills/pangolin-ai-gateway/SKILL.md) | The 2026-Q3 identity-aware AI Gateway contract — public+private overlapping resources, Custom providers, budgets, session logs |
 | [`marimo-embed`](.agents/skills/marimo-embed/SKILL.md) | Embed marimo notebooks in TanStack Start pages via the marimo-server-on-Pangolin pattern (sandboxed iframe) |
 | [`tuatha-asset-generation`](.agents/skills/tuatha-asset-generation/SKILL.md) | The asset-generation pipeline (Plan 1 of the 2026-10 convergence saga) — 5 image_gen models + ADK 2 Pillar 3 render_assets_node + BAML contracts + FIBO diagrams + Babylon.js textures |
+| [`retro-gameplay`](.agents/skills/retro-gameplay/SKILL.md) | The retro-gameplay design pattern catalog (Plan 3 of the 2026-10 convergence saga) — libretro + SAM3 + BAML ExtractGameplayPattern + CocoIndex LanceDB + the retro_pattern_agent |
 
 ### ccc code search (always use before grep)
 
@@ -452,7 +453,7 @@ plan:
 |:--|:--|:--|
 | **Plan 1 (Saga meta-plan)** | The 8-plan plan itself | **Done** (`openspec/plans/2026-10-01-convergence-saga-v1.md`) |
 | **Plan 2 (ADK + asset-gen)** | Pillar 3 → image-gen wiring | **Done** (`openspec/changes/2026-10-02-adk-asset-generation-pillar3-v1/`) |
-| Plan 3 (CocoIndex + retro) | SAM3 sprite seg + retro_design_embedding | Pending |
+| **Plan 3 (CocoIndex + retro)** | SAM3 sprite seg + retro_design_embedding | **Done** (`openspec/changes/2026-10-03-cocoindex-retro-gameplay-v1/`) |
 | Plan 4 (FIBO) | FIBO 2D diagram generation from NCCA PDFs | Pending |
 | Plan 5 (Lakehouse ↔ ML ↔ web) | LanceDB → DuckLake bridge + OTel spans | Pending |
 | Plan 6 (Cognee + visual-assets) | Pillar 3 → Cognee episode + entity-asset graph | Pending |

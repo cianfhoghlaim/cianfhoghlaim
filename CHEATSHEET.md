@@ -94,7 +94,21 @@ uv run python scripts/asset_bench.py "An Irish round tower at sunset" --role qwe
 # Plan 2: run a full Pillar 3 pipeline (decompose → research → synthesise → render)
 uv run python scripts/asset_bench.py --pipeline aistear_deep_research --query "How do the 4 themes support wellbeing?"
 
-# Plan 3-8: see openspec/plans/2026-10-01-convergence-saga-v1.md
+# Plan 3: CocoIndex + retro gameplay — list the retro library
+uv run python scripts/retro_capture.py --list-roms
+
+# Plan 3: capture + segment + extract + ingest for Hades
+uv run python scripts/retro_capture.py hades
+
+# Plan 3: browse the pattern catalog in marimo
+uv run marimo edit notebooks/dashboards/retro_patterns.py
+
+# Plan 5 prep: litellm routes for the 5 image_gen aliases are wired in
+# bonneagar/stacks/litellm/config/config.yaml (the `local/image/{fibo,flux2-dev,
+# qwen-image,sdxl,z-image-turbo}` entries). When the unsloth-serve llama-server
+# has the relevant GGUF loaded, the asset_bench works for real.
+
+# Plan 4-8: see openspec/plans/2026-10-01-convergence-saga-v1.md
 ```
 
 ## Top 10 priority mise tasks

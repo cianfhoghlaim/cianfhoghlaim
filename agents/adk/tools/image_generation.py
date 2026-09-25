@@ -560,11 +560,25 @@ async def _generate_image(
     full_prompt = prompt if not style else f"{prompt}, {style} style"
 
     try:
+        # litellm provider routing: our canonical litellm_aliases start with
+        # `local/image/...` (per MODEL_REGISTRY) but litellm interprets `local`
+        # as the provider name, which isn't registered. We need to strip the
+        # `local/<namespace>/` prefix and call openai/<model> directly,
+        # which routes to the litellm config's openai/* entries pointing at
+        # the unsloth-serve llama-server endpoint.
+        api_model = litellm_alias
+        api_base = "http://192.168.148.5:8889/v1"
+        api_key = os.environ.get("UNSLOTH_API_KEY", "sk-unsloth-dev-noop-key")
+        if api_model.startswith("local/"):
+            parts = api_model.split("/", 2)
+            if len(parts) == 3:
+                api_model = f"openai/{parts[2]}"
+
         # Image-gen models: litellm supports OpenAI-compatible image-gen
         # via the chat completions endpoint with image content type.
         # The unsloth-serve llama-server endpoint accepts this.
         response = await litellm.acompletion(
-            model=litellm_alias,
+            model=api_model,
             messages=[
                 {
                     "role": "user",
@@ -575,6 +589,8 @@ async def _generate_image(
             ],
             modalities=["image", "text"],
             timeout=120,
+            api_base=api_base,
+            api_key=api_key,
         )
 
         # Extract the image from the response. Different upstreams

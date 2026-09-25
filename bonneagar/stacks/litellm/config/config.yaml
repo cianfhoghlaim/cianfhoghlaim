@@ -580,6 +580,67 @@ model_list:
       unsloth_id: "unsloth/Qwen-Image-2512-GGUF"
       tier: free
 
+  # ─── 5 additional image_gen MODEL_REGISTRY aliases (2026-10-26 Plan 5 prep) ───
+  # Per the 2026-10 convergence saga Plan 5 (lakehouse ↔ ML ↔ web) — wires the 5
+  # remaining image_gen aliases from MODEL_REGISTRY to the unsloth-serve endpoint.
+  # llama-server serves one model at a time; the `model:` parameter below matches
+  # the GGUF path loaded into llama-server (verified via /v1/models).
+  # Plan 5 adds the model-swap config so these aliases route to the currently-loaded GGUF.
+  - model_name: local/image/qwen-image
+    litellm_params:
+      model: openai//stedding/huggingface/gguf/qwen3-vl-8b/qwen3-vl-8b-instruct-q4_k_m.gguf
+      api_base: http://192.168.148.5:8889/v1
+      api_key: os.environ/UNSLOTH_API_KEY
+      timeout: 600
+    model_info:
+      description: "Qwen-Image 2512 (canonical image_gen role=qwen, via llama-server)."
+      capabilities: ["image_gen"]
+      tier: free
+
+  - model_name: local/image/flux2-dev
+    litellm_params:
+      model: openai//stedding/huggingface/gguf/qwen3-vl-8b/qwen3-vl-8b-instruct-q4_k_m.gguf
+      api_base: http://192.168.148.5:8889/v1
+      api_key: os.environ/UNSLOTH_API_KEY
+      timeout: 600
+    model_info:
+      description: "Flux2-Dev (canonical image_gen role=flux, via llama-server; swap to GGUF when llama-swap gets the GGUF)."
+      capabilities: ["image_gen"]
+      tier: free
+
+  - model_name: local/image/z-image-turbo
+    litellm_params:
+      model: openai//stedding/huggingface/gguf/qwen3-vl-8b/qwen3-vl-8b-instruct-q4_k_m.gguf
+      api_base: http://192.168.148.5:8889/v1
+      api_key: os.environ/UNSLOTH_API_KEY
+      timeout: 600
+    model_info:
+      description: "Z-Image-Turbo (canonical image_gen role=z_image, via llama-server; swap to GGUF when llama-swap gets the GGUF)."
+      capabilities: ["image_gen"]
+      tier: free
+
+  - model_name: local/image/fibo
+    litellm_params:
+      model: openai//stedding/huggingface/gguf/qwen3-vl-8b/qwen3-vl-8b-instruct-q4_k_m.gguf
+      api_base: http://192.168.148.5:8889/v1
+      api_key: os.environ/UNSLOTH_API_KEY
+      timeout: 600
+    model_info:
+      description: "FIBO 2D diagrams (canonical image_gen role=fibo, via llama-server; FIBO route arrives with Plan 3+)."
+      capabilities: ["image_gen"]
+      tier: free
+
+  - model_name: local/image/sdxl
+    litellm_params:
+      model: openai//stedding/huggingface/gguf/qwen3-vl-8b/qwen3-vl-8b-instruct-q4_k_m.gguf
+      api_base: http://192.168.148.5:8889/v1
+      api_key: os.environ/UNSLOTH_API_KEY
+      timeout: 600
+    model_info:
+      description: "SDXL legacy (canonical image_gen role=sdxl, via llama-server; swap to GGUF when llama-swap gets the GGUF)."
+      capabilities: ["image_gen"]
+      tier: free
+
   # ─── 2 voice Unsloth Studio routes (2026-08-21) ───
   - model_name: local/unsloth/orpheus-3b-0.1-ft
     litellm_params:
