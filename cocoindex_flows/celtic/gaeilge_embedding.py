@@ -13,6 +13,13 @@ R1–R4 v1 conformance contract per `_lifespan.py`:
 - R3 — `app = coco.App(coco.AppConfig(name=...))` at module scope
 - R4 — `@coco.fn` decorator + `lancedb.mount_table_target(LANCE_DB, ...)`
 
+Phase 1.6 (2026-09-25 5-phase Celtic overhaul): the caighdean
+post-processor is applied to each chunk BEFORE embedding. This
+normalises pre-1936 / dialectal Irish spellings to modern standard
+Irish so the BGE-M3 embeddings are consistent across all chunks.
+The original (pre-standardisation) text is preserved as `raw_text`
+for the operator-facing marimo notebook to show the diff.
+
 Embedder: `BAAI/bge-m3` (multilingual 1024-dim, supports Irish).
 LanceDB table: `cianfhoghlaim.lc.gaeilge.<level>_ga`.
 
@@ -71,7 +78,13 @@ if COCOINDEX_AVAILABLE:
 
     @dataclass
     class GaelChunk:
-        """One chunked + embedded paragraph from a Gaeilge PDF (Irish-only)."""
+        """One chunked + embedded paragraph from a Gaeilge PDF (Irish-only).
+
+        Phase 1.6 (2026-09-25): `text` is the caighdean-standardised
+        (modern Caighdeán Oifigiúil) form. `raw_text` preserves the
+        original pre-1936 / dialectal form for the operator-facing
+        marimo notebook to show the diff.
+        """
 
         chunk_id: str
         subject: str
@@ -79,7 +92,9 @@ if COCOINDEX_AVAILABLE:
         language: str
         filename: str
         chunk_index: int
-        text: str
+        text: str @cocoindex.fields["Caighdean-standardised text (Phase 1.6)"]
+        raw_text: str = "" @description("Original pre-standardisation text (Phase 1.6)")
+        caighdean_changes: int = 0 @description("Number of word-level changes applied by Caighdean (Phase 1.6)")
         embedding: Annotated[NDArray, EMBEDDER]
 
     def _chunk_text(text: str, chunk_size: int = 512, overlap: int = 64) -> list[str]:
@@ -104,9 +119,17 @@ if COCOINDEX_AVAILABLE:
     ) -> None:
         embedder = await coco.use_context(EMBEDDER)  # type: ignore[arg-type]
         filename = file_path.name
+
+        # Phase 1.6: caighdean post-processor.
+        # Standardise each chunk to modern Caighdeán Oifigiúil before
+        # embedding. The original (pre-standardisation) text is preserved
+        # as raw_text for the operator-facing marimo notebook.
+        from .caighdean_postprocessor import standardize_gaeilge_chunk
+
         chunks = _chunk_text(text)
         for i, chunk in enumerate(chunks):
-            vec = await embedder.embed(chunk)  # type: ignore[attr-defined]
+            standardised, raw_chunk, changes = standardize_gaeilge_chunk(chunk)
+            vec = await embedder.embed(standardised)  # type: ignore[attr-defined]
             target_table.declare_row(
                 row=GaelChunk(
                     chunk_id=f"{file_path}#{i}",
@@ -115,7 +138,9 @@ if COCOINDEX_AVAILABLE:
                     language=GAEILGE_LANGUAGE,  # always `ga`
                     filename=filename,
                     chunk_index=i,
-                    text=chunk,
+                    text=standardised,
+                    raw_text=raw_chunk,
+                    caighdean_changes=changes,
                     embedding=vec,
                 )
             )

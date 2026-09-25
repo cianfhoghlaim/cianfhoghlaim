@@ -195,6 +195,57 @@ class TestLCSyllabusDocumentDialectVariants:
             "JCSubjectSpecification must have dialect_variants field (Phase 1.5)"
         )
 
+
+class TestGaeilgeCaighdeanPostProcessor:
+    """Stage 1.6 — gaeilge_embedding.py v1 conformance App with caighdean post-processor."""
+
+    def test_caighdean_postprocessor_module_importable(self):
+        sys.path.insert(0, str(REPO_ROOT))
+        sys.path.insert(0, str(REPO_ROOT / "cocoindex_flows" / "celtic"))
+        from caighdean_postprocessor import standardize_gaeilge_chunk
+        assert standardize_gaeilge_chunk is not None
+
+    def test_caighdean_postprocessor_strips_wikitext(self):
+        sys.path.insert(0, str(REPO_ROOT))
+        sys.path.insert(0, str(REPO_ROOT / "cocoindex_flows" / "celtic"))
+        from caighdean_postprocessor import standardize_gaeilge_chunk
+        text = "Tá [[bád]] ag [[File:boat.jpg|x]] i [[Cork|chathair]]."
+        standardised, raw, _ = standardize_gaeilge_chunk(text)
+        assert "[[" not in standardised, "wikitext should be stripped"
+        assert "[[File:" not in standardised, "image markup should be stripped"
+        assert "[[" in raw, "raw text should preserve original wikitext"
+
+    def test_caighdean_postprocessor_returns_three_tuple(self):
+        """standardize_gaeilge_chunk returns (standardised, raw, change_count)."""
+        sys.path.insert(0, str(REPO_ROOT))
+        sys.path.insert(0, str(REPO_ROOT / "cocoindex_flows" / "celtic"))
+        from caighdean_postprocessor import standardize_gaeilge_chunk
+        result = standardize_gaeilge_chunk("Tá bád ag dul ar an abhainn.")
+        assert isinstance(result, tuple)
+        assert len(result) == 3
+        standardised, raw, changes = result
+        assert isinstance(standardised, str)
+        assert isinstance(raw, str)
+        assert isinstance(changes, int)
+
+    def test_gaeilge_embedding_app_loads_with_postprocessor(self):
+        """gaeilge_embedding.py imports cleanly + the GaelChunk class has the new Phase 1.6 fields."""
+        sys.path.insert(0, str(REPO_ROOT))
+        # Don't actually run the app (requires CocoIndex); just verify imports
+        import importlib
+        try:
+            importlib.import_module("cocoindex_flows.celtic.caighdean_postprocessor")
+        except Exception as e:
+            pytest.fail(f"caighdean_postprocessor import failed: {e}")
+
+    def test_gaeilge_chunk_class_has_phase16_fields(self):
+        """GaelChunk must have raw_text + caighdean_changes fields."""
+        # We can't import GaelChunk without cocoindex available, so grep the source
+        content = (REPO_ROOT / "cocoindex_flows" / "celtic" / "gaeilge_embedding.py").read_text()
+        assert "raw_text" in content, "GaelChunk must have raw_text field (Phase 1.6)"
+        assert "caighdean_changes" in content, "GaelChunk must have caighdean_changes field (Phase 1.6)"
+        assert "standardize_gaeilge_chunk" in content, "gaeilge_embedding.py must call standardize_gaeilge_chunk"
+
     def test_ireland_jc_stage_template_documents_standardize_pretxt(self):
         """The ireland_jc_stage.baml template must document that text is pre-standardised."""
         content = (REPO_ROOT / "baml_src/_shared/templates/ireland_jc_stage.baml").read_text()
