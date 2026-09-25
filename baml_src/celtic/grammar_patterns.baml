@@ -31,6 +31,23 @@ enum IrishCopulaType {
   TA_POSSESSION @alias("Tá teach agam - I have a house")
 }
 
+// Irish initial-mutation types (Phase 1.2 — 2026-09-25 5-phase Celtic overhaul).
+// The 9 initial-mutation categories per traditional Irish grammar (séimhiú +
+// urú + eclipsis). Used by `ExtractCelticGrammar` + `DocumentMutationTriggers`
+// to classify the triggered mutation on the first letter of a Gaelic word
+// after a particle (e.g. "an" + "bád" → "an mhád", "do" + "cat" → "do chat").
+enum IrishMutation {
+  S_FADA            @alias("Séimhiú lenition with fada: b → bh (e.g. bád → bhád)")
+  S_NO_FADA         @alias("Séimhiú lenition without fada: b → bh (rare, e.g. bád → bhád without fada)")
+  URU                @alias("Urú (definite article): b → mb, c → gc, d → nd, g → ng, p → bp, t → dt")
+  ECLIPSIS_L        @alias("Eclipsis with l: l → ngl (e.g. lab → nglab)")
+  ECLIPSIS_N        @alias("Eclipsis with n: n → n- (no change, only orthographic)")
+  ECLIPSIS_T        @alias("Eclipsis with t: t → dt (e.g. teach → dteach)")
+  ECLIPSIS_D        @alias("Eclipsis with d: d → n (e.g. doras → ndoras)")
+  ECLIPSIS_G        @alias("Eclipsis with g: g → ng (e.g. gairdín → ngairdín)")
+  NO_MUTATION       @alias("No mutation triggered (e.g. word starting with vowel)")
+}
+
 // ============================================================================
 // GRAMMAR PATTERN CLASSES
 // ============================================================================
@@ -87,11 +104,11 @@ class PrepositionalPronoun {
 
 // Mutation trigger pattern
 class MutationTriggerPattern {
-  trigger string @description("What triggers the mutation")
-  mutation_type MutationType @description("Type of mutation caused")
-  affected_pos string @description("Part of speech affected")
-  example string @description("Example")
-  exceptions string? @description("Any exceptions")
+  trigger string @description("What triggers the mutation (e.g. 'an', 'do', 'a', 'sa', 'de')")
+  mutation_type IrishMutation @description("Type of mutation triggered (one of the 9 Irish mutations)")
+  affected_pos string @description("Part of speech affected (e.g. 'noun', 'verb', 'adjective')")
+  example string @description("Example: input → output transformation")
+  exceptions string? @description("Any exceptions to this rule")
 }
 
 // ============================================================================
@@ -117,7 +134,7 @@ function ExtractGrammarPatterns(
     - related_patterns: list of cross-references to related patterns
 
     {% if language == 'ga' %}
-    - Capture the 4 Irish mutations (séimhiú + urú + eclipsis + lenition)
+    - Capture the 9 Irish mutations (séimhiú: S_FADA, S_NO_FADA; urú: URÚ; eclipsis: ECLIPSIS_L, ECLIPSIS_N, ECLIPSIS_T, ECLIPSIS_D, ECLIPSIS_G; no-mutation: NO_MUTATION)
     {% elif language == 'cy' %}
     - Capture the Welsh soft + nasal + aspirate mutations
     {% endif %}
@@ -148,7 +165,7 @@ function ExtractIrishCopula(
     - related_patterns: list of cross-references to related patterns
 
     {% if language == 'ga' %}
-    - Capture the 4 Irish mutations (séimhiú + urú + eclipsis + lenition)
+    - Capture the 9 Irish mutations (séimhiú: S_FADA, S_NO_FADA; urú: URÚ; eclipsis: ECLIPSIS_L, ECLIPSIS_N, ECLIPSIS_T, ECLIPSIS_D, ECLIPSIS_G; no-mutation: NO_MUTATION)
     {% elif language == 'cy' %}
     - Capture the Welsh soft + nasal + aspirate mutations
     {% endif %}
@@ -180,7 +197,7 @@ function AnalyzeVSOOrder(
     - related_patterns: list of cross-references to related patterns
 
     {% if language == 'ga' %}
-    - Capture the 4 Irish mutations (séimhiú + urú + eclipsis + lenition)
+    - Capture the 9 Irish mutations (séimhiú: S_FADA, S_NO_FADA; urú: URÚ; eclipsis: ECLIPSIS_L, ECLIPSIS_N, ECLIPSIS_T, ECLIPSIS_D, ECLIPSIS_G; no-mutation: NO_MUTATION)
     {% elif language == 'cy' %}
     - Capture the Welsh soft + nasal + aspirate mutations
     {% endif %}
@@ -211,7 +228,7 @@ function ExtractPossession(
     - related_patterns: list of cross-references to related patterns
 
     {% if language == 'ga' %}
-    - Capture the 4 Irish mutations (séimhiú + urú + eclipsis + lenition)
+    - Capture the 9 Irish mutations (séimhiú: S_FADA, S_NO_FADA; urú: URÚ; eclipsis: ECLIPSIS_L, ECLIPSIS_N, ECLIPSIS_T, ECLIPSIS_D, ECLIPSIS_G; no-mutation: NO_MUTATION)
     {% elif language == 'cy' %}
     - Capture the Welsh soft + nasal + aspirate mutations
     {% endif %}
@@ -243,7 +260,7 @@ function GeneratePrepositionalPronouns(
     - related_patterns: list of cross-references to related patterns
 
     {% if language == 'ga' %}
-    - Capture the 4 Irish mutations (séimhiú + urú + eclipsis + lenition)
+    - Capture the 9 Irish mutations (séimhiú: S_FADA, S_NO_FADA; urú: URÚ; eclipsis: ECLIPSIS_L, ECLIPSIS_N, ECLIPSIS_T, ECLIPSIS_D, ECLIPSIS_G; no-mutation: NO_MUTATION)
     {% elif language == 'cy' %}
     - Capture the Welsh soft + nasal + aspirate mutations
     {% endif %}
@@ -274,7 +291,7 @@ function DocumentMutationTriggers(
     - related_patterns: list of cross-references to related patterns
 
     {% if language == 'ga' %}
-    - Capture the 4 Irish mutations (séimhiú + urú + eclipsis + lenition)
+    - Capture the 9 Irish mutations (séimhiú: S_FADA, S_NO_FADA; urú: URÚ; eclipsis: ECLIPSIS_L, ECLIPSIS_N, ECLIPSIS_T, ECLIPSIS_D, ECLIPSIS_G; no-mutation: NO_MUTATION)
     {% elif language == 'cy' %}
     - Capture the Welsh soft + nasal + aspirate mutations
     {% endif %}
@@ -327,7 +344,7 @@ function ExtractCelticGrammar(
     - related_patterns: list of cross-references to related patterns
 
     {% if language == 'ga' %}
-    - Capture the 4 Irish mutations (séimhiú + urú + eclipsis + lenition)
+    - Capture the 9 Irish mutations (séimhiú: S_FADA, S_NO_FADA; urú: URÚ; eclipsis: ECLIPSIS_L, ECLIPSIS_N, ECLIPSIS_T, ECLIPSIS_D, ECLIPSIS_G; no-mutation: NO_MUTATION)
     {% elif language == 'cy' %}
     - Capture the Welsh soft + nasal + aspirate mutations
     {% endif %}

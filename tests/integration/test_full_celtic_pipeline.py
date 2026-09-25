@@ -75,6 +75,43 @@ class TestCaighdeanStandardize:
         assert TransformResult is not None
 
 
+class TestIrishMutationEnum:
+    """Stage 1.2 — IrishMutation 9-value enum."""
+
+    def test_irish_mutation_enum_has_9_entries(self):
+        """The canonical IrishMutation enum must have all 9 Irish mutations."""
+        result = subprocess.run(
+            ["grep", "-A12", "^enum IrishMutation ", "baml_src/celtic/grammar_patterns.baml"],
+            cwd=str(REPO_ROOT),
+            capture_output=True, text=True,
+        )
+        for entry in ["S_FADA", "S_NO_FADA", "URU", "ECLIPSIS_L", "ECLIPSIS_N", "ECLIPSIS_T", "ECLIPSIS_D", "ECLIPSIS_G", "NO_MUTATION"]:
+            assert entry in result.stdout, f"Missing {entry} in IrishMutation enum"
+
+    def test_irish_mutation_wired_into_mutation_trigger_pattern(self):
+        """MutationTriggerPattern.mutation_type must reference IrishMutation (not the undefined MutationType)."""
+        result = subprocess.run(
+            ["grep", "-n", "mutation_type IrishMutation", "baml_src/celtic/grammar_patterns.baml"],
+            cwd=str(REPO_ROOT),
+            capture_output=True, text=True,
+        )
+        assert "mutation_type IrishMutation" in result.stdout, (
+            "MutationTriggerPattern.mutation_type must reference IrishMutation; "
+            "the old MutationType reference is undefined (only lives in _archive/)"
+        )
+
+    def test_irish_mutation_replaces_morphologytype(self):
+        """morphology.baml must reference IrishMutation (not the undefined MutationType)."""
+        result = subprocess.run(
+            ["grep", "-n", "MutationType", "baml_src/celtic/morphology.baml"],
+            cwd=str(REPO_ROOT),
+            capture_output=True, text=True,
+        )
+        assert result.stdout.strip() == "", (
+            f"morphology.baml still references undefined MutationType:\n{result.stdout}"
+        )
+
+
 class TestSisterLiftsProvenance:
     """Phase 5.6 — SisterLift provenance + ledger sync."""
 

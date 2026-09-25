@@ -18,7 +18,7 @@ class VerbForm {
   person int @description("1, 2, or 3")
   number string @description("sing or plur")
   form string @description("The conjugated form")
-  mutation MutationType? @description("Mutation on the form")
+  mutation IrishMutation? @description("Mutation on the form")
   is_autonomous bool @description("Is this the autonomous form?")
 }
 
@@ -222,7 +222,7 @@ class CelticForm {
   form string @description("The inflected form")
   features string[] @description("Morphological features: case, number, person, tense, etc.")
   ipa_pronunciation string? @description("IPA pronunciation guide")
-  mutation MutationType? @description("Initial mutation if any")
+  mutation IrishMutation? @description("Initial mutation if any")
   notes string? @description("Notes about this specific form")
 }
 
