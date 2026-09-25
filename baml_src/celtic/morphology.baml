@@ -207,7 +207,7 @@ function CompareAdjective(
 
 // Morphological specification for a Celtic-language word
 class CelticMorphologySpec {
-  language CelticLanguageCurriculum @description("Which Celtic language")
+  language CelticLanguage @description("Which Celtic language")
   word string @description("The word being analysed")
   word_class string @description("Part of speech: noun, verb, adjective, etc.")
   inflection_class string @description("Conjugation/declension class")
@@ -230,7 +230,7 @@ class CelticForm {
 // routing via LlamaSwap (Irish → uccix-mistral-24b, others → gemma-4-26B-A4B).
 function ExtractCelticMorphology(
   text: string,
-  language: CelticLanguageCurriculum,
+  language: CelticLanguage,
   word_class_hint: string?
 ) -> CelticMorphologySpec[] {
   client ExtractEn

@@ -18,14 +18,11 @@ class BilingualTextIsles {
 }
 
 // Language codes following ISO 639-1
-enum LanguageCodeIsles {
-    EN @description("English")
-    GA @description("Irish / Gaeilge")
-    GD @description("Scottish Gaelic / Gàidhlig")
-    CY @description("Welsh / Cymraeg")
-    GV @description("Manx / Gaelg")
-    KW @description("Cornish / Kernewek")
-}
+// Phase 1.1 (2026-09-25 5-phase Celtic overhaul): the local `CelticLanguage`
+// enum has been removed. Use the canonical `CelticLanguage` enum from
+// `baml_src/celtic/sources.baml` (8 entries: GA, GD, CY, GV, KW, EN, SCO, ULS)
+// which is a strict superset of the 6 entries below. The `CelticLanguage`
+// references in this file have been replaced with `CelticLanguage`.
 
 // Geographic regions
 enum Region {
@@ -306,7 +303,7 @@ function DetectDocumentType(
 
 function DetectLanguages(
   text: string
-) -> LanguageCodeIsles[] {
+) -> CelticLanguage[] {
   client ExtractEn
   prompt #"
     {{ _.role("user") }}

@@ -1109,7 +1109,7 @@ class CelticCurriculumComparison(BaseModel):
     notes: typing.Optional[str] = None
 
 class CelticCurriculumSpec(BaseModel):
-    language: typing.Optional[types.CelticLanguageCurriculum] = Field(default=None, description='Which Celtic language')
+    language: typing.Optional[types.CelticLanguage] = Field(default=None, description='Which Celtic language')
     nation_code: typing.Optional[str] = Field(default=None, description='ISO 3166-1 alpha-3 (e.g., IRL, GBR, FRA)')
     education_level: typing.Optional[types.EducationLevelCeltic] = Field(default=None, description='Primary / Secondary / Higher')
     year_levels: typing.List[str] = Field(description='Year levels covered (e.g., [\'Junior Infants\', \'Senior Infants\', \'1st\', \'2nd\'])')
@@ -1134,7 +1134,7 @@ class CelticForm(BaseModel):
     notes: typing.Optional[str] = Field(default=None, description='Notes about this specific form')
 
 class CelticGrammarPattern(BaseModel):
-    language: typing.Optional[types.CelticLanguageCurriculum] = Field(default=None, description='Which Celtic language')
+    language: typing.Optional[types.CelticLanguage] = Field(default=None, description='Which Celtic language')
     pattern_type: typing.Optional[types.GrammarPatternType] = Field(default=None, description='Type of grammar pattern (VSO, COPULA, etc.)')
     text: typing.Optional[str] = Field(default=None, description='The text example in the source language')
     english_translation: typing.Optional[str] = Field(default=None, description='English translation')
@@ -1151,7 +1151,7 @@ class CelticLearningOutcome(BaseModel):
     assessable: typing.Optional[bool] = Field(default=None, description='Can be formally assessed')
 
 class CelticMorphologySpec(BaseModel):
-    language: typing.Optional[types.CelticLanguageCurriculum] = Field(default=None, description='Which Celtic language')
+    language: typing.Optional[types.CelticLanguage] = Field(default=None, description='Which Celtic language')
     word: typing.Optional[str] = Field(default=None, description='The word being analysed')
     word_class: typing.Optional[str] = Field(default=None, description='Part of speech: noun, verb, adjective, etc.')
     inflection_class: typing.Optional[str] = Field(default=None, description='Conjugation/declension class')
@@ -1900,7 +1900,7 @@ class CurriculumTopic(BaseModel):
 
 class CurriculumUnit(BaseModel):
     title: typing.Optional[str] = Field(default=None, description='Unit title')
-    language: typing.Optional[types.CelticLanguageCurriculum] = Field(default=None, description='Target language')
+    language: typing.Optional[types.CelticLanguage] = Field(default=None, description='Target language')
     level: typing.Optional[types.EducationLevelCeltic] = Field(default=None, description='Education level')
     grade_year: typing.Optional[str] = Field(default=None, description='Specific grade/year')
     nation: typing.Optional[str] = Field(default=None, description='Country of origin')
@@ -7859,7 +7859,7 @@ class SubjectRegistryRow(BaseModel):
     subject_slug: typing.Optional[str] = None
     board: typing.Optional[types.AwardingBody] = None
     qualification_level: typing.Optional[types.QualificationLevel] = None
-    language: typing.Optional[types.Language] = None
+    language: typing.Optional[types.CelticLanguage] = None
     display_name_en: typing.Optional[str] = None
     display_name_local: typing.Optional[str] = None
     concept: typing.Optional[types.CrossJurisdictionConcept] = None
@@ -7885,7 +7885,7 @@ class SubjectSlug(BaseModel):
     subject_slug: typing.Optional[str] = Field(default=None, description='Lowercase snake_case, e.g. \'mathematics\', \'english_language\'')
     board: typing.Optional[types.AwardingBody] = None
     qualification_level: typing.Optional[types.QualificationLevel] = None
-    language: typing.Optional[types.Language] = None
+    language: typing.Optional[types.CelticLanguage] = None
 
 class SupernaturalEntity(BaseModel):
     name: typing.Optional[str] = Field(default=None, description='Entity name or type')

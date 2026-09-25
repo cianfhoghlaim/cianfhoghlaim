@@ -265,9 +265,9 @@ class LlmResponseParser:
 
     def DetectLanguages(
         self, llm_response: str, baml_options: BamlCallOptions = {},
-    ) -> typing.List[types.LanguageCodeIsles]:
+    ) -> typing.List[types.CelticLanguage]:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="DetectLanguages", llm_response=llm_response, mode="request")
-        return typing.cast(typing.List[types.LanguageCodeIsles], __result__)
+        return typing.cast(typing.List[types.CelticLanguage], __result__)
 
     def DocumentMutationTriggers(
         self, llm_response: str, baml_options: BamlCallOptions = {},
@@ -3909,9 +3909,9 @@ class LlmStreamParser:
 
     def DetectLanguages(
         self, llm_response: str, baml_options: BamlCallOptions = {},
-    ) -> typing.List[types.LanguageCodeIsles]:
+    ) -> typing.List[types.CelticLanguage]:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="DetectLanguages", llm_response=llm_response, mode="stream")
-        return typing.cast(typing.List[types.LanguageCodeIsles], __result__)
+        return typing.cast(typing.List[types.CelticLanguage], __result__)
 
     def DocumentMutationTriggers(
         self, llm_response: str, baml_options: BamlCallOptions = {},

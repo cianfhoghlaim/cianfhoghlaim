@@ -295,7 +295,7 @@ function DocumentMutationTriggers(
 
 // A single Celtic grammar pattern extracted from text
 class CelticGrammarPattern {
-  language CelticLanguageCurriculum @description("Which Celtic language")
+  language CelticLanguage @description("Which Celtic language")
   pattern_type GrammarPatternType @description("Type of grammar pattern (VSO, COPULA, etc.)")
   text string @description("The text example in the source language")
   english_translation string @description("English translation")
@@ -309,7 +309,7 @@ class CelticGrammarPattern {
 // routing via LlamaSwap (Irish → uccix-mistral-24b, others → gemma-4-26B-A4B).
 function ExtractCelticGrammar(
   text: string,
-  language: CelticLanguageCurriculum,
+  language: CelticLanguage,
   max_patterns: int?
 ) -> CelticGrammarPattern[] {
   client ExtractEn

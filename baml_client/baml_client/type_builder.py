@@ -22,11 +22,11 @@ class TypeBuilder(type_builder.TypeBuilder):
         super().__init__(classes=set(
           ["ALevelAreaTopic","ALevelBilingualText","ALevelCrossSubjectTopics","ALevelExamPaper","ALevelGradeDescriptor","ALevelLearningOutcome","ALevelMarkAllocation","ALevelMarkingScheme","ALevelModule","ALevelQuestion","ALevelQuestionSection","ALevelSubjectPDFLink","ALevelSyllabusDiagram","ALevelSyllabusSpec","AQAExamPaper","AQAMarkingScheme","AQAQualSpec","AcademicHistorySnapshot","AcademicModuleDescriptor","AccountingMarkingScheme","AccountingSubjectDiscriminator","AdaptiveAssessment","AdaptiveQuestion","AdjectiveComparison","AimsExpectations","AistearDocument","AistearFramework","AistearLearningGoal","AistearLearningGoalSimple","AistearPrinciple","AistearPrincipleSimple","AlbaniaHealthGuidance","AlbaniaStatute","AlbaniaSubjectCurriculum","AmericasJurisdictionMetadata","AnamParticle","AnimationMediaDescriptor","AnimationNarrativeBeat","AnimationPalette","AnimationPowerEvent","AnimationProvenance","AnimationTransferability","AnimationVfxVocabulary","AnimationVisualGrammar","ApiChange","ApplicationTimeline","AppliedMathsMarkingScheme","AppliedMathsSubjectDiscriminator","Apprenticeship","AreaRanking","ArmourOfClochur","ArtMarkingScheme","ArtSubjectDiscriminator","ArtworkAnalysis","AssessmentBreakdown","AssessmentComponent","AssessmentComponentStrand","AssessmentCriteria","AssessmentInfo","AssessmentObjective","AssessmentQuestion","AssessmentStructure","AssignmentBrief","AustraliaEducationDocument","AustraliaLawDocument","AustraliaMedicineDocument","AustriaHealthGuidance","AustriaStatute","AustriaSubjectCurriculum","Author","AuthorArchiveBoundingBox","AvatarElement","Award","BelgiumHealthGuidance","BelgiumStatute","BelgiumSubjectCurriculum","BendingSubdiscipline","BilingualPlaceTerm","BilingualText","BilingualTextEnGa","BilingualTextIsles","BilingualTextQuebec","BilingualTextRootPdf","BlogPostMetadata","BosniaAndHerzegovinaHealthGuidance","BosniaAndHerzegovinaStatute","BosniaAndHerzegovinaSubjectCurriculum","BoundingBox","BrazilEducationDocument","BrazilLawDocument","BrazilMedicineDocument","Breakdown","BridgeEdge","BulgariaHealthGuidance","BulgariaStatute","BulgariaSubjectCurriculum","BusinessMarkingScheme","BusinessSubjectDiscriminator","CBATask","CaliforniaOChoice","CaliforniaOCourse","CaliforniaOGradeProfile","CanadaEducationDocument","CanadaLawDocument","CanadaMedicineDocument","CanadianProvinceDocument","CandidatePDF","CanuintLocation","CanuintRecording","CanuintSpeaker","CanuintTranscription","CelticContent","CelticCurriculumComparison","CelticCurriculumSpec","CelticExample","CelticForm","CelticGrammarPattern","CelticLearningOutcome","CelticMorphologySpec","CelticNamedEntity","CelticTerm","CelticWord","CertGuidance","CertificationCitation","CharacterRelationship","ChariotOfSidrach","ChemSubjectDiscriminator","ChemistryGrade","ChemistryKCWeight","ChemistryMarkingQuestion","ChemistryMarkingRationale","ChemistryMarkingScheme","ChemistryMarkingSection","ChemistryMarksBreakdown","ChemistryStepMark","ChemistryStudyMilestone","ChemistryStudyWeek","ChemistryWebExamPaperDiscussionResponse","ChemistryWebMarkingSchemeExplanationResponse","ChemistryWebStudyPlanResponse","CircularExtraction","CircularReference","CitedUrl","ClassifiedFolkloreRecord","Coefficient","CognatePair","CognateSet","ColorInfo","ComicParticleFrame","CommonIrishError","CommonwealthJurisdictionMetadata","CommonwealthMemberState","CompetencyLink","ComputerScienceGrade","ComputerScienceKCWeight","ComputerScienceMarkingQuestion","ComputerScienceMarkingRationale","ComputerScienceMarkingScheme","ComputerScienceMarkingSection","ComputerScienceMarksBreakdown","ComputerScienceStepMark","ComputerScienceStudyMilestone","ComputerScienceStudyWeek","ComputerScienceWebExamPaperDiscussionResponse","ComputerScienceWebMarkingSchemeExplanationResponse","ComputerScienceWebStudyPlanResponse","ConceptChain","CondensedPage","ContactInfo","CookingSpitOfInnisCera","CourseDescriptor","CoursePointsPrediction","CourseworkArtifactExtraction","CourtFee","CourtForm","CourtRule","CoverageCell","CoverageMatrix","CroatiaHealthGuidance","CroatiaStatute","CroatiaSubjectCurriculum","CrossJurisdictionBridge","CrossJurisdictionEquivalency","CrossNationComparison","CrossNationCurriculumSpec","CrossNationLearningOutcome","CrossNationLearningOutcomeIsles","CsSubjectDiscriminator","CultureHeritageClaim","CultureTopicProfile","CurriculumComparison","CurriculumDesigned","CurriculumExtraction","CurriculumMapping","CurriculumSection","CurriculumSpecIsles","CurriculumSpecStrand","CurriculumStrand","CurriculumTopic","CurriculumUnit","CyprusHealthGuidance","CyprusStatute","CyprusSubjectCurriculum","CzechiaHealthGuidance","CzechiaStatute","CzechiaSubjectCurriculum","DenmarkHealthGuidance","DenmarkStatute","DenmarkSubjectCurriculum","Density","DerivationClass","DeveloperProfile","DiagramCoordinate","DiagramEdge","DiagramNode","DiagramPayload","DialectAnalysis","DialectIndicator","DialectSimilarity","DialogueLine","DisagreementVariant","DocSkillTag","DocumentMetadata","DocumentStructure","DuchasBoundingBox","DuchasFolkloreReference","DuchasLocation","DuchasManuscriptItem","DuchasManuscriptRecord","DuchasManuscriptVolume","DuchasPerson","DuchasPersonName","DuchasPersonNameExtraction","DuchasPhotograph","DuchasSchool","DuchasSchoolsItem","DuchasSchoolsPart","DuchasSchoolsTopic","DuchasSchoolsVolume","DuchasTranscription","DuchasTranscriptionLine","DuchasXMLRecord","ECDCSurveillance","EMAMedicine","ENSubjectSpec","EUDocument","EUExtractableBilingualDocument","EUMultilingualText","EURLexDecision","EURLexDirective","EURLexRegulation","EURLexTreaty","EdexcelQualSpec","Education","EducationEntry","EducationalTerm","EiraicTitle","EiraicTreasures","Element","EmailClassificationResult","EmailThread","EngSubjectDiscriminator","EnglandEducationDocument","EnglandLawDocument","EnglandMedicineDocument","EnglishGrade","EnglishKCWeight","EnglishMarkingQuestion","EnglishMarkingRationale","EnglishMarkingScheme","EnglishMarkingSection","EnglishMarksBreakdown","EnglishStepMark","EnglishStudyMilestone","EnglishStudyWeek","EnglishWebExamPaperDiscussionResponse","EnglishWebMarkingSchemeExplanationResponse","EnglishWebStudyPlanResponse","EnhancedLearningOutcome","EnsembleConsensus","EnsemblePathOutput","EquivalencyCell","EquivalencyGraph","EstoniaHealthGuidance","EstoniaStatute","EstoniaSubjectCurriculum","EurostatDatasetMetadata","EurydiceNationalEducationStructure","EvidenceLink","ExamAssessmentComponent","ExamPaperIsles","ExamPaperStrand","ExamQuestion","ExamQuestionIsles","ExamQuestionStrand","ExamSectionIsles","ExamSectionStrand","ExamStatistics","ExaminerCommentary","ExaminerReport","ExitCardQuestion","ExitCardSet","Experience","ExtractedCurriculumDocument","ExtractedEntity","ExtractedRelationship","ExtractionBudget","FIBOConfig","FadaError","FalseFriend","FeatherOfBirdOfCrannog","FestivalEntity","FinlandHealthGuidance","FinlandStatute","FinlandSubjectCurriculum","FolkloreElement","FormulaRecord","Foundation","FranceEducationDocument","FranceLawDocument","FranceMedicineDocument","FrenchMarkingScheme","FrenchSubjectDiscriminator","GCSEAreaTopic","GCSEAssessmentObjective","GCSEBilingualText","GCSECrossSubjectTopics","GCSEExamPaper","GCSEMarkingScheme","GCSEPerQuestionScheme","GCSEQuestion","GCSEQuestionSection","GCSESubjectPDFLink","GCSESyllabusDiagram","GCSESyllabusSpec","GaeilgeGrade","GaeilgeKCWeight","GaeilgeMarkingQuestion","GaeilgeMarkingRationale","GaeilgeMarkingScheme","GaeilgeMarkingSection","GaeilgeMarksBreakdown","GaeilgeStepMark","GaeilgeStudyMilestone","GaeilgeStudyWeek","GaeilgeWebExamPaperDiscussionResponse","GaeilgeWebMarkingSchemeExplanationResponse","GaeilgeWebStudyPlanResponse","GaelSubjectDiscriminator","GaeltachtOverlay","GameGenre","GameItem","GameLocation","GameProject","GameTechnology","GameplayMediaDescriptor","GameplayNarrativeBeat","GameplayPalette","GameplayPowerEvent","GameplayProvenance","GameplayTransferability","GameplayVfxVocabulary","GameplayVisualGrammar","GardaVetting","GbaMagicSystem","GeminiDeepResearchReport","GenerationSpec","GeoDistribution","GeoLocation","GeoPoint","GeoSubjectDiscriminator","GeographicUnit","GeographyGrade","GeographyKCWeight","GeographyMarkingQuestion","GeographyMarkingRationale","GeographyMarkingScheme","GeographyMarkingSection","GeographyMarksBreakdown","GeographyStepMark","GeographyStudyMilestone","GeographyStudyWeek","GeographyWebExamPaperDiscussionResponse","GeographyWebMarkingSchemeExplanationResponse","GeographyWebStudyPlanResponse","GeorgiaHealthGuidance","GeorgiaStatute","GeorgiaSubjectCurriculum","GermanyEducationDocument","GermanyLawDocument","GermanyMedicineDocument","GlossaryEntry","GlossaryReference","GradeBoundary","GradeLevel","GradingScale","GrammarError","GrammarPattern","GrammarProgress","GrammarTopic","GreeceHealthGuidance","GreeceStatute","GreeceSubjectCurriculum","GroundedElement","GuernseyAssessmentObjective","GuernseyEducationDocument","GuernseyLawDocument","GuernseySyllabusSpec","GuernseyTopic","HHTLocation","HHTTranscription","HadesBoon","HandwritingExtraction","HandwrittenEquation","HeaderElement","HeiferSkinOfDobar","HiddenHeritagesTale","HistoryMarkingScheme","HistorySubjectDiscriminator","HungaryHealthGuidance","HungaryStatute","HungarySubjectCurriculum","HybridProfile","IMSubjectSpec","ITTerm","IcelandHealthGuidance","IcelandStatute","IcelandSubjectCurriculum","IdentityDocument","ImageAssetMetadata","ImagePromptSpec","IndiaEducationDocument","IndiaLawDocument","IndiaMedicineDocument","InformantDetails","InitialMutation","IrishAdjectiveGrammar","IrishContentQuality","IrishCopulaPattern","IrishGrammar","IrishNounGrammar","IrishVerbGrammar","IsleOfManAssessmentObjective","IsleOfManEducationDocument","IsleOfManLawDocument","IsleOfManSyllabusSpec","IsleOfManTopic","ItalyEducationDocument","ItalyLawDocument","ItalyMedicineDocument","IterationStep","JCBilingualText","JCCBADescriptor","JCStrandRecord","JCSubjectPDFLink","JCSubjectSpecification","JcCurriculumStrand","JcLearningOutcome","JcRubricDescriptor","JerseyAssessmentObjective","JerseyEducationDocument","JerseyLawDocument","JerseySyllabusSpec","JerseyTopic","JsonSchema","Judgement","JuniorCycleExamPaper","JuniorCycleLearningOutcome","JuniorCycleQuestion","JuniorCycleQuestionSection","JuniorCycleShortCourse","JuniorCycleSubjectSpec","JuniorCycleWellbeingStatement","JurisdictionOverride","KnowledgeTriple","KosovoHealthGuidance","KosovoStatute","KosovoSubjectCurriculum","L2LPOutcome","LCBilingualText","LCCircularDepartment","LCCircularToSyllabusLink","LCCrossLinguisticConcept","LCDiagramRegion","LCEducationCircular","LCEnglishEquivalent","LCExamPaper","LCGaelicTopic","LCGradeDescriptor","LCLearningOutcome","LCMarkAllocation","LCMarkingScheme","LCModule","LCModuleTopic","LCQuestion","LCQuestionSection","LCSubjectPDFLink","LCSyllabus","LCSyllabusDiagram","LCSyllabusDocument","LCTopicExtraction","LatviaHealthGuidance","LatviaStatute","LatviaSubjectCurriculum","LayoutFingerprint","LeabharlannDoc","LearningGraph","LearningGraphCell","LearningGraphColumn","LearningGraphPrerequisite","LearningGraphRow","LearningOutcome","LeavingCertSyllabus","LecturerInfo","LegalAidForm","LegalAidPage","LegalCaseProfile","LegalTerm","LiechtensteinHealthGuidance","LiechtensteinStatute","LiechtensteinSubjectCurriculum","LineageTrace","LinguisticToken","LinkedInEducation","LinkedInExperience","LinkedInProfile","LithuaniaHealthGuidance","LithuaniaStatute","LithuaniaSubjectCurriculum","LocationFeature","LogainmCoordinates","LogainmDuchasLink","LogainmPlace","LogainmSearchResult","LowConfidenceSection","LuxembourgHealthGuidance","LuxembourgStatute","LuxembourgSubjectCurriculum","MaltaHealthGuidance","MaltaStatute","MaltaSubjectCurriculum","ManxOverlay","MarkingAnnotation","MarkingBandDescriptor","MarkingCriteria","MarkingCriterion","MarkingLevel","MarkingPointSec","MarkingPointStrand","MarkingSchemeDiff","MarkingSchemeSec","MarkingSchemeShared","MarkingSchemeStrand","MarkingSchemeSummary","MarkingSection","MathSubjectDiscriminator","MathematicsGrade","MathematicsKCWeight","MathematicsMarkingQuestion","MathematicsMarkingRationale","MathematicsMarkingScheme","MathematicsMarkingSection","MathematicsMarksBreakdown","MathematicsStepMark","MathematicsStudyMilestone","MathematicsStudyWeek","MathematicsWebExamPaperDiscussionResponse","MathematicsWebMarkingSchemeExplanationResponse","MathematicsWebStudyPlanResponse","MatriculationAudit","MatriculationRequirement","MediaDescriptor","MedicalCaseProfile","Metric","MexicoEducationDocument","MexicoLawDocument","MexicoMedicineDocument","ModelComparisonResult","ModelResult","ModuleDescriptor","MoldovaHealthGuidance","MoldovaStatute","MoldovaSubjectCurriculum","MontenegroHealthGuidance","MontenegroStatute","MontenegroSubjectCurriculum","MontrealSchoolBoardRecord","MorphologicalFeature","MorphologicalFeatures","MotifAnalysis","MotifOccurrence","MusicMarkingScheme","MusicProducerProfile","MusicProfile","MusicRelease","MusicSubjectDiscriminator","MusicTrack","MutationTriggerPattern","MythologicalCharacter","MythologicalLocation","MythologicalStory","NCCAKeyCompetencyRootPdf","NCCAPolicyCriteria","NISubjectSpec","NPC","NPCDialogue","NPCGreeting","Naionra","NameVariant","NarrativeBeat","NationComparison","NationJurisdictionMetadata","NetherlandsHealthGuidance","NetherlandsStatute","NetherlandsSubjectCurriculum","NewZealandEducationDocument","NewZealandLawDocument","NewZealandMedicineDocument","NigeriaState","NigerianFederalCurriculumSpec","NigerianStateCurriculumSpec","NonlinearSystemRecord","NorthMacedoniaHealthGuidance","NorthMacedoniaStatute","NorthMacedoniaSubjectCurriculum","NorthernIrelandEducationDocument","NorthernIrelandExamPaper","NorthernIrelandLawDocument","NorthernIrelandMedicineDocument","NorthernIrelandQuestion","NorthernIrelandSection","NorwayHealthGuidance","NorwayStatute","NorwaySubjectCurriculum","Notebook","NounDeclension","NpcDialogue","NpcDialogueExchange","NumericalMethodRecord","OCRBackendV4","OCRModelV4","OCRQualSpec","OCRValidationResult","OfficialDocumentMediaDescriptor","OfficialDocumentType","OfficialMediaCategory","OfficialNarrativeBeat","OfficialPalette","OfficialPowerEvent","OfficialProvenance","OfficialTransferability","OfficialVfxVocabulary","OfficialVisualGrammar","OralStudyPlan","OralStudySegment","OutcomeAlignment","OutcomeAssessment","OutcomeQuestionMapping","PIABPage","PackageRelease","PageDescription","Palette","ParentPlace","ParticleClass","PastExamQuestion","PastPaper","PastPaperRef","PastPaperStorage","PedagogyOverlay","PedagogyPrincipleDetail","PedagogySet","PersonEntity","PhoneticFeature","PhysicsMarkingScheme","PhysicsSubjectDiscriminator","PigSkinBagOfHealingWell","PigSkinOfDobar","PlaceEntity","Placement","PlacementResponse","PlacementResult","PlacenameText","PlayerLanguageProfile","PolandEducationDocument","PolandLawDocument","PolandMedicineDocument","PoliticalTopicProfile","PortfolioSkill","PortugalHealthGuidance","PortugalStatute","PortugalSubjectCurriculum","PossessionPattern","PowerEvent","PracticeItem","PrepositionalPronoun","PrimaryAreaSpecStage","PrimaryCurriculumArea","PrimaryLearningOutcome","PrimaryLearningOutcomeStage","PrimaryStrand","PrimaryStrandStage","ProfessionalExperience","ProfessionalRegistration","Programme","ProgrammeDescriptor","ProgressReport","ProgressStatistics","Project","ProsePalette","Provenance","Publication","QQIAward","QqiFetAward","QuebecEducationBilingualRecord","QueryResult","Quest","QuestHint","QuestObjective","QuestPackBilingualText","QuestPackEvidenceLink","QuestPackFormativeItem","QuestPackScore","QuestReward","QuestionAnalysis","QuickAnalysis","ReadingListItem","Reference","RegionalMotif","RegressionDiagnostics","RelationshipExtractionResult","ResearchGateProfile","ResearchGatePublication","ResearchLink","ResearchSiteMap","ResourceSharingRecommendation","ResponseAnalysis","RomaniaHealthGuidance","RomaniaStatute","RomaniaSubjectCurriculum","RubricDescriptor","RubricScore","SCSubjectSpec","SOLASCourse","SamildanachOfLugh","ScaleTier","ScotlandAssessmentObjective","ScotlandEducationDocument","ScotlandLawDocument","ScotlandMedicineDocument","ScotlandSyllabusSpec","ScotlandTopic","ScottishGaelicOverlay","ScrapingSession","ScriptStep","SearchFilter","SearchResult","SearchTelemetry","SerbiaHealthGuidance","SerbiaStatute","SerbiaSubjectCurriculum","SevenPigsOfEasmal","SiteAnalysis","Skill","SkillAssessment","SkillCategoryCv","SkillExtractionResult","SlovakiaHealthGuidance","SlovakiaStatute","SlovakiaSubjectCurriculum","SloveniaHealthGuidance","SloveniaStatute","SloveniaSubjectCurriculum","SocialLink","SoftwareFingerprint","SolutionStep","SoundChange","SouthAfricaEducationDocument","SouthAfricaLawDocument","SouthAfricaMedicineDocument","SpainEducationDocument","SpainLawDocument","SpainMedicineDocument","Speaker","SpeakerLineup","SpeakerTurn","SpearOfAssal","SpecialismRubric","SpellingError","StatisticMetadata","StatisticRecord","StatisticalProcedureRecord","StatisticsQuery","StatuteReference","StoryEvent","StoryExtraction","StudentAnswerScript","StudentFeedback","StudentTranscriptRow","StudyPlan","StudyPlanBilingual","StudyPlanKeyCompetencyWeight","StudyPlanMilestone","StudyPlanWeek","StyleAnalysis","StyleBlend","StyleComparison","StyleEmbedding","StyleFeatures","StyleMatchVariant","StyleMatchVariants","StyleTransferSpec","Subject","SubjectIsles","SubjectMasteryRow","SubjectQuestPack","SubjectRegistryRow","SubjectRubric","SubjectSlug","SupernaturalEntity","SwedenHealthGuidance","SwedenStatute","SwedenSubjectCurriculum","SwitzerlandHealthGuidance","SwitzerlandStatute","SwitzerlandSubjectCurriculum","SwordOfCaladbolg","SyllabusLevel","SyllabusStructure","SyllabusTopic","TU","TableElement","TaleSummary","TaleType","TaleVariant","TaleVariantAnalysis","TalesListingPage","TeachingQualification","TeachingResource","TearmaDomainTerms","TearmaFolkloreLink","TearmaSearchResult","TearmaTerm","TechTopicProfile","TermDefinition","TermEntry","TermRelation","TermText","TertiaryExamPaper","TextConsensus","TextDisagreement","Tg4EpisodeClassification","TheoremRecord","ThreeApplesOfHesperides","TimelineEvent","TopicDistribution","TranscriptQualityAudit","TranscriptionSegment","Transferability","TranslationRequest","TranslationResult","TrendAnalysis","TrendPoint","Triple","TriplesResult","TurkeyHealthGuidance","TurkeyStatute","TurkeySubjectCurriculum","UIComponentSuggestion","UKExamSection","UKQualificationSpec","UKQuestion","US_US_CAEducationDocument","US_US_CALawDocument","US_US_CAMedicineDocument","UiIndicator","UkraineEducationDocument","UkraineLawDocument","UkraineMedicineDocument","UnifiedSourceRecord","University","UniversityOfGalwayArtifact","UoGArtefactProvenanceMeta","UoGAssignment","UoGCaMark","UoGCodeCell","UoGExamPaper","UoGExamQuestionBloomTag","UoGLearningOutcome","UoGModuleCatalogueRow","UoGModuleSummary","UoGPersonalArchiveArtefact","UoGQuestion","UoGReadingItem","UoGSyllabusDescriptor","UoGTopic","UsageExample","VSOPattern","ValidationFinding","VenezuelaEducationDocument","VenezuelaLawDocument","VenezuelaMedicineDocument","VerbConjugation","VerbForm","VerificationSummary","VernacularSubjectSpec","VfxVocabulary","VisualGrammar","VisualScene","VisualSequence","VocabularyNote","VocabularyNotePlayer","VocabularyProgress","VocabularySet","VolumeSummary","WLSubjectSpec","WalesAssessmentObjective","WalesEducationDocument","WalesLawDocument","WalesMedicineDocument","WalesSyllabusSpec","WalesTopic","WelshMediumOverlay","WheelOfTimeMediaDescriptor","WheelOfTimeNarrativeBeat","WheelOfTimePowerEvent","WheelOfTimeProvenance","WheelOfTimeTransferability","WheelOfTimeVfxVocabulary","WheelOfTimeVisualGrammar","WhelpOfIoruaidh","WorkedSolution","WorksheetAnswers","WorksheetQuestion","ZoteroPaper",]
         ), enums=set(
-          ["ALevelAQASubject","ALevelEdexcelSubject","ALevelExamBoard","ALevelGrade","ALevelLanguage","ALevelOCRSubject","ALevelStage","ALevelSubjectSlug","AccountingCommonMistake","AccountingQuestionType","AchievementLevel","AdminUnitCategory","AggregationLevel","AistearAgeBand","AistearDialect","AistearLanguageMedium","AistearTheme","AlignmentMethod","AlignmentType","AnamSource","AppliedMathsCommonMistake","AppliedMathsQuestionType","ArtCommonMistake","ArtQuestionType","ArtStyle","ArtefactKind","ArtefactProvenance","AssessmentComponentType","AssessmentType","AssignmentKind","AuthorArchiveCivicCategory","AwardingBody","BiasMode","BifurcationType","BlogPostType","BloomLevel","BloomsLevel","BoonSlot","BoonTier","BusinessCommonMistake","BusinessQuestionType","CAOField","CCEALevel","CCEASubject","CameraAngle","CaseCategory","CelticBranch","CelticDeity","CelticEntityType","CelticLanguage","CelticLanguageArchive","CelticLanguageCurriculum","CelticSoundChange","CelticTradition","ChangeSeverity","CharacterType","ChemCommonMistake","ChemExperimentType","ChemQuestionType","ChemistryLanguage","ChemistryLevel","ColorScheme","ComicParticleForm","CompositionType","ComputerScienceLanguage","ComputerScienceLevel","ConvergenceRate","CourtLevel","CrossJurisdictionConcept","CsCommonMistake","CsNotationType","CsQuestionType","CultureTopic","CurriculumFramework","DataSource","DiagramMode","DifficultyLevel","DistributionFamily","DocCategory","DocumentCategory","DocumentKind","DocumentType","DocumentTypeIsles","DocumentTypeOcr","DuchasCollection","ENAwardDescriptor","ENKeyCompetency","ENStage","EQFLevel","EUInstitution","EULanguage","EditorialStatus","EducationLevel","EducationLevelCeltic","EducationLevelIsles","EducationalStage","EiraicCapability","EiraicProvenance","EiraicSubject","EmailClass","EngCommonMistake","EngGenreType","EngSkillType","EnglishLanguage","EnglishLevel","EntityConfidence","EntryPathway","EquationConfidence","EquivalencyJurisdiction","EvidenceQuality","ExamBoard","ExamLevel","FolkloreOccupation","FolkloreSource","FolkloreTopic","FrenchCommonMistake","FrenchQuestionType","GCSEAOLevel","GCSEAQASubject","GCSEAssessmentType","GCSEDexcelSubject","GCSEExamBoard","GCSEGrade","GCSEOCRSubject","GCSEStage","GCSESubjectSlug","GaeilgeLanguage","GaeilgeLevel","GaelCommonMistake","GaelRegister","GaelSkillType","GameZoneType","GbaElement","GbaGame","GeminiDomain","GeoCommonMistake","GeoFeatureCategory","GeoRegionalFocus","GeoSkillType","GeographicGranularity","GeographyLanguage","GeographyLevel","GodName","GrammarPatternType","GrammaticalCase","GrammaticalGender","GrammaticalNumber","GuernseyLevel","GuernseySubject","HEIType","HTRBackend","HandbookTopicCode","HistoryCommonMistake","HistoryQuestionType","IMAwardDescriptor","IMKeyCompetency","IMStage","ImagePurpose","InferenceProcedure","IrishCopulaType","IrishCountyCode","IrishDeclension","IrishDialect","IrishDialectArchive","IrishDialectOcr","IrishGender","IrishOCRErrorType","IrishSpellingStandard","IsleOfManLevel","IsleOfManSubject","JCEducationStage","JCLanguage","JCStrand","JCSubjectSlug","JCYearBand","JerseyLevel","JerseySubject","JuniorCycleSubject","Jurisdiction","KnowledgeTripleKind","LC6Language","LC6Subject","LCEducationStage","LCQuestionType","LCSubjectSlug","Language","LanguageCode","LanguageCodeIsles","LanguageCodeOcr","LeabharlannDocKind","LeabharlannLanguage","LeabharlannSubcorpus","LearningGraphPedagogyPrinciple","LearningGraphSkillType","LeavingCertSubject","LegalAidCategory","LegalAidEligibilityOutcome","LightingStyle","MarkingBand","MarkingType","MathCommonMistake","MathContentLanguage","MathMarkingBand","MathQuestionType","MathematicsLanguage","MathematicsLevel","MediaType","MetricCategory","Mood","MoodCategory","MusicCommonMistake","MusicGenre","MusicGenreArtwork","MusicGenrePortfolio","MusicQuestionType","MutationType","MythologicalCycle","NCCAAwardDescriptor","NCCACertificationStage","NCCAKeyCompetency","NCCASubjectSlug","NFQLevel","NIAwardDescriptor","NIKeyCompetency","NIStage","Nation","NationEducationLevel","NfqLevel","NonlinearSystemKind","NounDeclensionClass","NumericalMethod","OCRQuality","OralStudyPlanPhase","OralStudyPlanTTSProvider","PIABPageKind","Package","PaperKind","PartOfSpeech","PartOfSpeechArchive","PhysicsCommonMistake","PhysicsQuestionType","PlatformType","PoliticalTopic","PortfolioSkillCategory","PrimaryArea","PrimaryAreaCode","PrimaryMathsStrand","PrimaryStage","PrimaryYearLevel","ProficiencyLevel","ProfileType","ProgrammeStage","ProjectStatus","QQILevel","Quadrant","QualificationBoard","QualificationLevel","QuestDifficulty","QuestPackDifficulty","QuestPackFeedbackChannel","QuestPackItemType","QuestPackLanguage","QuestPackStage","QuestType","QuestionType","ReadingFormat","ReadingOrder","Region","RegistrySource","RegistryStatus","RegressionFamily","RelationshipType","RubricStyle","SCAwardDescriptor","SCKeyCompetency","SCQFLevel","SCQFSubject","SCStage","SOLASPath","Semester","SkillCategory","SkillDomain","Specialism","StatisticsAgency","StudyMode","StudyPlanAssessmentType","StudyPlanIrishDialect","StudyPlanKeyCompetency","SupernaturalType","TechTopic","TermStatus","TerminologyDomain","TerminologySource","TertiaryMathTopic","TimeGranularity","TranscriptionConfidence","UIComponentKind","UKNCCESubjectSlug","UKNCCEYearLevel","UKQuestionType","UiType","UniversityType","UoGArtifactKind","UoGBloomLevel","UoGLanguage","UoGPaperFormat","UoGProvenanceKind","UoGSitting","UoGStage","ValidationSeverity","VerbConjugationClass","VerbMood","VerbTense","VernacularLanguage","VisualStyle","WJECLevel","WJECSubject","WLAwardDescriptor","WLKeyCompetency","WLStage",]
+          ["ALevelAQASubject","ALevelEdexcelSubject","ALevelExamBoard","ALevelGrade","ALevelLanguage","ALevelOCRSubject","ALevelStage","ALevelSubjectSlug","AccountingCommonMistake","AccountingQuestionType","AchievementLevel","AdminUnitCategory","AggregationLevel","AistearAgeBand","AistearDialect","AistearLanguageMedium","AistearTheme","AlignmentMethod","AlignmentType","AnamSource","AppliedMathsCommonMistake","AppliedMathsQuestionType","ArtCommonMistake","ArtQuestionType","ArtStyle","ArtefactKind","ArtefactProvenance","AssessmentComponentType","AssessmentType","AssignmentKind","AuthorArchiveCivicCategory","AwardingBody","BiasMode","BifurcationType","BlogPostType","BloomLevel","BloomsLevel","BoonSlot","BoonTier","BusinessCommonMistake","BusinessQuestionType","CAOField","CCEALevel","CCEASubject","CameraAngle","CaseCategory","CelticBranch","CelticDeity","CelticEntityType","CelticLanguage","CelticLanguageArchive","CelticSoundChange","CelticTradition","ChangeSeverity","CharacterType","ChemCommonMistake","ChemExperimentType","ChemQuestionType","ChemistryLanguage","ChemistryLevel","ColorScheme","ComicParticleForm","CompositionType","ComputerScienceLanguage","ComputerScienceLevel","ConvergenceRate","CourtLevel","CrossJurisdictionConcept","CsCommonMistake","CsNotationType","CsQuestionType","CultureTopic","CurriculumFramework","DataSource","DiagramMode","DifficultyLevel","DistributionFamily","DocCategory","DocumentCategory","DocumentKind","DocumentType","DocumentTypeIsles","DocumentTypeOcr","DuchasCollection","ENAwardDescriptor","ENKeyCompetency","ENStage","EQFLevel","EUInstitution","EULanguage","EditorialStatus","EducationLevel","EducationLevelCeltic","EducationLevelIsles","EducationalStage","EiraicCapability","EiraicProvenance","EiraicSubject","EmailClass","EngCommonMistake","EngGenreType","EngSkillType","EnglishLanguage","EnglishLevel","EntityConfidence","EntryPathway","EquationConfidence","EquivalencyJurisdiction","EvidenceQuality","ExamBoard","ExamLevel","FolkloreOccupation","FolkloreSource","FolkloreTopic","FrenchCommonMistake","FrenchQuestionType","GCSEAOLevel","GCSEAQASubject","GCSEAssessmentType","GCSEDexcelSubject","GCSEExamBoard","GCSEGrade","GCSEOCRSubject","GCSEStage","GCSESubjectSlug","GaeilgeLanguage","GaeilgeLevel","GaelCommonMistake","GaelRegister","GaelSkillType","GameZoneType","GbaElement","GbaGame","GeminiDomain","GeoCommonMistake","GeoFeatureCategory","GeoRegionalFocus","GeoSkillType","GeographicGranularity","GeographyLanguage","GeographyLevel","GodName","GrammarPatternType","GrammaticalCase","GrammaticalGender","GrammaticalNumber","GuernseyLevel","GuernseySubject","HEIType","HTRBackend","HandbookTopicCode","HistoryCommonMistake","HistoryQuestionType","IMAwardDescriptor","IMKeyCompetency","IMStage","ImagePurpose","InferenceProcedure","IrishCopulaType","IrishCountyCode","IrishDeclension","IrishDialect","IrishDialectArchive","IrishDialectOcr","IrishGender","IrishOCRErrorType","IrishSpellingStandard","IsleOfManLevel","IsleOfManSubject","JCEducationStage","JCLanguage","JCStrand","JCSubjectSlug","JCYearBand","JerseyLevel","JerseySubject","JuniorCycleSubject","Jurisdiction","KnowledgeTripleKind","LC6Language","LC6Subject","LCEducationStage","LCQuestionType","LCSubjectSlug","LanguageCode","LanguageCodeOcr","LeabharlannDocKind","LeabharlannLanguage","LeabharlannSubcorpus","LearningGraphPedagogyPrinciple","LearningGraphSkillType","LeavingCertSubject","LegalAidCategory","LegalAidEligibilityOutcome","LightingStyle","MarkingBand","MarkingType","MathCommonMistake","MathContentLanguage","MathMarkingBand","MathQuestionType","MathematicsLanguage","MathematicsLevel","MediaType","MetricCategory","Mood","MoodCategory","MusicCommonMistake","MusicGenre","MusicGenreArtwork","MusicGenrePortfolio","MusicQuestionType","MutationType","MythologicalCycle","NCCAAwardDescriptor","NCCACertificationStage","NCCAKeyCompetency","NCCASubjectSlug","NFQLevel","NIAwardDescriptor","NIKeyCompetency","NIStage","Nation","NationEducationLevel","NfqLevel","NonlinearSystemKind","NounDeclensionClass","NumericalMethod","OCRQuality","OralStudyPlanPhase","OralStudyPlanTTSProvider","PIABPageKind","Package","PaperKind","PartOfSpeech","PartOfSpeechArchive","PhysicsCommonMistake","PhysicsQuestionType","PlatformType","PoliticalTopic","PortfolioSkillCategory","PrimaryArea","PrimaryAreaCode","PrimaryMathsStrand","PrimaryStage","PrimaryYearLevel","ProficiencyLevel","ProfileType","ProgrammeStage","ProjectStatus","QQILevel","Quadrant","QualificationBoard","QualificationLevel","QuestDifficulty","QuestPackDifficulty","QuestPackFeedbackChannel","QuestPackItemType","QuestPackLanguage","QuestPackStage","QuestType","QuestionType","ReadingFormat","ReadingOrder","Region","RegistrySource","RegistryStatus","RegressionFamily","RelationshipType","RubricStyle","SCAwardDescriptor","SCKeyCompetency","SCQFLevel","SCQFSubject","SCStage","SOLASPath","Semester","SkillCategory","SkillDomain","Specialism","StatisticsAgency","StudyMode","StudyPlanAssessmentType","StudyPlanIrishDialect","StudyPlanKeyCompetency","SupernaturalType","TechTopic","TermStatus","TerminologyDomain","TerminologySource","TertiaryMathTopic","TimeGranularity","TranscriptionConfidence","UIComponentKind","UKNCCESubjectSlug","UKNCCEYearLevel","UKQuestionType","UiType","UniversityType","UoGArtifactKind","UoGBloomLevel","UoGLanguage","UoGPaperFormat","UoGProvenanceKind","UoGSitting","UoGStage","ValidationSeverity","VerbConjugationClass","VerbMood","VerbTense","VernacularLanguage","VisualStyle","WJECLevel","WJECSubject","WLAwardDescriptor","WLKeyCompetency","WLStage",]
         ), runtime=DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_RUNTIME)
 
     # #########################################################################
-    # Generated enums 320
+    # Generated enums 317
     # #########################################################################
 
     @property
@@ -232,10 +232,6 @@ class TypeBuilder(type_builder.TypeBuilder):
     @property
     def CelticLanguageArchive(self) -> "CelticLanguageArchiveViewer":
         return CelticLanguageArchiveViewer(self)
-
-    @property
-    def CelticLanguageCurriculum(self) -> "CelticLanguageCurriculumViewer":
-        return CelticLanguageCurriculumViewer(self)
 
     @property
     def CelticSoundChange(self) -> "CelticSoundChangeViewer":
@@ -770,16 +766,8 @@ class TypeBuilder(type_builder.TypeBuilder):
         return LCSubjectSlugViewer(self)
 
     @property
-    def Language(self) -> "LanguageViewer":
-        return LanguageViewer(self)
-
-    @property
     def LanguageCode(self) -> "LanguageCodeViewer":
         return LanguageCodeViewer(self)
-
-    @property
-    def LanguageCodeIsles(self) -> "LanguageCodeIslesViewer":
-        return LanguageCodeIslesViewer(self)
 
     @property
     def LanguageCodeOcr(self) -> "LanguageCodeOcrViewer":
@@ -5053,7 +5041,7 @@ class TypeBuilder(type_builder.TypeBuilder):
 
 
 # #########################################################################
-# Generated enums 320
+# Generated enums 317
 # #########################################################################
 
 class ALevelAQASubjectAst:
@@ -8790,64 +8778,6 @@ class CelticLanguageArchiveValues:
     @property
     def EN(self) -> type_builder.EnumValueViewer:
         return type_builder.EnumValueViewer(self.__bldr.value("EN"))
-    
-    
-
-
-class CelticLanguageCurriculumAst:
-    def __init__(self, tb: type_builder.TypeBuilder):
-        _tb = tb._tb # type: ignore (we know how to use this private attribute)
-        self._bldr = _tb.enum("CelticLanguageCurriculum")
-        self._values: typing.Set[str] = set([  "IRISH",  "SCOTTISH_GAELIC",  "WELSH",  "MANX",  "CORNISH",  "BRETON",  ])
-        self._vals = CelticLanguageCurriculumValues(self._bldr, self._values)
-
-    def type(self) -> baml_py.FieldType:
-        return self._bldr.field()
-
-    @property
-    def values(self) -> "CelticLanguageCurriculumValues":
-        return self._vals
-
-
-class CelticLanguageCurriculumViewer(CelticLanguageCurriculumAst):
-    def __init__(self, tb: type_builder.TypeBuilder):
-        super().__init__(tb)
-
-    
-    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
-        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
-    
-
-class CelticLanguageCurriculumValues:
-    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
-        self.__bldr = enum_bldr
-        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
-
-    
-    
-    @property
-    def IRISH(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("IRISH"))
-    
-    @property
-    def SCOTTISH_GAELIC(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("SCOTTISH_GAELIC"))
-    
-    @property
-    def WELSH(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("WELSH"))
-    
-    @property
-    def MANX(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("MANX"))
-    
-    @property
-    def CORNISH(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("CORNISH"))
-    
-    @property
-    def BRETON(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("BRETON"))
     
     
 
@@ -18006,60 +17936,6 @@ class LCSubjectSlugValues:
     
 
 
-class LanguageAst:
-    def __init__(self, tb: type_builder.TypeBuilder):
-        _tb = tb._tb # type: ignore (we know how to use this private attribute)
-        self._bldr = _tb.enum("Language")
-        self._values: typing.Set[str] = set([  "EN",  "GA",  "CY",  "GD",  "GV",  ])
-        self._vals = LanguageValues(self._bldr, self._values)
-
-    def type(self) -> baml_py.FieldType:
-        return self._bldr.field()
-
-    @property
-    def values(self) -> "LanguageValues":
-        return self._vals
-
-
-class LanguageViewer(LanguageAst):
-    def __init__(self, tb: type_builder.TypeBuilder):
-        super().__init__(tb)
-
-    
-    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
-        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
-    
-
-class LanguageValues:
-    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
-        self.__bldr = enum_bldr
-        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
-
-    
-    
-    @property
-    def EN(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("EN"))
-    
-    @property
-    def GA(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("GA"))
-    
-    @property
-    def CY(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("CY"))
-    
-    @property
-    def GD(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("GD"))
-    
-    @property
-    def GV(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("GV"))
-    
-    
-
-
 class LanguageCodeAst:
     def __init__(self, tb: type_builder.TypeBuilder):
         _tb = tb._tb # type: ignore (we know how to use this private attribute)
@@ -18122,64 +17998,6 @@ class LanguageCodeValues:
     @property
     def UNKNOWN(self) -> type_builder.EnumValueViewer:
         return type_builder.EnumValueViewer(self.__bldr.value("UNKNOWN"))
-    
-    
-
-
-class LanguageCodeIslesAst:
-    def __init__(self, tb: type_builder.TypeBuilder):
-        _tb = tb._tb # type: ignore (we know how to use this private attribute)
-        self._bldr = _tb.enum("LanguageCodeIsles")
-        self._values: typing.Set[str] = set([  "EN",  "GA",  "GD",  "CY",  "GV",  "KW",  ])
-        self._vals = LanguageCodeIslesValues(self._bldr, self._values)
-
-    def type(self) -> baml_py.FieldType:
-        return self._bldr.field()
-
-    @property
-    def values(self) -> "LanguageCodeIslesValues":
-        return self._vals
-
-
-class LanguageCodeIslesViewer(LanguageCodeIslesAst):
-    def __init__(self, tb: type_builder.TypeBuilder):
-        super().__init__(tb)
-
-    
-    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
-        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
-    
-
-class LanguageCodeIslesValues:
-    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
-        self.__bldr = enum_bldr
-        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
-
-    
-    
-    @property
-    def EN(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("EN"))
-    
-    @property
-    def GA(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("GA"))
-    
-    @property
-    def GD(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("GD"))
-    
-    @property
-    def CY(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("CY"))
-    
-    @property
-    def GV(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("GV"))
-    
-    @property
-    def KW(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("KW"))
     
     
 

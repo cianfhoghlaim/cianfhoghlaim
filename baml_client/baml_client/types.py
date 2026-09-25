@@ -37,7 +37,7 @@ def get_checks(checks: typing.Dict[CheckName, Check]) -> typing.List[Check]:
 def all_succeeded(checks: typing.Dict[CheckName, Check]) -> bool:
     return all(check.status == "succeeded" for check in get_checks(checks))
 # #########################################################################
-# Generated enums (320)
+# Generated enums (317)
 # #########################################################################
 
 class ALevelAQASubject(str, Enum):
@@ -642,14 +642,6 @@ class CelticLanguageArchive(str, Enum):
     MGA = "MGA"
     OW = "OW"
     EN = "EN"
-
-class CelticLanguageCurriculum(str, Enum):
-    IRISH = "IRISH"
-    SCOTTISH_GAELIC = "SCOTTISH_GAELIC"
-    WELSH = "WELSH"
-    MANX = "MANX"
-    CORNISH = "CORNISH"
-    BRETON = "BRETON"
 
 class CelticSoundChange(str, Enum):
     KW_TO_K = "KW_TO_K"
@@ -2075,13 +2067,6 @@ class LCSubjectSlug(str, Enum):
     MUSIC = "MUSIC"
     COMPUTER_SCIENCE = "COMPUTER_SCIENCE"
 
-class Language(str, Enum):
-    EN = "EN"
-    GA = "GA"
-    CY = "CY"
-    GD = "GD"
-    GV = "GV"
-
 class LanguageCode(str, Enum):
     EN = "EN"
     GA = "GA"
@@ -2091,14 +2076,6 @@ class LanguageCode(str, Enum):
     KW = "KW"
     MIXED = "MIXED"
     UNKNOWN = "UNKNOWN"
-
-class LanguageCodeIsles(str, Enum):
-    EN = "EN"
-    GA = "GA"
-    GD = "GD"
-    CY = "CY"
-    GV = "GV"
-    KW = "KW"
 
 class LanguageCodeOcr(str, Enum):
     EN = "EN"
@@ -4631,7 +4608,7 @@ class CelticCurriculumComparison(BaseModel):
     notes: str
 
 class CelticCurriculumSpec(BaseModel):
-    language: CelticLanguageCurriculum = Field(description='Which Celtic language')
+    language: CelticLanguage = Field(description='Which Celtic language')
     nation_code: str = Field(description='ISO 3166-1 alpha-3 (e.g., IRL, GBR, FRA)')
     education_level: EducationLevelCeltic = Field(description='Primary / Secondary / Higher')
     year_levels: typing.List[str] = Field(description='Year levels covered (e.g., [\'Junior Infants\', \'Senior Infants\', \'1st\', \'2nd\'])')
@@ -4656,7 +4633,7 @@ class CelticForm(BaseModel):
     notes: typing.Optional[str] = Field(default=None, description='Notes about this specific form')
 
 class CelticGrammarPattern(BaseModel):
-    language: CelticLanguageCurriculum = Field(description='Which Celtic language')
+    language: CelticLanguage = Field(description='Which Celtic language')
     pattern_type: GrammarPatternType = Field(description='Type of grammar pattern (VSO, COPULA, etc.)')
     text: str = Field(description='The text example in the source language')
     english_translation: str = Field(description='English translation')
@@ -4673,7 +4650,7 @@ class CelticLearningOutcome(BaseModel):
     assessable: bool = Field(description='Can be formally assessed')
 
 class CelticMorphologySpec(BaseModel):
-    language: CelticLanguageCurriculum = Field(description='Which Celtic language')
+    language: CelticLanguage = Field(description='Which Celtic language')
     word: str = Field(description='The word being analysed')
     word_class: str = Field(description='Part of speech: noun, verb, adjective, etc.')
     inflection_class: str = Field(description='Conjugation/declension class')
@@ -5422,7 +5399,7 @@ class CurriculumTopic(BaseModel):
 
 class CurriculumUnit(BaseModel):
     title: str = Field(description='Unit title')
-    language: CelticLanguageCurriculum = Field(description='Target language')
+    language: CelticLanguage = Field(description='Target language')
     level: EducationLevelCeltic = Field(description='Education level')
     grade_year: typing.Optional[str] = Field(default=None, description='Specific grade/year')
     nation: str = Field(description='Country of origin')
@@ -11381,7 +11358,7 @@ class SubjectRegistryRow(BaseModel):
     subject_slug: str
     board: AwardingBody
     qualification_level: typing.Optional[QualificationLevel] = None
-    language: Language
+    language: CelticLanguage
     display_name_en: str
     display_name_local: typing.Optional[str] = None
     concept: CrossJurisdictionConcept
@@ -11407,7 +11384,7 @@ class SubjectSlug(BaseModel):
     subject_slug: str = Field(description='Lowercase snake_case, e.g. \'mathematics\', \'english_language\'')
     board: AwardingBody
     qualification_level: typing.Optional[QualificationLevel] = None
-    language: Language
+    language: CelticLanguage
 
 class SupernaturalEntity(BaseModel):
     name: str = Field(description='Entity name or type')

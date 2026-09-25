@@ -61,13 +61,14 @@ enum AwardingBody {
 }
 
 
-enum Language {
-  EN                       // English
-  GA                       // Irish (Gaeilge)
-  CY                       // Welsh (Cymraeg)
-  GD                       // Scottish Gaelic
-  GV                       // Manx
-}
+// Phase 1.1 (2026-09-25 5-phase Celtic overhaul): the local `Language` enum
+// has been replaced by the canonical `CelticLanguage` enum from
+// `baml_src/celtic/sources.baml`. The canonical 8-entry enum (GA, GD, CY, GV,
+// KW, EN, SCO, ULS) is a strict superset of this local 5-entry subset.
+// Cross-jurisdiction concept extractions now use CelticLanguage directly.
+
+// Phase 1.1: removed the local `enum Language { ... }` declaration.
+// Use the canonical `CelticLanguage` from `baml_src/celtic/sources.baml`.
 
 enum CrossJurisdictionConcept {
   // Core 10 subjects that span most jurisdictions
@@ -124,7 +125,7 @@ class SubjectSlug {
   subject_slug string             @description("Lowercase snake_case, e.g. 'mathematics', 'english_language'")
   board AwardingBody
   qualification_level QualificationLevel?
-  language Language
+  language CelticLanguage
 }
 
 class SubjectRegistryRow {
@@ -134,7 +135,7 @@ class SubjectRegistryRow {
   subject_slug string
   board AwardingBody
   qualification_level QualificationLevel?
-  language Language
+  language CelticLanguage
 
   // Display
   display_name_en string

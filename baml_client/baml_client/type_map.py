@@ -2921,8 +2921,6 @@ type_map = {
 
     "types.CelticLanguageArchive": types.CelticLanguageArchive,
 
-    "types.CelticLanguageCurriculum": types.CelticLanguageCurriculum,
-
     "types.CelticSoundChange": types.CelticSoundChange,
 
     "types.CelticTradition": types.CelticTradition,
@@ -3189,11 +3187,7 @@ type_map = {
 
     "types.LCSubjectSlug": types.LCSubjectSlug,
 
-    "types.Language": types.Language,
-
     "types.LanguageCode": types.LanguageCode,
-
-    "types.LanguageCodeIsles": types.LanguageCodeIsles,
 
     "types.LanguageCodeOcr": types.LanguageCodeOcr,
 

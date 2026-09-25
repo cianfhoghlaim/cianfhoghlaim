@@ -1,14 +1,14 @@
 // Celtic Curriculum Extraction Schemas
 // Extract structured data from Celtic language curriculum documents
-
-enum CelticLanguageCurriculum {
-  IRISH
-  SCOTTISH_GAELIC
-  WELSH
-  MANX
-  CORNISH
-  BRETON
-}
+//
+// Phase 1.1 (2026-09-25 5-phase Celtic overhaul): the duplicate
+// `CelticLanguageCurriculum` enum has been removed. All `language` fields
+// now reference the canonical `CelticLanguage` enum from
+// `baml_src/celtic/sources.baml` (which has all 8 entries: GA, GD, CY, GV, KW,
+// EN, SCO, ULS). The canonical enum covers all 6 Celtic languages (the
+// curriculum subset) plus the 2 non-Celtic sister variants needed for the
+// British-Isles Education Pipeline (EN for English-medium education; SCO + ULS
+// for the Ulster-Scots overlay).
 
 enum EducationLevelCeltic {
   PRIMARY
@@ -69,7 +69,7 @@ class CelticWord {
 
 class CurriculumUnit {
   title string @description("Unit title")
-  language CelticLanguageCurriculum @description("Target language")
+  language CelticLanguage @description("Target language")
   level EducationLevelCeltic @description("Education level")
   grade_year string? @description("Specific grade/year")
   nation string @description("Country of origin")
@@ -86,7 +86,7 @@ class CurriculumUnit {
 // Extract curriculum unit from document
 function ExtractCurriculumUnit(
   document: string,
-  language: CelticLanguageCurriculum,
+  language: CelticLanguage,
   nation: string
 ) -> CurriculumUnit {
   client ExtractEn
@@ -120,7 +120,7 @@ function ExtractCurriculumUnit(
 // Extract grammar explanation
 function ExtractGrammarTopic(
   content: string,
-  language: CelticLanguageCurriculum
+  language: CelticLanguage
 ) -> GrammarTopic {
   client ExtractEn
   prompt #"
@@ -153,7 +153,7 @@ function ExtractGrammarTopic(
 // Extract vocabulary from text
 function ExtractVocabulary(
   text: string,
-  language: CelticLanguageCurriculum,
+  language: CelticLanguage,
   theme: string?
 ) -> VocabularySet {
   client ExtractEn
@@ -204,7 +204,7 @@ class AssessmentQuestion {
 
 function GenerateAssessment(
   outcome: CelticLearningOutcome,
-  language: CelticLanguageCurriculum,
+  language: CelticLanguage,
   question_count: int
 ) -> OutcomeAssessment {
   client ExtractEn
@@ -345,7 +345,7 @@ function CompareCelticNations(
 // Per-nation curriculum specification for any of the 6 Celtic languages
 // (Irish, Scottish Gaelic, Welsh, Manx, Cornish, Breton)
 class CelticCurriculumSpec {
-  language CelticLanguageCurriculum @description("Which Celtic language")
+  language CelticLanguage @description("Which Celtic language")
   nation_code string @description("ISO 3166-1 alpha-3 (e.g., IRL, GBR, FRA)")
   education_level EducationLevelCeltic @description("Primary / Secondary / Higher")
   year_levels string[] @description("Year levels covered (e.g., ['Junior Infants', 'Senior Infants', '1st', '2nd'])")
@@ -362,7 +362,7 @@ class CelticCurriculumSpec {
 // `gemma-4-26B-A4B` (Welsh/Scottish/Breton) via LlamaSwap routing.
 function ExtractCelticCurriculum(
   text: string,
-  language: CelticLanguageCurriculum
+  language: CelticLanguage
 ) -> CelticCurriculumSpec {
   client ExtractEn
   prompt #"

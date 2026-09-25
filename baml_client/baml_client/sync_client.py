@@ -656,7 +656,7 @@ class BamlSyncClient:
             return typing.cast(types.DocumentTypeIsles, __result__.cast_to(types, types, stream_types, False, __runtime__))
     def DetectLanguages(self, text: str,
         baml_options: BamlCallOptions = {},
-    ) -> typing.List[types.LanguageCodeIsles]:
+    ) -> typing.List[types.CelticLanguage]:
         # Check if on_tick is provided
         if 'on_tick' in baml_options:
             __stream__ = self.stream.DetectLanguages(text=text,
@@ -667,7 +667,7 @@ class BamlSyncClient:
             __result__ = self.__options.merge_options(baml_options).call_function_sync(function_name="DetectLanguages", args={
                 "text": text,
             })
-            return typing.cast(typing.List[types.LanguageCodeIsles], __result__.cast_to(types, types, stream_types, False, __runtime__))
+            return typing.cast(typing.List[types.CelticLanguage], __result__.cast_to(types, types, stream_types, False, __runtime__))
     def DocumentMutationTriggers(self, language: types.CelticLanguage,
         baml_options: BamlCallOptions = {},
     ) -> typing.List["types.MutationTriggerPattern"]:
@@ -1970,7 +1970,7 @@ class BamlSyncClient:
                 "page_content": page_content,"barony_id": barony_id,
             })
             return typing.cast(types.CanuintRecording, __result__.cast_to(types, types, stream_types, False, __runtime__))
-    def ExtractCelticCurriculum(self, text: str,language: types.CelticLanguageCurriculum,
+    def ExtractCelticCurriculum(self, text: str,language: types.CelticLanguage,
         baml_options: BamlCallOptions = {},
     ) -> types.CelticCurriculumSpec:
         # Check if on_tick is provided
@@ -1998,7 +1998,7 @@ class BamlSyncClient:
                 "text": text,"language": language,
             })
             return typing.cast(typing.List["types.CelticNamedEntity"], __result__.cast_to(types, types, stream_types, False, __runtime__))
-    def ExtractCelticGrammar(self, text: str,language: types.CelticLanguageCurriculum,max_patterns: typing.Optional[int] = None,
+    def ExtractCelticGrammar(self, text: str,language: types.CelticLanguage,max_patterns: typing.Optional[int] = None,
         baml_options: BamlCallOptions = {},
     ) -> typing.List["types.CelticGrammarPattern"]:
         # Check if on_tick is provided
@@ -2012,7 +2012,7 @@ class BamlSyncClient:
                 "text": text,"language": language,"max_patterns": max_patterns,
             })
             return typing.cast(typing.List["types.CelticGrammarPattern"], __result__.cast_to(types, types, stream_types, False, __runtime__))
-    def ExtractCelticMorphology(self, text: str,language: types.CelticLanguageCurriculum,word_class_hint: typing.Optional[str] = None,
+    def ExtractCelticMorphology(self, text: str,language: types.CelticLanguage,word_class_hint: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> typing.List["types.CelticMorphologySpec"]:
         # Check if on_tick is provided
@@ -2488,7 +2488,7 @@ class BamlSyncClient:
                 "pdf_text": pdf_text,"subject": subject,"language": language,
             })
             return typing.cast(types.LCSyllabusDocument, __result__.cast_to(types, types, stream_types, False, __runtime__))
-    def ExtractCurriculumUnit(self, document: str,language: types.CelticLanguageCurriculum,nation: str,
+    def ExtractCurriculumUnit(self, document: str,language: types.CelticLanguage,nation: str,
         baml_options: BamlCallOptions = {},
     ) -> types.CurriculumUnit:
         # Check if on_tick is provided
@@ -3650,7 +3650,7 @@ class BamlSyncClient:
                 "text": text,"language": language,
             })
             return typing.cast(typing.List["types.GrammarPattern"], __result__.cast_to(types, types, stream_types, False, __runtime__))
-    def ExtractGrammarTopic(self, content: str,language: types.CelticLanguageCurriculum,
+    def ExtractGrammarTopic(self, content: str,language: types.CelticLanguage,
         baml_options: BamlCallOptions = {},
     ) -> types.GrammarTopic:
         # Check if on_tick is provided
@@ -7066,7 +7066,7 @@ class BamlSyncClient:
                 "video_id": video_id,"transcript": transcript,"frame_captions": frame_captions,
             })
             return typing.cast(typing.List["types.KnowledgeTriple"], __result__.cast_to(types, types, stream_types, False, __runtime__))
-    def ExtractVocabulary(self, text: str,language: types.CelticLanguageCurriculum,theme: typing.Optional[str] = None,
+    def ExtractVocabulary(self, text: str,language: types.CelticLanguage,theme: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> types.VocabularySet:
         # Check if on_tick is provided
@@ -7304,7 +7304,7 @@ class BamlSyncClient:
                 "subject": subject,"reference_artwork": reference_artwork,"target_genre": target_genre,"preferred_mood": preferred_mood,
             })
             return typing.cast(types.GenerationSpec, __result__.cast_to(types, types, stream_types, False, __runtime__))
-    def GenerateAssessment(self, outcome: types.CelticLearningOutcome,language: types.CelticLanguageCurriculum,question_count: int,
+    def GenerateAssessment(self, outcome: types.CelticLearningOutcome,language: types.CelticLanguage,question_count: int,
         baml_options: BamlCallOptions = {},
     ) -> types.OutcomeAssessment:
         # Check if on_tick is provided
@@ -9069,14 +9069,14 @@ class BamlStreamClient:
         )
     def DetectLanguages(self, text: str,
         baml_options: BamlCallOptions = {},
-    ) -> baml_py.BamlSyncStream[typing.List[types.LanguageCodeIsles], typing.List[types.LanguageCodeIsles]]:
+    ) -> baml_py.BamlSyncStream[typing.List[types.CelticLanguage], typing.List[types.CelticLanguage]]:
         __ctx__, __result__ = self.__options.merge_options(baml_options).create_sync_stream(function_name="DetectLanguages", args={
             "text": text,
         })
-        return baml_py.BamlSyncStream[typing.List[types.LanguageCodeIsles], typing.List[types.LanguageCodeIsles]](
+        return baml_py.BamlSyncStream[typing.List[types.CelticLanguage], typing.List[types.CelticLanguage]](
           __result__,
-          lambda x: typing.cast(typing.List[types.LanguageCodeIsles], x.cast_to(types, types, stream_types, True, __runtime__)),
-          lambda x: typing.cast(typing.List[types.LanguageCodeIsles], x.cast_to(types, types, stream_types, False, __runtime__)),
+          lambda x: typing.cast(typing.List[types.CelticLanguage], x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(typing.List[types.CelticLanguage], x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
     def DocumentMutationTriggers(self, language: types.CelticLanguage,
@@ -10195,7 +10195,7 @@ class BamlStreamClient:
           lambda x: typing.cast(types.CanuintRecording, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
-    def ExtractCelticCurriculum(self, text: str,language: types.CelticLanguageCurriculum,
+    def ExtractCelticCurriculum(self, text: str,language: types.CelticLanguage,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlSyncStream[stream_types.CelticCurriculumSpec, types.CelticCurriculumSpec]:
         __ctx__, __result__ = self.__options.merge_options(baml_options).create_sync_stream(function_name="ExtractCelticCurriculum", args={
@@ -10219,7 +10219,7 @@ class BamlStreamClient:
           lambda x: typing.cast(typing.List["types.CelticNamedEntity"], x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
-    def ExtractCelticGrammar(self, text: str,language: types.CelticLanguageCurriculum,max_patterns: typing.Optional[int] = None,
+    def ExtractCelticGrammar(self, text: str,language: types.CelticLanguage,max_patterns: typing.Optional[int] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlSyncStream[typing.List["stream_types.CelticGrammarPattern"], typing.List["types.CelticGrammarPattern"]]:
         __ctx__, __result__ = self.__options.merge_options(baml_options).create_sync_stream(function_name="ExtractCelticGrammar", args={
@@ -10231,7 +10231,7 @@ class BamlStreamClient:
           lambda x: typing.cast(typing.List["types.CelticGrammarPattern"], x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
-    def ExtractCelticMorphology(self, text: str,language: types.CelticLanguageCurriculum,word_class_hint: typing.Optional[str] = None,
+    def ExtractCelticMorphology(self, text: str,language: types.CelticLanguage,word_class_hint: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlSyncStream[typing.List["stream_types.CelticMorphologySpec"], typing.List["types.CelticMorphologySpec"]]:
         __ctx__, __result__ = self.__options.merge_options(baml_options).create_sync_stream(function_name="ExtractCelticMorphology", args={
@@ -10639,7 +10639,7 @@ class BamlStreamClient:
           lambda x: typing.cast(types.LCSyllabusDocument, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
-    def ExtractCurriculumUnit(self, document: str,language: types.CelticLanguageCurriculum,nation: str,
+    def ExtractCurriculumUnit(self, document: str,language: types.CelticLanguage,nation: str,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlSyncStream[stream_types.CurriculumUnit, types.CurriculumUnit]:
         __ctx__, __result__ = self.__options.merge_options(baml_options).create_sync_stream(function_name="ExtractCurriculumUnit", args={
@@ -11635,7 +11635,7 @@ class BamlStreamClient:
           lambda x: typing.cast(typing.List["types.GrammarPattern"], x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
-    def ExtractGrammarTopic(self, content: str,language: types.CelticLanguageCurriculum,
+    def ExtractGrammarTopic(self, content: str,language: types.CelticLanguage,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlSyncStream[stream_types.GrammarTopic, types.GrammarTopic]:
         __ctx__, __result__ = self.__options.merge_options(baml_options).create_sync_stream(function_name="ExtractGrammarTopic", args={
@@ -14563,7 +14563,7 @@ class BamlStreamClient:
           lambda x: typing.cast(typing.List["types.KnowledgeTriple"], x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
-    def ExtractVocabulary(self, text: str,language: types.CelticLanguageCurriculum,theme: typing.Optional[str] = None,
+    def ExtractVocabulary(self, text: str,language: types.CelticLanguage,theme: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlSyncStream[stream_types.VocabularySet, types.VocabularySet]:
         __ctx__, __result__ = self.__options.merge_options(baml_options).create_sync_stream(function_name="ExtractVocabulary", args={
@@ -14767,7 +14767,7 @@ class BamlStreamClient:
           lambda x: typing.cast(types.GenerationSpec, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
-    def GenerateAssessment(self, outcome: types.CelticLearningOutcome,language: types.CelticLanguageCurriculum,question_count: int,
+    def GenerateAssessment(self, outcome: types.CelticLearningOutcome,language: types.CelticLanguage,question_count: int,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlSyncStream[stream_types.OutcomeAssessment, types.OutcomeAssessment]:
         __ctx__, __result__ = self.__options.merge_options(baml_options).create_sync_stream(function_name="GenerateAssessment", args={
@@ -16805,7 +16805,7 @@ class BamlHttpRequestClient:
             "page_content": page_content,"barony_id": barony_id,
         }, mode="request")
         return __result__
-    def ExtractCelticCurriculum(self, text: str,language: types.CelticLanguageCurriculum,
+    def ExtractCelticCurriculum(self, text: str,language: types.CelticLanguage,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="ExtractCelticCurriculum", args={
@@ -16819,14 +16819,14 @@ class BamlHttpRequestClient:
             "text": text,"language": language,
         }, mode="request")
         return __result__
-    def ExtractCelticGrammar(self, text: str,language: types.CelticLanguageCurriculum,max_patterns: typing.Optional[int] = None,
+    def ExtractCelticGrammar(self, text: str,language: types.CelticLanguage,max_patterns: typing.Optional[int] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="ExtractCelticGrammar", args={
             "text": text,"language": language,"max_patterns": max_patterns,
         }, mode="request")
         return __result__
-    def ExtractCelticMorphology(self, text: str,language: types.CelticLanguageCurriculum,word_class_hint: typing.Optional[str] = None,
+    def ExtractCelticMorphology(self, text: str,language: types.CelticLanguage,word_class_hint: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="ExtractCelticMorphology", args={
@@ -17064,7 +17064,7 @@ class BamlHttpRequestClient:
             "pdf_text": pdf_text,"subject": subject,"language": language,
         }, mode="request")
         return __result__
-    def ExtractCurriculumUnit(self, document: str,language: types.CelticLanguageCurriculum,nation: str,
+    def ExtractCurriculumUnit(self, document: str,language: types.CelticLanguage,nation: str,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="ExtractCurriculumUnit", args={
@@ -17645,7 +17645,7 @@ class BamlHttpRequestClient:
             "text": text,"language": language,
         }, mode="request")
         return __result__
-    def ExtractGrammarTopic(self, content: str,language: types.CelticLanguageCurriculum,
+    def ExtractGrammarTopic(self, content: str,language: types.CelticLanguage,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="ExtractGrammarTopic", args={
@@ -19353,7 +19353,7 @@ class BamlHttpRequestClient:
             "video_id": video_id,"transcript": transcript,"frame_captions": frame_captions,
         }, mode="request")
         return __result__
-    def ExtractVocabulary(self, text: str,language: types.CelticLanguageCurriculum,theme: typing.Optional[str] = None,
+    def ExtractVocabulary(self, text: str,language: types.CelticLanguage,theme: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="ExtractVocabulary", args={
@@ -19472,7 +19472,7 @@ class BamlHttpRequestClient:
             "subject": subject,"reference_artwork": reference_artwork,"target_genre": target_genre,"preferred_mood": preferred_mood,
         }, mode="request")
         return __result__
-    def GenerateAssessment(self, outcome: types.CelticLearningOutcome,language: types.CelticLanguageCurriculum,question_count: int,
+    def GenerateAssessment(self, outcome: types.CelticLearningOutcome,language: types.CelticLanguage,question_count: int,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="GenerateAssessment", args={
@@ -21055,7 +21055,7 @@ class BamlHttpStreamRequestClient:
             "page_content": page_content,"barony_id": barony_id,
         }, mode="stream")
         return __result__
-    def ExtractCelticCurriculum(self, text: str,language: types.CelticLanguageCurriculum,
+    def ExtractCelticCurriculum(self, text: str,language: types.CelticLanguage,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="ExtractCelticCurriculum", args={
@@ -21069,14 +21069,14 @@ class BamlHttpStreamRequestClient:
             "text": text,"language": language,
         }, mode="stream")
         return __result__
-    def ExtractCelticGrammar(self, text: str,language: types.CelticLanguageCurriculum,max_patterns: typing.Optional[int] = None,
+    def ExtractCelticGrammar(self, text: str,language: types.CelticLanguage,max_patterns: typing.Optional[int] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="ExtractCelticGrammar", args={
             "text": text,"language": language,"max_patterns": max_patterns,
         }, mode="stream")
         return __result__
-    def ExtractCelticMorphology(self, text: str,language: types.CelticLanguageCurriculum,word_class_hint: typing.Optional[str] = None,
+    def ExtractCelticMorphology(self, text: str,language: types.CelticLanguage,word_class_hint: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="ExtractCelticMorphology", args={
@@ -21314,7 +21314,7 @@ class BamlHttpStreamRequestClient:
             "pdf_text": pdf_text,"subject": subject,"language": language,
         }, mode="stream")
         return __result__
-    def ExtractCurriculumUnit(self, document: str,language: types.CelticLanguageCurriculum,nation: str,
+    def ExtractCurriculumUnit(self, document: str,language: types.CelticLanguage,nation: str,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="ExtractCurriculumUnit", args={
@@ -21895,7 +21895,7 @@ class BamlHttpStreamRequestClient:
             "text": text,"language": language,
         }, mode="stream")
         return __result__
-    def ExtractGrammarTopic(self, content: str,language: types.CelticLanguageCurriculum,
+    def ExtractGrammarTopic(self, content: str,language: types.CelticLanguage,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="ExtractGrammarTopic", args={
@@ -23603,7 +23603,7 @@ class BamlHttpStreamRequestClient:
             "video_id": video_id,"transcript": transcript,"frame_captions": frame_captions,
         }, mode="stream")
         return __result__
-    def ExtractVocabulary(self, text: str,language: types.CelticLanguageCurriculum,theme: typing.Optional[str] = None,
+    def ExtractVocabulary(self, text: str,language: types.CelticLanguage,theme: typing.Optional[str] = None,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="ExtractVocabulary", args={
@@ -23722,7 +23722,7 @@ class BamlHttpStreamRequestClient:
             "subject": subject,"reference_artwork": reference_artwork,"target_genre": target_genre,"preferred_mood": preferred_mood,
         }, mode="stream")
         return __result__
-    def GenerateAssessment(self, outcome: types.CelticLearningOutcome,language: types.CelticLanguageCurriculum,question_count: int,
+    def GenerateAssessment(self, outcome: types.CelticLearningOutcome,language: types.CelticLanguage,question_count: int,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="GenerateAssessment", args={
