@@ -537,3 +537,135 @@ try:  # R3 — `mount_table_target`; R4 — `declare_vector_index`
 except ImportError:  # pragma: no cover
     _v1_mount_caighdean_target = None  # type: ignore[assignment]
 
+
+# ============================================================================
+# Phase 1.3 (2026-09-25 5-phase Celtic overhaul) — 3 new pre-extraction helpers.
+#
+# These are wired by the BAML `baml_src/celtic/standardize.baml` wrappers
+# (StandardizeIrish / StandardizeScottishGaelic / StandardizeManx). The
+# pure-Python regex implementations here run BEFORE the BAML function
+# fires (they're cheap), so the BAML function only has to do the
+# linguistically-aware CaighdeanTransform step.
+# ============================================================================
+
+# Pre-compiled regex patterns for the 3 cleanup modes. Compiled at import
+# time so the BAML function calls are O(input) not O(input * regex compile).
+
+# Mode 1 — Wikitext extraction (MediaWiki + Irish-language wiki markup).
+# Matches:
+#   - [[link|alias]]      → capture alias
+#   - [[link]]            → capture link
+#   - {{template|arg}}    → drop entirely
+#   - <ref>...</ref>      → drop entirely
+#   - <ref name="X"/>     → drop entirely
+#   - [[File:...]] / [[Íomhá:...]] / [[Image:...]] → drop entirely
+#   - {| ... |}           → drop the {| |} markup but keep cell content
+#   - ''italic''           → drop the '' markers
+#   - '''bold'''           → drop the ''' markers
+#   - <br> / <br/>         → drop
+#   - <span>...</span>     → drop
+_WIKITEXT_LINK_ALIAS = re.compile(r"\[\[([^\]|]+)\|([^\]]+)\]\]")  # [[link|alias]] → alias
+_WIKITEXT_LINK_PLAIN = re.compile(r"\[\[([^\]]+)\]\]")  # [[link]] → link
+_WIKITEXT_TEMPLATE = re.compile(r"\{\{[^}]*\}\}")  # {{template|arg}} → drop
+_WIKITEXT_REF_FULL = re.compile(r"<ref(?:\s[^>]*)?>.*?</ref>", re.DOTALL)  # <ref>...</ref>
+_WIKITEXT_REF_SELF = re.compile(r"<ref(?:\s[^>]*)?/>")  # <ref name="X"/>
+_WIKITEXT_IMAGE = re.compile(r"\[\[(?:File|Íomhá|Image|Mage|Íoslódáil):[^\]]+\]\]")
+_WIKITEXT_TABLE = re.compile(r"\{\|[^|]*\|([^{]*)\|\}")  # {| cell |} → cell
+_WIKITEXT_ITALIC = re.compile(r"''(.*?)''")  # ''italic'' → italic
+_WIKITEXT_BOLD = re.compile(r"'''(.*?)'''")  # '''bold''' → bold
+_WIKITEXT_BR = re.compile(r"<br\s*/?>")  # <br> / <br/>
+_WIKITEXT_SPAN = re.compile(r"<span(?:\s[^>]*)?>.*?</span>", re.DOTALL)
+
+
+def strip_wikitext(text: str) -> tuple[str, list[str]]:
+    """Strip MediaWiki + Irish-language wiki markup.
+
+    Returns (cleaned_text, list_of_captured_audio_links).
+
+    The captured_audio_links list is empty here — Teanglann audio capture
+    happens in `capture_teanglann_audio_links` (a separate function so
+    the BAML `CaptureTeanglannAudioLinks` wrapper can call it without
+    the wikitext strip).
+    """
+    # Order matters: templates first (they may contain other markup),
+    # then refs (which may contain templates), then images, then the
+    # inline markdowns.
+    cleaned = _WIKITEXT_TEMPLATE.sub("", text)
+    cleaned = _WIKITEXT_REF_FULL.sub("", cleaned)
+    cleaned = _WIKITEXT_REF_SELF.sub("", cleaned)
+    cleaned = _WIKITEXT_IMAGE.sub("", cleaned)
+    cleaned = _WIKITEXT_TABLE.sub(r"\1", cleaned)  # {| cell |} → cell
+    cleaned = _WIKITEXT_BR.sub("", cleaned)
+    cleaned = _WIKITEXT_SPAN.sub("", cleaned)
+    cleaned = _WIKITEXT_LINK_ALIAS.sub(r"\2", cleaned)  # [[link|alias]] → alias
+    cleaned = _WIKITEXT_LINK_PLAIN.sub(r"\1", cleaned)  # [[link]] → link
+    cleaned = _WIKITEXT_BOLD.sub(r"\1", cleaned)  # '''bold''' → bold
+    cleaned = _WIKITEXT_ITALIC.sub(r"\1", cleaned)  # ''italic'' → italic
+    # Collapse 3+ newlines to 2 (preserve paragraph structure).
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    return cleaned, []
+
+
+# Mode 2 — TN6 (Téamaí Náisiúnta 6) hyperlink stripping.
+# Matches:
+#   - [anchor text](http://...)      → keep anchor text
+#   - <a href="...">text</a>          → keep text
+#   - [anchor text][ref]            → keep anchor text
+#   - bare URLs (http://... | https://...)  → drop entirely
+_TN6_MARKDOWN_LINK = re.compile(r"\[([^\]]+)\]\((?:https?://[^)]+)\)")  # [text](http://...)
+_TN6_HTML_LINK = re.compile(r"<a\s+[^>]*href=['\"](?:https?://[^'\"]+)['\"][^>]*>(.*?)</a>", re.DOTALL)
+_TN6_MARKDOWN_REF = re.compile(r"\[([^\]]+)\]\[[^\]]*\]")  # [text][ref]
+_TN6_BARE_URL = re.compile(r"https?://[^\s<>\"']+")
+
+
+def strip_tn6_hyperlinks(text: str) -> str:
+    """Strip hyperlinks per the Téamaí Náisiúnta 6 (TN6) standard."""
+    cleaned = _TN6_MARKDOWN_LINK.sub(r"\1", text)  # [text](http://...) → text
+    cleaned = _TN6_HTML_LINK.sub(r"\1", cleaned)  # <a href="...">text</a> → text
+    cleaned = _TN6_MARKDOWN_REF.sub(r"\1", cleaned)  # [text][ref] → text
+    cleaned = _TN6_BARE_URL.sub("", cleaned)  # bare URLs → drop
+    return cleaned
+
+
+# Mode 3 — Teanglann audio link capture.
+# Matches Teanglann.ie audio URLs in these patterns:
+#   - https://www.teanglann.ie/CanAinm/<word>.mp3
+#   - https://www.teanglann.ie/fuaim/<word>.mp3
+#   - https://www.teanglann.ie/<word>/<pronunciation>.mp3
+#   - Any URL containing 'teanglann.ie' ending in .mp3 or .ogg
+_TEANGLANN_AUDIO_URL = re.compile(
+    r"https?://(?:www\.)?teanglann\.ie/[^\s<>\"']+\.(?:mp3|ogg)",
+    re.IGNORECASE,
+)
+
+
+def capture_teanglann_audio_links(text: str) -> list[str]:
+    """Capture Teanglann.ie audio link URLs.
+
+    Returns the list of distinct URLs in document order.
+    """
+    seen: set[str] = set()
+    result: list[str] = []
+    for match in _TEANGLANN_AUDIO_URL.finditer(text):
+        url = match.group(0)
+        if url not in seen:
+            seen.add(url)
+            result.append(url)
+    return result
+
+
+# Full-clean pipeline — the StandardizationMode.FULL_CLEAN entrypoint.
+def standardize_full_clean(text: str) -> tuple[str, list[str]]:
+    """Apply the full Phase 1.3 cleanup pipeline (wikitext + TN6 + Teanglann).
+
+    Returns (cleaned_text, list_of_captured_audio_links).
+    """
+    audio_links: list[str] = []
+    # Capture Teanglann audio links BEFORE stripping wikitext (the links
+    # are usually in <ref> tags or {{...}} templates).
+    audio_links = capture_teanglann_audio_links(text)
+    cleaned, _ = strip_wikitext(text)
+    cleaned = strip_tn6_hyperlinks(cleaned)
+    return cleaned, audio_links
+
+

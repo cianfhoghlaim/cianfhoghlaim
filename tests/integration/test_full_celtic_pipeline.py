@@ -112,6 +112,46 @@ class TestIrishMutationEnum:
         )
 
 
+class TestStandardizeHelpers:
+    """Stage 1.3 — caighdean_standardize hardening (wikitext + TN6 + Teanglann)."""
+
+    def test_strip_wikitext_removes_link_markup(self):
+        sys.path.insert(0, str(REPO_ROOT))
+        from cocoindex_flows._shared.caighdean_standardize import strip_wikitext
+        cleaned, _ = strip_wikitext("Tá [[bád]] ag [[File:boat.jpg|x]].")
+        assert "[[" not in cleaned
+        assert "bád" in cleaned
+        assert "[[File:" not in cleaned
+
+    def test_strip_tn6_removes_hyperlinks(self):
+        sys.path.insert(0, str(REPO_ROOT))
+        from cocoindex_flows._shared.caighdean_standardize import strip_tn6_hyperlinks
+        cleaned = strip_tn6_hyperlinks("[x](http://y.com) <a href='http://z.com'>link</a>")
+        assert "http://" not in cleaned
+        assert "x" in cleaned
+        assert "link" in cleaned
+
+    def test_capture_teanglann_audio_links(self):
+        sys.path.insert(0, str(REPO_ROOT))
+        from cocoindex_flows._shared.caighdean_standardize import capture_teanglann_audio_links
+        text = "Éist https://www.teanglann.ie/CanAinm/cat.mp3 agus https://www.teanglann.ie/fuaim/bád.mp3"
+        links = capture_teanglann_audio_links(text)
+        assert len(links) == 2
+        assert all("teanglann.ie" in link for link in links)
+
+    def test_standardize_baml_wrappers_compile(self):
+        """The 3 standardize.baml wrappers reach the generated Python client."""
+        # Import-time check (baml-cli generate must have run successfully;
+        # if it didn't, the import will fail)
+        sys.path.insert(0, str(REPO_ROOT))
+        sys.path.insert(0, str(REPO_ROOT / "baml_client"))
+        from baml_client.sync_client import b
+        funcs = [n for n in dir(b) if n.startswith("Standardize")]
+        assert "StandardizeIrish" in funcs
+        assert "StandardizeScottishGaelic" in funcs
+        assert "StandardizeManx" in funcs
+
+
 class TestSisterLiftsProvenance:
     """Phase 5.6 — SisterLift provenance + ledger sync."""
 
