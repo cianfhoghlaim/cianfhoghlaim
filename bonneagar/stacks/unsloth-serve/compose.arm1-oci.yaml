@@ -1,0 +1,40 @@
+# =============================================================================
+# UNSLOTH-SERVE — arm1-oci GPU Override
+# =============================================================================
+# GPU-backed variant. Public-facing via Pangolin
+# (`unsloth-api.cianfhoghlaim.ie`).
+#
+# Applied via:  docker compose -f compose.yaml -f compose.arm1-oci.yaml up -d
+# =============================================================================
+
+services:
+  unsloth-serve:
+    # Override the base image: GPU base (CUDA) on arm1-oci
+    image: unsloth/unsloth:cuda-latest
+    # Full GPU offload (model fits in the 12 GB NVIDIA RTX-class GPU)
+    environment:
+      LLAMA_ARG_NGL: "99"
+      LLAMA_ARG_CTX_SIZE: "32768"
+      # The CUDA base image needs the host's GPU passthrough
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+    # Public bind on arm1-oci (Pangolin routes)
+    ports:
+      - "8888:8888"
+      - "8889:8889"
+    # Larger memory limit on the GPU host (the model + KV cache
+    # requires ~12 GB at Q4_K_M for 27B-class models)
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 12G
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    # The network on arm1-oci is the public one
+    networks:
+      - cianfhoghlaim
+      - lakehouse

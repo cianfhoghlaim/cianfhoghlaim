@@ -5,13 +5,14 @@ description: Consolidated setup + MCP reference for the three agent knowledge su
 
 # Indexing & Cognition — Setup + MCP Reference
 
-The Cianfhoghlaim monorepo runs **three parallel knowledge surfaces**
+The Cianfhoghlaim monorepo runs **four parallel knowledge surfaces**
 that every agent consumes via MCP:
 
 | Surface | What it indexes | Backend | MCP server | Use for |
 |:--|:--|:--|:--|:--|
 | **CCC** (CocoIndex Code) | 8,845 source files / 257,957 chunks | SQLite + BGE-M3 embeddings | `cocoindex-code` (`ccc mcp`) | "Where is BAML extraction implemented?" "What calls `run_conformance_check`?" |
 | **Cognee** | Docs (1,743 `.md` files, ~2,242 docs across 7 typed clusters) | Neo4j graph + LanceDB vectors + DeepSeek V4 Pro | `cognee` (`cognee-mcp`) | "What is the architecture pattern for the agent fleet?" "How does the cognify pipeline differ across stages?" |
+| **Pangolin** (2026-09-25) | 1 self-hosted Pangolin EE instance (fosrl/pangolin:ee-1.21.1) on arm1-oci + ~50 private resources + 1 AI Gateway (`ai.cianfhoghlaim.ie`) with 1 Custom provider (`unsloth-local`) + 2 overlapping resources (private + public) | The self-hosted Pangolin control plane + WireGuard tunnel to bunchloch | n/a (no MCP yet — use `scripts/pangolin/provision_ai_gateway.py` + `curl https://pangolin.cianfhoghlaim.ie/api/v1/...`) | "What private resources are reachable from this device?" "What's the model catalogue at `ai.cianfhoghlaim.ie`?" "What are the per-role + global budgets on the AI Gateway?" |
 | **Firecrawl MCP** | Live web (search / scrape / crawl / map / agent / interact / batch / parse / research / developer) | Firecrawl SaaS + 12 MCP tools + 43M-paper Research Index | `firecrawl` (the platform-level MCP) | "What does upstream say about X right now?" "Find the GitHub issue about this bug" "Find papers on BAML / OCR / curriculum" |
 
 **The triple-search insight (post-2026-08-14):** CCC returns code;
@@ -31,7 +32,7 @@ spec formalises the contract.
 
 | Metric | Value |
 |:--|:--|
-| Project | `/Users/cianmacandeisigh/dev/cianfhoghlaim` |
+| Project | `/Users/cianmacandeisigh/dev/kings_college_galway` |
 | Settings | `.cocoindex_code/settings.yml` |
 | Index DB | `.cocoindex_code/target_sqlite.db` (2.1 GB) |
 | Flow state | `.cocoindex_code/cocoindex.db` (incremental tracking) |
@@ -82,7 +83,7 @@ bun run ccc:search --lang python --path 'cianfhoghlaim/*' "BAML extraction funct
 bun run ccc:search --offset 5 --limit 5 "BAML extraction function"
 
 # Summarise a file or directory (uses project's summary feature)
-ccc describe cocoindex_flows/_lifespan.py
+ccc describe cocoindex/_lifespan.py
 
 # List + read concept guides (loaded from .cocoindex_code/guides.yml)
 ccc describe .                       # project overview
@@ -93,7 +94,7 @@ ccc describe .                       # project overview
 
 Per the `docs-skills-consolidation-pipeline` change (2026-06-16),
 the v1-native replacement for the standalone `ccc search` CLI is
-the **`cocoindex_flows/codebase_indexing.py`**
+the **`cocoindex/codebase_indexing.py`**
 CocoIndex v1 App, registered in Dagster under the `codebase`
 asset group. It uses the **same embedding model** (`BAAI/bge-m3`)
 and the **same LanceDB HNSW index** as the rest of the data
@@ -276,26 +277,24 @@ exposes the following tools to every agent:
 
 ---
 
-## 3. The full MCP inventory (12 enabled servers in `opencode.json`)
+## 3. The full MCP inventory (10 servers in `opencode.json`)
 
-| Server | Tools (n) | Backend | Use for |
-|:--|--:|:--|:--|
-| `cocoindex-code` (ccc) | 9 | SQLite + BGE-M3 | semantic code search |
-| `cognee` | 10 | Neo4j + LanceDB + DeepSeek | knowledge graph over docs |
-| `firecrawl` | 14+ | Firecrawl SaaS | web search / scrape / crawl / agent / research / monitor / develop |
-| `chrome` (chrome-devtools-mcp) | 28+ | Chrome DevTools | navigation / screenshot / a11y snapshot / JS eval / performance / lighthouse |
-| `motherduck` | 5 | DuckDB + MotherDuck | SQL analytics |
-| `huggingface` | 10+ | HF Hub API | model + dataset + Space discovery |
-| `design-system` | 1+ | Python FastMCP | AG-UI self-heal |
-| `dlt-workspace-mcp` | 8 | dlthub CLI | dlt pipeline workspace |
-| `crawl4ai` | 7+ | self-hosted | open-source bulk scraping |
-| `infisical` | 12 | Infisical API | runtime secret mutation |
-| `graphiti` | 8 | FalkorDB + OpenAI | bi-temporal knowledge graph |
-| `langfuse` | 15+ | Langfuse API | LLM trace retrieval |
+| MCP server | Purpose | Tool count | Required? |
+|:--|:--|--:|:--|
+| **cocoindex-code** | Semantic code search via `ccc mcp` | 9 | ✅ Yes (always on) |
+| **cognee** | Knowledge graph over docs via `cognee-mcp` | 10 | ✅ Yes (always on) |
+| **graphiti** | Temporal knowledge graph (bi-temporal memory) | 6 | ✅ Yes (always on) |
+| **langfuse** | LLM observability (traces, costs, prompt mgmt) | 8 | ✅ Yes (always on) |
+| **firecrawl** | Web scraping / crawling / monitoring | 6 | ✅ Yes (always on) |
+| **browserbase** | Cloud browser automation (Stagehand) | 12 | ✅ Yes (always on) |
+| **chrome** | Local Chrome DevTools MCP (for debugging web apps) | 6 | Optional |
+| **motherduck** | DuckDB / MotherDuck analytics | 8 | ✅ Yes (always on) |
+| **infisical** | Secrets management | 10 | ✅ Yes (always on) |
 
-**Total: 12 enabled MCP servers, 130+ tools.** Run
-`mise run lint:mcp-runtime` to verify every enabled MCP has a
-`mcp:smoke:<name>` mise task.
+**Total: 15 MCP servers, 100+ tools** wired in `opencode.json`.
+
+All secrets are auto-hydrated from Infisical (`dev-baile`
+environment) — never hard-coded in `opencode.json`.
 
 ---
 
@@ -371,7 +370,7 @@ documented" — agent merges code (CCC) with architecture
 | Doc | Lines | Purpose |
 |:--|--:|:--|
 | `.agents/skills/ccc/SKILL.md` | 400 | Agent usage guide for CCC |
-| `.agents/skills/ccc/references/integration/CCC_INTEGRATION.md` | 187 | cianfhoghlaim-specific setup + dual-search workflow |
+| `.agents/skills/ccc/references/integration/CCC_INTEGRATION.md` | 187 | KCG-specific setup + dual-search workflow |
 | `.agents/skills/ccc/references/health/cocoindex_readiness_audit.md` | 327 | Index health audit (1.4 GB → 2.1 GB, 8,845 files, 257,957 chunks) |
 | `.agents/skills/ccc/references/settings.md` | — | Index settings (`include_patterns`, `exclude_patterns`, embedding model) |
 | `.agents/skills/ccc/references/management.md` | — | CLI commands (init, index, search, status, reset, doctor, mcp, daemon) |
@@ -603,7 +602,7 @@ subagents were rewritten to align with the new tree.
 
 | Former surface (pre-2026-06-28) | Current path (v7) |
 |:--|:--|
-| Oideachais data platform (5-stage PDF pipeline, BAML, DLT sources) | repo root with `dlt_sources/`, `baml_src/`, `cocoindex_flows/`, `orchestration/`, `notebooks/` |
+| Oideachais data platform (5-stage PDF pipeline, BAML, DLT sources) | repo root with `dlt_sources/`, `baml_src/`, `cocoindex/`, `orchestration/`, `notebooks/` |
 | Oideachais official-media DLT source | `dlt_sources/official_media/` |
 | Oideachais BAML schemas | `baml_src/` |
 | Oideachais notebooks | `notebooks/` |
@@ -645,7 +644,7 @@ subagents + 1 research subagent** in `opencode.json`:
 
 The pre-v4 subagent `skill_filter` arrays referenced ~35 legacy
 skill names that no longer exist as top-level skills (e.g.
-`cianfhoghlaim-pipeline`, `agent-fleet-orchestration`,
+`cianfhoghlaim-pipeline`, `kcg-pangolin-stack`, `agent-fleet-orchestration`,
 `document-intelligence`, `tuatha-mmo`, `pent-elemental-cosmology`,
 `croilar-stream-registry`, etc.). These have all been replaced with
 top-level skills that resolve to existing directories under
@@ -685,7 +684,7 @@ and defines a new canonical spec:
 Three surfaces expose the Cianfhoghlaim codebase to agents.
 This section resolves the dual CLI vs v1 App vs graph
 companion split that the `ccc` skill's DEPRECATION NOTICE
-banner + the `cocoindex_flows/codebase_indexing.py` v1 App
+banner + the `cocoindex/codebase_indexing.py` v1 App
 introduced.
 
 ### 10.1 The 3 surfaces
@@ -749,7 +748,7 @@ code). All registered in
 Each companion writes to its own LanceDB table; the
 unified v1 App + the 4 companions share the same
 embedder (`BAAI/bge-m3`, 1024-d) per
-`cocoindex_flows/_shared/_lifespan.py:107`.
+`cocoindex/_shared/_lifespan.py:107`.
 
 ### 10.5 The DEPRECATION NOTICE context
 
@@ -773,7 +772,7 @@ bun run ccc:init       # first time only (creates .cocoindex_code/)
 bun run ccc:index      # incremental refresh (<10s) / full rebuild (~2-5 min)
 bun run ccc:search "your query"
 ccc describe .         # project overview
-ccc describe cocoindex_flows/_lifespan.py    # per-file summary
+ccc describe cocoindex/_lifespan.py    # per-file summary
 ccc status             # chunk count + file count + language histogram
 
 # v1 App (Python — canonical replacement)
@@ -789,47 +788,12 @@ uv run python -c "from cocoindex.codebase_indexing import search_api_endpoints; 
 ### 10.7 Cross-references
 
 - [`./ccc/SKILL.md`](ccc/SKILL.md) — the CCC CLI skill (with the DEPRECATION NOTICE banner)
-- [`./cocoindex_flows/SKILL.md`](cocoindex_flows/SKILL.md) — the CocoIndex v1 master skill
-- [`../../cocoindex_flows/codebase_indexing.py`](../../cocoindex_flows/codebase_indexing.py) — the v1 App canonical source
-- [`../../cocoindex_flows/AGENTS.md`](../../cocoindex_flows/AGENTS.md) — the CocoIndex embedding layer
+- [`./cocoindex/SKILL.md`](cocoindex/SKILL.md) — the CocoIndex v1 master skill
+- [`../../cocoindex/codebase_indexing.py`](../../cocoindex/codebase_indexing.py) — the v1 App canonical source
+- [`../../cocoindex/AGENTS.md`](../../cocoindex/AGENTS.md) — the CocoIndex embedding layer
 - [`../../orchestration/defs/unified_embedding_assets.py`](../../orchestration/defs/unified_embedding_assets.py) — the 4 infrastructure companions
 
 ---
 
 **Last updated**: 2026-08-13 (added §10 Code-search canonical entrypoint — resolves the CLI vs v1 App vs graph companion split; 3 surfaces + decision matrix + code samples + 4 infrastructure companions).
 **Owner**: Build agent.
-
----
-
-## 5. The triple-tool workflow (MCP-native)
-
-Per the §MCP Tool Routing table in `AGENTS.md`, agents should call
-the MCP tools directly when they need a live result. The dual-search
-workflow in §4 stays valid for build pipelines and shell scripts
-(`bun run ccc:search "..."` and `curl /api/v1/search`); agents in a
-fresh OpenCode session should prefer the MCP tools.
-
-```python
-# 1. CCC: find the code (MCP tool — appears in system prompt)
-result = call_mcp_tool("cocoindex-code_search", {
-    "query": "BAML extraction function",
-    "limit": 5,
-})
-
-# 2. Cognee: find the architecture (MCP tool)
-context = call_mcp_tool("cognee_search", {
-    "query": "BAML extraction patterns",
-    "datasets": ["docs-agents", "docs-ml"],
-})
-
-# 3. Firecrawl: check upstream (MCP tool, needs API key)
-upstream = call_mcp_tool("firecrawl_search", {
-    "query": "BAML 0.6 schema changes",
-    "categories": ["developer"],
-    "limit": 3,
-})
-```
-
-`call_mcp_tool` here is conceptual — OpenCode's actual surface is the
-qualified tool name in the system prompt (e.g.
-`mcp__cocoindex-code__cocoindex-code_search`).

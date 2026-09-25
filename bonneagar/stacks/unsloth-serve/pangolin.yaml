@@ -1,0 +1,59 @@
+# =============================================================================
+# UNSLOTH-SERVE — Pangolin Traefik Routing
+# =============================================================================
+# Routes 2 Pangolin private resources:
+#   1. unsloth.cianfhoghlaim.ie       → :8888 (the Studio UI)
+#   2. unsloth-api.cianfhoghlaim.ie  → :8889 (the OpenAI/Anthropic API)
+#
+# The API route terminates on arm1-oci (the GPU host). The Studio UI
+# route is routeable on both arm1-oci + bunchloch.
+#
+# Middlewares (canonical Cianfhoghlaim):
+#   tinyauth        — Pocket ID OIDC SSO (from the pangolin stack)
+#   secure-headers  — HSTS + X-Frame-Options etc. (from the pangolin stack)
+# =============================================================================
+
+http:
+  routers:
+    unsloth-studio:
+      entryPoints:
+        - https
+      rule: "Host(`unsloth.cianfhoghlaim.ie`)"
+      service: unsloth-serve
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - tinyauth
+        - secure-headers
+      priority: 100
+
+    unsloth-api:
+      entryPoints:
+        - https
+      rule: "Host(`unsloth-api.cianfhoghlaim.ie`)"
+      service: unsloth-serve-api
+      tls:
+        certResolver: letsencrypt
+      middlewares:
+        - tinyauth
+        - secure-headers
+      priority: 100
+
+  services:
+    unsloth-serve:
+      loadBalancer:
+        servers:
+          - url: "http://unsloth-serve:8888"
+        healthCheck:
+          path: /
+          interval: 30s
+          timeout: 3s
+
+    unsloth-serve-api:
+      loadBalancer:
+        servers:
+          - url: "http://unsloth-serve:8889"
+        healthCheck:
+          path: /v1/models
+          interval: 30s
+          timeout: 3s
