@@ -117,6 +117,8 @@ class JCSubjectSpecification {
   cba_descriptor JCCBADescriptor? @description("The Classroom-Based Assessment descriptor (for Sciences, CSPE, SPHE)")
   prescribed_texts JCBilingualText[]? @description("For English + Gaeilge")
   key_competencies string[]
+  dialect_variants DialectVariant[]? @description("Phase 1.5 (2026-09-25 5-phase Celtic overhaul) — per-segment dialectal standardisation records from StandardizeIrish (see baml_src/celtic/standardize.baml). Records the original → standardised transformation for each segment.")
+  audio_links string[]? @description("Phase 1.5 — Teanglann.ie audio links captured during wikitext extraction, attached for the operator-facing marimo notebook pronunciation panel")
 }
 
 class JuniorCycleLearningOutcome {

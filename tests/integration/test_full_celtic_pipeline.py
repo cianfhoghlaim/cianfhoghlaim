@@ -186,6 +186,21 @@ class TestLCSyllabusDocumentDialectVariants:
         assert "StandardizeIrish" in content
         assert "dialect_variants" in content or "Phase 1.4" in content
 
+    def test_jc_syllabus_document_has_dialect_variants_field(self):
+        """The JCSubjectSpecification class must have the new dialect_variants field (Phase 1.5)."""
+        sys.path.insert(0, str(REPO_ROOT))
+        sys.path.insert(0, str(REPO_ROOT / "baml_client"))
+        from baml_client.types import JCSubjectSpecification
+        assert "dialect_variants" in JCSubjectSpecification.model_fields, (
+            "JCSubjectSpecification must have dialect_variants field (Phase 1.5)"
+        )
+
+    def test_ireland_jc_stage_template_documents_standardize_pretxt(self):
+        """The ireland_jc_stage.baml template must document that text is pre-standardised."""
+        content = (REPO_ROOT / "baml_src/_shared/templates/ireland_jc_stage.baml").read_text()
+        assert "StandardizeIrish" in content
+        assert "dialect_variants" in content or "Phase 1.5" in content
+
 
 class TestSisterLiftsProvenance:
     """Phase 5.6 — SisterLift provenance + ledger sync."""
