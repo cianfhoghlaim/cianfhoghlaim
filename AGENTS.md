@@ -8,7 +8,7 @@ The 5 priority skills, the 4 priority commands, the 4 priority
 compose stacks, and the 4 priority openspec specs at a glance.
 **Read this first**; the rest of the file is detail.
 
-### Priority skills (7 of 64)
+### Priority skills (10 of 67)
 
 | Skill | When to load |
 |:--|:--|
@@ -19,6 +19,9 @@ compose stacks, and the 4 priority openspec specs at a glance.
 | [`centralized-registry`](.agents/skills/centralized-registry/SKILL.md) | **The single source of truth for models + schemas** — MODEL_REGISTRY + notebooks/_shared/schema.py + deployment-choice.yaml (post-2026-08-15). Load this when adding/changing/toggling any model, schema, pipeline, or stack. |
 | [`openspec`](openspec/AGENTS.md) | Spec-driven change management (96 capability specs) |
 | [`indexing-and-cognition`](.agents/skills/INDEXING_AND_COGNITION.md) | Consolidated setup + MCP reference for `ccc` (semantic code search) + `cognee` (knowledge graph over docs). Use when an agent or team member asks "how do I set up ccc?", "how do I start cognee?", "what MCP tools are available?", or "how does the dual-search workflow work?" |
+| [`pangolin-cli`](.agents/skills/pangolin-cli/SKILL.md) | Pangolin CLI v0.17 — machine-client tunneling, `pangolin up`, `pangolin configure opencode`, launchd/systemd service-install |
+| [`pangolin-ai-gateway`](.agents/skills/pangolin-ai-gateway/SKILL.md) | The 2026-Q3 identity-aware AI Gateway contract — public+private overlapping resources, Custom providers, budgets, session logs |
+| [`marimo-embed`](.agents/skills/marimo-embed/SKILL.md) | Embed marimo notebooks in TanStack Start pages via the marimo-server-on-Pangolin pattern (sandboxed iframe) |
 
 ### ccc code search (always use before grep)
 
@@ -432,9 +435,83 @@ Use [`ragas`](.agents/skills/ragas/SKILL.md) with [`langfuse`](.agents/skills/la
 ### UI/UX
 
 1. **Use CopilotKit components** for consistent AI interfaces
-2. **Implement streaming suspense** with TanStack Start (v1.94+)
+ 2. **Implement streaming suspense** with TanStack Start (v1.94+)
 3. **Leverage React Server Components** for better performance
 4. **Support multi-agent interfaces** for complex workflows
+
+## Remote access (Pangolin.app + Pangolin CLI)
+
+Pangolin.app is the macOS WireGuard GUI VPN client (already installed + connected on
+this MacBook). It tunnels `*.cianfhoghlaim.ie` private resources from any device on the
+local network — use it whenever you need to reach the marimo server, the cianfhoghlaim-cognee
+UI, the Langfuse dashboard, the lakehouse viewer, the litellm proxy, the unsloth Studio, or
+any other private resource from inside the bunchloch Docker network.
+
+For machine-client access (background services, CI, headless containers), use the
+Pangolin CLI instead:
+
+```bash
+curl -fsSL https://static.pangolin.net/get-cli.sh | bash   # installs to /usr/local/bin (requires sudo)
+pangolin login                                              # browser-based user auth
+pangolin up --attach                                        # foreground tunnel
+pangolin service install client --id <id> --secret <secret> --endpoint https://pangolin.cianfhoghlaim.ie
+```
+
+For coding-agent wire-up (OpenCode, Claude Code, Codex, Gemini CLI):
+
+```bash
+pangolin configure opencode --resource ai.cianfhoghlaim.ie
+```
+
+See `.agents/skills/pangolin-cli/SKILL.md` for full details + the Docker sidecar + Kubernetes
+patterns.
+
+## VLM testing surface
+
+The bunchloch MacBook now hosts a self-hosted VLM stack reachable through the Pangolin
+AI Gateway at `https://ai.cianfhoghlaim.ie`. Three ways to reach the fleet:
+
+1. **Preferred**: `https://ai.cianfhoghlaim.ie/v1/chat/completions` (identity-aware via
+   the Pangolin.app tunnel; placeholder key `none` for the private resource)
+2. **Fallback**: `http://localhost:4000/v1` (LiteLLM proxy on the bunchloch docker network)
+3. **Direct**: `http://192.168.148.5:8889/v1` (the unsloth-serve container on the
+   bunchloch `cianfhoghlaim` docker network — bypasses the gateway)
+
+The 12 unsloth-served models + the 20 ocr_vision models in MODEL_REGISTRY all share
+this surface. See `notebooks/_shared/evaluation/vlm_registry_benchmark.py` for the
+benchmark notebook that exercises all 12 models against 3 standard prompts (NCCA
+syllabus PDF page + LC marking-scheme snippet + Ordnance Survey map extract).
+
+For the future (deferred to `2026-09-26-bunchloch-vlm-stacks-v1/`):
+- `invokeai-local` (Stable Diffusion XL + Flux image gen on `:9090`)
+- `comfyui-local` (ComfyUI workflows + OpenAI bridge on `:8188` + `:9000`)
+
+## arm1-oci SSH quick reference
+
+The Pangolin control plane + Newt connector run on the OCI arm (`140.238.96.148`). SSH
+config is at `~/.ssh/config` (host alias: `oci.arm1`):
+
+```bash
+# Verify reachability (use this as the health gate)
+ssh -o ConnectTimeout=5 -o BatchMode=yes oci.arm1 'true'
+
+# Inspect the running Pangolin stack
+ssh oci.arm1 'docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Image}}"'
+# Pangolin: fosrl/pangolin:ee-1.21.1 (running, healthy)
+# Newt:     fosrl/newt:1.16.0
+# Traefik:  reverse proxy for *.cianfhoghlaim.ie
+
+# Check Pangolin + Newt version compatibility
+ssh oci.arm1 'docker exec pangolin -- pangolin --version'   # 1.21.x (Enterprise)
+docker exec newt-bunchloch -- newt --version                # 1.16.x
+
+# Open browser SSH to a bunchloch machine from the Pangolin UI
+# https://pangolin.cianfhoghlaim.ie → Sites → bunchloch → Machines → SSH
+# Requires pangolin ≥ 1.19 (✓) + newt ≥ 1.13 (✓)
+
+# Push secrets to the Infisical vault on arm1-oci
+ssh oci.arm1 'infisical secrets set <KEY> "<value>" --project-id d900f50a-acbf-446b-b4f6-e439710253e4 --env dev-baile --path /<service>'
+```
 
 ## Landing the Plane (Session Completion)
 

@@ -1,0 +1,34 @@
+# =============================================================================
+# Dockerfile.bunchloch — bunchloch-cached unsloth Studio image
+# =============================================================================
+# Extends unsloth-serve-local with the Unsloth Studio install (the 17 deps + the
+# llama.cpp prebuilt + the Studio backend venv). After this image is built,
+# the bunchloch compose stack can `up` and `unsloth studio -H 0.0.0.0 -p 8888`
+# runs without any further install.
+#
+# Build (from repo root):
+#   docker build -t unsloth-serve-bunchloch:latest \
+#     -f bonneagar/stacks/unsloth-serve/Dockerfile.bunchloch .
+#
+# Then reference it from compose.bunchloch.yaml:
+#   image: unsloth-serve-bunchloch:latest
+# =============================================================================
+
+FROM unsloth-serve-local:latest
+
+USER root
+
+# Install wget (curl not in the base image) then run the official Unsloth
+# install.sh which creates /root/.unsloth/studio/unsloth_studio (the Studio
+# venv) + installs the 17 missing packages + downloads llama.cpp prebuilt
+# + writes the install manifest.
+RUN apt-get update -qq && \
+    apt-get install -y -qq --no-install-recommends wget ca-certificates && \
+    rm -rf /var/lib/apt/lists/* && \
+    wget -O /tmp/install.sh https://unsloth.ai/install.sh && \
+    bash /tmp/install.sh && \
+    rm /tmp/install.sh
+
+USER unsloth_user
+
+WORKDIR /home/unsloth_user

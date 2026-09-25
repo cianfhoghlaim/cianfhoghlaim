@@ -107,11 +107,11 @@
       }
     },
     "unsloth-studio": {
-      "name": "Unsloth Studio (local unsloth-serve :8889) — the 2026-08-21 fallback when the M3 token plan quota is exhausted; same UNSLOTH_API_KEY as hermes/openclaw/openchamber",
+      "name": "Unsloth Studio (local unsloth-serve :8889 on docker network IP) — the 2026-08-21 fallback when the M3 token plan quota is exhausted; same UNSLOTH_API_KEY as hermes/openclaw/openchamber",
       "api": "openai",
       "options": {
         "apiKey": "{env:UNSLOTH_API_KEY}",
-        "baseURL": "http://unsloth:8889/v1/",
+        "baseURL": "http://192.168.148.5:8889/v1",
         "timeout": 600000
       },
       "models": {
@@ -160,6 +160,29 @@
           }
         }
       }
+    },
+    "pangolin-ai-gateway": {
+      "name": "Pangolin AI Gateway (ai.cianfhoghlaim.ie) — identity-aware proxy in front of unsloth-serve + future invokeai + comfyui. Per the 2026-09-25-pangolin-aware-bunchloch-vlm-deploy-v1 change. The placeholder key 'none' is required for the private resource (identity comes from the Pangolin.app tunnel). For the public resource, mint a virtual API key at https://pangolin.cianfhoghlaim.ie → Resources → ai-public → Keys.",
+      "api": "openai",
+      "options": {
+        "apiKey": "none",
+        "baseURL": "https://ai.cianfhoghlaim.ie/v1",
+        "timeout": 600000
+      },
+      "models": {
+        "unsloth/qwen3-vl-8b-instruct": {
+          "id": "/stedding/huggingface/gguf/qwen3-vl-8b/qwen3-vl-8b-instruct-q4_k_m.gguf",
+          "name": "Qwen3-VL-8B-Instruct Q4_K_M (Pangolin AI Gateway → unsloth-serve)",
+          "attachment": true,
+          "reasoning": false,
+          "tool_call": false,
+          "limit": {
+            "context": 32768,
+            "output": 8192
+          }
+        }
+      },
+      "enabled": true
     }
   },
   "mcp": {

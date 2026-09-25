@@ -5,13 +5,14 @@ description: Consolidated setup + MCP reference for the three agent knowledge su
 
 # Indexing & Cognition — Setup + MCP Reference
 
-The Cianfhoghlaim monorepo runs **three parallel knowledge surfaces**
+The Cianfhoghlaim monorepo runs **four parallel knowledge surfaces**
 that every agent consumes via MCP:
 
 | Surface | What it indexes | Backend | MCP server | Use for |
 |:--|:--|:--|:--|:--|
 | **CCC** (CocoIndex Code) | 8,845 source files / 257,957 chunks | SQLite + BGE-M3 embeddings | `cocoindex-code` (`ccc mcp`) | "Where is BAML extraction implemented?" "What calls `run_conformance_check`?" |
 | **Cognee** | Docs (1,743 `.md` files, ~2,242 docs across 7 typed clusters) | Neo4j graph + LanceDB vectors + DeepSeek V4 Pro | `cognee` (`cognee-mcp`) | "What is the architecture pattern for the agent fleet?" "How does the cognify pipeline differ across stages?" |
+| **Pangolin** (2026-09-25) | 1 self-hosted Pangolin EE instance (fosrl/pangolin:ee-1.21.1) on arm1-oci + ~50 private resources + 1 AI Gateway (`ai.cianfhoghlaim.ie`) with 1 Custom provider (`unsloth-local`) + 2 overlapping resources (private + public) | The self-hosted Pangolin control plane + WireGuard tunnel to bunchloch | n/a (no MCP yet — use `scripts/pangolin/provision_ai_gateway.py` + `curl https://pangolin.cianfhoghlaim.ie/api/v1/...`) | "What private resources are reachable from this device?" "What's the model catalogue at `ai.cianfhoghlaim.ie`?" "What are the per-role + global budgets on the AI Gateway?" |
 | **Firecrawl MCP** | Live web (search / scrape / crawl / map / agent / interact / batch / parse / research / developer) | Firecrawl SaaS + 12 MCP tools + 43M-paper Research Index | `firecrawl` (the platform-level MCP) | "What does upstream say about X right now?" "Find the GitHub issue about this bug" "Find papers on BAML / OCR / curriculum" |
 
 **The triple-search insight (post-2026-08-14):** CCC returns code;

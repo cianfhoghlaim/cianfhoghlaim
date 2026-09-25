@@ -9,15 +9,45 @@
 
 services:
   unsloth-serve:
-    # Override the base image: CPU/base image on bunchloch (macOS)
+    # Use the upstream `unsloth/unsloth:latest` image which ships the prebuilt
+    # llama-server binary at /opt/unsloth/llama.cpp/build/bin/llama-server.
+    # We bypass the unsloth Studio install (it requires network + npm + a complex
+    # venv setup that flakes inside Docker on bunchloch) and run llama-server
+    # directly — it speaks OpenAI Chat Completions natively.
     image: unsloth/unsloth:latest
     # No GPU offload on macOS Docker Desktop (no Metal passthrough)
     environment:
       LLAMA_ARG_NGL: "0"
       LLAMA_ARG_CTX_SIZE: "32768"
-      # Apple Silicon fallback uses MLX underneath (handled by the
-      # unsloth CLI itself when it detects the Mac platform)
-      UNSLOTH_PLATFORM: macos
+      # Dev mode: don't try to source Locket secrets (sidecar not running)
+      UNSLOTH_API_KEY: "sk-unsloth-dev-noop-key"
+      UNSLOTH_MODEL_ID: "unsloth/Qwen3-VL-8B-Instruct-GGUF:UD-Q4_K_XL"
+      # Point at the host's HF cache so unsloth can load GGUFs without re-downloading
+      HF_HOME: /stedding/huggingface
+      HF_HUB_CACHE: /stedding/huggingface/hub
+    # Mount the host HF cache + the llama.cpp prebuilt from the image
+    volumes:
+      - ../../../stedding/huggingface:/stedding/huggingface:ro
+    # Run llama-server directly with the local Qwen3-VL-8B Q4_K_M GGUF
+    # (pre-quantised vision LLM, ~5 GB on disk in the host's HF cache).
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -e
+        LLAMA_SERVER=/opt/unsloth/llama.cpp/build/bin/llama-server
+        MODEL=/stedding/huggingface/gguf/qwen3-vl-8b/qwen3-vl-8b-instruct-q4_k_m.gguf
+        MMPROJ=/stedding/huggingface/gguf/qwen3-vl-8b/qwen3-vl-8b-instruct-mmproj-f16.gguf
+        echo "Starting llama-server with model: $$MODEL"
+        exec $$LLAMA_SERVER \
+          --model "$$MODEL" \
+          --mmproj "$$MMPROJ" \
+          --host 0.0.0.0 --port 8889 \
+          --ctx-size 32768 \
+          --n-gpu-layers 0 \
+          --parallel 4 \
+          --chat-template-kwargs '{"reasoning_effort":"medium"}' \
+          --jinja
     # Local-only bind on Mac (the Studio UI + API are reachable via
     # marimo notebook going to ocr-router → unsloth-serve on the
     # cianfhoghlaim Docker network)

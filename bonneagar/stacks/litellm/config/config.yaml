@@ -364,7 +364,7 @@ model_list:
   - model_name: local/unsloth/qwen3.8-27b
     litellm_params:
       model: openai/unsloth/Qwen3.8-27B-GGUF
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 600
     model_info:
@@ -376,7 +376,7 @@ model_list:
   - model_name: local/unsloth/qwen3.8-2.4t-a95b
     litellm_params:
       model: openai/unsloth/Qwen3.8-2.4T-A95B-GGUF
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 900
     model_info:
@@ -388,7 +388,7 @@ model_list:
   - model_name: local/unsloth/deepseek-v4-pro
     litellm_params:
       model: openai/unsloth/DeepSeek-V4-Pro-0813-GGUF
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 900
     model_info:
@@ -400,7 +400,7 @@ model_list:
   - model_name: local/unsloth/deepseek-v4-flash
     litellm_params:
       model: openai/unsloth/DeepSeek-V4-Flash-0731
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 600
     model_info:
@@ -412,7 +412,7 @@ model_list:
   - model_name: local/unsloth/kimi-k2.7-code
     litellm_params:
       model: openai/unsloth/Kimi-K2.7-Code-GGUF
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 600
     model_info:
@@ -424,7 +424,7 @@ model_list:
   - model_name: local/unsloth/kimi-k3
     litellm_params:
       model: openai/unsloth/Kimi-K3-GGUF
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 600
     model_info:
@@ -436,7 +436,7 @@ model_list:
   - model_name: local/unsloth/nemotron-3.5-lightning-30b-a3b
     litellm_params:
       model: openai/unsloth/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 600
     model_info:
@@ -448,7 +448,7 @@ model_list:
   - model_name: local/unsloth/muse-glimmer-30b
     litellm_params:
       model: openai/unsloth/Muse-Glimmer-30B-GGUF
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 600
     model_info:
@@ -460,7 +460,7 @@ model_list:
   - model_name: local/unsloth/minimax-m2.5
     litellm_params:
       model: openai/unsloth/MiniMax-M2.5-GGUF
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 600
     model_info:
@@ -472,7 +472,7 @@ model_list:
   - model_name: local/unsloth/magistral-small-2509
     litellm_params:
       model: openai/unsloth/Magistral-Small-2509-GGUF
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 600
     model_info:
@@ -484,8 +484,8 @@ model_list:
   # ─── 4 ocr_vision Unsloth Studio routes (2026-08-21) ───
   - model_name: local/unsloth/qwen3-vl-8b-instruct
     litellm_params:
-      model: openai/unsloth/Qwen3-VL-8B-Instruct-GGUF
-      api_base: http://unsloth:8889/v1
+      model: openai//stedding/huggingface/gguf/qwen3-vl-8b/qwen3-vl-8b-instruct-q4_k_m.gguf
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 600
     model_info:
@@ -497,7 +497,7 @@ model_list:
   - model_name: local/unsloth/qwen3-vl-32b-instruct
     litellm_params:
       model: openai/unsloth/Qwen3-VL-32B-Instruct-GGUF
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 900
     model_info:
@@ -509,7 +509,7 @@ model_list:
   - model_name: local/unsloth/glm-4.6v-flash
     litellm_params:
       model: openai/unsloth/GLM-4.6V-Flash-GGUF
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 600
     model_info:
@@ -521,7 +521,7 @@ model_list:
   - model_name: local/unsloth/deepseek-ocr-2
     litellm_params:
       model: openai/unsloth/DeepSeek-OCR-2-GGUF
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 600
     model_info:
@@ -534,7 +534,7 @@ model_list:
   - model_name: local/unsloth/qwen3-embedding-4b
     litellm_params:
       model: openai/unsloth/Qwen3-Embedding-4B-unsloth-bnb-4bit
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 300
     model_info:
@@ -546,7 +546,7 @@ model_list:
   - model_name: local/unsloth/embeddinggemma-300m
     litellm_params:
       model: openai/unsloth/EmbeddingGemma-300M
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 300
     model_info:
@@ -559,7 +559,7 @@ model_list:
   - model_name: local/unsloth/diffusiongemma-26b-a4b
     litellm_params:
       model: openai/unsloth/diffusiongemma-26B-A4B-it-GGUF
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 600
     model_info:
@@ -571,7 +571,7 @@ model_list:
   - model_name: local/unsloth/qwen-image-2512
     litellm_params:
       model: openai/unsloth/Qwen-Image-2512-GGUF
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 600
     model_info:
@@ -584,7 +584,7 @@ model_list:
   - model_name: local/unsloth/orpheus-3b-0.1-ft
     litellm_params:
       model: openai/unsloth/orpheus-3b-0.1-ft-unsloth-bnb-4bit
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 600
     model_info:
@@ -596,7 +596,7 @@ model_list:
   - model_name: local/unsloth/sesame-csm-1b
     litellm_params:
       model: openai/unsloth/Sesame-CSM-1B
-      api_base: http://unsloth:8889/v1
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 600
     model_info:
@@ -611,8 +611,8 @@ model_list:
 
   - model_name: vision
     litellm_params:
-      model: openai/unsloth/Qwen3-VL-8B-Instruct-GGUF
-      api_base: http://unsloth:8889/v1
+      model: openai//stedding/huggingface/gguf/qwen3-vl-8b/qwen3-vl-8b-instruct-q4_k_m.gguf
+      api_base: http://192.168.148.5:8889/v1
       api_key: os.environ/UNSLOTH_API_KEY
       timeout: 600
     model_info:

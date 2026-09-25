@@ -50,6 +50,7 @@ ALLOWED_API_BASES = {
     "http://llama-swap:8080/v1",
     "http://mlx-omni:10240/v1",
     "http://transformers:5000/v1",
+    "http://192.168.148.5:8889/v1",    # unsloth-serve container on the bunchloch docker network (per 2026-09-25-pangolin-aware-bunchloch-vlm-deploy-v1)
     "http://docling-serve:5001/v1",
     "http://olmocr:8003/v1",
     # M3 chokepoint (OpenCode Go) — pre-existing, added 2026-07-08
