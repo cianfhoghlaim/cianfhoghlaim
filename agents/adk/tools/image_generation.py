@@ -105,14 +105,15 @@ def _resolve_image_model(role: str = "default") -> dict[str, Any] | None:
         or None if the model is unavailable.
     """
     try:
-        from meaisinfhoghlaim.models import MODEL_REGISTRY, model_for
+        from meaisinfhoghlaim.models import MODEL_REGISTRY, filter_models
     except ImportError:
         logger.debug("_resolve_image_model: MODEL_REGISTRY not importable")
         return None
 
-    entry = model_for("image_gen", role)
-    if entry is None:
+    entries = filter_models(family="image_gen", role=role, available=True)
+    if not entries:
         return None
+    entry = entries[0]
     return {
         "key": entry.key,
         "upstream_id": entry.upstream_id,
@@ -237,12 +238,13 @@ async def generate_2d_asset(
         }
 
     asset_id = str(uuid.uuid4())
-    file_path = await _stub_generate_image(
+    file_path = await _generate_image(
         prompt=prompt,
-        style=style,
+        litellm_alias=model["litellm_alias"],
         width=width,
         height=height,
         asset_id=asset_id,
+        style=style,
     )
     sha256 = _sha256_file(file_path)
     duration = int((time.monotonic() - start) * 1000)
@@ -308,12 +310,13 @@ async def generate_texture(
         }
 
     texture_id = str(uuid.uuid4())
-    file_path = await _stub_generate_image(
+    file_path = await _generate_image(
         prompt=f"Seamless {pattern} texture for Babylon.js PBR material: {name}",
-        style="seamless-pbr",
+        litellm_alias=model["litellm_alias"],
         width=width,
         height=height,
         asset_id=texture_id,
+        style="seamless-pbr",
     )
     sha256 = _sha256_file(file_path)
     duration = int((time.monotonic() - start) * 1000)
@@ -376,12 +379,13 @@ async def style_match(
     variants: list[dict[str, Any]] = []
     for i in range(count):
         variant_id = str(uuid.uuid4())
-        file_path = await _stub_generate_image(
+        file_path = await _generate_image(
             prompt=combined_prompt,
-            style=f"variant-{i}",
+            litellm_alias=model["litellm_alias"],
             width=1024,
             height=1024,
             asset_id=variant_id,
+            style=f"variant-{i}",
         )
         sha256 = _sha256_file(file_path)
         variants.append(
@@ -485,27 +489,21 @@ async def _stub_generate_image(
     height: int,
     asset_id: str,
 ) -> Path:
-    """Stubbed image generator — writes a deterministic placeholder PNG.
+    """DEPRECATED — kept as a safety net for offline dev mode.
 
-    In production, this calls the resolved model via InvokeAI / ComfyUI
-    / llama.cpp. In dev, it writes a text manifest + a 1x1 PNG so
+    Writes a deterministic placeholder PNG + sidecar manifest so the
     downstream tools (cocoindex_register, Babylon.js material loader)
-    can consume the asset_url + sha256.
-
-    Args:
-        prompt: The text prompt.
-        style: Optional style override.
-        width: Image width.
-        height: Image height.
-        asset_id: The canonical asset UUID.
-
-    Returns:
-        The local file path.
+    can still consume the asset_url + sha256 when the litellm gateway
+    is unreachable. The real image-gen path goes through
+    `_generate_image` (calls LiteLLM with the resolved model).
     """
+    logger.warning(
+        "_stub_generate_image is deprecated — use _generate_image instead. "
+        "Falling back to placeholder PNG."
+    )
     out_path = ASSETS_OUTPUT_DIR / f"{asset_id}.png"
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # Write a minimal PNG (1x1 transparent) + a sidecar manifest
     minimal_png = _minimal_png_bytes(width=width, height=height)
     await asyncio.to_thread(out_path.write_bytes, minimal_png)
 
@@ -517,16 +515,153 @@ async def _stub_generate_image(
         "width": width,
         "height": height,
         "stub": True,
-        "stub_note": (
-            "Replace _stub_generate_image with a real InvokeAI / "
-            "ComfyUI / llama.cpp call once the image_gen stack is "
-            "deployed"
-        ),
+        "stub_note": "FALLBACK: litellm gateway unreachable; placeholder PNG written",
         "generated_at": datetime.now(UTC).isoformat(),
     }
     await asyncio.to_thread(manifest_path.write_text, json.dumps(manifest, indent=2))
 
     return out_path
+
+
+async def _generate_image(
+    prompt: str,
+    litellm_alias: str,
+    width: int,
+    height: int,
+    asset_id: str,
+    style: str | None = None,
+) -> Path:
+    """Real image generator — calls LiteLLM with the resolved image_gen model.
+
+    Routes through the litellm proxy (which fans out to llama-swap /
+    unsloth-serve / invokeai / comfyui depending on the alias).
+    Writes the returned image as a PNG + a sidecar manifest.
+
+    Args:
+        prompt: The text prompt.
+        litellm_alias: The litellm_alias from MODEL_REGISTRY (e.g.
+            `local/unsloth/qwen-image-2512`, `local/image/flux2-dev`).
+        width: Image width.
+        height: Image height.
+        asset_id: The canonical asset UUID.
+        style: Optional style override (appended to prompt).
+
+    Returns:
+        The local file path of the generated PNG.
+
+    Raises:
+        RuntimeError: If the litellm call fails or returns no image.
+    """
+    import litellm
+
+    out_path = ASSETS_OUTPUT_DIR / f"{asset_id}.png"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    full_prompt = prompt if not style else f"{prompt}, {style} style"
+
+    try:
+        # Image-gen models: litellm supports OpenAI-compatible image-gen
+        # via the chat completions endpoint with image content type.
+        # The unsloth-serve llama-server endpoint accepts this.
+        response = await litellm.acompletion(
+            model=litellm_alias,
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": f"Generate an image: {full_prompt}"},
+                    ],
+                },
+            ],
+            modalities=["image", "text"],
+            timeout=120,
+        )
+
+        # Extract the image from the response. Different upstreams
+        # return it differently; we try the OpenAI images format first,
+        # then fall back to base64 in the message content.
+        image_b64 = _extract_image_from_response(response)
+
+        if image_b64 is None:
+            raise RuntimeError(
+                f"litellm returned no image for {litellm_alias!r} on "
+                f"prompt={prompt[:80]!r}"
+            )
+
+        import base64
+        img_bytes = base64.b64decode(image_b64)
+        await asyncio.to_thread(out_path.write_bytes, img_bytes)
+
+        manifest_path = out_path.with_suffix(".json")
+        manifest = {
+            "asset_id": asset_id,
+            "prompt": prompt,
+            "style": style,
+            "width": width,
+            "height": height,
+            "stub": False,
+            "litellm_alias": litellm_alias,
+            "sha256": _sha256_bytes(img_bytes),
+            "generated_at": datetime.now(UTC).isoformat(),
+        }
+        await asyncio.to_thread(manifest_path.write_text, json.dumps(manifest, indent=2))
+
+        return out_path
+
+    except Exception as exc:
+        logger.warning(
+            "_generate_image failed for %r: %s — falling back to stub",
+            litellm_alias,
+            exc,
+        )
+        # Fall back to the stub (keeps downstream tools working in
+        # offline dev mode).
+        return await _stub_generate_image(
+            prompt=prompt, style=style, width=width, height=height, asset_id=asset_id,
+        )
+
+
+def _extract_image_from_response(response: Any) -> str | None:
+    """Extract a base64 image string from a litellm response.
+
+    Supports the OpenAI images format (``response.images[0].b64_json``)
+    and the chat-completions multimodal format
+    (``response.choices[0].message.images[0].image_url.url`` as data URI).
+    """
+    # OpenAI images API format
+    images = getattr(response, "images", None)
+    if images and len(images) > 0:
+        first = images[0]
+        b64 = getattr(first, "b64_json", None) or (
+            first.get("b64_json") if isinstance(first, dict) else None
+        )
+        if b64:
+            return b64
+
+    # Chat-completions multimodal format
+    choices = getattr(response, "choices", None)
+    if choices and len(choices) > 0:
+        message = getattr(choices[0], "message", None)
+        if message is not None:
+            msg_images = getattr(message, "images", None)
+            if msg_images and len(msg_images) > 0:
+                img = msg_images[0]
+                url = getattr(img, "image_url", None)
+                if url is None and isinstance(img, dict):
+                    url = img.get("image_url")
+                if isinstance(url, dict):
+                    url = url.get("url")
+                if isinstance(url, str) and url.startswith("data:image"):
+                    # data:image/png;base64,XXXX
+                    return url.split(",", 1)[1] if "," in url else None
+
+    return None
+
+
+def _sha256_bytes(data: bytes) -> str:
+    """Return the SHA-256 hex digest of a bytes blob."""
+    import hashlib
+    return hashlib.sha256(data).hexdigest()
 
 
 def _minimal_png_bytes(width: int = 1, height: int = 1) -> bytes:

@@ -14,6 +14,15 @@ textures for Babylon.js (the educational MMO). It consumes:
 The agent NEVER hardcodes a model string. It routes via
 ``MODEL_REGISTRY.filter(family='image_gen')`` + ``model_for('image_gen', role)``.
 
+Per the 2026-10-02-adk-asset-generation-pillar3-v1 saga change (Plan 1 of
+the convergence saga), the 5 image-gen tools are now real LiteLLM
+FunctionTool wrappers (no more ``None`` placeholders). The actual image
+inference goes through ``_generate_image`` which calls the litellm
+gateway with the resolved model's ``litellm_alias`` and writes the
+returned image as a PNG + a sidecar manifest. Falls back to a
+placeholder PNG only when the litellm gateway is unreachable (offline
+dev mode).
+
 Reference:
     openspec/changes/2026-08-13-web-monorepo-consolidation-and-agent-integration-v1/
     specs/image-generation-agent/spec.md
@@ -28,17 +37,15 @@ from google.adk.agents import LlmAgent
 from .litellm_agent import litellm_model
 
 from .config import config
+from .tools.image_generation import (
+    COCOINDEX_REGISTER_TOOL,
+    GENERATE_2D_ASSET_TOOL,
+    GENERATE_TEXTURE_TOOL,
+    LIST_IMAGE_MODELS_TOOL,
+    STYLE_MATCH_TOOL,
+)
 
 logger = logging.getLogger(__name__)
-
-# Image generation tools (the canonical module is not yet implemented;
-# these are placeholder tool references that will be filled in by the
-# Phase L image generation work in the BIEP v3 system).
-GENERATE_2D_ASSET_TOOL = None
-GENERATE_TEXTURE_TOOL = None
-STYLE_MATCH_TOOL = None
-COCOINDEX_REGISTER_TOOL = None
-LIST_IMAGE_MODELS_TOOL = None
 
 
 # ============================================================================
