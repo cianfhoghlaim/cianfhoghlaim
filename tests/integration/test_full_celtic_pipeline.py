@@ -152,6 +152,41 @@ class TestStandardizeHelpers:
         assert "StandardizeManx" in funcs
 
 
+class TestLCSyllabusDocumentDialectVariants:
+    """Stage 1.4 — ireland_lc_stage.baml + dialect_variants on LCSyllabusDocument."""
+
+    def test_lc_syllabus_document_has_dialect_variants_field(self):
+        """The LCSyllabusDocument class must have the new dialect_variants field."""
+        sys.path.insert(0, str(REPO_ROOT))
+        sys.path.insert(0, str(REPO_ROOT / "baml_client"))
+        from baml_client.types import LCSyllabusDocument
+        assert "dialect_variants" in LCSyllabusDocument.model_fields, (
+            "LCSyllabusDocument must have dialect_variants field (Phase 1.4)"
+        )
+
+    def test_lc_syllabus_document_has_audio_links_field(self):
+        """The LCSyllabusDocument class must have the new audio_links field (Teanglann capture)."""
+        sys.path.insert(0, str(REPO_ROOT))
+        sys.path.insert(0, str(REPO_ROOT / "baml_client"))
+        from baml_client.types import LCSyllabusDocument
+        assert "audio_links" in LCSyllabusDocument.model_fields
+
+    def test_dialect_variant_class_exists(self):
+        """The DialectVariant class must be importable from the generated client."""
+        sys.path.insert(0, str(REPO_ROOT))
+        sys.path.insert(0, str(REPO_ROOT / "baml_client"))
+        from baml_client.types import DialectVariant
+        fields = DialectVariant.model_fields
+        for expected in ["segment_id", "original", "standardised", "changes", "confidence"]:
+            assert expected in fields, f"DialectVariant missing field: {expected}"
+
+    def test_ireland_lc_stage_template_documents_standardize_pretxt(self):
+        """The ireland_lc_stage.baml template must document that text is pre-standardised."""
+        content = (REPO_ROOT / "baml_src/_shared/templates/ireland_lc_stage.baml").read_text()
+        assert "StandardizeIrish" in content
+        assert "dialect_variants" in content or "Phase 1.4" in content
+
+
 class TestSisterLiftsProvenance:
     """Phase 5.6 — SisterLift provenance + ledger sync."""
 

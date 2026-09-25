@@ -84,6 +84,17 @@ class LCBilingualText {
   text_ga string? @description("Irish translation; null if EN-only")
 }
 
+// Phase 1.4 (2026-09-25 5-phase Celtic overhaul) — per-segment dialectal
+// standardisation record. Captures the original → standardised transformation
+// applied by StandardizeIrish (baml_src/celtic/standardize.baml).
+class DialectVariant {
+  segment_id string @description("Identifier for the diff segment (e.g. 'paragraph_3_sentence_1')")
+  original string @description("The text before standardisation (pre-1936 / dialectal form)")
+  standardised string @description("The text after standardisation (modern Caighdeán Oifigiúil form)")
+  changes int @description("Number of word-level changes applied in this segment")
+  confidence float @description("0.5-1.0 — inverse-proportional to changes/length")
+}
+
 class LCSubjectPDFLink {
   source_pdf string
   source_page int
@@ -121,6 +132,8 @@ class LCSyllabusDocument {
   prescribed_texts LCBilingualText[]? @description("For English + Gaeilge")
   formulas string[]? @description("Formula references (for Mathematics, Physics, Accounting)")
   lineage LineageTrace?
+  dialect_variants DialectVariant[]? @description("Phase 1.4 (2026-09-25 5-phase Celtic overhaul) — per-segment dialectal standardisation records from StandardizeIrish (see baml_src/celtic/standardize.baml). Records the original → standardised transformation for each segment.")
+  audio_links string[]? @description("Phase 1.4 — Teanglann.ie audio links captured during wikitext extraction, attached for the operator-facing marimo notebook pronunciation panel")
 }
 
 class LCQuestion {
