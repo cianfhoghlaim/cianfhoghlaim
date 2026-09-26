@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import Any
 
 
-KW_TABLE = "cianhfhglaim.media.image_gen_chunks_kernewek"
+KW_TABLE = "cianhoghlaim.media.image_gen_chunks_kernewek"
 
 
 def ingest_kernewek_asset(asset: dict[str, Any]) -> None:

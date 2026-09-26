@@ -186,3 +186,19 @@ function ExtractGameplayDescriptor(
     Return the typed GameplayMediaDescriptor.
   "#
 }
+
+
+// ExtractGameplayPattern (Plan 3 thin wrapper)
+// Per the 2026-10-03-cocoindex-retro-gameplay-v1 saga change.
+function ExtractGameplayPattern(
+  screenshot_b64 string    @description("Base64-encoded PNG"),
+  session_log string?      @description("Optional session log"),
+  game_id string           @description("The canonical retro_library game_id"),
+  scene_id string          @description("title | menu | gameplay | boss | minigame | end | custom"),
+  game_genre string        @description("The known GameGenre"),
+) -> RetroGameplayPattern {
+  client "Primary"
+  prompt #"
+    Same as ExtractDesignPattern, returns RetroGameplayPattern.
+  "
+}
