@@ -511,3 +511,42 @@ bun run saga:status
 **Date**: 2026-10-01
 **Author**: Build subagent
 **Next step**: Wire `image_generation_agent` to real LiteLLM calls (C1 stub sweep).
+
+
+---
+
+## Status (as of 2026-10-26)
+
+7 of 8 plans merged to main. Only Stage 8 fresh-slate spec refactor remains (separate branch).
+
+### Plan → PR mapping
+
+| Plan | PR | Commit | Files | Status |
+|:--|:--|:--|:--|:--|
+| 1 (Saga meta-plan) | #196 | `8b200afad` | 20 / 2,354 lines | ✅ Merged |
+| 2 (ADK + asset-gen) | #196 | `8b200afad` | (same) | ✅ Merged |
+| 3 (CocoIndex + retro) | #197 | `1af8194d6` | 15 / 1,577 lines | ✅ Merged |
+| 4 (FIBO 2D diagram) | #198 | `a2a54c181` | 9 / ~1,500 lines | ✅ Merged |
+| 5 (Lakehouse bridge) | #199 + #204 | `1a9c2dca0` | 6 / 631 lines + 5 / 277 lines | ✅ Merged |
+| 6 (Cognee + visual assets) | #200 + #204 | `1a9c2dca0` | 6 / 837 + 5 / 277 lines | ✅ Merged |
+| 7 (Celtic bilingual) | #201 | `fc0808dac` | 23 / 1,270 lines | ✅ Merged |
+| 8 (Tuatha closed-loop) | #202 | `59012ca52` | 8 / 849 lines | ✅ Merged |
+| Phase A (typo fix + duplicate) | #203 | `5b9659fe3` | 12 / 172 lines | ✅ Merged |
+| Phase C2 (Cognee retry) | #204 | `1a9c2dca0` | (rolled into Plan 5) | ✅ Merged |
+
+### Remaining work
+
+**Stage 8 fresh-slate spec refactor** (deferred per original user direction):
+- Branch: `fresh-slate-spec-rules` (new branch off `main`)
+- Work: Phase B schema-naming convergence (TODO notes already in `baml_src/AGENTS.md`, `cocoindex_flows/AGENTS.md`, `dlt_sources/AGENTS.md`)
+- 2 BAML parser workarounds in the new BAML contracts (extract_syllabus_diagram.baml, extract_design_pattern.baml) — `baml-py 0.226.1` issue with multi-line function signatures
+- Docker daemon recovery (OrbStack socket issue blocking Plan 5 service bring-up)
+
+### Operational notes
+
+- All demo scripts run with graceful stub fallbacks (Cognee + LanceDB + Litellm)
+- `uv run python scripts/asset_bench.py --list-models` → 7 image_gen entries
+- `uv run python scripts/celtic_assets.py --lang ga --prompt '...'` → 5.4s end-to-end
+- `uv run python scripts/cognee_link.py --demo` → 3-retry exponential backoff + stub fallback
+- `uv run python scripts/lakehouse/verify_bridge.py` → graceful FAIL with no traceback when offline
+
