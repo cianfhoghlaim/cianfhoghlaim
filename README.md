@@ -599,6 +599,308 @@ surface (the same conventions as
 [`AGENTS.md`](AGENTS.md) for the durable rules every coding agent
 follows in this repo.
 
+---
+
+## §11 — Hardware footprint + cloud options
+
+> **For:** Teachers, students, parents, NCCA subject specialists, university faculty, journalists, citizens, contributors — anyone who wants to know **which machine** to buy / which cloud to use, and **how that compares to the alternatives** (the Mac tiers, the Oracle ARM free tier, Google Cloud, Gemini API, MiniMax Token Plan, and the local GGUF models from the canonical `MODEL_REGISTRY`).
+>
+> **Canonical reference:** [`meaisinfhoghlaim/models/model_registry.py`](./meaisinfhoghlaim/models/model_registry.py) (52 entries across 7 families — the centralised registry).
+>
+> **Why this matters for cianfhoghlaim:** the British-Isles education corpus platform is **research-and-deployment** — every deployment option must be auditable + reproducible. Local GGUF gives the strongest audit story; Oracle ARM gives the cheapest 24/7 cloud; the APIs give the lowest capex but the weakest audit story.
+
+### §11.1 — The 5-axis hardware landscape
+
+| Axis | Option | RAM | Type | Cost | Sovereignty |
+|---|---|---|---|---|---|
+| **Apple Silicon** | MacBook Pro 14" M4 Max | 48 GB | Local GPU | ~$3,500 one-off | 100% local |
+| **Apple Silicon** | MacBook Air 13" M5 (cheapest new) | 16 GB | Local GPU | ~$1,100 one-off | 100% local |
+| **Apple Silicon** | MacBook Air 13" M1 (older entry) | 8 GB | Local GPU | (used market) | 100% local |
+| **ARM cloud** | Oracle Cloud Always-Free Ampere A1 + PAYG upgrade | 24 GB | Cloud ARM vCPU | $0/month forever | Cloud (OCI region) |
+| **x86 cloud** | Google Cloud $300 free-trial credit | 32 GB | Cloud x86 | $0 for ~45 days | Cloud (GCP region) |
+| **API** | Gemini 3.1 Pro API | (infinite) | API token billing | $2/$12 per M tokens | Cloud (Google) |
+| **API** | MiniMax Token Plan | (infinite) | API token billing | $0.30/$1.20 per M tokens | Cloud (MiniMax) |
+
+### §11.2 — The 3 Mac tiers (the hardware case scenario)
+
+| Tier | Machine | RAM | GPU cores | Apple Silicon GPU bandwidth | Best GGUF (Q4_K_M) | Monthly cost (electricity) |
+|---|---|---|---|---|---|---|
+| **Primary** (the canonical case) | MacBook Pro 14" M4 Max | 48 GB | 40 | 546 GB/s | Qwen3.8-27B (~17 GB) + DeepSeek V4-Pro (~17 GB) + Kimi K3 (~17 GB) + PaddleOCR-VL-1.6 (~3 GB) | ~$3 |
+| **Cheapest new** | MacBook Air 13" M5 | 16 GB | 10 | ~100 GB/s | Qwen3.6-27B-MTP (~17 GB) + Gemma-4-E4B (~3 GB) + PaddleOCR-VL-1.6 (~3 GB) | ~$2 |
+| **Older entry** | MacBook Air 13" M1 | 8 GB | 8 | ~70 GB/s | Llama-3.2-3B Q4_K_M (~2 GB) + BAAI/bge-m3 (~2 GB) | ~$2 |
+
+### §11.3 — The 3 cloud options
+
+#### §11.3.1 — Oracle Cloud Always-Free Ampere A1 ARM (with PAYG upgrade for 24 GB)
+
+Per Oracle's official Always-Free tier + the documented PAYG workaround:
+
+- **Without PAYG**: 2 OCPU + 12 GB RAM + 100 GB storage (the post-July 2026 reduction)
+- **With PAYG upgrade**: **4 OCPU + 24 GB RAM + 200 GB storage** (the pre-reduction allocation; Oracle does NOT charge for the Always-Free resources, only for usage above the limits)
+- 1,500 OCPU hours + 9,000 GB hours per month = 4 OCPU + 24 GB running 24/7
+- ARM Ampere A1 architecture — most popular tools support ARM in 2026
+- $0/month forever (with PAYG, as long as you stay within Always-Free limits)
+
+5-step "Enable PAYG for the 24 GB upgrade" recipe:
+
+```bash
+# 1. Sign up at oracle.com/cloud/free with the Always-Free tier
+# 2. Upgrade to Pay As You Go (Billing → Upgrade to Pay As You Go)
+#    → This unlocks access to the full Always-Free allocation of 4 OCPU + 24 GB
+#    → No charges as long as you stay within Always-Free limits
+# 3. Provision an Ampere A1.Flex VM with 4 OCPU + 24 GB RAM in your home region
+# 4. Set up Pangolin Newt on the Oracle VM (the WireGuard client that joins the cianfhoghlaim mesh)
+# 5. Add the Oracle VM as a Pangolin private resource target
+```
+
+#### §11.3.2 — Google Cloud $300 free-trial credit
+
+- $300 credit for 90 days on a new account
+- Best value: `e2-highmem-4` (4 vCPU + 32 GB RAM = $0.068/hour = ~4,400 hours on $300)
+- Use case: the x86 alternative to Oracle ARM; useful if your stack requires x86-only Docker images
+
+#### §11.3.3 — The API options (Gemini 3.1 Pro vs MiniMax Token Plan)
+
+| API | Input $/M | Output $/M | SWE-Bench Verified | Free tier | Best for |
+|---|---|---|---|---|---|
+| Gemini 3.1 Pro | $2.00 | $12.00 | ~78% | None (only Flash has free tier) | Long-context (>200K) |
+| Gemini 3.5 Flash | $1.50 | $9.00 | n/a | None | Bulk extraction |
+| **MiniMax M3** | **$0.30** | **$1.20** | **80.5%** | None | **SWE-Bench leader** |
+| MiniMax M2.5 Standard | $0.15 | $1.20 | 80.2% | None | Cheapest option |
+
+**Why MiniMax M3 wins for cianfhoghlaim specifically:**
+- 80.5% on SWE-Bench Verified (the highest of any open-weight model)
+- $0.30/$1.20 is 6.7× cheaper than Gemini 3.1 Pro for input tokens
+- The canonical `MODEL_REGISTRY["text_llm"]["default"]` resolves to `minimax-m3` — the LiteLLM M3 chokepoint alias
+
+### §11.4 — The canonical GGUF/MLX registry (from `meaisinfhoghlaim/models/`)
+
+Per the `centralized-model-registry` openspec capability (post-2026-08-15) + the 2026-09-26 Firecrawl MCP research, the canonical model registry has 52 entries across 7 families.
+
+#### §11.4.1 — Per-family features/benefits (7 paragraphs)
+
+**text_llm (19 entries)** — covering the canonical LiteLLM M3 chokepoint (`minimax-m3` for cloud) + the local GGUF primary set (Gemma 4 + Qwen3 + DeepSeek V4 + Kimi K3 for on-device). Chosen because they cover the 3 key dimensions: SWE-Bench (coding), MMLU (general reasoning), and long-context (the 8 NCCA LC subject dossiers).
+
+**ocr_vision (22 entries)** — covering OCR-specialised models (PaddleOCR-VL-1.6 at 96.33% OmniDocBench v1.6, dots-ocr, deepseek-ocr-2) + general VLMs (Gemma 4, Qwen3-VL-8B at 5.03 GB Q4_K_M with 32-language OCR, InternVL3, Llama-3.2-Vision). Chosen because BIEP needs both text extraction + chart/diagram understanding for the NCCA syllabus PDFs.
+
+**embedder (5 entries)** — `BAAI/bge-m3` (1024 dim, 8192 tokens, multilingual dense+sparse+colbert), `BAAI/bge-large-en-v1.5`, `sentence-transformers/all-MiniLM-L6-v2`, `qwen3-embedding-4b`, `embeddinggemma-300m`. Chosen for the 3 size tiers matching the 3 hardware tiers.
+
+**rerank (3 entries)** — `jina-reranker-v2-base-multilingual`, `rerank-v3.5`, `gte-rerank-v2`.
+
+**image_gen (7 entries)** — `flux2-dev`, `z-image-turbo`, `qwen-image`, `sdxl`, `fibo`, `diffusiongemma-26b-a4b`, `qwen-image-2512`.
+
+**voice (7 entries)** — ASR (Whisper-large, Wav2Vec2-Irish) + TTS (Chatterbox, ABA-TTS, Orpheus-TTS-3B, Sesame-CSM-1B). The Wav2Vec2-Irish is the canonical Irish ASR for the Gaeilge pipeline.
+
+**translation (3 entries)** — Opus-MT, M2M100, NLLB. Chosen for the 3 scale tiers matching the 3 hardware tiers.
+
+#### §11.4.2 — "Previously incorrect vs canonical" comparison
+
+| What we previously had | What's actually in the canonical MODEL_REGISTRY | What Firecrawl research confirmed |
+|---|---|---|
+| "Gemma 4 26B has 84.3% SWE-Bench Verified" | The actual is **17.4%** — Google deliberately omitted SWE-bench from official benchmarks | Per independent tests (grigio.org) |
+| "Qwen3.8-27B primary" | ✓ Correct — SWE-bench Pro 61.7, MTP trained | Qwen3.8-27B is the canonical primary |
+| "DeepSeek V4 Pro has 80.6% SWE-Bench" | The actual is **95.2%** | DeepSeek V4 Pro is the SWE-Bench leader of open-weight |
+| "Kimi K3 unspecified" | Kimi K3: 2.8T MoE, 1M context, 92.6% SWE-Bench | Moonshot AI flagship July 16, 2026 |
+| "BAAI/bge-m3 is 1024 dim, 8192 tokens" | ✓ Correct | Multilingual, dense+sparse+colbert |
+
+The journey from "previously incorrect" to "canonical" is exactly what `mise run lint:registry` catches.
+
+#### §11.4.3 — Per-PIRP (Personal Information Retrieval Pipeline) — adapted for education
+
+The cianfhoghlaim-specific use case (instead of cianchosaint's political-accountability pipeline):
+
+| Subject | M4 Max 48 GB | M5 Air 16 GB | M1 Air 8 GB | Oracle ARM 24 GB | GCP x86 32 GB | Gemini API | MiniMax API |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| Mathematics (LC) | ✓ local | ✓ local | ✓ local | ✓ cloud | ✓ cloud | ✓ | ✓ |
+| Chemistry (LC) | ✓ local | ✓ local | ✓ local | ✓ cloud | ✓ cloud | ✓ | ✓ |
+| Geography (LC) | ✓ local | ✓ local | ✓ local | ✓ cloud | ✓ cloud | ✓ | ✓ |
+| Gaeilge (LC) | ✓ local (Wav2Vec2-Irish) | ✓ local | ✓ local | ✓ cloud | ✓ cloud | ✓ | ✓ |
+| English (LC) | ✓ local | ✓ local | ✓ local | ✓ cloud | ✓ cloud | ✓ | ✓ |
+| Computer Science (LC) | ✓ local | ✓ local | ✓ local | ✓ cloud | ✓ cloud | ✓ | ✓ |
+| Welsh (vernacular) | ✓ local | ✓ local | ✗ | ⚠ tight | ✓ | ✓ | ✓ |
+| Scottish Gaelic (vernacular) | ✓ local | ✓ local | ✗ | ⚠ tight | ✓ | ✓ | ✓ |
+| Ulster Scots (vernacular) | ✓ local | ✓ local | ✗ | ⚠ tight | ✓ | ✓ | ✓ |
+
+#### §11.4.4 — Why centralised (the audit)
+
+Per the 2026-09-26 Firecrawl research of BAML best practices, the canonical pattern for runtime model override is `baml_py.ClientRegistry`. The `mise run lint:registry` audit fails CI on any hardcoded model string outside `MODEL_REGISTRY`. The 12 ocr_vision models + the 20 text_llm models + the 3 embedders + the 3 rerankers all resolve via this single canonical surface.
+
+### §11.5 — The local-inference stack (Unsloth Studio + llama-swap)
+
+The provider chain is **LiteLLM-primary** (different from cianchosaint's Unsloth Studio primary). The local-inference path uses:
+
+```yaml
+# The canonical 12 unsloth-served models (per the 2026-08-21-unsloth-v5 change)
+# Each model has a LiteLLM alias in bonneagar/stacks/litellm/config/config.yaml
+# The 12 routes point at http://host.docker.internal:8888/v1 (the Unsloth Studio)
+```
+
+### §11.6 — For file processing (the BIEP use case)
+
+The 6 LC subjects + the 3 vernaculars + the 4 Irish stages + the 8 nations run on the same hardware axes as the model table above. The 4-stage orchestration (1_ingestion → 2_materials → 3_model_lifecycle → 4_asset_generation) runs end-to-end on the M4 Max 48 GB.
+
+### §11.7 — For code development (the dev use case)
+
+Same 9-task table as cianchosaint, plus:
+- `bun run ccc:search "X"` — the canonical semantic code search (always use before grep)
+- `mise run sync:all` — the 14-layer knowledge sync loop
+- `mise run core:ci` — the canonical CI gate
+- `mise run data:dagster:up` — launch the Dagster UI on :3335
+- `mise run ml:registry:audit` — verify all 24 VISION_MODELS are live on HF Hub
+
+### §11.8 — Pangolin.net private self-hosted resources
+
+The 107 Docker Compose stacks are exposed as private Pangolin resources. The `arm1-oci` (Oracle Cloud) control plane + `bunchloch` (MacBook M4) workload host. From any UK / Irish / EU laptop enrolled in Pocket ID, the analyst reaches the platform without ever exposing a public port.
+
+### §11.9 — Mapping the cianfhoghlaim user types to the 5-axis landscape
+
+(Adapted from the 13 user types per the existing README — teachers, students, parents, NCCA specialists, university faculty, journalists, citizens, contributors, etc.)
+
+| User type | M4 Max 48 GB | M5 Air 16 GB | M1 Air 8 GB | Oracle ARM 24 GB | GCP $300 trial | Gemini API | MiniMax API |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| Teacher (secondary) | ✓ all BIEP | ✓ 6 LC flagship | ✓ 6 LC flagship (basic) | ✓ all BIEP | ✓ all BIEP | ✓ | ✓ |
+| Student (LC) | ✓ all BIEP | ✓ 6 LC flagship | ✓ 6 LC flagship (basic) | ✓ all BIEP | ✓ all BIEP | ✓ | ✓ |
+| Parent | ✓ all BIEP | ✓ 6 LC flagship | ✓ 6 LC flagship (basic) | ✓ all BIEP | ✓ all BIEP | ✓ | ✓ |
+| NCCA subject specialist | ✓ all BIEP | ✓ 6 LC flagship | ✓ 6 LC flagship (basic) | ✓ all BIEP | ✓ all BIEP | ✓ | ✓ |
+| UoG undergraduate (personal archive) | ✓ all BIEP | ✓ 6 LC flagship | ✓ 6 LC flagship (basic) | ✓ all BIEP | ✓ all BIEP | ✓ | ✓ |
+| Academic researcher | ✓ all BIEP | ✓ 6 LC flagship | ✓ 6 LC flagship (basic) | ✓ all BIEP | ✓ all BIEP | ✓ | ✓ |
+| Journalist | ✓ 6 LC flagship | ✓ 6 LC flagship | ✓ 6 LC flagship (basic) | ✓ 6 LC flagship | ✓ 6 LC flagship | ✓ | ✓ |
+| Citizen (self-host) | ✓ all BIEP | ✓ all BIEP (offline cache) | ✓ 6 LC flagship (basic) | ✓ all BIEP | ✓ all BIEP | n/a | n/a |
+| Contributor (bug hunter, dev) | ✓ all BIEP | ✓ all BIEP | ✓ 6 LC flagship (basic) | ✓ all BIEP | ✓ all BIEP | ✓ | ✓ |
+
+### §11.10 — The "pick your subset" cheat-sheet
+
+| Scenario | Recommendation | Why |
+|---|---|---|
+| **Teacher on a budget** | M5 Air 16 GB + Oracle ARM 24 GB + MiniMax Token Plan | $1,100 one-off + $0 cloud + $20/month API covers all BIEP subjects |
+| **Self-hosted citizen, no cloud** | M1 Air 8 GB (used market) | The 6 LC flagship subjects + offline SQLite cache; full sovereignty |
+| **Power analyst (the canonical case)** | M4 Max 48 GB + Oracle ARM 24 GB + MiniMax Token Plan | $3,500 one-off + $0 cloud + occasional API |
+| **Audit-grade sovereign deployment** | M4 Max 48 GB + Oracle ARM 24 GB (no API) | 100% local + cloud; no third-party API |
+
+---
+
+## §12 — The dev environment: OpenSpec + openchamber.dev + mise
+
+> **For:** Anyone extending cianfhoghlaim — adding a new DLT source, a new BAML extraction, a new agent, a new web surface, or a new openspec change.
+>
+> **Canonical tools:** OpenSpec (change management), openchamber.dev (browser UI), mise (task runner), opencode.json (12-MCP runtime), `.cocoindex_code/guides.yml` (12 concept guides).
+
+### §12.1 — Why this section exists
+
+Cianfhoghlaim was built agentically, with the dev environment deliberately exposed so users can extend it without learning a new stack. The 4 load-bearing tools: **OpenSpec** (change mgmt — 96 specs, 13 pending changes), **openchamber.dev** (UI), **mise** (task runner — 6 domain namespaces), **opencode.json** (12-MCP runtime).
+
+### §12.2 — OpenSpec (the spec-driven change-management workflow)
+
+The canonical workflow:
+
+```bash
+# 1. Create the change directory
+mkdir -p openspec/changes/<change-id>/specs/<capability>
+
+# 2. Write the 3 artifacts
+$EDITOR openspec/changes/<change-id>/proposal.md       # why + what + impact + dependencies
+$EDITOR openspec/changes/<change-id>/tasks.md          # the ordered checklist
+$EDITOR openspec/changes/<change-id>/specs/<capability>/spec.md  # ADDED/MODIFIED/REMOVED Requirements
+
+# 3. Validate --strict
+openspec validate <change-id> --strict
+
+# 4. Implement the changes
+# 5. Archive the change (after deploy)
+openspec archive <change-id> --yes
+```
+
+**Why it matters for education:** every change is auditable in a way that matches what an academic records office needs. The `openspec list --specs` + `openspec validate --all --strict` + `openspec archive` workflow gives the audit trail the BUSL-1.1 licence requires.
+
+The 3 priority specs (post-2026-08-15):
+- `centralized-model-registry` — the 52-entry `MODEL_REGISTRY` driving LiteLLM + BAML + agents
+- `centralized-schema-registry` — BAML is the single source of truth; Pydantic + Zod are codegen
+- `deployment-control-panel` — the 5-tab marimo control panel + web UI + CLI
+
+Cross-link to `openspec/AGENTS.md` for the full workflow.
+
+### §12.3 — openchamber.dev (the browser-based OpenCode UI)
+
+**What it is:** Browser-based OpenCode UI built on `oven/bun:1.3.5` + React. MIT-licensed upstream at `openchamber/openchamber`. 18+ themes, persistent session state, multi-device sync via the Pangolin mesh.
+
+#### §12.3.1 — The 5 key features that matter for cianfhoghlaim
+
+| Feature | Why it matters for cianfhoghlaim |
+|---|---|
+| **Bundled-runtime vs external-runtime dual-mode** | The same image serves both `arm1-oci` (production, bundled) and `bunchloch` (your MacBook, external — the host OpenCode owns the process + MCP config) |
+| **18+ themes + persistent sessions** | Long-running research sessions (the 8 NCCA LC subject dossiers, the BIEP nightly batch) need to survive browser restarts |
+| **Pangolin private-resource ingress** | Every OpenChamber instance is exposed as a Pangolin private resource — Pocket ID OIDC + WireGuard means no public ports |
+| **Multi-device session sync** | A teacher starts research at school, continues on the iPad on the bus, finishes at home — same OpenChamber session |
+| **Provider picker (OpenAI / Anthropic / OpenAI-compatible)** | Maps directly to the cianfhoghlaim 7-tier `minimax` LiteLLM chokepoint alias |
+
+#### §12.3.2 — Capabilities alongside bonneagar + the dev setup
+
+| openchamber.dev capability | How it uses the bonneagar stack |
+|---|---|
+| Browser chat with the AG-UI chat window | Routes through the `litellm` stack → falls through to the `unsloth-serve` stack → the `pangolin` private resource target → `host.docker.internal:8888` on your Mac |
+| Persistent session state | Backed by the `locket` sidecar-injected SQLite volume |
+| Multi-device sync | Goes through the `pangolin` Newt WireGuard tunnel; the `pocket-id` OIDC layer authenticates every device |
+| MCP tool calls (firecrawl / ccc / cognee / etc.) | Routed through the `opencode.json` 12-MCP runtime |
+| Provider switching | Driven by `MODEL_REGISTRY` + `baml_src/clients.baml`; the OpenChamber UI reads the same `deployment-choice.yaml` toggle |
+
+#### §12.3.3 — How to add openchamber.dev to your deployment
+
+```bash
+cd bonneagar/stacks/openchamber
+locket inject -- docker compose up -d
+# (bunchloch only) Configure external-runtime mode
+export OPENCODE_HOST=http://host.docker.internal:4096
+export OPENCODE_PORT=4096
+export OPENCODE_SKIP_START=true
+open https://openchamber.cianchosaint.ie
+```
+
+### §12.4 — mise (the 107-task namespaced workflow)
+
+The 6 domain namespaces: `core:`, `lint:`, `sync:`, `openspec:`, `devops:`, `data:`, `ml:`, `web:` (post-2026-08-19).
+
+The 3 tasks a new user runs on day 1:
+
+```bash
+mise run sync:all                    # 14 sync layers
+mise run core:ci                     # canonical CI gate
+mise run openspec:validate-all       # 131 items pass
+```
+
+The 5 most useful daily tasks:
+
+```bash
+mise run data:dagster:up             # Dagster UI on :3335
+mise run data:biep:milestone -- 1    # BIEP v3 milestone m1
+mise run ml:registry:audit           # verify all 24 VISION_MODELS live on HF
+mise run web:dev tuatha-ui           # per-app dev server
+mise run devops:validate-stacks      # all 89 Docker Compose stacks
+```
+
+### §12.5 — `opencode.json` + the `.cocoindex_code/guides.yml` (the dual-search)
+
+The 12-MCP runtime (per the 2026-08-21 MCP revival): ccc + firecrawl + crawl4ai + chrome + dlt-workspace + motherduck + cognee + graphiti + design-system + langfuse + infisical + huggingface.
+
+The `.cocoindex_code/guides.yml` ships with 12 concept guides (each maps a high-level concept to the canonical files). When a search query matches a guide's description, `ccc:search` returns a `[guide]` hit pointing the user at the canonical set.
+
+**Why dual-search matters for education:** every Firecrawl call MUST be paired with a `ccc:search` so both tool names appear in the Langfuse trace (the audit trail the licence requires).
+
+### §12.6 — The 5 dispatchable opencode subagents
+
+| Subagent | When to dispatch |
+|---|---|
+| `data-platform` | Adding a new DLT source + a BAML extraction + a CocoIndex flow |
+| `infrastructure` | Adding a new Docker Compose stack to `bonneagar/stacks/` |
+| `agent-platform` | Adding a new agent or specialist |
+| `frontend-apps` | Adding a new web surface |
+| `research` | BrowserBase + Firecrawl + CCC + Cognee + change-detection |
+
+### §12.7 — The 16 domain packages — features/benefits/usage
+
+Same 16-package table as cianchosaint §12.7 (with education-specific usage examples).
+
+---
+
 ## Licensing
 
 Business Source License 1.1 — see [`LICENSE.md`](LICENSE.md). Granted
