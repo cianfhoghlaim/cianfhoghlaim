@@ -10,7 +10,7 @@ from __future__ import annotations
 from typing import Any
 
 
-CY_TABLE = "cianhfhglaim.media.image_gen_chunks_cymraeg"
+CY_TABLE = "cianhoghlaim.media.image_gen_chunks_cymraeg"
 
 
 def ingest_cymraeg_asset(asset: dict[str, Any]) -> None:

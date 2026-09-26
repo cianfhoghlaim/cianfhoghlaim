@@ -25,6 +25,9 @@ When the BAML client isn't generated + the litellm gateway is unreachable
 behaviour that returns a deterministic asset record.
 """
 from __future__ import annotations
+import logging
+
+logger = logging.getLogger(__name__)
 
 import argparse
 import asyncio
@@ -77,41 +80,36 @@ def _stub_generate_one(lang_code: str, prompt: str, subject: str = "mathematics"
     }
 
 
-def _render_asset(asset: dict) -> tuple[dict, bool]:
-    """Stub render via litellm (falls back to placeholder PNG when offline).
+async def _render_asset(asset: dict) -> tuple[dict, bool]:
+    """Real render via the canonical image_generation helper.
+
+    Delegates to `agents.adk.tools.image_generation.generate_2d_asset` which
+    handles the litellm call + the stub fallback (placeholder PNG when the
+    litellm gateway is unreachable).
 
     Returns (asset_record, was_stub) tuple.
     """
-    import asyncio
-    import os
-
-    api_base = os.environ.get("LITELLM_BASE_URL", "http://litellm:4000/v1")
-    api_key = os.environ.get("LITELLM_API_KEY", "sk-litellm-dev")
+    from agents.adk.tools.image_generation import generate_2d_asset
 
     try:
-        import litellm
-        response = asyncio.run(litellm.acompletion(
-            model=f"local/image/{asset['language']}",
-            messages=[{
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": f"Generate a FIBO educational diagram ({asset['language']}): {asset['prompt']}"},
-                ],
-            }],
-            modalities=["image", "text"],
-            timeout=120,
-            api_base=api_base,
-            api_key=api_key,
-        ))
-        return asset, response.choices[0].message.get("stub", False)
-    except Exception:
+        rendered = await generate_2d_asset(
+            prompt=f"FIBO educational diagram ({asset['language']}): {asset['prompt']}",
+            role=asset.get("role", "default"),
+        )
+        # Merge the rendered metadata back into the asset record
+        asset["url"] = rendered.get("url", asset.get("url"))
+        asset["sha256"] = rendered.get("sha256", asset.get("sha256", ""))
+        asset["stub"] = rendered.get("stub", True)
+        return asset, rendered.get("stub", True)
+    except Exception as exc:
+        logger.warning("celtic_assets._render_asset fallback: %s", exc)
         return asset, True
 
 
 async def generate_one(lang_code: str, prompt: str, subject: str = "mathematics") -> dict:
     """Generate 1 asset in 1 language."""
     asset = _stub_generate_one(lang_code, prompt, subject)
-    asset, was_stub = _render_asset(asset)
+    asset, was_stub = await _render_asset(asset)
     asset["stub"] = was_stub
     return asset
 

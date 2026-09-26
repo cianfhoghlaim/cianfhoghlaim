@@ -122,7 +122,7 @@ def _build_embedding_text(row: RetroPatternRow) -> str:
     return " | ".join(p for p in parts if p)
 
 
-@coco.AppConfig(name="cianhfhglaim_media_retro_design_embedding")
+@coco.AppConfig(name="cianhoghlaim_media_retro_design_embedding")
 @coco.fn
 def retro_design_app() -> None:
     """The canonical CocoIndex App for retro gameplay design patterns.
@@ -131,7 +131,7 @@ def retro_design_app() -> None:
     ``lance://media.retro_design_patterns`` keyed by
     ``(platform, game_id, scene_id)``.
     """
-    table_name = "cianhfhglaim.media.retro_design_patterns"
+    table_name = "cianhoghlaim.media.retro_design_patterns"
 
     @coco.fn
     async def ingest_pattern(

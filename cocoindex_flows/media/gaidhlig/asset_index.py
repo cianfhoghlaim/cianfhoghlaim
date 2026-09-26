@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import Any
 
 
-GD_TABLE = "cianhfhglaim.media.image_gen_chunks_gaidhlig"
+GD_TABLE = "cianhoghlaim.media.image_gen_chunks_gaidhlig"
 
 
 def ingest_gaidhlig_asset(asset: dict[str, Any]) -> None:

@@ -91,15 +91,18 @@ LEGACY_DUCKLAKE_NAMESPACE_ALIASES: tuple[str, ...] = (
     "ducklake_tertiary",
     "ducklake_uog",
     "ducklake_cie",
-    "ducklake_oideachais",  # de-duplicated by tuple; preserved for documentation
     "ducklake_tuath",
     "ducklake_meaisinfhoghlaim",
     "ducklake_aleyum",
     "ducklake_croilar",
 )
-"""The 6 → 10 legacy DuckLake namespace names that pre-Wave-4 code paths
+"""The 10 legacy DuckLake namespace names that pre-Wave-4 code paths
 still use. All are routed to `DUCKLAKE_NAMESPACE`
 (`"ducklake_cianfhoghlaim"`) via the `DESTINATIONS` registry.
+
+Note: the canonical spelling is `cianhoghlaim` (one `f`), per the
+Phase A convergence work of the 2026-10 saga. The legacy aliases
+are preserved as historical spellings only — never use them in new code.
 """
 
 # ─── Environment variable contract ──────────────────────────────────────────
@@ -112,7 +115,7 @@ REQUIRED_ENV_VARS: tuple[str, ...] = (
 before constructing a destination. `validate_credentials(...)` asserts
 these are present unless an explicit override is supplied.
 
-The convention (per `openspec/changes/2026-08-22-lakehouse-config-and-env-var-hardening-v1`):
+Per the lakehouse-config-and-env-var-hardening-v1 openspec change, the canonical env-var convention is:
 - `CIANFHOGHLAIM_DUCKLAKE_POSTGRES` — Postgres catalog URI
 - `CIANFHOGHLAIM_DUCKLAKE_S3` — Garage S3 storage path
 """

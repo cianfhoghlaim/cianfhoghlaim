@@ -14,7 +14,7 @@ from typing import Any
 
 
 # Canonical table name for the Irish asset index
-GAEILGE_TABLE = "cianhfhglaim.media.image_gen_chunks_gaeilge"
+GAEILGE_TABLE = "cianhoghlaim.media.image_gen_chunks_gaeilge"
 
 
 def ingest_gaeilge_asset(asset: dict[str, Any]) -> None:
