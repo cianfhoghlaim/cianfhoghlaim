@@ -372,21 +372,33 @@ def link_entities_to_assets(
                 language=language,
             ))
 
-    # Try to POST to Cognee (graceful fallback if unreachable)
-    try:
-        import urllib.request
-        edges_data = [e.to_dict() for e in edges]
-        req = urllib.request.Request(
-            f"{COGNEE_API}/api/v1/edges/create",
-            data=json.dumps({"edges": edges_data}).encode(),
-            headers={"Content-Type": "application/json"},
-            method="POST",
-        )
-        with urllib.request.urlopen(req, timeout=1) as resp:
-            return {"edges_created": len(edges), "stub": False}
-    except Exception as exc:
-        logger.info("link_entities_to_assets fallback: %s", exc)
-        return {"edges_created": len(edges), "stub": True}
+    # Try to POST to Cognee with exponential backoff retry
+    # 3 attempts: 0.5s, 1s, 2s. Falls back to stub if all 3 fail.
+    for attempt, delay in enumerate([0.5, 1.0, 2.0]):
+        try:
+            import urllib.request
+            edges_data = [e.to_dict() for e in edges]
+            req = urllib.request.Request(
+                f"{COGNEE_API}/api/v1/edges/create",
+                data=json.dumps({"edges": edges_data}).encode(),
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=2) as resp:
+                if resp.status == 200:
+                    return {"edges_created": len(edges), "stub": False,
+                            "cognee_response": json.loads(resp.read())}
+                else:
+                    logger.warning("cognee edges POST returned status %s", resp.status)
+        except Exception as exc:
+            logger.info("link_entities_to_assets attempt %s/%s failed: %s", attempt + 1, 3, exc)
+            if attempt < 2:
+                import time
+                time.sleep(delay)
+            else:
+                break
+    return {"edges_created": len(edges), "stub": True,
+            "stub_note": "COGNEE_API unreachable after 3 retries (Cognee service may not be up)"}
 
 
 __all__ = [
