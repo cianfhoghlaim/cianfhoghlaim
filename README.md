@@ -601,303 +601,350 @@ follows in this repo.
 
 ---
 
-## §11 — Hardware footprint + cloud options
 
-> **For:** Teachers, students, parents, NCCA subject specialists, university faculty, journalists, citizens, contributors — anyone who wants to know **which machine** to buy / which cloud to use, and **how that compares to the alternatives** (the Mac tiers, the Oracle ARM free tier, Google Cloud, Gemini API, MiniMax Token Plan, and the local GGUF models from the canonical `MODEL_REGISTRY`).
+## §11 — Data Engineering: Pipelines + Lakehouse
+
+> **For:** Anyone extending cianfhoghlaim — adding a new LC subject, a new jurisdiction, a new CocoIndex flow, a new MotherDuck Dive, or a new Dagster asset.
 >
-> **Canonical reference:** [`meaisinfhoghlaim/models/model_registry.py`](./meaisinfhoghlaim/models/model_registry.py) (52 entries across 7 families — the centralised registry).
+> **Canonical reference:** [`dlt_sources/DATA_PLATFORM_ROUTER.md`](./dlt_sources/DATA_PLATFORM_ROUTER.md) (the canonical single-router for the 5 sub-area `AGENTS.md` files that document the data platform surface).
 >
-> **Why this matters for cianfhoghlaim:** the British-Isles education corpus platform is **research-and-deployment** — every deployment option must be auditable + reproducible. Local GGUF gives the strongest audit story; Oracle ARM gives the cheapest 24/7 cloud; the APIs give the lowest capex but the weakest audit story.
+> **Per-area deep-dives:** [`dlt_sources/AGENTS.md`](./dlt_sources/AGENTS.md) (1,957 files / 920 `@dlt.source`) + [`baml_src/AGENTS.md`](./baml_src/AGENTS.md) (319 files / 3 canonical clients) + [`cocoindex_flows/AGENTS.md`](./cocoindex_flows/AGENTS.md) (94 explicit Apps + 378 factory Apps) + [`orchestration/AGENTS.md`](./orchestration/AGENTS.md) (~833 assets / 11 Component classes) + [`meaisinfhoghlaim/README.md`](./meaisinfhoghlaim/README.md) (22 VISION_MODELS + 6 CLASSICAL_OCR + 7 PDF converters).
 
-### §11.1 — The 5-axis hardware landscape
+### §11.1 — What this is
 
-| Axis | Option | RAM | Type | Cost | Sovereignty |
-|---|---|---|---|---|---|
-| **Apple Silicon** | MacBook Pro 14" M4 Max | 48 GB | Local GPU | ~$3,500 one-off | 100% local |
-| **Apple Silicon** | MacBook Air 13" M5 (cheapest new) | 16 GB | Local GPU | ~$1,100 one-off | 100% local |
-| **Apple Silicon** | MacBook Air 13" M1 (older entry) | 8 GB | Local GPU | (used market) | 100% local |
-| **ARM cloud** | Oracle Cloud Always-Free Ampere A1 + PAYG upgrade | 24 GB | Cloud ARM vCPU | $0/month forever | Cloud (OCI region) |
-| **x86 cloud** | Google Cloud $300 free-trial credit | 32 GB | Cloud x86 | $0 for ~45 days | Cloud (GCP region) |
-| **API** | Gemini 3.1 Pro API | (infinite) | API token billing | $2/$12 per M tokens | Cloud (Google) |
-| **API** | MiniMax Token Plan | (infinite) | API token billing | $0.30/$1.20 per M tokens | Cloud (MiniMax) |
+Cianfhoghlaim is a 4-stage data pipeline walking the British-Isles education corpus from raw disk to agent-consumable, semantically-indexed artefacts:
 
-### §11.2 — The 3 Mac tiers (the hardware case scenario)
+```
+Stage 1 — INGESTION        DLT sources → DuckLake raw
+Stage 2 — MATERIALS         BAML/Docling extraction → typed structures
+Stage 3 — MODEL LIFECYCLE    CocoIndex v1 embedding + Cognee cognify
+Stage 4 — ASSET GENERATION   marimo dashboards + TanStack pages + oRPC routes
+Stage 4b — BUDGET            Firecrawl credit tracking (the meter for the BIEP freshness loop)
+Stage 4c — MEMORY            docs-index Cognee cognify job (the 6th sync layer)
+Stage 5 — AGENT OPS         the 13-agent fleet + the 8 NCCA subject specialists
+```
 
-| Tier | Machine | RAM | GPU cores | Apple Silicon GPU bandwidth | Best GGUF (Q4_K_M) | Monthly cost (electricity) |
-|---|---|---|---|---|---|---|
-| **Primary** (the canonical case) | MacBook Pro 14" M4 Max | 48 GB | 40 | 546 GB/s | Qwen3.8-27B (~17 GB) + DeepSeek V4-Pro (~17 GB) + Kimi K3 (~17 GB) + PaddleOCR-VL-1.6 (~3 GB) | ~$3 |
-| **Cheapest new** | MacBook Air 13" M5 | 16 GB | 10 | ~100 GB/s | Qwen3.6-27B-MTP (~17 GB) + Gemma-4-E4B (~3 GB) + PaddleOCR-VL-1.6 (~3 GB) | ~$2 |
-| **Older entry** | MacBook Air 13" M1 | 8 GB | 8 | ~70 GB/s | Llama-3.2-3B Q4_K_M (~2 GB) + BAAI/bge-m3 (~2 GB) | ~$2 |
+The lakehouse is the data platform backbone: **MotherDuck** (cloud DuckDB via Postgres endpoint) + **LanceDB** (vector store) + **DuckLake** (ACID on object storage) + **Garage S3** (object storage) + **Lakekeeper** (Iceberg REST catalog) + **Lance Namespace**.
 
-### §11.3 — The 3 cloud options
+### §11.2 — Current implementation (the snapshot)
 
-#### §11.3.1 — Oracle Cloud Always-Free Ampere A1 ARM (with PAYG upgrade for 24 GB)
+| Sub-area | Current state (as of 2026-09-26) | Canonical entry point |
+|---|---:|---|
+| **DLT sources** | 1,905 `.py` files / 920 `@dlt.source` / 13 top-level sub-trees | [`dlt_sources/README.md`](./dlt_sources/README.md) |
+| **BAML extraction** | 319 `.baml` files / 5 canonical `lc6` functions + 3 canonical clients (`BIEPV3Extract` / `BIEPV3ExtractStrong` / `BIEPV3Vision` per the 2026-08-07-biep-v3-hardening-v1 change) | [`baml_src/AGENTS.md`](./baml_src/AGENTS.md) |
+| **CocoIndex v1 flows** | 94 explicit `coco.App(...)` + 378 factory Apps across 15 sub-trees; `BAAI/bge-m3` 1024-d embedder; R1-R4 conformance contract | [`cocoindex_flows/AGENTS.md`](./cocoindex_flows/AGENTS.md) |
+| **Dagster orchestration** | ~833 assets across 192 `defs.yaml` files + 145 `@asset` decorators + 8 `@sensor` + 1 `@schedule` + 54 `@asset_check` (auto-detected by `mise run sync:dagster`); 11 Component classes; 5-layer architecture | [`orchestration/AGENTS.md`](./orchestration/AGENTS.md) |
+| **MotherDuck Dives** | 53 Dive definitions (4 BIEP v1 canonical + 39 BIEP v3 jurisdiction + 10 misc) | [`motherduck/README.md`](./motherduck/README.md) |
+| **MotherDuck Flights** | 27 Flight files (the canonical daily / weekly / monthly sync jobs) | [`motherduck/flights/config.yaml`](./motherduck/flights/config.yaml) |
+| **Model registry** | 52 entries across 7 families (ocr_vision + text_llm + embedder + rerank + image_gen + voice + translation); audit via `mise run lint:registry` | [`meaisinfhoghlaim/models/model_registry.py`](./meaisinfhoghlaim/models/model_registry.py) |
+| **Bonneagar (IaC)** | 88 Docker Compose stacks + 4 Komodo resource-syncs + 111 stack/procedure TOML files + 6-file `GOLD_STANDARD` pattern | [`bonneagar/README.md`](./bonneagar/README.md) |
 
-Per Oracle's official Always-Free tier + the documented PAYG workaround:
+### §11.3 — Jumping-on points (the 5 recipes for new contributors)
 
-- **Without PAYG**: 2 OCPU + 12 GB RAM + 100 GB storage (the post-July 2026 reduction)
-- **With PAYG upgrade**: **4 OCPU + 24 GB RAM + 200 GB storage** (the pre-reduction allocation; Oracle does NOT charge for the Always-Free resources, only for usage above the limits)
-- 1,500 OCPU hours + 9,000 GB hours per month = 4 OCPU + 24 GB running 24/7
-- ARM Ampere A1 architecture — most popular tools support ARM in 2026
-- $0/month forever (with PAYG, as long as you stay within Always-Free limits)
+A new contributor who wants to extend cianfhoghlaim typically wants to do one of 5 things. For each, the canonical 3-5 files are:
 
-5-step "Enable PAYG for the 24 GB upgrade" recipe:
+#### §11.3.1 — "I want to add a new NCCA LC subject"
 
 ```bash
-# 1. Sign up at oracle.com/cloud/free with the Always-Free tier
-# 2. Upgrade to Pay As You Go (Billing → Upgrade to Pay As You Go)
-#    → This unlocks access to the full Always-Free allocation of 4 OCPU + 24 GB
-#    → No charges as long as you stay within Always-Free limits
-# 3. Provision an Ampere A1.Flex VM with 4 OCPU + 24 GB RAM in your home region
-# 4. Set up Pangolin Newt on the Oracle VM (the WireGuard client that joins the cianfhoghlaim mesh)
-# 5. Add the Oracle VM as a Pangolin private resource target
+# Read these 3 files first
+$EDITOR docs/per-subject-pipeline.md          # the canonical 9-file template per subject
+$EDITOR baml_src/AGENTS.md                     # the 5 canonical lc6 BAML functions
+$EDITOR orchestration/components/biep_subject_component.py  # the canonical Dagster Component
 ```
 
-#### §11.3.2 — Google Cloud $300 free-trial credit
+The 9-file template per subject: `qpack_<subject>.baml` + `dlt/subjects/<subject>/{__init__,sources,schema}.py` + `dagster/assets/<subject>_assets.py` + `cocoindex/<subject>_embedding.py` + `agents/meaisinfhoghlaim/educational/<subject>_agent.py` + `notebooks/leaving_cert/<subject>.py`. Per `docs/per-subject-pipeline.md`.
 
-- $300 credit for 90 days on a new account
-- Best value: `e2-highmem-4` (4 vCPU + 32 GB RAM = $0.068/hour = ~4,400 hours on $300)
-- Use case: the x86 alternative to Oracle ARM; useful if your stack requires x86-only Docker images
+#### §11.3.2 — "I want to add a new jurisdiction (e.g. Australia, South Africa, India)"
 
-#### §11.3.3 — The API options (Gemini 3.1 Pro vs MiniMax Token Plan)
-
-| API | Input $/M | Output $/M | SWE-Bench Verified | Free tier | Best for |
-|---|---|---|---|---|---|
-| Gemini 3.1 Pro | $2.00 | $12.00 | ~78% | None (only Flash has free tier) | Long-context (>200K) |
-| Gemini 3.5 Flash | $1.50 | $9.00 | n/a | None | Bulk extraction |
-| **MiniMax M3** | **$0.30** | **$1.20** | **80.5%** | None | **SWE-Bench leader** |
-| MiniMax M2.5 Standard | $0.15 | $1.20 | 80.2% | None | Cheapest option |
-
-**Why MiniMax M3 wins for cianfhoghlaim specifically:**
-- 80.5% on SWE-Bench Verified (the highest of any open-weight model)
-- $0.30/$1.20 is 6.7× cheaper than Gemini 3.1 Pro for input tokens
-- The canonical `MODEL_REGISTRY["text_llm"]["default"]` resolves to `minimax-m3` — the LiteLLM M3 chokepoint alias
-
-### §11.4 — The canonical GGUF/MLX registry (from `meaisinfhoghlaim/models/`)
-
-Per the `centralized-model-registry` openspec capability (post-2026-08-15) + the 2026-09-26 Firecrawl MCP research, the canonical model registry has 52 entries across 7 families.
-
-#### §11.4.1 — Per-family features/benefits (7 paragraphs)
-
-**text_llm (19 entries)** — covering the canonical LiteLLM M3 chokepoint (`minimax-m3` for cloud) + the local GGUF primary set (Gemma 4 + Qwen3 + DeepSeek V4 + Kimi K3 for on-device). Chosen because they cover the 3 key dimensions: SWE-Bench (coding), MMLU (general reasoning), and long-context (the 8 NCCA LC subject dossiers).
-
-**ocr_vision (22 entries)** — covering OCR-specialised models (PaddleOCR-VL-1.6 at 96.33% OmniDocBench v1.6, dots-ocr, deepseek-ocr-2) + general VLMs (Gemma 4, Qwen3-VL-8B at 5.03 GB Q4_K_M with 32-language OCR, InternVL3, Llama-3.2-Vision). Chosen because BIEP needs both text extraction + chart/diagram understanding for the NCCA syllabus PDFs.
-
-**embedder (5 entries)** — `BAAI/bge-m3` (1024 dim, 8192 tokens, multilingual dense+sparse+colbert), `BAAI/bge-large-en-v1.5`, `sentence-transformers/all-MiniLM-L6-v2`, `qwen3-embedding-4b`, `embeddinggemma-300m`. Chosen for the 3 size tiers matching the 3 hardware tiers.
-
-**rerank (3 entries)** — `jina-reranker-v2-base-multilingual`, `rerank-v3.5`, `gte-rerank-v2`.
-
-**image_gen (7 entries)** — `flux2-dev`, `z-image-turbo`, `qwen-image`, `sdxl`, `fibo`, `diffusiongemma-26b-a4b`, `qwen-image-2512`.
-
-**voice (7 entries)** — ASR (Whisper-large, Wav2Vec2-Irish) + TTS (Chatterbox, ABA-TTS, Orpheus-TTS-3B, Sesame-CSM-1B). The Wav2Vec2-Irish is the canonical Irish ASR for the Gaeilge pipeline.
-
-**translation (3 entries)** — Opus-MT, M2M100, NLLB. Chosen for the 3 scale tiers matching the 3 hardware tiers.
-
-#### §11.4.2 — "Previously incorrect vs canonical" comparison
-
-| What we previously had | What's actually in the canonical MODEL_REGISTRY | What Firecrawl research confirmed |
-|---|---|---|
-| "Gemma 4 26B has 84.3% SWE-Bench Verified" | The actual is **17.4%** — Google deliberately omitted SWE-bench from official benchmarks | Per independent tests (grigio.org) |
-| "Qwen3.8-27B primary" | ✓ Correct — SWE-bench Pro 61.7, MTP trained | Qwen3.8-27B is the canonical primary |
-| "DeepSeek V4 Pro has 80.6% SWE-Bench" | The actual is **95.2%** | DeepSeek V4 Pro is the SWE-Bench leader of open-weight |
-| "Kimi K3 unspecified" | Kimi K3: 2.8T MoE, 1M context, 92.6% SWE-Bench | Moonshot AI flagship July 16, 2026 |
-| "BAAI/bge-m3 is 1024 dim, 8192 tokens" | ✓ Correct | Multilingual, dense+sparse+colbert |
-
-The journey from "previously incorrect" to "canonical" is exactly what `mise run lint:registry` catches.
-
-#### §11.4.3 — Per-PIRP (Personal Information Retrieval Pipeline) — adapted for education
-
-The cianfhoghlaim-specific use case (instead of cianchosaint's political-accountability pipeline):
-
-| Subject | M4 Max 48 GB | M5 Air 16 GB | M1 Air 8 GB | Oracle ARM 24 GB | GCP x86 32 GB | Gemini API | MiniMax API |
-|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| Mathematics (LC) | ✓ local | ✓ local | ✓ local | ✓ cloud | ✓ cloud | ✓ | ✓ |
-| Chemistry (LC) | ✓ local | ✓ local | ✓ local | ✓ cloud | ✓ cloud | ✓ | ✓ |
-| Geography (LC) | ✓ local | ✓ local | ✓ local | ✓ cloud | ✓ cloud | ✓ | ✓ |
-| Gaeilge (LC) | ✓ local (Wav2Vec2-Irish) | ✓ local | ✓ local | ✓ cloud | ✓ cloud | ✓ | ✓ |
-| English (LC) | ✓ local | ✓ local | ✓ local | ✓ cloud | ✓ cloud | ✓ | ✓ |
-| Computer Science (LC) | ✓ local | ✓ local | ✓ local | ✓ cloud | ✓ cloud | ✓ | ✓ |
-| Welsh (vernacular) | ✓ local | ✓ local | ✗ | ⚠ tight | ✓ | ✓ | ✓ |
-| Scottish Gaelic (vernacular) | ✓ local | ✓ local | ✗ | ⚠ tight | ✓ | ✓ | ✓ |
-| Ulster Scots (vernacular) | ✓ local | ✓ local | ✗ | ⚠ tight | ✓ | ✓ | ✓ |
-
-#### §11.4.4 — Why centralised (the audit)
-
-Per the 2026-09-26 Firecrawl research of BAML best practices, the canonical pattern for runtime model override is `baml_py.ClientRegistry`. The `mise run lint:registry` audit fails CI on any hardcoded model string outside `MODEL_REGISTRY`. The 12 ocr_vision models + the 20 text_llm models + the 3 embedders + the 3 rerankers all resolve via this single canonical surface.
-
-### §11.5 — The local-inference stack (Unsloth Studio + llama-swap)
-
-The provider chain is **LiteLLM-primary** (different from cianchosaint's Unsloth Studio primary). The local-inference path uses:
-
-```yaml
-# The canonical 12 unsloth-served models (per the 2026-08-21-unsloth-v5 change)
-# Each model has a LiteLLM alias in bonneagar/stacks/litellm/config/config.yaml
-# The 12 routes point at http://host.docker.internal:8888/v1 (the Unsloth Studio)
+```bash
+$EDITOR dlt_sources/british_isles/_cross/jurisdiction_pipeline_base.py  # the canonical base class
+$EDITOR dlt_sources/README.md           # §"The BIEP v3 jurisdiction pipeline pattern"
+$EDITOR orchestration/components/biep_subject_component.py  # the per-jurisdiction Component
 ```
 
-### §11.6 — For file processing (the BIEP use case)
+Subclass `JurisdictionPipelineBase` (at `dlt_sources/british_isles/_cross/jurisdiction_pipeline_base.py:33`) and add a ~30-line subclass instead of a ~380-line hand-written asset file. The pattern is documented in `dlt_sources/README.md`.
 
-The 6 LC subjects + the 3 vernaculars + the 4 Irish stages + the 8 nations run on the same hardware axes as the model table above. The 4-stage orchestration (1_ingestion → 2_materials → 3_model_lifecycle → 4_asset_generation) runs end-to-end on the M4 Max 48 GB.
+#### §11.3.3 — "I want to add a new CocoIndex v1 flow"
 
-### §11.7 — For code development (the dev use case)
+```bash
+$EDITOR cocoindex_flows/AGENTS.md       # the 4-rule R1-R4 conformance contract
+$EDITOR cocoindex_flows/infrastructure/cocoindex_v1_conformance.py  # the R1-R4 linter
+$EDITOR cocoindex_flows/_shared/_lifespan.py  # the canonical lifespan (LANCE_DB + EMBEDDER ContextKeys)
+```
 
-Same 9-task table as cianchosaint, plus:
-- `bun run ccc:search "X"` — the canonical semantic code search (always use before grep)
-- `mise run sync:all` — the 14-layer knowledge sync loop
-- `mise run core:ci` — the canonical CI gate
-- `mise run data:dagster:up` — launch the Dagster UI on :3335
-- `mise run ml:registry:audit` — verify all 24 VISION_MODELS are live on HF Hub
+Every new v1 App MUST satisfy the R1-R4 contract (per `cocoindex_flows/infrastructure/cocoindex_v1_conformance.py:13-31`):
 
-### §11.8 — Pangolin.net private self-hosted resources
+- **R1** — The App imports from `.._shared._lifespan` (or `..._shared._lifespan` for 3-deep dirs, etc.)
+- **R2** — Uses the canonical ContextKeys (`LANCE_DB`, `EMBEDDER`, `RESOLVED_FILE_REGISTRY`)
+- **R3** — Has a module-scope `coco.App(...)` instantiation
+- **R4** — Has at least one `@coco.fn(memo=True)` decorator
 
-The 107 Docker Compose stacks are exposed as private Pangolin resources. The `arm1-oci` (Oracle Cloud) control plane + `bunchloch` (MacBook M4) workload host. From any UK / Irish / EU laptop enrolled in Pocket ID, the analyst reaches the platform without ever exposing a public port.
+The audit is `mise run cocoindex:conformance`. Conformance violations raise `ConformanceViolation` at scaffold time (before Dagster tries to run the App).
 
-### §11.9 — Mapping the cianfhoghlaim user types to the 5-axis landscape
+#### §11.3.4 — "I want to add a new MotherDuck Dive"
 
-(Adapted from the 13 user types per the existing README — teachers, students, parents, NCCA specialists, university faculty, journalists, citizens, contributors, etc.)
+```bash
+$EDITOR motherduck/README.md   # the canonical entry-point + the DiveRegistry class
+$EDITOR motherduck/dives/<new_dive>.py  # the new Dive definition
+```
 
-| User type | M4 Max 48 GB | M5 Air 16 GB | M1 Air 8 GB | Oracle ARM 24 GB | GCP $300 trial | Gemini API | MiniMax API |
-|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| Teacher (secondary) | ✓ all BIEP | ✓ 6 LC flagship | ✓ 6 LC flagship (basic) | ✓ all BIEP | ✓ all BIEP | ✓ | ✓ |
-| Student (LC) | ✓ all BIEP | ✓ 6 LC flagship | ✓ 6 LC flagship (basic) | ✓ all BIEP | ✓ all BIEP | ✓ | ✓ |
-| Parent | ✓ all BIEP | ✓ 6 LC flagship | ✓ 6 LC flagship (basic) | ✓ all BIEP | ✓ all BIEP | ✓ | ✓ |
-| NCCA subject specialist | ✓ all BIEP | ✓ 6 LC flagship | ✓ 6 LC flagship (basic) | ✓ all BIEP | ✓ all BIEP | ✓ | ✓ |
-| UoG undergraduate (personal archive) | ✓ all BIEP | ✓ 6 LC flagship | ✓ 6 LC flagship (basic) | ✓ all BIEP | ✓ all BIEP | ✓ | ✓ |
-| Academic researcher | ✓ all BIEP | ✓ 6 LC flagship | ✓ 6 LC flagship (basic) | ✓ all BIEP | ✓ all BIEP | ✓ | ✓ |
-| Journalist | ✓ 6 LC flagship | ✓ 6 LC flagship | ✓ 6 LC flagship (basic) | ✓ 6 LC flagship | ✓ 6 LC flagship | ✓ | ✓ |
-| Citizen (self-host) | ✓ all BIEP | ✓ all BIEP (offline cache) | ✓ 6 LC flagship (basic) | ✓ all BIEP | ✓ all BIEP | n/a | n/a |
-| Contributor (bug hunter, dev) | ✓ all BIEP | ✓ all BIEP | ✓ 6 LC flagship (basic) | ✓ all BIEP | ✓ all BIEP | ✓ | ✓ |
+A Dive is a SQL/Python artefact that gets registered in the MotherDuck workspace. Use the existing 4 BIEP v1 Dives (`lc_syllabus_topics` / `lc_exam_difficulty` / `lc_marking_complexity` / `gov_circulars_archive`) as templates.
 
-### §11.10 — The "pick your subset" cheat-sheet
+#### §11.3.5 — "I want to add a new Dagster asset"
 
-| Scenario | Recommendation | Why |
+```bash
+$EDITOR orchestration/AGENTS.md  # the 5-layer architecture + the 2 parallel trees (defs/ + pipelines/)
+$EDITOR orchestration/components/__init__.py  # the registry surface (every new Component MUST be re-exported here)
+$EDITOR orchestration/components/layer<N>_<stage>.py  # the appropriate stage Component
+```
+
+`orchestration/components/__init__.py` is the **registry surface** — every class instantiated from `defs.yaml` via `type:` MUST be re-exported there, or Dagster raises `DagsterUnresolvableSymbolError` at load time.
+
+### §11.4 — The 4-stage pipeline (the canonical walk)
+
+| Stage | Directory | Canonical files | Sample asset | Sample BAML | Sample CocoIndex | Sample DLT |
+|---|---|---|---|---|---|---|
+| **1. Ingestion** | `dlt_sources/` | `british_isles/_cross/jurisdiction_pipeline_base.py` | `ireland_lc_jurisdiction_assets` (6 assets) | n/a | n/a | `ireland_jurisdiction_pipeline.py` |
+| **2. Materials** | `baml_src/` + `orchestration/defs/2_materials/` | `baml_src/british_isles/_shared/lc6_extraction.baml` | `lc_syllabus_extraction_asset` | `ExtractCurriculumSyllabus` | n/a | n/a |
+| **3. Model Lifecycle** | `cocoindex_flows/` + `orchestration/defs/3_model_lifecycle/` | `cocoindex_flows/_shared/_lifespan.py` | `ireland_lc_syllabus_embedding_asset` | n/a | `ireland_lc_factory.ireland_lc_syllabus_topics` | n/a |
+| **4. Asset Generation** | `web/apps/` + `orchestration/defs/4_asset_generation/` | the 8 web apps (`web/apps/{cianfhoghlaim-web,tuatha-ui,oideachais,...}`) | `lc_dashboard_marimo_asset` | n/a | n/a | n/a |
+| **5. Agent Ops** | `agents/meaisinfhoghlaim/` + `orchestration/defs/5_agent_ops/` | the 13-agent fleet | `nightly_pipeline_health_asset` | n/a | n/a | n/a |
+
+### §11.5 — The lakehouse (MotherDuck + LanceDB + DuckLake + Garage)
+
+The lakehouse is the data platform backbone, deployed as the `lakehouse` Docker Compose stack (per `bonneagar/stacks/lakehouse/`):
+
+| Component | Image | Purpose |
 |---|---|---|
-| **Teacher on a budget** | M5 Air 16 GB + Oracle ARM 24 GB + MiniMax Token Plan | $1,100 one-off + $0 cloud + $20/month API covers all BIEP subjects |
-| **Self-hosted citizen, no cloud** | M1 Air 8 GB (used market) | The 6 LC flagship subjects + offline SQLite cache; full sovereignty |
-| **Power analyst (the canonical case)** | M4 Max 48 GB + Oracle ARM 24 GB + MiniMax Token Plan | $3,500 one-off + $0 cloud + occasional API |
-| **Audit-grade sovereign deployment** | M4 Max 48 GB + Oracle ARM 24 GB (no API) | 100% local + cloud; no third-party API |
+| **Garage** | `ghcr.io/garage-tech/garage:1.0.0` | S3-compatible object storage (the canonical blob layer) |
+| **Postgres** | `postgres:16` | Metadata catalog + the LanceDB metadata + Dagster run history |
+| **Lakekeeper** | `lakekeeper/lakekeeper:latest` | Iceberg REST catalog (the canonical table format) |
+| **Lance NS** | `lancedb/lance-namespace:latest` | The LanceDB namespace service (the canonical vector store) |
+
+The canonical database namespace is `md:cianfhoghlaim` (per `dlt_sources/_shared/motherduck_options.py`). The 53 MotherDuck Dives are registered under `md:cianfhoghlaim.<subject>.<stage>`. The 4 BIEP v1 canonical Dives are:
+
+- `lc_syllabus_topics` — the 6 LC subjects × NCCA syllabus topics
+- `lc_exam_difficulty` — the exam paper difficulty metrics
+- `lc_marking_complexity` — the marking scheme complexity analysis
+- `gov_circulars_archive` — the gov.ie circulars archive
+
+### §11.6 — The BIEP v3 generic pipeline pattern
+
+The canonical reference is `dlt_sources/british_isles/ireland/education/ireland_jurisdiction_pipeline.py`. To add a new jurisdiction (per `dlt_sources/README.md`):
+
+```python
+from dlt_sources.british_isles._cross.jurisdiction_pipeline_base import JurisdictionPipelineBase
+import dlt
+
+class MyJurisdictionPipeline(JurisdictionPipelineBase):
+    STAGE = "leaving_certificate"
+
+    def build_pipeline_resource(self, pipeline):
+        @dlt.resource(name="documents", write_disposition="merge", primary_key=["content_hash"])
+        def documents():
+            for subject in self.subjects():
+                yield {"subject": subject, "content_hash": ..., "url": ..., "text": ...}
+        return documents
+
+my_pipeline = MyJurisdictionPipeline("my_jurisdiction")
+my_pipeline.run()  # writes to md:cianfhoghlaim.education.my_jurisdiction.*
+```
+
+This is the canonical pattern that replaces the ~380-line hand-written asset files with a ~30-line subclass.
+
+### §11.7 — The 3 canonical BAML clients
+
+Per `docs/baml/biiep-v3-client-canon.md` (the 2026-08-07-biep-v3-hardening-v1 change). The fragmented client setup (`ExtractEn` / `ExtractEnStrong` / `LlamaSwapClient` / `LocalVision`) is consolidated into **3 canonical clients**:
+
+| Client | Model | Use case | Retries | Timeout | Max tokens |
+|---|---|---|--:|--:|--:|
+| `BIEPV3Extract` | Gemma 3 4B IT | Single-shot extraction where latency matters | 3 | 60s | 2,048 |
+| `BIEPV3ExtractStrong` | Qwen 3-VL 8B IT | Multi-shot extraction where fidelity matters | 3 | 120s | 4,096 |
+| `BIEPV3Vision` | qwen3-vl-8b via llama-swap | The 4-path OCR/VLM ensemble (Docling + Unstract + qwen3-vl + gemma4) | 5 | 180s | 8,192 |
+
+For each `client ExtractEn` / `client ExtractEnStrong` reference in BAML function signatures:
+
+- Single-subject quick extraction → `client BIEPV3Extract`
+- Multi-step syllabus extraction → `client BIEPV3ExtractStrong`
+- OCR/VLM pipeline integration → `client BIEPV3Vision`
+
+### §11.8 — Forward plans (the 5-row roadmap)
+
+| # | Plan | Status | Reference |
+|---|---|---|---|
+| 1 | **BIEP v3 cutover** — replace the v1 hand-written jurisdiction pipelines with the generic `JurisdictionPipelineBase` pattern | In progress (Q4 2026) | `dlt_sources/README.md` |
+| 2 | **2026-10 convergence saga** — the 8-plan saga that converges ADK 2 Pillar 3 + asset generation + lakehouse bridge + Tuatha closed-loop MMO | Plans 1-3 done; Plans 4-8 pending | [`openspec/plans/2026-10-01-convergence-saga-v1.md`](./openspec/plans/2026-10-01-convergence-saga-v1.md) |
+| 3 | **The 24 active openspec changes** — the canonical change ledger | See [`openspec/AGENTS.md`](./openspec/AGENTS.md) for the full inventory | `openspec/changes/` |
+| 4 | **BIOD v1 follow-on** (the cianchosaint tangent) — the defence / policing / intel oversight pipeline | Pending (the cianchosaint sibling repo is the implementation) | [`openspec/specs/cianchosaint-pipeline/spec.md`](./openspec/specs/cianchosaint-pipeline/spec.md) |
+| 5 | **The 6 Celtic vernacular pipelines** — Welsh + Scottish Gaelic + Manx + Breton + Cornish + Channel Islands French × 2 | Pending (per the 2026-09-01-cianfhoghlaim-nua-v7-vernaculars-v1 change) | `baml_src/british_isles/_shared/vernacular_overlay.baml` |
+
+### §11.9 — Cross-references (the per-area deep-dives)
+
+| If you want to ... | Open this file |
+|---|---|
+| Add a DLT source | [`dlt_sources/AGENTS.md`](./dlt_sources/AGENTS.md) |
+| Add a BAML extraction | [`baml_src/AGENTS.md`](./baml_src/AGENTS.md) |
+| Add a CocoIndex v1 flow | [`cocoindex_flows/AGENTS.md`](./cocoindex_flows/AGENTS.md) |
+| Add a Dagster asset | [`orchestration/AGENTS.md`](./orchestration/AGENTS.md) |
+| Add a VLM / OCR / HTR step | [`meaisinfhoghlaim/README.md`](./meaisinfhoghlaim/README.md) |
+| Understand the 5-sub-area router | [`dlt_sources/DATA_PLATFORM_ROUTER.md`](./dlt_sources/DATA_PLATFORM_ROUTER.md) |
+| Chop-and-change for your own domain | [`docs/CHOP_AND_CHANGE_GUIDE.md`](./docs/CHOP_AND_CHANGE_GUIDE.md) |
+| Use the canonical day-1 dev workflow | [`AGENTS.md`](./AGENTS.md) |
+| Add a new openspec change | [`openspec/AGENTS.md`](./openspec/AGENTS.md) |
 
 ---
 
-## §12 — The dev environment: OpenSpec + openchamber.dev + mise
+## §12 — Deployment + Recreation Playbook
 
-> **For:** Anyone extending cianfhoghlaim — adding a new DLT source, a new BAML extraction, a new agent, a new web surface, or a new openspec change.
+> **For:** Operators bringing up the platform from cold on `arm1-oci` (production) + `bunchloch` (MacBook M4 local-dev), OR forking the repo to retarget for a different jurisdiction.
 >
-> **Canonical tools:** OpenSpec (change management), openchamber.dev (browser UI), mise (task runner), opencode.json (12-MCP runtime), `.cocoindex_code/guides.yml` (12 concept guides).
+> **Canonical reference:** [`docs/DEPLOYMENT-PLAYBOOK.md`](./docs/DEPLOYMENT-PLAYBOOK.md) (the canonical 13-step recreation + 6-step confirmation + 4-blocker "if it doesn't work" recipe — also rendered inline below).
+>
+> **Per-area IaC deep-dives:** [`bonneagar/README.md`](./bonneagar/README.md) (the 6-step IaC golden path) + [`bonneagar/DEPLOYMENT-STRATEGY.md`](./bonneagar/DEPLOYMENT-STRATEGY.md) (the 2-host topology + the 8-phase bootstrap state machine) + [`docs/CHOP_AND_CHANGE_GUIDE.md`](./docs/CHOP_AND_CHANGE_GUIDE.md) (the chop-and-change recipe for your own domain).
 
-### §12.1 — Why this section exists
+### §12.1 — The 2-host topology (the canonical deployment)
 
-Cianfhoghlaim was built agentically, with the dev environment deliberately exposed so users can extend it without learning a new stack. The 4 load-bearing tools: **OpenSpec** (change mgmt — 96 specs, 13 pending changes), **openchamber.dev** (UI), **mise** (task runner — 6 domain namespaces), **opencode.json** (12-MCP runtime).
+Per `bonneagar/DEPLOYMENT-STRATEGY.md §1`:
 
-### §12.2 — OpenSpec (the spec-driven change-management workflow)
+| Host | Role | Spec | What runs there |
+|---|---|---|---|
+| `bunchloch` | Primary Workloads | MacBook M4 Max, ~14 cores, 48 GB RAM, NVMe | 35 containers: lakehouse (Garage + Postgres + Lakekeeper + Lance NS), Langfuse, LiteLLM, llama-swap, Convex, browser stack, oideachais frontend + API + Dagster, komodo-core + komodo-periphery, Cognee, LanceDB, newt (Pangolin client) |
+| `arm1-oci` | Control Plane | Oracle Cloud London, 4 ARM OCPUs, 24 GB RAM, 200 GB (via Always-Free + PAYG upgrade — see §12.5) | ~10 containers: Pangolin + Gerbil + Traefik + Pocket ID + TinyAuth + Middleware Manager + CrowdSec, Komodo Core, Infisical, Garage, Beszel, Dozzle, Qdrant, cal-diy |
 
-The canonical workflow:
+**Host names are not Pangolin site names.** The machine called `bunchloch` is registered in Pangolin as the site named **`macbook`**. There is also a site named `bunchloch` (a dead registration that has been offline since 2026-07-27). Automation addresses sites by `niceId`, not by either name.
 
-```bash
-# 1. Create the change directory
-mkdir -p openspec/changes/<change-id>/specs/<capability>
+### §12.2 — The 6-step IaC golden path (the canonical deployment sequence)
 
-# 2. Write the 3 artifacts
-$EDITOR openspec/changes/<change-id>/proposal.md       # why + what + impact + dependencies
-$EDITOR openspec/changes/<change-id>/tasks.md          # the ordered checklist
-$EDITOR openspec/changes/<change-id>/specs/<capability>/spec.md  # ADDED/MODIFIED/REMOVED Requirements
+Per `bonneagar/README.md §1-§6`:
 
-# 3. Validate --strict
-openspec validate <change-id> --strict
-
-# 4. Implement the changes
-# 5. Archive the change (after deploy)
-openspec archive <change-id> --yes
+```
+Step 1 — Verify mise + secrets            mise run validate-env
+Step 2 — 6-way health check               mise run iac:health
+Step 3 — Plan (read-only diff)            mise run iac:plan
+Step 4 — Validate 88 stacks               mise run cic:stack-doctor
+Step 5 — Bootstrap a new cluster          mise run iac:bootstrap (8-phase state machine)
+Step 6 — arm1-OCI safety preflight        mise run preflight-arm-oci
 ```
 
-**Why it matters for education:** every change is auditable in a way that matches what an academic records office needs. The `openspec list --specs` + `openspec validate --all --strict` + `openspec archive` workflow gives the audit trail the BUSL-1.1 licence requires.
+### §12.3 — The 6-file GOLD_STANDARD stack pattern
 
-The 3 priority specs (post-2026-08-15):
-- `centralized-model-registry` — the 52-entry `MODEL_REGISTRY` driving LiteLLM + BAML + agents
-- `centralized-schema-registry` — BAML is the single source of truth; Pydantic + Zod are codegen
-- `deployment-control-panel` — the 5-tab marimo control panel + web UI + CLI
+Every one of the 88 Docker Compose stacks follows the same 6-file pattern (per `bonneagar/GOLD_STANDARD.md`):
 
-Cross-link to `openspec/AGENTS.md` for the full workflow.
-
-### §12.3 — openchamber.dev (the browser-based OpenCode UI)
-
-**What it is:** Browser-based OpenCode UI built on `oven/bun:1.3.5` + React. MIT-licensed upstream at `openchamber/openchamber`. 18+ themes, persistent session state, multi-device sync via the Pangolin mesh.
-
-#### §12.3.1 — The 5 key features that matter for cianfhoghlaim
-
-| Feature | Why it matters for cianfhoghlaim |
+| File | Purpose |
 |---|---|
-| **Bundled-runtime vs external-runtime dual-mode** | The same image serves both `arm1-oci` (production, bundled) and `bunchloch` (your MacBook, external — the host OpenCode owns the process + MCP config) |
-| **18+ themes + persistent sessions** | Long-running research sessions (the 8 NCCA LC subject dossiers, the BIEP nightly batch) need to survive browser restarts |
-| **Pangolin private-resource ingress** | Every OpenChamber instance is exposed as a Pangolin private resource — Pocket ID OIDC + WireGuard means no public ports |
-| **Multi-device session sync** | A teacher starts research at school, continues on the iPad on the bus, finishes at home — same OpenChamber session |
-| **Provider picker (OpenAI / Anthropic / OpenAI-compatible)** | Maps directly to the cianfhoghlaim 7-tier `minimax` LiteLLM chokepoint alias |
+| `compose.yaml` | Docker service definitions (health checks, restart policies, volumes, network) |
+| `sidecar.yaml` | Locket container for Infisical secret injection at runtime |
+| `secrets.env` | Infisical URI references (`infisical://dev-baile/...`) — NO plaintext |
+| `blueprint.yaml` | Pangolin private-resource definition (YAML form) |
+| `pangolin.yaml` | The Pangolin route config (full domain, role, destination) |
+| `.env.example` | Local-dev placeholder env vars (committed, no real secrets) |
 
-#### §12.3.2 — Capabilities alongside bonneagar + the dev setup
+The `stack-doctor` audit (`mise run cic:stack-doctor`) walks `bonneagar/stacks/*/compose.yaml` and reports:
 
-| openchamber.dev capability | How it uses the bonneagar stack |
+- **CRITICAL**: stacks missing `compose.yaml` or failing `docker compose config --quiet`
+- **WARNING**: stacks missing one of the 6 GOLD_STANDARD files
+- **INFO**: stacks that pass all checks
+
+Target: **0 CRITICALS**.
+
+### §12.4 — The 13-stack bootstrap order (the canonical dependency sequence)
+
+Per `docs/DEPLOYMENT.md §3`. When bringing up the platform from cold, start the 13 stacks in this exact order — skipping a tier breaks downstream tier dependencies:
+
+```
+1.  secrets        →  infisical                  (everything depends on this)
+2.  storage        →  motherduck, lakehouse      (LLM gateways need to log traces)
+3.  LLM            →  litellm, unsloth-serve     (Unsloth first; LiteLLM routes to Unsloth)
+4.  observability  →  langfuse                   (LLM gateways need to flush traces)
+5.  browser        →  crawl4ai, stagehand        (Firefox + Chrome bring-up is slow)
+6.  monitoring     →  changedetection            (sensors must come after the sources they watch)
+7.  governance     →  komodo, pangolin, locket   (orchestration + routing + secret-injection)
+8.  UI             →  openchamber                (web UI last; it depends on everything above)
+```
+
+### §12.5 — The 4 known blockers (the "if it doesn't work" recipe)
+
+Per `bonneagar/DEPLOYMENT-STRATEGY.md §4`. A deploy at the moment will hit these 4 known issues:
+
+| # | Blocker | Fix |
+|--:|:--|:--|
+| 1 | Newt 1.12.5 + Pangolin server 1.18.4 incompatible (`CLIENTS WILL NOT WORK ON THIS VERSION OF NEWT WITH THIS PANGOLIN SERVER`) | Update Pangolin server to ≥1.13.0 OR downgrade newt to 1.11.x |
+| 2 | 3 manually-created private resources (`komodo`, `cal-diy`, `infisical`) override the blueprints. New blueprint: `Blueprint application failed: Site resource already exists with domain: <X>` | Open the Pangolin UI → Sites → each resource → delete the manual entry. Blueprint reapplies on the next newt cycle |
+| 3 | Both `PANGOLIN_API_KEY` and `PANGOLIN_API_KEY_0` in `.env` return 401 | Use the Pangolin UI to mint a fresh machine-identity token. Save to `.env` as `PANGOLIN_API_KEY` |
+| 4 | `komodo-locket` sidecar fails: `error: invalid value '${INFISICAL_CLIENT_ID}'` | Switch to single-dollar Compose substitution; add `--infisical-default-environment` + `--infisical-default-project-id` flags; provision an Infisical machine identity with `/komodo` access |
+
+### §12.6 — The recreation recipe (if you want to fork or restart from cold)
+
+The canonical 13-step recreation recipe. For the full recipe, see [`docs/DEPLOYMENT-PLAYBOOK.md`](./docs/DEPLOYMENT-PLAYBOOK.md §1).
+
+Quick path:
+
+```bash
+# Step 1 — prerequisites
+git clone https://github.com/cianfhoghlaim/cianfhoghlaim
+cd cianfhoghlaim
+
+# Step 2 — install
+mise install        # bun + uv + dagger + pulumi + duckdb + opencode
+bun install          # TypeScript workspace deps
+uv sync              # Python sub-packages
+
+# Step 3 — secrets
+bun run scripts/create-env.ts    # creates the dev-baile environment in Infisical
+bun run scripts/init-vault.ts    # reads .env + .infisical.env, creates / updates vault secrets
+
+# Step 4 — verify
+mise run validate-env            # verifies all required env vars are hydrated
+mise run iac:health              # 6-way health check
+mise run iac:plan                # read-only diff between IaC-declared and actual state
+mise run cic:stack-doctor        # validate 88 stacks against 6-file GOLD_STANDARD
+
+# Step 5 — bootstrap (8-phase state machine)
+mise run iac:bootstrap           # the 8-phase state machine: Pulumi → Infisical → Pangolin → Komodo → Newt → syncs → one-shot → first sync
+
+# Step 6 — materialise the lakehouse
+mise run dagster:dev             # launches the Dagster UI on :3000
+uv run python -m orchestration.cli list-assets      # verify ~833 assets loaded
+uv run python -m orchestration.cli materialise-leabharlann  # the canonical first materialise
+
+# Step 7 — run the 4 BIEP v1 Dives
+python -c "from motherduck import BIEP_DIVES; print([d.name for d in BIEP_DIVES])"
+python -c "from motherduck import save_all; save_all()"
+
+# Step 8 — the canonical CI gate
+mise run core:ci                 # lint + test + openspec:validate-all + devops:validate-stacks
+```
+
+### §12.7 — The confirmation recipe (the "is it actually deployed?" check)
+
+The canonical 6-step confirmation recipe. For the full recipe, see [`docs/DEPLOYMENT-PLAYBOOK.md`](./docs/DEPLOYMENT-PLAYBOOK.md §2).
+
+Quick path:
+
+```bash
+# The 6 weekly health-checks
+mise run iac:health                 # 6-way health check (Komodo + Pangolin + Infisical + Newt + Pocket ID + Tinyauth)
+mise run devops:validate-stacks     # 88 stacks against GOLD_STANDARD
+mise run data:dagster:up            # Dagster UI on :3335 + ~833 assets
+mise run ml:registry:audit          # 24 VISION_MODELS live on HF Hub
+mise run openspec:validate-all      # CI gate (131 items pass)
+mise run sync:all                   # 14 sync layers
+```
+
+### §12.8 — Cross-references
+
+| If you want to ... | Open this file |
 |---|---|
-| Browser chat with the AG-UI chat window | Routes through the `litellm` stack → falls through to the `unsloth-serve` stack → the `pangolin` private resource target → `host.docker.internal:8888` on your Mac |
-| Persistent session state | Backed by the `locket` sidecar-injected SQLite volume |
-| Multi-device sync | Goes through the `pangolin` Newt WireGuard tunnel; the `pocket-id` OIDC layer authenticates every device |
-| MCP tool calls (firecrawl / ccc / cognee / etc.) | Routed through the `opencode.json` 12-MCP runtime |
-| Provider switching | Driven by `MODEL_REGISTRY` + `baml_src/clients.baml`; the OpenChamber UI reads the same `deployment-choice.yaml` toggle |
+| Follow the full 13-step recreation recipe | [`docs/DEPLOYMENT-PLAYBOOK.md`](./docs/DEPLOYMENT-PLAYBOOK.md §1) |
+| Follow the full 6-step confirmation recipe | [`docs/DEPLOYMENT-PLAYBOOK.md`](./docs/DEPLOYMENT-PLAYBOOK.md §2) |
+| Understand the 4 known blockers + fixes | [`docs/DEPLOYMENT-PLAYBOOK.md`](./docs/DEPLOYMENT-PLAYBOOK.md §3) |
+| Bootstrap a new cluster | [`bonneagar/DEPLOYMENT-STRATEGY.md`](./bonneagar/DEPLOYMENT-STRATEGY.md) |
+| Chop-and-change for your own domain | [`docs/CHOP_AND_CHANGE_GUIDE.md`](./docs/CHOP_AND_CHANGE_GUIDE.md) |
+| Understand the IaC mesh | [`bonneagar/README.md`](./bonneagar/README.md) |
+| Use the canonical day-1 dev workflow | [`AGENTS.md`](./AGENTS.md) |
 
-#### §12.3.3 — How to add openchamber.dev to your deployment
+---
 
-```bash
-cd bonneagar/stacks/openchamber
-locket inject -- docker compose up -d
-# (bunchloch only) Configure external-runtime mode
-export OPENCODE_HOST=http://host.docker.internal:4096
-export OPENCODE_PORT=4096
-export OPENCODE_SKIP_START=true
-open https://openchamber.cianchosaint.ie
-```
-
-### §12.4 — mise (the 107-task namespaced workflow)
-
-The 6 domain namespaces: `core:`, `lint:`, `sync:`, `openspec:`, `devops:`, `data:`, `ml:`, `web:` (post-2026-08-19).
-
-The 3 tasks a new user runs on day 1:
-
-```bash
-mise run sync:all                    # 14 sync layers
-mise run core:ci                     # canonical CI gate
-mise run openspec:validate-all       # 131 items pass
-```
-
-The 5 most useful daily tasks:
-
-```bash
-mise run data:dagster:up             # Dagster UI on :3335
-mise run data:biep:milestone -- 1    # BIEP v3 milestone m1
-mise run ml:registry:audit           # verify all 24 VISION_MODELS live on HF
-mise run web:dev tuatha-ui           # per-app dev server
-mise run devops:validate-stacks      # all 89 Docker Compose stacks
-```
-
-### §12.5 — `opencode.json` + the `.cocoindex_code/guides.yml` (the dual-search)
-
-The 12-MCP runtime (per the 2026-08-21 MCP revival): ccc + firecrawl + crawl4ai + chrome + dlt-workspace + motherduck + cognee + graphiti + design-system + langfuse + infisical + huggingface.
-
-The `.cocoindex_code/guides.yml` ships with 12 concept guides (each maps a high-level concept to the canonical files). When a search query matches a guide's description, `ccc:search` returns a `[guide]` hit pointing the user at the canonical set.
-
-**Why dual-search matters for education:** every Firecrawl call MUST be paired with a `ccc:search` so both tool names appear in the Langfuse trace (the audit trail the licence requires).
-
-### §12.6 — The 5 dispatchable opencode subagents
-
-| Subagent | When to dispatch |
-|---|---|
-| `data-platform` | Adding a new DLT source + a BAML extraction + a CocoIndex flow |
-| `infrastructure` | Adding a new Docker Compose stack to `bonneagar/stacks/` |
-| `agent-platform` | Adding a new agent or specialist |
-| `frontend-apps` | Adding a new web surface |
-| `research` | BrowserBase + Firecrawl + CCC + Cognee + change-detection |
-
-### §12.7 — The 16 domain packages — features/benefits/usage
-
-Same 16-package table as cianchosaint §12.7 (with education-specific usage examples).
 
 ---
 
@@ -928,7 +975,7 @@ this entry-point scannable:
 - **Pocket ID + Komodo + Pangolin** (single-Passkey login mesh) → [`AGENTS.md` § opencode-safety](AGENTS.md#opencode-safety) + [`bonneagar/README.md`](bonneagar/README.md)
 - **Tuatha Educational MMO** (Babylon.js + FastAPI + TanStack UI) → [`tuatha/README.md`](tuatha/README.md)
 - **BIEP data platform** (DLT + Dagster + BAML + CocoIndex + MotherDuck) → [`orchestration/README.md`](orchestration/README.md) + [`dlt_sources/DATA_PLATFORM_ROUTER.md`](dlt_sources/DATA_PLATFORM_ROUTER.md)
-- **Self-host a fresh cluster** → [`bonneagar/README.md`](bonneagar/README.md) (the 6-step operator quick start)
+- **Self-host a fresh cluster** → [`docs/DEPLOYMENT-PLAYBOOK.md`](docs/DEPLOYMENT-PLAYBOOK.md) (the 13-step recreation + 6-step confirmation recipe) + [`bonneagar/README.md`](bonneagar/README.md) (the 6-step IaC operator quick start)
 - **Onboarding wizard** (the 3-credentials TUI) → [`scripts/onboard-pocketid.sh`](scripts/onboard-pocketid.sh)
 
 ---

@@ -126,6 +126,7 @@ subdirectory (see [`bonneagar/README.md`](bonneagar/README.md)).
 
 ## Search: ccc + cognee + firecrawl_mcp
 
+
 Three complementary surfaces. ccc and cognee are local + free;
 firecrawl_mcp is external + metered. Every agent session that runs
 `firecrawl_search` MUST also emit a `ccc:search` query so both tool
@@ -270,7 +271,9 @@ code.
 | 93 Docker Compose stacks | `bonneagar/stacks/<name>/` |
 | Komodo resource-syncs + procedures | `bonneagar/komodo/` |
 | Pangolin config | `bonneagar/pangolin/` |
-| Deploy runbooks | `bonneagar/deploy-runbooks/` |
+| Deploy runbooks (per-stack) | `bonneagar/deploy-runbooks/` |
+| **Canonical deployment playbook** (13-step recreation + 6-step confirmation + 4-blocker "if it doesn't work" recipe) | [`docs/DEPLOYMENT-PLAYBOOK.md`](docs/DEPLOYMENT-PLAYBOOK.md) |
+
 | Leabharlann corpus | `leabharlann/` (SEPARATE REPO at `github.com/cianfhoghlaim/leabharlann`) |
 
 > **Hard rule**: An agent MUST NOT write into the `leabharlann/`
