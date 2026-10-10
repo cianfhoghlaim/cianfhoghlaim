@@ -35,6 +35,17 @@ roadmaps.
 | `infrastructure_deep_dive.md` | 2026-06-13 | superseded by [`infrastructure-stacks` spec](../specs/infrastructure-stacks/spec.md) | keep |
 | `package-updates.md` | 2026-06-13 | research (the only plan with substantive content; 277 lines) | keep |
 
+## Status: active sagas + their umbrella changes (live work in flight)
+
+Sagas are research artefacts that span multiple `openspec/changes/`
+umbrellas. The active ones live in this directory; the
+post-completion versions move to `archive/` once all their changes
+archive.
+
+| Saga plan | Stage | Umbrella change | Change status |
+|:--|:--|:--|:--|
+| `2026-10-10-tuatha-curriculum-media-saga-v1.md` | Plans 1–2.5 done; Plan 3.5 partial; Plan 5 (skills + docs tie-off) in progress | [`2026-10-10-media-intel-and-curriculum-hydration-v1`](../changes/2026-10-10-media-intel-and-curriculum-hydration-v1/) | 22/33 tasks checked. 7 unchecked: `A5` (BAML test cases), `E1`–`E4` (skills + docs tie-off — this round), `F4` (`mypy` clean on the new Python), `F5` (operator-gated commit) |
+
 ## Status: archived (fully absorbed; moved 2026-07-06)
 
 These 6 plans were fully absorbed into canonical specs and moved to
@@ -89,3 +100,4 @@ The plan-md files for the *complete* changes were archived already
 - [`docs/00-deploy-plans/STATUS.md`](../../docs/00-deploy-plans/STATUS.md) — the deploy-plans index
 - [`openspec/specs/`](../specs/) — the 32 canonical capability specs
 - [`openspec/changes/`](../changes/) — the 13 active change proposals
+- [`openspec/changes/2026-10-10-media-intel-and-curriculum-hydration-v1/`](../changes/2026-10-10-media-intel-and-curriculum-hydration-v1/) — the umbrella change for `2026-10-10-tuatha-curriculum-media-saga-v1.md` (media-intel + curriculum hydration)

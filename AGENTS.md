@@ -22,6 +22,7 @@ compose stacks, and the 4 priority openspec specs at a glance.
 | [`pangolin-cli`](.agents/skills/pangolin-cli/SKILL.md) | Pangolin CLI v0.17 — machine-client tunneling, `pangolin up`, `pangolin configure opencode`, launchd/systemd service-install |
 | [`pangolin-ai-gateway`](.agents/skills/pangolin-ai-gateway/SKILL.md) | The 2026-Q3 identity-aware AI Gateway contract — public+private overlapping resources, Custom providers, budgets, session logs |
 | [`marimo-embed`](.agents/skills/marimo-embed/SKILL.md) | Embed marimo notebooks in TanStack Start pages via the marimo-server-on-Pangolin pattern (sandboxed iframe) |
+| [`media-intel`](.agents/skills/media-intel/SKILL.md) | Cross-media design-pattern catalogue (Hades / Avatar / X-Men / Wheel of Time) + per-chapter WoT schema + curriculum hydration CLI. Description-only (`shippable = false`); legacy retro tier at [`.agents/skills/retro-gameplay/SKILL.md`](.agents/skills/retro-gameplay/SKILL.md). |
 
 ### ccc code search (always use before grep)
 
