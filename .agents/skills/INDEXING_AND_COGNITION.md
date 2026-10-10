@@ -390,6 +390,7 @@ documented" — agent merges code (CCC) with architecture
 - [`.agents/skills/motherduck/SKILL.md`](motherduck/SKILL.md) — DuckDB / MotherDuck analytics
 - [`.agents/skills/agent-observability/SKILL.md`](agent-observability/SKILL.md) — Langfuse + MLflow + Ragas
 - [`.agents/skills/agent-fleet-orchestration/SKILL.md`](agent-fleet-orchestration/SKILL.md) — 12-agent fleet + OpenCode agent/skill/MCP registry
+- [`.agents/skills/media-intel/SKILL.md`](media-intel/SKILL.md) — Cross-media design-pattern catalogue (Hades / Avatar / X-Men / Wheel of Time) + per-chapter WoT schema + curriculum hydration CLI (`description_only`, `shippable = false`). Companion: [`.agents/skills/retro-gameplay/SKILL.md`](retro-gameplay/SKILL.md) (legacy retro tier, retained as the "where we came from" reference).
 
 ---
 
