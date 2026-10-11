@@ -1257,6 +1257,27 @@ description = "DATA lakehouse smoke-test — the 6-service health check (Lakekee
 alias = ["lakehouse:smoke-test"]
 run = "bash mise-tasks/data/lakehouse-smoke-test"
 
+# NEW 2026-10-30 (per the 2026-10-30-lakehouse-bridge-bring-up-v1 umbrella
+# of openspec/plans/2026-10-30-platform-reset-saga-v1.md, Umbrella 3):
+# the canonical bridge verifier (Python; checks 12 services + the
+# ducklake_cianfhoghlaim namespace + the 6 per-language media.image_gen_chunks_<lang>
+# tables). Falls back to stub mode when the lakehouse is offline (development).
+# The bring-up script `scripts/lakehouse/up_lakehouse_bridge.sh` brings
+# up the 12 services in dependency order; `init_lakehouse_postgres.sh`
+# creates the 13 databases. Both are operator-side because they require
+# Docker daemon access (per Stage 8 Gap 4).
+[tasks."core:lakehouse:health"]
+description = "Lakehouse health — wraps scripts/lakehouse/verify_bridge.py (12 services + 6 per-language tables + namespace check)"
+depends = ["core:sync"]
+run = "uv run python scripts/lakehouse/verify_bridge.py"
+
+# NEW 2026-10-30: the operator-side bring-up (requires Docker daemon).
+# This task is a thin wrapper around scripts/lakehouse/up_lakehouse_bridge.sh.
+[tasks."core:lakehouse:up"]
+description = "Lakehouse bring-up — start the 12 down services in dependency order (operator-side; requires Docker daemon)"
+depends = ["core:lakehouse:health"]
+run = "bash scripts/lakehouse/up_lakehouse_bridge.sh"
+
 [tasks."data:setup"]
 description = "BIEP v3 full setup — Docker + lakehouse + BAML codegen + registry seed + lance namespace + openspec + lint:skills"
 alias = ["biep:v3:setup"]

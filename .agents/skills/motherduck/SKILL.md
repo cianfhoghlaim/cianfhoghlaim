@@ -326,6 +326,33 @@ Cross-references:
 - [`.agents/skills/ducklake/SKILL.md`](../ducklake/SKILL.md) —
   the DuckLake sink layer
 
+## Local DuckLake bring-up (the 12-service lakehouse stack on `bunchloch`)
+
+Per the 2026-10-30-lakehouse-bridge-bring-up-v1 umbrella of
+`openspec/plans/2026-10-30-platform-reset-saga-v1.md` (Stage 8 Gap 4):
+
+The 12 currently-down lakehouse services (Garage + Lakekeeper + Lance
+Namespace + Nimtable + Olake + Cognee + Graphiti + FalkorDB + Memgraph
++ Memgraph Lab + etc.) are all on `bunchloch` but the OrbStack Docker
+daemon socket is missing. The 3 `scripts/lakehouse/` bring-up scripts
+are ready to run as soon as Docker is reachable.
+
+Operator-side recovery runbook: `docs/lakehouse/orbstack-docker-recovery.md`.
+
+Bring-up (once OrbStack is healthy):
+```bash
+mise run core:lakehouse:up      # 12 services in dependency order
+bash scripts/lakehouse/init_lakehouse_postgres.sh   # 14 databases
+mise run core:lakehouse:health   # verify_bridge.py smoke test
+```
+
+The canonical DuckLake namespace is `ciianfhoghlaim` (per the
+2026-10-30-biep-tertiary-baml-repair-v1 Umbrella 2 helper
+`baml_src/_shared/dltq_naming.py::DUCKLAKE_NAMESPACE`). The historical
+`ducklake_cianfhoghlaim` form is preserved as the
+`dlt_sources/destinations/_common.py::_LEGACY_DUCKLAKE_NAMESPACE` alias
+for the 6-month deprecation grace period.
+
 ## v7 flattening migration notes (added 2026-07-19)
 
 Per openspec/changes/2026-07-14-fix-foundation-v7-flattening-and-baml-drift-v1:
