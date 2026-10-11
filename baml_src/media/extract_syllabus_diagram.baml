@@ -19,23 +19,23 @@
 // baml_src/british_isles/_shared/lc_extraction_template.baml.
 
 class FIBOSyllabusDiagram {
-  diagram_id string          @description("Deterministic: sha256(subject + page_number + caption)[:16]")
-  subject string             @description("The NCCA subject (e.g. 'chemistry')")
-  language string            @description("en | ga")
-  page_number int            @description("The page where the diagram was found in the syllabus PDF")
-  caption string             @description("The figure caption text (verbatim from the syllabus)")
-  description string          @description("A 1-2 sentence description of what the diagram depicts")
-  source_pdf string           @description("The path to the source PDF (absolute or relative to stedding/)")
-  extraction_method string   @description("fibo_pdf_extract | manual | other")
-  extracted_at string         @description("ISO 8601 timestamp of extraction")
+  diagram_id string @description("Deterministic: sha256(subject + page_number + caption)[:16]")
+  subject string @description("The NCCA subject (e.g. 'chemistry')")
+  language string @description("en | ga")
+  page_number int @description("The page where the diagram was found in the syllabus PDF")
+  caption string @description("The figure caption text (verbatim from the syllabus)")
+  description string @description("A 1-2 sentence description of what the diagram depicts")
+  source_pdf string @description("The path to the source PDF (absolute or relative to stedding/)")
+  extraction_method string @description("fibo_pdf_extract | manual | other")
+  extracted_at string @description("ISO 8601 timestamp of extraction")
 }
 
 function ExtractFIBOSyllabusDiagram(
-  pdf_text string         @description("The raw text content of the syllabus PDF (from pdfplumber or pypdf)"),
+  pdf_text string @description("The raw text content of the syllabus PDF (from pdfplumber or pypdf)"),
   pdf_page_images string[]  @description("Optional list of base64-encoded page images (used for the VLM)"),
-  source_pdf_path string   @description("The source PDF path"),
-  subject string           @description("The NCCA subject (mathematics, chemistry, geography, etc.)"),
-  language string          @description("en | ga"),
+  source_pdf_path string @description("The source PDF path"),
+  subject string @description("The NCCA subject (mathematics, chemistry, geography, etc.)"),
+  language string @description("en | ga"),
 ) -> FIBOSyllabusDiagram[] {
   client "Primary"
   prompt #"
@@ -59,7 +59,7 @@ function ExtractFIBOSyllabusDiagram(
 
 function GenerateFiboConfigsFromSyllabus(
   diagrams FIBOSyllabusDiagram[],
-  subject_prompt string   @description("The per-subject FIBO prompt template (from get_fibo_prompt)"),
+  subject_prompt string @description("The per-subject FIBO prompt template (from get_fibo_prompt)"),
   subject string,
   language string,
 ) -> string[] {
@@ -77,4 +77,3 @@ function GenerateFiboConfigsFromSyllabus(
   "
 }
 
-__all__ = ["FIBOSyllabusDiagram", "ExtractFIBOSyllabusDiagram", "GenerateFiboConfigsFromSyllabus"]

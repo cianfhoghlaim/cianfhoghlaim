@@ -9,13 +9,18 @@ from __future__ import annotations
 
 from typing import Any
 
+try:
+    from baml_src._shared.dltq_naming import to_dlq_lance_table
+except ImportError:  # baml_src not on sys.path in some test contexts
+    def to_dlq_lance_table(lang, table):
+        return "ciianfhoghlaim.media_" + lang + "_" + table
 
-CY_TABLE = "cianhoghlaim.media.image_gen_chunks_cymraeg"
+
+CY_TABLE = to_dlq_lance_table("cymraeg", "image_gen_chunks")
 
 
 def ingest_cymraeg_asset(asset: dict[str, Any]) -> None:
     """Ingest a single CelticAssetRecord into the cymraeg LanceDB table."""
-    import time
     import hashlib
 
     asset_id = asset.get("asset_id", hashlib.sha256(
@@ -25,4 +30,4 @@ def ingest_cymraeg_asset(asset: dict[str, Any]) -> None:
     print(f"[cymraeg/asset_index] ingest asset_id={asset_id}, subject={asset.get('subject', '?')}, language={asset.get('language', 'cy')}")
 
 
-__all__ = ["ingest_cymraeg_asset", "CY_TABLE"]
+__all__ = ["CY_TABLE", "ingest_cymraeg_asset"]

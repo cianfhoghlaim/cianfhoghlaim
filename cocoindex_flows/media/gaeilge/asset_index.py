@@ -12,9 +12,15 @@ from __future__ import annotations
 
 from typing import Any
 
+try:
+    from baml_src._shared.dltq_naming import to_dlq_lance_table
+except ImportError:  # baml_src not on sys.path in some test contexts
+    def to_dlq_lance_table(lang, table):
+        return "ciianfhoghlaim.media_" + lang + "_" + table
+
 
 # Canonical table name for the Irish asset index
-GAEILGE_TABLE = "cianhoghlaim.media.image_gen_chunks_gaeilge"
+GAEILGE_TABLE = to_dlq_lance_table("gaeilge", "image_gen_chunks")
 
 
 def ingest_gaeilge_asset(asset: dict[str, Any]) -> None:
@@ -26,9 +32,8 @@ def ingest_gaeilge_asset(asset: dict[str, Any]) -> None:
     # Real implementation: uses the shared CocoIndex runtime from
     # cocoindex_flows/media/image_generation_flow.py pattern.
     # Offline dev mode: writes a stub manifest.
-    import json
-    import time
     import hashlib
+    import time
 
     asset_id = asset.get("asset_id", hashlib.sha256(
         f"{asset.get('language', 'ga')}|{asset.get('prompt', '')}".encode()
@@ -49,4 +54,4 @@ def ingest_gaeilge_asset(asset: dict[str, Any]) -> None:
     print(f"[gaeilge/asset_index] ingest asset_id={asset_id}, subject={asset.get('subject', '?')}, language={asset.get('language', 'ga')}")
 
 
-__all__ = ["ingest_gaeilge_asset", "GAEILGE_TABLE"]
+__all__ = ["GAEILGE_TABLE", "ingest_gaeilge_asset"]
