@@ -6,13 +6,18 @@ from __future__ import annotations
 
 from typing import Any
 
+try:
+    from baml_src._shared.dltq_naming import to_dlq_lance_table
+except ImportError:  # baml_src not on sys.path in some test contexts
+    def to_dlq_lance_table(lang, table):
+        return "ciianfhoghlaim.media_" + lang + "_" + table
 
-KW_TABLE = "cianhoghlaim.media.image_gen_chunks_kernewek"
+
+KW_TABLE = to_dlq_lance_table("kernewek", "image_gen_chunks")
 
 
 def ingest_kernewek_asset(asset: dict[str, Any]) -> None:
     """Ingest a single CelticAssetRecord into the kernewek LanceDB table."""
-    import time
     import hashlib
 
     asset_id = asset.get("asset_id", hashlib.sha256(
@@ -22,4 +27,4 @@ def ingest_kernewek_asset(asset: dict[str, Any]) -> None:
     print(f"[kernewek/asset_index] ingest asset_id={asset_id}, subject={asset.get('subject', '?')}, language={asset.get('language', 'kw')}")
 
 
-__all__ = ["ingest_kernewek_asset", "KW_TABLE"]
+__all__ = ["KW_TABLE", "ingest_kernewek_asset"]

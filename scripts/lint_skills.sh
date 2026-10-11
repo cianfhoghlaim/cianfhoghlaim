@@ -4,6 +4,7 @@
 # Per the 2026-10-30-housekeeping-sprawl-cleanup-v1 umbrella of
 # openspec/plans/2026-10-30-platform-reset-saga-v1.md. Promoted from the
 # historical `_tmp_lint.sh` (now removed in this change).
+# historical `_tmp_lint.sh` (now removed).
 #
 # Rules enforced (per the canonical _template/SKILL.md):
 #   1. Every SKILL.md must have YAML frontmatter delimited by `---` lines.
@@ -18,6 +19,8 @@
 #   bash scripts/lint_skills.sh                       # check all 80 skills
 #   bash scripts/lint_skills.sh --limit 5            # check the first 5
 #   bash scripts/lint_skills.sh --strict             # fail on warnings too
+#
+# CI: wired as `mise run core:lint:skills` (added 2026-10-30).
 
 set -euo pipefail
 
@@ -32,6 +35,9 @@ for arg in "$@"; do
     sed -n '2,20p' "$0"
     exit 0
     ;;
+      sed -n '2,20p' "$0"
+      exit 0
+      ;;
   esac
 done
 
