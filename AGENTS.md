@@ -24,6 +24,7 @@ compose stacks, and the 4 priority openspec specs at a glance.
 | [`marimo-embed`](.agents/skills/marimo-embed/SKILL.md) | Embed marimo notebooks in TanStack Start pages via the marimo-server-on-Pangolin pattern (sandboxed iframe) |
 | [`tuatha-asset-generation`](.agents/skills/tuatha-asset-generation/SKILL.md) | The asset-generation pipeline (Plan 1 of the 2026-10 convergence saga) — 5 image_gen models + ADK 2 Pillar 3 render_assets_node + BAML contracts + FIBO diagrams + Babylon.js textures |
 | [`retro-gameplay`](.agents/skills/retro-gameplay/SKILL.md) | The retro-gameplay design pattern catalog (Plan 3 of the 2026-10 convergence saga) — libretro + SAM3 + BAML ExtractGameplayPattern + CocoIndex LanceDB + the retro_pattern_agent |
+| [`media-intel`](.agents/skills/media-intel/SKILL.md) | Cross-media design-pattern catalogue (Hades / Avatar / X-Men / Wheel of Time) + per-chapter WoT schema + curriculum hydration CLI. Description-only (`shippable = false`); legacy retro tier at [`.agents/skills/retro-gameplay/SKILL.md`](retro-gameplay/SKILL.md). |
 
 ### ccc code search (always use before grep)
 

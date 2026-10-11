@@ -185,6 +185,11 @@ echo 'bonneagar stacks:' && ls bonneagar/stacks 2>/dev/null | wc -l
 echo 'agents files:' && find agents/ -name "*.py" 2>/dev/null | wc -l
 """
 
+[tasks."core:hydrate:curriculum"]
+description = "Hydrate the 4 curriculum tables (geography, gaeilge, english, policies) into local DuckLake"
+depends = ["core:sync"]
+run = "uv run python scripts/curriculum_hydrate.py --all"
+
 [tasks."core:clean"]
 description = "CORE clean — clean build artifacts"
 alias = ["clean"]
@@ -1221,13 +1226,13 @@ run = "bash mise-tasks/data/lakehouse-smoke-test"
 description = "BIEP v3 full setup — Docker + lakehouse + BAML codegen + registry seed + lance namespace + openspec + lint:skills"
 alias = ["biep:v3:setup"]
 depends = ["sync"]
-run = ".venv/bin/python3 scripts/biiep_v3_setup.py"
+run = ".venv/bin/python3 scripts/biep_v3_setup.py"
 
 [tasks."data:status"]
 description = "BIEP v3 full status — lakehouse health + registry count + BAML codegen + asset count + MotherDuck Dive + Flight status"
 alias = ["biep:v3:status"]
 depends = ["sync"]
-run = ".venv/bin/python3 scripts/biiep_v3_status.py"
+run = ".venv/bin/python3 scripts/biep_v3_status.py"
 
 # 2026-08-31: BAML switching strategy (per the v5 model priority change).
 # One-liner model switches via the `Primary` alias in baml_src/clients.baml.
