@@ -1,5 +1,13 @@
 # Change: 2026-10-02-adk-asset-generation-pillar3-v1
 
+> **Status (added 2026-10-30, per Umbrella 4 of the platform-reset saga):**
+> This change is **KEEP** in the backlog triage (i.e. it has not been
+> archived). The 1-paragraph "what this is for" stub below helps
+> future operators read the change's intent from the proposal instead
+> of from a 0/N task list. The classification rationale is in
+> `openspec/changes/2026-10-30-openspec-backlog-triage-v1/tasks.md`.
+
+
 ## Why
 
 The ADK 2 Pillar 3 deep-research pipelines (aistear + primary + JC + SC + tertiary) currently produce a written briefing but no visual assets. The `image_generation_agent` exists but with `GENERATE_2D_ASSET_TOOL = None` (stub). The 6 `_stub_generate_image` calls return `{"stub": True}` dicts. The 5 `image_gen` MODEL_REGISTRY entries (flux2-dev + z-image-turbo + qwen-image + sdxl + fibo) are wired through litellm but never called.
