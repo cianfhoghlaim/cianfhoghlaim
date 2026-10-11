@@ -34,6 +34,7 @@ extractor prompt body that replaces the historical
 | **Catch coverage** | Every `Extract*` function MUST have a `catch_all` block that emits a safe-default value for the return type. Enforced by `python scripts/lint_baml_catch_coverage.py`. |
 | **BAML 0.223.0 features** | Use `_.role("user")`, `ctx.output_format`, `{% if %}` branching, `catch_all`, `TypeBuilder`, `@stream.done`, `@assert`, and dynamic schemas where appropriate. |
 | **Reference path** | Read the canonical templates at `baml_src/_shared/templates/<domain>.baml` when adding new extraction functions. |
+| **Directory prefix convention** | Use `_shared/` for cross-jurisdiction shared types + cross-BIEP helpers; `_archive/` for deprecated code (kept for traceability, not loaded by the BAML CLI); `archive/` (no underscore) for old jurisdiction clusters that the BAML CLI still scans but no new code should add to. The `_legacy/`, `_cross/`, and `archive/` prefixes are equivalent (per Umbrella 2's future consolidation in the 2026-10-30-platform-reset-saga). |
 
 To regenerate the 18 templates from scratch:
 ```bash
