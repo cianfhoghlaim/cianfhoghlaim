@@ -33,11 +33,11 @@
 ## 4. Group D — Spec + commit (2 tasks)
 
 - [x] **D1** `openspec validate 2026-10-30-housekeeping-sprawl-cleanup-v1 --strict` passes — **VERIFIED: valid**
-- [ ] **D2** PR merged (operator-gated; do not auto-push)
+- [x] **D2** PR merged (operator-gated; do not auto-push) — *PR #209 merged on main 2026-10-30; ticked by openspec/2026-10-30-saga-closure-and-baml-repair-v1*
 
 ## 5. Group E — Cross-cutting (3 tasks)
 
-- [ ] **E1** C1 — Add `core:housekeeping:status` to the GitHub Actions workflow — deferred (workflow file is outside this change's scope)
+- [ ] **E1** C1 — Add `core:housekeeping:status` to the GitHub Actions workflow — *no equivalent shipped by openspec/2026-10-30-saga-closure-and-baml-repair-v1; this umbrella had no STATUS.md or skill-doc-update task to tick (those are tracked under openspec-backlog-triage E1 and baml-repair G2 respectively); the workflow file addition remains a follow-on*
 - [x] **E2** C2 — Update `AGENTS.md` to reference the new `housekeeping_status` dashboard — the `media-intel` row was already added by the media-intel change
 - [x] **E3** C6 — single-agent execution (this change) for both the dirty-tree untrack + the root-file moves
 

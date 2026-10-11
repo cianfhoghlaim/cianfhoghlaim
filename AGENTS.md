@@ -84,6 +84,32 @@ mise run web:dev tuatha-ui        # per-app dev server via Turbo filter
 > `dagster:dev`, `cic:stack-doctor`, `iac:health`) remain valid for 1
 > release cycle as aliases.
 
+### Top mise tasks (added 2026-10-30 — platform-reset saga #209–#212)
+
+The 2026-10-30 platform-reset saga shipped 8 new `core:*` and `housekeeping:*`
+mise tasks. These are the per-domain status + lint + health checks the
+marimo dashboards call:
+
+```bash
+mise run core:housekeeping:status   # dirty-tree + untracked .DS_Store + change-backlog counts
+mise run housekeeping:autofix       # safe subset: untrack .DS_Store + print baseline
+mise run core:lint:skills           # validate all .agents/skills/<name>/SKILL.md frontmatter
+mise run core:lint:baml             # validate BAML frontmatter (no __all__, no string-literal clients, no multi-space, no inline string-literal unions)
+mise run core:baml:status           # baml-cli version + error count + lint summary + schema-naming round-trip
+mise run core:openspec:status       # change count + spec count + skill count + 49-archived list
+mise run core:lakehouse:health      # wraps scripts/lakehouse/verify_bridge.py (12 services + 6 per-language tables + namespace check)
+mise run core:lakehouse:up          # operator-side bring-up (requires Docker daemon)
+```
+
+The 4 marimo dashboards that consume these tasks:
+
+| Dashboard | Task |
+|:--|:--|
+| `notebooks/dashboards/housekeeping_status.py` | `core:housekeeping:status` |
+| `notebooks/dashboards/baml_build_status.py` | `core:baml:status` + `core:lint:baml` |
+| `notebooks/dashboards/openspec_status.py` | `core:openspec:status` |
+| `notebooks/dashboards/lakehouse_health.py` | `core:lakehouse:health` |
+
 ### Priority sync commands
 
 ```bash

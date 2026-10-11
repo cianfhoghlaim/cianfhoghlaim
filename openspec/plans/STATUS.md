@@ -45,10 +45,21 @@ archive.
 | Saga plan | Stage | Umbrella change | Change status |
 |:--|:--|:--|:--|
 | `2026-10-10-tuatha-curriculum-media-saga-v1.md` | Plans 1–2.5 done; Plan 3.5 partial; Plan 5 (skills + docs tie-off) in progress | [`2026-10-10-media-intel-and-curriculum-hydration-v1`](../changes/2026-10-10-media-intel-and-curriculum-hydration-v1/) | 22/33 tasks checked. 7 unchecked: `A5` (BAML test cases), `E1`–`E4` (skills + docs tie-off — this round), `F4` (`mypy` clean on the new Python), `F5` (operator-gated commit) |
-| `2026-10-30-platform-reset-saga-v1.md` | Umbrella 0 (meta-plan) done; Umbrellas 1–4 documented + validated, awaiting operator green-light to ship | [`2026-10-30-housekeeping-sprawl-cleanup-v1`](../changes/2026-10-30-housekeeping-sprawl-cleanup-v1/) | 0/22 tasks — Umbrella 1 of 4 (operational hygiene + code de-sprawl: untrack 13 `.DS_Store`, move 5 root orphans, recreate `retro_capture.py` stub, add `CHEATSHEET.md` entries, `housekeeping_status` marimo) |
-| | | [`2026-10-30-biep-tertiary-baml-repair-v1`](../changes/2026-10-30-biep-tertiary-baml-repair-v1/) | 0/25 tasks — Umbrella 2 of 4 (BAML full repair: 21 → 0 pre-existing errors + parser workaround + `dltq_naming` helper + 4 call-site wirings + CI lint) |
-| | | [`2026-10-30-lakehouse-bridge-bring-up-v1`](../changes/2026-10-30-lakehouse-bridge-bring-up-v1/) | 0/20 tasks — Umbrella 3 of 4 (12 lakehouse services healthy + 4 stack compose files wired to `to_dlq_table_name` + 6 per-language LanceDB + 13 cognee_datasets renamed/staged + `lakehouse_health` marimo) |
-| | | [`2026-10-30-openspec-backlog-triage-v1`](../changes/2026-10-30-openspec-backlog-triage-v1/) | 0/15 tasks — Umbrella 4 of 4 (49 archives + 30 KEEP stubs + spec doctor + skill conformance + `openspec_status` marimo; drives change count 126 → ≤ 80) |
+| `2026-10-30-platform-reset-saga-v1.md` | ✓ **CLOSED (4 PRs merged: #209, #210, #211, #212 + this saga-closure change)** — Umbrella 0 (meta-plan) done; Umbrellas 1–4 shipped | [`2026-10-30-housekeeping-sprawl-cleanup-v1`](../changes/2026-10-30-housekeeping-sprawl-cleanup-v1/) | ✓ **MERGED (#209)** — Umbrella 1 of 4 |
+| | | [`2026-10-30-biep-tertiary-baml-repair-v1`](../changes/2026-10-30-biep-tertiary-baml-repair-v1/) | ✓ **MERGED (#210)** — Umbrella 2 of 4 |
+| | | [`2026-10-30-lakehouse-bridge-bring-up-v1`](../changes/2026-10-30-lakehouse-bridge-bring-up-v1/) | ✓ **MERGED (#212)** — Umbrella 3 of 4 (artifacts shipped; runtime bridge-verify deferred to operator) |
+| | | [`2026-10-30-openspec-backlog-triage-v1`](../changes/2026-10-30-openspec-backlog-triage-v1/) | ✓ **MERGED (#211)** — Umbrella 4 of 4 |
+| | | [`2026-10-30-saga-closure-and-baml-repair-v1`](../changes/2026-10-30-saga-closure-and-baml-repair-v1/) | **(this change)** — closes the saga: fixes the 4 follow-on issues (duplicate `core:lint:skills` in `mise.toml`, bash syntax error in `scripts/lint_skills.sh`, lakehouse Umbrella 3 task reconciliation, saga-deferred STATUS.md + AGENTS.md + CHEATSHEET.md updates) |
+
+## Status: completed sagas
+
+Sagas in this section are **closed** — all umbrella changes shipped, all
+follow-on issues addressed. The plan files are kept here for traceability
+but no new umbrella changes are expected.
+
+| Saga plan | Closed | Umbrella changes | Follow-on issues fixed |
+|:--|:--|:--|:--|
+| `2026-10-30-platform-reset-saga-v1.md` | 2026-10-30 (this change) | #209 housekeeping + #210 baml-repair + #211 openspec-triage + #212 lakehouse-bridge | 4 issues addressed in PR for `2026-10-30-saga-closure-and-baml-repair-v1`: (1) duplicate `core:lint:skills` in `mise.toml`; (2) bash syntax error in `scripts/lint_skills.sh`; (3) lakehouse Umbrella 3 task reconciliation (7 done / 14 deferred / 21 total); (4) saga-deferred STATUS.md + AGENTS.md + CHEATSHEET.md updates |
 
 ## Status: archived (fully absorbed; moved 2026-07-06)
 

@@ -34,14 +34,14 @@
 
 ## 5. Group E — Docs + commit (3 tasks)
 
-- [x] **E1** `openspec/plans/STATUS.md` — mark the 4 new umbrellas as the last active saga — DEFERRED (Umbrella 1 PR #209 + Umbrella 2 PR #210 + Umbrella 3 (not yet PRed) + this Umbrella 4 — the STATUS.md update happens after all 4 land; the operator can do it as a follow-on commit)
+- [x] **E1** `openspec/plans/STATUS.md` — mark the 4 new umbrellas as the last active saga — *shipped by openspec/2026-10-30-saga-closure-and-baml-repair-v1 (Issue 4 — STATUS.md update box ticked; the saga-closure change ships the STATUS.md + the saga plan doc + the AGENTS.md/CHEATSHEET.md references)*
 - [x] **E2** `openspec validate 2026-10-30-openspec-backlog-triage-v1 --strict` passes — DONE
-- [ ] **E3** PR merged (operator-gated; do not auto-push)
+- [x] **E3** PR merged (operator-gated; do not auto-push) — *PR #211 merged on main 2026-10-30; ticked by openspec/2026-10-30-saga-closure-and-baml-repair-v1*
 
 ## 6. Group F — Cross-cutting (3 tasks)
 
 - [x] **F1** C1 — `openspec list --changes` returns 77 entries (down from 129; the saga's 80 was a stale count; actual is 77 after the 52 archives + the 0/0 changes that resolved to Complete)
-- [x] **F2** C2 — `AGENTS.md` + `CHEATSHEET.md` reference the new `core:openspec:status` task — DEFERRED (the new task is documented in `mise.toml`; the operator can add the markdown reference in a follow-up)
+- [x] **F2** C2 — `AGENTS.md` + `CHEATSHEET.md` reference the new `core:openspec:status` task — *shipped by openspec/2026-10-30-saga-closure-and-baml-repair-v1 (Issue 4 — G2 skill-doc-reference box ticked; the change adds a "Top mise tasks" section to AGENTS.md and a saga-closed row to CHEATSHEET.md)*
 - [x] **F3** C6 — 1 subagent handled the 52 archive moves + 1 subagent handled the 5 KEEP-stubs (sequential, not parallel, because the archives depend on the classification)
 
 ## Summary
@@ -49,11 +49,11 @@
 - **B1-B4**: 3/3 + 1 deferred (the JSON formatter).
 - **C1-C3**: 3/3 done.
 - **D1-D2**: 2/2 done.
-- **E1**: 1 deferred (STATUS.md update; operator-gated).
+- **E1**: done (STATUS.md update shipped in the saga-closure change).
 - **E2**: done.
-- **E3**: deferred (operator-gated).
+- **E3**: done (PR #211 merged; ticked by openspec/2026-10-30-saga-closure-and-baml-repair-v1).
 - **F1**: done (77 active changes).
-- **F2**: 1 deferred (markdown reference).
+- **F2**: done (markdown reference shipped in the saga-closure change).
 - **F3**: done.
 
 ## Headline numbers

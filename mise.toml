@@ -247,10 +247,9 @@ echo "=== baseline ===" && mise run core:housekeeping:status
 # NEW 2026-10-30: validate all .agents/skills/<name>/SKILL.md files for
 # frontmatter conformance (name matches dir, description ≥ 40 chars).
 # Promoted from the historical `_tmp_lint.sh` (now removed in this change).
-[tasks."core:lint:skills"]
-description = "Validate all 80 `.agents/skills/<name>/SKILL.md` files for frontmatter conformance"
-depends = ["core:sync"]
-run = "bash scripts/lint_skills.sh"
+# NOTE: The Umbrella 1 version (PR #209) added an earlier block; that was
+# removed in openspec/2026-10-30-saga-closure-and-baml-repair-v1 (Issue 1).
+# Keep only the canonical block above (this one).
 
 [tasks."core:clean"]
 description = "CORE clean — clean build artifacts"

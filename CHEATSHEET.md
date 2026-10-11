@@ -138,10 +138,11 @@ uv run python scripts/curriculum_hydrate.py policies --dry-run --limit 2
 uv run python scripts/curriculum_hydrate.py all
 ```
 
-## 2026-10 Platform Reset saga quick path (proposed)
+## 2026-10 Platform Reset saga quick path
 
 > Per the [2026-10-30-platform-reset-saga-v1.md](openspec/plans/2026-10-30-platform-reset-saga-v1.md) saga.
-> 4 umbrellas: housekeeping + BAML repair + lakehouse bring-up + openspec triage.
+> ✓ **CLOSED 2026-10-30** — all 4 umbrella PRs merged: #209 housekeeping + #210 BAML repair + #211 openspec triage + #212 lakehouse bring-up.
+> The saga-closure change `2026-10-30-saga-closure-and-baml-repair-v1` addresses the 4 follow-on issues (duplicate `core:lint:skills`, bash syntax in `scripts/lint_skills.sh`, lakehouse Umbrella 3 task reconciliation, saga-deferred STATUS.md + AGENTS.md + CHEATSHEET.md updates).
 > Each umbrella is PR-able independently; the recommended order is
 > housekeeping → BAML → triage → lakehouse.
 
@@ -179,6 +180,12 @@ mise run openspec:status                  # change count, spec count, skill coun
 | `core:hydrate:curriculum` | Hydrate the 4 DuckLake tables (geography / gaeilge / english / policies) from the LC PDFs + hand-made examples |
 | `core:housekeeping:status` | (NEW 2026-10-30) Print dirty-tree, untracked-`.DS_Store`, `__pycache__`, change-backlog counts |
 | `core:lint:skills` | (NEW 2026-10-30) Validate all 80 `.agents/skills/<name>/SKILL.md` files for frontmatter conformance |
+| `core:openspec:status` | (NEW 2026-10-30, #211) Print change count + spec count + skill count + 49-archived list |
+| `core:lakehouse:health` | (NEW 2026-10-30, #212) Wrap `scripts/lakehouse/verify_bridge.py` (12 services + 6 per-language tables + namespace check) |
+| `core:lakehouse:up` | (NEW 2026-10-30, #212) Operator-side lakehouse bring-up (requires Docker daemon) |
+| `core:baml:status` | (NEW 2026-10-30, #210) BAML build status — `baml-cli` version + error count + lint summary + schema-naming round-trip |
+| `core:lint:baml` | (NEW 2026-10-30, #210) BAML frontmatter lint — no `__all__`, no string-literal clients, no multi-space, no inline string-literal unions |
+| `housekeeping:autofix` | (NEW 2026-10-30, #209) Safe subset: untrack newly-added `.DS_Store` + print the baseline |
 | `lint:registry` | 0 hardcoded model strings |
 | `lint:skills` | All 167 skills pass |
 | `openspec:validate-all` | All 19+ openspec changes pass strict validation |
