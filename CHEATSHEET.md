@@ -111,6 +111,60 @@ uv run marimo edit notebooks/dashboards/retro_patterns.py
 # Plan 4-8: see openspec/plans/2026-10-01-convergence-saga-v1.md
 ```
 
+## 2026-10 Media-Intel + Curriculum Hydration saga quick path
+
+> Per the [2026-10-10-tuatha-curriculum-media-saga-v1.md](openspec/plans/2026-10-10-tuatha-curriculum-media-saga-v1.md) saga.
+> The cross-media design-pattern catalogue (Hades / Avatar / X-Men / Wheel of Time) +
+> the per-chapter WoT schema + the LC curriculum DuckLake hydration CLI.
+> The canonical surface is [`.agents/skills/media-intel/SKILL.md`](.agents/skills/media-intel/SKILL.md).
+
+```bash
+# List the canonical 4-class media library (Hades / Avatar / X-Men / WoT + retro homage)
+uv run python -c "from cianfhoghlaim.agents.adk.tools.media_library import list_media, summary; import json; print(json.dumps(summary(), indent=2))"
+
+# Hydrate the 4 DuckLake tables (geography / gaeilge / english / policies) from
+# leaving_certificate/ + the hand-made examples (stedding/geog.pdf,
+# ~/Library/Mobile Documents/com~apple~CloudDocs/insta_docs/PastLC-IrishEnglish/)
+mise run core:hydrate:curriculum           # hydrates all 4 tables (local DuckLake)
+
+# Per-subcommand dry-run (emits JSONL to stedding/ingest_queue/curriculum/;
+# no DuckLake write — perfect for smoke testing)
+uv run python scripts/curriculum_hydrate.py geography --dry-run --limit 3
+uv run python scripts/curriculum_hydrate.py gaeilge --dry-run --limit 2
+uv run python scripts/curriculum_hydrate.py english --dry-run --limit 2
+uv run python scripts/curriculum_hydrate.py policies --dry-run --limit 2
+
+# Real run (writes to local DuckLake; needs `uv pip install pypdf` first)
+uv run python scripts/curriculum_hydrate.py all
+```
+
+## 2026-10 Platform Reset saga quick path (proposed)
+
+> Per the [2026-10-30-platform-reset-saga-v1.md](openspec/plans/2026-10-30-platform-reset-saga-v1.md) saga.
+> 4 umbrellas: housekeeping + BAML repair + lakehouse bring-up + openspec triage.
+> Each umbrella is PR-able independently; the recommended order is
+> housekeeping → BAML → triage → lakehouse.
+
+```bash
+# See the saga plan + the 4 umbrella changes
+cat openspec/plans/2026-10-30-platform-reset-saga-v1.md
+ls openspec/changes/2026-10-30-*/
+
+# Umbrella 1 — operational hygiene + code de-sprawl
+mise run core:housekeeping:status         # print dirty-tree, untracked-DS, __pycache__, change-backlog
+mise run core:lint:skills                 # validate all 80 .agents/skills/<name>/SKILL.md
+
+# Umbrella 2 — BAML full repair (21 → 0 pre-existing errors)
+mise run baml:generate                    # rebuilds baml_client/ from baml_src/
+mise run cic:baml:lint                    # validate all 56+ BAML files
+
+# Umbrella 3 — lakehouse bridge bring-up (12 services)
+mise run core:lakehouse:health            # wraps scripts/lakehouse/verify_bridge.py
+
+# Umbrella 4 — openspec backlog triage
+mise run openspec:status                  # change count, spec count, skill count
+```
+
 ## Top 10 priority mise tasks
 
 | Task | Purpose |
@@ -122,6 +176,9 @@ uv run marimo edit notebooks/dashboards/retro_patterns.py
 | `preflight:arm-oci` | Mandatory safety gate for iac:bootstrap / iac:plan |
 | `baml:generate` | Regenerate the baml_client from baml_src |
 | `baml:check` | Validate BAML source files parse cleanly |
+| `core:hydrate:curriculum` | Hydrate the 4 DuckLake tables (geography / gaeilge / english / policies) from the LC PDFs + hand-made examples |
+| `core:housekeeping:status` | (NEW 2026-10-30) Print dirty-tree, untracked-`.DS_Store`, `__pycache__`, change-backlog counts |
+| `core:lint:skills` | (NEW 2026-10-30) Validate all 80 `.agents/skills/<name>/SKILL.md` files for frontmatter conformance |
 | `lint:registry` | 0 hardcoded model strings |
 | `lint:skills` | All 167 skills pass |
 | `openspec:validate-all` | All 19+ openspec changes pass strict validation |
@@ -134,6 +191,7 @@ uv run marimo edit notebooks/dashboards/retro_patterns.py
 | `openspec` | The canonical openspec workflow |
 | `baml` | The BAML v0.226.2 schema + the Phase 0.5 regeneration |
 | `cocoindex` | The CocoIndex factory pattern + the NCCE flow |
+| `media-intel` | (NEW 2026-10-10) Cross-media design-pattern catalogue (Hades / Avatar / X-Men / Wheel of Time) + per-chapter WoT schema + curriculum hydration CLI. Description-only (`shippable = false`); legacy retro tier at [`.agents/skills/retro-gameplay/SKILL.md`](retro-gameplay/SKILL.md) |
 | `agentic-frontend-frameworks` | The A2UI v0.9 catalog + the 11 components |
 | `agent-fleet-orchestration` | The 12-agent fleet + the ADK 2 integration |
 | `agent-memory-systems` | The 5 memory backends + the Phase 7 certificate |

@@ -45,6 +45,10 @@ archive.
 | Saga plan | Stage | Umbrella change | Change status |
 |:--|:--|:--|:--|
 | `2026-10-10-tuatha-curriculum-media-saga-v1.md` | Plans 1–2.5 done; Plan 3.5 partial; Plan 5 (skills + docs tie-off) in progress | [`2026-10-10-media-intel-and-curriculum-hydration-v1`](../changes/2026-10-10-media-intel-and-curriculum-hydration-v1/) | 22/33 tasks checked. 7 unchecked: `A5` (BAML test cases), `E1`–`E4` (skills + docs tie-off — this round), `F4` (`mypy` clean on the new Python), `F5` (operator-gated commit) |
+| `2026-10-30-platform-reset-saga-v1.md` | Umbrella 0 (meta-plan) done; Umbrellas 1–4 documented + validated, awaiting operator green-light to ship | [`2026-10-30-housekeeping-sprawl-cleanup-v1`](../changes/2026-10-30-housekeeping-sprawl-cleanup-v1/) | 0/22 tasks — Umbrella 1 of 4 (operational hygiene + code de-sprawl: untrack 13 `.DS_Store`, move 5 root orphans, recreate `retro_capture.py` stub, add `CHEATSHEET.md` entries, `housekeeping_status` marimo) |
+| | | [`2026-10-30-biep-tertiary-baml-repair-v1`](../changes/2026-10-30-biep-tertiary-baml-repair-v1/) | 0/25 tasks — Umbrella 2 of 4 (BAML full repair: 21 → 0 pre-existing errors + parser workaround + `dltq_naming` helper + 4 call-site wirings + CI lint) |
+| | | [`2026-10-30-lakehouse-bridge-bring-up-v1`](../changes/2026-10-30-lakehouse-bridge-bring-up-v1/) | 0/20 tasks — Umbrella 3 of 4 (12 lakehouse services healthy + 4 stack compose files wired to `to_dlq_table_name` + 6 per-language LanceDB + 13 cognee_datasets renamed/staged + `lakehouse_health` marimo) |
+| | | [`2026-10-30-openspec-backlog-triage-v1`](../changes/2026-10-30-openspec-backlog-triage-v1/) | 0/15 tasks — Umbrella 4 of 4 (49 archives + 30 KEEP stubs + spec doctor + skill conformance + `openspec_status` marimo; drives change count 126 → ≤ 80) |
 
 ## Status: archived (fully absorbed; moved 2026-07-06)
 

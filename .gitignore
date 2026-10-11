@@ -20,6 +20,12 @@ dlthub
 .gemini
 .DS_Store
 
+# NEW 2026-10-30 (per the 2026-10-30-housekeeping-sprawl-cleanup-v1 umbrella):
+# operator-personal material (CV, family history, achievement, identity, teaching).
+# Move out of the working tree (e.g. to `~/`) before committing the change.
+cian_mac*/
+cian_mac_*/
+
 dlthub
 .local
 
