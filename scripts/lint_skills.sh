@@ -3,6 +3,7 @@
 #
 # Per the 2026-10-30-housekeeping-sprawl-cleanup-v1 umbrella of
 # openspec/plans/2026-10-30-platform-reset-saga-v1.md. Promoted from the
+# historical `_tmp_lint.sh` (now removed in this change).
 # historical `_tmp_lint.sh` (now removed).
 #
 # Rules enforced (per the canonical _template/SKILL.md):
@@ -31,6 +32,9 @@ for arg in "$@"; do
     --limit=*) LIMIT="${arg#--limit=}" ;;
     --strict) STRICT=1 ;;
     --help|-h)
+    sed -n '2,20p' "$0"
+    exit 0
+    ;;
       sed -n '2,20p' "$0"
       exit 0
       ;;

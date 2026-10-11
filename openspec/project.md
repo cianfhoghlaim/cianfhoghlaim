@@ -1,19 +1,17 @@
 # Cianfhoghlaim Project Conventions
 
-> **STALE PATHS WARNING (added 2026-08-26):** the capability tables below
-> (Subproject + Capability Areas) were written against the pre-v7
-> directory layout (`core/`, `assets/`, `pipelines/`, `cognify/`,
-> `sources/nations/`) and have not been updated for the current flattened
-> layout. Verified current top-level locations: `dlt_sources/` (not
-> `pipelines/ingest/` or `sources/nations/`), `cocoindex_flows/` (not
-> `core/cocoindex/`), `orchestration/` (not `assets/definitions.py`),
-> `baml_src/` (not `core/baml/`), `.agents/skills/` (not a `cognify/`
-> tree). The spec COUNT below ("38 specs") is also stale — the live
-> count is 101 (`openspec list --specs`). The capability DESCRIPTIONS
-> (what each thing does) are likely still directionally accurate; the
-> PATHS inside them are not verified and should not be trusted without
-> checking. A full per-row path audit is tracked as follow-up work, not
-> done here — see the 2026-08-26 data-side-remediation session notes.
+> **v7-current (verified 2026-10-30, per Umbrella 4 of the platform-reset saga):**
+> the capability tables below are written against the v7 flattened
+> directory layout. Verified current top-level locations: `dlt_sources/`
+> (the canonical DLT source surface — was `pipelines/ingest/` pre-v7),
+> `cocoindex_flows/` (the canonical CocoIndex v1 flow surface — was
+> `core/cocoindex/` pre-v7), `orchestration/` (the canonical Dagster
+> definitions.py surface — was `assets/definitions.py` pre-v7), `baml_src/`
+> (the canonical BAML surface — was `core/baml/` pre-v7), `.agents/skills/`
+> (the canonical skill surface — was a `cognify/` tree pre-v7). The
+> capability DESCRIPTIONS (what each thing does) are directionally
+> accurate; the spec COUNT is live and verifiable via
+> `openspec list --specs`.
 
 ## Project Overview
 
