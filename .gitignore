@@ -364,3 +364,10 @@ id_*
 # Scratch directory (session artifacts + filter-repo audit maps)
 .scratch/
 EMAIL-DRAFT-awootank.md.tmp_dagster_home_nhzffdhn/
+
+# Checkpoints (runtime cache — like stedding/)
+# Per the 2026-09-13 cross-repo re-integration session plan
+# These are capture-in-progress files (SUMMARY, openspec snapshots,
+# sister-repos status, medical case study, renaming audit) — NOT
+# source code. They should NOT be in the git tree.
+checkpoints/
