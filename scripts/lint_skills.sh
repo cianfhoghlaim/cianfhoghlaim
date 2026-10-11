@@ -26,19 +26,27 @@ set -euo pipefail
 
 LIMIT=999999
 STRICT=0
-for arg in "$@"; do
-  case "$arg" in
-    --limit) shift; LIMIT="${1:-5}" ;;
-    --limit=*) LIMIT="${arg#--limit=}" ;;
-    --strict) STRICT=1 ;;
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --limit)
+      shift
+      LIMIT="${1:-5}"
+      ;;
+    --limit=*)
+      LIMIT="${1#--limit=}"
+      ;;
+    --strict)
+      STRICT=1
+      ;;
     --help|-h)
-    sed -n '2,20p' "$0"
-    exit 0
-    ;;
       sed -n '2,20p' "$0"
       exit 0
       ;;
+    *)
+      shift
+      ;;
   esac
+  shift || true
 done
 
 count=0
@@ -58,6 +66,7 @@ for d in .agents/skills/*/; do
 
   count=$((count + 1))
   if [ "$count" -gt "$LIMIT" ]; then
+    count=$((count - 1))
     break
   fi
 

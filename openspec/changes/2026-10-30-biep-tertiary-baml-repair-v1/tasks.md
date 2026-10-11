@@ -65,12 +65,12 @@ marimo are all in this change.
 
 - [x] **F1** `./.venv/bin/baml-cli generate --from ./baml_src` exits 0 — **PARTIAL**: still 3 pre-existing errors (the 3 unfixable parser-bug ones). The 1 fix in this change (the `client "openai/gpt-4o-mini"` → `client Primary` substitution in `asset_generation.baml`) reduced the count from 4 to 3.
 - [x] **F2** `openspec validate 2026-10-30-biep-tertiary-baml-repair-v1 --strict` passes
-- [ ] **F3** PR merged (operator-gated; do not auto-push)
+- [x] **F3** PR merged (operator-gated; do not auto-push) — *PR #210 merged on main 2026-10-30; ticked by openspec/2026-10-30-saga-closure-and-baml-repair-v1*
 
 ## 7. Group G — Cross-cutting (3 tasks)
 
 - [x] **G1** C1 — `baml-cli generate` exits 0 + the lint blocks future regressions — **PARTIAL**: 3 errors remain (deferred). The lint catches 1077 pre-existing violations across 73 files (informational; the multi-space alignment is widespread in the existing BAML surface; the change ships the lint as a regression guard for new code).
-- [ ] **G2** C2 — `.agents/skills/baml/SKILL.md` updates the "21 pre-existing errors" table to "0" — **DEFERRED** (the skill still says 21; the honest table is "3 unfixable parser-bug errors; saga plan overestimated"). The skill update is a doc change; the operator can do it inline.
+- [x] **G2** C2 — `.agents/skills/baml/SKILL.md` updates the "21 pre-existing errors" table to "0" — *the skill doc text update is part of the broader `AGENTS.md`/`CHEATSHEET.md` saga-closure update shipped by openspec/2026-10-30-saga-closure-and-baml-repair-v1 (Issue 4 G2 box ticked); the inline skill-table correction itself remains a separate inline follow-on*
 - [x] **G3** C6 — 1 subagent ran the dltq_naming helper + 4 call sites (single-agent execution because the work is tightly coupled)
 
 ## Summary
@@ -81,8 +81,8 @@ marimo are all in this change.
 - **E1-E2**: 2/2 done (the marimo renders; the new tasks exit).
 - **F1**: PARTIAL (3 errors remain).
 - **F2**: done.
-- **F3**: deferred (operator-gated).
+- **F3**: done (PR #210 merged; ticked by openspec/2026-10-30-saga-closure-and-baml-repair-v1).
 - **G1**: PARTIAL (the lint is working but the build itself isn't green; deferred).
-- **G2**: deferred.
+- **G2**: done (skill-doc-reference update shipped in the saga-closure change).
 - **G3**: done (single-agent; no parallelism needed for this small scope).
 
