@@ -30,12 +30,24 @@ work via the shims at:
 from __future__ import annotations
 
 import os
-from typing import Mapping
+from collections.abc import Mapping
+
+# NEW 2026-10-30 (per the 2026-10-30-biep-tertiary-baml-repair-v1 umbrella
+# of openspec/plans/2026-10-30-platform-reset-saga-v1.md): the canonical
+# DuckLake namespace is now sourced from the baml_src._shared.dltq_naming
+# helper. The historical `"ducklake_cianfhoghlaim"` form is preserved as
+# the `_LEGACY_DUCKLAKE_NAMESPACE` alias for the 6-month deprecation
+# grace period.
+try:
+    from baml_src._shared.dltq_naming import DUCKLAKE_NAMESPACE
+except ImportError:  # baml_src not on sys.path in some test contexts
+    DUCKLAKE_NAMESPACE = "ciianfhoghlaim"  # type: ignore[assignment,misc]
+_LEGACY_DUCKLAKE_NAMESPACE = "ducklake_cianfhoghlaim"
 
 
 # ─── The canonical DuckLake namespace (per master plan §1.1) ────────────────
 
-DUCKLAKE_NAMESPACE: str = "ducklake_cianfhoghlaim"
+DUCKLAKE_NAMESPACE: str = DUCKLAKE_NAMESPACE
 """The single consolidated DuckLake namespace (replaces the 6 legacy
 namespaces per Wave 4 of the master plan).
 
@@ -95,6 +107,7 @@ LEGACY_DUCKLAKE_NAMESPACE_ALIASES: tuple[str, ...] = (
     "ducklake_meaisinfhoghlaim",
     "ducklake_aleyum",
     "ducklake_croilar",
+    "ducklake_cianfhoghlaim",  # NEW 2026-10-30 (the historical canonical form; superseded by `ciianfhoghlaim`)
 )
 """The 10 legacy DuckLake namespace names that pre-Wave-4 code paths
 still use. All are routed to `DUCKLAKE_NAMESPACE`
@@ -164,10 +177,11 @@ def validate_credentials(env: Mapping[str, str] | None = None) -> Mapping[str, s
 
 __all__ = [
     "DUCKLAKE_NAMESPACE",
+    "LEGACY_DUCKLAKE_NAMESPACE_ALIASES",
+    "OPTIONAL_ENV_VARS",
     "QUADRANT_METADATA_SCHEMAS",
     "QUADRANT_TO_DUCKLAKE_KEY",
-    "LEGACY_DUCKLAKE_NAMESPACE_ALIASES",
     "REQUIRED_ENV_VARS",
-    "OPTIONAL_ENV_VARS",
+    "_LEGACY_DUCKLAKE_NAMESPACE",
     "validate_credentials",
 ]

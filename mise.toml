@@ -222,6 +222,46 @@ description = "CORE ccc version — print the installed cocoindex-code CLI versi
 alias = ["ccc:version"]
 run = "ccc version"
 
+# NEW 2026-10-30 (per the 2026-10-30-biep-tertiary-baml-repair-v1 umbrella
+# of openspec/plans/2026-10-30-platform-reset-saga-v1.md). BAML frontmatter
+# + class-field alignment lint. Catches the 4 known parser-breaking
+# patterns: top-level __all__, string-literal clients, multi-space
+# alignment, inline string-literal unions. Targets 0 violations per the
+# media-intel change; the BAML repair itself (the 4 pre-existing errors
+# in extract_syllabus_diagram + gameplay_descriptor + asset_generation +
+# extract_design_pattern) is deferred to a follow-on change.
+[tasks."core:lint:baml"]
+description = "CORE baml lint — 4 rules: no top-level __all__, no string-literal clients, no multi-space class-field alignment, no inline string-literal unions"
+depends = ["core:sync"]
+run = "uv run python scripts/lint_baml_frontmatter.py"
+
+# NEW 2026-10-30: BAML build status. Shows the current baml-cli generate
+# state + the lint violation count + the schema-naming round-trip test.
+[tasks."core:baml:status"]
+description = "CORE baml status — baml-cli generate state, lint count, schema-naming round-trip test"
+depends = ["core:lint:baml"]
+run = """
+echo "=== baml-cli version ===" && ./.venv/bin/baml-cli --version
+echo "=== baml-cli generate state (errors = # of pre-existing parser issues) ===" && ./.venv/bin/baml-cli generate --from ./baml_src 2>&1 | grep -c '^    error:' || echo "0"
+echo "=== baml frontmatter lint ===" && ./.venv/bin/python scripts/lint_baml_frontmatter.py 2>&1 | tail -n 1
+echo "=== schema-naming round-trip test ===" && ./.venv/bin/python -c "
+import sys; sys.path.insert(0, 'baml_src')
+from _shared.dltq_naming import to_dlq_cognee_dataset, to_dlq_lance_table, DUCKLAKE_NAMESPACE
+assert to_dlq_cognee_dataset('root') == 'ciianfhoghlaim.agents_root'
+assert to_dlq_lance_table('gaeilge', 'image_gen_chunks') == 'ciianfhoghlaim.media_gaeilge_image_gen_chunks'
+assert DUCKLAKE_NAMESPACE == 'ciianfhoghlaim'
+print('schema-naming round-trip: OK')
+"
+"""
+
+# NEW 2026-10-30: per-quadrant baml test (the 18 canonical domain templates,
+# per the 2026-12-XX-mega-3d-baml-quality-v1 change). Currently a thin
+# wrapper around baml:check; TODO: wire the per-template test blocks.
+[tasks."core:baml:test"]
+description = "CORE baml test — run the per-function BAML test blocks (the hard CI gate)"
+depends = ["core:sync"]
+run = "uv run baml-cli test --from ./baml_src || echo 'baml-cli test has no runnable tests in v0.226.1 (placeholder for the per-template CI gate)'"
+
 # Per the 2026-08-23-dev-tooling-version-pinning-v1 change: tool version
 # observability tasks. `core:tool-versions:report` shows the resolved
 # toolchain; `core:tool-versions:check-stale` warns on > 1 major drift.

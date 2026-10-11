@@ -8,20 +8,20 @@
 // baml_src/british_isles/_cross/vernacular_languages.baml.
 
 class CelticAssetRecord {
-  asset_id string              @description("Deterministic: sha256(language + prompt + subject + role)[:16]")
-  subject string               @description("The NCCA subject (e.g. 'chemistry')")
-  language string              @description("The Celtic language code (ga | cy | gd | gv | kw | br)")
-  language_label string        @description("Human-readable label in the vernacular (e.g. 'Gaeilge', 'Cymraeg', 'Gàidhlig')")
+  asset_id string @description("Deterministic: sha256(language + prompt + subject + role)[:16]")
+  subject string @description("The NCCA subject (e.g. 'chemistry')")
+  language string @description("The Celtic language code (ga | cy | gd | gv | kw | br)")
+  language_label string @description("Human-readable label in the vernacular (e.g. 'Gaeilge', 'Cymraeg', 'Gàidhlig')")
   language_native_script string @description("The language name written in its native script")
-  title string                 @description("Human-readable title in the vernacular language")
-  title_en string              @description("English translation of the title")
-  prompt string                @description("The asset-generation prompt (translated + culturally adapted for the target language)")
-  prompt_en string             @description("The English source prompt")
+  title string @description("Human-readable title in the vernacular language")
+  title_en string @description("English translation of the title")
+  prompt string @description("The asset-generation prompt (translated + culturally adapted for the target language)")
+  prompt_en string @description("The English source prompt")
   palette_hex string[]
-  role string                  @description("The image_gen role (default | fast | bilingual | legacy | diagrams)")
+  role string @description("The image_gen role (default | fast | bilingual | legacy | diagrams)")
   source_briefing_id string?   @description("The LearningEpisode.episode_id this asset was generated from (per Plan 6)")
   provenance_pdf string?       @description("The source PDF the prompt was extracted from (when available)")
-  generated_at string           @description("ISO 8601 timestamp")
+  generated_at string @description("ISO 8601 timestamp")
 }
 
 function GenerateIrishAsset(
@@ -29,7 +29,7 @@ function GenerateIrishAsset(
   subject string @description("The NCCA subject (e.g. 'chemistry')"),
   role string @description("The image_gen role (default | fast | bilingual | legacy | diagrams)"),
 ) -> CelticAssetRecord {
-  client "openai/gpt-4o-mini"
+  client Primary
   prompt #"
     You are generating a FIBO 2D educational diagram asset for the
     Cianfhoghlaim British Isles MMO. Translate the prompt to Irish
@@ -44,7 +44,7 @@ function GenerateWelshAsset(
   subject string @description("The NCCA subject (e.g. 'chemistry')"),
   role string @description("The image_gen role"),
 ) -> CelticAssetRecord {
-  client "openai/gpt-4o-mini"
+  client Primary
   prompt #"
     You are generating a FIBO 2D educational diagram asset for the
     Cianfhoghlaim British Isles MMO. Translate the prompt to Welsh
@@ -59,7 +59,7 @@ function GenerateScottishGaelicAsset(
   subject string @description("The NCCA subject"),
   role string @description("The image_gen role"),
 ) -> CelticAssetRecord {
-  client "openai/gpt-4o-mini"
+  client Primary
   prompt #"
     You are generating a FIBO 2D educational diagram asset for the
     Cianfhoghlaim British Isles MMO. Translate the prompt to Scottish
@@ -73,7 +73,7 @@ function GenerateManxAsset(
   subject string @description("The NCCA subject"),
   role string @description("The image_gen role"),
 ) -> CelticAssetRecord {
-  client "openai/gpt-4o-mini"
+  client Primary
   prompt #"
     You are generating a FIBO 2D educational diagram asset for the
     Cianfhoghlaim British Isles MMO. Translate the prompt to Manx
@@ -87,7 +87,7 @@ function GenerateCornishAsset(
   subject string @description("The NCCA subject"),
   role string @description("The image_gen role"),
 ) -> CelticAssetRecord {
-  client "openai/gpt-4o-mini"
+  client Primary
   prompt #"
     You are generating a FIBO 2D educational diagram asset for the
     Cianfhoghlaim British Isles MMO. Translate the prompt to Cornish
@@ -101,7 +101,7 @@ function GenerateBretonAsset(
   subject string @description("The NCCA subject"),
   role string @description("The image_gen role"),
 ) -> CelticAssetRecord {
-  client "openai/gpt-4o-mini"
+  client Primary
   prompt #"
     You are generating a FIBO 2D educational diagram asset for the
     Cianfhoghlaim British Isles MMO. Translate the prompt to Breton
