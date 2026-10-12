@@ -244,6 +244,43 @@ When the user asks "where do I add X?", route using the
 - **Control Plane (`arm1-oci`)**: Handles routing (Pangolin), identity (Pocket ID), and orchestration (Komodo).
 - **Workload Host (`bunchloch` - MacBook M4)**: Handles memory-intensive workloads (Vector DBs, Graph DBs, LLM Inference, local analytics).
 
+### Mac-Side `*.cianfhoghlaim.ie` Resolution: Local, Not OCI
+
+Agent sessions running on `bunchloch` (this Mac) MUST assume a
+`*.cianfhoghlaim.ie` hostname routes through **headscale**, not
+Cloudflare. The headscale resolver sends the request onto the local
+tailnet, where it terminates on a bunchloch stack — **not** on
+`arm1-oci`. `ssh oci.arm1` from this Mac reaches the OCI VM, but a
+plain `https://<host>.cianfhoghlaim.ie/...` request from this Mac
+almost always does not.
+
+How to verify which tier a hostname is serving:
+
+```bash
+dig +short <host>.cianfhoghlaim.ie
+# 100.96.x.x     → headscale tailnet → bunchloch workload tier
+# 140.238.x.x    → OCI control-plane VM
+# 104.21.x / 172.67.x → Cloudflare public proxy → OCI
+```
+
+Worked example (verified 2026-10-11 during the local-Infisical
+login incident):
+
+| Hostname | Resolution on this Mac | Tier reached |
+|:--|:--|:--|
+| `infisical.cianfhoghlaim.ie` | `100.96.128.10` (headscale) | bunchloch workload tier — local `infisical/infisical:v0.161.12` container (`dev-baile` workspace, admin row `eolas@cianfhoghlaim.ie`). See [`bonneagar/deploy-runbooks/local-infisical-as-permanent-dev-env.md`](bonneagar/deploy-runbooks/local-infisical-as-permanent-dev-env.md). |
+| `oci.arm1` (DNS / SSH alias) | n/a (SSH-only) | OCI control-plane VM directly via `pangolin-newt-arm1-oci` tunnel |
+| `pangolin.cianfhoghlaim.ie`, `auth.cianfhoghlaim.ie`, `komodo.cianfhoghlaim.ie` | public Cloudflare → OCI front door | OCI control-plane stack |
+
+**Rule**: before SSH-ing to `oci.arm1` to retrieve, reset, or inspect
+a credential named after a `*.cianfhoghlaim.ie` host, run the
+`dig +short` check above. If the result is `100.96.x.x`, the
+host is serving from this Mac, and the right move is to operate on
+the local container / data, not on OCI. Load
+[`.agents/skills/pangolin-cli/SKILL.md`](.agents/skills/pangolin-cli/SKILL.md)
+first; it spells out the convergence layout and the headscale routing
+expectation.
+
 ### Secrets Management (Infisical + mise)
 - Secrets are **automatically injected** via `mise` hooks when entering a directory.
 - `infisical export` resolves all secrets instantly into an ignored `.env` file from a `.infisical.env` template.
